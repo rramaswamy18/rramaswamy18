@@ -1,0 +1,22 @@
+﻿<br />
+<div class="container" style="background-color: #f3f3f3; width: 100%;">
+    <table align="center" class="table table-responsive">
+        <tr>
+            <td style="text-align: left; width: 25%;">
+                <i class="fa fa-facebook-square" style="color: #4267b2; font-size: 36px"></i>
+                <i class="fa fa-twitter-square" style="color: #00acee; font-size: 36px"></i>
+                @*<i class="fa fa-youtube-square" style="color: #cd201f; font-size: 36px"></i>
+                <i class="fa fa-linkedin-square" style="color: #0e76a8; font-size: 36px"></i>*@
+            </td>
+            <td style="text-align: center; width: 50%;">
+                <span style="font-family: sans-serif; font-size: 13px; color: #7a7a7a;">Powered by</span>&nbsp;<span style="color: #0170b9; font-size: 13px; font-weight: bold;">Gajaashwa Inc.</span>&nbsp;
+                <span style="font-family: sans-serif; font-size: 12px; color: #000000;">&copy; Copyright @DateTime.Now.Year</span>
+                <br />
+                @Html.Partial("_FooterMenu")
+            </td>
+            <td style="text-align: right; width: 25%;">
+                @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressLine1", ""), @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCityName", "")<br />@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressStateAbbrev", "") @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipCode", "")-@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCountryAbbrev", "")
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,255 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<style>
+    .outercontainer {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    /* Bottom left text */
+    .bottom-left {
+        position: absolute;
+        bottom: 8px;
+        left: 16px;
+    }
+
+    /* Top left text */
+    .top-left {
+        position: absolute;
+        top: 8px;
+        left: 16px;
+    }
+
+    /* Top right text */
+    .top-right {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+    }
+
+    /* Bottom right text */
+    .bottom-right {
+        position: absolute;
+        bottom: 8px;
+        right: 16px;
+    }
+
+    /* Centered text */
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Left Centered text */
+    .left-centered {
+        position: absolute;
+        top: 50%;
+        left: 16px;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Left Centered text */
+    .right-centered {
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Left Centered text */
+    .bottom-centered {
+        position: absolute;
+        top: 95%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .circle {
+        border: 2px solid white;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0);
+        color: white;
+        width: 10px;
+        height: 10px;
+        text-align: center;
+        line-height: 100px;
+    }
+
+    .circleSelected {
+        border: 2px solid white;
+        border-radius: 50%;
+        background: white;
+        color: white;
+        width: 10px;
+        height: 10px;
+        text-align: center;
+        line-height: 100px;
+    }
+</style>
+<div class="col-md-12" style="margin-left: auto; margin-right: auto;">
+    <div class="col-md-8">
+        <div class="outercontainer" id="divCarousel0" style="display: none;">
+            <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_001.webp" style="height: 387px; max-height: 387px; margin: auto; max-width: 999px; width: 100%;" title="@imageTitle" />
+            <div class="left-centered">
+                <a class="left carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(3);">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    <span class="sr-only">Prev</span>
+                </a>
+            </div>
+            <div class="right-centered">
+                <a class="right carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(1);">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div class="centered" style="width: 81%;">
+                <h1 style="color: #ffffff; font-family: 'Patua One'; font-size: 35px; font-weight: 900;">We Are Hiring Now!</h1>
+                <span class="themecolor" style="color: #e8b740;text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; text-align: center; line-height: 29px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 28px;">
+                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") is now hiring CDL trainer
+                </span>
+                <br /><br />
+                <a href="@Url.Action("ContactUs", "Home")" class="btn btn-lg btn-primary" style="background-color: #efb740; font-weight: 900;">Learn More</a>
+            </div>
+            <div class="bottom-centered">
+                <div style="float: left; padding-right: 9px;"><div class="circleSelected" onclick="javascript: return displayCarousel(0);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(1);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(2);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(3);" style="cursor: pointer;"></div></div>
+            </div>
+        </div>
+        <div class="outercontainer" id="divCarousel1" style="display: none;">
+            <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_002.webp" style="height: 387px; max-height: 387px; margin: auto; max-width: 999px; width: 100%;" title="@imageTitle" />
+            <div class="left-centered">
+                <a class="left carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(0);">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    <span class="sr-only">Prev</span>
+                </a>
+            </div>
+            <div class="right-centered">
+                <a class="right carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(2);">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div class="centered" style="width: 81%;">
+                <h1 style="color: #ffffff; font-family: 'Patua One'; font-size: 35px; font-weight: 900;">Enroll now and get $2000 Off!</h1>
+                <span style="color: #ffffff; font-family: 'Open Sans'; font-size: 25px; font-weight: 900;">Our comprehensive program gives you everything you need to know to get your CDL</span>
+                <br /><br />
+                <a href="@Url.Action("Admission", "Home")" class="btn btn-lg btn-primary" style="background-color: #e8b740; font-weight: 900;">Learn More</a>
+            </div>
+            <div class="bottom-centered">
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(0);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circleSelected" onclick="javascript: return displayCarousel(1);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(2);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(3);" style="cursor: pointer;"></div></div>
+            </div>
+        </div>
+        <div class="outercontainer" id="divCarousel2" style="display: none;">
+            <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_003.webp" style="height: 387px; max-height: 387px; margin: auto; max-width: 999px; width: 100%;" title="@imageTitle" />
+            <div class="left-centered">
+                <a class="left carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(1);">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    <span class="sr-only">Prev</span>
+                </a>
+            </div>
+            <div class="right-centered">
+                <a class="right carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(3);">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div class="centered" style="width: 81%;">
+                <h1 style="color: #ffffff; font-family: 'Patua One'; font-size: 35px; font-weight: 900;">Truck Driving Salary Expectations</h1>
+                <span style="color: #ffffff; font-family: 'Open Sans'; font-size: 25px; font-weight: 900;">Truck driving is one of America's highest paying profession upto $40,000+ per year</span>
+                <br /><br />
+                <a href="@Url.Action("Admission", "Home")" class="btn btn-lg btn-primary" style="background-color: #e8b740; font-weight: 900;">Learn More</a>
+            </div>
+            <div class="bottom-centered ">
+                <div style="float: left; padding-right: 9px;"><div class="circle" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circleSelected" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" style="cursor: pointer;"></div></div>
+            </div>
+        </div>
+        <div class="outercontainer" id="divCarousel3" style="display: none;">
+            <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_004.webp" style="height: 387px; max-height: 387px; margin: auto; max-width: 999px; width: 100%;" title="@imageTitle" />
+            <div class="left-centered">
+                <a class="left carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(2);">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    <span class="sr-only">Prev</span>
+                </a>
+            </div>
+            <div class="right-centered">
+                <a class="right carousel-control" href="javascript: void(0);" onclick="javascript: return displayCarousel(0);">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div class="centered" style="width: 81%;">
+                <h1 style="color: #ffffff; font-family: 'Patua One'; font-size: 35px; font-weight: 900;">Need a new career?</h1>
+                <span class="themecolor" style="color: #e8b740; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; text-align: center; line-height: 29px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 28px;">
+                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")  in Business since 1975. Get on your career path
+                </span>
+                <br /><br />
+                <a href="@Url.Action("Admission", "Home")" class="btn btn-lg btn-primary" style="background-color: #e8b740; font-weight: 900;">Learn More</a>
+            </div>
+            <div class="bottom-centered ">
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(0);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(1);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circle" onclick="javascript: return displayCarousel(2);" style="cursor: pointer;"></div></div>
+                <div style="float: left; padding-right: 9px;"><div class="circleSelected" onclick="javascript: return displayCarousel(3);" style="cursor: pointer;"></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <span style="color: #0000ff; font-size: 18px; font-weight: bold; padding-left: 9px; vertical-align: top;">
+            <span class="text-info">DO YOU WANT TO LEARN DRIVING? Are you a student?</span>&nbsp;<a href="@Url.Action("Enrollment", "Home")" style="color: #ff0000; text-decoration: underline;">!!!ENROLL NOW!!!</a>
+        </span>
+        <br />
+        <span style="font-size: 16px; font-weight: bold; padding-right: 9px; vertical-align: top;">
+            <span class="text-danger">Please ask for <span style="color: #0000ff;">Spanish</span> speaking instructor</span><br />
+            <!--<span style="color: #337ab7; font-weight: bold;">Tenga en cuenta que hemos contratado a un instructor <span style="color: #ff0000;">de habla hispana</span></span>-->
+            <br style="clear: both;" />
+        </span>
+        <div class="col-md-12" style="color: #0000ff; font-size: 16px; font-weight: bold; margin: auto; text-align: center;">
+            ONLY SCHOOL OFFERING AUTOMATIC CLASS A TRAINING AND MANUAL TRANSMISSION
+        </div>
+        <hr style="font-weight: bold; border: 1px solid;" />
+        <div id="carouselText0" style="color: #000000; display: none; font-weight: bold; text-align: center;">
+            <h1 style="color: #000000; font-family: 'Patua One'; font-size: 27px; font-weight: 900;">We Are Hiring Now!</h1>
+            <span class="themecolor" style="color: #0000ff; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; line-height: 29px; border-width: 0px; font-size: 18px; font-weight: 900; letter-spacing: 0px; margin: 0px; padding: 0px;">
+                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") is now hiring CDL trainer
+            </span>
+            <br style="clear: both;" />
+            <a href="@Url.Action("Enrollment", "Home")" style="color: #000000; font-size: 18px; font-weight: 900; text-decoration: underline;">Click to enroll now</a>
+        </div>
+        <div id="carouselText1" style="color: #000000; display: none; font-weight: bold; text-align: center;">
+            <h1 style="color: #000000; font-family: 'Patua One'; font-size: 25px; font-weight: 900;">Enroll now and get $2000 Off!</h1>
+            <span style="color: #000000; font-family: 'Open Sans'; font-size: 16px; font-weight: 900;">Our comprehensive program gives you everything you need to know to get your CDL</span>
+            <br />
+            <a href="@Url.Action("Enrollment", "Home")" style="color: #000000; font-size: 18px; font-weight: 900; text-decoration: underline;">Click to enroll now</a>
+        </div>
+        <div id="carouselText2" style="color: #000000; display: none; font-weight: bold; text-align: center;">
+            <h1 style="color: #000000; font-family: 'Patua One'; font-size: 25px; font-weight: 900;">Truck Driving Salary Expectations</h1>
+            <span style="color: #000000; font-family: 'Open Sans'; font-size: 16px; font-weight: 900;">Truck driving is one of America's highest paying profession upto $40,000+ per year</span>
+            <br />
+            <a href="@Url.Action("Enrollment", "Home")" style="color: #000000; font-size: 18px; font-weight: 900; text-decoration: underline;">Click to enroll now</a>
+        </div>
+        <div id="carouselText3" style="color: #000000; display: none; font-weight: bold; text-align: center;">
+            <h1 style="color: #000000; font-family: 'Patua One'; font-size: 27px; font-weight: 900;">Need a new career?</h1>
+            <span style="color: #000000; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; text-align: center; line-height: 29px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 16px;">
+                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")  in Business since 1975. Get on your career path
+            </span>
+            <br />
+            <a href="@Url.Action("Enrollment", "Home")" style="color: #000000; font-size: 18px; font-weight: 900; text-decoration: underline;">Click to enroll now</a>
+        </div>
+    </div>
+</div>
+

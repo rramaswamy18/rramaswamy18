@@ -1,0 +1,173 @@
+﻿@using ArchitectureLibraryCacheData
+@{ 
+    var clientId = ArchLibCache.ClientId;
+}
+<div style="background-color: #f7f7f7; padding-left: 72px; padding-top: 9px; text-align: center;">
+    <label style="color: #0000ff; font-size: 23px;">Read this in : </label>
+    <select class="form-control" id="language" onchange="javascript: return language_onchange();" style="color: #000000; display: inline-block; font-size: 18px; font-weight: bold; width: 189px;">
+        <option value="divEnglishUSA" selected="selected" style="font-weight: bold;">English (USA)</option>
+        <option value="divSpanish" style="font-weight: bold;">Spanish</option>
+        <option value="divHindi" style="font-weight: bold;">Hindi</option>
+        <option value="divPunjabi" style="font-weight: bold;">Punjabi</option>
+        <option value="divGujarati" style="font-weight: bold;">Gujarati</option>
+    </select>
+</div>
+@*<div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 36px; font-weight: bold; padding-left: 72px; padding-right: 40px; text-align: center;">
+    <strong><a href="@Url.Action("", "Home")" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" style="font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</a></strong>
+</div>*@
+<script type="text/javascript">
+    function window_onload() {
+        //document.getElementById("language").scrollIntoView();
+        language_onchange();
+    }
+    function language_onchange() {
+        for (var i = 0; i < document.getElementById("language").options.length; i++) {
+            document.getElementById(document.getElementById("language").options[i].value).style.display = "none";
+        }
+        document.getElementById(document.getElementById("language").value).style.display = "block";
+    }
+</script>
+<div id="divEnglishUSA" style="display: none;">
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 36px; font-weight: bold; padding-left: 72px; padding-right: 40px; text-align: center;">
+        About Us<label style="padding-left: 18px;">&#8208;</label><label style="padding-left: 18px;">English (USA)</label><!--<a href="javascript: void(0);" onclick="javascript: return document.getElementById('language').scrollIntoView();"><i class="fa fa-arrow-circle-up" style="color: #000000; font-size: 36px; padding-left: 0px;"></i></a>-->
+    </div>
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+        The economy always has movement of goods and people. Farm produce has to move from the point of origin to the shelves in the supermarket. Dairy products have to move from the production facilities to the shelves of the supermarket, When people move they need to move their belongings too! The trucking industry, thus, performs a very important function in the economy. Truck drivers are the main backbone of the trucking industry.
+        <br /><br />
+              <a href="@Url.Action("", "Home")" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" style="font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</a> can prepare you to become a professional driver  in as little two weeks for CDL (commercial driver license).
+        <br /><br />
+        We have been in the trucking business since 1975. We specialize in training for most  vehicles that need a commercial driver’s license including transfers, doubles, and flats. Our campus includes a spacious yard for training and practice.
+        <br /><br />
+        Our instructors are friendly, courteous and patient, and are available 7 days a week to work with your schedule. We’re conveniently located in the Bay Area, with training facilities in Hayward.
+        <br /><br />
+        Pick up the phone and call us today!
+        <br /><br />
+        <em>A Career in Trucking Has Never Looked Better!</em>
+    </div>
+    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+</div>
+<div id="divSpanish" style="display: none;">
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 36px; font-weight: bold; padding-left: 72px; padding-right: 40px; text-align: center;">
+        About Us<label style="padding-left: 18px;">&#8208;</label><label style="padding-left: 18px;">Spanish</label><br />
+        Sobre nosotras<!--&nbsp;<a href="javascript: void(0);" onclick="javascript: return document.getElementById('language').scrollIntoView();"><i class="fa fa-arrow-circle-up" style="color: #000000; font-size: 36px; padding-left: 0px;"></i></a>-->
+    </div>
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+        Nuestra historia es una historia de motivación, pasión y compromiso incondicional. Nos preocupamos por nuestros productos y su impacto positivo en el bienestar de nuestros clientes.
+        <br /><br />
+        La calidad de los productos ofrecidos nos define y nos diferencia de los demás. Creemos que un cliente satisfecho es una gran fuente de referencia.
+        <br /><br />
+        Para prácticas espirituales, Divine Bija ofrece herramientas y kits para ayudar a las familias modernas de todo el mundo a continuar con sus tradiciones. Esto incluye flores, vasthrams y otros artículos de pooja. Ofrecemos kits para diversas ocasiones, como la inauguración de una casa (Gruhapravesh), etc., para ayudarlo a concentrarse en el evento más grande en lugar de en los detalles.
+        <br /><br />
+        Para eventos y ocasiones especiales, ofrecemos dulces y sabores que llevan el sabor de la India directamente a su puerta dondequiera que esté. Esto incluye las delicias de Andhra y Chennai.
+        <br /><br />
+        Para bodas y otras ceremonias, ofrecemos varios productos para ayudar a las familias a hacer que esas ocasiones sean realmente especiales.
+        <br /><br />
+        Para familias de todo el mundo, les traemos especias de la mejor calidad para su consumo diario a precios razonables.
+        <br /><br />
+        ¡Esa es nuestra promesa y garantía para usted!
+        <br /><br />
+        <span style="color: #000000; text-decoration: underline;">Divina Bija - Nuestra Misión:</span>
+        <br />
+        Entregar productos premium de calidad superior para apoyar y nutrir la salud y el bienestar de nuestros clientes que depositan su confianza en nosotros.
+    </div>
+    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+</div>
+<div id="divHindi" style="display: none;">
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 36px; font-weight: bold; padding-left: 72px; padding-right: 40px; text-align: center;">
+        About Us<label style="padding-left: 18px;">&#8208;</label><label style="padding-left: 18px;">Hindi</label><br />
+        हमारे बारे में - hamaare baare mein<!--&nbsp;<a href="javascript: void(0);" onclick="javascript: return document.getElementById('language').scrollIntoView();"><i class="fa fa-arrow-circle-up" style="color: #000000; font-size: 36px; padding-left: 0px;"></i></a>-->
+    </div>
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+        <strong>एक 1 ट्रक ड्राइविंग स्कूल, इंक</strong>
+        <br /><br />
+        अर्थव्यवस्था में हमेशा माल और लोगों की आवाजाही होती है। कृषि उपज को सुपरमार्केट में उत्पत्ति के बिंदु से अलमारियों तक ले जाना पड़ता है। डेयरी उत्पादों को उत्पादन सुविधाओं से सुपरमार्केट की अलमारियों में स्थानांतरित करना पड़ता है, जब लोग चलते हैं तो उन्हें अपना सामान भी स्थानांतरित करने की आवश्यकता होती है! इस प्रकार, ट्रकिंग उद्योग अर्थव्यवस्था में एक बहुत महत्वपूर्ण कार्य करता है। ट्रक चालक ट्रकिंग उद्योग की मुख्य रीढ़ हैं।
+        <br /><br />
+        <a href="@Url.Action("", "Home")" alt="A-1 Truck Driving School" title="A-1 Truck Driving School" style="font-weight: bold; text-decoration: underline;">एक 1 ट्रक ड्राइविंग स्कूल, इंक</a>
+        सीडीएल (वाणिज्यिक चालक लाइसेंस) के लिए आपको कम से कम दो सप्ताह में एक पेशेवर ड्राइवर बनने के लिए तैयार कर सकता है।
+        <br /><br />
+        हम 1975 के बाद से ट्रकिंग व्यवसाय में हैं। हम उन अधिकांश वाहनों के लिए प्रशिक्षण में विशेषज्ञता प्राप्त करते हैं, जिनके लिए ट्रांसफ़र, डबल्स और फ़्लैट सहित कमर्शियल ड्राइवर के लाइसेंस की आवश्यकता होती है। हमारे परिसर में प्रशिक्षण और अभ्यास के लिए एक विशाल यार्ड शामिल है।
+        <br /><br />
+        हमारे प्रशिक्षक मित्रवत, विनम्र और धैर्यवान हैं, और आपके कार्यक्रम के साथ काम करने के लिए सप्ताह में 7 दिन उपलब्ध हैं। हम हेवर्ड में प्रशिक्षण सुविधाओं के साथ, बे क्षेत्र में आसानी से स्थित हैं।
+        <br /><br />
+        फोन उठाओ और हमें आज बुलाओ!
+        <br /><br />
+        <em>ट्रकिंग में कैरियर ने कभी बेहतर नहीं देखा!</em>
+        <br /><br />
+        arthavyavastha mein hamesha maal aur logon kee aavaajaahee hotee hai. krshi upaj ko mool sthaan se suparamaarket mein alamaariyon tak le jaana padata hai. deyaree utpaadon ko utpaadan suvidhaon se suparamaarket kee alamaariyon tak le jaana padata hai, jab log chalate hain to unhen apana saamaan bhee sthaanaantarit karane kee aavashyakata hotee hai! traking udyog, is prakaar, arthavyavastha mein ek bahut hee mahatvapoorn kaary karata hai. trak draivar traking udyog kee mukhy reedh hain.
+        <br /><br />
+        ek 1 trak draiving skool, ink aapako seedeeel (vaanijyik draivar laisens) ke lie kam se kam do saptaah mein ek peshevar draivar banane ke lie taiyaar kar sakata hai.
+        <br /><br />
+        ham 1975 se traking vyavasaay mein hain. ham un adhikaansh vaahanon ke prashikshan mein visheshagy hain, jinake lie vyaavasaayik chaalak ke laisens kee aavashyakata hotee hai, jisamen sthaanaantaran, yugal aur phlait shaamil hain. hamaare parisar mein prashikshan aur abhyaas ke lie ek vishaal praangan shaamil hai.
+        <br /><br />
+        hamaare prashikshak milanasaar, vinamr aur dhairyavaan hain, aur aapake shedyool ke saath kaam karane ke lie saptaah mein 7 din upalabdh hain. ham hevard mein prashikshan suvidhaon ke saath khaadee kshetr mein suvidhaajanak roop se sthit hain.
+        <br /><br />
+        phon uthao aur aaj hamen kol karo!
+        <br /><br />
+        traking mein kariyar isase behatar kabhee nahin dekha!
+    </div>
+    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+</div>
+<div id="divPunjabi" style="display: none;">
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 36px; font-weight: bold; padding-left: 72px; padding-right: 40px; text-align: center;">
+        About Us<label style="padding-left: 18px;">&#8208;</label><label style="padding-left: 18px;">Punjabi</label><br />
+        ਸਾਡੇ ਬਾਰੇ - Sāḍē bārē<!--&nbsp;<a href="javascript: void(0);" onclick="javascript: return document.getElementById('language').scrollIntoView();"><i class="fa fa-arrow-circle-up" style="color: #000000; font-size: 36px; padding-left: 0px;"></i></a>-->
+    </div>
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+        ਆਰਥਿਕਤਾ ਵਿੱਚ ਹਮੇਸ਼ਾ ਵਸਤੂਆਂ ਅਤੇ ਲੋਕਾਂ ਦੀ ਆਵਾਜਾਈ ਹੁੰਦੀ ਹੈ। ਖੇਤੀ ਉਪਜ ਨੂੰ ਮੂਲ ਸਥਾਨ ਤੋਂ ਸੁਪਰਮਾਰਕੀਟ ਦੀਆਂ ਅਲਮਾਰੀਆਂ ਤੱਕ ਜਾਣਾ ਪੈਂਦਾ ਹੈ। ਡੇਅਰੀ ਉਤਪਾਦਾਂ ਨੂੰ ਉਤਪਾਦਨ ਦੀਆਂ ਸਹੂਲਤਾਂ ਤੋਂ ਸੁਪਰਮਾਰਕੀਟ ਦੀਆਂ ਸ਼ੈਲਫਾਂ ਵਿੱਚ ਜਾਣਾ ਪੈਂਦਾ ਹੈ, ਜਦੋਂ ਲੋਕ ਚਲੇ ਜਾਂਦੇ ਹਨ ਤਾਂ ਉਨ੍ਹਾਂ ਨੂੰ ਆਪਣਾ ਸਮਾਨ ਵੀ ਲਿਜਾਣਾ ਪੈਂਦਾ ਹੈ! ਟਰੱਕਿੰਗ ਉਦਯੋਗ, ਇਸ ਤਰ੍ਹਾਂ, ਆਰਥਿਕਤਾ ਵਿੱਚ ਇੱਕ ਬਹੁਤ ਮਹੱਤਵਪੂਰਨ ਕੰਮ ਕਰਦਾ ਹੈ। ਟਰੱਕ ਡਰਾਈਵਰ ਟਰੱਕਿੰਗ ਉਦਯੋਗ ਦੀ ਮੁੱਖ ਰੀੜ੍ਹ ਦੀ ਹੱਡੀ ਹਨ।
+        <br /><br />
+        ਇੱਕ 1 ਟਰੱਕ ਡਰਾਈਵਿੰਗ ਸਕੂਲ, ਇੰਕ ਤੁਹਾਨੂੰ CDL (ਵਪਾਰਕ ਡਰਾਈਵਰ ਲਾਇਸੈਂਸ) ਲਈ ਦੋ ਹਫ਼ਤਿਆਂ ਵਿੱਚ ਇੱਕ ਪੇਸ਼ੇਵਰ ਡਰਾਈਵਰ ਬਣਨ ਲਈ ਤਿਆਰ ਕਰ ਸਕਦਾ ਹੈ।
+        <br /><br />
+        ਅਸੀਂ 1975 ਤੋਂ ਟਰੱਕਿੰਗ ਕਾਰੋਬਾਰ ਵਿੱਚ ਹਾਂ। ਅਸੀਂ ਜ਼ਿਆਦਾਤਰ ਵਾਹਨਾਂ ਲਈ ਸਿਖਲਾਈ ਵਿੱਚ ਮੁਹਾਰਤ ਰੱਖਦੇ ਹਾਂ ਜਿਨ੍ਹਾਂ ਨੂੰ ਟਰਾਂਸਫਰ, ਡਬਲਜ਼ ਅਤੇ ਫਲੈਟਾਂ ਸਮੇਤ ਵਪਾਰਕ ਡ੍ਰਾਈਵਰਜ਼ ਲਾਇਸੈਂਸ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ। ਸਾਡੇ ਕੈਂਪਸ ਵਿੱਚ ਸਿਖਲਾਈ ਅਤੇ ਅਭਿਆਸ ਲਈ ਇੱਕ ਵਿਸ਼ਾਲ ਵਿਹੜਾ ਸ਼ਾਮਲ ਹੈ।
+        <br /><br />
+        ਸਾਡੇ ਇੰਸਟ੍ਰਕਟਰ ਦੋਸਤਾਨਾ, ਨਿਮਰ ਅਤੇ ਧੀਰਜ ਵਾਲੇ ਹਨ, ਅਤੇ ਤੁਹਾਡੇ ਕਾਰਜਕ੍ਰਮ ਦੇ ਨਾਲ ਕੰਮ ਕਰਨ ਲਈ ਹਫ਼ਤੇ ਵਿੱਚ 7 ​​ਦਿਨ ਉਪਲਬਧ ਹਨ। ਅਸੀਂ ਹੇਵਰਡ ਵਿੱਚ ਸਿਖਲਾਈ ਸਹੂਲਤਾਂ ਦੇ ਨਾਲ, ਬੇ ਏਰੀਆ ਵਿੱਚ ਸੁਵਿਧਾਜਨਕ ਤੌਰ 'ਤੇ ਸਥਿਤ ਹਾਂ।
+        <br /><br />
+        ਫ਼ੋਨ ਚੁੱਕੋ ਅਤੇ ਅੱਜ ਸਾਨੂੰ ਕਾਲ ਕਰੋ!
+        <br /><br />
+        ਟਰੱਕਿੰਗ ਵਿੱਚ ਕਰੀਅਰ ਕਦੇ ਵੀ ਬਿਹਤਰ ਨਹੀਂ ਲੱਗਿਆ!
+        <br /><br />
+        Ārathikatā vica hamēśā vasatū'āṁ atē lōkāṁ dī āvājā'ī hudī hai. Khētī upaja nū mūla sathāna tōṁ suparamārakīṭa dī'āṁ alamārī'āṁ taka jāṇā paindā hai. Ḍē'arī utapādāṁ nū utapādana dī'āṁ sahūlatāṁ tōṁ suparamārakīṭa dī'āṁ śailaphāṁ vica jāṇā paindā hai, jadōṁ lōka calē jāndē hana tāṁ unhāṁ nū āpaṇā samāna vī lijāṇā paindā hai! Ṭarakiga udayōga, isa tar'hāṁ, ārathikatā vica ika bahuta mahatavapūrana kama karadā hai. Ṭaraka ḍarā'īvara ṭarakiga udayōga dī mukha rīṛha dī haḍī hana.
+        <br /><br />
+        Ika 1 ṭaraka ḍarā'īviga sakūla, ika tuhānū CDL (vapāraka ḍarā'īvara lā'isainsa) la'ī dō hafati'āṁ vica ika pēśēvara ḍarā'īvara baṇana la'ī ti'āra kara sakadā hai.
+        <br /><br />
+        Asīṁ 1975 tōṁ ṭarakiga kārōbāra vica hāṁ. Asīṁ zi'ādātara vāhanāṁ la'ī sikhalā'ī vica muhārata rakhadē hāṁ jinhāṁ nū ṭarānsaphara, ḍabalaza atē phalaiṭāṁ samēta vapāraka ḍrā'īvaraza lā'isainsa dī lōṛa hudī hai. Sāḍē kaimpasa vica sikhalā'ī atē abhi'āsa la'ī ika viśāla vihaṛā śāmala hai.
+        <br /><br />
+        Sāḍē isaṭrakaṭara dōsatānā, nimara atē dhīraja vālē hana, atē tuhāḍē kārajakrama dē nāla kama karana la'ī hafatē vica 7 ​​dina upalabadha hana. Asīṁ hēvaraḍa vica sikhalā'ī sahūlatāṁ dē nāla, bē ērī'ā vica suvidhājanaka taura'tē sathita hāṁ.
+        <br /><br />
+        Fōna cukō atē aja sānū kāla karō!
+        <br /><br />
+        Ṭarakiga vica karī'ara kadē vī bihatara nahīṁ lagi'ā!
+    </div>
+    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+</div>
+<div id="divGujarati" style="display: none;">
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 36px; font-weight: bold; padding-left: 72px; padding-right: 40px; text-align: center;">
+        About Us<label style="padding-left: 18px;">&#8208;</label><label style="padding-left: 18px;">Gujarati</label><br />
+        અમારા વિશે - Amārā viśē<!--&nbsp;<a href="javascript: void(0);" onclick="javascript: return document.getElementById('language').scrollIntoView();"><i class="fa fa-arrow-circle-up" style="color: #000000; font-size: 36px; padding-left: 0px;"></i></a>-->
+    </div>
+    <div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+        અર્થતંત્રમાં હંમેશા માલસામાન અને લોકોની અવરજવર હોય છે. ખેત પેદાશોને મૂળ સ્થાનેથી સુપરમાર્કેટની છાજલીઓ સુધી ખસેડવી પડે છે. ડેરી ઉત્પાદનોને ઉત્પાદન સુવિધાઓમાંથી સુપરમાર્કેટના છાજલીઓ પર ખસેડવું પડે છે, જ્યારે લોકો ખસેડે છે ત્યારે તેઓએ તેમનો સામાન પણ ખસેડવો પડે છે! ટ્રકિંગ ઉદ્યોગ, આમ, અર્થતંત્રમાં ખૂબ જ મહત્વપૂર્ણ કાર્ય કરે છે. ટ્રક ડ્રાઇવરો ટ્રકિંગ ઉદ્યોગની મુખ્ય કરોડરજ્જુ છે.
+        <br /><br />
+        @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") તમને CDL (વાણિજ્યિક ડ્રાઇવર લાઇસન્સ) માટે બે અઠવાડિયામાં વ્યાવસાયિક ડ્રાઇવર બનવા માટે તૈયાર કરી શકે છે.
+        <br /><br />
+        અમે 1975 થી ટ્રકિંગ વ્યવસાયમાં છીએ. અમે મોટાભાગના વાહનો માટે તાલીમ આપવામાં નિષ્ણાત છીએ જેને ટ્રાન્સફર, ડબલ્સ અને ફ્લેટ સહિત વ્યવસાયિક ડ્રાઇવિંગ લાયસન્સની જરૂર હોય છે. અમારા કેમ્પસમાં તાલીમ અને પ્રેક્ટિસ માટે એક વિશાળ યાર્ડનો સમાવેશ થાય છે.
+        <br /><br />
+        અમારા પ્રશિક્ષકો મૈત્રીપૂર્ણ, નમ્ર અને દર્દી છે, અને તમારા શેડ્યૂલ સાથે કામ કરવા માટે અઠવાડિયાના 7 દિવસ ઉપલબ્ધ છે. અમે હેવર્ડમાં તાલીમ સુવિધાઓ સાથે, ખાડી વિસ્તારમાં સહેલાઇથી સ્થિત છીએ.
+        <br /><br />
+        ફોન ઉપાડો અને આજે અમને કૉલ કરો!
+        <br /><br />
+        ટ્રકિંગમાં કારકિર્દી ક્યારેય સારી દેખાઈ નથી!
+        <br /><br />
+        Arthatantramāṁ hammēśā mālasāmāna anē lōkōnī avarajavara hōya chē. Khēta pēdāśōnē mūḷa sthānēthī suparamārkēṭanī chājalī'ō sudhī khasēḍavī paḍē chē. Ḍērī utpādanōnē utpādana suvidhā'ōmānthī suparamārkēṭanā chājalī'ō para khasēḍavuṁ paḍē chē, jyārē lōkō khasēḍē chē tyārē tē'ō'ē tēmanō sāmāna paṇa khasēḍavō paḍē chē! Ṭrakiṅga udyōga, āma, arthatantramāṁ khūba ja mahatvapūrṇa kārya karē chē. Ṭraka ḍrā'ivarō ṭrakiṅga udyōganī mukhya karōḍarajju chē.
+        <br /><br />
+        @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") tamanē CDL (vāṇijyika ḍrā'ivara lā'isansa) māṭē bē aṭhavāḍiyāmāṁ vyāvasāyika ḍrā'ivara banavā māṭē taiyāra karī śakē chē.
+        <br /><br />
+        Amē 1975 thī ṭrakiṅga vyavasāyamāṁ chī'ē. Amē mōṭābhāganā vāhanō māṭē tālīma āpavāmāṁ niṣṇāta chī'ē jēnē ṭrānsaphara, ḍabalsa anē phlēṭa sahita vyavasāyika ḍrā'iviṅga lāyasansanī jarūra hōya chē. Amārā kēmpasamāṁ tālīma anē prēkṭisa māṭē ēka viśāḷa yārḍanō samāvēśa thāya chē.
+        <br /><br />
+        Amārā praśikṣakō maitrīpūrṇa, namra anē dardī chē, anē tamārā śēḍyūla sāthē kāma karavā māṭē aṭhavāḍiyānā 7 divasa upalabdha chē. Amē hēvarḍamāṁ tālīma suvidhā'ō sāthē, khāḍī vistāramāṁ sahēlā'ithī sthita chī'ē.
+        <br /><br />
+        Phōna upāḍō anē ājē amanē kŏla karō!
+        <br /><br />
+        Ṭrakiṅgamāṁ kārakirdī kyārēya sārī dēkhā'ī nathī!
+    </div>
+    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+</div>

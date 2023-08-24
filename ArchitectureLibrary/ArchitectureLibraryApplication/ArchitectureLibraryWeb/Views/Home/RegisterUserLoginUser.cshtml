@@ -1,0 +1,71 @@
+﻿@model ArchitectureLibraryModels.RegisterUserLoginUserModel
+@using ArchitectureLibraryMenuCacheData
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    ViewBag.Title = "RegisterUserLoginUser";
+}
+@Html.Partial("_HeaderMenu")
+<div class="container" style="text-align: left;">
+    @{
+        string scrollIntoViewDocumentElementId = "", focusDocumentElementId = "";
+        switch (Model.RegisterUserProfModel.QueryString1)
+        {
+            case "REGISTER":
+                scrollIntoViewDocumentElementId = "divRegisterUserProfScrollIntoView";
+                focusDocumentElementId = "RegisterEmailAddress";
+                break;
+            case "LOGIN":
+                scrollIntoViewDocumentElementId = "divLoginUserProfScrollIntoView";
+                focusDocumentElementId = "LoginEmailAddress";
+                break;
+            case "RESETPASSWORD":
+                scrollIntoViewDocumentElementId = "divResetPasswordScrollIntoView";
+                focusDocumentElementId = "ResetPasswordEmailAddress";
+                break;
+            case "":
+                break;
+            default:
+                try
+                {
+                    var htmlContent = ArchLibMenuCache.MenuKVPModels.First(x => x.MenuKVPId == int.Parse(Model.RegisterUserProfModel.QueryString1)).MenuKVPValueData;
+                    htmlContent = Server.MapPath("~/ClientSpecific/" + clientId + "_" + clientName + "/Documents/HtmlFiles/" + htmlContent);
+                    var streamReader = new StreamReader(htmlContent);
+                    htmlContent = streamReader.ReadToEnd();
+                    streamReader.Close();
+                    if (htmlContent != "")
+                    {
+                        @Html.Raw(htmlContent)
+                    }
+                }
+                catch
+                {
+                }
+                break;
+        }
+    }
+    <div class="col-md-6">
+        <div id="divRegisterUserProfScrollIntoView" style="font-weight: bold;"></div>
+        @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
+        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+        @Html.Partial("_ContactUsDetail", Model.ContactUsModel)
+    </div>
+    <div class="col-md-6">
+        <div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>
+        @Html.Partial("_LoginUserProf", Model.LoginUserProfModel)
+        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+        <div id="divResetPasswordScrollIntoView" style="font-weight: bold;"></div>
+        @Html.Partial("_ResetPassword", Model.ResetPasswordModel)
+    </div>
+</div>
+<script type="text/javascript">
+    function window_onload() {
+        if ("@scrollIntoViewDocumentElementId" != "") {
+            document.getElementById("@scrollIntoViewDocumentElementId").scrollIntoView();
+        }
+        if ("@focusDocumentElementId" != "") {
+            document.getElementById("@focusDocumentElementId").focus();
+        }
+    }
+</script>

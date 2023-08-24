@@ -1,0 +1,125 @@
+﻿using ArchitectureLibraryEnumerations;
+using ArchitectureLibraryException;
+using ArchitectureLibraryModels;
+using ArchitectureLibraryUtility;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArchitectureLibraryDataLayer
+{
+    public static partial class ArchLibDataContext
+    {
+        public static void UpdAspNetUser(AspNetUserModel aspNetUserModel, string aspNetUserId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserModel.AspNetUserId;
+            sqlCommand.Parameters["@LoginPassword"].Value = aspNetUserModel.LoginPassword ?? (object)DBNull.Value;// : aspNetUserModel.LoginPassword;
+            sqlCommand.Parameters["@PasswordExpiry"].Value = aspNetUserModel.PasswordExpiry;
+            sqlCommand.Parameters["@ResetPasswordCompletedDateTime"].Value = aspNetUserModel.ResetPasswordCompletedDateTime;
+            sqlCommand.Parameters["@UserStatusId"].Value = aspNetUserModel.UserStatusId;
+            sqlCommand.Parameters["@UpdUserId"].Value = aspNetUserModel.UpdUserId;
+            sqlCommand.Parameters["@UpdUserName"].Value = aspNetUserModel.UpdUserName ?? "";// : aspNetUserModel.UpdUserName;
+            sqlCommand.ExecuteNonQuery();
+        }
+        public static void UpdPerson(PersonModel personModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandPersonUpd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = personModel.AspNetUserId;
+            sqlCommand.Parameters["@StatusId"].Value = StatusEnum.Active;
+            sqlCommand.Parameters["@UpdUserId"].Value = personModel.AspNetUserId;
+            sqlCommand.Parameters["@UpdUserName"].Value = personModel.UpdUserName ?? "";// : personModel.UpdUserName;
+            sqlCommand.ExecuteNonQuery();
+        }
+        public static void UpdPerson1(PersonModel personModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandPersonUpd1(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@CitizenshipId"].Value = personModel.CitizenshipId;
+            sqlCommand.Parameters["@CertificateDocumentId"].Value = personModel.CertificateDocumentId;
+            sqlCommand.Parameters["@DateOfBirth"].Value = personModel.DateOfBirth;
+            sqlCommand.Parameters["@DriverLicenseDemogInfoSubDivisionId"].Value = personModel.DriverLicenseDemogInfoSubDivisionId;
+            sqlCommand.Parameters["@DriverLicenseExpiryDate"].Value = personModel.DriverLicenseExpiryDate;
+            sqlCommand.Parameters["@DriverLicenseNumber"].Value = personModel.DriverLicenseNumber;
+            sqlCommand.Parameters["@DriverLicenseType"].Value = personModel.DriverLicenseType;
+            sqlCommand.Parameters["@ElectronicSignatureConsent"].Value = (bool)personModel.ElectronicSignatureConsentAccepted ? DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") : (object)DBNull.Value;
+            sqlCommand.Parameters["@ElectronicSignatureConsentAccepted"].Value = personModel.ElectronicSignatureConsentAccepted;
+            sqlCommand.Parameters["@FirstName"].Value = personModel.FirstName;
+            sqlCommand.Parameters["@InitialsTextId"].Value = personModel.InitialsTextId;
+            sqlCommand.Parameters["@InitialsTextValue"].Value = personModel.InitialsTextValue;
+            sqlCommand.Parameters["@LastName"].Value = personModel.LastName;
+            sqlCommand.Parameters["@MaritalStatusId"].Value = personModel.MaritalStatusId;
+            sqlCommand.Parameters["@MiddleName"].Value = personModel.MiddleName ?? (object)DBNull.Value;
+            //sqlCommand.Parameters["@MilitaryServiceId"].Value = personModel.MilitaryServiceId;
+            sqlCommand.Parameters["@NicknameFirst"].Value = personModel.NicknameFirst;
+            sqlCommand.Parameters["@NicknameLast"].Value = personModel.NicknameLast;
+            sqlCommand.Parameters["@SalutationId"].Value = personModel.SalutationId;
+            sqlCommand.Parameters["@SignatureTextId"].Value = personModel.SignatureTextId;
+            sqlCommand.Parameters["@SignatureTextValue"].Value = personModel.SignatureTextValue;
+            sqlCommand.Parameters["@SSN"].Value = personModel.SSN;
+            sqlCommand.Parameters["@SuffixId"].Value = personModel.SuffixId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInuserId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = personModel.AspNetUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
+        public static void UpdAspNetUser1(AspNetUserModel aspNetUserModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpd1(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@PhoneNumber"].Value = aspNetUserModel.PhoneNumber;
+            sqlCommand.Parameters["@LoggedInuserId"].Value = loggedInuserId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserModel.AspNetUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
+        public static void UpdAspNetUserResetPassword(AspNetUserModel aspNetUserModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpdResetPassword(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@ResetPasswordQueryString"].Value = aspNetUserModel.ResetPasswordQueryString;
+            sqlCommand.Parameters["@ResetPasswordExpiryDateTime"].Value = aspNetUserModel.ResetPasswordExpiryDateTime;
+            sqlCommand.Parameters["@ResetPasswordKey"].Value = aspNetUserModel.ResetPasswordKey;
+            sqlCommand.Parameters["@LoggedInuserId"].Value = loggedInuserId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserModel.AspNetUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
+        public static void UpdDemogInfoAddress(DemogInfoAddressModel demogInfoAddressModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandUpdPerson()", "AspNetUserId", loggedInUserId);
+                SqlCommand sqlCommand = BuildSqlCommandUpdDemogInfoAddress(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002100 After calling the BuildSqlCommandUpdPersonForStatus()", "AspNetUserId", loggedInUserId);
+                sqlCommand.Parameters["@DemogInfoAddressId"].Value = demogInfoAddressModel.DemogInfoAddressId;
+                sqlCommand.Parameters["@AddressLine1"].Value = demogInfoAddressModel.AddressLine1;
+                sqlCommand.Parameters["@AddressLine2"].Value = demogInfoAddressModel.AddressLine2 == null ? (object)DBNull.Value : demogInfoAddressModel.AddressLine2;
+                sqlCommand.Parameters["@AddressTypeId"].Value = AddressTypeEnum.Home;
+                sqlCommand.Parameters["@BuildingTypeId"].Value = demogInfoAddressModel.BuildingTypeId == null ? 0 : demogInfoAddressModel.BuildingTypeId;
+                sqlCommand.Parameters["@CityName"].Value = demogInfoAddressModel.CityName == null ? (object)DBNull.Value : demogInfoAddressModel.CityName;
+                sqlCommand.Parameters["@CountryAbbrev"].Value = demogInfoAddressModel.CountryAbbrev == null ? (object)DBNull.Value : demogInfoAddressModel.CountryAbbrev;
+                sqlCommand.Parameters["@CountyName"].Value = demogInfoAddressModel.CountyName == null ? (object)DBNull.Value : demogInfoAddressModel.CountyName;
+                sqlCommand.Parameters["@DemogInfoCityId"].Value = demogInfoAddressModel.DemogInfoCityId == null ? (object)DBNull.Value : demogInfoAddressModel.DemogInfoCityId;
+                sqlCommand.Parameters["@DemogInfoCountryId"].Value = demogInfoAddressModel.DemogInfoCountryId == null ? (object)DBNull.Value : demogInfoAddressModel.DemogInfoCountryId;
+                sqlCommand.Parameters["@DemogInfoSubDivisionId"].Value = demogInfoAddressModel.DemogInfoSubDivisionId == null ? (object)DBNull.Value : demogInfoAddressModel.DemogInfoSubDivisionId;
+                sqlCommand.Parameters["@DemogInfoZipId"].Value = demogInfoAddressModel.DemogInfoZipId == null ? (object)DBNull.Value : demogInfoAddressModel.DemogInfoZipId;
+                sqlCommand.Parameters["@DemogInfoZipPlusId"].Value = demogInfoAddressModel.DemogInfoZipPlusId == null ? 0 : demogInfoAddressModel.DemogInfoZipPlusId;
+                sqlCommand.Parameters["@HouseNumber"].Value = demogInfoAddressModel.HouseNumber == null ? (object)DBNull.Value : demogInfoAddressModel.HouseNumber;
+                sqlCommand.Parameters["@StateAbbrev"].Value = demogInfoAddressModel.StateAbbrev == null ? (object)DBNull.Value : demogInfoAddressModel.StateAbbrev;
+                sqlCommand.Parameters["@ZipCode"].Value = demogInfoAddressModel.ZipCode == null ? (object)DBNull.Value : demogInfoAddressModel.ZipCode;
+                sqlCommand.Parameters["@ZipPlus4"].Value = demogInfoAddressModel.ZipPlus4 == null ? (object)DBNull.Value : demogInfoAddressModel.ZipPlus4;
+                sqlCommand.Parameters["@UpdUserId"].Value = loggedInUserId;
+                sqlCommand.ExecuteNonQuery();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+    }
+}

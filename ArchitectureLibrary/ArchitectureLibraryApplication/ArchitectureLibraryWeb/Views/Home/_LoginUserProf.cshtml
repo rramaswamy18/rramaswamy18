@@ -1,0 +1,66 @@
+﻿@model ArchitectureLibraryModels.LoginUserProfModel
+<h3 style="font-weight: bold;">L O G I N <span style="color: #ff0000;">(Returning users)</span></h3>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+}
+else
+{
+    <ul style="font-weight: bold;">
+        <li>
+            Please enter email address, password, captcha answer
+        </li>
+        <li>
+            Click <span style="color: #0000ff; font-size: 18px;">L O G I N</span> to continue
+        </li>
+        @*<li>
+                Login and enjoy the features of our rich product
+            </li>*@
+        <li style="color: #000000;">
+            Did you forget your password or like to reset - please scroll down
+        </li>
+        <li style="color: #000000;">
+            Password(s) have an expiry. Please scroll down to reset, should your password has expired
+        </li>
+    </ul>
+    @*<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />*@
+    <form id="formLoginUserProfData">
+        @Html.Partial("_LoginUserProfData", Model)
+    </form>
+    <button class="loginRegisterbtn" id="loginUserSave" onclick="javascript: return loginUserSave_onclick();" type="button">L O G I N</button>
+    <script type="text/javascript">
+        function loginUserSave_onclick() {
+            console.log("00000000", "loginUserSave_onclick");
+            $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+            var url = "/Home/LoginUserProf";
+            var postData = $("#formLoginUserProfData").serialize();
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                //dataType: "html",
+                data: postData,
+                //async: false,
+                success: function (responseData, textStatus, request) {
+                    $("#loadingModal").modal('hide');
+                    console.log("00001000", "loginUserSave_onclick success", responseData.processMessage);
+                    if (responseData.success) {
+                        window.location = responseData.redirectUrl;
+                    }
+                    else {
+                        document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
+                    }
+                    //document.getElementById("formLoginUserProfData").innerHTML = responseData;
+                    //alert("Login completed successfully!!!");
+                },
+                error: function (xhr, exception) {
+                    $("#loadingModal").modal('hide');
+                    console.log("00099000", "loginUserSave_onclick", "ERROR???", exception, xhr);
+                    document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
+                    alert("Login encountered errors. Please fix errors to continue???");
+                }
+            });
+        }
+    </script>
+}

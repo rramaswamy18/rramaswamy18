@@ -1,0 +1,110 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var inTheNewsTitle1 = imageTitle + " is in the news, with enrollment going up due to shortage of drivers in the nation. Along with extra pay - Jan 31 2022 7:34am";
+    var inTheNewsTitle2 = imageTitle + " is in the news, with enrollment going up due to shortage of drivers in the nation. Along with extra pay - Jan 18 2022 6:32pm";
+    var inTheNewsUrl1 = "https://www.cbsnews.com/video/supply-chain-bottleneck-increases-demand-for-truck-drivers/";
+    var inTheNewsUrl2 = "https://www.cbsnews.com/video/supply-chain-bottleneck-increases-demand-for-truck-drivers/";
+}
+@Html.Partial("_Carousel")
+<table style="margin: auto; padding: 5px; text-align: center; width: 90%;">
+    <tr>
+        <td style="padding: 5px; text-align: right;">
+            <a href="https://www.bppe.ca.gov/" target="_blank">
+                <img alt="CA Bureau for Private Postsecondary Education" src="~/Images/CA_BPPE.webp" title="CA BPPE - Bureau for Private Postsecondary Education">
+            </a>
+        </td>
+        <td style="padding: 5px; text-align: left;">
+            <p style="color: #000000; font-family: Roboto, Arial, Tahoma, sans-serif; font-size: 14px; font-style: normal; font-weight: 400; text-align: center; width: 100%;">
+                <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle" style="font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</a> has a several grant programs exist that you may qualify for, many state and local agencies such as the Workforce Investment Act (WIA), Department of Rehabilitation (DOR), Employment Development Department (EDD), NUMMI, TAA and One Career Stop Centers. @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") does not offer Federal financial aid at this time.
+            </p>
+        </td>
+    </tr>
+</table>
+<br style="clear: both;" />
+<style>
+    .outercontainer {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    /* Top Centered text */
+    .top-centered {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<div style="margin-left: auto; margin-right: auto; text-align: center; width: 100%;">
+    <table style="margin-left: auto; margin-right: auto; padding: 5px;">
+        <tr>
+            <td style="text-align: center; padding: 5px; vertical-align: bottom; width: 279px;">
+                <h1 style="color: #000000; font-family: 'Patua One'; font-size: 15px; font-weight: 900;">We are in the news Jan 31</h1>
+                <span class="themecolor" style="color: #000000; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; line-height: 18px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 14px;">
+                    Nation is facing shortage of drivers & demand increasing
+                </span>
+            </td>
+            <td style="text-align: center; padding: 5px; vertical-align: bottom; width: 279px;">
+                <h1 style="color: #000000; font-family: 'Patua One'; font-size: 15px; font-weight: 900;">Enroll Now!!!</h1>
+                <span class="themecolor" style="color: #000000; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; line-height: 18px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 14px;">
+                    Do you wish to learn driving? Ask for our Spanish speaking instructor
+                </span>
+            </td>
+            <td style="text-align: center; padding: 5px; vertical-align: bottom; width: 279px;">
+                <h1 style="color: #000000; font-family: 'Patua One'; font-size: 15px; font-weight: 900;">We are in the news Jan 18</h1>
+                <span class="themecolor" style="color: #000000; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; line-height: 18px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 14px;">
+                    Nation is facing shortage of drivers & demand increasing
+                </span>
+            </td>
+            <td style="text-align: center; padding: 5px; vertical-align: bottom; width: 279px;">
+                <h1 style="color: #000000; font-family: 'Patua One'; font-size: 15px; font-weight: 900;">Our Programs!!!</h1>
+                <span class="themecolor" style="color: #000000; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; line-height: 18px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 14px;">
+                    Do you wish to learn driving? Ask for our Spanish speaking instructor
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; padding: 5px; vertical-align:top; width: 279px;">
+                <img alt="@inTheNewsTitle1" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_005.webp" style="height: auto; max-width: 279px; width: 100%;" title="@inTheNewsTitle1" />
+                <div style="background-color: #ff9966; color: #ffffff; font-family: Lato, Arial, Tahoma, sans-serif; font-size: 20px; font-style: normal; font-weight: 300;">
+                    <a alt="@inTheNewsTitle1" href="@inTheNewsUrl1" style="color: #ffffff; font-weight: 900; text-decoration: underline;" target="_blank" title="@inTheNewsTitle1">
+                        Read More...
+                    </a>
+                </div>
+            </td>
+            <td style="text-align: center; padding: 5px; vertical-align:top; width: 279px;">
+                <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_006.webp" style="height: auto; max-width: 279px; width: 100%;" title="@imageTitle" />
+                <div style="background-color: #ff9966; color: #ffffff; font-family: Lato, Arial, Tahoma, sans-serif; font-size: 20px; font-style: normal; font-weight: 300;">
+                    <a href="@Url.Action("Enrollment", "Home")" style="background-color: #ff9966; color: #ffffff; font-family: Lato, Arial, Tahoma, sans-serif; font-size: 20px; font-style: normal; font-weight: 900; text-decoration: underline;">
+                        Enroll Now...
+                    </a>
+                </div>
+            </td>
+            <td style="text-align: center; padding: 5px; vertical-align:top; width: 279px;">
+                <img alt="@inTheNewsTitle2" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_007.webp" style="height: auto; max-width: 279px; width: 100%;" title="@inTheNewsTitle2" />
+                <div style="background-color: #ff9966; color: #ffffff; font-family: Lato, Arial, Tahoma, sans-serif; font-size: 20px; font-style: normal; font-weight: 300;">
+                    <a alt="@inTheNewsTitle2" href="@inTheNewsUrl2" style="color: #ffffff; font-weight: 900; text-decoration: underline;" target="_blank" title="@inTheNewsTitle2">
+                        Read More...
+                    </a>
+                </div>
+            </td>
+            <td style="text-align: center; padding: 5px; vertical-align:top; width: 279px;">
+                <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_008.webp" style="height: auto; max-width: 279px; width: 100%;" title="@imageTitle" />
+                <div style="background-color: #ff9966; color: #ffffff; font-family: Lato, Arial, Tahoma, sans-serif; font-size: 20px; font-style: normal; font-weight: 300;">
+                    <a href="@Url.Action("Programs", "Home")" style="background-color: #ff9966; color: #ffffff; font-family: Lato, Arial, Tahoma, sans-serif; font-size: 20px; font-style: normal; font-weight: 900; text-decoration: underline;">Programs...</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<table style="margin: auto; padding: 5px; text-align: center; width: 80%;">
+    <tr>
+        <td style="padding: 5px; text-align: left;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12640.855267345!2d-122.098874!3d37.620658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x862d95ba287e651!2sA-1+Truck+Driving+School+Inc!5e0!3m2!1sen!2sus!4v1430349027356" frameborder="0" style="border: 0px; pointer-events: none; height: 280px; width: 100%;"></iframe>
+        </td>
+    </tr>
+</table>

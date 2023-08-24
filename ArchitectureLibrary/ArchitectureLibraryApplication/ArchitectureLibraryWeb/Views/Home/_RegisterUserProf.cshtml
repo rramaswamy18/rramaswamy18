@@ -1,0 +1,66 @@
+﻿@model ArchitectureLibraryModels.RegisterUserProfModel
+<h3 style="font-weight: bold;">R E G I S T E R <span style="color: #0000ff;">(First time users)</span></h3>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div id="divRegisterUserProfScrollIntoView" style="font-weight: bold;"></div>
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+}
+else
+{
+    <ul style="font-weight: bold;">
+        <li>
+            Please enter email address, confirm email address, telephone#
+        </li>
+        <li>
+            Answer captcha question
+        </li>
+        <li>
+            Click <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> to continue
+        </li>
+        <li>
+            Please check your <span style="color: #ff0000; font-size: 15px;">Inbox</span> for email with further instructions
+        </li>
+        <li>
+            If you do not see the email in your Inbox - please check <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+        </li>
+        <li>
+            If so, move the email to Inbox and mark the <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+        </li>
+    </ul>
+    @*<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />*@
+    <form id="formRegisterUserProfData">
+        @Html.Partial("_RegisterUserProfData", Model)
+    </form>
+    <p>By creating an account you agree to our <a href="@Url.Action("PrivacyPolicy", "Home")" target="_blank">Terms & Privacy</a>.</p>
+    <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" type="button">R E G I S T E R</button>
+    <script type="text/javascript">
+        function registerUserSave_onclick() {
+            console.log("00000000", "registerUserSave_onclick", "Enter");
+            $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+            var url = "/Home/RegisterUserProf";
+            var postData = $("#formRegisterUserProfData").serialize();
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                //dataType: "html",
+                data: postData,
+                //async: false,
+                success: function (responseData, textStatus, request) {
+                    $("#loadingModal").modal('hide');
+                    console.log("00001000", "registerUserSave_onclick success", responseData.processMessage);
+                    document.getElementById("formRegisterUserProfData").innerHTML = responseData.htmlString;
+                    document.getElementById("divScrollIntoViewRegister").scrollIntoView();
+                    console.log("00090000", "registerUserSave_onclick success", "Exit");
+                },
+                error: function (xhr, exception) {
+                    $("#loadingModal").modal('hide');
+                    console.log("00099000", "registerUserSave_onclick error", "ERROR???", exception, xhr);
+                    document.getElementById("formRegisterUserProfData").innerHTML = xhr.responseText;
+                    console.log("00090100", "enrollmentSave_onclick error", "Exit");
+                    document.getElementById("divScrollIntoViewRegister").scrollIntoView();
+                }
+            });
+        }
+    </script>
+}
