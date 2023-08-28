@@ -29,16 +29,16 @@ DELETE ArchLib.CreditCardData WHERE CreditCardDataId > 0
 DBCC CHECKIDENT ('ArchLib.CreditCardData', RESEED, 0);
 
 DELETE RetailSlnSch.GiftCert WHERE GiftCertId > 0
-DBCC CHECKIDENT ('RetailApp.GiftCert', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.GiftCert', RESEED, 0);
 
-DELETE RetailApp.OrderDelivery WHERE OrderDeliveryId > 0
-DBCC CHECKIDENT ('RetailApp.OrderDelivery', RESEED, 0);
+DELETE RetailSlnSch.OrderDelivery WHERE OrderDeliveryId > 0
+DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);
 
-DELETE RetailApp.OrderPayment WHERE OrderPaymentId > 0
-DBCC CHECKIDENT ('RetailApp.OrderPayment', RESEED, 0);
+DELETE RetailSlnSch.OrderPayment WHERE OrderPaymentId > 0
+DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
 
-DELETE RetailApp.OrderDetail WHERE OrderDetailId > 0
-DBCC CHECKIDENT ('RetailApp.OrderDetail', RESEED, 0);
+DELETE RetailSlnSch.OrderDetail WHERE OrderDetailId > 0
+DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
 
-DELETE RetailApp.OrderHeader WHERE OrderHeaderId > 0
-DBCC CHECKIDENT ('RetailApp.OrderHeader', RESEED, 0);
+DELETE RetailSlnSch.OrderHeader WHERE OrderHeaderId > 0
+DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);
