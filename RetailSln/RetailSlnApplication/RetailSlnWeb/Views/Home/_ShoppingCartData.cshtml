@@ -1,0 +1,117 @@
+﻿@model RetailSlnModels.ShoppingCartModel
+@using RetailSlnCacheData
+@{
+    int index = 0;
+}
+<table style="padding: 5px; width: 100%;">
+    <tr>
+        <td style="padding: 5px; vertical-align: top; width: 100%;">
+            @if (Model.ShoppingCartItems == null || Model.ShoppingCartItems.Count == 0)
+            {
+                <div style="color: #ff9900; font-family: Arial; font-size: 27px; font-weight: bold; margin: 0 auto; text-align: center; width: 100%;">Your shopping cart is empty</div>
+            }
+            else
+            {
+                <table class="table table-striped">
+                    <tr>
+                        @if (Model.Checkout)
+                        {
+                            <th class="text-center" scope="col"></th>
+                        }
+                        <th scope="col">#</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Item Desc</th>
+                        <th scope="col">Rate</th>
+                        <th class="text-center" scope="col">Qty</th>
+                        <th class="text-right" scope="col">Amount</th>
+                    </tr>
+                    @{
+                        foreach (var shoppingCartItem in Model.ShoppingCartItems)
+                        {
+                            index++;
+                            <tr>
+                                @if (Model.Checkout)
+                                {
+                                    <td class="text-center"><a href="javascript: void(0);" onclick="javascript: return removeFromCart_onclick(@(index - 1));"><img alt="" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart #@(index)" /></a></td>
+                                }
+                                <th scope="row">@(index + ".")</th>
+                                <td class="text-left">
+                                    @shoppingCartItem.ItemId
+                                </td>
+                                <td class="text-left">
+                                    @shoppingCartItem.ItemShortDesc
+                                </td>
+                                <td>
+                                    @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-center">
+                                    @shoppingCartItem.OrderQty
+                                </td>
+                                <td class="text-right">
+                                    @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                            </tr>
+                            @*<tr>
+                                <td></td>
+                                <td colspan="6">
+                                    Weight :&nbsp;
+                                    @shoppingCartItem.WeightValue
+                                    &nbsp;/&nbsp;
+                                    @shoppingCartItem.WeightUnitId
+                                    Volume :&nbsp;
+                                    @shoppingCartItem.VolumeValue
+                                    &nbsp;
+                                    @shoppingCartItem.DimensionUnitId
+                                </td>
+                            </tr>*@
+                            <tr>
+                                <td></td>
+                                <td colspan="6">
+                                    @if (Model.Checkout)
+                                    {
+                                        @Html.TextBoxFor(m => shoppingCartItem.OrderComments, new { id = "orderComments" + (index - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onchange = "javascript: return orderComments_onchange(" + (index - 1) + ");" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(m => shoppingCartItem.OrderComments)
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </td>
+    </tr>
+</table>
+@{
+    if (Model.ShoppingCartSummaryItems != null && Model.ShoppingCartSummaryItems.Count != 0)
+    {
+        index = 0;
+        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+        <table class="table table-striped">
+            <tr>
+                <th scope="col">
+                    #.
+                </th>
+                <th scope="col">
+                    Description
+                </th>
+                <th class="text-right" scope="col">
+                    Amount
+                </th>
+            </tr>
+            @foreach (var shoppingCartSummary in Model.ShoppingCartSummaryItems)
+            {
+                index++;
+                <tr>
+                    <th scope="row">@(index + ".")</th>
+                    <td>
+                        @shoppingCartSummary.ItemShortDesc
+                    </td>
+                    <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
+                </tr>
+            }
+        </table>
+    }
+}

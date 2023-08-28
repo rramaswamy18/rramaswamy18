@@ -15,7 +15,7 @@ namespace ArchitectureLibraryEmailLibrary
 {
     public class SmtpEmailService
     {
-        public void SendEmail(string emailDirectory, string aspNetUserId, KeyValuePair<string, string> fromEmailAddress, string emailSubject, string emailBody, List<KeyValuePair<string, string>> replyToEmailAddresses, List<KeyValuePair<string, string>> toEmailAddresses, string ipAddress, string execUniqueId, string loggedInUserId, List<KeyValuePair<string, string>> ccEmailAddresses = null, List<KeyValuePair<string, string>> bccEmailAddresses = null, List<string> emailAttachmentFileNames = null, string smtpClientHost = null, bool? smtpClientEnableSsl = null, string networkUsername = null, string networkPassword = null)
+        public void SendEmail(string emailDirectory, string aspNetUserId, KeyValuePair<string, string> fromEmailAddress, string emailSubject, string emailBody, List<KeyValuePair<string, string>> replyToEmailAddresses, List<KeyValuePair<string, string>> toEmailAddresses, string ipAddress, string execUniqueId, string loggedInUserId, List<KeyValuePair<string, string>> ccEmailAddresses = null, List<KeyValuePair<string, string>> bccEmailAddresses = null, List<string> emailAttachmentFileNames = null, bool pickupDirectory = true, string smtpClientHost = null, int? smtpPort = null, bool? smtpClientEnableSsl = null, string networkUsername = null, string networkPassword = null)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -59,10 +59,11 @@ namespace ArchitectureLibraryEmailLibrary
                 EmailRepository emailRepository = new EmailRepository();
                 emailRepository.SaveEmail(emailDirectory, aspNetUserId, fromEmailAddress, emailSubject, emailBody, replyToEmailAddresses, toEmailAddresses, execUniqueId, mailMessage, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames);
                 SmtpClient smtpClient = new SmtpClient();
-                if (!string.IsNullOrWhiteSpace(networkUsername))
+                if (!pickupDirectory)
                 {
                     var basicCredential = new NetworkCredential(networkUsername, networkPassword);
                     smtpClient.Host = smtpClientHost;
+                    smtpClient.Port = (int)smtpPort;
                     smtpClient.EnableSsl = smtpClientEnableSsl.Value;
                     smtpClient.UseDefaultCredentials = false;
                     smtpClient.Credentials = basicCredential;

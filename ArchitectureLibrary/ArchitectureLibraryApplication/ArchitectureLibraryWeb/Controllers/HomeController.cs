@@ -483,6 +483,37 @@ namespace ArchitectureLibraryWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [Route("RegisterLoginContactResetPassword")]
+        public ActionResult RegisterLoginContactResetPassword(string id)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "RegisterUserLoginUser";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                RegisterLoginContactResetPasswordModel registerLoginContactResetPasswordModel = archLibBL.RegisterLoginContactResetPassword(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                registerLoginContactResetPasswordModel.QueryString = id;
+                actionResult = View("RegisterLoginContactResetPassword", registerLoginContactResetPasswordModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
         [Route("RegisterUserLoginUser")]
         public ActionResult RegisterUserLoginUser(string id)
         {
@@ -497,7 +528,7 @@ namespace ArchitectureLibraryWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
+                registerUserLoginUserModel.QueryString = id;
                 actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -517,7 +548,7 @@ namespace ArchitectureLibraryWeb.Controllers
         [Route("RegisterUserProf")]
         public ActionResult RegisterUserProf(string id)
         {
-            int x = 1, y = 0, z = x / y;
+            //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "RegisterUserProf";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());

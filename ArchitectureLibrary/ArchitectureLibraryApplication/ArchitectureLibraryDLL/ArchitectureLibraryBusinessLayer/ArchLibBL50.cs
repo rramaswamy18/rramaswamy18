@@ -218,11 +218,56 @@ namespace ArchitectureLibraryBusinessLayer
             {
                 ;
             }
-            var smtpClientHost = ArchLibCache.GetApplicationDefault(clientId, "SmtpClientHost", "");
-            var networkUsername = ArchLibCache.GetApplicationDefault(clientId, "NetworkUsername", "");
-            var networkPassword = ArchLibCache.GetApplicationDefault(clientId, "NetworkPassword", "");
-            bool smtpClientEnableSsl = bool.Parse(ArchLibCache.GetApplicationDefault(clientId, "SmtpClientEnableSSL", ""));
-            emailService.SendEmail(emailDirectoryName, "", fromEmailAddress, emailSubjectText, emailBodyHtml, toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, privateKey, null, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames, smtpClientHost, smtpClientEnableSsl, networkUsername, networkPassword);
+            string emailServiceType;
+            try
+            {
+                emailServiceType = emailServiceType = Utilities.GetApplicationValue("EmailServiceType");//ConfigurationManager.AppSettings["EmailServiceType"];
+            }
+            catch
+            {
+                emailServiceType = "";
+            }
+            GetSmtpValues(emailServiceType, out bool pickupDirectory, out string smtpClientHost, out bool? smtpClientEnableSsl, out int? smtpPort, out string networkUsername, out string networkPassword, clientId, ipAddress, execUniqueId, loggedInUserId);
+            emailService.SendEmail(emailServiceType, emailDirectoryName, "", fromEmailAddress, emailSubjectText, emailBodyHtml, toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, privateKey, null, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames, pickupDirectory, smtpClientHost, smtpPort, smtpClientEnableSsl, networkUsername, networkPassword);
+        }
+        private void GetSmtpValues(string emailServiceType, out bool pickupDirectory, out string smtpClientHost, out bool? smtpClientEnableSsl, out int? smtpPort , out string networkUsername, out string networkPassword, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            if (emailServiceType == "SMTP")
+            {
+                try
+                {
+                    pickupDirectory = bool.Parse(ArchLibCache.GetApplicationDefault(clientId, "SMTP", "PickupDirectory"));
+                }
+                catch
+                {
+                    pickupDirectory = false;
+                }
+                if (pickupDirectory)
+                {
+                    smtpClientHost = null;
+                    smtpClientEnableSsl = null;
+                    smtpPort = null;
+                    networkUsername = null;
+                    networkPassword = null;
+                }
+                else
+                {
+                    smtpClientHost = ArchLibCache.GetApplicationDefault(clientId, "SMTP", "SmtpClientHost");
+                    smtpClientEnableSsl = bool.Parse(ArchLibCache.GetApplicationDefault(clientId, "SMTP", "SmtpClientEnableSsl"));
+                    smtpPort = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "SMTP", "SmtpPort"));
+                    networkUsername = ArchLibCache.GetApplicationDefault(clientId, "SMTP", "NetworkUsername");
+                    networkPassword = ArchLibCache.GetApplicationDefault(clientId, "SMTP", "NetworkPassword");
+                }
+            }
+            else
+            {
+                pickupDirectory = false;
+                smtpClientHost = null;
+                smtpClientEnableSsl = null;
+                smtpPort = null;
+                networkUsername = null;
+                networkPassword = null;
+            }
         }
         public string ViewToHtmlString(Controller controller, string viewName, object model)
         {

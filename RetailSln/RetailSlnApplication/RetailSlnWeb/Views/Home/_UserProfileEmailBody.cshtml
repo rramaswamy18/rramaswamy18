@@ -1,0 +1,20 @@
+﻿@model ArchitectureLibraryModels.PersonModel
+@using ArchitectureLibraryCacheData
+@{
+    long clientId = ArchLibCache.ClientId;
+}
+<table>
+    <tr>
+        <td style="font-family: Arial; font-size: 15px; text-align: left;">
+            <span style="font-weight: bold;">Dear @Model.FirstName @Model.LastName,</span>
+            <br /><br />
+            Thank you for updating your profile. Having the latest information will help us communicate better with you about matters that may be of mutual importance.
+            <br /><br />
+            <span style="background-color: #deecf9;">
+                Please do not hesitate to call us at @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") if you have any questions.
+                <br /><br />
+                Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@ArchLibCache.GetApplicationDefault(0, "ContactUsUrl", "" )" target="_blank">Contact Us Here</a> to let us know.
+            </span>
+        </td>
+    </tr>
+</table>

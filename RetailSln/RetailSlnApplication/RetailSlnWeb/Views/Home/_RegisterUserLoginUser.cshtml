@@ -1,0 +1,66 @@
+﻿@model ArchitectureLibraryModels.RegisterUserLoginUserModel
+@using ArchitectureLibraryMenuCacheData
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<div class="container col-md-12" style="text-align: left;">
+    <div id="divRegisterUserProfScrollIntoView" class="col-md-6" style="float: left; padding-right: 9px;">
+        @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
+    </div>
+    <div id="divLoginUserProfScrollIntoView" class="col-md-6" style="float: left; padding-left: 9px;">
+        @Html.Partial("_LoginUserProf1", Model.LoginUserProfModel)
+    </div>
+</div>
+<br style="clear: both;" />
+<div class="container col-md-12" style="text-align: left;">
+    <div class="col-md-6" style="float: left; padding-right: 9px;">
+        <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" type="button">R E G I S T E R</button>
+    </div>
+    <div class="col-md-6" style="float: left; padding-left: 9px;">
+        <button class="loginRegisterbtn" id="loginUserSave" onclick="javascript: return loginUserSave_onclick();" type="button">L O G I N</button>
+    </div>
+</div>
+@{
+    string scrollIntoViewDocumentElementId = "", focusDocumentElementId = ""; ;
+    switch (Model.QueryString)
+    {
+        case "REGISTER":
+            scrollIntoViewDocumentElementId = "divRegisterUserProfScrollIntoView";
+            focusDocumentElementId = "RegisterEmailAddress";
+            break;
+        case "LOGIN":
+            scrollIntoViewDocumentElementId = "divLoginUserProfScrollIntoView";
+            focusDocumentElementId = "LoginEmailAddress";
+            break;
+        case "":
+            break;
+        default:
+            try
+            {
+                var htmlContent = ArchLibMenuCache.MenuKVPModels.First(x => x.MenuKVPId == int.Parse(Model.RegisterUserProfModel.QueryString1)).MenuKVPValueData;
+                htmlContent = Server.MapPath("~/ClientSpecific/" + clientId + "_" + clientName + "/Documents/HtmlFiles/" + htmlContent);
+                var streamReader = new StreamReader(htmlContent);
+                htmlContent = streamReader.ReadToEnd();
+                streamReader.Close();
+                if (htmlContent != "")
+                {
+                    @Html.Raw(htmlContent)
+                }
+            }
+            catch
+            {
+            }
+            break;
+    }
+}
+<br style="clear: both;" />
+<script type="text/javascript">
+    if ("@focusDocumentElementId" != "") {
+        document.getElementById("@focusDocumentElementId").focus();
+    }
+    if ("@scrollIntoViewDocumentElementId" != "") {
+        document.getElementById("@scrollIntoViewDocumentElementId").scrollIntoView();
+    }
+</script>

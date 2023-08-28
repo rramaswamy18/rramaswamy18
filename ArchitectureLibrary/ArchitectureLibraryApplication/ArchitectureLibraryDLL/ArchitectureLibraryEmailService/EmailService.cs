@@ -12,7 +12,7 @@ namespace ArchitectureLibraryEmailService
 {
     public class EmailService
     {
-        public void SendEmail(string emailDirectory, string aspNetUserId, KeyValuePair<string, string> fromEmailAddress, string emailSubject, string emailBody, List<KeyValuePair<string, string>> toEmailAddresses, string ipAddress, string execUniqueId, string loggedInUserId, string privateKey = "", List<KeyValuePair<string, string>> replyToEmailAddresses = null, List<KeyValuePair<string, string>> ccEmailAddresses = null, List<KeyValuePair<string, string>> bccEmailAddresses = null, List<string> emailAttachmentFileNames = null, string smtpClientHost = null, bool? smtpClientEnableSsl = null, string networkUsername = null, string networkPassword = null)
+        public void SendEmail(string emailServiceType, string emailDirectory, string aspNetUserId, KeyValuePair<string, string> fromEmailAddress, string emailSubject, string emailBody, List<KeyValuePair<string, string>> toEmailAddresses, string ipAddress, string execUniqueId, string loggedInUserId, string privateKey = "", List<KeyValuePair<string, string>> replyToEmailAddresses = null, List<KeyValuePair<string, string>> ccEmailAddresses = null, List<KeyValuePair<string, string>> bccEmailAddresses = null, List<string> emailAttachmentFileNames = null, bool pickupDirectory = true, string smtpClientHost = null, int? smtpPort = null, bool? smtpClientEnableSsl = null, string networkUsername = null, string networkPassword = null)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -21,7 +21,6 @@ namespace ArchitectureLibraryEmailService
             {
                 if (string.IsNullOrWhiteSpace(fromEmailAddress.Key))
                 {
-                    fromEmailAddress = new KeyValuePair<string, string>(GetFromEmailAddress(toEmailAddresses[0].Key), fromEmailAddress.Key);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: From Email Address Override", "Key", fromEmailAddress.Key, "Value", fromEmailAddress.Value);
                     foreach (var ccEmailAddress in ccEmailAddresses)
                     {
@@ -32,15 +31,6 @@ namespace ArchitectureLibraryEmailService
                         }
                     }
                     ccEmailAddresses.Add(new KeyValuePair<string, string>(fromEmailAddress.Key, fromEmailAddress.Value));
-                }
-                string emailServiceType;
-                try
-                {
-                    emailServiceType = emailServiceType = Utilities.GetApplicationValue("EmailServiceType");//ConfigurationManager.AppSettings["EmailServiceType"];
-                }
-                catch
-                {
-                    emailServiceType = "";
                 }
                 if (replyToEmailAddresses == null)
                 {
@@ -65,7 +55,7 @@ namespace ArchitectureLibraryEmailService
                     default:
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00006000 Before SmtpEmailService.SendEmail", toEmailAddresses, "aspNetUserId", aspNetUserId);
                         SmtpEmailService smtpEmailService = new SmtpEmailService();
-                        smtpEmailService.SendEmail(emailDirectory, aspNetUserId, fromEmailAddress, emailSubject, emailBody, replyToEmailAddresses, toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames, smtpClientHost, smtpClientEnableSsl, networkUsername, networkPassword);
+                        smtpEmailService.SendEmail(emailDirectory, aspNetUserId, fromEmailAddress, emailSubject, emailBody, replyToEmailAddresses, toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames, pickupDirectory, smtpClientHost, smtpPort, smtpClientEnableSsl, networkUsername, networkPassword);
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00007000 After SmtpEmailService.SendEmail", toEmailAddresses, "aspNetUserId", aspNetUserId);
                         break;
                 }
@@ -75,19 +65,6 @@ namespace ArchitectureLibraryEmailService
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
             }
-        }
-        private string GetFromEmailAddress(string toemailAddressValue)
-        {
-            string fromEmailAddress;
-            try
-            {
-                fromEmailAddress = ArchLibCache.GetApplicationDefault(0, "FromEmailAddressDomain", toemailAddressValue.Substring(toemailAddressValue.IndexOf('@')));
-            }
-            catch
-            {
-                fromEmailAddress = "undefinedemail";
-            }
-            return fromEmailAddress;
         }
     }
 }

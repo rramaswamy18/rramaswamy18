@@ -313,6 +313,113 @@ namespace ArchitectureLibraryBusinessLayer
         {
             return new ProductsAndServicesModel();
         }
+        //RegisterLoginContactResetPassword GET
+        public RegisterLoginContactResetPasswordModel RegisterLoginContactResetPassword(string queryString, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                modelStateDictionary.Clear();
+                RegisterLoginContactResetPasswordModel registerLoginContactResetPasswordModel = new RegisterLoginContactResetPasswordModel
+                {
+                    ContactUsModel = new ContactUsModel
+                    {
+                        ContactUsTypeId = ContactUsTypeEnum.Request,
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    },
+                    LoginUserProfModel = new LoginUserProfModel
+                    {
+                        //LoginEmailAddress = "test1@email.com",
+                        //LoginPassword = "Login9#9Password",
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Success,
+                        },
+                    },
+                    QueryString = queryString,
+                    RegisterUserProfModel = new RegisterUserProfModel
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Success,
+                        },
+                    },
+                    ResetPasswordModel = new ResetPasswordModel
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    },
+                };
+                List<string> numberSessions = new List<string>
+                {
+                    "CaptchaNumberLogin0",
+                    "CaptchaNumberLogin1",
+                    "CaptchaNumberRegister0",
+                    "CaptchaNumberRegister1",
+                    "CaptchaNumberResetPassword0",
+                    "CaptchaNumberResetPassword1",
+                    "CaptchaNumberContactUs0",
+                    "CaptchaNumberContactUs1",
+                };
+                GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
+                if (registerLoginContactResetPasswordModel.ContactUsModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    registerLoginContactResetPasswordModel.ContactUsModel.CaptchaAnswerContactUs = null;
+                    registerLoginContactResetPasswordModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
+                    registerLoginContactResetPasswordModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
+                }
+                if (registerLoginContactResetPasswordModel.LoginUserProfModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    registerLoginContactResetPasswordModel.LoginUserProfModel.CaptchaAnswerLogin = null;
+                    registerLoginContactResetPasswordModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
+                    registerLoginContactResetPasswordModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
+                }
+                if (registerLoginContactResetPasswordModel.RegisterUserProfModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    registerLoginContactResetPasswordModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
+                    registerLoginContactResetPasswordModel.RegisterUserProfModel.CaptchaNumberRegister0 = httpSessionStateBase["CaptchaNumberRegister0"].ToString();
+                    registerLoginContactResetPasswordModel.RegisterUserProfModel.CaptchaNumberRegister1 = httpSessionStateBase["CaptchaNumberRegister1"].ToString();
+                }
+                if (registerLoginContactResetPasswordModel.ResetPasswordModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    registerLoginContactResetPasswordModel.ResetPasswordModel.CaptchaAnswerResetPassword = null;
+                    registerLoginContactResetPasswordModel.ResetPasswordModel.CaptchaNumberResetPassword0 = httpSessionStateBase["CaptchaNumberResetPassword0"].ToString();
+                    registerLoginContactResetPasswordModel.ResetPasswordModel.CaptchaNumberResetPassword1 = httpSessionStateBase["CaptchaNumberResetPassword1"].ToString();
+                }
+                return registerLoginContactResetPasswordModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
         //RegisterUserLoginUser GET
         public RegisterUserLoginUserModel RegisterUserLoginUser(string queryString, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

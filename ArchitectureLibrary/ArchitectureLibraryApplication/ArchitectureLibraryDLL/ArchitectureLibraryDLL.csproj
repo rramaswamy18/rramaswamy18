@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{25A0BC0B-6C0B-47B5-8534-95B616179701}</ProjectGuid>
+    <ProjectGuid>{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ArchitectureLibraryDLL</RootNamespace>
     <AssemblyName>ArchitectureLibraryDLL</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -91,8 +91,8 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.7.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -263,6 +263,7 @@
     <Compile Include="ArchitectureLibraryModels\PrivacyPolicyModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ProductsAndServicesModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ProductsModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\RegisterLoginContactResetPasswordModel.cs" />
     <Compile Include="ArchitectureLibraryModels\RegisterUserLoginUserModel.cs" />
     <Compile Include="ArchitectureLibraryModels\RegisterUserProfModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ResetPasswordModel.cs" />
@@ -301,9 +302,6 @@
     <None Include="ArchitectureLibraryImageLibrary\Fonts\SEGOESC.TTF" />
     <None Include="ArchitectureLibraryImageLibrary\Fonts\SEGOESCB.TTF" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ArchitectureLibraryModels\RegisterUserProfModel.cs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ArchitectureLibraryMenuService\ArchitectureLibraryMenuBusinessLayer\" />
