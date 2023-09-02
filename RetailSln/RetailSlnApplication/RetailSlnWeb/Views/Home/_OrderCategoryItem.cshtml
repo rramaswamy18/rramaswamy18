@@ -1,0 +1,197 @@
+﻿@model long
+@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    @BuildOrderCategoryItemHier(Model)
+}
+@helper BuildOrderCategoryItemHier(long parentCategoryId)
+{
+    long clientId = ArchLibCache.ClientId;
+    string clientName = ArchLibCache.ClientName;
+    CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[parentCategoryId];
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    <div class="col-md-12" style="justify-content: center; text-align: center; vertical-align: bottom; width: 100%;">
+        @BuildOrderCategoryItem(categoryItemHierModels)
+    </div>
+}@*helper BuildOrderCategoryItemHier(long parentCategoryId)*@
+@helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)
+{
+    long clientId = ArchLibCache.ClientId;
+    string clientName = ArchLibCache.ClientName;
+    string categoryOrItem, imageDivWidth, imageHeight, imageWidth;
+    int imageCount = 0, imageCountIndex = 0, imageCountPerRow;
+    List<CategoryItemHierModel> categoryItemHierModelsRecursive;
+    CategoryLayoutModel categoryLayoutModel;
+    foreach (var categoryItemHierModel in categoryItemHierModels)
+    {
+        categoryOrItem = categoryItemHierModel.CategoryOrItem;
+        imageDivWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageDivWidth");
+        imageHeight = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageHeight");
+        imageWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageWidth");
+        imageCountPerRow = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageCountPerRow"));
+
+        if (categoryItemHierModel.CategoryId != null && categoryItemHierModel.ProcessType == "Recursive")
+        {
+            <a href="@Url.Action("Index", "Home")" style="color: #000000; padding-right: 18px;" title="Return to categories"><i class="fa fa-arrow-circle-left" style="font-size: 36px;"></i></a>
+            <span style="color: #a54000; font-family: 'Comic Sans MS'; font-size: 27px; font-weight: bold; letter-spacing: 4px; padding-left: 18px; padding-right: 18px; text-align: center; text-transform: uppercase;">@categoryItemHierModel.CategoryModel.CategoryDesc</span>
+            categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[categoryItemHierModel.CategoryModel.CategoryId.Value];
+            categoryItemHierModelsRecursive = categoryLayoutModel.CategoryItemHierModels;
+            <br style="clear: both;" />
+            @BuildOrderCategoryItem(categoryItemHierModelsRecursive)
+        }//if (categoryItemHierModel.CategoryId != null && categoryItemHierModel.ProcessType == "Recursive")*@
+        else
+        {
+            imageCount++;
+            imageCountIndex++;
+            if (categoryItemHierModel.CategoryId != null)
+            {
+                <div style="border-radius: 25px; color: #000000; display: inline-block; font-size: 20px; font-weight: bold; margin-left: auto; margin-right: auto; padding-right: 45px; width: @imageDivWidth;">
+                    @BuildCategory(categoryItemHierModel.CategoryModel, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                </div>
+            }
+            else
+            {
+                <div style="display: inline-block; margin-left: auto; margin-right: auto; padding-right: 27px; vertical-align: top; width: @imageDivWidth;">
+                    @BuildItem(categoryItemHierModel.ItemModel, imageCountIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                </div>
+            }//else (categoryItemHierModel.CategoryId != null && categoryItemHierModel.ProcessType == "Recursive")
+            if (imageCountIndex == imageCountPerRow)
+            {
+                <br style="clear: both;" />
+                imageCountIndex = 0;
+            }//if (imageCountIndex == imageCountPerRow - 1)
+            else
+            {
+
+            }//if (imageCountIndex == imageCountPerRow - 1)
+        }//if (categoryItemHierModel.CategoryId != null && categoryItemHierModel.ProcessType == "Recursive")
+    }//foreach (var categoryItemHierModel in categoryItemHierModels)
+    <br style="clear: both;" />
+}@*helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)*@
+@helper BuildCategory(CategoryModel categoryModel, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+{
+    <a href="@Url.Action("OrderCategoryItem", "Home", new { id = categoryModel.CategoryId })" style="color: #000000; text-decoration: underline;">
+        @if (categoryOrItem == "Category")
+        {
+            <img class="img-responsive" style="background-image: url('./ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName'); background-size: 100%; border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
+        }
+        else
+        {
+            <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
+        }
+        <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">@categoryModel.CategoryDesc</div>
+    </a>
+}
+@helper BuildItem(ItemModel itemModel, int i, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+{
+    int k;
+    <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemModel.ImageName" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
+    if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
+    {
+        <img class="img-responsive" src="~/Images/OutofStock.png" style="position: absolute; top: 0px; left: 14px; height: auto; max-width: @imageWidth; width: 100%;" />
+    }
+    <span style="color: #000000; font-weight: bold; padding-right: 5px;">@itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</span>
+    for (k = 0; k < itemModel.ItemStarCount; k++)
+    {
+        <span class="fa fa-star" style="color: #ff9900;"></span>
+    }
+    for (; k < 5; k++)
+    {
+        <span class="fa fa-star-o" style="color: #ff9900;"></span>
+    }
+    <br style="clear: both;">
+    <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">@itemModel.ItemShortDesc</div>
+    if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
+    {
+        <span style="color: #a54000; font-family: Arial; font-size: 15px; font-style: italic; font-weight: 900; text-decoration: underline;">Out of Stock&nbsp;</span>
+        <br />
+        <span style="color: #a54000; font-family: Arial; font-size: 12px; font-weight: 800;">Expected - </span>
+        if (!string.IsNullOrEmpty(itemModel.ExpectedAvailability))
+        {
+            <span style="color: #0000ff; font-family: Arial; font-size: 11px; font-weight: 800;">@DateTime.Parse(itemModel.ExpectedAvailability).ToString("MMM-dd-yyyy")</span>
+        }
+        if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        {
+            <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
+            <br />
+        }
+        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 15px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+    }
+    else
+    {
+        <span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>
+        if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        {
+            <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
+            <br />
+        }
+        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 15px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+        <br />
+        <div style="float: left; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">Qty : </div>
+        <input class="form-control" id="orderQty@(i)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(i));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty")" />
+        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@i);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
+    }
+    <br style="clear: both;">
+    <span id="itemId@(i)" style="display: none;">@itemModel.ItemId</span>
+}
+<script type="text/javascript">
+    function addToCart_onclick(index) {
+        console.log("addToCart_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        document.getElementById("addToCart" + index).innerHTML = "";
+        try {
+            var itemId = document.getElementById("itemId" + index).innerText;
+            var orderQty = document.getElementById("orderQty" + index).value;
+            //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
+            if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + index).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + index).getAttribute("min") && orderQty <= document.getElementById("orderQty" + index).getAttribute("max")) {
+            }
+            else {
+                $('#loadingModal').modal('hide');
+                document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
+                document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Invalid qty</span><br />";
+                return false;
+            }
+            var url = "/Home/AddToCart";
+            $.ajax({
+                url: url,
+                type: "GET",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                dataType: "html",
+                data: { "itemId": itemId, "orderQty": orderQty },
+                async: true,
+                success: function (responseData, textStatus, request) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCart_onclick", "00090000", "SUCCESS!!!");
+                    var jsonData = JSON.parse(responseData);
+                    document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
+                    document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-check' style='color: #00d000; padding-right: 5px;'></i><span style='color: #0000ff;'>Added to cart</span><br />";
+                    document.getElementById("orderQty" + index).value = "@ArchLibCache.GetApplicationDefault(@ArchLibCache.ClientId, "OrderProcess", "DefaultOrderQty")";
+                },
+                error: function (xhr, exception) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCart_onclick", "00099000", "ERROR???");
+                    console.log(exception, xhr);
+                    var jsonData = JSON.parse(xhr.responseText);
+                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                    document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
+                }
+            });
+        }
+        catch (err) {
+            alert("Please fix errors to continue???");
+        }
+        return false;
+    }
+    function orderQty_oninput(index) {
+        if (document.getElementById("orderQty" + index).value.length > document.getElementById("orderQty" + index).getAttribute("maxlength")) {
+            document.getElementById("orderQty" + index).value = document.getElementById("orderQty" + index).value.substr(0, document.getElementById("orderQty" + index).getAttribute("maxlength"));
+        }
+    }
+</script>
+@*https://onlinetexttools.com/convert-text-to-image*@

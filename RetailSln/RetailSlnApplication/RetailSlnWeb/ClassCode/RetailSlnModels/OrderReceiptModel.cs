@@ -1,0 +1,16 @@
+﻿using ArchitectureLibraryModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace RetailSlnModels
+{
+    public class OrderReceiptModel
+    {
+        public DeliveryInfoDataModel DeliveryInfoDataModel { set; get; }
+        public PaymentDataModel PaymentDataModel { set; get; }
+        public ShoppingCartModel ShoppingCartModel { set; get; }
+        public ResponseObjectModel ResponseObjectModel { set; get; }
+    }
+}

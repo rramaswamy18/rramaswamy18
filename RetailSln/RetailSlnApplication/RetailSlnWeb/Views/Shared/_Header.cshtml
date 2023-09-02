@@ -1,80 +1,198 @@
 ﻿@using ArchitectureLibraryCacheData
 @{
+    //DivineBija.in --> 97
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
 <style>
-    /*.starchecked {
-            color: #ff9900;
-        }
-
-        .badge {
-            padding-left: 9px;
-            padding-right: 9px;
-            -webkit-border-radius: 9px;
-            -moz-border-radius: 9px;
-            border-radius: 9px;
-        }
-
-        .label-warning[href],
-        .badge-warning[href] {
-            background-color: #c67605;
-        }*/
-
-    .headfirst {
-        background-color: black;
-        color: white;
+    .starchecked {
+        color: #ff9900;
     }
 
-    .hphone {
-        color: #e8ac1f;
+    .badge {
+        padding-left: 9px;
+        padding-right: 9px;
+        -webkit-border-radius: 9px;
+        -moz-border-radius: 9px;
+        border-radius: 9px;
     }
 
-    .footer {
-        color: white;
-        background-color: #464646;
+    .label-warning[href],
+    .badge-warning[href] {
+        background-color: #c67605;
     }
 
-    .footerbelow {
-        text-align: center;
-        background-color: black;
-        color: white;
+    .shoppingCartTotalAmount {
+        font-size: 15px;
+        background: #0000ff;
+        color: #ffffff;
+        padding: 0 5px;
+        vertical-align: top;
+        margin-left: -10px;
+    }
+
+    .shoppingCartItemsCount {
+        font-size: 15px;
+        background: #ff0000;
+        color: #ffffff;
+        padding: 0 5px;
+        vertical-align: top;
+        margin-left: -10px;
     }
 </style>
-<section id="header" class="headfirst">
-    <div class="container" style="margin-left: auto; margin-right: auto;">
-        <div class="row">
-            <div style="padding-top: 5px; padding-left: 18px;" class="col-md-4">
-                <h5 style="font-size: 12px; font-weight: bold;">
-                    <span style="font-size: 11px;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessTiming", "")</span>
-                </h5>
-            </div>
-            <div style="padding-top: 5px;" class="col-md-2">
-                <h5 style="font-size: 12px; font-weight: bold;">
-                    <span style="color: #ffffff;">Call </span>
-                    <a href="tel:@long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "")).ToString("1-###-###-####")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")">
-                        @long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "")).ToString("(###) ###-####")
-                    </a>
-                    <i style="color: #ffffff; font-weight: bold;" class="fa fa-phone"></i>
-                </h5>
-            </div>
-            <div style="padding-top: 5px;" class="col-md-2">
-                <h5 style="font-size: 12px; font-weight: bold;"><span style="color: #ffffff;">Text </span><a href="sms:@long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhone", "")).ToString("1-###-###-####")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")">@long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhone", "")).ToString("(###) ###-####")</a><img src="~/Images/Comments.png" style="padding-left: 3px; width: 18px; height: 18px;" /></h5>
-            </div>
-            <div style="padding-top: 5px; vertical-align: top;" class="col-md-4">
-                <h5 style="font-size: 12px; font-weight: bold;">
-                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")">
-                        @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")
-                    </a>
-                    <i style="color: darkgray; font-size: 12px;" class="fa fa-envelope"></i>
-                    <i style="color: darkgray; font-size: 14px; padding-left: 27px; padding-right: 5px;" class="fa fa-facebook"></i>
-                    <i style="color:darkgray; font-size: 14px; padding-right: 5px;" class="fa fa-google-plus"></i>
-                    <i style="color: darkgray; font-size: 14px;" class="fa fa-twitter"></i>
-                </h5>
-            </div>
-        </div>
-    </div>
-</section>
-<div style="margin-left: auto; margin-right: auto;">
-    <a href="@Url.Action("Index", "Home")" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")"><img class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_000.webp" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") | @ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") | @ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "")" style="display: block; margin: auto; height: auto; max-width: 855px; width: 100%;" /></a>
+<div style="float: left;">
+    <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: 171px; width: 171px;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" />
 </div>
+<div style="float: right; padding-left: 9px;">
+    <table style="padding: 0px;">
+        <tr>
+            <td style="vertical-align: top; width: 180px;">
+                <table>
+                    <tr>
+                        <td style="padding-right: 3px; text-align: right; vertical-align: top;">
+                            <i class="fa fa-envelope" style="padding-right: 6px;"></i>
+                        </td>
+                        <td style="padding-right: 3px; text-align: left; vertical-align: top;">
+                            <a href="@Url.Action("ContactUs", "Home")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessEmail", "")</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">
+                            <i class="fa fa-phone" style="font-size: 16px; padding-right: 9px;"></i>
+                        </td>
+                        <td style="text-align: left;">
+                            <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">
+                            <img class="img-responsive" src="~/Images/SMSIcon2.png" style="height: 27px; padding-right: 5px; width: 27px;" />
+                        </td>
+                        <td style="text-align: left;">
+                            <a href="sms:@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: top;">
+                            <i class="fa fa-dot-circle-o" style="font-size: 16px; height: 27px; padding-right: 5px; width: 27px;"></i>
+                        </td>
+                        <td style="font-size: 14px; text-align: left;">
+                            @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")<br />@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")-@ArchLibCache.GetApplicationDefault(clientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryAbbrev", "")
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top; width: 171px;">
+                <table>
+                    <tr>
+                        <td style="text-align: right;">
+                            <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="padding-bottom: 2px;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #c3c3c3; font-size: 14px; font-weight: bold; padding-left: 3px; padding-right: 3px; text-align: left; vertical-align: top;">
+                            @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="padding-left: 27px; text-align: left;">
+    <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span>
+    &nbsp;
+    <span style="color: #dc3131; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span>
+    &nbsp;
+    <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
+    <br />
+    <span style="font-weight: 900; color: #000000;">
+        A story of motivation, passion and unconditional commitment
+    </span>
+    <br /><br />
+    <table>
+        <tr>
+            <td>
+                <table style="padding: 0px;">
+                    <tr>
+                        <td style="white-space: nowrap; vertical-align: bottom;">
+                            <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #000000; font-size: 15px; font-weight: bold; text-decoration: underline;" title="Register, Login, Reset Password, Contact Us">
+                                <img alt="Register, Login, Reset Password, Contact Us" src="~/Images/SignIn.png" style="height: 36px; width: 36px;" title="Click to perform Register, Login, Reset Password, Contact Us" /><br />
+                                Sign In
+                            </a>
+                        </td>
+                        <td style="padding-left: 18px; vertical-align: bottom;">
+                            <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
+                                <i class="fa" style="font-size:24px">&#xf07a;</i><span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span><span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount" style="padding-left: 9px;"></span>
+                                <br />
+                                <span style="color: #000000; font-size: 15px; text-decoration: underline;">Checkout</span>
+                            </a>
+                        </td>
+                        <td style="padding-left: 18px; vertical-align: bottom;">
+                            @Html.Partial("_HeaderMenu")
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        @*<tr>
+                <td style="padding-top: 6px; text-align: center; width: 100%;">
+                    @Html.Partial("_HeaderMenu")
+                </td>
+            </tr>*@
+    </table>
+</div>
+<script type="text/javascript">
+    var url = "/Home/ShoppingCartSummary/";
+    $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "html",
+        async: true,
+        success: function (responseData, textStatus, request) {
+            var jsonData = JSON.parse(responseData);
+            document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
+            document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
+        },
+        error: function (xhr, exception) {
+            console.log(43, "ERROR???", exception, xhr);
+        }
+    });
+    function checkoutValidate_onclick() {
+        console.log("00000000", "checkoutValidate_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        var url = "/Home/CheckoutValidate";
+        $.ajax({
+            url: url,
+            type: "POST",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (responseData, textStatus, request) {
+                console.log(responseData);
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "checkoutValidate_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    if (responseData.success) {
+                        window.location.href = "/Home/Checkout/";
+                    }
+                    else {
+                        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                    }
+                }
+                else {
+                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                }
+                console.log("00090000", "checkoutValidate_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("checkoutValidate_onclick", "00099000", "ERROR???");
+                document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout???";
+            }
+        });
+        return false;
+    }
+</script>

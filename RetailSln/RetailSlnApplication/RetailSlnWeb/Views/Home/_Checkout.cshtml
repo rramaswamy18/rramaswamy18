@@ -1,0 +1,170 @@
+﻿@model RetailSlnModels.CheckoutModel
+<div class="container" id="divOrderProcess">
+    <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+        Checkout
+    </h2>
+    <div class="col-md-6" style="float: left;">
+        <div>
+            @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+        </div>
+        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+        <h3 style="font-weight: bold;">L O G I N <span style="color: #ff0000;">(Returning users)</span></h3>
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+        }
+        else
+        {
+            <ul style="font-weight: bold;">
+                <li>
+                    Please enter email address, login password
+                </li>
+                <li>
+                    Answer captcha question
+                </li>
+                <li>
+                    Click <span style="color: #0000ff; font-size: 18px;">L O G I N</span> to continue
+                </li>
+                <li>
+                    Login and enjoy the features of our rich product
+                </li>
+                <li style="color: #ff0000;">
+                    Did you forget your password or like to reset - please scroll down
+                </li>
+            </ul>
+            @*<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />*@
+            <form id="formLoginUserProfData">
+                @Html.Partial("_LoginUserProfData", Model.LoginUserProfModel)
+            </form>
+            <button class="loginRegisterbtn" id="checkoutLoginUser" onclick="javascript: return checkoutLoginUser_onclick();" type="button">L O G I N</button>
+        }
+    </div>
+    <div class="col-md-6" style="float: left;">
+        @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
+        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+        @Html.Partial("_ResetPassword", Model.ResetPasswordModel)
+    </div>
+</div>
+<script>
+    function giftCertBalance_onclick() {
+        console.log("00000000", "giftCertBalance_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/GiftCertBalance?";
+        var queryString = "giftCertNumber=" + document.getElementById("GiftCertNumber").value + "&giftCertKey=" + document.getElementById("GiftCertKey").value;
+        $.ajax({
+            url: url + queryString,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            //data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                if (responseData.success) {
+                    document.getElementById("giftCertBalanceAmount").innerHTML = responseData.giftCertBalanceAmount;
+                }
+                else {
+                    document.getElementById("giftCertBalanceAmount").innerHTML = responseData.errorMessage;
+                }
+                console.log("00090000", "giftCertBalance_onclick", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("giftCertBalanceAmount").innerHTML = xhr.responseText.errorMessage;
+                console.log("00099000", "giftCertBalance_onclick", "ERROR???", exception, xhr);
+            }
+        });
+        return false;
+    }
+    function checkoutLoginUser_onclick() {
+        console.log("00000000", "checkoutLoginUser_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/Checkout";
+        var postData = $("#formLoginUserProfData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                //document.getElementById("divOrderProcess").innerHTML = responseData;
+                //console.log("00090000", "checkoutLoginUser_onclick", "SUCCESS!!!");
+                alert(responseData.processMessage);
+                alert(responseData.success);
+                console.log(responseData);
+                if (responseData.success) {
+                    alert(1);
+                    document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                    alert(2);
+                }
+                else {
+                    alert(3);
+                    document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
+                    alert(4);
+                }
+                console.log("00001000", "checkoutLoginUser_onclick success", responseData.processMessage);
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                alert(2);
+                document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
+                console.log("00099000", "checkoutLoginUser_onclick", "ERROR???", exception, xhr);
+            }
+        });
+    }
+    function deliveryInfoSave_onclick() {
+        console.log("00000000", "deliveryInfoSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/DeliveryInfo";
+        var postData = $("#formDeliveryInfoData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("divOrderProcess").innerHTML = responseData;
+                console.log("00090000", "deliveryInfoSave_onclick", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formDeliveryInfoData").innerHTML = xhr.responseText;
+                console.log("00099000", "deliveryInfoSave_onclick", "ERROR???", exception, xhr);
+            }
+        });
+    }
+    function paymentSave_onclick() {
+        console.log("00000000", "paymentSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/Payment";
+        var postData = $("#formPaymentData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("divOrderProcess").innerHTML = responseData;
+                document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
+                document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
+                document.getElementById("divOrderProcess").scrollIntoView();
+                console.log("00090000", "paymentSave_onclick", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formPaymentData").innerHTML = xhr.responseText;
+                console.log("00099000", "paymentSave_onclick", "ERROR???", exception, xhr);
+            }
+        });
+    }
+</script>
