@@ -4,11 +4,11 @@
 * intended to be used only for design-time IntelliSense.  Please use the
 * standard jQuery library for all runtime use.
 *
-* Comment version: 3.7.0
+* Comment version: 3.7.1
 */
 
 /*!
-* jQuery JavaScript Library v3.7.0
+* jQuery JavaScript Library v3.7.1
 * http://jquery.com/
 *
 * Includes Sizzle.js
