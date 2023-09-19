@@ -59,7 +59,7 @@
                     </tr>
                     <tr>
                         <td style="text-align: right;">
-                            <i class="fa fa-phone" style="font-size: 16px; padding-right: 9px;"></i>
+                            <i class="fa fa-phone" style="padding-right: 9px;"></i>
                         </td>
                         <td style="text-align: left;">
                             <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>
@@ -75,9 +75,9 @@
                     </tr>
                     <tr>
                         <td style="text-align: center; vertical-align: top;">
-                            <i class="fa fa-dot-circle-o" style="font-size: 16px; height: 27px; padding-right: 5px; width: 27px;"></i>
+                            <i class="fa fa-dot-circle-o" style="height: 27px; padding-right: 5px; width: 27px;"></i>
                         </td>
-                        <td style="font-size: 14px; text-align: left;">
+                        <td style="text-align: left;">
                             @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")<br />@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")-@ArchLibCache.GetApplicationDefault(clientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryAbbrev", "")
                         </td>
                     </tr>
@@ -91,7 +91,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="background-color: #c3c3c3; font-size: 14px; font-weight: bold; padding-left: 3px; padding-right: 3px; text-align: left; vertical-align: top;">
+                        <td style="background-color: #c3c3c3; font-weight: bold; padding-left: 3px; padding-right: 3px; text-align: left; vertical-align: top;">
                             @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
                         </td>
                     </tr>
@@ -110,26 +110,25 @@
     <span style="font-weight: 900; color: #000000;">
         A story of motivation, passion and unconditional commitment
     </span>
-    <br /><br />
     <table>
         <tr>
             <td>
                 <table style="padding: 0px;">
                     <tr>
-                        <td style="white-space: nowrap; vertical-align: bottom;">
-                            <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #000000; font-size: 15px; font-weight: bold; text-decoration: underline;" title="Register, Login, Reset Password, Contact Us">
-                                <img alt="Register, Login, Reset Password, Contact Us" src="~/Images/SignIn.png" style="height: 36px; width: 36px;" title="Click to perform Register, Login, Reset Password, Contact Us" /><br />
+                        <td style="text-align: left; vertical-align: bottom; white-space: nowrap;">
+                            <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;" title="Register, Login, Reset Password, Contact Us">
+                                <img alt="Register, Login, Reset Password, Contact Us" src="~/Images/SignIn.png" style="height: 45px; width: 45px;" title="Click to perform Register, Login, Reset Password, Contact Us" /><br />
                                 Sign In
                             </a>
                         </td>
-                        <td style="padding-left: 18px; vertical-align: bottom;">
+                        <td style="padding-left: 18px; text-align: left; vertical-align: bottom; white-space: nowrap;">
                             <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
-                                <i class="fa" style="font-size:24px">&#xf07a;</i><span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span><span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount" style="padding-left: 9px;"></span>
+                                <i class="fa" style="font-size:24px">&#xf07a;</i><span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
                                 <br />
-                                <span style="color: #000000; font-size: 15px; text-decoration: underline;">Checkout</span>
+                                <span style="color: #000000; text-decoration: underline;">Checkout</span>
                             </a>
                         </td>
-                        <td style="padding-left: 18px; vertical-align: bottom;">
+                        <td style="padding-left: 18px; text-align: left; vertical-align: bottom; white-space: nowrap;">
                             @Html.Partial("_HeaderMenu")
                         </td>
                     </tr>
@@ -137,10 +136,10 @@
             </td>
         </tr>
         @*<tr>
-                <td style="padding-top: 6px; text-align: center; width: 100%;">
-                    @Html.Partial("_HeaderMenu")
-                </td>
-            </tr>*@
+            <td style="padding-top: 6px; text-align: center; width: 100%;">
+                @Html.Partial("_HeaderMenu")
+            </td>
+        </tr>*@
     </table>
 </div>
 <script type="text/javascript">
@@ -176,7 +175,7 @@
                 console.log("00001000", "checkoutValidate_onclick success", responseData.processMessage);
                 if (responseData.success) {
                     if (responseData.success) {
-                        window.location.href = "/Home/Checkout/";
+                        window.location.href = "/Checkout/";
                     }
                     else {
                         document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;

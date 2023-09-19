@@ -1,12 +1,13 @@
 ﻿@model ArchitectureLibraryModels.RegisterUserProfModel
-<h3 style="font-size: 24px; font-weight: bold;"><span style="color: #000000; letter-spacing: 9px; text-transform: uppercase;">register</span>&nbsp;<span style="color: #0000ff; font-size: 20px;">(First time users)</span></h3>
+<h3 style="font-weight: bold;">R E G I S T E R <span style="color: #0000ff;">(First time users)</span></h3>
 @if (!ViewData.ModelState.IsValid)
 {
+    <div id="divRegisterUserProfScrollIntoView" style="font-weight: bold;"></div>
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
 }
 else
 {
-    <ul style="font-size: 14px; font-weight: bold;">
+    <ul style="font-weight: bold;">
         <li>
             Please enter email address, confirm email address, telephone#
         </li>
@@ -30,10 +31,9 @@ else
     <form id="formRegisterUserProfData">
         @Html.Partial("_RegisterUserProfData", Model)
     </form>
-    <p style="font-size: 14px;">By creating an account you agree to our <a href="@Url.Action("PrivacyPolicy", "Home")" style="font-weight: bold; text-decoration: underline;" target="_blank">Terms & Privacy</a>.</p>
-    @*<button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" type="button">R E G I S T E R</button>*@
+    <p>By creating an account you agree to our <a href="@Url.Action("PrivacyPolicy", "Home")" target="_blank">Terms & Privacy</a>.</p>
+    <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">register</button>
     <script type="text/javascript">
-        document.getElementById("RegisterEmailAddress").focus();
         function registerUserSave_onclick() {
             console.log("00000000", "registerUserSave_onclick", "Enter");
             $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

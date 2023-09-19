@@ -1,8 +1,10 @@
 ﻿@model ArchitectureLibraryModels.ContactUsModel
-<h3 style="font-size: 24px; font-weight: bold; letter-spacing: 9px; text-transform: uppercase;">contact us</h3>
+<h3 style="font-weight: bold; letter-spacing: 9px; text-transform: uppercase;">contact us</h3>
 <form id="formContactUsData">
     @Html.Partial("_ContactUsData", Model)
 </form>
+<button class="loginRegisterbtn" id="contactUsSave" onclick="javascript: return contactUsSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">submit</button>
+<br style="clear: both;" />
 <script type="text/javascript">
     function contactUsSave_onclick() {
         console.log("00000000", "contactUsSave_onclick");
@@ -32,5 +34,4 @@
             }
         });
     }
-
 </script>

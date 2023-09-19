@@ -1,0 +1,72 @@
+﻿@{
+    //Text, Action, Controller, Width, Target
+    List<string> menuItems = new List<string>
+    {
+        "Home", "Index", "SVCCTempleSacramento", "", "",
+        "About Us", "AboutUs", "SVCCTempleSacramento", "", "",
+        "Contact Us", "ContactUs", "SVCCTempleSacramento", "", "",
+        "Calendar", "Calendar", "SVCCTempleSacramento", "", "",
+        "Festivals", "TempleFestivals", "SVCCTempleSacramento", "", "",
+        "Sankalpam Info", "SankalpamInfo", "SVCCTempleSacramento", "", "",
+        "Donation(s)", "Sponsorship", "SVCCTempleSacramento", "", "",
+    };
+}
+<style>
+    .menuul {
+        list-style-type: none;
+        margin: auto 0;
+        padding: 0;
+        /*overflow:hidden;*/
+        display: inline-block;
+    }
+
+    .menuli {
+        float: left;
+        display: inline;
+        /*padding-left: 6px;*/
+        padding-right: 15px;
+    }
+
+        .menuli a {
+            color: #282424;
+            display: inline;
+            float: left;
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            text-decoration: underline;
+            text-decoration-color: #000000;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 5px;
+        }
+
+            .menuli a:hover {
+                text-decoration: underline;
+                text-decoration-color: #61ce70;
+                text-decoration-thickness: 3px;
+                text-underline-offset: 5px;
+            }
+
+            .menuli a.active {
+                text-decoration: underline;
+                text-decoration-color: #61ce70;
+                text-decoration-thickness: 3px;
+                text-underline-offset: 5px;
+            }
+</style>
+<div class="menu" style="margin: 0 auto; text-align: center; width: 100%;">
+    <ul class="menuul">
+        @{
+            for (int i = 0; i < 35; i = i + 5)
+            {
+                <li class="menuli"><a href="@Url.Action(menuItems[i + 1], menuItems[i + 2])">@menuItems[i]</a></li>
+            }
+        }
+    </ul>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery('.menu').meanmenu();
+        jQuery(".menuli a").css({ "width": "100%", "padding": "3px" });
+    });
+</script>

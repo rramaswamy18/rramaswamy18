@@ -25,7 +25,7 @@ namespace ArchitectureLibraryWeb
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
-            //Begin Ravi R Aug 18 2023
+            //Begin Ravi Sep 4 2023
             bundles.Add(new StyleBundle("~/Content/css0").Include(
                       "~/Content/jquery-ui.css",
                       "~/Content/bootstrap.css",
@@ -42,17 +42,7 @@ namespace ArchitectureLibraryWeb
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/jquery.meanmenu.js",
                       "~/Include/javaScriptCode-{version}.js"));
-            bundles.Add(new ScriptBundle("~/bundles/scripts1").Include(
-                      "~/Scripts/jquery-{version}.js",
-                      "~/Scripts/jquery-ui.js",
-                      "~/Scripts/jquery.validate.js",
-                      "~/Scripts/jquery.validate.unobtrusive.js",
-                      "~/Scripts/jquery.validate.unobtrusive-ajax.js",
-                      "~/Scripts/jquery.unobtrusive-ajax.js"));
-            bundles.Add(new ScriptBundle("~/bundles/scripts2").Include(
-                      "~/Scripts/jquery.meanmenu.js",
-                      "~/Include/javaScriptCode-{version}.js"));
-            //End Ravi R Aug 18 2023
+            //End Ravi Sep 4 2023
         }
     }
 }

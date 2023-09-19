@@ -21,7 +21,6 @@ namespace ArchitectureLibraryWeb
 
             Bootstrap.Initialize(HttpContext.Current);
         }
-
         protected void Application_BeginRequest()
         {
             if (!Context.Request.IsSecureConnection && !Context.Request.IsLocal && ArchLibCache.RedirectToHttps) // to avoid switching to https when local testing

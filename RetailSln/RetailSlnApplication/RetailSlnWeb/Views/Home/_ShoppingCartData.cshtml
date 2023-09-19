@@ -106,7 +106,7 @@
                 index++;
                 <tr>
                     <th scope="row">@(index + ".")</th>
-                    <td>
+                    <td class="text-left">
                         @shoppingCartSummary.ItemShortDesc
                     </td>
                     <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>

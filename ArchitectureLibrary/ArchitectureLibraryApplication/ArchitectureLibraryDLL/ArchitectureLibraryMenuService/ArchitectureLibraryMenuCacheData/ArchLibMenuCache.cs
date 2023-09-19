@@ -60,6 +60,8 @@ namespace ArchitectureLibraryMenuCacheData
                         ActionName = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "ActionName").MenuKVPValueData,
                         AjaxUpdateTargetId = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "AjaxUpdateTargetId").MenuKVPValueData,
                         ControllerName = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "ControllerName").MenuKVPValueData,
+                        //HrefTarget = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "HrefTarget").MenuKVPValueData,
+                        HrefWidth = "100%",//menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "HrefWidth").MenuKVPValueData,
                         LinkText = menuLayoutModelTemp.MenuListDesc,
                         QueryString = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "QueryString").MenuKVPValueData,
                         RedirectActionName = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "RedirectActionName").MenuKVPValueData,

@@ -431,18 +431,8 @@ namespace ArchitectureLibraryBusinessLayer
                 modelStateDictionary.Clear();
                 RegisterUserLoginUserModel registerUserLoginUserModel = new RegisterUserLoginUserModel
                 {
-                    ContactUsModel = new ContactUsModel
-                    {
-                        ContactUsTypeId = ContactUsTypeEnum.Request,
-                        ResponseObjectModel = new ResponseObjectModel
-                        {
-                            ResponseTypeId = ResponseTypeEnum.Info,
-                        },
-                    },
                     LoginUserProfModel = new LoginUserProfModel
                     {
-                        //LoginEmailAddress = "test1@email.com",
-                        //LoginPassword = "Login9#9Password",
                         ResponseObjectModel = new ResponseObjectModel
                         {
                             ResponseTypeId = ResponseTypeEnum.Success,
@@ -456,13 +446,6 @@ namespace ArchitectureLibraryBusinessLayer
                             ResponseTypeId = ResponseTypeEnum.Success,
                         },
                     },
-                    ResetPasswordModel = new ResetPasswordModel
-                    {
-                        ResponseObjectModel = new ResponseObjectModel
-                        {
-                            ResponseTypeId = ResponseTypeEnum.Info,
-                        },
-                    },
                 };
                 List<string> numberSessions = new List<string>
                 {
@@ -470,22 +453,8 @@ namespace ArchitectureLibraryBusinessLayer
                     "CaptchaNumberLogin1",
                     "CaptchaNumberRegister0",
                     "CaptchaNumberRegister1",
-                    "CaptchaNumberResetPassword0",
-                    "CaptchaNumberResetPassword1",
-                    "CaptchaNumberContactUs0",
-                    "CaptchaNumberContactUs1",
                 };
                 GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
-                if (registerUserLoginUserModel.ContactUsModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
-                {
-                    ;
-                }
-                else
-                {
-                    registerUserLoginUserModel.ContactUsModel.CaptchaAnswerContactUs = null;
-                    registerUserLoginUserModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
-                    registerUserLoginUserModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
-                }
                 if (registerUserLoginUserModel.LoginUserProfModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
                 {
                     ;
@@ -505,16 +474,6 @@ namespace ArchitectureLibraryBusinessLayer
                     registerUserLoginUserModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
                     registerUserLoginUserModel.RegisterUserProfModel.CaptchaNumberRegister0 = httpSessionStateBase["CaptchaNumberRegister0"].ToString();
                     registerUserLoginUserModel.RegisterUserProfModel.CaptchaNumberRegister1 = httpSessionStateBase["CaptchaNumberRegister1"].ToString();
-                }
-                if (registerUserLoginUserModel.ResetPasswordModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
-                {
-                    ;
-                }
-                else
-                {
-                    registerUserLoginUserModel.ResetPasswordModel.CaptchaAnswerResetPassword = null;
-                    registerUserLoginUserModel.ResetPasswordModel.CaptchaNumberResetPassword0 = httpSessionStateBase["CaptchaNumberResetPassword0"].ToString();
-                    registerUserLoginUserModel.ResetPasswordModel.CaptchaNumberResetPassword1 = httpSessionStateBase["CaptchaNumberResetPassword1"].ToString();
                 }
                 return registerUserLoginUserModel;
             }
@@ -827,6 +786,72 @@ namespace ArchitectureLibraryBusinessLayer
                 }
             }
         }
+        //RegisterLoginContactResetPassword GET
+        public ResetPasswordContactUsModel ResetPasswordContactUs(string queryString, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                modelStateDictionary.Clear();
+                ResetPasswordContactUsModel resetPasswordContactUsModel = new ResetPasswordContactUsModel
+                {
+                    ContactUsModel = new ContactUsModel
+                    {
+                        ContactUsTypeId = ContactUsTypeEnum.Request,
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    },
+                    ResetPasswordModel = new ResetPasswordModel
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    },
+                };
+                List<string> numberSessions = new List<string>
+                {
+                    "CaptchaNumberContactUs0",
+                    "CaptchaNumberContactUs1",
+                    "CaptchaNumberResetPassword0",
+                    "CaptchaNumberResetPassword1",
+                };
+                GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
+                if (resetPasswordContactUsModel.ContactUsModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    resetPasswordContactUsModel.ContactUsModel.CaptchaAnswerContactUs = null;
+                    resetPasswordContactUsModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
+                    resetPasswordContactUsModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
+                }
+                if (resetPasswordContactUsModel.ResetPasswordModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    resetPasswordContactUsModel.ResetPasswordModel.CaptchaAnswerResetPassword = null;
+                    resetPasswordContactUsModel.ResetPasswordModel.CaptchaNumberResetPassword0 = httpSessionStateBase["CaptchaNumberResetPassword0"].ToString();
+                    resetPasswordContactUsModel.ResetPasswordModel.CaptchaNumberResetPassword1 = httpSessionStateBase["CaptchaNumberResetPassword1"].ToString();
+                }
+                return resetPasswordContactUsModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
         //ReturnPolicy GET
         public ReturnPolicyModel ReturnPolicy(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -974,6 +999,7 @@ namespace ArchitectureLibraryBusinessLayer
                     }
                     else
                     {
+                        modelStateDictionary.AddModelError("ResetPasswordKey", "Invalid reset password key");
                         success = false;
                     }
                     if (success && long.Parse(DateTime.Parse(aspNetUserModel.ResetPasswordExpiryDateTime).ToString("yyyyMMddHHmmss")) >= long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
@@ -1342,164 +1368,6 @@ namespace ArchitectureLibraryBusinessLayer
             {
             }
         }
-        //private void SendContactUsEmail(ContactUsModel contactUsModel, bool userProfRegistered, string loginPassword, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-
-        //    TemplateBL templateBL = new TemplateBL();
-        //    Dictionary<string, string> keywordValues = new Dictionary<string, string>
-        //    {
-        //        { "@@##FirstName##@@", contactUsModel.FirstName },
-        //        { "@@##LastName##@@", contactUsModel.LastName },
-        //        { "@@##EmailAddress##@@", contactUsModel.EmailAddress },
-        //        { "@@##TelephoneNum##@@", contactUsModel.TelephoneNumber },
-        //        { "@@##CommentsRequests##@@", string.IsNullOrWhiteSpace(contactUsModel.CommentsRequests) ? "" : contactUsModel.CommentsRequests },
-        //        { "@@##SignatureTemplate##@@",  SignatureTemplate(clientId) },
-        //    };
-        //    if (userProfRegistered)
-        //    {
-        //        keywordValues["@@##Register##@@"] = "Your email address is registered Successfully!!!!!. Please use the below credentials.";
-        //        keywordValues["@@##LoginDetails##@@"] = "UserName : " + contactUsModel.EmailAddress + "<br />" + "Password : " + loginPassword;
-        //    }
-        //    else
-        //    {
-        //        keywordValues["@@##Register##@@"] = "Your email address is already registered!!!!!. Please login with your credentials.";
-        //        keywordValues["@@##LoginDetails##@@"] = "";
-        //    }
-        //    Dictionary<string, string> templateWithData = templateBL.PopulateKeyWords("ContactUsEmailTemplate", keywordValues);
-        //    EmailService emailService = new EmailService();
-        //    string privateKey = ArchLibCache.GetPrivateKey(clientId);
-        //    string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
-        //    var fromEmailAddress = new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""), ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", ""));
-        //    var toEmailAddresses = new List<KeyValuePair<string, string>>
-        //    {
-        //        new KeyValuePair<string, string>(contactUsModel.EmailAddress, ""),
-        //    };
-        //    List<KeyValuePair<string, string>> replyToEmailAddresses = new List<KeyValuePair<string, string>>
-        //    {
-        //        new KeyValuePair<string, string>(contactUsModel.EmailAddress, ""),
-        //        new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""), ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", "")),
-        //    };
-        //    List<KeyValuePair<string, string>> ccEmailAddresses = new List<KeyValuePair<string, string>>
-        //    {
-        //        fromEmailAddress,
-        //    };
-        //    List<KeyValuePair<string, string>> bccEmailAddresses = new List<KeyValuePair<string, string>>();
-        //    try
-        //    {
-        //        bccEmailAddresses.Add(new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "BccEmailAddress", ""), ""));
-        //    }
-        //    catch
-        //    {
-        //        ;
-        //    }
-        //    emailService.SendEmail(emailDirectoryName, "", fromEmailAddress, templateWithData["EMAIL_SUBJECT"], templateWithData["EMAIL_BODY"], toEmailAddresses, execUniqueId, privateKey, replyToEmailAddresses, ccEmailAddresses, bccEmailAddresses);
-        //}
-        //private void SendEmailRegisterUser(string registerEmailAddress, string resetPasswordQueryString, string resetPasswordDateTime, string resetPasswordKey, string aspNetUserId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibCacheBL archLibCacheBL = new ArchLibCacheBL();
-        //    try
-        //    {
-        //        string privateKey = ArchLibCache.GetPrivateKey(clientId);//Get this from Session Object
-        //        Dictionary<string, string> keywordValues = new Dictionary<string, string>()
-        //        {
-        //            { "@@##BaseUrl##@@", ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "") },
-        //            { "@@##ContactUsUrl##@@", ArchLibCache.GetApplicationDefault(0, "ContactUsUrl", "") },
-        //            { "@@##ResetPasswordExpiryDateTime##@@", resetPasswordDateTime },
-        //            { "@@##UpdatePasswordUrl##@@", ArchLibCache.GetApplicationDefault(0, "UpdatePasswordUrl", "") },
-        //            { "@@##ResetPasswordQueryString##@@", resetPasswordQueryString },
-        //            { "@@##ResetPasswordKey##@@", resetPasswordKey},
-        //            { "@@##ContactPhone##@@", ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "") },
-        //            { "@@##AdminRepresentativeName##@@", ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "") },
-        //            { "@@##CurrentDateTime##@@", DateTime.Now.ToString("MMM-dd-yyyy hh:mm tt") },
-        //            { "@@##RegisterEmailAddress##@@", registerEmailAddress },
-        //            { "@@##SignatureTemplate##@@", SignatureTemplate(clientId) },
-        //        };
-        //        TemplateBL templateBL = new TemplateBL();
-        //        Dictionary<string, string> templateWithData = templateBL.PopulateKeyWords("RegisterEmailTemplate", keywordValues);
-        //        string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
-        //        var fromEmailAddress = new KeyValuePair<string, string>
-        //        (
-        //            ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""),
-        //            ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", "")
-        //        );
-        //        var toEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>(registerEmailAddress, ""),
-        //        };
-        //        List<KeyValuePair<string, string>> ccEmailAddresses = new List<KeyValuePair<string, string>> { fromEmailAddress };
-        //        var replyToEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>(fromEmailAddress.Key, fromEmailAddress.Value),
-        //        };
-        //        var bccEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            //new KeyValuePair<string, string>(fromEmailAddress, fromEmailAddressDisplayName),
-        //        };
-        //        EmailService emailService = new EmailService();
-        //        emailService.SendEmail(emailDirectoryName, aspNetUserId, fromEmailAddress, templateWithData["EMAIL_SUBJECT"], templateWithData["EMAIL_BODY"], toEmailAddresses, execUniqueId, privateKey, replyToEmailAddresses, ccEmailAddresses, bccEmailAddresses);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Error Occured", exception);
-        //        throw;
-        //    }
-        //}
-        //private void SendEmailResetPassword(string resetPaswwordEmailAddress, string resetPasswordQueryString, string resetPasswordExpiryDateTime, string resetPasswordKey, string aspNetUserId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibCacheBL archLibCacheBL = new ArchLibCacheBL();
-        //    try
-        //    {
-        //        string privateKey = ArchLibCache.GetPrivateKey(clientId);//Get this from Session Object
-        //        Dictionary<string, string> keywordValues = new Dictionary<string, string>()
-        //        {
-        //            { "@@##BaseUrl##@@", ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "") },
-        //            { "@@##ContactUsUrl##@@", ArchLibCache.GetApplicationDefault(0, "ContactUsUrl", "") },
-        //            { "@@##ResetPasswordExpiryDateTime##@@", resetPasswordExpiryDateTime },
-        //            { "@@##UpdatePasswordUrl##@@", ArchLibCache.GetApplicationDefault(0, "UpdatePasswordUrl", "") },
-        //            { "@@##ResetPasswordQueryString##@@", resetPasswordQueryString },
-        //            { "@@##ResetPasswordKey##@@", resetPasswordKey},
-        //            { "@@##ContactPhone##@@", ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "") },
-        //            { "@@##AdminRepresentativeName##@@", ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "") },
-        //            { "@@##CurrentDateTime##@@", DateTime.Now.ToString("MMM-dd-yyyy hh:mm tt") },
-        //            { "@@##RegisterEmailAddress##@@", resetPaswwordEmailAddress },
-        //            { "@@##SignatureTemplate##@@", SignatureTemplate(clientId) },
-        //        };
-        //        TemplateBL templateBL = new TemplateBL();
-        //        Dictionary<string, string> templateWithData = templateBL.PopulateKeyWords("ResetPasswordEmailTemplate", keywordValues);
-        //        string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
-        //        var fromEmailAddress = new KeyValuePair<string, string>
-        //        (
-        //            ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""),
-        //            ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", "")
-        //        );
-        //        var toEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>(resetPaswwordEmailAddress, ""),
-        //        };
-        //        List<KeyValuePair<string, string>> ccEmailAddresses = new List<KeyValuePair<string, string>> { fromEmailAddress };
-        //        var replyToEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>(fromEmailAddress.Key, fromEmailAddress.Value),
-        //        };
-        //        var bccEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            //new KeyValuePair<string, string>(fromEmailAddress, fromEmailAddressDisplayName),
-        //        };
-        //        EmailService emailService = new EmailService();
-        //        emailService.SendEmail(emailDirectoryName, aspNetUserId, fromEmailAddress, templateWithData["EMAIL_SUBJECT"], templateWithData["EMAIL_BODY"], toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, privateKey, replyToEmailAddresses, ccEmailAddresses, bccEmailAddresses);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Error Occured", exception);
-        //        throw;
-        //    }
-        //}
         public bool RegisterUserProf(string registerEmailAddress, string loginPassword, string telephoneNumber, string firstName, string lastName, SqlConnection sqlConnection, out PersonModel personModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1536,123 +1404,7 @@ namespace ArchitectureLibraryBusinessLayer
             {
             }
         }
-        //public bool RegisterUserProf(RegisterUserProfModel registerUserProfModel, string loginPassword, string telephoneNumber, string firstName, string lastName, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before ApplicationDataContext.OpenSqlConnection");
-        //        if (string.IsNullOrWhiteSpace(ArchLibDataContext.SelectAspNetUserFromUserName(registerUserProfModel.RegisterEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId).AspNetUserId))
-        //        {//User is not registered - create user with password - Do not need reset password - Set the expiry to 30 days
-        //            string aspNetUserId = Guid.NewGuid().ToString();
-        //            string privateKey = ArchLibCache.GetPrivateKey(clientId);
-        //            string loginPasswordEncrypted = EncryptDecrypt.EncryptDataMd5(loginPassword, privateKey);
-        //            DateTime loginPasswordExpiryDateTime = DateTime.Now.AddDays(180);
-        //            long certificateDocumentId = 0;
-        //            ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, telephoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //            return true;
-        //        }
-        //        else
-        //        {//User is already registered
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        //private bool ResetPassword(ResetPasswordModel resetPasswordModel, string loginPassword, string phoneNumber, string firstName, string lastName, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before ApplicationDataContext.OpenSqlConnection");
-        //        if (string.IsNullOrWhiteSpace(ArchLibDataContext.SelectAspNetUserFromUserName(resetPasswordModel.ResetPasswordEmailAddress, execUniqueId).AspNetUserId))
-        //        {//User is not registered - create user with password - Do not need reset password - Set the expiry to 30 days
-        //            string aspNetUserId = Guid.NewGuid().ToString();
-        //            string privateKey = ArchLibCache.GetPrivateKey(clientId);
-        //            string loginPasswordEncrypted = EncryptDecrypt.EncryptDataMd5(loginPassword, privateKey);
-        //            DateTime loginPasswordExpiryDateTime = DateTime.Now.AddDays(30);
-        //            ArchLibDataContext.CreateResetPassword(aspNetUserId, resetPasswordModel.ResetPasswordEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, phoneNumber, null, null, null, firstName, lastName, "0", "", "0", "", clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //            return true;
-        //        }
-        //        else
-        //        {//User is already registered
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        //private void SendEmailUpdatePassword(string toEmailAddress, string firstName, string lastName, string aspNetUserId, long clientId, string execUniqueId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    //SchoolPrdBL schoolPrdBL = new SchoolPrdBL();
-        //    try
-        //    {
-        //        string privateKey = ArchLibCache.GetPrivateKey(clientId);
-        //        Dictionary<string, string> keywordValues = new Dictionary<string, string>()
-        //        {
-        //            { "@@##BaseUrl##@@", ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "") },
-        //            { "@@##ContactUsUrl##@@", ArchLibCache.GetApplicationDefault(0, "ContactUsUrl", "") },
-        //            { "@@##AdminRepresentativeName##@@", ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "") },
-        //            { "@@##CurrentDateTime##@@", DateTime.Now.ToShortDateString() },
-        //            //{ "@@##UpdatePasswordUrl##@@", RetailAppCacheBusinessObject.GetApplicationDefault(0, "UpdatePasswordUrl", "") },
-        //            { "@@##FirstName##@@", firstName },
-        //            { "@@##LastName##@@", lastName },
-        //            { "@@##ContactPhone##@@", ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "") },
-        //            { "@@##SignatureTemplate##@@", SignatureTemplate(clientId) },
-        //        };
-        //        TemplateBL templateBL = new TemplateBL();
-        //        Dictionary<string, string> templateWithData = templateBL.PopulateKeyWords("UpdatePasswordEmailTemplate", keywordValues);
-        //        string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
-        //        var fromEmailAddress = new KeyValuePair<string, string>
-        //        (
-        //            ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""),
-        //            ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", "")
-        //        );
-        //        var toEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>(toEmailAddress, ""),
-        //            new KeyValuePair<string, string>(fromEmailAddress.Key, fromEmailAddress.Value),
-        //        };
-        //        var replyToEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>(fromEmailAddress.Key, fromEmailAddress.Value),
-        //        };
-        //        var bccEmailAddresses = new List<KeyValuePair<string, string>>
-        //        {
-        //            //new KeyValuePair<string, string>(fromEmailAddress, fromEmailAddressDisplayName),
-        //        };
-        //        EmailService emailService = new EmailService();
-        //        emailService.SendEmail(emailDirectoryName, aspNetUserId, fromEmailAddress, templateWithData["EMAIL_SUBJECT"], templateWithData["EMAIL_BODY"], toEmailAddresses, execUniqueId, privateKey, replyToEmailAddresses, null, bccEmailAddresses);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Error Occured", exception);
-        //        throw;
-        //    }
-        //}
-        private List<string> CreatePasswordStrengthMessages()
+        public List<string> CreatePasswordStrengthMessages()
         {
             List<string> passwordStrengthMessages = new List<string>
             {
@@ -1664,7 +1416,7 @@ namespace ArchitectureLibraryBusinessLayer
             };
             return passwordStrengthMessages;
         }
-        private List<string> CalculatePasswordStrength(string loginPassword, out string passwordStrengthColor, out string passwordStrengthMessage)
+        public List<string> CalculatePasswordStrength(string loginPassword, out string passwordStrengthColor, out string passwordStrengthMessage)
         {
             loginPassword = string.IsNullOrEmpty(loginPassword) ? "" : loginPassword;
             List<string> passwordValidationMessages = new List<string>();

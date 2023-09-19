@@ -170,7 +170,6 @@ namespace ArchitectureLibraryBusinessLayer
                 { "@@##AddressStateAbbrev##@@", ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") },
                 { "@@##AddressZipCode##@@", ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "") },
                 { "@@##BaseUrl##@@", ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "") },
-                //{ "@@##UpdatePasswordUrl##@@", SchoolPrdCacheData.ArchLibCache.GetApplicationDefault(0, "UpdatePasswordUrl", "") },
                 { "@@##ContactPhone##@@", ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "") },
                 { "@@##ContactFax##@@", "" },
                 { "@@##EmailAddress##@@", ArchLibCache.GetApplicationDefault(clientId, "BusinessEmail", "") },

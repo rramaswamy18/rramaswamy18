@@ -3,7 +3,7 @@
     <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
         Checkout
     </h2>
-    <div class="col-md-6" style="float: left;">
+    <div class="col-md-6" style="float: left; text-align: left;">
         <div>
             @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
         </div>
@@ -40,7 +40,7 @@
             <button class="loginRegisterbtn" id="checkoutLoginUser" onclick="javascript: return checkoutLoginUser_onclick();" type="button">L O G I N</button>
         }
     </div>
-    <div class="col-md-6" style="float: left;">
+    <div class="col-md-6" style="float: left; text-align: left;">
         @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
         @Html.Partial("_ResetPassword", Model.ResetPasswordModel)
@@ -91,26 +91,17 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                //document.getElementById("divOrderProcess").innerHTML = responseData;
-                //console.log("00090000", "checkoutLoginUser_onclick", "SUCCESS!!!");
-                alert(responseData.processMessage);
-                alert(responseData.success);
                 console.log(responseData);
                 if (responseData.success) {
-                    alert(1);
                     document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-                    alert(2);
                 }
                 else {
-                    alert(3);
                     document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
-                    alert(4);
                 }
                 console.log("00001000", "checkoutLoginUser_onclick success", responseData.processMessage);
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
-                alert(2);
                 document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
                 console.log("00099000", "checkoutLoginUser_onclick", "ERROR???", exception, xhr);
             }

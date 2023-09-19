@@ -487,7 +487,14 @@ namespace ArchitectureLibraryWeb.Controllers
         public ActionResult RegisterLoginContactResetPassword(string id)
         {
             //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserLoginUser";
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                ViewData["ActionName"] = "REGISTER";
+            }
+            else
+            {
+                ViewData["ActionName"] = id.ToUpper();
+            }
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -518,7 +525,14 @@ namespace ArchitectureLibraryWeb.Controllers
         public ActionResult RegisterUserLoginUser(string id)
         {
             //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserLoginUser";
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                ViewData["ActionName"] = "REGISTER";
+            }
+            else
+            {
+                ViewData["ActionName"] = id.ToUpper();
+            }
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -528,7 +542,7 @@ namespace ArchitectureLibraryWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerUserLoginUserModel.QueryString = id;
+                registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
                 actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -548,7 +562,7 @@ namespace ArchitectureLibraryWeb.Controllers
         [Route("RegisterUserProf")]
         public ActionResult RegisterUserProf(string id)
         {
-            //int x = 1, y = 0, z = x / y;
+            int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "RegisterUserProf";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -804,7 +818,7 @@ namespace ArchitectureLibraryWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult UpdatePassword(string id)
+        public ActionResult     UpdatePassword(string id)
         {
             //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "UpdatePassword";

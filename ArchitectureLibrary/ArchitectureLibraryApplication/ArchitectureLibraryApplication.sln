@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.7.34009.444
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchitectureLibraryWeb", "ArchitectureLibraryWeb\ArchitectureLibraryWeb.csproj", "{B0EA1B70-B8D3-487B-9DE7-8168A138771E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchitectureLibraryWeb", "ArchitectureLibraryWeb\ArchitectureLibraryWeb.csproj", "{6906A6D6-8702-4545-9714-4C33EE1BA3A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchitectureLibraryDLL", "ArchitectureLibraryDLL\ArchitectureLibraryDLL.csproj", "{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}"
 EndProject
@@ -13,10 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B0EA1B70-B8D3-487B-9DE7-8168A138771E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0EA1B70-B8D3-487B-9DE7-8168A138771E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0EA1B70-B8D3-487B-9DE7-8168A138771E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0EA1B70-B8D3-487B-9DE7-8168A138771E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6906A6D6-8702-4545-9714-4C33EE1BA3A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6906A6D6-8702-4545-9714-4C33EE1BA3A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6906A6D6-8702-4545-9714-4C33EE1BA3A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6906A6D6-8702-4545-9714-4C33EE1BA3A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {4015B539-1D35-423B-BD9E-CB48ED4D431D}
+		SolutionGuid = {30F762AA-14F7-46B1-A309-A1507B4E774F}
 	EndGlobalSection
 EndGlobal

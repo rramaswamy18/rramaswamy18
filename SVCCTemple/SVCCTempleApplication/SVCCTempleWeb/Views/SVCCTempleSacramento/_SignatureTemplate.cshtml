@@ -1,0 +1,38 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    long clientId = -1;//ArchLibCache.ClientId;
+}
+<br />
+Thanking You,
+<br />
+Sincerely,
+<br />
+<span style="font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "")</span>
+@*<br />
+    <span style="font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeTitle", "")</span>*@
+<br />
+<span style="font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span>
+<br />
+@ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
+<br />
+@ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")
+<br />
+@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
+<br />
+Phone : <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>
+<br />
+Phone : <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "2")">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "2")</a>
+<br />
+Phone : <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "3")">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "3")</a>
+<br />
+SMS / Text : <a href="sms:@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+<br />
+SMS / Text : <a href="sms:@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "2")">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "2")</a>
+<br />
+<a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "")</a>
+<br />
+<a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "2" )" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "2")</a>
+<br />
+<a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "3" )" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "3")</a>
+<br />
+@DateTime.Now.ToString("ddd MMM-dd-yyyy hh:mm:ss tt")

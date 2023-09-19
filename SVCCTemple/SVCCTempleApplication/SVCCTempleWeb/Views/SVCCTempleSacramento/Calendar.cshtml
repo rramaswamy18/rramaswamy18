@@ -1,0 +1,54 @@
+﻿@model SVCCTempleModels.CalendarModel
+@{
+    ViewBag.Title = "Calendar";
+    Layout = "_Layout2.cshtml";
+}
+@Html.Partial("_Menu1")
+<div id="divCalendar">
+    @Html.Partial("_Calendar", Model)
+</div>
+<script type="text/javascript">
+<!--
+    function window_onload() {
+
+    }
+    function calendarMonth_onchange() {
+        window.location.href = "@Url.Action("Calendar", "SVCCTempleSacramento")" + "?id=" + document.getElementById("calendarYear").value + "-" + document.getElementById("calendarMonth").value;
+    }
+    function calendarYear_onchange() {
+        window.location.href = "@Url.Action("Calendar", "SVCCTempleSacramento")" + "?id=" + document.getElementById("calendarYear").value + "-" + document.getElementById("calendarMonth").value;
+    }
+    function calendarPrev_onclick() {
+        if (document.getElementById("calendarMonth").selectedIndex == 0) {
+            if (document.getElementById("calendarYear").selectedIndex == 0) {
+                ;
+            }
+            else {
+                document.getElementById("calendarYear").selectedIndex--;
+                document.getElementById("calendarMonth").selectedIndex = document.getElementById("calendarMonth").options.length - 1;
+                window.location.href = "@Url.Action("Calendar", "SVCCTempleSacramento")" + "?id=" + document.getElementById("calendarYear").value + "-" + document.getElementById("calendarMonth").value;
+            }
+        }
+        else {
+            document.getElementById("calendarMonth").selectedIndex--;
+            window.location.href = "@Url.Action("Calendar", "SVCCTempleSacramento")" + "?id=" + document.getElementById("calendarYear").value + "-" + document.getElementById("calendarMonth").value;
+        }
+    }
+    function calendarNext_onclick() {
+        if (document.getElementById("calendarMonth").selectedIndex == document.getElementById("calendarMonth").options.length - 1) {
+            if (document.getElementById("calendarYear").selectedIndex == document.getElementById("calendarYear").options.length - 1) {
+                ;
+            }
+            else {
+                document.getElementById("calendarYear").selectedIndex++;
+                document.getElementById("calendarMonth").selectedIndex = 0;
+                window.location.href = "@Url.Action("Calendar", "SVCCTempleSacramento")" + "?id=" + document.getElementById("calendarYear").value + "-" + document.getElementById("calendarMonth").value;
+            }
+        }
+        else {
+            document.getElementById("calendarMonth").selectedIndex++;
+            window.location.href = "@Url.Action("Calendar", "SVCCTempleSacramento")" + "?id=" + document.getElementById("calendarYear").value + "-" + document.getElementById("calendarMonth").value;
+        }
+    }
+    //-->
+</script>

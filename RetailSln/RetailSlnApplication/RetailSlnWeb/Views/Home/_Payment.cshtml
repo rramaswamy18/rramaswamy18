@@ -2,11 +2,11 @@
 <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
     Payment
 </h2>
-<div class="container">
-    <div class="col-md-6">
+<div class="center">
+    <div class="col-md-6" style="float: left; text-align: left;">
         @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" style="float: left; text-align: left;">
         <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment&nbsp;&nbsp;Info</h3>
         <form id="formPaymentData">
             @Html.Partial("_PaymentData", Model.PaymentDataModel)

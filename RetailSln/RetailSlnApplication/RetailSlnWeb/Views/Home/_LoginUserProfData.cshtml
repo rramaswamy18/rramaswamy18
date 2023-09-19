@@ -25,17 +25,14 @@
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
     </div>
 }
-<div style="padding-bottom: 5px; padding-left: 18px; padding-right: 18px;">
-    @Html.LabelFor(m => m.LoginEmailAddress, new { style = "font-size: 14px; font-weight: bold;" })&nbsp;<span style="color: #0000ff; font-size: 14px; font-weight: bold;">(Required)</span>
-</div>
-<div style="padding-left: 18px; padding-right: 18px;">
-    @Html.TextBoxFor(m => m.LoginEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginEmailAddress), style = "font-size: 14px; width: 90%;" })
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.LoginEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.LoginEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginEmailAddress), style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginEmailAddress, "", new { id = "LoginEmailAddress-error" }).ToHtmlString()))
 </div>
-<div style="padding-bottom: 5px; padding-left: 18px; padding-right: 18px;">
-    @Html.LabelFor(m => m.LoginPassword, new { style = "font-size: 14px; font-weight: bold;" })&nbsp;<span style="color: #0000ff; font-size: 14px; font-weight: bold;">(Required)</span>
-</div>
-<div style="padding-left: 18px; padding-right: 18px;">
+
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.LoginPassword, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <div>
         @Html.TextBoxFor(m => m.LoginPassword, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginPassword), style = "float: left; width: 76%;", @type = "password" })
         <span style="width: 18px;">&nbsp;</span>
@@ -45,10 +42,9 @@
     </div>
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginPassword, "", new { id = "LoginPassword-error" }).ToHtmlString()))
 </div>
-<div style="padding-bottom: 5px; padding-left: 18px; padding-right: 18px;">
-    @Html.LabelFor(m => m.CaptchaAnswerLogin, new { style = "font-size: 14px; font-weight: bold;" })&nbsp;<span style="color: #000000; font-size: 14px;">- Sum of </span><span style="color: #ff0000; font-size: 14PX; font-weight: bold;">@Model.CaptchaNumberLogin0</span> <span style="color: #000000; font-size: 14px;">&</span> <span style="color: #ff0000; font-size: 14PX; font-weight: bold;">@Model.CaptchaNumberLogin1</span><span style="color: #000000; font-size: 14px;">?</span><span style="color: #0000ff; font-size: 14px; font-weight: bold;"> (Required)</span>
-</div>
-<div style="padding-left: 18px; padding-right: 18px;">
-    @Html.TextBoxFor(m => m.CaptchaAnswerLogin, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberLogin0 + " + " + @Model.CaptchaNumberLogin1 + " =?", style = "font-size: 14px; width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerLogin, "", new { id = "CaptchaAnswerRegister-error" }).ToHtmlString()))
+
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.CaptchaAnswerLogin, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000;">@Model.CaptchaNumberLogin0</span> & <span style="color: #ff0000;">@Model.CaptchaNumberLogin1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
+    @Html.TextBoxFor(m => m.CaptchaAnswerLogin, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberLogin0 + " + " + @Model.CaptchaNumberLogin1 + " =?", style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerLogin, "", new { id = "CaptchaAnswerLogin-error" }).ToHtmlString()))
 </div>

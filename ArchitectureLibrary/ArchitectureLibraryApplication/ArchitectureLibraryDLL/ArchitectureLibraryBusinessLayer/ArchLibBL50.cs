@@ -196,39 +196,51 @@ namespace ArchitectureLibraryBusinessLayer
         }
         public void SendEmail(string toEmailAddress, string emailSubjectText, string emailBodyHtml, List<string> emailAttachmentFileNames, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            EmailService emailService = new EmailService();
-            string privateKey = ArchLibCache.GetPrivateKey(clientId);
-            string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
-            //string documentsImagesDirectoryName = Utilities.GetApplicationValue("DocumentsImagesDirectoryName");
-            var fromEmailAddress = new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""), ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", ""));
-            var toEmailAddresses = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>(toEmailAddress, ""),
-            };
-            List<KeyValuePair<string, string>> ccEmailAddresses = new List<KeyValuePair<string, string>>
-            {
-                fromEmailAddress,
-            };
-            List<KeyValuePair<string, string>> bccEmailAddresses = new List<KeyValuePair<string, string>>();
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                bccEmailAddresses.Add(new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "BccEmailAddress", ""), ""));
+                EmailService emailService = new EmailService();
+                string privateKey = ArchLibCache.GetPrivateKey(clientId);
+                string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
+                //string documentsImagesDirectoryName = Utilities.GetApplicationValue("DocumentsImagesDirectoryName");
+                var fromEmailAddress = new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", ""), ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddressDisplayName", ""));
+                var toEmailAddresses = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>(toEmailAddress, ""),
+                };
+                List<KeyValuePair<string, string>> ccEmailAddresses = new List<KeyValuePair<string, string>>
+                {
+                    fromEmailAddress,
+                };
+                List<KeyValuePair<string, string>> bccEmailAddresses = new List<KeyValuePair<string, string>>();
+                try
+                {
+                    bccEmailAddresses.Add(new KeyValuePair<string, string>(ArchLibCache.GetApplicationDefault(clientId, "BccEmailAddress", ""), ""));
+                }
+                catch
+                {
+                    ;
+                }
+                string emailServiceType;
+                try
+                {
+                    emailServiceType = emailServiceType = Utilities.GetApplicationValue("EmailServiceType");//ConfigurationManager.AppSettings["EmailServiceType"];
+                }
+                catch
+                {
+                    emailServiceType = "";
+                }
+                GetSmtpValues(emailServiceType, out bool pickupDirectory, out string smtpClientHost, out bool? smtpClientEnableSsl, out int? smtpPort, out string networkUsername, out string networkPassword, clientId, ipAddress, execUniqueId, loggedInUserId);
+                emailService.SendEmail(emailServiceType, emailDirectoryName, "", fromEmailAddress, emailSubjectText, emailBodyHtml, toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, privateKey, null, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames, pickupDirectory, smtpClientHost, smtpPort, smtpClientEnableSsl, networkUsername, networkPassword);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
-            catch
+            catch (Exception exception)
             {
-                ;
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
             }
-            string emailServiceType;
-            try
-            {
-                emailServiceType = emailServiceType = Utilities.GetApplicationValue("EmailServiceType");//ConfigurationManager.AppSettings["EmailServiceType"];
-            }
-            catch
-            {
-                emailServiceType = "";
-            }
-            GetSmtpValues(emailServiceType, out bool pickupDirectory, out string smtpClientHost, out bool? smtpClientEnableSsl, out int? smtpPort, out string networkUsername, out string networkPassword, clientId, ipAddress, execUniqueId, loggedInUserId);
-            emailService.SendEmail(emailServiceType, emailDirectoryName, "", fromEmailAddress, emailSubjectText, emailBodyHtml, toEmailAddresses, ipAddress, execUniqueId, loggedInUserId, privateKey, null, ccEmailAddresses, bccEmailAddresses, emailAttachmentFileNames, pickupDirectory, smtpClientHost, smtpPort, smtpClientEnableSsl, networkUsername, networkPassword);
         }
         private void GetSmtpValues(string emailServiceType, out bool pickupDirectory, out string smtpClientHost, out bool? smtpClientEnableSsl, out int? smtpPort , out string networkUsername, out string networkPassword, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

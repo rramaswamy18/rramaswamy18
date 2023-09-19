@@ -1,0 +1,239 @@
+﻿@model SchoolPrdModels.ProgramsModel
+@using ArchitectureLibraryCacheData
+@using SchoolPrdCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var classScheduleModels = Model.ClassScheduleModels;
+    SchoolPrdModels.ClassScheduleModel classScheduleModel;
+    int i;
+}
+<h2>
+    Programs
+</h2>
+<div style="color: #000000; font-family: Roboto, Arial, Tahoma, sans-serif; font-style: normal; font-weight: 400; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+    <h3 style="font-weight: bold;">
+        Professional Truck & Bus Driving Training, Schedule
+    </h3>
+    The course is offered on an on-going basis at <span style="color: #000000;font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")</span> as available. Please feel free to contact us, should you need more information.
+    <br style="clear: both;" />
+    <div style="color: #000000; font-family: Roboto, Arial, Tahoma, sans-serif;">
+        <ul class="nav nav-tabs">
+            <li style="padding-right: 27px; text-align: center;">
+                <div style="background: #e5e4e2; border-top-left-radius: 25px; border-top-right-radius: 25px; height: 45px; padding-left: 18px; padding-right: 18px; text-align: center;">
+                    <a href="javascript: void(0);" id="programsTabLink0" onclick="javascript: return programsTab_onclick(0, 3);" style="color: #000000; font-size: 27px; font-weight: bold;">Start, Grad. Dates</a>
+                </div>
+            </li>
+            <li style="padding-right: 27px; text-align: center;">
+                <div style="background: #e5e4e2; border-top-left-radius: 25px; border-top-right-radius: 25px; height: 45px; padding-left: 18px; padding-right: 18px; text-align: center;">
+                    <a href="javascript: void(0);" id="programsTabLink1" onclick="javascript: return programsTab_onclick(1, 3);" style="color: #000000; font-size: 27px; font-weight: bold;">Class Details</a>
+                </div>
+            </li>
+            <li style="padding-right: 27px; text-align: center;">
+                <div style="background: #e5e4e2; border-top-left-radius: 25px; border-top-right-radius: 25px; height: 45px; padding-left: 18px; padding-right: 18px; text-align: center;">
+                    <a href="javascript: void(0);" id="programsTabLink2" onclick="javascript: return programsTab_onclick(2, 3);" style="color: #000000; font-size: 27px; font-weight: bold;">Our Program</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <br style="clear: both;" />
+    <div class="col-md-12" id="programsData0" style="display: none;">
+        <div class="col-md-6" style="float: left;">
+            <table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 99%;">
+                <tr>
+                    <th class="text-center">
+
+                    </th>
+                    <th class="text-center">
+                        Register
+                    </th>
+                    <th class="text-center">
+                        Start
+                    </th>
+                    <th class="text-center">
+                        Graduation
+                    </th>
+                    <th class="text-left">
+                        Session
+                    </th>
+                    <th class="text-left">
+                        Schedule
+                    </th>
+                </tr>
+                @for (i = 0; i < classScheduleModels.Count / 2; i++)
+                {
+                    classScheduleModel = classScheduleModels[i];
+                    <tr>
+                        <th class="text-center">
+                            @(i + 1)
+                        </th>
+                        <td class="text-center">
+                            @DateTime.Parse(classScheduleModel.RegisterDate).ToString("ddd MMM-dd-yyyy")
+                        </td>
+                        <td class="text-center">
+                            @DateTime.Parse(classScheduleModel.StartDate).ToString("ddd MMM-dd-yyyy")
+                        </td>
+                        <td class="text-center">
+                            @DateTime.Parse(classScheduleModel.GraduationDate).ToString("ddd MMM-dd-yyyy")
+                        </td>
+                        <td class="text-left">
+                            @classScheduleModel.ClassSessionModel.ClassSessionDesc
+                        </td>
+                        <td class="text-left">
+                            @classScheduleModel.ClassScheduleDesc
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-md-6" style="float: left;">
+            <table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 99%;">
+                <tr>
+                    <th class="text-center">
+
+                    </th>
+                    <th class="text-center">
+                        Register
+                    </th>
+                    <th class="text-center">
+                        Start
+                    </th>
+                    <th class="text-center">
+                        Graduation
+                    </th>
+                    <th class="text-left">
+                        Session
+                    </th>
+                    <th class="text-left">
+                        Schedule
+                    </th>
+                </tr>
+                @for (i = classScheduleModels.Count / 2; i < classScheduleModels.Count; i++)
+                {
+                    classScheduleModel = classScheduleModels[i];
+
+                    <tr>
+                        <th class="text-center">
+                            @(i + 1)
+                        </th>
+                        <td class="text-center">
+                            @DateTime.Parse(classScheduleModel.RegisterDate).ToString("ddd MMM-dd-yyyy")
+                        </td>
+                        <td class="text-center">
+                            @DateTime.Parse(classScheduleModel.StartDate).ToString("ddd MMM-dd-yyyy")
+                        </td>
+                        <td class="text-center">
+                            @DateTime.Parse(classScheduleModel.GraduationDate).ToString("ddd MMM-dd-yyyy")
+                        </td>
+                        <td class="text-left">
+                            @classScheduleModel.ClassSessionModel.ClassSessionDesc
+                        </td>
+                        <td class="text-left">
+                            @classScheduleModel.ClassScheduleDesc
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12" id="programsData1" style="display: none;">
+        <table class="table table-responsive" style="width: 81%;">
+            <tr>
+                <th style="font-size: 27px; text-align: center;">
+                    Morning
+                </th>
+                <th style="font-size: 27px; text-align: center;">
+                    Evening
+                </th>
+            </tr>
+            <tr>
+                @foreach (var classSessionModel in SchoolPrdCache.ClassSessionModels)
+                {
+                    <td>
+                        <table class="table table-responsive" style="width: 81%;">
+                            <tr>
+                                <th class="text-right">
+                                    Seq
+                                </th>
+                                <th class="text-left">
+                                    Desc
+                                </th>
+                                <th class="text-center">
+                                    Start
+                                </th>
+                                <th class="text-center">
+                                    Finish
+                                </th>
+                            </tr>
+                            @foreach (var classDetailModel in classSessionModel.ClassDetailModels)
+                            {
+                                <tr>
+                                    <td class="text-right">
+                                        @classDetailModel.SeqNum
+                                    </td>
+                                    <td class="text-left">
+                                        @classDetailModel.ClassDetailDesc
+                                    </td>
+                                    <td class="text-center">
+                                        @DateTime.Parse(classDetailModel.StartTime).ToString("h:mm tt")
+                                    </td>
+                                    <td class="text-center">
+                                        @DateTime.Parse(classDetailModel.FinishTime).ToString("h:mm tt")
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                }
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-12" id="programsData2" style="display: none;">
+        Our comprehensive programs give you everything you need to know to get your CDL, and to get employed in the trucking industry.<br />
+        <ul style="line-height: 2.7;">
+            <li>
+                Assistance in getting your learner's permit.
+            </li>
+            <li>
+                Driving on the open road in highway, city, and heavy traffic conditions.
+            </li>
+            <li>
+                Safe and efficient operation of various types of tractors and trailers.
+            </li>
+            <li>
+                Defensive driving techniques, backing, safety and emergency procedures.
+            </li>
+            <li>
+                Graduates receive a Class A CDL.
+            </li>
+            <li>
+                We will assist you with all endorsements at no extra charge.
+            </li>
+            <li>
+                Operations of straight trucks.
+            </li>
+            <li>
+                Loading and unloading, parking and docking procedures.
+            </li>
+            <li>
+                Trip planning and navigational skills.
+            </li>
+            <li>
+                Graduates receive a Class B CDL.
+            </li>
+            <li>
+                We will assist you with all endorsements at no extra charge.
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    function programsTab_onclick(tabIndex, tabCount) {
+        for (var i = 0; i < tabCount; i++) {
+            document.getElementById("programsData" + i).style.display = "none";
+            document.getElementById("programsTabLink" + i).style.color = "#000000";
+        }
+        document.getElementById("programsData" + tabIndex).style.display = "block";
+        document.getElementById("programsTabLink" + tabIndex).style.color = "#0000ff";
+    }
+    programsTab_onclick(0, 3);
+</script>

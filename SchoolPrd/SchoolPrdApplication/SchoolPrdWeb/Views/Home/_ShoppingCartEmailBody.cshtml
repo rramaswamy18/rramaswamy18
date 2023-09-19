@@ -1,0 +1,86 @@
+﻿@model RetailSlnModels.ShoppingCartModel
+@using RetailSlnCacheData
+@{
+int index = 0;
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <tr>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">#</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Id</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">Item Desc</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Rate</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Qty</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Amount</th>
+    </tr>
+    @{
+        foreach (var shoppingCartItem in Model.ShoppingCartItems)
+        {
+            index++;
+            <tr>
+                <th scope="row" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@(index + ".")</th>
+                <td style="border-collapse: collapse; border-color: #000000; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+                    @shoppingCartItem.ItemId
+                </td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                    @shoppingCartItem.ItemShortDesc
+                </td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderQty</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
+            </tr>
+            <tr>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;"></td>
+                <td colspan="5" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                    Weight :&nbsp;
+                    @shoppingCartItem.WeightValue
+                    &nbsp;
+                    @shoppingCartItem.WeightUnitId
+                    &nbsp;/&nbsp;
+                    Volume :&nbsp;
+                    @shoppingCartItem.VolumeValue
+                    &nbsp;
+                    Cubic&nbsp;@shoppingCartItem.DimensionUnitId
+                </td>
+            </tr>
+            if (!string.IsNullOrWhiteSpace(shoppingCartItem.OrderComments))
+            {
+                <tr>
+                    <td></td>
+                    <td colspan="5" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                        @Html.DisplayFor(m => shoppingCartItem.OrderComments)
+                    </td>
+                </tr>
+            }
+        }
+    }
+</table>
+<br />
+index = 0;
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <tr>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+            #.
+        </th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            Description
+        </th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+            Amount
+        </th>
+    </tr>
+    @foreach (var shoppingCartSummary in Model.ShoppingCartSummaryItems)
+    {
+        index++;
+        <tr>
+            <th scope="row" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+                @(index + ".")
+            </th>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                @shoppingCartSummary.ItemShortDesc
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+                @shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+            </td>
+        </tr>
+    }
+</table>
+}

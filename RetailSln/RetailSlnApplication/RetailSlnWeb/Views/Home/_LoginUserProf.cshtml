@@ -1,5 +1,5 @@
 ﻿@model ArchitectureLibraryModels.LoginUserProfModel
-<h3 style="font-size: 24px; font-weight: bold;"><span style="color: #000000; letter-spacing: 9px; text-transform: uppercase;">login</span>&nbsp;<span style="color: #ff0000; font-size: 20px;">(Returning users)</span></h3>
+<h3 style="font-weight: bold;">L O G I N <span style="color: #ff0000;">(Returning users)</span></h3>
 @if (!ViewData.ModelState.IsValid)
 {
     <div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>
@@ -7,7 +7,7 @@
 }
 else
 {
-    <ul style="font-size: 14px; font-weight: bold;">
+    <ul style="font-weight: bold;">
         <li>
             Please enter email address, password, captcha answer
         </li>
@@ -21,20 +21,15 @@ else
             Did you forget your password or like to reset - please scroll down
         </li>
         <li style="color: #000000;">
-            Password(s) have an expiry. Feel free to reset - please scroll down
+            Password(s) have an expiry. Please scroll down to reset, should your password has expired
         </li>
     </ul>
+    @*<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />*@
     <form id="formLoginUserProfData">
         @Html.Partial("_LoginUserProfData", Model)
     </form>
-    <br />
-    <ul style="color: #0000ff; font-size: 14px; font-weight: bold;">
-        <li style="color: #0000ff;">
-            Login and enjoy the rich features of the product
-        </li>
-    </ul>
+    <button class="loginRegisterbtn" id="loginUserSave" onclick="javascript: return loginUserSave_onclick();" style="width: 90%;" type="button">L O G I N</button>
     <script type="text/javascript">
-        document.getElementById("LoginEmailAddress").focus();
         function loginUserSave_onclick() {
             console.log("00000000", "loginUserSave_onclick");
             $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

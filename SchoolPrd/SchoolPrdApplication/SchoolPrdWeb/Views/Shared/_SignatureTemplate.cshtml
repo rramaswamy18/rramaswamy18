@@ -1,0 +1,26 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    long clientId = ArchLibCache.ClientId;
+}
+<br />
+Thanking You,
+<br />
+Sincerely,
+<br />
+<span style="font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "")</span>
+<br />
+<span style="font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeTitle", "")</span>
+<br />
+<span style="font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span>
+<br />
+@ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
+<br />
+@ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")
+<br />
+@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
+<br />
+Phone : @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")
+<br />
+<a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "")</a>
+<br />
+@DateTime.Now.ToString("ddd MMM-dd-yyyy hh:mm:ss tt")

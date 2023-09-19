@@ -1,0 +1,133 @@
+﻿@using ArchitectureLibraryUtility
+@model SVCCTempleModels.ContactUsModel
+@{
+    string telNum1 = long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone1")).ToString("(###) ###-####");
+    string telNum2 = long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone2")).ToString("(###) ###-####");
+    string telNum3 = long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone3")).ToString("(###) ###-####");
+    string telNum4 = long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone4")).ToString("(###) ###-####");
+    string imageTitle = Utilities.GetApplicationValue("SacramentoTempleFullName")
+        + ", " + Utilities.GetApplicationValue("SacramentoTempleName")
+        + ", " + Utilities.GetApplicationValue("SacramentoTempleAddressLine1")
+        + ", " + Utilities.GetApplicationValue("SacramentoTempleCityName")
+        + " " + Utilities.GetApplicationValue("SacramentoTempleStateAbbrev")
+        + " " + Utilities.GetApplicationValue("SacramentoTempleZipCode")
+        + ", " + long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone1")).ToString("(###) ###-####")
+        + ", " + long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone2")).ToString("(###) ###-####")
+        + ", " + long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone3")).ToString("(###) ###-####")
+        + ", " + long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone4")).ToString("(###) ###-####")
+        + ", Weekdays : " + Utilities.GetApplicationValue("SacramentoTempleTimingsWeekdays")
+        + ", Weekends : " + Utilities.GetApplicationValue("SacramentoTempleTimingsWeekends")
+        ;
+}
+<div class="row">
+    <div style="float: left; padding-right: 9px;">
+        <h2 style="font-weight: bold; padding-left: 63px;">CONTACT US</h2>
+        <form id="formContactUs">
+            @Html.Partial("_ContactUsData")
+        </form>
+    </div>
+    <div style="float: left;">
+        <h2 class="text-primary" style="font-size: 27px; font-weight: bold;">Feel free to contact us by...</h2>
+        <span class="text-primary" style="font-weight: bold; padding: 5px; vertical-align: top; white-space: nowrap;">
+            <br />
+            <span style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <span class="glyphicon glyphicon-phone" style="font-size: 27px;"></span>
+            </span>
+            <span style="padding: 5px; font-size: 18px; text-align: left; vertical-align: top; white-space: nowrap;">
+                <a target="_blank" alt="@imageTitle" href="tel:@telNum1" style="text-decoration: underline;">@long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone1")).ToString("(###) ###-####")</a>&nbsp;<i style="color: #000000; font-weight: bold;" class="fa fa-phone"></i>
+            </span>
+            <br />
+            <br />
+            <span style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <span class="glyphicon glyphicon-phone" style="font-size: 27px;"></span>
+            </span>
+            <span style="padding: 5px; font-size: 18px; text-align: left; vertical-align: top; white-space: nowrap;">
+                <a target="_blank" alt="@imageTitle" href="tel:@telNum2" style="text-decoration: underline;">@long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone2")).ToString("(###) ###-####")</a>&nbsp;<i style="color: #000000; font-weight: bold;" class="fa fa-phone"></i>
+            </span>
+            <br />
+            <br />
+            <span style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <span class="glyphicon glyphicon-phone" style="font-size: 27px;"></span>
+            </span>
+            <span style="padding: 5px; font-size: 18px; text-align: left; vertical-align: top; white-space: nowrap;">
+                <a target="_blank" alt="@imageTitle" href="tel:@telNum3" style="text-decoration: underline;">@long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone3")).ToString("(###) ###-####")</a>&nbsp;<i style="color: #000000; font-weight: bold;" class="fa fa-phone"></i>
+            </span>
+            <br />
+            <br />
+            <span style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <span class="glyphicon glyphicon-phone" style="font-size: 27px;"></span>
+            </span>
+            <span style="padding: 5px; font-size: 18px; text-align: left; vertical-align: top; white-space: nowrap;">
+                <a target="_blank" alt="@imageTitle" href="tel:@telNum4" style="text-decoration: underline;">@long.Parse(Utilities.GetApplicationValue("SacramentoTemplePhone4")).ToString("(###) ###-####")</a>&nbsp;<i style="color: #000000; font-weight: bold;" class="fa fa-phone"></i>
+            </span>
+            <br />
+            <br />
+            <span style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <span class="glyphicon glyphicon-envelope" style="font-size: 27px;"></span>
+            </span>
+            <span style="padding: 5px; font-size: 18px; text-align: left; vertical-align: top; white-space: nowrap;">
+                @Utilities.GetApplicationValue("SacramentoTempleAddressLine1")<br />
+            </span>
+            <span style="padding: 52px; font-size: 18px; text-align: left; vertical-align: top; white-space: nowrap;">
+                @(Utilities.GetApplicationValue("SacramentoTempleCityName") + ", " + Utilities.GetApplicationValue("SacramentoTempleStateAbbrev") + " " + Utilities.GetApplicationValue("SacramentoTempleZipCode"))
+            </span>
+        </span>
+    </div>
+    <br style="clear: both;" />
+</div>
+<script type="text/javascript">
+    function contactUsSave_onclick() {
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/SVCCTempleSacramento/ContactUs";
+        var postData = $("#formContactUs").serialize();
+        console.log(3, "contactUsSave_onclick");
+        document.getElementById("validationSummaryDiv").innerHTML = "";
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("Contact Us SUCCESSFUL!!!");
+                var jsonObject = JSON.parse(responseData);
+                console.log(9, jsonObject);
+                document.getElementById("validationSummaryDiv").innerHTML = "";
+                document.getElementById("reponseMessagesDiv").innerHTML = jsonObject.ResponseMessagesHtml;
+                for (var i = 0; i < jsonObject.ResponseMessagesData.length; i++) {
+                    document.getElementById(jsonObject.ResponseMessagesData[i].Key).value = jsonObject.ResponseMessagesData[i].Value;
+                }
+                alert("Your request has been submitted successfully!!!");
+                $("#loadingModal").modal('hide');
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("Contact Us ERROR???", "xhr.status", xhr.status, "exception", exception);
+                var jsonObject = JSON.parse(xhr.responseText);
+                var values;
+                console.log(9, jsonObject);
+                for (var i = 0; i < jsonObject.ResponseMessagesError.length; i++) {
+                    if (jsonObject.ResponseMessagesError[i].Key != "") {
+                        values = "";
+                        for (var j = 0; j < jsonObject.ResponseMessagesError[i].Value.length; j++) {
+                            if (j > 0) {
+                                values += "<br />";
+                            }
+                            values += jsonObject.ResponseMessagesError[i].Value;
+                        }
+                        $('span[data-valmsg-for="' + jsonObject.ResponseMessagesError[i].Key + '"]').text(values);
+                    }
+                }
+                document.getElementById("validationSummaryDiv").innerHTML = jsonObject.ValidationSummaryPropertiesHtml;
+                alert(jsonObject.ValidationSummaryMessage);
+            }
+        });
+        //}
+        //else {
+        //    $("#loadingModal").modal('hide');
+        //    alert("Please fix errors and continue");
+        //}
+    }
+</script>

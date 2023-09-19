@@ -149,32 +149,35 @@ namespace RetailSlnBusinessLayer
                     ResetPasswordModel = new ResetPasswordModel(),
                     ShoppingCartModel = CheckoutValidate(httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
                 };
-                checkoutModel.ShoppingCartModel.Checkout = true;
-                List<string> numberSessions = new List<string>
+                if (checkoutModel.ShoppingCartModel != null)
                 {
-                    "CaptchaNumberLogin0",
-                    "CaptchaNumberLogin1",
-                    "CaptchaNumberRegister0",
-                    "CaptchaNumberRegister1",
-                    "CaptchaNumberResetPassword0",
-                    "CaptchaNumberResetPassword1",
-                    "CaptchaNumberContactUs0",
-                    "CaptchaNumberContactUs1",
-                };
-                archLibBL.GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
-                checkoutModel.ContactUsModel.CaptchaAnswerContactUs = null;
-                checkoutModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
-                checkoutModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
-                checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = null;
-                //checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = (int.Parse(httpSessionStateBase["CaptchaNumberLogin0"].ToString()) + int.Parse(httpSessionStateBase["CaptchaNumberLogin1"].ToString())).ToString();
-                checkoutModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
-                checkoutModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
-                checkoutModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
-                checkoutModel.RegisterUserProfModel.CaptchaNumberRegister0 = httpSessionStateBase["CaptchaNumberRegister0"].ToString();
-                checkoutModel.RegisterUserProfModel.CaptchaNumberRegister1 = httpSessionStateBase["CaptchaNumberRegister1"].ToString();
-                checkoutModel.ResetPasswordModel.CaptchaAnswerResetPassword = null;
-                checkoutModel.ResetPasswordModel.CaptchaNumberResetPassword0 = httpSessionStateBase["CaptchaNumberResetPassword0"].ToString();
-                checkoutModel.ResetPasswordModel.CaptchaNumberResetPassword1 = httpSessionStateBase["CaptchaNumberResetPassword1"].ToString();
+                    checkoutModel.ShoppingCartModel.Checkout = true;
+                    List<string> numberSessions = new List<string>
+                    {
+                        "CaptchaNumberLogin0",
+                        "CaptchaNumberLogin1",
+                        "CaptchaNumberRegister0",
+                        "CaptchaNumberRegister1",
+                        "CaptchaNumberResetPassword0",
+                        "CaptchaNumberResetPassword1",
+                        "CaptchaNumberContactUs0",
+                        "CaptchaNumberContactUs1",
+                    };
+                    archLibBL.GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
+                    checkoutModel.ContactUsModel.CaptchaAnswerContactUs = null;
+                    checkoutModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
+                    checkoutModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
+                    checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = null;
+                    //checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = (int.Parse(httpSessionStateBase["CaptchaNumberLogin0"].ToString()) + int.Parse(httpSessionStateBase["CaptchaNumberLogin1"].ToString())).ToString();
+                    checkoutModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
+                    checkoutModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
+                    checkoutModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
+                    checkoutModel.RegisterUserProfModel.CaptchaNumberRegister0 = httpSessionStateBase["CaptchaNumberRegister0"].ToString();
+                    checkoutModel.RegisterUserProfModel.CaptchaNumberRegister1 = httpSessionStateBase["CaptchaNumberRegister1"].ToString();
+                    checkoutModel.ResetPasswordModel.CaptchaAnswerResetPassword = null;
+                    checkoutModel.ResetPasswordModel.CaptchaNumberResetPassword0 = httpSessionStateBase["CaptchaNumberResetPassword0"].ToString();
+                    checkoutModel.ResetPasswordModel.CaptchaNumberResetPassword1 = httpSessionStateBase["CaptchaNumberResetPassword1"].ToString();
+                }
                 return checkoutModel;
             }
             catch (Exception exception)
@@ -194,22 +197,23 @@ namespace RetailSlnBusinessLayer
             {
                 ShoppingCartModel shoppingCartModel;
                 shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
-                shoppingCartModel.ShoppingCartSummaryItems = null;
                 if (shoppingCartModel == null)
                 {
-                    throw new Exception("Shopping Cart is Empty");
+                    //throw new Exception("Shopping Cart is Empty");
                 }
                 else
                 {
+                    shoppingCartModel.ShoppingCartSummaryItems = null;
                     if (shoppingCartModel.ShoppingCartItems.Count > 0 && shoppingCartModel.ShoppingCartTotalAmount > 0)
                     {
-                        return shoppingCartModel;
+                        ;
                     }
                     else
                     {
-                        throw new Exception("Shopping Cart is Empty");
+                        shoppingCartModel = null;
                     }
                 }
+                return shoppingCartModel;
             }
             catch (Exception exception)
             {
@@ -227,19 +231,20 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ShoppingCartModel shoppingCartModel;
+                DeliveryInfoModel deliveryInfoModel = null;
                 shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
                 shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>();
                 shoppingCartModel.Checkout = false;
                 httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
                 if (shoppingCartModel == null)
                 {
-                    throw new Exception("Shopping Cart is Empty");
+                    ;
                 }
                 else
                 {
                     if (shoppingCartModel.ShoppingCartItems.Count > 0 && shoppingCartModel.ShoppingCartTotalAmount > 0)
                     {
-                        DeliveryInfoModel deliveryInfoModel = new DeliveryInfoModel
+                        deliveryInfoModel = new DeliveryInfoModel
                         {
                             DeliveryInfoDataModel = new DeliveryInfoDataModel
                             {
@@ -260,13 +265,13 @@ namespace RetailSlnBusinessLayer
                             },                           
                             ShoppingCartModel = shoppingCartModel,
                         };
-                        return deliveryInfoModel;
                     }
                     else
                     {
-                        throw new Exception("Shopping Cart is Empty");
+                        ;
                     }
                 }
+                return deliveryInfoModel;
             }
             catch (Exception exception)
             {
@@ -285,6 +290,7 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.OpenSqlConnection();
                 deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev");//DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId).CountryAbbrev;
                 deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = DemogInfoCache.DemogInfoSubDivisionModels.First(x => x.DemogInfoSubDivisionId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId).StateAbbrev;
+                deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = 0;
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
                 ShoppingCartModel shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
                 ItemModel itemModel;
@@ -380,19 +386,13 @@ namespace RetailSlnBusinessLayer
                     SessionObjectModel sessionObjectModel = archLibBL.LoginUserProfValidate(ref loginUserProfModel, httpSessionStateBase, modelStateDictionary, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (modelStateDictionary.IsValid)
                     {
+                        string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
                         CreditCardDataModel creditCardDataModel = new CreditCardDataModel
                         {
                             CreditCardAmount = giftCertModel.GiftCertAmount.ToString(),
                             CreditCardExpMM = giftCertModel.CardExpiryMM,
                             CreditCardExpYear = giftCertModel.CardExpiryYYYY,
-                            CreditCardKVPs = new Dictionary<string, string>
-                            {
-                                { "PrivateKey", ArchLibCache.GetPrivateKey(1) },
-                                { "NuveiRestAPIRootUri", ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "NuveiRestAPIRootUri", "") },
-                                { "NuveiRequestUri", ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "NuveiRequestUri", "") },
-                                { "NuveiTerminalId", ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "NuveiTerminalId", "") },
-                                { "NuveiSharedSecret", ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "NuveiSharedSecret", "") },
-                            },
+                            CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId),
                             CreditCardNumber = giftCertModel.CreditCardNumber,
                             CreditCardProcessor = "NUVEI",
                             CreditCardSecCode = giftCertModel.CVV,
@@ -546,11 +546,12 @@ namespace RetailSlnBusinessLayer
             }
         }
         //GET OrderReceipt
-        public OrderReceiptModel OrderReceipt(PaymentDataModel paymentDataModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public OrderReceiptModel OrderReceipt(PaymentDataModel paymentDataModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
             try
             {
                 DeliveryInfoDataModel deliveryInfoDataModel = (DeliveryInfoDataModel)httpSessionStateBase["DeliveryInfoDataModel"];
@@ -563,6 +564,11 @@ namespace RetailSlnBusinessLayer
                     PaymentDataModel = paymentDataModel,
                     ShoppingCartModel = shoppingCartModel,
                 };
+                string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailSubject", orderReceiptModel);
+                string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailBody", orderReceiptModel);
+                string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplate", orderReceiptModel);
+                emailBodyHtml += signatureHtml;
+                archLibBL.SendEmail(paymentDataModel.EmailAddress, emailSubjectText, emailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return orderReceiptModel;
             }
             catch (Exception exception)

@@ -1,0 +1,14 @@
+﻿@*@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+@{
+    string absoluteUri = Request.Url.AbsoluteUri;
+    if (absoluteUri.ToUpper().IndexOf("FREMONT") > -1)
+    {
+        Layout = "~/Views/SVCCTempleFremont/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/SVCCTempleSacramento/_Layout.cshtml";
+    }
+}

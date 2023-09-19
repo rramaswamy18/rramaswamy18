@@ -1,0 +1,46 @@
+﻿@using ArchitectureLibraryUtility
+@{
+    string templeFullName = Utilities.GetApplicationValue("SacramentoTempleFullName");
+    string[] actionNames = { "Index", "RegisterUserLoginUser/REGISTER", "Sponsorship", "SankalpamInfo", "ContactUs", "Calendar", "TempleServices", "PoojaItems", "Unsubscribe", "RegisterUserLoginUser/LOGIN", "Snippets", "PicGallery", "AboutUs", "TempleFestivals" };
+    string[] controllerNames = { "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento", "SVCCTempleSacramento" };
+    string[] linkTexts = { "Home", "Register", "Sponsorship/<br />Donations", "Sankalpam", "Contact Us", "Calendar", "Services", "Pooja Items", "Unsubscribe", "Login", "Snippets", "Pic Gallery", "About Us", "Festivals" };
+    string actionName;
+    try
+    {
+        actionName = ViewData["ActionName"].ToString();
+    }
+    catch
+    {
+        actionName = "";
+    }
+}
+<img alt="@templeFullName Ganesha Ganapathy Pillaiyar" class="img-responsive" src="~/Images/Sacramento/Ganesha01.jpg" style="height: auto; max-height: 225px;  max-width: 225px; width: 100%;" title="@templeFullName Ganesha Ganapathy Pillaiyar" />
+<br />
+<table align="left" class="table-responsive" style="background-image: url('/Images/Sacramento/HomePage/MenuBackground.jpg'); background-repeat: no-repeat; height: 693px; margin: 0 auto; width: 225px;">
+    <tr>
+        <td style="height: 55px; text-align: left;"></td>
+    </tr>
+    @{
+        for (int i = 0; i < controllerNames.Length; i++)
+        {
+            <tr>
+                <td style="padding-bottom: 11px; padding-left: 42px; text-align: left; vertical-align: middle">
+                    @{
+                        if (actionNames[i] == actionName)
+                        {
+                            <span style="color:#ffffff; font-family:Verdana; font-size:14pt; font-weight:bold; text-decoration:none;">@Html.Raw(linkTexts[i])</span>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action(actionNames[i], controllerNames[i])" style="color:#fcc200; font-family: Verdana; font-size: 18px; font-weight: bold; text-decoration: none;">@Html.Raw(linkTexts[i])</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    }
+</table>
+<img alt="@templeFullName Balaji Venkateswara Srinivasa" class="img-responsive" src="~/Images/Sacramento/Balaji01.jpg" style="height: auto; max-height: 225px;  max-width: 225px; width: 100%;" title="@templeFullName Balaji Venkateswara Srinivasa" />
+<br />
+<img alt="@templeFullName Aandal" class="img-responsive" src="~/Images/Sacramento/Aandal01.jpg" style="height: auto; max-height: 225px;  max-width: 225px; width: 100%;" title="@templeFullName Aandal" />
+<br />

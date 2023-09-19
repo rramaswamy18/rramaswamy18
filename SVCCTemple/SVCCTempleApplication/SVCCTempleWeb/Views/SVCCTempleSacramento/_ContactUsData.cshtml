@@ -1,0 +1,53 @@
+﻿@model SVCCTempleModels.ContactUsModel
+@{
+    var contactTypeIdSelectList = new List<SelectListItem>
+    {
+        new SelectListItem { Text = "Comments", Value = "100" },
+        //new SelectListItem { Text = "Suggestion", Value = "200" },
+        new SelectListItem { Text = "Question", Value = "200" },
+    };
+}
+<div id="validationSummaryDiv" class="row" style="padding-left: 36px; text-align: left;"></div>
+<div id="reponseMessagesDiv" class="row" style="padding-left: 36px; text-align: left;">
+    @Html.Partial("_ResponseMessages", Model.ResponseObjectModel)
+</div>
+@*<div class="row" style="text-align: left; padding-left: 63px;">
+    <input class="btn btn-primary" id="contactUsSave1" onclick="javascript: return contactUsSave_onclick();" style="font-size: 18px; font-weight: bold;" type="button" value="S U B M I T" />
+</div>
+<br />*@
+<div class="row" style="text-align: left; padding-left: 63px;">
+    @Html.LabelFor(m => m.ContactUsTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 15px; font-weight: bold;">(Required)</span>
+    @Html.DropDownListFor(m => m.ContactUsTypeId, new SelectList(contactTypeIdSelectList, "Value", "Text", Model.ContactUsTypeId), "--- Select ---", new { @class = "form-control", style = "width: 297px;" })
+    @Html.ValidationMessageFor(model => model.ContactUsTypeId, "", new { @class = "text-danger", style = "color: #ff0000; font-size: 15px; font-weight: bold;" })
+</div>
+<div class="row" style="text-align: left; padding-left: 63px;">
+    @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 15px; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", placeholder = "First Name", style = "width: 297px;" })
+    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger", style = "color: #ff0000; font-size: 15px; font-weight: bold;" })
+</div>
+<div class="row" style="text-align: left; padding-left: 63px;">
+    @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 15px; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", placeholder = "Last Name", style = "width: 297px;" })
+    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger", style = "color: #ff0000; font-size: 15px; font-weight: bold;" })
+</div>
+<div class="row" style="text-align: left; padding-left: 63px;">
+    @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 15px; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control", placeholder = "Email Address", style = "width: 297px;" })
+    @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger", style = "color: #ff0000; font-size: 15px; font-weight: bold;" })
+</div>
+<div class="row" style="text-align: left; padding-left: 63px;">
+    @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 15px; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(model => model.TelephoneNumber, new { @class = "form-control", placeholder = "Telephone#", style = "width: 297px;" })
+    @Html.ValidationMessageFor(model => model.TelephoneNumber, "", new { @class = "text-danger", style = "color: #ff0000; font-size: 15px; font-weight: bold;" })
+</div>
+<div class="row" style="text-align: left; padding-left: 63px;">
+    @Html.LabelFor(m => m.Comments, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 15px; font-weight: bold;">(Required)</span><br />
+    <span style="color: #a54000; font-size: 15px; font-weight: bold;">Please include approximate date & time, if applicable</span>
+    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", placeholder = "Write a comment......Please include approximate date & time, if applicable", style = "height: 120px; width: 297px;" })
+    @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger", style = "color: #ff0000; font-size: 15px; font-weight: bold;" })
+</div>
+<br />
+<div class="row" style="text-align: left; padding-left: 63px;">
+    <input class="btn btn-primary" id="contactUsSave2" onclick="javascript: return contactUsSave_onclick();" style="font-size: 18px; font-weight: bold;" type="button" value="S U B M I T" />
+</div>
+ 

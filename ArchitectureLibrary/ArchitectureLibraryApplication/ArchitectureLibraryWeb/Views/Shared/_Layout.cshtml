@@ -3,7 +3,7 @@
     var clientId = ArchLibCache.ClientId;
 }
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
 <head>
     <meta charset="utf-8" />
     <meta name="author" content="Gajaashwa Inc." />
@@ -18,9 +18,7 @@
     <title>@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")</title>
     <link rel="shortcut icon" href="~/Images/favicon.ico" />
     @Styles.Render("~/Content/css0")
-    @Scripts.Render("~/bundles/scripts1")
-    <script src="/Scripts/bootstrap.min.js"></script>
-    @Scripts.Render("~/bundles/scripts2")
+    @Scripts.Render("~/bundles/scripts0")
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Patua+One|Open+Sans|Lato|Roboto" />
@@ -43,7 +41,7 @@
         </script>*@
     <!-- End Google Tag Manager -->
 </head>
-<body style="margin-left: auto; margin-right: auto; max-width: 1350px; min-width: fit-content; padding: 0px;">
+<body style="margin-left: auto; margin-right: auto; max-width: 1350px; padding: 0px;">
     <!-- Google Tag Manager (noscript) -->
     @*<noscript>
             <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDPL9DB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -58,7 +56,7 @@
             alert("Implement window on load in your page");
         }
     </script>
-    <div class="container col-md-12" id="divContainer" style="margin-left: auto; margin-right: auto; max-width: 1350px; padding: 0px; text-align: center; width: 100%;">
+    <div class="container" id="divContainer" style="margin-left: auto; margin-right: auto; padding: 0px; text-align: center; width: 100%;">
         @Html.Partial("_Header")
         @RenderBody()
         @Html.Partial("_Footer")

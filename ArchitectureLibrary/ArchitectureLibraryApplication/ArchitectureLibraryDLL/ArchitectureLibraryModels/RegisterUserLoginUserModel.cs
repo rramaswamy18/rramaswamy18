@@ -8,10 +8,8 @@ namespace ArchitectureLibraryModels
 {
     public class RegisterUserLoginUserModel
     {
-        public ContactUsModel ContactUsModel { set; get; }
         public LoginUserProfModel LoginUserProfModel { set; get; }
         public RegisterUserProfModel RegisterUserProfModel { set; get; }
-        public ResetPasswordModel ResetPasswordModel { set; get; }
         public string QueryString { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

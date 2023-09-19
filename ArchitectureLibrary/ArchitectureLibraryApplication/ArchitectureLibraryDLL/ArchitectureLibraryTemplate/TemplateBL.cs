@@ -44,7 +44,7 @@ namespace ArchitectureLibraryTemplate
         {
             /* This code works and WIP
             //SqlConnection sqlConnection = new SqlConnection(Utilities.GetDatabaseConnectionString("DatabaseConnectionString"));
-            SqlConnection sqlConnection = new SqlConnection("DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=SchoolPrd");
+            SqlConnection sqlConnection = new SqlConnection("DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=TestDB");
             sqlConnection.Open();
             TemplateModel templateModel = LoadTemplateInfo(templateName, sqlConnection);
             Dictionary<string, string> templateWithData1 = new Dictionary<string, string>();

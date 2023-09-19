@@ -2,6 +2,14 @@
     box-sizing: border-box;
 }
 
+.center {
+    border: 0px none;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    width: 90%;
+}
+
 .validationSummaryMessage {
     color: #000000;
     font-size: 18px;

@@ -2,10 +2,10 @@
     .menuItemFooter {
         color: #000000;
         font-family: Roboto, sans-serif;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 900;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 6px;
+        padding-right: 6px;
         text-decoration: underline;
         text-decoration-thickness: 1px;
         text-underline-offset: 5px;
@@ -26,7 +26,7 @@
     }
 </style>
 @{
-    string viewDataActionName, selectedMenu, urlString;
+    string viewDataActionName, selectedMenu, loggedInUserFullName, urlString, redirectUrlString;
     try
     {
         viewDataActionName = ViewData["ActionName"].ToString();
@@ -34,6 +34,17 @@
     catch
     {
         viewDataActionName = "";
+    }
+    ArchitectureLibraryModels.SessionObjectModel sessionObjectModel;
+    if (Session["SessionObject"] != null)
+    {
+        sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
+        loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
+    }
+    else
+    {
+        sessionObjectModel = null;
+        loggedInUserFullName = "";
     }
 }
 @{
@@ -53,19 +64,52 @@
         {
             urlString += "?" + menuLayoutModel.MenuUrlAction.QueryString;
         }
+        if (string.IsNullOrWhiteSpace(menuLayoutModel.MenuUrlAction.RedirectActionName))
+        {
+            redirectUrlString = "";
+        }
+        else
+        {
+            redirectUrlString = Url.Action(menuLayoutModel.MenuUrlAction.RedirectActionName, menuLayoutModel.MenuUrlAction.RedirectControllerName);
+            if (!string.IsNullOrWhiteSpace(menuLayoutModel.MenuUrlAction.RedirectQueryString))
+            {
+                redirectUrlString += "?" + menuLayoutModel.MenuUrlAction.RedirectQueryString;
+            }
+            if (!string.IsNullOrWhiteSpace(menuLayoutModel.MenuUrlAction.RedirectMessage))
+            {
+                redirectUrlString += "?id=" + menuLayoutModel.MenuUrlAction.RedirectMessageId;
+            }
+        }
         switch (menuLayoutModel.MenuUrlAction.AccessType)
         {
             case "PUBLIC":
                 <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
                 break;
-            case "SECURED20":
-                <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+            case "SECURED20": //Show this menu when logged in and when not logged as disabled
+                if (sessionObjectModel == null)
+                {
+                    <a class="@selectedMenu" href="@redirectUrlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #a0a0a0; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+                }
+                else
+                {
+                    <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+                }
                 break;
-            case "SECURED40":
-                <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+            case "SECURED40": //Show this menu only when not logged in
+                if (sessionObjectModel == null)
+                {
+                    <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+                }
                 break;
-            case "SECURED60":
-                <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+            case "SECURED60": //Show this menu when bot logged in and when logged as disabled
+                if (sessionObjectModel == null)
+                {
+                    <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+                }
+                else
+                {
+                    <a class="@selectedMenu" href="@redirectUrlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #a0a0a0; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">@menuLayoutModel.MenuUrlAction.LinkText</a>
+                }
                 break;
             default:
                 break;

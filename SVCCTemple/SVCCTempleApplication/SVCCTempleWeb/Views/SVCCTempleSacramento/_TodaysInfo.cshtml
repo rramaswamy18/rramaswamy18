@@ -1,0 +1,21 @@
+﻿@using SVCCTempleCacheData
+@{ 
+    var todaysInfos = SVCCTempleCache.TodaysInfoLocations["SACRAMENTO"];
+}
+<table style="margin-left: auto 0; margin-right: auto 0; padding: 9px;">
+    <tr>
+        <td style="padding: 9px; width: 63%;">
+            <span style="color: #0000ff; font-family: Verdana; font-size: 12px; font-weight: bold;">
+                @DateTime.Now.ToString("dddd MMMM d yyyy")
+                <span style="color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold">
+                    <span style="color: #000000;">&nbsp;Sun Rise / Set</span>
+                    <span style="color: #ff0000;">&nbsp;@todaysInfos["SunRise"] - @todaysInfos["SunSet"]</span>
+                    <span style="color: #000000;">&nbsp;Rahu Kalam</span>
+                    <span style="color: #ff0000;">&nbsp;@todaysInfos["RKStart"] - @todaysInfos["RKFinish"]</span>
+                    <span style="color: #000000;">&nbsp;Yama Gandam</span>
+                    <span style="color: #ff0000;">&nbsp;@todaysInfos["YGStart"] - @todaysInfos["YGFinish"]</span>
+                </span>
+            </span>
+        </td>
+    </tr>
+</table>

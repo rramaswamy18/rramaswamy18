@@ -64,6 +64,7 @@ namespace ArchitectureLibraryEmailService
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
             }
         }
     }

@@ -1,0 +1,6 @@
+﻿@model RetailSlnModels.OrderReceiptModel
+@Html.Partial("_OrderReceiptDataEmailBody", Model.PaymentDataModel)
+<br /><br />
+@Html.Partial("_DeliveryInfoEmailBody", Model.DeliveryInfoDataModel)
+<br /><br />
+@Html.Partial("_ShoppingCartEmailBody", Model.ShoppingCartModel)
