@@ -856,7 +856,7 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult     UpdatePassword(string id)
+        public ActionResult UpdatePassword(string id)
         {
             //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "UpdatePassword";

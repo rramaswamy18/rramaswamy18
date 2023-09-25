@@ -121,13 +121,18 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                document.getElementById("divOrderProcess").innerHTML = responseData;
-                console.log("00090000", "deliveryInfoSave_onclick", "SUCCESS!!!");
+                if (responseData.success) {
+                    document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                }
+                else {
+                    document.getElementById("formDeliveryInfoData").innerHTML = responseData.htmlString;
+                }
+                console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
                 document.getElementById("formDeliveryInfoData").innerHTML = xhr.responseText;
-                console.log("00099000", "deliveryInfoSave_onclick", "ERROR???", exception, xhr);
+                console.log("00099000", "deliveryInfoSave_onclick error", exception, xhr);
             }
         });
     }
@@ -145,16 +150,29 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                document.getElementById("divOrderProcess").innerHTML = responseData;
-                document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
-                document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
-                document.getElementById("divOrderProcess").scrollIntoView();
-                console.log("00090000", "paymentSave_onclick", "SUCCESS!!!");
+                console.log(responseData);
+                if (responseData.success) {
+                    if (responseData.success) {
+                        document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                        document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
+                        document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
+                        document.getElementById("divOrderProcess").scrollIntoView();
+                    }
+                    else {
+                        document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
+                    }
+                }
+                else {
+                    document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
+                }
+                console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
+                $("#loadingModal").modal('hide');
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
                 document.getElementById("formPaymentData").innerHTML = xhr.responseText;
-                console.log("00099000", "paymentSave_onclick", "ERROR???", exception, xhr);
+                console.log("00099000", "paymentSave_onclick error", exception, xhr);
+                $("#loadingModal").modal('hide');
             }
         });
     }

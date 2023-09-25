@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailSlnWeb", "RetailSlnWe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchitectureLibraryDLL", "..\..\ArchitectureLibrary\ArchitectureLibraryApplication\ArchitectureLibraryDLL\ArchitectureLibraryDLL.csproj", "{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailSlnConsoleApp1", "..\RetailSlnConsoleApp1\RetailSlnConsoleApp1.csproj", "{A6B9EE9C-7BF6-4439-B1B4-747D62C2247F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5278BE7-1380-4CF9-B37C-4AAA21576FDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6B9EE9C-7BF6-4439-B1B4-747D62C2247F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6B9EE9C-7BF6-4439-B1B4-747D62C2247F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6B9EE9C-7BF6-4439-B1B4-747D62C2247F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6B9EE9C-7BF6-4439-B1B4-747D62C2247F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

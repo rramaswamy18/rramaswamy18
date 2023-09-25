@@ -123,17 +123,19 @@ namespace RetailSlnWeb.Controllers
         [HttpPost]
         public ActionResult Checkout(LoginUserProfModel loginUserProfModel)
         {
+            //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "Checkout";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
             ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
             bool success;
             string processMessage, htmlString;
             try
             {
+                //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(loginUserProfModel);
                 SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -247,6 +249,9 @@ namespace RetailSlnWeb.Controllers
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             RetailSlnBL retailSlnBL = new RetailSlnBL();
+            bool success;
+            string processMessage, htmlString;
+            ArchLibBL archLibBL = new ArchLibBL();
             ActionResult actionResult;
             try
             {
@@ -280,23 +285,55 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     retailSlnBL.DeliveryInfo(deliveryInfoDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    PaymentModel paymentModel = retailSlnBL.Payment(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    actionResult = PartialView("_Payment", paymentModel);
-                    Response.StatusCode = (int)HttpStatusCode.OK;
+                    if (ModelState.IsValid)
+                    {
+                        PaymentModel paymentModel = retailSlnBL.Payment(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        if (ModelState.IsValid)
+                        {
+                            success = true;
+                            processMessage = "SUCCESS!!!";
+                            htmlString = archLibBL.ViewToHtmlString(this, "_Payment", paymentModel);
+                            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                        }
+                        else
+                        {
+                            success = false;
+                            processMessage = "ERROR???";
+                            htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
+                            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Payment BL Error");
+                        }
+                    }
+                    else
+                    {
+                        success = false;
+                        processMessage = "ERROR???";
+                        htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: DeliveryInfo BL Error");
+                    }
                 }
                 else
                 {
-                    actionResult = PartialView("_DeliveryInfoData", deliveryInfoDataModel);
-                    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    success = false;
+                    processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Validation Error");
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                actionResult = Json(new { errorMessage = "Error ocurred while checking out" }, JsonRequestBehavior.AllowGet);
+                success = false;
+                processMessage = "ERROR???";
+                deliveryInfoDataModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
                 Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
+            actionResult = Json(new { success, processMessage, htmlString });
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 
@@ -565,6 +602,137 @@ namespace RetailSlnWeb.Controllers
         [Authorize]
         [HttpPost]
         public ActionResult Payment(PaymentDataModel paymentDataModel)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                //paymentDataModel.ResponseObjectModel = new ResponseObjectModel();
+                ModelState.Clear();
+                bool giftCertPresent, creditCardPresent;
+                var giftCertValidateModel = new GiftCertValidateModel
+                {
+                    GiftCertKey = paymentDataModel.GiftCertKey,
+                    GiftCertNumber = paymentDataModel.GiftCertNumber,
+                };
+                var giftCertModelIsValid = TryValidateModel(giftCertValidateModel);
+                if (string.IsNullOrWhiteSpace(giftCertValidateModel.GiftCertNumber) && string.IsNullOrWhiteSpace(giftCertValidateModel.GiftCertKey))
+                {
+                    ModelState.Remove("GiftCertNumber");
+                    ModelState.Remove("GiftCertKey");
+                    giftCertPresent = false;
+                }
+                else
+                {
+                    giftCertPresent = true;
+                }
+                var creditCardValidateModel = new CreditCardValidateModel
+                {
+                    CardExpiryMM = paymentDataModel.CardExpiryMM,
+                    CardExpiryYYYY = paymentDataModel.CardExpiryYYYY,
+                    CardHolderName = paymentDataModel.CardHolderName,
+                    CreditCardNumber = paymentDataModel.CreditCardNumber,
+                    CVV = paymentDataModel.CVV,
+                };
+                var creditCardModelIsValid = TryValidateModel(creditCardValidateModel);
+                if (
+                    string.IsNullOrWhiteSpace(creditCardValidateModel.CardExpiryMM) &&
+                    string.IsNullOrWhiteSpace(creditCardValidateModel.CardExpiryYYYY) &&
+                    string.IsNullOrWhiteSpace(creditCardValidateModel.CardHolderName) &&
+                    string.IsNullOrWhiteSpace(creditCardValidateModel.CreditCardNumber) &&
+                    string.IsNullOrWhiteSpace(creditCardValidateModel.CVV)
+                   )
+                {
+                    ModelState.Remove("CardExpiryMM");
+                    ModelState.Remove("CardExpiryYYYY");
+                    ModelState.Remove("CardHolderName");
+                    ModelState.Remove("CreditCardNumber");
+                    ModelState.Remove("CVV");
+                    creditCardPresent = false;
+                }
+                else
+                {
+                    creditCardPresent = true;
+                }
+                if (!giftCertPresent && !creditCardPresent)
+                {
+                    ModelState.AddModelError("GiftCertNumber", "Enter Gift Cert#");
+                    ModelState.AddModelError("GiftCertKey", "Enter Gift Cert Key");
+                    ModelState.AddModelError("CreditCardNumber", "Enter Credit Card#");
+                    ModelState.AddModelError("CardHolderName", "Enter Card Holder Name");
+                    ModelState.AddModelError("CVV", "CVV");
+                    ModelState.AddModelError("CardExpiryMM", "***");
+                    ModelState.AddModelError("CardExpiryYYYY", "***");
+                }
+                else
+                {
+
+                }
+                if (ModelState.IsValid)
+                {
+                    retailSlnBL.Payment(ref paymentDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success");
+                        OrderReceiptModel orderReceiptModel = retailSlnBL.OrderReceipt(paymentDataModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        Session["ShoppingCartModel"] = null;
+                        Session["DeliveryInfoModel"] = null;
+                        success = true;
+                        processMessage = "SUCCESS";
+                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderReceipt", orderReceiptModel);
+                    }
+                    else
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: BL Process Error");
+                        success = false;
+                        processMessage = "ERROR???";
+                        paymentDataModel.ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                        };
+                        htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
+                    }
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    paymentDataModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                    htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                success = false;
+                processMessage = "ERROR???";
+                paymentDataModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+            }
+            actionResult = Json(new { success, processMessage, htmlString });
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        public ActionResult Payment_Backup0(PaymentDataModel paymentDataModel)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";

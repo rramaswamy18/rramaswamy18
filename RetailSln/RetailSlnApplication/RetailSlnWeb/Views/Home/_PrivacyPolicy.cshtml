@@ -1,25 +1,47 @@
 ﻿@model ArchitectureLibraryModels.PrivacyPolicyModel
+@using ArchitectureLibraryCacheData
 @{
-    ViewBag.Title = "PrivacyPolicy";
+    var clientId = ArchLibCache.ClientId;
 }
-<h1>Privacy Policy</h1>
-<script type="text/javascript">
-    function window_onload() {
-    }
-</script>
-<div style="padding-left: 27px; text-align: left;">
-    <ul style="list-style: decimal;">
-        <li style="padding-left: 9px;">
-            Privacy Policy 1
-        </li>
-        <li style="padding-left: 9px;">
-            Privacy Policy 2
-        </li>
-        <li style="padding-left: 9px;">
-            Privacy Policy 3
-        </li>
-        <li style="padding-left: 9px;">
-            Privacy Policy 4
-        </li>
-    </ul>
+<div style="padding-left: 9%; padding-right: 27%; text-align: left;">
+    <h1 style="color: #000000; font-weight: bold;">&nbsp;</h1>
+</div>
+<div style="padding-left: 9%; padding-right: 27%; text-align: left;">
+    <h1 style="color: #000000; font-weight: bold;">Privacy Policy</h1>
+    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> takes your privacy seriously. Please read the following to learn more about our privacy policy.<br />
+    What this Privacy Policy Covers<br />
+    This Privacy Policy covers <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> 's treatment of personally identifiable information that <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> collects when you are on the <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> site, and when you use <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> 's services. This policy also covers <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> 's treatment of any personally identifiable information that <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> 's business partners share with <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> . <br />
+    This policy does not apply to the practices of companies that <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> does not own or control, or to people that <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> does not employ or manage but obtains services from in the operation of its own business. <br />
+    Information Collection and Use<br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> collects personally identifiable information when you register for an <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> account, when you use certain <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> Services or products or when you visit <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> pages, and when you enter promotions etc. <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> may also receive personally identifiable information from our business partners. <br />
+    &bull;	When you register with <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span>, we ask for your name, email address, birth date, time of birth, place of birth, gender, zip code, and address and contact details as well as personal interests. Once you register with <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> and sign in to our services, you are not anonymous to us. <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> also automatically receives and records information on our server logs from your browser including your IP Address, <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> may also collect and/or store cookie information and the page you requested. <br />
+    &bull;	In addition, when you use <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> 's services, you may make some of your personal information public. If you post personal information online that is accessible to the public, you may receive unsolicited messages from other parties in return. <br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> uses information mainly for four general purposes: to customize the advertising and content you see, to fulfill your requests for certain products and services, to contact you about specials and new products and to periodically validate the email ID and/or User ID and contact address or phone numbers. <br />
+    Information Sharing and Disclosure<br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> will not sell or rent your personally identifiable information to anyone. <br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> will send personally identifiable information about you to other companies or people when: <br />
+    &bull;	We need to share your information to provide the product or service you have requested; <br />
+    &bull;	We need to share the information with certain service providers in order to respond to your comments or to resolve service issues. <br />
+    &bull;	We need to share information with the group or corporate to which you have signed up for or belong to. <br />
+    &bull;	We respond to requests from any government, security, revenue, regulatory or other authority, agency or officer; <br />
+    &bull;	We respond to subpoenas, court orders or legal process; or <br />
+    &bull;	We find that your actions on our web sites violate the <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> policy or any of our usage guidelines for specific products or services. <br />
+    Cookies<br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> may set and access <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> cookies on your computer. <br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> allows other companies that are presenting advertisements on some of our pages to set and access their cookies on your computer. Other companies' use of their cookies is subject to their own privacy policies, not this one. Advertisers or other companies do not have access to <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> 's cookies. <br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> may use web beacons to access our cookies within our network of web sites and in connection with <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> products and services. <br />
+    Your Ability to Edit and Delete Your Account Information and Preferences<br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> gives you the ability to edit your <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> account and preferences at any time. <br />
+    &bull;	You may request deletion of your <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> account by emailing our contacts listed on the contact us page and after due verification and validation <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> may confirming your choice to terminate the account. Please note that information may still possibly remain in our archived records and servers after your account has been deleted. <br />
+    Security<br />
+    &bull;	Your <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> Account Information is password-protected for your privacy and security. <br />
+    &bull;	In certain areas <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> uses industry-standard SSL-encryption to protect data transmissions.<br />
+    &bull;	We do require our customers to take all possible care and precaution while entering the credit card numbers on our payment gateway that is managed by a 3rd party banks etc. and internet use of cards has inherent risk that we cannot control and are not liable for. In case the customer has security concerns he should not use the site and enter confidential or credit card data and immediately alert us and should continue to not use the site until he is fully satisfied <br />
+    Changes to this Privacy Policy<br />
+    &bull;	<span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span> may amend this policy from time to time. If we make any substantial changes in the way we use your personal information we will posting the latest policy on the website. Users will not be informed individually and should check the policy from time to time on our pages. <br />
+    Questions or Suggestions<br />
+    &bull;	If you have questions or suggestions, please send us an email from our contact us page. <br />
+    @*<br />
+        <br />
+        Please indicate that you have read and accept the terms of the privacy policy by clicking yes below.*@
 </div>
