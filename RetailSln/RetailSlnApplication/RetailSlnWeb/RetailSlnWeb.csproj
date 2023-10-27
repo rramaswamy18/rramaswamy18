@@ -794,8 +794,8 @@
     <Content Include="Views\Home\_ReturnPolicy.cshtml" />
     <Content Include="Views\Home\_SEOPage1.cshtml" />
     <Content Include="Views\Home\_Services.cshtml" />
-    <Content Include="Views\Home\_ShoppingCart.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartData.cshtml" />
+    <Content Include="Views\Home\_ShoppingCart0.cshtml" />
+    <Content Include="Views\Home\_ShoppingCartData0.cshtml" />
     <Content Include="Views\Home\_ShoppingCartEmailBody.cshtml" />
     <Content Include="Views\Home\_Testimonials.cshtml" />
     <Content Include="Views\Home\_UpdatePassword.cshtml" />
@@ -865,8 +865,8 @@
     <Content Include="Views\Home\OrderListView.cshtml" />
     <Content Include="Views\Home\_OrderListView.cshtml" />
     <Content Include="Views\Home\_OrderListViewData.cshtml" />
-    <Content Include="Views\Home\_ShoppingCart1.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartData1.cshtml" />
+    <Content Include="Views\Home\_ShoppingCart.cshtml" />
+    <Content Include="Views\Home\_ShoppingCartData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
