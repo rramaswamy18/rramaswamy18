@@ -19,7 +19,6 @@ namespace ArchitectureLibraryModels
         public string AddressLine1 { set; get; }
 
         [Display(Name = "Address line# 2")]
-        [Required(ErrorMessage = "Enter address line 2")]
         [StringLength(100, ErrorMessage = "Enter valid address line 2")]
         public string AddressLine2 { set; get; }
 
@@ -55,7 +54,6 @@ namespace ArchitectureLibraryModels
         public long? DemogInfoZipPlusId { set; get; }
 
         [Display(Name = "House#")]
-        [Required(ErrorMessage = "House#")]
         [MaxLength(50, ErrorMessage = "50 chars")]
         public string HouseNumber { set; get; }
 

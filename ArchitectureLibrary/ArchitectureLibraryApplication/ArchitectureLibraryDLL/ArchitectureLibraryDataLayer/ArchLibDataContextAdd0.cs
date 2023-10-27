@@ -25,6 +25,7 @@ namespace ArchitectureLibraryDataLayer
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUsers()", "AspNetUserId", "");
                 SqlCommand sqlCommand = BuildSqlCommandAspNetUserAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserModel.AspNetUserId;
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@AccessFailedCount"].Value = aspNetUserModel.AccessFailedCount;
                 sqlCommand.Parameters["@Email"].Value = aspNetUserModel.Email;
                 sqlCommand.Parameters["@EmailConfirmed"].Value = aspNetUserModel.EmailConfirmed;
@@ -35,6 +36,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters["@LoginTypeId"].Value = aspNetUserModel.LoginTypeId == null ? (object)DBNull.Value : (int)aspNetUserModel.LoginTypeId;
                 sqlCommand.Parameters["@PasswordHash"].Value = string.IsNullOrEmpty(aspNetUserModel.PasswordHash) ? (object)DBNull.Value : aspNetUserModel.PasswordHash;
                 sqlCommand.Parameters["@PasswordExpiry"].Value = aspNetUserModel?.PasswordExpiry ?? (object)DBNull.Value;// : aspNetUserModel.PasswordExpiry;
+                sqlCommand.Parameters["@TelephoneCountryId"].Value = aspNetUserModel.TelephoneCountryId == null ? 0 : aspNetUserModel.TelephoneCountryId;
                 sqlCommand.Parameters["@PhoneNumber"].Value = string.IsNullOrEmpty(aspNetUserModel.PhoneNumber) ? (object)DBNull.Value : aspNetUserModel.PhoneNumber;
                 sqlCommand.Parameters["@PhoneNumberConfirmed"].Value = aspNetUserModel.PhoneNumberConfirmed;
                 sqlCommand.Parameters["@ResetPasswordKey"].Value = string.IsNullOrWhiteSpace(aspNetUserModel.ResetPasswordKey) ? (object)DBNull.Value : aspNetUserModel.ResetPasswordKey;
@@ -65,6 +67,7 @@ namespace ArchitectureLibraryDataLayer
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
                 SqlCommand sqlCommand = BuildSqlCommandAspNetUserRoleAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@AddUserId"].Value = aspNetUserRoleModel.AddUserId;
                 sqlCommand.Parameters["@AspNetRoleId"].Value = aspNetUserRoleModel.AspNetRoleId;
                 sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserRoleModel.AspNetUserId;
@@ -94,6 +97,7 @@ namespace ArchitectureLibraryDataLayer
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUsers()", "AspNetUserId", "");
                 SqlCommand sqlCommand = BuildSqlCommandDemogInfoAddressAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@AddressLine1"].Value = demogInfoAddressModel.AddressLine1;
                 sqlCommand.Parameters["@AddressLine2"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine2) ? (object)DBNull.Value : demogInfoAddressModel.AddressLine2;
                 sqlCommand.Parameters["@AddressTypeId"].Value = demogInfoAddressModel.AddressTypeId == null ? (long)AddressTypeEnum._ : (long)demogInfoAddressModel.AddressTypeId;
@@ -136,6 +140,7 @@ namespace ArchitectureLibraryDataLayer
                 SqlCommand sqlCommand = BuildSqlCommandPersonAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 sqlCommand.Parameters["@AddUserId"].Value = personModel.AddUserId;
                 sqlCommand.Parameters["@AspNetUserId"].Value = personModel.AspNetUserId;
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@CertificateDocumentId"].Value = personModel.CertificateDocumentId;
                 sqlCommand.Parameters["@ElectronicSignatureConsentAccepted"].Value = personModel.ElectronicSignatureConsentAccepted ? 1 : 0;
                 sqlCommand.Parameters["@FirstName"].Value = personModel.FirstName;

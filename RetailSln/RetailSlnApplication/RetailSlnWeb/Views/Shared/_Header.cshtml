@@ -115,15 +115,15 @@
             <td>
                 <table style="padding: 0px;">
                     <tr>
-                        <td style="text-align: left; vertical-align: bottom; white-space: nowrap;">
-                            <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;" title="Register, Login, Reset Password, Contact Us">
-                                <img alt="Register, Login, Reset Password, Contact Us" src="~/Images/SignIn.png" style="height: 45px; width: 45px;" title="Click to perform Register, Login, Reset Password, Contact Us" /><br />
-                                Sign In
-                            </a>
-                        </td>
-                        <td style="padding-left: 18px; text-align: left; vertical-align: bottom; white-space: nowrap;">
+                        @*<td style="text-align: left; vertical-align: bottom; white-space: nowrap;">
+                                <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;" title="Register, Login, Reset Password, Contact Us">
+                                    <img alt="Register, Login, Reset Password, Contact Us" src="~/Images/SignIn.png" style="height: 45px; width: 45px;" title="Click to perform Register, Login, Reset Password, Contact Us" /><br />
+                                    Sign In
+                                </a>
+                            </td>*@
+                        <td style="padding-left: 9px; text-align: left; vertical-align: bottom; white-space: nowrap;">
                             <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
-                                <i class="fa" style="font-size:24px">&#xf07a;</i><span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
+                                <i class="fa" style="font-size: 24px">&#xf07a;</i><span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
                                 <br />
                                 <span style="color: #000000; text-decoration: underline;">Checkout</span>
                             </a>
@@ -135,13 +135,9 @@
                 </table>
             </td>
         </tr>
-        @*<tr>
-            <td style="padding-top: 6px; text-align: center; width: 100%;">
-                @Html.Partial("_HeaderMenu")
-            </td>
-        </tr>*@
     </table>
 </div>
+<br style="clear: both;" />
 <script type="text/javascript">
     var url = "/Home/ShoppingCartSummary/";
     $.ajax({
@@ -153,6 +149,10 @@
             var jsonData = JSON.parse(responseData);
             document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
             document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
+            if (document.getElementById("shoppingCartItemsCount2") != null) {
+                document.getElementById("shoppingCartItemsCount2").innerHTML = jsonData.shoppingCartItemsCount;
+                document.getElementById("shoppingCartTotalAmount2").innerHTML = jsonData.shoppingCartTotalAmount;
+            }
         },
         error: function (xhr, exception) {
             console.log(43, "ERROR???", exception, xhr);
@@ -162,6 +162,9 @@
         console.log("00000000", "checkoutValidate_onclick", "Enter");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         document.getElementById("divErrorMessage").innerHTML = "";
+        if (document.getElementById("divErrorMessage2") != null) {
+            document.getElementById("divErrorMessage2").innerHTML = "";
+        }
         var url = "/Home/CheckoutValidate";
         $.ajax({
             url: url,
@@ -179,10 +182,16 @@
                     }
                     else {
                         document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                        if (document.getElementById("divErrorMessage2") != null) {
+                            document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                        }
                     }
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                    if (document.getElementById("divErrorMessage2") != null) {
+                        document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                    }
                 }
                 console.log("00090000", "checkoutValidate_onclick success", "Exit");
             },
@@ -190,6 +199,9 @@
                 $('#loadingModal').modal('hide');
                 console.log("checkoutValidate_onclick", "00099000", "ERROR???");
                 document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout???";
+                if (document.getElementById("divErrorMessage2") != null) {
+                    document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                }
             }
         });
         return false;

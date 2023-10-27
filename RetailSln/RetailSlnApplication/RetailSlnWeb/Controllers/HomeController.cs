@@ -24,7 +24,7 @@ namespace RetailSlnWeb.Controllers
         // GET: Home
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
             ViewData["ActionName"] = "Index";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
@@ -35,15 +35,27 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                actionResult = View("Index");
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                string absoluteUri = Request.Url.AbsoluteUri;
+                if (absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1)
+                {
+                    RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
+                    actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                }
+                else
+                {
+                    actionResult = View("Index");
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                }
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
                 ModelState.AddModelError("", "Index / GET");
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
             }
             return actionResult;
         }

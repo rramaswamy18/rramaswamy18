@@ -1,6 +1,6 @@
 ﻿@model ArchitectureLibraryModels.RegisterUserProfModel
 <style>
-    #RegisterEmailAddress-error, #ConfirmRegisterEmailAddress-error, #TelephoneNumber-error, #CaptchaAnswerRegister-error {
+    #RegisterEmailAddress-error, #ConfirmRegisterEmailAddress-error, #TelephoneNumber-error, #CaptchaAnswerRegister-error, #TelephoneCountryId-error {
         color: #ff0000;
         display: block;
         font-size: 14px;
@@ -33,18 +33,26 @@
 
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.ConfirmRegisterEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.ConfirmRegisterEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmRegisterEmailAddress), style = "width: 90%;" })
+    @Html.TextBoxFor(m => m.ConfirmRegisterEmailAddress, new { @class = "form-control validate", oncopy = "javascript: return false;", oncut = "javascript: return false;", ondrag = "javascript: return false;", ondrop = "javascript: return false;", onpaste = "javascript: return false;", onselectstart = "javascript: return false;", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmRegisterEmailAddress), style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ConfirmRegisterEmailAddress, "", new { id = "ConfirmRegisterEmailAddress-error" }).ToHtmlString()))
 </div>
 
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.TelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.TelephoneNumber), style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error" }).ToHtmlString()))
+    <div>
+        @Html.DropDownListFor(m => m.RegisterTelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.RegisterTelephoneCountryId), "---", new { @class = "form-control", style = "float: left; font-size: 14px; width: 36%;" })
+        <span style="float: left; width: 9px;">&nbsp;</span>
+        @Html.TextBoxFor(m => m.TelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.TelephoneNumber), style = "float: left; width: 53%;" })
+    </div>
+    <div>
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.RegisterTelephoneCountryId, "", new { id = "TelephoneCountryId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
+        <span style="float: left; width: 9px;">&nbsp;</span>
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error", style = "float: left;" }).ToHtmlString()))
+    </div>
 </div>
 
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
-    @Html.LabelFor(m => m.CaptchaAnswerRegister, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000;">@Model.CaptchaNumberRegister0</span> & <span style="color: #ff0000;">@Model.CaptchaNumberRegister1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
+    @Html.LabelFor(m => m.CaptchaAnswerRegister, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberRegister0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberRegister1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
     @Html.TextBoxFor(m => m.CaptchaAnswerRegister, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberRegister0 + " + " + @Model.CaptchaNumberRegister1 + " =?", style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerRegister, "", new { id = "CaptchaAnswerRegister-error" }).ToHtmlString()))
 </div>

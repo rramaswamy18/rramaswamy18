@@ -6,6 +6,7 @@ using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using RetailSlnBusinessLayer;
 using RetailSlnCacheData;
+using RetailSlnEnumerations;
 using RetailSlnModels;
 using RetailSlnWeb.ClassCode;
 using System;
@@ -48,6 +49,60 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 actionResult = Json(new { errorMessage = "Error while adding item to cart" }, JsonRequestBehavior.AllowGet);
                 Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult AddToCart(List<ShoppingCartItemModel> shoppingCartItemModels)
+        {
+            ViewData["ActionName"] = "AddToCart";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = false;
+                if (shoppingCartItemModels != null)
+                {
+                    foreach (var shoppingCartItemModel in shoppingCartItemModels)
+                    {
+                        if (shoppingCartItemModel.OrderQty != null)
+                        {
+                            success = true;
+                            break;
+                        }
+                    }
+                }
+                if (!success)
+                {
+                    processMessage = "ERROR???";
+                    htmlString = "Please enter order quantity for a min of 1 item";
+                    actionResult = Json(new { success, processMessage, htmlString });
+                }
+                else
+                {
+                    ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(shoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderListViewData", null);
+                    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while adding item to cart";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             }
             return actionResult;
         }
@@ -193,6 +248,76 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
             }
             actionResult = Json(new { success, processMessage, htmlString });
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult CheckoutGuest(CheckoutGuestModel checkoutGuestModel)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ModelState.Clear();
+                TryValidateModel(checkoutGuestModel);
+                SessionObjectModel sessionObjectModel = archLibBL.CheckoutGuest(ref checkoutGuestModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (ModelState.IsValid)
+                {
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    Session["SessionObject"] = sessionObjectModel;
+                    Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
+                    var identity = new ClaimsIdentity
+                    (
+                        new[]
+                        {
+                            new Claim(ClaimTypes.Name, sessionObjectModel.FirstName + " " + sessionObjectModel.LastName),
+                            new Claim(ClaimTypes.Email, sessionObjectModel.EmailAddress),
+                            new Claim(ClaimTypes.Role, sessionObjectModel.AspNetRoleName),
+                            //new Claim(ClaimTypes.Country, "India"),
+                        },
+                        "ApplicationCookie"
+                    );
+                    var ctx = Request.GetOwinContext();
+                    var authManager = ctx.Authentication;
+                    authManager.SignIn(identity);
+                    success = true;
+                    processMessage = "ERROR???";
+                    string redirectUrl = Url.Action(sessionObjectModel.ActionName, sessionObjectModel.ControllerName);
+                    actionResult = Json(new { success, processMessage, redirectUrl });
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", checkoutGuestModel);
+                    actionResult = Json(new { success, processMessage, htmlString });
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberCheckoutGuest0", "CaptchaNumberCheckoutGuest1");
+                checkoutGuestModel.CaptchaAnswerCheckoutGuest = null;
+                checkoutGuestModel.CaptchaNumberCheckoutGuest0 = Session["CaptchaNumberCheckoutGuest0"].ToString();
+                checkoutGuestModel.CaptchaNumberCheckoutGuest1 = Session["CaptchaNumberCheckoutGuest1"].ToString();
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", checkoutGuestModel);
+                success = false;
+                processMessage = "ERROR???";
+                actionResult = Json(new { success, processMessage, htmlString });
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 
@@ -380,16 +505,14 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(giftCertModel);
-                retailSlnBL.GiftCert(ref giftCertModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                retailSlnBL.GiftCert(ref giftCertModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     actionResult = PartialView("_GiftCertReceipt", giftCertModel);
-                    Response.StatusCode = (int)HttpStatusCode.OK;
                 }
                 else
                 {
                     actionResult = PartialView("_GiftCertData", giftCertModel);
-                    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -400,7 +523,7 @@ namespace RetailSlnWeb.Controllers
                 ModelState.AddModelError("", "Gift Cert / POST");
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = PartialView("_Error");
-                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                //Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
             return actionResult;
         }
@@ -598,6 +721,14 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("OrderListView")]
+        public ActionResult OrderListView()
+        {
+            return View();
+        }
+
         [AjaxAuthorize]
         [Authorize]
         [HttpPost]
@@ -732,115 +863,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        public ActionResult Payment_Backup0(PaymentDataModel paymentDataModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            try
-            {
-                paymentDataModel.ResponseObjectModel = new ResponseObjectModel();
-                ModelState.Clear();
-                bool giftCertPresent, creditCardPresent;
-                var giftCertValidateModel = new GiftCertValidateModel
-                {
-                    GiftCertKey = paymentDataModel.GiftCertKey,
-                    GiftCertNumber = paymentDataModel.GiftCertNumber,
-                };
-                var giftCertModelIsValid = TryValidateModel(giftCertValidateModel);
-                if (string.IsNullOrWhiteSpace(giftCertValidateModel.GiftCertNumber) && string.IsNullOrWhiteSpace(giftCertValidateModel.GiftCertKey))
-                {
-                    ModelState.Remove("GiftCertNumber");
-                    ModelState.Remove("GiftCertKey");
-                    giftCertPresent = false;
-                }
-                else
-                {
-                    giftCertPresent = true;
-                }
-                var creditCardValidateModel = new CreditCardValidateModel
-                {
-                    CardExpiryMM = paymentDataModel.CardExpiryMM,
-                    CardExpiryYYYY = paymentDataModel.CardExpiryYYYY,
-                    CardHolderName = paymentDataModel.CardHolderName,
-                    CreditCardNumber = paymentDataModel.CreditCardNumber,
-                    CVV = paymentDataModel.CVV,
-                };
-                var creditCardModelIsValid = TryValidateModel(creditCardValidateModel);
-                if (
-                    string.IsNullOrWhiteSpace(creditCardValidateModel.CardExpiryMM) &&
-                    string.IsNullOrWhiteSpace(creditCardValidateModel.CardExpiryYYYY) &&
-                    string.IsNullOrWhiteSpace(creditCardValidateModel.CardHolderName) &&
-                    string.IsNullOrWhiteSpace(creditCardValidateModel.CreditCardNumber) &&
-                    string.IsNullOrWhiteSpace(creditCardValidateModel.CVV)
-                   )
-                {
-                    ModelState.Remove("CardExpiryMM");
-                    ModelState.Remove("CardExpiryYYYY");
-                    ModelState.Remove("CardHolderName");
-                    ModelState.Remove("CreditCardNumber");
-                    ModelState.Remove("CVV");
-                    creditCardPresent = false;
-                }
-                else
-                {
-                    creditCardPresent = true;
-                }
-                if (!giftCertPresent && !creditCardPresent)
-                {
-                    ModelState.AddModelError("", "Enter Gift Cert or Credit Card Info");
-                }
-                else
-                {
-
-                }
-                if (ModelState.IsValid)
-                {
-                    retailSlnBL.Payment(ref paymentDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (ModelState.IsValid)
-                    {
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success");
-                        OrderReceiptModel orderReceiptModel = retailSlnBL.OrderReceipt(paymentDataModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        Session["ShoppingCartModel"] = null;
-                        Session["DeliveryInfoModel"] = null;
-                        Response.StatusCode = (int)HttpStatusCode.OK;
-                        actionResult = PartialView("_OrderReceipt", orderReceiptModel);
-                    }
-                    else
-                    {
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: BL Process Error");
-                        Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        paymentDataModel.ResponseObjectModel.ValidationSummaryMessage = "PLEASE FIX ERRORS TO CONTINUE???";
-                        actionResult = PartialView("_PaymentData", paymentDataModel);
-                    }
-                }
-                else
-                {
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: Payment Data Model Validation Failed");
-                    archLibBL.MergeModelStateErrorMessages(ModelState);
-                    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    paymentDataModel.ResponseObjectModel.ValidationSummaryMessage = "PLEASE FIX ERRORS TO CONTINUE???";
-                    actionResult = PartialView("_PaymentData", paymentDataModel);
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                paymentDataModel.ResponseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                paymentDataModel.ResponseObjectModel.ValidationSummaryMessage = "PLEASE FIX ERRORS TO CONTINUE???";
-                archLibBL.MergeModelStateErrorMessages(ModelState);
-                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                actionResult = PartialView("_PaymentData", paymentDataModel);
-            }
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
-
         [AllowAnonymous]
         [HttpGet]
         public ActionResult RemoveFromCart(string id)
@@ -933,5 +955,43 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
+
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("Wholesale")]
+        //public ActionResult Wholesale(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    if (string.IsNullOrWhiteSpace(id))
+        //    {
+        //        ViewData["ActionName"] = "REGISTER";
+        //    }
+        //    else
+        //    {
+        //        ViewData["ActionName"] = id.ToUpper();
+        //    }
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
+        //        actionResult = View("Index", registerUserLoginUserModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
+        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
     }
 }

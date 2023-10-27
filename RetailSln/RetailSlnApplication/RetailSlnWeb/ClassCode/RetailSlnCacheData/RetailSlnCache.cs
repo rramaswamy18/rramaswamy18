@@ -46,6 +46,7 @@ namespace RetailSlnCacheData
             {
                 categoryItemHierModel.CategoryModel = categoryModels.FirstOrDefault(x => x.CategoryId == categoryItemHierModel.CategoryId);
                 categoryItemHierModel.ItemModel = itemModels.FirstOrDefault(x => x.ItemId == categoryItemHierModel.ItemId);
+                categoryItemHierModel.ParentCategoryModel = categoryModels.FirstOrDefault(x => x.CategoryId == categoryItemHierModel.ParentCategoryId);
             }
             categoryLayoutModels = new Dictionary<long, CategoryLayoutModel>();
             foreach (var categoryModel in categoryModels)

@@ -1,0 +1,87 @@
+﻿@model RetailSlnModels.GiftCertModel
+@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<div>
+    Dear Recipient,
+    <br />
+    We are happy to inform you that you have received a gift certificate from @Model.SenderFullName
+    <br />
+    Please feel free to use it at your convenience to shop from the numerous items we have available on our website
+    <br />
+</div>
+<br />
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Gift Certificate# :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.GiftCertNumber
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Gift Certificate Key :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.GiftCertKey
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Sender Email Address :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.SenderEmailAddress
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Sender :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.SenderFullName
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Recipient :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.RecipientFullName
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Message :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.GiftCertMessage
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            Amount :&nbsp;
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; ">
+            @Model.GiftCertAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 14px; padding: 5px; text-align: left;">
+            Recipient Email address
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 14px; padding: 5px; text-align: left;">
+            @Model.RecipientEmailAddressRegistered
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <img src="@(ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", ""))/ClientSpecific/@(clientId)_@(clientName)/Documents/GiftCertificate/@(Model.GiftCertNumber).jpg" alt="@Model.GiftCertImageFileName" title="@Model.GiftCertImageFileName" />
+        </td>
+    </tr>
+</table>

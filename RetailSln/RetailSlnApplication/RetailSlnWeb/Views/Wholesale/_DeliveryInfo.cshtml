@@ -1,0 +1,15 @@
+﻿@model RetailSlnModels.DeliveryInfoModel
+<h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+    Delivery&nbsp;&nbsp;Info
+</h2>
+<div class="container">
+    <div class="col-md-6" style="text-align: left;">
+        @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+    </div>
+    <div class="col-md-6" style="text-align: left;">
+        <form id="formDeliveryInfoData">
+            @Html.Partial("_DeliveryInfoData", Model.DeliveryInfoDataModel)
+        </form>
+        <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process</button>
+    </div>
+</div>

@@ -16,6 +16,9 @@ namespace ArchitectureLibraryModels
 
         public string CaptchaNumberRegister1 { set; get; }
 
+        [Required(ErrorMessage = "Country")]
+        public long? RegisterTelephoneCountryId { set; get; }
+
         [Compare(nameof(RegisterEmailAddress), ErrorMessage = "Register email address & confirm do not match")]
         [Display(Name = "Confirm register email address")]
         //[EmailAddress(ErrorMessage = "Please enter valid confirm register email address")]

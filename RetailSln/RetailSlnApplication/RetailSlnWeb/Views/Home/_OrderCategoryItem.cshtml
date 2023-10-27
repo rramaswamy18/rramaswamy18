@@ -12,7 +12,15 @@
     string clientName = ArchLibCache.ClientName;
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[parentCategoryId];
     List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
-    <div class="col-md-12" style="justify-content: center; text-align: center; vertical-align: bottom; width: 100%;">
+    <div class="center" style="vertical-align: bottom; width: 100%;">
+        <div class="fixedDiv">
+            <i class="fa" style="font-size: 18px; padding-left: 2px;">&#xf07a;</i>
+            <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount2"></span>
+            <br style="clear: both;" />
+            &nbsp;&nbsp;&nbsp;<span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount2"></span>
+            <br style="clear: both;" />
+            <div id="divErrorMessage2" style="color: #000000; font-family: Arial; font-size: 12px; font-weight: bold; text-align: left;"></div>
+        </div>
         @BuildOrderCategoryItem(categoryItemHierModels)
     </div>
 }@*helper BuildOrderCategoryItemHier(long parentCategoryId)*@
@@ -21,7 +29,7 @@
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
     string categoryOrItem, imageDivWidth, imageHeight, imageWidth;
-    int imageCount = 0, imageCountIndex = 0, imageCountPerRow;
+    int imageCount = -1, imageCountIndex = 0, imageCountPerRow;
     List<CategoryItemHierModel> categoryItemHierModelsRecursive;
     CategoryLayoutModel categoryLayoutModel;
     foreach (var categoryItemHierModel in categoryItemHierModels)
@@ -43,23 +51,38 @@
         }//if (categoryItemHierModel.CategoryId != null && categoryItemHierModel.ProcessType == "Recursive")*@
         else
         {
-            imageCount++;
             imageCountIndex++;
             if (categoryItemHierModel.CategoryId != null)
             {
-                <div style="border-radius: 25px; color: #000000; display: inline-block; font-size: 20px; font-weight: bold; margin-left: auto; margin-right: auto; padding-right: 45px; width: @imageDivWidth;">
+                <div style="border-radius: 25px; color: #000000; display: inline-block; font-size: 20px; font-weight: bold; padding: 18px;">
                     @BuildCategory(categoryItemHierModel.CategoryModel, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
                 </div>
             }
             else
             {
-                <div style="display: inline-block; margin-left: auto; margin-right: auto; padding-right: 27px; vertical-align: top; width: @imageDivWidth;">
-                    @BuildItem(categoryItemHierModel.ItemModel, imageCountIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
-                </div>
+                if (categoryItemHierModel.ProcessType == "ParentCategoryName")
+                {
+                    imageCountIndex--;
+                    <a href="@Url.Action("Index", "Home")" style="color: #000000; padding: 18px;" title="Return to categories">
+                        <i class="fa fa-arrow-circle-left" style="font-size: 36px;"></i>
+                    </a>
+                    <span style="color: #a54000; font-family: 'Comic Sans MS'; font-size: 27px; font-weight: bold; letter-spacing: 4px; padding-left: 18px; padding-right: 18px; text-align: center; text-transform: uppercase;">@categoryItemHierModel.ParentCategoryModel.CategoryDesc</span>
+                    <br />
+                }
+                else
+                {
+                    imageCount++;
+                    <div style="display: inline-block; padding: 15px; vertical-align: top; width: @imageDivWidth;">
+                        @BuildItem(categoryItemHierModel.ItemModel, imageCount, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                    </div>
+                }
             }//else (categoryItemHierModel.CategoryId != null && categoryItemHierModel.ProcessType == "Recursive")
             if (imageCountIndex == imageCountPerRow)
             {
                 <br style="clear: both;" />
+                @*<div style="margin-left: auto; margin-right: auto; width: 810px;">
+                        <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+                    </div>*@
                 imageCountIndex = 0;
             }//if (imageCountIndex == imageCountPerRow - 1)
             else
@@ -73,26 +96,25 @@
 @helper BuildCategory(CategoryModel categoryModel, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
     <a href="@Url.Action("OrderCategoryItem", "Home", new { id = categoryModel.CategoryId })" style="color: #000000; text-decoration: underline;">
-        @if (categoryOrItem == "Category")
-        {
-            <img class="img-responsive" style="background-image: url(./ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName); background-size: 100%; border-radius: 25px; height: @imageHeight; width: @imageWidth;">
-        }
-        else
-        {
-            <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
-        }
-        <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">@categoryModel.CategoryDesc</div>
+        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
+        <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">
+            @categoryModel.CategoryDesc
+        </div>
     </a>
 }
 @helper BuildItem(ItemModel itemModel, int i, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
     int k;
-    <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemModel.ImageName" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
+    float itemRate;
+    string addToCartSuccessDisplay;
+    var shoppingCartItems = ((ShoppingCartModel)Session["ShoppingCartModel"])?.ShoppingCartItems;
+    itemRate = itemModel.ItemRate.Value;
+    <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" />
     if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     {
         <img class="img-responsive" src="~/Images/OutofStock.png" style="position: absolute; top: 0px; left: 14px; height: auto; max-width: @imageWidth; width: 100%;" />
     }
-    <span style="color: #000000; font-weight: bold; padding-right: 5px;">@itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</span>
+    <span style="color: #000000; font-weight: bold; padding-right: 5px;">@itemRate.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</span>
     for (k = 0; k < itemModel.ItemStarCount; k++)
     {
         <span class="fa fa-star" style="color: #ff9900;"></span>
@@ -102,10 +124,13 @@
         <span class="fa fa-star-o" style="color: #ff9900;"></span>
     }
     <br style="clear: both;">
+    <a href="javascript: void(0);" id="checkoutHref@(i)" onclick="return checkoutValidate_onclick();" style="color: #0000ff; font-size: 16px; font-weight: bold; text-decoration: underline;">Checkout</a>
+    <br style="clear: both;">
     <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">@itemModel.ItemShortDesc</div>
     if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     {
-        <span style="color: #a54000; font-family: Arial; font-size: 15px; font-style: italic; font-weight: 900; text-decoration: underline;">Out of Stock&nbsp;</span><br />
+        <span style="color: #a54000; font-family: Arial; font-size: 15px; font-style: italic; font-weight: 900; text-decoration: underline;">Out of Stock&nbsp;</span>
+        <br />
         <span style="color: #a54000; font-family: Arial; font-size: 12px; font-weight: 800;">Expected - </span>
         if (!string.IsNullOrEmpty(itemModel.ExpectedAvailability))
         {
@@ -113,25 +138,47 @@
         }
         if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
         {
-            <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a><br />
+            <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
+            <br />
         }
-        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 15px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
     }
     else
     {
-        <span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>
+        if (shoppingCartItems != null && shoppingCartItems.FindIndex(x => x.ItemId == itemModel.ItemId) > -1)
+        {
+            addToCartSuccessDisplay = "block";
+        }
+        else
+        {
+            addToCartSuccessDisplay = "none;";
+        }
+        <span id="addToCartSuccess@(i)" style="display: @addToCartSuccessDisplay; font-family: Arial; font-size: 12px; font-weight: bold;">
+            <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+            <span style="color: #0000ff; padding-right: 5px;">Added...</span>
+            <br style="clear: both;">
+        </span>
+        <span id="addToCartFailure@(i)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+            <i class="fa fa-times" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+            <span style='color: #ff0000;'>Invalid qty</span>
+            <br style="clear: both;">
+        </span>
+        @*<span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>*@
         if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
         {
-            <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a><br />
+            <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
+            <br style="clear: both;" />
         }
-        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 15px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a><br />
+        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+        <br />
         <div style="float: left; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">Qty : </div>
         <input class="form-control" id="orderQty@(i)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(i));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty")" />
         <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@i);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
     }
-    <br style="clear: both;">
+    <br style="clear: both;" />
+    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
     <span id="itemId@(i)" style="display: none;">@itemModel.ItemId</span>
 }
 <script type="text/javascript">
@@ -139,7 +186,12 @@
         console.log("addToCart_onclick", "00000000", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         document.getElementById("divErrorMessage").innerHTML = "";
-        document.getElementById("addToCart" + index).innerHTML = "";
+        if (document.getElementById("divErrorMessage2") != null) {
+            document.getElementById("divErrorMessage2").innerHTML = "";
+        }
+        //document.getElementById("addToCart" + index).innerHTML = "";
+        document.getElementById("addToCartSuccess" + index).style.display = "none";
+        document.getElementById("addToCartFailure" + index).style.display = "none";
         try {
             var itemId = document.getElementById("itemId" + index).innerText;
             var orderQty = document.getElementById("orderQty" + index).value;
@@ -149,7 +201,11 @@
             else {
                 $('#loadingModal').modal('hide');
                 document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
-                document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Invalid qty</span><br />";
+                if (document.getElementById("divErrorMessage2") != null) {
+                    document.getElementById("divErrorMessage2").innerHTML = "Enter valid order quantity";
+                }
+                //document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Invalid qty</span><br />";
+                document.getElementById("addToCartFailure" + index).style.display = "block";
                 return false;
             }
             var url = "/Home/AddToCart";
@@ -166,7 +222,10 @@
                     var jsonData = JSON.parse(responseData);
                     document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
-                    document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-check' style='color: #00d000; padding-right: 5px;'></i><span style='color: #0000ff;'>Added to cart</span><br />";
+                    document.getElementById("shoppingCartItemsCount2").innerHTML = jsonData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount2").innerHTML = jsonData.shoppingCartTotalAmount;
+                    //document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-check' style='color: #00d000; padding-right: 5px;'></i><span style='color: #0000ff;'>Added to cart</span><br />";
+                    document.getElementById("addToCartSuccess" + index).style.display = "block";
                     document.getElementById("orderQty" + index).value = "@ArchLibCache.GetApplicationDefault(@ArchLibCache.ClientId, "OrderProcess", "DefaultOrderQty")";
                 },
                 error: function (xhr, exception) {
@@ -175,7 +234,11 @@
                     console.log(exception, xhr);
                     var jsonData = JSON.parse(xhr.responseText);
                     document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                    document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
+                    if (document.getElementById("divErrorMessage2") != null) {
+                        document.getElementById("divErrorMessage2").innerHTML = jsonData.errorMessage;
+                    }
+                    //document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
+                    document.getElementById("addToCartFailure" + index).style.display = "block";
                 }
             });
         }

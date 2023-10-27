@@ -77,7 +77,7 @@ namespace ArchitectureLibraryBusinessLayer
                     ArchLibDataContext.OpenSqlConnection();
                     ArchLibDataContext.AddContactUs(contactUsModel, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     contactUsModel.LoginPassword = GenerateRandomKey(9);
-                    contactUsModel.UserProfRegistered = !RegisterUserProf(contactUsModel.EmailAddress, contactUsModel.LoginPassword, contactUsModel.ContactUsTelephoneNumber, contactUsModel.FirstName, contactUsModel.LastName, ArchLibDataContext.SqlConnectionObject, out PersonModel personModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    contactUsModel.UserProfRegistered = !RegisterUserProf(contactUsModel.EmailAddress, contactUsModel.LoginPassword, contactUsModel.ContactUsTelephoneCountryId, contactUsModel.ContactUsTelephoneNumber, contactUsModel.FirstName, contactUsModel.LastName, ArchLibDataContext.SqlConnectionObject, out PersonModel personModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                     string contactUsEmailBodyHtml = ViewToHtmlString(controller, "_ContactUsEmailBody", contactUsModel);
                     string contactUsEmailSubjectHtml = ViewToHtmlString(controller, "_ContactUsEmailSubject", contactUsModel);
@@ -293,6 +293,130 @@ namespace ArchitectureLibraryBusinessLayer
                 }
             }
         }
+        //LoginUserProf POST
+        public SessionObjectModel CheckoutGuest(ref CheckoutGuestModel checkoutGuestModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Validate");
+                if (ValidateCaptcha(httpSessionStateBase, "CaptchaNumberCheckoutGuest0", "CaptchaNumberCheckoutGuest1", checkoutGuestModel.CaptchaAnswerCheckoutGuest))
+                {
+                }
+                else
+                {
+                    modelStateDictionary.AddModelError("CaptchaAnswerCheckoutGuest", "Incorrect captcha answer");
+                }
+                SessionObjectModel sessionObjectModel;
+                if (modelStateDictionary.IsValid)
+                {
+                    //int x = 1, y = 0, z = x / y;
+                    checkoutGuestModel.CheckoutGuestEmailAddress = checkoutGuestModel.CheckoutGuestEmailAddress.Trim().ToLower();
+                    ArchLibDataContext.OpenSqlConnection();
+                    PersonModel personModel = ArchLibDataContext.GetPersonFromEmailAddress(checkoutGuestModel.CheckoutGuestEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (personModel == null) //Guest User is new User
+                    {
+                        //Create in the database as Guest User
+                        //AspNetUser, Person, UserRole, Address
+                        string aspNetUserId = Guid.NewGuid().ToString();
+                        string firstName = "Guest", lastName = "User";
+                        long certificateDocumentId = 0, initialsTextId = 0, signatureTextId = 0;
+                        string initialsTextValue = "", signatureTextValue = "";
+                        personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, checkoutGuestModel.CheckoutGuestEmailAddress, null, null, null, null, null, null, null, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserTypeEnum.GuestUser, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                    else
+                    {
+
+                    }
+                    if (personModel != null)
+                    {
+                        if (personModel.AspNetUserModel.UserTypeId == UserTypeEnum.GuestUser)
+                        {
+                            checkoutGuestModel.ResponseObjectModel = new ResponseObjectModel
+                            {
+                                ResponseMessages = new List<string>(),
+                                ResponseTypeId = ResponseTypeEnum.Success,
+                            };
+                            sessionObjectModel = new SessionObjectModel
+                            {
+                                AspNetRoleId = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleId,
+                                AspNetRoleName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleName,
+                                ControllerName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.ControllerName,
+                                ActionName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.ActionName,
+                                AspNetUserId = personModel.AspNetUserModel.AspNetUserId,
+                                ClientId = clientId,
+                                EmailAddress = personModel.AspNetUserModel.Email ?? null,
+                                FirstName = personModel.FirstName,
+                                InitialsTextId = (long)personModel.InitialsTextId,
+                                InitialsTextValue = personModel.InitialsTextValue,
+                                LastName = personModel.LastName,
+                                LoggedInUserId = personModel.AspNetUserId,
+                                NicknameFirst = personModel.NicknameFirst,
+                                NicknameLast = personModel.NicknameLast,
+                                PersonId = (long)personModel.PersonId,
+                                PhoneNumber = personModel.AspNetUserModel.PhoneNumber,
+                                SignatureTextId = (long)personModel.SignatureTextId,
+                                SignatureTextValue = personModel.SignatureTextValue,
+                                UserProfileAdultAge = true,
+                                UserProfileUpdated = true,
+                            };
+                        }
+                        else
+                        {
+                            modelStateDictionary.AddModelError("LoginEmailAddress", "Please check your email address");
+                            modelStateDictionary.AddModelError("LoginPassword", "Please check your login password");
+                            modelStateDictionary.AddModelError("", "Unable to login with credentials supplied");
+                            modelStateDictionary.AddModelError("", "It is likely your password is expired");
+                            sessionObjectModel = null;
+                        }
+                    }
+                    else
+                    {
+                        modelStateDictionary.AddModelError("LoginEmailAddress", "Please check your email address");
+                        modelStateDictionary.AddModelError("LoginPassword", "Please check your login password");
+                        modelStateDictionary.AddModelError("", "Unable to login with credentials supplied");
+                        modelStateDictionary.AddModelError("", "It is likely your password is expired");
+                        sessionObjectModel = null;
+                    }
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                }
+                else
+                {
+                    sessionObjectModel = null;
+                }
+                if (modelStateDictionary.IsValid)
+                {
+
+                }
+                else
+                {
+                    GenerateCaptchaQuesion(httpSessionStateBase, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
+                    checkoutGuestModel.CaptchaNumberCheckoutGuest0 = httpSessionStateBase["CaptchaNumberCheckoutGuest0"].ToString();
+                    checkoutGuestModel.CaptchaNumberCheckoutGuest1 = httpSessionStateBase["CaptchaNumberCheckoutGuest1"].ToString();
+                    checkoutGuestModel.CaptchaAnswerCheckoutGuest = null;
+                    MergeModelStateErrorMessages(modelStateDictionary);
+                }
+                return sessionObjectModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                try
+                {
+                    ArchLibDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+                    ;
+                }
+            }
+        }
         //PrivacyPolicy GET
         public PrivacyPolicyModel PrivacyPolicy(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -441,6 +565,7 @@ namespace ArchitectureLibraryBusinessLayer
                     QueryString = queryString,
                     RegisterUserProfModel = new RegisterUserProfModel
                     {
+                        RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
                         ResponseObjectModel = new ResponseObjectModel
                         {
                             ResponseTypeId = ResponseTypeEnum.Success,
@@ -569,7 +694,7 @@ namespace ArchitectureLibraryBusinessLayer
 
                         string firstName = "", lastName = "", initialsTextValue = "", signatureTextValue = "";
                         long initialsTextId = 0, signatureTextId = 0;
-                        ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, null, null, registerUserProfModel.TelephoneNumber, resetPasswordQueryString, resetPasswordDateTime, resetPasswordKey, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, null, null, registerUserProfModel.RegisterTelephoneCountryId, registerUserProfModel.TelephoneNumber, resetPasswordQueryString, resetPasswordDateTime, resetPasswordKey, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserTypeEnum.RegularUser, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         string registerUserProfEmailBodyHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailBody", registerUserProfModel);
                         string registerUserProfEmailSubjectHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailSubject", registerUserProfModel);
                         string signatureHtml = ViewToHtmlString(controller, "_SignatureTemplate", registerUserProfModel);
@@ -1368,7 +1493,7 @@ namespace ArchitectureLibraryBusinessLayer
             {
             }
         }
-        public bool RegisterUserProf(string registerEmailAddress, string loginPassword, string telephoneNumber, string firstName, string lastName, SqlConnection sqlConnection, out PersonModel personModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public bool RegisterUserProf(string registerEmailAddress, string loginPassword, long? registerTelephoneCountryId, string telephoneNumber, string firstName, string lastName, SqlConnection sqlConnection, out PersonModel personModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1384,7 +1509,7 @@ namespace ArchitectureLibraryBusinessLayer
                     string loginPasswordEncrypted = EncryptDecrypt.EncryptDataMd5(loginPassword, privateKey);
                     DateTime loginPasswordExpiryDateTime = DateTime.Now.AddDays(180);
                     long certificateDocumentId = 0;
-                    personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, telephoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, registerTelephoneCountryId, telephoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserTypeEnum.RegularUser, UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                     personModel.AspNetUserId = aspNetUserId;
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                     return true;

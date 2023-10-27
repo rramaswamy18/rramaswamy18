@@ -257,6 +257,7 @@
     <Compile Include="ArchitectureLibraryModels\DemogInfoCountryModel.cs" />
     <Compile Include="ArchitectureLibraryModels\DemogInfoSubDivisionModel.cs" />
     <Compile Include="ArchitectureLibraryModels\FAQsModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\CheckoutGuestModel.cs" />
     <Compile Include="ArchitectureLibraryModels\LoginUserProfModel.cs" />
     <Compile Include="ArchitectureLibraryModels\PersonModel.cs" />
     <Compile Include="ArchitectureLibraryModels\PicGalleryModel.cs" />
@@ -275,6 +276,7 @@
     <Compile Include="ArchitectureLibraryModels\SessionObjectModel.cs" />
     <Compile Include="ArchitectureLibraryModels\TestimonialsModel.cs" />
     <Compile Include="ArchitectureLibraryModels\UpdatePasswordModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\UserProfileMetaDataModel.cs" />
     <Compile Include="ArchitectureLibraryPDFLibrary\PDFDataModel.cs" />
     <Compile Include="ArchitectureLibraryPDFLibrary\PDFUtility3.cs" />
     <Compile Include="ArchitectureLibraryTemplate\KeywordModel.cs" />

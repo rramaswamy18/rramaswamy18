@@ -1,0 +1,33 @@
+﻿@model ArchitectureLibraryModels.RegisterUserProfModel
+@using ArchitectureLibraryCacheData
+@{
+    long clientId = ArchLibCache.ClientId;
+}
+<table>
+    <tr>
+        <td style="font-family: Arial; font-size: 15px; text-align: left;">
+            <span style="font-weight: bold;">Dear Valued Customer,</span>
+            <br /><br />
+            Thank you for your interest in registering - @Model.RegisterEmailAddress
+            <br /><br />
+            This email is to welcome you to our school, enable you to update your profile and register for our programs.
+            <br />
+            Please <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "UpdatePasswordAction", "" ), ArchLibCache.GetApplicationDefault(0, "UpdatePasswordController", "" ))/@Model.ResetPasswordQueryString" target="_blank">Click Here</a> to complete the registration process.
+            <br /><br />
+            If you are having issues with the above link - please copy and paste the below in your browser to continue
+            <br />
+            <span style="color:#0000ff;">@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "")/@Url.Action(ArchLibCache.GetApplicationDefault(0, "UpdatePasswordAction", ""), ArchLibCache.GetApplicationDefault(0, "UpdatePasswordController", ""))/@Model.ResetPasswordQueryString</span>
+            <br /><br />
+            Your Reset Password key is
+            <br /><br />
+            <b>@Model.ResetPasswordKey</b>
+            <br /><br />
+            <span style="background-color: #deecf9;">
+                Please do not hesitate to call us at @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") if you have any questions.
+                <br /><br />
+                Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" target="_blank">Contact Us Here</a> to let us know.
+            </span>
+        </td>
+    </tr>
+</table>
+<br /><br />

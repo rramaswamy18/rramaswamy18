@@ -129,7 +129,6 @@ namespace RetailSlnDataLayer
                         ItemName = sqlDataReader["ItemName"].ToString(),
                         ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                         ImageName = sqlDataReader["ImageName"].ToString(),
-                        ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
                         ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
                         ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
                         ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),

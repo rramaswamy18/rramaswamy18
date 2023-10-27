@@ -1,0 +1,142 @@
+﻿@model RetailSlnModels.GiftCertModel
+@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<style>
+    .class1 {
+        border-collapse: collapse;
+        border-color: #000000;
+        border-style: solid;
+        border-width: 1px;
+        color: #000000;
+        font-family: Arial;
+        font-size: 14px;
+        padding: 5px;
+        text-align: left;
+        text-wrap: avoid;
+        vertical-align: top;
+    }
+</style>
+<table class="class1 table table-responsive">
+    <tr>
+        <td class="class1" colspan="2" style="color: #a54000; font-size: 20px; font-weight: bold; letter-spacing: 4px; text-align: center; text-transform: uppercase; width: 100%;">
+            Gift&nbsp;&nbsp;Certificate&nbsp;&nbsp;Receipt
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" colspan="2">
+            <span style="font-size: 15px; font-weight: bold;">Dear Valued Customer,</span>
+            <br /><br />
+            Please find below the details of the purchase of your gift certificate
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            CC Process Status
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.CreditCardProcessStatus
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            CC Last 4
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.CreditCardLast4
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Unique Ref#
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.CreditCardProcessMessage
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Gift Certificate#
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.GiftCertNumber
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Gift Certificate Key
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.GiftCertKey
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Sender Name
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.SenderFullName
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Sender Email Address
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.SenderEmailAddress
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Recipient Name
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.RecipientFullName
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Recipient Email Address
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.RecipientEmailAddress
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Amount
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.GiftCertAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo)
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Message
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.GiftCertMessage
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" style="text-align: left;">
+            Recipient Email Address
+        </td>
+        <td class="class1" style="text-align: left;">
+            @Model.RecipientEmailAddressRegistered
+        </td>
+    </tr>
+    <tr>
+        <td class="class1" colspan="2" style="text-align: left;">
+            Login using email address, password and the Gift Cert# & key while making payment
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <img src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/GiftCertificate/@(Model.GiftCertNumber).jpg" alt="@Model.GiftCertImageFileName" title="@Model.GiftCertImageFileName" />
+        </td>
+    </tr>
+</table>

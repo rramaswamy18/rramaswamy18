@@ -15,6 +15,7 @@ namespace ArchitectureLibraryModels
         public bool EmailConfirmed { set; get; }
         public string PasswordHash { set; get; }
         public string SecurityStamp { set; get; }
+        public long? TelephoneCountryId { set; get; }
 
         [Display(Name = "Telephone#")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Please enter 10 digit valid phone#")]

@@ -1,0 +1,57 @@
+﻿@model ArchitectureLibraryModels.CheckoutGuestModel
+<h3 style="font-size: 24px; font-weight: bold;"><span style="color: #000000; letter-spacing: 9px; text-transform: uppercase;">guest checkout</span></h3>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+}
+else
+{
+    <ul style="font-size: 14px; font-weight: bold;">
+        <li>
+            Please enter email address, confirm email, captcha answer
+        </li>
+        <li>
+            Click <span style="color: #0000ff; font-size: 18px; text-transform: uppercase;">checkout guest</span> to continue
+        </li>
+        <li style="color: #ff0000;">
+            FYI... Regular login has other interesting features
+        </li>
+    </ul>
+    <form id="formLoginUserProfGuestData">
+        @Html.Partial("_LoginUserProfGuestData", Model)
+    </form>
+    <button class="loginRegisterbtn" id="loginUserProfGuestSave" onclick="javascript: return loginUserProfGuestSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 93%;" type="button">checkout guest</button>
+    <script type="text/javascript">
+        function loginUserProfGuestSave_onclick() {
+            console.log("00000000", "loginUserProfGuestSave_onclick", "ENTER!!!");
+            $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+            var url = "/Home/CheckoutGuest";
+            var postData = $("#formLoginUserProfGuestData").serialize();
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                //dataType: "html",
+                data: postData,
+                //async: false,
+                success: function (responseData, textStatus, request) {
+                    $("#loadingModal").modal('hide');
+                    console.log(responseData);
+                    if (responseData.success) {
+                        document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                    }
+                    else {
+                        document.getElementById("formLoginUserProfGuestData").innerHTML = responseData.htmlString;
+                    }
+                    console.log("00001000", "loginUserProfGuestSave_onclick success", responseData.processMessage);
+                },
+                error: function (xhr, exception) {
+                    $("#loadingModal").modal('hide');
+                    document.getElementById("formLoginUserProfGuestData").innerHTML = xhr.responseText;
+                    console.log("00099000", "loginUserProfGuestSave_onclick", "ERROR???", exception, xhr);
+                }
+            });
+        }
+    </script>
+}

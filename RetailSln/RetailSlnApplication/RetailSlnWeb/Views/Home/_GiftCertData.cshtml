@@ -1,0 +1,187 @@
+﻿@model RetailSlnModels.GiftCertModel
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<style>
+    #SenderEmailAddress-error, #SenderPassword-error, #RecepientEmailAddress-error, #ConfirmRecipientEmailAddress-error, #SenderFullName-error, #RecipientFullName-error, #GiftCertAmount-error, #GiftCertMessage-error, #CaptchaAnswer-error, #CreditCardNumber-error, #CVV-error, #CardExpiryMM-error, #CardExpiryYYYY-error, #CardHolderName-error, #SelectedTemplateName-error {
+        color: #ff0000;
+        display: block;
+        font-size: 15px;
+        font-weight: bold;
+    }
+</style>
+@{
+    int i, j, index;
+    List<SelectListItem> years = new List<SelectListItem>();
+    for (i = DateTime.Now.Year; i <= DateTime.Now.Year + 4; i++)
+    {
+        years.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+    }
+}
+@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+{
+    <div class="row validationSummaryMessage" id="divLoginUserProfValidationSummaryMessage">
+        @Model.ResponseObjectModel.ValidationSummaryMessage
+    </div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row" id="divGiftCertValidationSummary">
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+    </div>
+}
+@if (Model != null && Model.ResponseObjectModel != null)
+{
+    <div class="row" id="divLoginUserProfResponseObject">
+        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+    </div>
+}
+<center><button class="loginRegisterbtn" id="giftCertSave0" onclick="javascript: return giftCertSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 171px;" type="button">Save</button></center>
+<div class="col-md-6" style="text-align: left;">
+    <h3 style="color: #000000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Recipient&nbsp;&nbsp;Info</h3>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.RecipientEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.RecipientEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.RecipientEmailAddress), title = "Enter " + @Html.DisplayNameFor(m => m.RecipientEmailAddress), style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.RecipientEmailAddress, "", new { id = "RecepientEmailAddress-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.ConfirmRecipientEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.ConfirmRecipientEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmRecipientEmailAddress), title = "Enter " + @Html.DisplayNameFor(m => m.ConfirmRecipientEmailAddress), style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ConfirmRecipientEmailAddress, "", new { id = "ConfirmRecipientEmailAddress-error" }).ToHtmlString()))
+    </div>
+    <h3 style="color: #000000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Gift&nbsp;&nbsp;Info</h3>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.SenderFullName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.SenderFullName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.SenderFullName), title = @Html.DisplayNameFor(m => m.SenderFullName), style = "width: 90%;", type = "text" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SenderFullName, "", new { id = "SenderFullName-error" }).ToHtmlString()))
+    </div>    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.RecipientFullName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.RecipientFullName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.RecipientFullName), title = @Html.DisplayNameFor(m => m.RecipientFullName), style = "width: 90%;", type = "text" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.RecipientFullName, "", new { id = "RecipientFullName-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.GiftCertAmount, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.GiftCertAmount, new { @class = "form-control validate", placeholder = "Amount", min = "1", max = "99999", maxlength = 5, style = "width: 27%;", title = "Gift Cert Amount", type = "number" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertAmount, "", new { id = "GiftCertAmount-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.GiftCertMessage, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.GiftCertMessage, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertMessage), title = @Html.DisplayNameFor(m => m.GiftCertMessage), style = "width: 90%;", type = "text" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertMessage, "", new { id = "GiftCertMessage-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.CaptchaAnswer, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumber0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumber1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
+        @Html.TextBoxFor(m => m.CaptchaAnswer, null, new { @class = "form-control", placeholder = @Model.CaptchaNumber0 + " + " + @Model.CaptchaNumber1 + " =?", style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswer, "", new { id = "CaptchaAnswer-error" }).ToHtmlString()))
+    </div>
+    <center><button class="loginRegisterbtn" id="giftCertSave1" onclick="javascript: return giftCertSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 171px;" type="button">Save</button></center>
+</div>
+<div class="col-md-6" style="text-align: left;">
+    <h3 style="color: #000000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Sender&nbsp;&nbsp;Info</h3>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.SenderEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required) - <span style="color: #ff0000;">must be registered</span></span>
+        @Html.TextBoxFor(m => m.SenderEmailAddress, new { @class = "form-control validate", onchange = "javascript: return senderEmailAddress_onchange();", placeholder = "Enter " + @Html.DisplayNameFor(m => m.SenderEmailAddress) + " - must be registered", style = "width: 90%;", title = "Enter " + @Html.DisplayNameFor(m => m.SenderEmailAddress) + " - must be registered" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SenderEmailAddress, "", new { id = "SenderEmailAddress-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.SenderPassword, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.SenderPassword, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.SenderPassword), style = "width: 90%;", title = "Enter " + @Html.DisplayNameFor(m => m.SenderPassword), @type = "password" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SenderPassword, "", new { id = "SenderPassword-error" }).ToHtmlString()))
+    </div>
+    <h3 style="color: #000000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment&nbsp;&nbsp;Info</h3>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.CreditCardNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        <div>
+            @Html.TextBoxFor(m => m.CreditCardNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CreditCardNumber), title = @Html.DisplayNameFor(m => m.CreditCardNumber), style = "float: left; width: 76%;", type = "password" })
+            <span style="width: 18px;">&nbsp;</span>
+            <button class="btn btn-primary" id="creditCardNumber" onmouseout="javascript: return showHideForHide('CreditCardNumber', 'password');" onmouseover="javascript: return showHideForShow('CreditCardNumber', 'text');" type="button" style="width: 50px;">
+                <span class="fa fa-eye-slash icon"></span>
+            </button>
+        </div>
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CreditCardNumber, "", new { id = "CreditCardNumber-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 15px;">
+        <table style="border-collapse: separate; border-spacing: 3px; padding: 0px;">
+            <tr>
+                <td style="padding: 0px;">
+                    @Html.LabelFor(m => m.CVV, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
+                </td>
+                <td style="padding: 0px;"></td>
+                <td style="padding: 0px;">
+                    @Html.LabelFor(m => m.CardExpiryMM, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
+                </td>
+                <td>
+                    @Html.LabelFor(m => m.CardExpiryYYYY, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0px;">
+                    @Html.TextBoxFor(m => m.CVV, new { @class = "form-control validate", onkeydown = "javascript: return validateInteger(event);", placeholder = @Html.DisplayNameFor(m => m.CVV), title = @Html.DisplayNameFor(m => m.CVV), style = "float: left; width: 81px;", type = "password" })
+                </td>
+                <td style="padding-left: 5px; padding-right: 5px;">
+                    <button class="btn btn-primary" id="creditCardCVV" onmouseout="javascript: return showHideForHide('CVV', 'password');" onmouseover="javascript: return showHideForShow('CVV', 'text');" type="button" style="float: left; width: 50px;">
+                        <span class="fa fa-eye-slash icon"></span>
+                    </button>
+                </td>
+                <td style="padding: 0px;">
+                    @Html.DropDownListFor(m => m.CardExpiryMM, new SelectList(ArchitectureLibraryCacheData.LookupCache.CodeTypeSelectListItems["GregorianMonths"]["Type1"], "Value", "Text", Model.CardExpiryMM), "---", new { @class = "form-control", style = "float: left; font-size: 14px; width: 81px;", title = @Html.DisplayNameFor(m => m.CardExpiryMM) })
+                </td>
+                <td style="padding: 0px;">
+                    @Html.DropDownListFor(m => m.CardExpiryYYYY, years, "---", new { @class = "form-control", style = "font-size: 14px; width: 81px;", title = @Html.DisplayNameFor(m => m.CardExpiryYYYY) })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CVV, "", new { id = "CVV-error" }).ToHtmlString()))
+                </td>
+                <td style="padding: 0px;">
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardExpiryMM, "", new { id = "CardExpiryMM-error", title = @Html.DisplayNameFor(m => m.CardExpiryMM) }).ToHtmlString()))
+                </td>
+                <td style="padding: 0px;">
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardExpiryYYYY, "", new { id = "CardExpiryYYYY-error" }).ToHtmlString()))
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px;">
+        @Html.LabelFor(m => m.CardHolderName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>)
+        @Html.TextBoxFor(m => m.CardHolderName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CardHolderName), style = "width: 90%;", title = @Html.DisplayNameFor(m => m.CardHolderName), type = "text" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardHolderName, "", new { id = "CardHolderName-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px; padding-top: 9px; text-align: left;">
+        <select class="form-control" id="giftCertTemplatesList" onchange="javascript: return giftCertTemplateSelect('giftCertTemplate' + this.value);" style="color: #0000ff; font-weight: bold; width: 90%;" , title="Select a gift certifcate template">
+            <option style="color: #000000; font-weight;" value="">--- Select a gift cert template ---</option>
+            @for (i = 0; i < 9; i++)
+            {
+                <option style="color: #000000;" value="@i">Gift Cert Template @i</option>
+            }
+        </select>
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SelectedTemplateName, "", new { id = "SelectedTemplateName-error" }).ToHtmlString()))
+    </div>
+    <div class="row" style="padding-left: 18px; padding-right: 18px; padding-top: 9px;">
+        <center>
+            <img alt="Click to select a template from the below..." class="img-responsive" id="giftCertTemplateSelected" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/GiftCertificate/Templates/GiftCertSelectTemplate.png" style="height: 254px; width: 419px;" title="Click to select a template from the below..." />
+            @Html.HiddenFor(m => m.SelectedTemplateImageId)
+            @Html.HiddenFor(m => m.SelectedTemplateName)
+        </center>
+    </div>
+</div>
+<div class="col-md-12" style="font-size: 36px; font-weight: bold; text-align: center;">
+    Click a template  from the below choices...
+</div>
+@{
+    for (i = 0; i < 3; i++)
+    {
+        <div class="row mt-4" style="padding-top: 9px;">
+            @for (j = 0; j < 3; j++)
+            {
+                index = i * 3 + j;
+                <div class="col-md-4">
+                    <a href="javascript: void(0);" onclick="javascript: return giftCertTemplateSelect('giftCertTemplate@(index)');"><img class="img-responsive" id="giftCertTemplate@(index)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/GiftCertificate/Templates/GiftCertTemplate@(index).jpg" title="Gift Certificate Template @index" /></a>
+                </div>
+            }
+        </div>
+    }
+}

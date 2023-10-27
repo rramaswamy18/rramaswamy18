@@ -54,6 +54,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "        INSERT ArchLib.AspNetUser" + Environment.NewLine;
             sqlStmt += "              (" + Environment.NewLine;
             sqlStmt += "               AspNetUserId" + Environment.NewLine;
+            sqlStmt += "              ,ClientId" + Environment.NewLine;
             sqlStmt += "              ,AccessFailedCount" + Environment.NewLine;
             sqlStmt += "              ,Email" + Environment.NewLine;
             sqlStmt += "              ,EmailConfirmed" + Environment.NewLine;
@@ -64,6 +65,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,LoginTypeId" + Environment.NewLine;
             sqlStmt += "              ,PasswordHash" + Environment.NewLine;
             sqlStmt += "              ,PasswordExpiry" + Environment.NewLine;
+            sqlStmt += "              ,TelephoneCountryId" + Environment.NewLine;
             sqlStmt += "              ,PhoneNumber" + Environment.NewLine;            
             sqlStmt += "              ,PhoneNumberConfirmed" + Environment.NewLine;
             sqlStmt += "              ,ResetPasswordKey" + Environment.NewLine;
@@ -78,6 +80,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              )" + Environment.NewLine;
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @AspNetUserId" + Environment.NewLine;
+            sqlStmt += "              ,@ClientId" + Environment.NewLine;
             sqlStmt += "              ,@AccessFailedCount" + Environment.NewLine;
             sqlStmt += "              ,@Email" + Environment.NewLine;
             sqlStmt += "              ,@EmailConfirmed" + Environment.NewLine;
@@ -88,6 +91,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,@LoginTypeId" + Environment.NewLine;
             sqlStmt += "              ,@PasswordHash" + Environment.NewLine;
             sqlStmt += "              ,@PasswordExpiry" + Environment.NewLine;
+            sqlStmt += "              ,@TelephoneCountryId" + Environment.NewLine;
             sqlStmt += "              ,@PhoneNumber" + Environment.NewLine;
             sqlStmt += "              ,@PhoneNumberConfirmed" + Environment.NewLine;
             sqlStmt += "              ,@ResetPasswordKey" + Environment.NewLine;
@@ -101,6 +105,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,@UserStatusId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.AddWithValue("@AspNetUserId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@ClientId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@AccessFailedCount", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@Email", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@EmailConfirmed", System.DBNull.Value);
@@ -111,6 +116,7 @@ namespace ArchitectureLibraryDataLayer
             sqlCommand.Parameters.AddWithValue("@LoginTypeId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@PasswordHash", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@PasswordExpiry", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@TelephoneCountryId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@PhoneNumber", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@PhoneNumberConfirmed", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@ResetPasswordKey", System.DBNull.Value);
@@ -129,17 +135,20 @@ namespace ArchitectureLibraryDataLayer
             string sqlStmt = "";
             sqlStmt += "        INSERT ArchLib.AspNetUserRole" + Environment.NewLine;
             sqlStmt += "              (" + Environment.NewLine;
-            sqlStmt += "               AddUserId" + Environment.NewLine;
+            sqlStmt += "               ClientId" + Environment.NewLine;
+            sqlStmt += "              ,AddUserId" + Environment.NewLine;
             sqlStmt += "              ,AspNetRoleId" + Environment.NewLine;
             sqlStmt += "              ,AspNetUserId" + Environment.NewLine;
             sqlStmt += "              ,AspNetUserRoleId" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
             sqlStmt += "        SELECT" + Environment.NewLine;
-            sqlStmt += "               @AddUserId" + Environment.NewLine;
+            sqlStmt += "               @ClientId" + Environment.NewLine;
+            sqlStmt += "              ,@AddUserId" + Environment.NewLine;
             sqlStmt += "              ,@AspNetRoleId" + Environment.NewLine;
             sqlStmt += "              ,@AspNetUserId" + Environment.NewLine;
             sqlStmt += "              ,@AspNetUserRoleId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("@ClientId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@AddUserId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@AspNetRoleId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@AspNetUserId", System.DBNull.Value);
@@ -298,7 +307,8 @@ namespace ArchitectureLibraryDataLayer
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before Insert Query into AspNetUserRole Table");
                 sqlStmt += "        INSERT ArchLib.DemogInfoAddress" + Environment.NewLine;
                 sqlStmt += "              (" + Environment.NewLine;
-                sqlStmt += "               AddressLine1" + Environment.NewLine;
+                sqlStmt += "               ClientId" + Environment.NewLine;
+                sqlStmt += "              ,AddressLine1" + Environment.NewLine;
                 sqlStmt += "              ,AddressLine2" + Environment.NewLine;
                 sqlStmt += "              ,AddressTypeId" + Environment.NewLine;
                 sqlStmt += "              ,BuildingTypeId" + Environment.NewLine;
@@ -323,7 +333,8 @@ namespace ArchitectureLibraryDataLayer
                 sqlStmt += "              )" + Environment.NewLine;
                 sqlStmt += "        OUTPUT INSERTED.DemogInfoAddressId" + Environment.NewLine;
                 sqlStmt += "        SELECT" + Environment.NewLine;
-                sqlStmt += "               @AddressLine1" + Environment.NewLine;
+                sqlStmt += "               @ClientId" + Environment.NewLine;
+                sqlStmt += "              ,@AddressLine1" + Environment.NewLine;
                 sqlStmt += "              ,@AddressLine2" + Environment.NewLine;
                 sqlStmt += "              ,@AddressTypeId" + Environment.NewLine;
                 sqlStmt += "              ,@BuildingTypeId" + Environment.NewLine;
@@ -346,6 +357,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
                 sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.AddWithValue("@ClientId", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@AddressLine1", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@AddressLine2", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@AddressTypeId", DBNull.Value);
@@ -449,7 +461,7 @@ namespace ArchitectureLibraryDataLayer
             };
             return aspNetUserRoleModel;
         }
-        private static AspNetUserModel BuildAspNetUser(string aspNetUserId, string loginNameId1, string loginPassword, DateTime? loginPasswordExpiryDateTime, string phoneNumber, string resetPasswordQueryString, string resetPasswordDateTime, string resetPasswordKey, LoginTypeEnum? loginTypeId, UserTypeEnum? userTypeId, UserStatusEnum? userStatusId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static AspNetUserModel BuildAspNetUser(string aspNetUserId, string loginNameId1, string loginPassword, DateTime? loginPasswordExpiryDateTime, long? telephoneCountryId, string phoneNumber, string resetPasswordQueryString, string resetPasswordDateTime, string resetPasswordKey, LoginTypeEnum? loginTypeId, UserTypeEnum? userTypeId, UserStatusEnum? userStatusId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             AspNetUserModel aspNetUserModel = new AspNetUserModel
             {
@@ -462,6 +474,7 @@ namespace ArchitectureLibraryDataLayer
                 LoginPassword = loginPassword,
                 LoginTypeId = loginTypeId,
                 PasswordExpiry = DateTime.Now.AddDays(180).ToString("yyyy-MM-dd HH:mm:ss"),
+                TelephoneCountryId = telephoneCountryId,
                 PhoneNumber = phoneNumber,
                 PhoneNumberConfirmed = false,
                 ResetPasswordExpiryDateTime = resetPasswordDateTime,
@@ -505,6 +518,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              (" + Environment.NewLine;
             sqlStmt += "               AddUserId" + Environment.NewLine;
             sqlStmt += "              ,AspNetUserId" + Environment.NewLine;
+            sqlStmt += "              ,ClientId" + Environment.NewLine;
             sqlStmt += "              ,CertificateDocumentId" + Environment.NewLine;
             //sqlStmt += "              ,CertificateDocumentNoImage" + Environment.NewLine;
             sqlStmt += "              ,ElectronicSignatureConsentAccepted" + Environment.NewLine;
@@ -525,6 +539,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @AddUserId" + Environment.NewLine;
             sqlStmt += "              ,@AspNetUserId" + Environment.NewLine;
+            sqlStmt += "              ,@ClientId" + Environment.NewLine;
             sqlStmt += "              ,@CertificateDocumentId" + Environment.NewLine;
             //sqlStmt += "              ,@CertificateDocumentNoImage" + Environment.NewLine;
             sqlStmt += "              ,@ElectronicSignatureConsentAccepted" + Environment.NewLine;
@@ -544,6 +559,7 @@ namespace ArchitectureLibraryDataLayer
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.AddWithValue("@AddUserId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@AspNetUserId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@ClientId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@CertificateDocumentId", System.DBNull.Value);
             //sqlCommand.Parameters.AddWithValue("@CertificateDocumentNoImage", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@ElectronicSignatureConsentAccepted", System.DBNull.Value);

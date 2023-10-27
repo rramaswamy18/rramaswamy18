@@ -17,6 +17,7 @@ namespace RetailSlnModels
         public string ProcessType { set; get; }
         public string CategoryOrItem { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
+        public CategoryModel ParentCategoryModel { set; get; }
         public CategoryModel CategoryModel { set; get; }
         public ItemModel ItemModel { set; get; }
     }

@@ -8,9 +8,11 @@ namespace RetailSlnEnumerations
 {
     public enum ItemTypeEnum : int
     {
-        [Description("Regular Item")]
+        [Description("Product")]
         RegularItem = 100,
-        [Description("Item Bundle")]
-        ItemBundle = 200,
+        [Description("Book")]
+        Book = 200,
+        [Description("Bundle")]
+        ItemBundle = 300,
     }
 }

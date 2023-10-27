@@ -18,35 +18,45 @@
         {
             <ul style="font-weight: bold;">
                 <li>
-                    Please enter email address, login password
-                </li>
-                <li>
-                    Answer captcha question
+                    Please enter email address, login password, captcha answer
                 </li>
                 <li>
                     Click <span style="color: #0000ff; font-size: 18px;">L O G I N</span> to continue
                 </li>
-                <li>
-                    Login and enjoy the features of our rich product
-                </li>
                 <li style="color: #ff0000;">
-                    Did you forget your password or like to reset - please scroll down
+                    Did you forget your password - feel free to reset
+                </li>
+                <li>
+                    Passwords have expiry date. Feel free to reset
                 </li>
             </ul>
-            @*<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />*@
             <form id="formLoginUserProfData">
                 @Html.Partial("_LoginUserProfData", Model.LoginUserProfModel)
             </form>
-            <button class="loginRegisterbtn" id="checkoutLoginUser" onclick="javascript: return checkoutLoginUser_onclick();" type="button">L O G I N</button>
+            <button class="loginRegisterbtn" id="checkoutLoginUser" onclick="javascript: return checkoutLoginUser_onclick();" style="width: 90%;" type="button">L O G I N</button>
+            <br style="clear: both;" />
+            <br style="clear: both;" />
+            <ul style="font-size: 14px; font-weight: bold;">
+                <li>
+                    <a href="@Url.Action("ResetPasswordContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">Click here to reset your password</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click here to Contact Us...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold;">
+                <li>
+                    Login and enjoy the rich features of the product
+                </li>
+            </ul>
         }
     </div>
     <div class="col-md-6" style="float: left; text-align: left;">
+        @Html.Partial("_LoginUserProfGuest", Model.CheckoutGuestModel)
         @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
-        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
-        @Html.Partial("_ResetPassword", Model.ResetPasswordModel)
     </div>
 </div>
-<script>
+<script type="text/javascript">
     function giftCertBalance_onclick() {
         console.log("00000000", "giftCertBalance_onclick", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -156,6 +166,10 @@
                         document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
                         document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
                         document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
+                        if (document.getElementById("shoppingCartItemsCount2") != null) {
+                            document.getElementById("shoppingCartItemsCount2").innerHTML = "Empty";
+                            document.getElementById("shoppingCartTotalAmount2").innerHTML = "Cart";
+                        }
                         document.getElementById("divOrderProcess").scrollIntoView();
                     }
                     else {

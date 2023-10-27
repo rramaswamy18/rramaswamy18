@@ -50,6 +50,7 @@ namespace ArchitectureLibraryDataLayer
                 AspNetUserId = sqlDataReader["AspNetUserId"].ToString(),
                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                 Email = sqlDataReader["Email"].ToString(),
+                TelephoneCountryId = long.Parse(sqlDataReader["TelephoneCountryId"].ToString()),
                 PhoneNumber = sqlDataReader["PhoneNumber"].ToString(),
                 UserName = sqlDataReader["UserName"].ToString(),
             };
@@ -136,6 +137,18 @@ namespace ArchitectureLibraryDataLayer
                 SuffixId = sqlDataReader["SuffixId"].ToString() == "" ? (SuffixEnum?)null : (SuffixEnum)long.Parse(sqlDataReader["SuffixId"].ToString()),
             };
             return personModel;
+        }
+        private static UserProfileMetaDataModel AssignUserProfileMetaData(SqlDataReader sqlDataReader, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            UserProfileMetaDataModel userProfileMetaDataModeu = new UserProfileMetaDataModel
+            {
+                UserProfileMetaDataId = long.Parse(sqlDataReader["UserProfileMetaDataId"].ToString()),
+                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                MetaDataName = sqlDataReader["MetaDataName"].ToString(),
+                SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                IsMapped = bool.Parse(sqlDataReader["IsMapped"].ToString()),
+            };
+            return userProfileMetaDataModeu;
         }
     }
 }

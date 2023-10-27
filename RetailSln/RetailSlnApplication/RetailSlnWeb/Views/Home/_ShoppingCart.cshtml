@@ -1,74 +1,33 @@
 ﻿@model RetailSlnModels.ShoppingCartModel
-<h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Shopping&nbsp;&nbsp;Cart</h3>
-<div id="divShoppingCart">
-    @Html.Partial("_ShoppingCartData", Model)
-</div>
-<script type="text/javascript">
-    function removeFromCart_onclick(index) {
-        console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
-        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        document.getElementById("divErrorMessage").innerHTML = "";
-        try {
-            var url = "/Home/RemoveFromCart/" + index;
-            $.ajax({
-                url: url,
-                type: "GET",
-                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-                dataType: "html",
-                async: true,
-                success: function (responseData, textStatus, request) {
-                    $('#loadingModal').modal('hide');
-                    //console.log("Shoppincart", responseData);
-                    console.log("removeFromCart_onclick", "00090000", "SUCCESS!!!");
-                    var jsonData = JSON.parse(responseData);
-                    document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
-                    document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
-                    document.getElementById("divShoppingCart").innerHTML = jsonData.shoppingCartDataHtml;
-                },
-                error: function (xhr, exception) {
-                    $('#loadingModal').modal('hide');
-                    console.log("removeFromCart_onclick", "00099000", "ERROR???");
-                    console.log(exception, xhr);
-                    var jsonData = JSON.parse(xhr.responseText);
-                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                }
-            });
+<table class="col-md-12" style="padding: 5px;">
+    <tr>
+        @if (Model != null && Model.Checkout)
+        {
+            <td class="col-md-4" style="padding: 5px; vertical-align: top;">
+                <a href="javascript: void(0);" onclick="javascript: return document.getElementById('tableOrderItemListData').scrollIntoView();" style="text-decoration: underline;">
+                    <h3 style="font-size: 24px; font-weight: bold;">
+                        Back to top
+                    </h3>
+                </a>
+            </td>
         }
-        catch (err) {
-            alert("Please fix errors to continue???");
+        <td class="col-md-4" style="padding: 5px; text-align: center; vertical-align: top; width: 60%;">
+            <h3 style="color: #ff9900; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; ">
+                Shopping&nbsp;&nbsp;Cart
+            </h3>
+        </td>
+        @if (Model != null && Model.Checkout)
+        {
+            <td class="col-md-4" style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <h3>
+                    <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
+                        <i class="fa" style="font-size: 24px">&#xf07a;</i>
+                        &nbsp;
+                        <span style="color: #000000; font-size: 24px; text-decoration: underline;">Checkout</span>
+                    </a>
+                </h3>
+            </td>
         }
-        return false;
-    }
-    function orderComments_onchange(index) {
-        console.log("orderComments_onchange", "00000000", "ENTER!!!");
-        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        document.getElementById("divErrorMessage").innerHTML = "";
-        try {
-            var orderComments = document.getElementById("orderComments" + index).value;
-            var url = "/Home/ShoppingCartComments";
-            $.ajax({
-                url: url,
-                type: "GET",
-                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-                dataType: "html",
-                data: { "index": index, "orderComments": orderComments },
-                async: true,
-                success: function (responseData, textStatus, request) {
-                    $('#loadingModal').modal('hide');
-                    console.log("orderComments_onchange", "00090000", "SUCCESS!!!");
-                },
-                error: function (xhr, exception) {
-                    $('#loadingModal').modal('hide');
-                    console.log("orderComments_onchange", "00099000", "ERROR???");
-                    console.log(exception, xhr);
-                    var jsonData = JSON.parse(xhr.responseText);
-                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                }
-            });
-        }
-        catch (err) {
-            alert("Please fix errors to continue???");
-        }
-        return false;
-    }
-</script>
+    </tr>
+</table>
+@Html.Partial("_ShoppingCartData", Model)

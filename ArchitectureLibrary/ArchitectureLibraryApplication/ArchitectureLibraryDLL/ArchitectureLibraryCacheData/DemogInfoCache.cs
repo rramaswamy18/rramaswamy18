@@ -17,6 +17,8 @@ namespace ArchitectureLibraryCacheData
         public static List<DemogInfoCountryModel> DemogInfoCountryModels { set; get; }
         public static List<DemogInfoSubDivisionModel> DemogInfoSubDivisionModels { set; get; }
         public static List<SelectListItem> DemogInfoCountrySelectListItems { set; get; }
+        public static List<SelectListItem> DemogInfoCountrySelectListItemsAbbrev { set; get; }
+        public static List<SelectListItem> DemogInfoCountrySelectListItemsName { set; get; }
         public static Dictionary<long, List<SelectListItem>> DemogInfoSubDivisionSelectListItems { set; get; }
         public static string DemogInfoCountryOptionTags { set; get; }
         public static Dictionary<long, string> DemogInfoSubDivisionOptionTags { set; get; }
@@ -26,11 +28,13 @@ namespace ArchitectureLibraryCacheData
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             DemogInfoCacheBL demogInfoCacheBL = new DemogInfoCacheBL();
-            demogInfoCacheBL.Initialize(out List<DemogInfoCountryModel> demogInfoCountryModels, out List<DemogInfoSubDivisionModel> demogInfoSubDivisionModels, out List<SelectListItem> demogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> demogInfoSubDivisionSelectListItems, out string demogInfoCountryOptionTags, out Dictionary<long, string> demogInfoSubDivisionOptionTags, execUniqueId);
+            demogInfoCacheBL.Initialize(out List<DemogInfoCountryModel> demogInfoCountryModels, out List<DemogInfoSubDivisionModel> demogInfoSubDivisionModels, out List<SelectListItem> demogInfoCountrySelectListItems, out List<SelectListItem> demogInfoCountrySelectListItemsAbbrev, out List<SelectListItem> demogInfoCountrySelectListItemsName, out Dictionary<long, List<SelectListItem>> demogInfoSubDivisionSelectListItems, out string demogInfoCountryOptionTags, out Dictionary<long, string> demogInfoSubDivisionOptionTags, execUniqueId);
             DemogInfoCountryModels = demogInfoCountryModels;
             DemogInfoSubDivisionModels = demogInfoSubDivisionModels;
             //BuildDemogInfoSelectListItems(demogInfoCountryModels, out List<SelectListItem> demogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> demogInfoSubDivisionSelectListItems, execUniqueId);
             DemogInfoCountrySelectListItems = demogInfoCountrySelectListItems;
+            DemogInfoCountrySelectListItemsAbbrev = demogInfoCountrySelectListItemsAbbrev;
+            DemogInfoCountrySelectListItemsName = demogInfoCountrySelectListItemsName;
             DemogInfoSubDivisionSelectListItems = demogInfoSubDivisionSelectListItems;
             DemogInfoCountryOptionTags = demogInfoCountryOptionTags;
             DemogInfoSubDivisionOptionTags = demogInfoSubDivisionOptionTags;

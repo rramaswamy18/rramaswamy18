@@ -51,52 +51,20 @@ namespace RetailSlnConsoleApp1
             };
             DrawTextMultipleLines(inputFullFileName, outputFullFileName, messages, 36f, 18f, 45f, 45);
         }
-        public void DivineBijaResizeBooksImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
+        public void DivineBijaResizeImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
         {
             int resizedWidth = 180, resizedHeight = 189, itemId;
             string inputFullFileName, outputFullFileName;
             SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
             sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand("SELECT Item.ItemId AS ItemId1, DivineBija_Books.* FROM DivineBija_Books INNER JOIN RetailSlnSch.Item ON DivineBija_Books.ItemId = ProductItemId WHERE ItemTypeId = 200 ORDER BY Item.ItemId", sqlConnection);
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            while (sqlDataReader.Read())
-            {
-                itemId = int.Parse(sqlDataReader["ItemId1"].ToString());
-                if (sqlDataReader["Image1"].ToString() != "")
-                {
-                    inputFullFileName = inputDirectoryName + sqlDataReader["Image1"].ToString();
-                    if (File.Exists(inputFullFileName))
-                    {
-                        outputFullFileName = outputDirectoryName + "Item" + itemId + ".png";
-                        ResizeImage(inputFullFileName, outputFullFileName, resizedWidth, resizedHeight);
-                    }
-                    else
-                    {
-                        Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, "Books", sqlDataReader["Image1"].ToString(), sqlDataReader["ProductDesc"].ToString());
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, "Books", "Empty", sqlDataReader["ProductDesc"].ToString());
-                }
-            }
-            sqlDataReader.Close();
-            sqlConnection.Close();
-        }
-        public void DivineBijaResizeProductsImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
-        {
-            int resizedWidth = 180, resizedHeight = 189, itemId;
-            string inputFullFileName, outputFullFileName;
-            SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
-            sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand("SELECT Item.ItemId, DivineBija_Products.* FROM DivineBija_Products INNER JOIN RetailSlnSch.Item ON Id = ProductItemId WHERE ItemTypeId IN(100, 300) ORDER BY Item.ItemId", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.Item ORDER BY Item.ItemId", sqlConnection);
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             while (sqlDataReader.Read())
             {
                 itemId = int.Parse(sqlDataReader["ItemId"].ToString());
-                if (sqlDataReader["Item 180"].ToString() != "")
+                if (sqlDataReader["UploadImageFileName"].ToString() != "")
                 {
-                    inputFullFileName = inputDirectoryName + sqlDataReader["Item 180"].ToString() + ".jpg";
+                    inputFullFileName = inputDirectoryName + sqlDataReader["UploadImageFileName"].ToString();
                     if (File.Exists(inputFullFileName))
                     {
                         outputFullFileName = outputDirectoryName + "Item" + itemId + ".png";
@@ -104,17 +72,113 @@ namespace RetailSlnConsoleApp1
                     }
                     else
                     {
-                        Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["Item Type"].ToString(), sqlDataReader["Item 180"].ToString(), sqlDataReader["Description"].ToString());
+                        Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), sqlDataReader["UploadImageFileName"].ToString(), sqlDataReader["ItemShortDesc"].ToString());
                     }
                 }
                 else
                 {
-                    Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["Item Type"].ToString(), "Empty", sqlDataReader["Description"].ToString());
+                    Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), "Empty", sqlDataReader["ItemShortDesc"].ToString());
                 }
             }
             sqlDataReader.Close();
             sqlConnection.Close();
         }
+        //public void DivineBijaResizeProductsImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
+        //{
+        //    int resizedWidth = 180, resizedHeight = 189, itemId;
+        //    string inputFullFileName, outputFullFileName;
+        //    SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        //    sqlConnection.Open();
+        //    SqlCommand sqlCommand = new SqlCommand("SELECT Item.ItemId, DivineBija_Products.* FROM DivineBija_Products INNER JOIN RetailSlnSch.Item ON Id = ProductItemId WHERE ItemTypeId IN(100, 300) ORDER BY Item.ItemId", sqlConnection);
+        //    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //    while (sqlDataReader.Read())
+        //    {
+        //        itemId = int.Parse(sqlDataReader["ItemId"].ToString());
+        //        if (sqlDataReader["Item 180"].ToString() != "")
+        //        {
+        //            inputFullFileName = inputDirectoryName + sqlDataReader["Item 180"].ToString() + ".jpg";
+        //            if (File.Exists(inputFullFileName))
+        //            {
+        //                outputFullFileName = outputDirectoryName + "Item" + itemId + ".png";
+        //                ResizeImage(inputFullFileName, outputFullFileName, resizedWidth, resizedHeight);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["Item Type"].ToString(), sqlDataReader["Item 180"].ToString(), sqlDataReader["Description"].ToString());
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["Item Type"].ToString(), "Empty", sqlDataReader["Description"].ToString());
+        //        }
+        //    }
+        //    sqlDataReader.Close();
+        //    sqlConnection.Close();
+        //}
+        //public void DivineBijaResizeBooksImages_Backup(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
+        //{
+        //    int resizedWidth = 180, resizedHeight = 189, itemId;
+        //    string inputFullFileName, outputFullFileName;
+        //    SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        //    sqlConnection.Open();
+        //    SqlCommand sqlCommand = new SqlCommand("SELECT Item.ItemId AS ItemId1, DivineBija_Books.* FROM DivineBija_Books INNER JOIN RetailSlnSch.Item ON DivineBija_Books.ItemId = ProductItemId WHERE ItemTypeId = 200 ORDER BY Item.ItemId", sqlConnection);
+        //    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //    while (sqlDataReader.Read())
+        //    {
+        //        itemId = int.Parse(sqlDataReader["ItemId1"].ToString());
+        //        if (sqlDataReader["Image1"].ToString() != "")
+        //        {
+        //            inputFullFileName = inputDirectoryName + sqlDataReader["Image1"].ToString();
+        //            if (File.Exists(inputFullFileName))
+        //            {
+        //                outputFullFileName = outputDirectoryName + "Item" + itemId + ".png";
+        //                ResizeImage(inputFullFileName, outputFullFileName, resizedWidth, resizedHeight);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, "Books", sqlDataReader["Image1"].ToString(), sqlDataReader["ProductDesc"].ToString());
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, "Books", "Empty", sqlDataReader["ProductDesc"].ToString());
+        //        }
+        //    }
+        //    sqlDataReader.Close();
+        //    sqlConnection.Close();
+        //}
+        //public void DivineBijaResizeProductsImages_Backup(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
+        //{
+        //    int resizedWidth = 180, resizedHeight = 189, itemId;
+        //    string inputFullFileName, outputFullFileName;
+        //    SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        //    sqlConnection.Open();
+        //    SqlCommand sqlCommand = new SqlCommand("SELECT Item.ItemId, DivineBija_Products.* FROM DivineBija_Products INNER JOIN RetailSlnSch.Item ON Id = ProductItemId WHERE ItemTypeId IN(100, 300) ORDER BY Item.ItemId", sqlConnection);
+        //    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //    while (sqlDataReader.Read())
+        //    {
+        //        itemId = int.Parse(sqlDataReader["ItemId"].ToString());
+        //        if (sqlDataReader["Item 180"].ToString() != "")
+        //        {
+        //            inputFullFileName = inputDirectoryName + sqlDataReader["Item 180"].ToString() + ".jpg";
+        //            if (File.Exists(inputFullFileName))
+        //            {
+        //                outputFullFileName = outputDirectoryName + "Item" + itemId + ".png";
+        //                ResizeImage(inputFullFileName, outputFullFileName, resizedWidth, resizedHeight);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["Item Type"].ToString(), sqlDataReader["Item 180"].ToString(), sqlDataReader["Description"].ToString());
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["Item Type"].ToString(), "Empty", sqlDataReader["Description"].ToString());
+        //        }
+        //    }
+        //    sqlDataReader.Close();
+        //    sqlConnection.Close();
+        //}
         public void ResizeImage(string inputFullFileName, string outputFullFileName, int resizedWidth, int resizedHeight)
         {
             var fileData = File.ReadAllBytes(inputFullFileName);

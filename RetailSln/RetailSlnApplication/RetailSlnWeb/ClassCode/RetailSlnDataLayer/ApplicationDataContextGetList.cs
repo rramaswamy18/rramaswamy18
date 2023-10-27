@@ -51,7 +51,7 @@ namespace RetailSlnDataLayer
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
             }
-        }        
+        }
         public static List<GiftCertModel> GetGiftCerts(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -560,7 +560,6 @@ namespace RetailSlnDataLayer
                             ItemName = sqlDataReader["ItemName"].ToString(),
                             ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                             ImageName = sqlDataReader["ImageName"].ToString(),
-                            ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
                             ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
                             ItemStarCount = int.Parse(sqlDataReader["ItemStarCount"].ToString()),
                             ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),

@@ -1,0 +1,49 @@
+﻿@model RetailSlnModels.DeliveryInfoDataModel
+<table class="table table-responsive">
+    <tr>
+        <th class="text-center" colspan="2" scope="row">
+            Delivery Info
+        </th>
+    </tr>
+    <tr>
+        <th class="text-left" scope="col" style="vertical-align: top;">
+            Delivery Address
+        </th>
+        <td class="text-left" scope="col" style="vertical-align: top;">
+            @Model.DeliveryAddressModel.AddressLine1&nbsp;@Model.DeliveryAddressModel.BuildingTypeId&nbsp;@Model.DeliveryAddressModel.HouseNumber
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+            {
+                <br />
+                @Model.DeliveryAddressModel.AddressLine2
+            }
+            <br />
+            @Model.DeliveryAddressModel.CityName&nbsp;@Model.DeliveryAddressModel.StateAbbrev&nbsp;@Model.DeliveryAddressModel.ZipCode
+            <br />
+            @Model.DeliveryAddressModel.CountryAbbrev
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left"scope="col" style="vertical-align: top;">
+            Primary Telpehone#
+        </th>
+        <td class="text-left" scope="col" style="vertical-align: top;">
+            @long.Parse(Model.PrimaryTelephoneNum).ToString("(###) ###-####")
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="col" style="vertical-align: top;">
+            Alternate Telpehone#
+        </th>
+        <td class="text-left" scope="col" style="vertical-align: top;">
+            @long.Parse(Model.AlternateTelephoneNum).ToString("(###) ###-####")
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="col" style="vertical-align: top;">
+            Delivery Instructions
+        </th>
+        <td class="text-left" scope="col" style="vertical-align: top;">
+            @Model.DeliveryInstructions
+        </td>
+    </tr>
+</table>

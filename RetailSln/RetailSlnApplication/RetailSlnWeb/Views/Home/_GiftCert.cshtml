@@ -1,0 +1,109 @@
+﻿@model RetailSlnModels.GiftCertModel
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<div class="center">
+    <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+        Gift&nbsp;&nbsp;Certificate
+    </h2>
+    <ul style="column-count: 3; list-style: decimal; font-weight: bold; text-align: left;">
+        <li>
+            Sender email address should be registered
+        </li>
+        <li>
+            If not, please register&nbsp;<a href="@Url.Action("RegisterUserLoginUser", "Home")" target="_blank" style="color: #0000ff; font-weight: bold; text-decoration: underline;">R E G I S T E R</a>
+        </li>
+        <li>
+            Enter sender email address, password
+        </li>
+        <li>
+            Enter recipient email address & confirm
+        </li>
+        <li>
+            Enter gift info - Sender, Recipient name(s), amount, message
+        </li>
+        <li>
+            Enter payment info (Credit Card info)
+        </li>
+        <li>
+            Select the template you want to customize for your recipient
+        </li>
+        <li>
+            Answer captcha & click S A V E
+        </li>
+    </ul>
+    <form id="formGiftCertData">
+        @Html.Partial("_GiftCertData", Model)
+    </form>
+</div>
+<script type="text/javascript">
+    function giftCertSave_onclick() {
+        console.log("00000000", "giftCertSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/GiftCert";
+        var postData = $("#formGiftCertData").serialize();
+        //console.log(postData);
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                $("#formGiftCertData").html(responseData);
+                console.log("00090000", "giftCertSave_onclick", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formGiftCertData").innerHTML = xhr.responseText;
+                giftCertTemplateSelect(document.getElementById("SelectedTemplateImageId").value);
+                console.log("00099000", "giftCertSave_onclick", "ERROR???", exception, xhr);
+            }
+        });
+    }
+    function senderEmailAddress_onchange() {
+        console.log("00000000", "senderEmailAddress_onchange");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/ValidateEmailAddress?id=" + document.getElementById("SenderEmailAddress").value;
+        $.ajax({
+            url: url,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            //data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                $("#SenderEmailAddress-error").html(responseData);
+                console.log("00090000", "senderEmailAddress_onchange", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                //document.getElementById("formGiftCertData").innerHTML = xhr.responseText;
+                //giftCertTemplateSelect(document.getElementById("SelectedTemplateImageId").value);
+                console.log("00099000", "senderEmailAddress_onchange", "ERROR???", exception, xhr);
+            }
+        });
+    }
+    function giftCertTemplateSelect(giftCertTemplateImageId) {
+        console.log("giftCertTemplateSelect 0", giftCertTemplateImageId);
+        if (giftCertTemplateImageId == null || giftCertTemplateImageId == "" || giftCertTemplateImageId == undefined) {
+            return false;
+        }
+        console.log("giftCertTemplateSelect 1", giftCertTemplateImageId);
+        document.getElementById("SelectedTemplateImageId").value = giftCertTemplateImageId;
+        var fullPath = document.getElementById(giftCertTemplateImageId).src;
+        var fileName = fullPath.replace(/^.*[\\\/]/, '');
+        $("#SelectedTemplateName").val(fileName);
+        document.getElementById("giftCertTemplateSelected").src = "/ClientSpecific/@(clientId)_@(clientName)/Documents/GiftCertificate/Templates/" + fileName;
+        $('span[data-valmsg-for="SelectedTemplateName"]').text("");
+        document.getElementById("giftCertTemplatesList").scrollIntoView();
+        document.getElementById("giftCertTemplatesList").selectedIndex = 0;
+        console.log("giftCertTemplateSelect 9", giftCertTemplateImageId);
+        return false;
+    }
+</script>

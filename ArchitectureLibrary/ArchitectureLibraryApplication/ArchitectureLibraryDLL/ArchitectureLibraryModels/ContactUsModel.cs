@@ -49,6 +49,8 @@ namespace ArchitectureLibraryModels
         [StringLength(10, MinimumLength = 10, ErrorMessage = "Please enter 10 digit phone#")]
         public string ContactUsTelephoneNumber { get; set; }
 
+        public long? ContactUsTelephoneCountryId { set; get; }
+
         public string LoginPassword { set; get; }
 
         public bool UserProfRegistered { set; get; }

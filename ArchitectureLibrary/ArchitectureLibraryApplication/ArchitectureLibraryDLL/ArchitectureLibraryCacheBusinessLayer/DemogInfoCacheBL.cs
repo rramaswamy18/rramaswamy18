@@ -12,7 +12,7 @@ namespace ArchitectureLibraryCacheBusinessLayer
 {
     public class DemogInfoCacheBL
     {
-        public void Initialize(out List<DemogInfoCountryModel> demogInfoCountryModels, out List<DemogInfoSubDivisionModel> demogInfoSubDivisionModels, out List<SelectListItem> demogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> demogInfoSubDivisionSelectListItems, out string demogInfoCountryOptionTags, out Dictionary<long, string> demogInfoSubDivisionOptionTags, string execUniqueId)
+        public void Initialize(out List<DemogInfoCountryModel> demogInfoCountryModels, out List<DemogInfoSubDivisionModel> demogInfoSubDivisionModels, out List<SelectListItem> demogInfoCountrySelectListItems, out List<SelectListItem> demogInfoCountrySelectListItemsAbbrev, out List<SelectListItem> demogInfoCountrySelectListItemsName, out Dictionary<long, List<SelectListItem>> demogInfoSubDivisionSelectListItems, out string demogInfoCountryOptionTags, out Dictionary<long, string> demogInfoSubDivisionOptionTags, string execUniqueId)
         {
             string databaseConnectionString = Utilities.GetDatabaseConnectionString("DatabaseConnectionString");
             SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
@@ -21,7 +21,7 @@ namespace ArchitectureLibraryCacheBusinessLayer
             demogInfoSubDivisionModels = LoadDemogInfoSubDivisionModels(demogInfoCountryModels, sqlConnection, execUniqueId);
             sqlConnection.Close();
             BuildDemogInfoSubDivisionModel(demogInfoCountryModels, demogInfoSubDivisionModels, execUniqueId);
-            BuildDemogInfoSelectListItems(demogInfoCountryModels, out demogInfoCountrySelectListItems, out demogInfoSubDivisionSelectListItems, execUniqueId);
+            BuildDemogInfoSelectListItems(demogInfoCountryModels, out demogInfoCountrySelectListItems, out demogInfoCountrySelectListItemsAbbrev, out demogInfoCountrySelectListItemsName, out demogInfoSubDivisionSelectListItems, execUniqueId);
             BuildDemogInfoOptionTags(demogInfoCountryModels, out demogInfoCountryOptionTags, out demogInfoSubDivisionOptionTags, execUniqueId);
             return;
         }
@@ -96,7 +96,7 @@ namespace ArchitectureLibraryCacheBusinessLayer
                 demogInfoCountryModel.DemogInfoSubDivisionModels = demogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryModel.DemogInfoCountryId).OrderBy(x => x.StateAbbrev).ToList();
             }
         }
-        private void BuildDemogInfoSelectListItems(List<DemogInfoCountryModel> demogInfoCountryModels, out List<SelectListItem> demogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> demogInfoCountrySubDivisionSelectListItems, string execUniqueId)
+        private void BuildDemogInfoSelectListItems(List<DemogInfoCountryModel> demogInfoCountryModels, out List<SelectListItem> demogInfoCountrySelectListItems, out List<SelectListItem> demogInfoCountrySelectListItemsAbbrev, out List<SelectListItem> demogInfoCountrySelectListItemsName, out Dictionary<long, List<SelectListItem>> demogInfoCountrySubDivisionSelectListItems, string execUniqueId)
         {
             demogInfoCountrySelectListItems = new List<SelectListItem>();
             demogInfoCountrySubDivisionSelectListItems = new Dictionary<long, List<SelectListItem>>();
@@ -121,6 +121,36 @@ namespace ArchitectureLibraryCacheBusinessLayer
                         {
                             Text = demogInfoSubDivisionModel.SubDivisionDesc,
                             Value = demogInfoSubDivisionModel.DemogInfoSubDivisionId.ToString(),
+                        }
+                    );
+                }
+            }
+            demogInfoCountrySelectListItemsAbbrev = new List<SelectListItem>();
+            foreach (var demogInfoCountryModel in demogInfoCountryModels.OrderBy(x => x.CountryAbbrev))
+            {
+                if (demogInfoCountryModel.CountryAbbrev != "")
+                {
+                    demogInfoCountrySelectListItemsAbbrev.Add
+                    (
+                        new SelectListItem
+                        {
+                            Text = demogInfoCountryModel.CountryAbbrev + " " + demogInfoCountryModel.CountryDesc,
+                            Value = demogInfoCountryModel.DemogInfoCountryId.ToString(),
+                        }
+                    );
+                }
+            }
+            demogInfoCountrySelectListItemsName = new List<SelectListItem>();
+            foreach (var demogInfoCountryModel in demogInfoCountryModels.OrderBy(x => x.CountryDesc))
+            {
+                if (demogInfoCountryModel.CountryAbbrev != "")
+                {
+                    demogInfoCountrySelectListItemsName.Add
+                    (
+                        new SelectListItem
+                        {
+                            Text = demogInfoCountryModel.CountryAbbrev + " " + demogInfoCountryModel.CountryDesc,
+                            Value = demogInfoCountryModel.DemogInfoCountryId.ToString(),
                         }
                     );
                 }

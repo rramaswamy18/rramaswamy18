@@ -1,0 +1,44 @@
+﻿@model ArchitectureLibraryModels.CheckoutGuestModel
+<style>
+    #CheckoutGuestEmailAddress-error, #ConfirmCheckoutGuestEmailAddress-error, #CaptchaAnswerCheckoutGuest-error {
+        color: #ff0000;
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+    }
+</style>
+@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+{
+    <div class="row validationSummaryMessage" id="divLoginUserProfValidationSummaryMessage">
+        @Model.ResponseObjectModel.ValidationSummaryMessage
+    </div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row" id="divLoginUserProfValidationSummary">
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+    </div>
+}
+@if (Model != null && Model.ResponseObjectModel != null)
+{
+    <div class="row" id="divLoginUserProfResponseObject">
+        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+    </div>
+}
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.CheckoutGuestEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.CheckoutGuestEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.CheckoutGuestEmailAddress), style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CheckoutGuestEmailAddress, "", new { id = "CheckoutGuestEmailAddress-error" }).ToHtmlString()))
+</div>
+
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.ConfirmCheckoutGuestEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.ConfirmCheckoutGuestEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmCheckoutGuestEmailAddress), style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ConfirmCheckoutGuestEmailAddress, "", new { id = "ConfirmCheckoutGuestEmailAddress-error" }).ToHtmlString()))
+</div>
+
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.CaptchaAnswerCheckoutGuest, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberCheckoutGuest0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberCheckoutGuest1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
+    @Html.TextBoxFor(m => m.CaptchaAnswerCheckoutGuest, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberCheckoutGuest0 + " + " + @Model.CaptchaNumberCheckoutGuest1 + " =?", style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerCheckoutGuest, "", new { id = "CaptchaAnswerCheckoutGuest-error" }).ToHtmlString()))
+</div>

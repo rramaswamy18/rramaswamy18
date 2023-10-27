@@ -10,6 +10,16 @@
     width: 90%;
 }
 
+.fixedDiv {
+    padding-left: 9px;
+    position: fixed;
+    left: auto;
+    text-align: left;
+    top: 36%;
+    width: 9em;
+    /*margin-top: -2.5em;*/
+}
+
 .validationSummaryMessage {
     color: #000000;
     font-size: 18px;

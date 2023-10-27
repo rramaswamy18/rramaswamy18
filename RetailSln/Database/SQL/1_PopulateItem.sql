@@ -1,3 +1,4 @@
+--1_PopulateItem.sql
 /*
 TRUNCATE TABLE DivineBija_Products
 SELECT * FROM RetailSlnSch.Item WHERE ItemTypeId = 200 ORDER BY ItemId

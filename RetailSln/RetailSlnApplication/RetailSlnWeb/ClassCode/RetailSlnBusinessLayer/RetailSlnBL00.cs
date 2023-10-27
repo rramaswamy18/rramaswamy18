@@ -43,7 +43,7 @@ namespace RetailSlnBusinessLayer
                     };
                 }
                 ItemModel itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == itemId);
-                float heightValue, lengthValue, weightValue, widthValue;
+                float heightValue, lengthValue, weightValue, widthValue, itemRate;
                 DimensionUnitEnum dimensionUnitId;
                 WeightUnitEnum weightUnitId;
                 dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue);
@@ -54,6 +54,7 @@ namespace RetailSlnBusinessLayer
                 widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
                 if (itemModel != null)
                 {
+                    itemRate = itemModel.ItemRate.Value;
                     shoppingCartModel.ShoppingCartItems.Add
                     (
                         new ShoppingCartItemModel
@@ -62,10 +63,10 @@ namespace RetailSlnBusinessLayer
                             HeightValue = heightValue,
                             ItemDesc = itemModel.ItemDesc,
                             ItemId = itemModel.ItemId,
-                            ItemRate = itemModel.ItemRate,
+                            ItemRate = itemRate,
                             ItemShortDesc = itemModel.ItemShortDesc,
                             LengthValue = lengthValue,
-                            OrderAmount = orderQty * itemModel.ItemRate,
+                            OrderAmount = orderQty * itemRate,
                             OrderComments = "",
                             OrderQty = orderQty,
                             VolumeValue = lengthValue * widthValue * heightValue * orderQty,
@@ -83,6 +84,75 @@ namespace RetailSlnBusinessLayer
                 {
                     throw new Exception("Error while adding item to shopping cart itemid=" + itemId + " orderQty=" + orderQty);
                 }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        //POST AddToCart
+        public ShoppingCartModel AddToCart(List<ShoppingCartItemModel> shoppingCartItemModels, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long itemId, orderQty;
+                string orderComments;
+                ItemModel itemModel;
+                ShoppingCartModel shoppingCartModel;
+                ShoppingCartItemModel shoppingCartItemModel;
+                shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
+                if (shoppingCartModel == null)
+                {
+                    shoppingCartModel = new ShoppingCartModel
+                    {
+                        Checkout = true,
+                        ShoppingCartItems = new List<ShoppingCartItemModel>(),
+                    };
+                }
+                foreach (var shoppingCartItemModelTemp in shoppingCartItemModels)
+                {
+                    itemId = shoppingCartItemModelTemp.ItemId.Value;
+                    orderQty = shoppingCartItemModelTemp.OrderQty.Value;
+                    orderComments = shoppingCartItemModelTemp.OrderComments;
+                    shoppingCartItemModel = shoppingCartModel.ShoppingCartItems.FirstOrDefault(x => x.ItemId == itemId);
+                    if (shoppingCartItemModel == null)
+                    {
+                        itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == itemId);
+                        shoppingCartModel.ShoppingCartItems.Add
+                        (
+                            shoppingCartItemModel = new ShoppingCartItemModel
+                            {
+                                DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue),
+                                HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue),
+                                ItemDesc = itemModel.ItemDesc,
+                                ItemId = itemModel.ItemId,
+                                ItemRate = itemModel.ItemRate,
+                                ItemShortDesc = itemModel.ItemShortDesc,
+                                LengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue),
+                                OrderQty = orderQty,
+                                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue),
+                                WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue),
+                                WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue),
+                            }
+                        );
+                    }
+                    else
+                    {
+                        shoppingCartItemModel.OrderQty += orderQty;
+                    }
+                    shoppingCartItemModel.OrderComments = orderComments;
+                    shoppingCartItemModel.OrderAmount = shoppingCartItemModel.OrderQty * shoppingCartItemModel.ItemRate;
+                    shoppingCartItemModel.VolumeValue = shoppingCartItemModel.OrderQty * shoppingCartItemModel.LengthValue * shoppingCartItemModel.WidthValue * shoppingCartItemModel.HeightValue;
+                    shoppingCartItemModel.WeightValue = shoppingCartItemModel.OrderQty * shoppingCartItemModel.WeightValue;
+                }
+                UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return shoppingCartModel;
             }
             catch (Exception exception)
             {
@@ -138,6 +208,13 @@ namespace RetailSlnBusinessLayer
                 CheckoutModel checkoutModel = new CheckoutModel
                 {
                     ContactUsModel = new ContactUsModel(),
+                    CheckoutGuestModel = new CheckoutGuestModel
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Success,
+                        },
+                    },
                     LoginUserProfModel = new LoginUserProfModel
                     {
                         ResponseObjectModel = new ResponseObjectModel
@@ -154,6 +231,8 @@ namespace RetailSlnBusinessLayer
                     checkoutModel.ShoppingCartModel.Checkout = true;
                     List<string> numberSessions = new List<string>
                     {
+                        "CaptchaNumberCheckoutGuest0",
+                        "CaptchaNumberCheckoutGuest1",
                         "CaptchaNumberLogin0",
                         "CaptchaNumberLogin1",
                         "CaptchaNumberRegister0",
@@ -167,8 +246,10 @@ namespace RetailSlnBusinessLayer
                     checkoutModel.ContactUsModel.CaptchaAnswerContactUs = null;
                     checkoutModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
                     checkoutModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
+                    checkoutModel.CheckoutGuestModel.CaptchaAnswerCheckoutGuest = null;
+                    checkoutModel.CheckoutGuestModel.CaptchaNumberCheckoutGuest0 = httpSessionStateBase["CaptchaNumberCheckoutGuest0"].ToString();
+                    checkoutModel.CheckoutGuestModel.CaptchaNumberCheckoutGuest1 = httpSessionStateBase["CaptchaNumberCheckoutGuest1"].ToString();
                     checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = null;
-                    //checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = (int.Parse(httpSessionStateBase["CaptchaNumberLogin0"].ToString()) + int.Parse(httpSessionStateBase["CaptchaNumberLogin1"].ToString())).ToString();
                     checkoutModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
                     checkoutModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
                     checkoutModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
@@ -199,7 +280,7 @@ namespace RetailSlnBusinessLayer
                 shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
                 if (shoppingCartModel == null)
                 {
-                    //throw new Exception("Shopping Cart is Empty");
+                    throw new Exception("Shopping Cart is Empty");
                 }
                 else
                 {
@@ -231,14 +312,14 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ShoppingCartModel shoppingCartModel;
-                DeliveryInfoModel deliveryInfoModel = null;
+                DeliveryInfoModel deliveryInfoModel;
                 shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
                 shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>();
                 shoppingCartModel.Checkout = false;
                 httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
                 if (shoppingCartModel == null)
                 {
-                    ;
+                    deliveryInfoModel = null;
                 }
                 else
                 {
@@ -268,7 +349,7 @@ namespace RetailSlnBusinessLayer
                     }
                     else
                     {
-                        ;
+                        deliveryInfoModel = null;
                     }
                 }
                 return deliveryInfoModel;
@@ -294,12 +375,13 @@ namespace RetailSlnBusinessLayer
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
                 ShoppingCartModel shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
                 ItemModel itemModel;
-                float totalItemsCount = 0, totalOrderAmount = 0, totalVolumeValue = 0, totalWeightValue = 0;
+                float totalItemsCount = 0, totalOrderAmount = 0, totalVolumeValue = 0, totalWeightValue = 0, itemRate;
                 foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
                 {
                     itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItem.ItemId);
+                    itemRate = itemModel.ItemRate.Value;
                     totalItemsCount += shoppingCartItem.OrderQty.Value;
-                    totalOrderAmount += itemModel.ItemRate.Value * shoppingCartItem.OrderQty.Value;
+                    totalOrderAmount += itemRate * shoppingCartItem.OrderQty.Value;
                     totalVolumeValue += shoppingCartItem.VolumeValue.Value;
                     totalWeightValue += shoppingCartItem.WeightValue.Value;
                 }
@@ -360,7 +442,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         //POST GiftCert
-        public void GiftCert(ref GiftCertModel giftCertModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void GiftCert(ref GiftCertModel giftCertModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -417,11 +499,18 @@ namespace RetailSlnBusinessLayer
                         giftCertModel.GiftCertBalanceAmount = (float)giftCertModel.GiftCertAmount;
                         giftCertModel.RecipientEmailAddressRegistered = userProfRegistered ? $"Registered with password {loginPassword}" : "Already registered";
                         ApplicationDataContext.CreateGiftCert(giftCertModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        string inputFullFileName;
-                        inputFullFileName = Utilities.GetServerMapPath("~/Documents/Templates/GiftCertificate") + @"/" + giftCertModel.SelectedTemplateName;
-                        giftCertModel.GiftCertImageFileName = Utilities.GetServerMapPath("~/Documents/GiftCertificates") + @"/" + giftCertModel.GiftCertNumber + ".jpg";
+                        string giftCertDirectory = Utilities.GetServerMapPath("~/ClientSpecific/" + ArchLibCache.ClientId + "_" + ArchLibCache.ClientName + "/Documents/GiftCertificate/");
+                        string inputFullFileName = giftCertDirectory + @"\Templates\" + giftCertModel.SelectedTemplateName;
+                        giftCertModel.GiftCertImageFileName = giftCertDirectory + @"\" + giftCertModel.GiftCertNumber + ".jpg";
                         CreateGiftCertImage(inputFullFileName, giftCertModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        //SendGiftCertReceiptEmail(giftCertModel, userProfRegistered, loginPassword, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplate", giftCertModel);
+                        string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_GiftCertEmailSubject", giftCertModel);
+                        string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_GiftCertEmailBody", giftCertModel);
+                        emailBodyHtml += signatureHtml;
+                        archLibBL.SendEmail(giftCertModel.SenderEmailAddress, emailSubjectText, emailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_GiftCertRecipientEmailBody", giftCertModel);
+                        emailBodyHtml += signatureHtml;
+                        archLibBL.SendEmail(giftCertModel.SenderEmailAddress, emailSubjectText, emailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                     }
                     else
@@ -689,6 +778,8 @@ namespace RetailSlnBusinessLayer
                             else
                             {
                                 modelStateDictionary.AddModelError("", creditCardDataModel.ProcessMessage);
+                                modelStateDictionary.AddModelError("CreditCardNumber", creditCardDataModel.ProcessMessage);
+                                modelStateDictionary.AddModelError("CardHolderName", creditCardDataModel.ProcessMessage);
                             }
                         }
                         else
@@ -722,18 +813,20 @@ namespace RetailSlnBusinessLayer
                                 },
                             };
                             ItemModel itemModel;
+                            float itemRate;
                             foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
                             {
                                 itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItem.ItemId);
+                                itemRate = itemModel.ItemRate.Value;
                                 orderModel.OrderHeaderModel.OrderDetailModels.Add
                                 (
                                     new OrderDetailModel
                                     {
                                         ItemDesc = itemModel.ItemDesc,
-                                        ItemRate = (float)itemModel.ItemRate,
+                                        ItemRate = itemRate,
                                         ItemShortDesc = itemModel.ItemShortDesc,
                                         ItemId = itemModel.ItemId,
-                                        OrderAmount = itemModel.ItemRate.Value * shoppingCartItem.OrderQty.Value,
+                                        OrderAmount = itemRate * shoppingCartItem.OrderQty.Value,
                                         OrderComments = shoppingCartItem.OrderComments,
                                         OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                         OrderQty = (long)shoppingCartItem.OrderQty,

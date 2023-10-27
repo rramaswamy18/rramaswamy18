@@ -15,5 +15,7 @@ namespace ArchitectureLibraryEnumerations
         ApplicationAdmin = 200,
         [Description("Regular User")]
         RegularUser = 300,
+        [Description("Guest User")]
+        GuestUser = 400,
     }
 }

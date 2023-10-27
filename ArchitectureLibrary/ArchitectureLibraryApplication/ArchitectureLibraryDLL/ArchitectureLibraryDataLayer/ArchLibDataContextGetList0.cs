@@ -105,5 +105,28 @@ namespace ArchitectureLibraryDataLayer
             }
             return personModels;
         }
+        public static List<UserProfileMetaDataModel> GetUserProfileMetaDatas(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<UserProfileMetaDataModel> userProfileMetaDataModels = new List<UserProfileMetaDataModel>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM ArchLib.UserProfileMetaData ORDER BY SeqNum", sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    userProfileMetaDataModels.Add(AssignUserProfileMetaData(sqlDataReader, clientId, ipAddress, execUniqueId, loggedInUserId));
+                }
+                sqlDataReader.Close();
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            return userProfileMetaDataModels;
+        }
     }
 }

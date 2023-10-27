@@ -15,7 +15,7 @@ namespace ArchitectureLibraryDataLayer
 {
     public static partial class ArchLibDataContext
     {
-        public static PersonModel CreateRegisterUser(string aspNetUserId, string loginNameId1, string loginPassword, DateTime? loginPasswordExpiryDateTime, string phoneNumber, string resetPasswordQueryString, string resetPasswordDateTime, string resetPasswordKey, string firstName, string lastName, long certificateDocumentId, long initialsTextId, string initialsTextValue, long signatureTextId, string signatureTextValue, UserStatusEnum? userStatusId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static PersonModel CreateRegisterUser(string aspNetUserId, string loginNameId1, string loginPassword, DateTime? loginPasswordExpiryDateTime, long? telephoneCountryId, string phoneNumber, string resetPasswordQueryString, string resetPasswordDateTime, string resetPasswordKey, string firstName, string lastName, long certificateDocumentId, long initialsTextId, string initialsTextValue, long signatureTextId, string signatureTextValue, UserTypeEnum userTypeId, UserStatusEnum? userStatusId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -25,7 +25,7 @@ namespace ArchitectureLibraryDataLayer
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before AspNetRole", "loginNameId1", loginNameId1);
                 string aspNetRoleId = GetAspNetRole("Default Role", sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before AspNetUser", "loginNameId1", loginNameId1);
-                AspNetUserModel aspNetUserModel = BuildAspNetUser(aspNetUserId, loginNameId1, loginPassword, loginPasswordExpiryDateTime, phoneNumber, resetPasswordQueryString, resetPasswordDateTime, resetPasswordKey, LoginTypeEnum.EmailAddress, UserTypeEnum.RegularUser, userStatusId, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AspNetUserModel aspNetUserModel = BuildAspNetUser(aspNetUserId, loginNameId1, loginPassword, loginPasswordExpiryDateTime, telephoneCountryId, phoneNumber, resetPasswordQueryString, resetPasswordDateTime, resetPasswordKey, LoginTypeEnum.EmailAddress, UserTypeEnum.RegularUser, userStatusId, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddAspNetUser(aspNetUserModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
 
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Before AspNetUserRole", "loginNameId1", loginNameId1);

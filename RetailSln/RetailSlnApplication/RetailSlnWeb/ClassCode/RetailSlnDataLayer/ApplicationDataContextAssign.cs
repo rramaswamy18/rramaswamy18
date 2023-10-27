@@ -80,7 +80,6 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@ExpectedAvailability"].Value = string.IsNullOrEmpty(itemModel.ExpectedAvailability) ? (object)DBNull.Value : itemModel.ExpectedAvailability;
             sqlCommand.Parameters["@ItemDesc"].Value = itemModel.ItemDesc;
-            sqlCommand.Parameters["@ItemRate"].Value = itemModel.ItemRate;
             sqlCommand.Parameters["@ItemShortDesc"].Value = itemModel.ItemShortDesc;
             sqlCommand.Parameters["@ItemStarCount"].Value = (int)itemModel.ItemStarCount;
             sqlCommand.Parameters["@ItemStatusId"].Value = (int)itemModel.ItemStatusId;
@@ -92,7 +91,6 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ItemId"].Value = itemModel.ItemId;
             sqlCommand.Parameters["@ExpectedAvailability"].Value = string.IsNullOrEmpty(itemModel.ExpectedAvailability) ? (object)DBNull.Value : itemModel.ExpectedAvailability;
             sqlCommand.Parameters["@ItemDesc"].Value = itemModel.ItemDesc;
-            sqlCommand.Parameters["@ItemRate"].Value = itemModel.ItemRate;
             sqlCommand.Parameters["@ItemShortDesc"].Value = itemModel.ItemShortDesc;
             sqlCommand.Parameters["@ItemStarCount"].Value = (int)itemModel.ItemStarCount;
             sqlCommand.Parameters["@ItemStatusId"].Value = (int)itemModel.ItemStatusId;
