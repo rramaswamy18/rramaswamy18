@@ -1,4 +1,5 @@
-﻿using ArchitectureLibraryException;
+﻿using ArchitectureLibraryCacheData;
+using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using System;
 using System.Collections.Generic;
@@ -210,6 +211,66 @@ namespace ArchitectureLibraryUtility
             }
 
             return request.UserHostAddress;
+        }
+        public static string GetIPAddress(HttpRequestBase request, string lastIpAddress, string ipInfoClientAccessToken)
+        {
+            // handle standardized 'Forwarded' header
+            string forwarded = request.Headers["Forwarded"];
+            string ip = null;
+            if (!string.IsNullOrEmpty(forwarded))
+            {
+                foreach (string segment in forwarded.Split(',')[0].Split(';'))
+                {
+                    string[] pair = segment.Trim().Split('=');
+                    if (pair.Length == 2 && pair[0].Equals("for", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ip = pair[1].Trim('"');
+
+                        // IPv6 addresses are always enclosed in square brackets
+                        int left = ip.IndexOf('['), right = ip.IndexOf(']');
+                        if (left == 0 && right > 0)
+                        {
+                            ip = ip.Substring(1, right - 1);
+                            break;
+                        }
+
+                        // strip port of IPv4 addresses
+                        int colon = ip.IndexOf(':');
+                        if (colon != -1)
+                        {
+                            ip = ip.Substring(0, colon);
+                            break;
+                        }
+
+                        // this will return IPv4, "unknown", and obfuscated addresses
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // handle non-standardized 'X-Forwarded-For' header
+                string xForwardedFor = request.Headers["X-Forwarded-For"];
+                if (!string.IsNullOrEmpty(xForwardedFor))
+                {
+                    ip = xForwardedFor.Split(',')[0];
+                }
+                else
+                {
+                    ip = request.UserHostAddress;
+                }
+            }
+            if (ArchLibCache.IpInfoMode == "PROD" && ip != null && ip != lastIpAddress)
+            {
+                HttpContext.Current.Session["LastIpAddress"] = ip;
+                IpInfoProcess.ProcessIpInfo(ip, ipInfoClientAccessToken);
+            }
+            return ip;
+        }
+        public static string GetLastIPAddress()
+        {
+            var lastIpAddress = HttpContext.Current.Session["LastIpAddress"];
+            return lastIpAddress == null ? "" : lastIpAddress.ToString();
         }
         public static string GetLoggedInUserId(HttpSessionStateBase httpSessionStateBase)
         {

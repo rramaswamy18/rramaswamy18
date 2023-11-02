@@ -26,6 +26,8 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please select a delivery method")]
         public DeliveryMethodEnum? DeliveryMethodId { set; get; }
 
+        public string DeliveryTypeId { set; get; }
+
         [Display(Name = "Prim. Phone#")]
         [Required(ErrorMessage = "Primary phone#")]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "10 digit phone#")]

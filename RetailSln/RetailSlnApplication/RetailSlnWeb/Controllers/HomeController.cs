@@ -20,6 +20,7 @@ namespace RetailSlnWeb.Controllers
     {
         private readonly long clientId = long.Parse(Utilities.GetApplicationValue("ClientId"));
         private readonly string execUniqueId = Utilities.CreateExecUniqueId();
+        private readonly string lastIpAddress = Utilities.GetLastIPAddress();
 
         // GET: Home
         [AllowAnonymous]
@@ -27,7 +28,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult Index(string id)
         {
             ViewData["ActionName"] = "Index";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ActionResult actionResult;
@@ -1010,9 +1011,76 @@ namespace RetailSlnWeb.Controllers
                 ModelState.Clear();
                 TryValidateModel(personModel);
                 TryValidateModel(personModel.HomeDemogInfoAddressModel, "HomeDemogInfoAddressModel");
+                TryValidateModel(personModel.AspNetUserModel, "AspNetUserModel");
                 if (personModel.CertificateDocumentHttpPostedFileBase == null && personModel.CertificateDocumentModel.ServerFileName == null)
                 {
                     ModelState.AddModelError("CertificateDocumentModel.ServerFileName", "Select certificate document");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Nickname").IsMapped)
+                {
+                    ModelState.Remove("NicknameFirst");
+                    ModelState.Remove("NicknameLast");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Name").IsMapped)
+                {
+                    ModelState.Remove("SalutationId");
+                    ModelState.Remove("FirstName");
+                    ModelState.Remove("MiddleName");
+                    ModelState.Remove("LastName");
+                    ModelState.Remove("SuffixId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "MaritalStatus").IsMapped)
+                {
+                    ModelState.Remove("MaritalStatusId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Citizenship").IsMapped)
+                {
+                    ModelState.Remove("CitizenshipId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "DateOfBirth").IsMapped)
+                {
+                    ModelState.Remove("DateOfBirth");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "ElectronicSignatureConsent").IsMapped)
+                {
+                    ModelState.Remove("ElectronicSignatureConsentAccepted");
+                    ModelState.Remove("ElectronicSignatureConsent");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "InitialsSignature").IsMapped)
+                {
+                    ModelState.Remove("InitialsTextValue");
+                    ModelState.Remove("InitialsTextId");
+                    ModelState.Remove("SignatureTextValue");
+                    ModelState.Remove("SignatureTextId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Address").IsMapped)
+                {
+                    ModelState.Remove("HomeDemogInfoAddressModel.DemogInfoCountryId");
+                    ModelState.Remove("HomeDemogInfoAddressModel.BuildingTypeId");
+                    ModelState.Remove("HomeDemogInfoAddressModel.AddressLine1");
+                    ModelState.Remove("HomeDemogInfoAddressModel.AddressLine2");
+                    ModelState.Remove("HomeDemogInfoAddressModel.DemogInfoSubDivisionId");
+                    ModelState.Remove("HomeDemogInfoAddressModel.ZipCode");
+                    ModelState.Remove("HomeDemogInfoAddressModel.CityName");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Telephone").IsMapped)
+                {
+                    ModelState.Remove("AspNetUserModel.PhoneNumber");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "SSN").IsMapped)
+                {
+                    ModelState.Remove("SSN");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "DriverLicense").IsMapped)
+                {
+                    ModelState.Remove("DriverLicenseType");
+                    ModelState.Remove("DriverLicenseNumber");
+                    ModelState.Remove("DriverLicenseDemogInfoSubDivisionId");
+                    ModelState.Remove("DriverLicenseExpiryDate");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "CertificateDocument").IsMapped)
+                {
+                    ModelState.Remove("CertificateDocumentModel.ServerFileName");
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before BL");
                 archLibBL.UserProfile(ref personModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);

@@ -49,6 +49,8 @@ namespace ArchitectureLibraryCacheBusinessLayer
                         NumericCode = sqlDataReader["NumericCode"].ToString(),
                         SubDivisionCodeHyperLink = sqlDataReader["SubDivisionCodeHyperLink"].ToString(),
                         TelephoneCode = sqlDataReader["TelephoneCode"].ToString() == "" ? (short?)null : short.Parse(sqlDataReader["TelephoneCode"].ToString()),
+                        PostalCodeLabel = sqlDataReader["PostalCodeLabel"].ToString(),
+                        PostalCodeRegEx = sqlDataReader["PostalCodeRegEx"].ToString(),
                         UpdDateTime = sqlDataReader["UpdDateTime"].ToString(),
                         UpdUserId = sqlDataReader["UpdUserId"].ToString(),
                         UpdUserName = sqlDataReader["UpdUserName"].ToString(),

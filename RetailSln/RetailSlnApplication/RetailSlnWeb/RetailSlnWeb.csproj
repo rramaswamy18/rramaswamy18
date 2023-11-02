@@ -245,6 +245,7 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\GiftCertificate\Templates\GiftCertTemplate6.jpg" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\GiftCertificate\Templates\GiftCertTemplate7.jpg" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\GiftCertificate\Templates\GiftCertTemplate8.jpg" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\GiftCertificate\Templates\GiftCertTemplate9.jpg" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category0.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category1.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category100.png" />
@@ -257,6 +258,7 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category115.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category116.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category117.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category118.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category2.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category3.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category4.png" />
@@ -867,6 +869,7 @@
     <Content Include="Views\Home\_OrderListViewData.cshtml" />
     <Content Include="Views\Home\_ShoppingCart.cshtml" />
     <Content Include="Views\Home\_ShoppingCartData.cshtml" />
+    <Content Include="Views\Home\_ShoppingCartLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

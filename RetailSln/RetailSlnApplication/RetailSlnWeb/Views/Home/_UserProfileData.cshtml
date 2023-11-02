@@ -1,4 +1,18 @@
 ﻿@model ArchitectureLibraryModels.PersonModel
+<style>
+    #NicknameFirst-error, #NicknameLast-error, #SalutationId-error, #FirstName-error, #MiddleName-error, #LastName-error, #PhoneNumber-error, #TelephoneCountryId-error, #-error, #-error, #-error, #-error, #-error, #-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .fieldValidationError {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
 @using ArchitectureLibraryCacheData
 @Html.HiddenFor(m => m.AspNetUserId)
 @Html.HiddenFor(m => m.CertificateDocumentModel.DocumentId)
@@ -13,19 +27,19 @@
 }
 @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
 {
-    <div class="row validationSummaryMessage" id="divItemAddEditValidationSummaryMessage">
+    <div class="row validationSummaryMessage" id="divUserProfileValidationSummaryMessage">
         @Model.ResponseObjectModel.ValidationSummaryMessage
     </div>
 }
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="row" id="divCategoryAddEditValidationSummary">
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3; font-size: 12px;" }).ToHtmlString()))
+    <div class="row" id="divUserProfileValidationSummary" style="margin-left: auto; margin-right: auto; padding: 5px; width: 90%">
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3; font-size: 12px; text-align: left;" }).ToHtmlString()))
     </div>
 }
 @if (Model != null && Model.ResponseObjectModel != null)
 {
-    <div class="row" id="divCategoryAddEditResponseObject">
+    <div class="row" id="divUserProfileResponseObject">
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
     </div>
 }
@@ -37,19 +51,19 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Nickname").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.NicknameFirst, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.NicknameFirst, null, new { @class = "form-control", placeholder = "Nickname first" })
-                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.NicknameFirst, null, new { @class = "fieldValidationError" }).ToHtmlString()))
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.NicknameFirst, "", new { id = "NicknameFirst-error" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.NicknameLast, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.NicknameLast, null, new { @class = "form-control", placeholder = "Nickname last" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.NicknameLast, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
@@ -58,45 +72,45 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Name").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.SalutationId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.DropDownListFor(m => m.SalutationId, new SelectList(LookupCache.CodeTypeSelectListItems["Salutation"]["CodeDataNameId"], "Value", "Text", Model.SalutationId), "---", new { @class = "form-control", style = "font-size: 12px;" })
-                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SalutationId, null, new { @class = "fieldValidationError" }).ToHtmlString()))
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SalutationId, "", new { id = "SalutationId-error" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.FirstName, null, new { @class = "form-control", placeholder = "First name" })
-                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "fieldValidationError" }).ToHtmlString()))
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, "", new { id = "FirstName-error" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.MiddleName, new { @class = "col-form-label" })
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.MiddleName, null, new { @class = "form-control", placeholder = "Middle name" })
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.LastName, null, new { @class = "form-control", placeholder = "Last name" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LastName, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.SuffixId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.DropDownListFor(m => m.SuffixId, new SelectList(LookupCache.CodeTypeSelectListItems["Suffix"]["CodeDataNameId"], "Value", "Text", Model.SuffixId), "---", new { @class = "form-control", style = "font-size: 12px;" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SuffixId, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
@@ -105,7 +119,7 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Citizenship").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.CitizenshipId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
                         <td style="padding: 5px; vertical-align: middle;">
@@ -117,7 +131,7 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "MaritalStatus").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.MaritalStatusId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
                         <td style="padding: 5px; vertical-align: middle;">
@@ -129,10 +143,10 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "DateOfBirth").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.DateOfBirth, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "datepick form-control", style = "font-size: 12px;" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DateOfBirth, null, new { id = "fieldValidationError" }).ToHtmlString()))
                         </td>
@@ -160,7 +174,7 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "InitialsSignature").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.InitialsTextValue, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
                         <td style="padding: 5px; vertical-align: top;">
@@ -200,63 +214,63 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Address").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.DemogInfoCountryId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.DropDownListFor(m => m.HomeDemogInfoAddressModel.DemogInfoCountryId, new SelectList(DemogInfoCache.DemogInfoCountrySelectListItems, "Value", "Text", Model.HomeDemogInfoAddressModel.DemogInfoCountryId), "---", new { @class = "form-control", disabled = "disabled", style = "font-size: 12px;" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.HomeDemogInfoAddressModel.DemogInfoCountryId, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.BuildingTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.DropDownListFor(m => m.HomeDemogInfoAddressModel.BuildingTypeId, new SelectList(LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"], "Value", "Text", Model.HomeDemogInfoAddressModel.BuildingTypeId), "---", new { @class = "form-control", style = "font-size: 12px;" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.HomeDemogInfoAddressModel.BuildingTypeId, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.HomeDemogInfoAddressModel.AddressLine1, null, new { @class = "form-control", placeholder = "Address line# 1" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.HomeDemogInfoAddressModel.AddressLine1, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.AddressLine2, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.HomeDemogInfoAddressModel.AddressLine2, null, new { @class = "form-control", placeholder = "Address line# 2" })
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.DemogInfoSubDivisionId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.DropDownListFor(m => m.HomeDemogInfoAddressModel.DemogInfoSubDivisionId, new SelectList(DemogInfoCache.DemogInfoSubDivisionSelectListItems[(long)Model.HomeDemogInfoAddressModel.DemogInfoCountryId], "Value", "Text", Model.HomeDemogInfoAddressModel.DemogInfoSubDivisionId), "---", new { @class = "form-control", style = "float: left; font-size: 12px;" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.HomeDemogInfoAddressModel.DemogInfoSubDivisionId, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.ZipCode, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.HomeDemogInfoAddressModel.ZipCode, null, new { @class = "form-control", placeholder = "Zip Code" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.HomeDemogInfoAddressModel.ZipCode, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.HomeDemogInfoAddressModel.CityName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.HomeDemogInfoAddressModel.CityName, null, new { @class = "form-control", placeholder = "City" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.HomeDemogInfoAddressModel.CityName, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
@@ -265,22 +279,35 @@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Telephone").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.AspNetUserModel.PhoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
-                            @Html.TextBoxFor(m => m.AspNetUserModel.PhoneNumber, null, new { @class = "form-control", @maxlength = "10", oninput = "javascript: return checkMaxLength(this);", onkeydown = "javascript: return checkMaxLength(this);", onkeypress = "javascript: return isInputNumber(event);", onkeyup = "javascript: return checkMaxLength(this);", placeholder = "Telephone#", @type = "text" })
-                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AspNetUserModel.PhoneNumber, null, new { @class = "fieldValidationError" }).ToHtmlString()))
+                        <td style="padding: 5px; text-align: left;">
+                            <table style="padding: 0px;">
+                                <tr>
+                                    <td style="padding-right: 9px; text-align: left; width: 36%;">
+                                        @Html.DropDownListFor(m => m.AspNetUserModel.TelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.AspNetUserModel.TelephoneCountryId), "---", new { @class = "form-control", style = "float: left; font-size: 14px;" })
+                                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AspNetUserModel.TelephoneCountryId, "", new { id = "TelephoneCountryId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
+                                    </td>
+                                    <td style="text-align: left; width: 9%;">
+                                        +@ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountryModels.FirstOrDefault(x => x.DemogInfoCountryId == Model.AspNetUserModel.TelephoneCountryId).TelephoneCode
+                                    </td>
+                                    <td style="text-align: left; width: 45%;">
+                                        @Html.TextBoxFor(m => m.AspNetUserModel.PhoneNumber, null, new { @class = "form-control", @maxlength = "10", oninput = "javascript: return checkMaxLength(this);", onkeydown = "javascript: return checkMaxLength(this);", onkeypress = "javascript: return isInputNumber(event);", onkeyup = "javascript: return checkMaxLength(this);", placeholder = "Telephone#", @type = "text" })
+                                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AspNetUserModel.PhoneNumber, null, new { @class = "PhoneNumber-error" }).ToHtmlString()))
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 }
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "SSN").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.SSN, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
-                        <td style="padding: 5px;">
+                        <td style="padding: 5px; text-align: left;">
                             @Html.TextBoxFor(m => m.SSN, null, new { @class = "form-control", @maxlength = "9", oninput = "javascript: return checkMaxLength(this);", onkeydown = "javascript: return checkMaxLength(this);", onkeypress = "javascript: return isInputNumber(event);", onkeyup = "javascript: return checkMaxLength(this);", placeholder = "SSN#", @type = "text" })
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SSN, null, new { @class = "fieldValidationError" }).ToHtmlString()))
                         </td>
@@ -338,46 +365,10 @@
                         </td>
                     </tr>
                 }
-                @*<tr>
-            <th style="padding: 5px;">
-                @Html.LabelFor(m => m.DriverLicenseType, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            </th>
-            <td style="padding: 5px;">
-                @Html.TextBoxFor(m => m.DriverLicenseType, new { @class = "form-control", @maxlength = "1", style = "font-size: 12px; text-transform: uppercase;", autocomplete = "off" })
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DriverLicenseType, null, new { @class = "fieldValidationError" }).ToHtmlString()))
-            </td>
-        </tr>
-        <tr>
-            <th style="padding: 5px;">
-                @Html.LabelFor(m => m.DriverLicenseNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            </th>
-            <td style="padding: 5px;">
-                @Html.TextBoxFor(m => m.DriverLicenseNumber, new { @class = "form-control", @maxlength = "15", style = "font-size: 12px; text-transform: uppercase;", autocomplete = "off" })
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DriverLicenseNumber, null, new { @class = "fieldValidationError" }).ToHtmlString()))
-            </td>
-        </tr>
-        <tr>
-            <th style="padding: 5px;">
-                @Html.LabelFor(m => m.DriverLicenseDemogInfoSubDivisionId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            </th>
-            <td style="padding: 5px;">
-                @Html.DropDownListFor(m => m.DriverLicenseDemogInfoSubDivisionId, new SelectList(DemogInfoCache.DemogInfoSubDivisionSelectListItems[(long)Model.HomeDemogInfoAddressModel.DemogInfoCountryId], "Value", "Text", Model.DriverLicenseDemogInfoSubDivisionId), "---", new { @class = "form-control", style = "font-size: 12px;" })
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DriverLicenseDemogInfoSubDivisionId, null, new { @class = "fieldValidationError" }).ToHtmlString()))
-            </td>
-        </tr>
-        <tr>
-            <th style="padding: 5px;">
-                @Html.LabelFor(m => m.DriverLicenseExpiryDate, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            </th>
-            <td style="padding: 5px;">
-                @Html.TextBoxFor(m => m.DriverLicenseExpiryDate, "{0:MM/dd/yyyy}", new { @class = "datepick form-control", style = "font-size: 12px;" })
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DriverLicenseExpiryDate, null, new { @class = "fieldValidationError" }).ToHtmlString()))
-            </td>
-        </tr>*@
                 @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "InitialsSignature").IsMapped)
                 {
                     <tr>
-                        <th style="padding: 5px;">
+                        <th style="padding: 5px; vertical-align: top;">
                             @Html.LabelFor(m => m.SignatureTextValue, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                         </th>
                         <td style="padding: 5px; vertical-align: top;">

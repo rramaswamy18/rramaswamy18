@@ -14,6 +14,8 @@ namespace ArchitectureLibraryCacheData
     {
         public static long ClientId { set; get; }
         public static string ClientName { set; get; }
+        public static string IpInfoClientAccessToken { set; get; }
+        public static string IpInfoMode { set; get; }
         public static bool RedirectToHttps { set; get; }
         public static string ValidationSummaryMessageFixErrors { get { return "PLEASE FIX ERRORS TO CONTINUE???"; } }
         public static string ValidationSummaryMessageSuccess { get { return "Process completed successfully!!!"; } }
@@ -45,6 +47,8 @@ namespace ArchitectureLibraryCacheData
             BuildCacheModels(applicationDefaultModels, clientModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             ClientId = clientId;
             ClientName = Utilities.GetApplicationValue("ClientName");
+            IpInfoClientAccessToken = GetApplicationDefault(0, "IpInfo", "ClientAccessToken");
+            IpInfoMode = Utilities.GetApplicationValue("IpInfoMode");
             RedirectToHttps = bool.Parse(Utilities.GetApplicationValue("RedirectToHttps"));
         }
         private static void BuildCacheModels(List<ApplicationDefaultModel> applicationDefaultModels, List<ClientModel> clientModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

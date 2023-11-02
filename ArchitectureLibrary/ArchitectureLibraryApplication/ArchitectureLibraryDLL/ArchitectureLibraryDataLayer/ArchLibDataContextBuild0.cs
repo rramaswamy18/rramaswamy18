@@ -262,13 +262,15 @@ namespace ArchitectureLibraryDataLayer
             string sqlStmt = "";
             sqlStmt += "        UPDATE ArchLib.AspNetUser" + Environment.NewLine;
             sqlStmt += "           SET " + Environment.NewLine;
-            sqlStmt += "               PhoneNumber = @PhoneNumber" + Environment.NewLine;
+            sqlStmt += "               TelephoneCountryId = @TelephoneCountryId" + Environment.NewLine;
+            sqlStmt += "              ,PhoneNumber = @PhoneNumber" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId = @LoggedInUserId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserName = SUSER_NAME()" + Environment.NewLine;
             sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
             sqlStmt += "         WHERE " + Environment.NewLine;
             sqlStmt += "               AspNetUserId = @AspNetUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("@TelephoneCountryId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@PhoneNumber", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@LoggedInUserId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@AspNetUserId", System.DBNull.Value);

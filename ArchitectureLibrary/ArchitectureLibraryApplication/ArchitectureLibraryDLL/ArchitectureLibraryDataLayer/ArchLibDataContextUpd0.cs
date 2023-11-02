@@ -39,28 +39,28 @@ namespace ArchitectureLibraryDataLayer
         public static void UpdPerson1(PersonModel personModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
         {
             SqlCommand sqlCommand = BuildSqlCommandPersonUpd1(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
-            sqlCommand.Parameters["@CitizenshipId"].Value = personModel.CitizenshipId;
-            sqlCommand.Parameters["@CertificateDocumentId"].Value = personModel.CertificateDocumentId;
-            sqlCommand.Parameters["@DateOfBirth"].Value = personModel.DateOfBirth;
-            sqlCommand.Parameters["@DriverLicenseDemogInfoSubDivisionId"].Value = personModel.DriverLicenseDemogInfoSubDivisionId;
-            sqlCommand.Parameters["@DriverLicenseExpiryDate"].Value = personModel.DriverLicenseExpiryDate;
-            sqlCommand.Parameters["@DriverLicenseNumber"].Value = personModel.DriverLicenseNumber;
-            sqlCommand.Parameters["@DriverLicenseType"].Value = personModel.DriverLicenseType;
+            sqlCommand.Parameters["@CitizenshipId"].Value = personModel.CitizenshipId ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@CertificateDocumentId"].Value = personModel.CertificateDocumentId ?? 0;
+            sqlCommand.Parameters["@DateOfBirth"].Value = personModel.DateOfBirth ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@DriverLicenseDemogInfoSubDivisionId"].Value = personModel.DriverLicenseDemogInfoSubDivisionId ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@DriverLicenseExpiryDate"].Value = personModel.DriverLicenseExpiryDate ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@DriverLicenseNumber"].Value = personModel.DriverLicenseNumber ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@DriverLicenseType"].Value = personModel.DriverLicenseType ?? (object)DBNull.Value;
             sqlCommand.Parameters["@ElectronicSignatureConsent"].Value = (bool)personModel.ElectronicSignatureConsentAccepted ? DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") : (object)DBNull.Value;
             sqlCommand.Parameters["@ElectronicSignatureConsentAccepted"].Value = personModel.ElectronicSignatureConsentAccepted;
             sqlCommand.Parameters["@FirstName"].Value = personModel.FirstName;
-            sqlCommand.Parameters["@InitialsTextId"].Value = personModel.InitialsTextId;
-            sqlCommand.Parameters["@InitialsTextValue"].Value = personModel.InitialsTextValue;
+            sqlCommand.Parameters["@InitialsTextId"].Value = personModel.InitialsTextId ?? 0;
+            sqlCommand.Parameters["@InitialsTextValue"].Value = personModel.InitialsTextValue ?? "";
             sqlCommand.Parameters["@LastName"].Value = personModel.LastName;
-            sqlCommand.Parameters["@MaritalStatusId"].Value = personModel.MaritalStatusId;
+            sqlCommand.Parameters["@MaritalStatusId"].Value = personModel.MaritalStatusId ?? (object)DBNull.Value;
             sqlCommand.Parameters["@MiddleName"].Value = personModel.MiddleName ?? (object)DBNull.Value;
             //sqlCommand.Parameters["@MilitaryServiceId"].Value = personModel.MilitaryServiceId;
             sqlCommand.Parameters["@NicknameFirst"].Value = personModel.NicknameFirst;
             sqlCommand.Parameters["@NicknameLast"].Value = personModel.NicknameLast;
             sqlCommand.Parameters["@SalutationId"].Value = personModel.SalutationId;
-            sqlCommand.Parameters["@SignatureTextId"].Value = personModel.SignatureTextId;
-            sqlCommand.Parameters["@SignatureTextValue"].Value = personModel.SignatureTextValue;
-            sqlCommand.Parameters["@SSN"].Value = personModel.SSN;
+            sqlCommand.Parameters["@SignatureTextId"].Value = personModel.SignatureTextId ?? 0;
+            sqlCommand.Parameters["@SignatureTextValue"].Value = personModel.SignatureTextValue ?? "";
+            sqlCommand.Parameters["@SSN"].Value = personModel.SSN ?? (object)DBNull.Value;
             sqlCommand.Parameters["@SuffixId"].Value = personModel.SuffixId;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInuserId;
             sqlCommand.Parameters["@AspNetUserId"].Value = personModel.AspNetUserId;
@@ -69,6 +69,7 @@ namespace ArchitectureLibraryDataLayer
         public static void UpdAspNetUser1(AspNetUserModel aspNetUserModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
         {
             SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpd1(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@TelephoneCountryId"].Value = aspNetUserModel.TelephoneCountryId;
             sqlCommand.Parameters["@PhoneNumber"].Value = aspNetUserModel.PhoneNumber;
             sqlCommand.Parameters["@LoggedInuserId"].Value = loggedInuserId;
             sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserModel.AspNetUserId;
