@@ -1,4 +1,5 @@
 ﻿using ArchitectureLibraryModels;
+using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,17 @@ namespace RetailSlnModels
     {
         public long DeliveryChargeId { set; get; }
 
+        public long ClientId { set; get; }
+
         public string ChargeUnitMeasure { set; get; }
 
         public float DeliveryChargeAmount { set; get; }
+
+        public long DeliveryListId { set; get; }
+
+        public DeliveryTypeEnum DeliveryTypeId { set; get; }
+
+        public long DemogInfoCountryId { set; get; }
 
         public long UnitId { set; get; }
 
@@ -23,6 +32,5 @@ namespace RetailSlnModels
         public string ZipCodeFrom { set; get; }
 
         public string ZipCodeTo { set; get; }
-
     }
 }

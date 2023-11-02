@@ -17,7 +17,8 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44374</IISExpressSSLPort>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -160,6 +161,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\CategoryStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\CategoryTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryMethodEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderDetailTypeEnum.cs" />
@@ -908,7 +910,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54331</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44374/</IISUrl>
+          <IISUrl>http://localhost:44374/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
