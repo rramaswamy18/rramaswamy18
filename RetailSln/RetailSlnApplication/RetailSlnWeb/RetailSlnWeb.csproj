@@ -796,8 +796,8 @@
     <Content Include="Views\Home\_ReturnPolicy.cshtml" />
     <Content Include="Views\Home\_SEOPage1.cshtml" />
     <Content Include="Views\Home\_Services.cshtml" />
-    <Content Include="Views\Home\_ShoppingCart0.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartData0.cshtml" />
+    <None Include="Views\Home\_ShoppingCart0.cshtml.zzz" />
+    <None Include="Views\Home\_ShoppingCartData0.cshtml.zzz" />
     <Content Include="Views\Home\_ShoppingCartEmailBody.cshtml" />
     <Content Include="Views\Home\_Testimonials.cshtml" />
     <Content Include="Views\Home\_UpdatePassword.cshtml" />
