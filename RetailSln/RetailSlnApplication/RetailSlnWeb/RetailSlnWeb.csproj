@@ -687,6 +687,7 @@
     <Content Include="Images_Original\SMSIcon3.png" />
     <Content Include="Include\javaScriptCode-1.1.1.js" />
     <Content Include="Include\javaScriptCode-1.1.1.min.js" />
+    <Content Include="Include\orderItemCode.js" />
     <Content Include="Include\StyleSheet1.css" />
     <Content Include="Include\StyleSheet1.min.css" />
     <Content Include="Include\StyleSheet2.css" />

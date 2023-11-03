@@ -26,36 +26,8 @@ namespace RetailSlnWeb.Controllers
     public partial class HomeController : Controller
     {
         [AllowAnonymous]
-        [HttpGet]
-        public ActionResult AddToCart(string itemId, string orderQty)
-        {
-            ViewData["ActionName"] = "AddToCart";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            //ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(long.Parse(itemId), long.Parse(orderQty), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = Json(new { shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
-                Response.StatusCode = (int)HttpStatusCode.OK;
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                actionResult = Json(new { errorMessage = "Error while adding item to cart" }, JsonRequestBehavior.AllowGet);
-                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            }
-            return actionResult;
-        }
-
-        [AllowAnonymous]
         [HttpPost]
-        public ActionResult AddToCart(List<ShoppingCartItemModel> shoppingCartItemModels)
+        public ActionResult AddToCart([System.Web.Http.FromUri] string id, [System.Web.Http.FromBody] List<ShoppingCartItemModel> shoppingCartItemModels)
         {
             ViewData["ActionName"] = "AddToCart";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -92,7 +64,14 @@ namespace RetailSlnWeb.Controllers
                     ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(shoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderListViewData", null);
+                    if (long.TryParse(id, out long tempId))
+                    {
+                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", long.Parse(id));
+                    }
+                    else
+                    {
+                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderListView", null);
+                    }
                     actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -865,7 +844,7 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult RemoveFromCart(string id)
+        public ActionResult RemoveFromCart(string id, string index)
         {
             ViewData["ActionName"] = "RemoveFromCart";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -874,19 +853,52 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                ShoppingCartModel shoppingCartModel = retailSlnBL.RemoveFromCart(int.Parse(id), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                var shoppingCartDataHtml = archLibBL.ViewToHtmlString(this, "_ShoppingCartData", shoppingCartModel);
-                actionResult = Json(new { shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""), shoppingCartDataHtml }, JsonRequestBehavior.AllowGet);
+                ShoppingCartModel shoppingCartModel = retailSlnBL.RemoveFromCart(int.Parse(index), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", long.Parse(id));
+                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while adding item to cart";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult ShoppingCartComments(int index, string orderComments)
+        {
+            ViewData["ActionName"] = "ShoppingCartComments";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            //ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                retailSlnBL.ShoppingCartComments(index, orderComments, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 Response.StatusCode = (int)HttpStatusCode.OK;
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                actionResult = Json(new { errorMessage = "Error while adding item to cart" }, JsonRequestBehavior.AllowGet);
+                actionResult = Json(new { errorMessage = "Error in shopping cart comments" }, JsonRequestBehavior.AllowGet);
                 Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
             return actionResult;
@@ -927,71 +939,5 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult ShoppingCartComments(int index, string orderComments)
-        {
-            ViewData["ActionName"] = "ShoppingCartComments";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            //ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                retailSlnBL.ShoppingCartComments(index, orderComments, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                Response.StatusCode = (int)HttpStatusCode.OK;
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                actionResult = Json(new { errorMessage = "Error in shopping cart comments" }, JsonRequestBehavior.AllowGet);
-                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            }
-            return actionResult;
-        }
-
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("Wholesale")]
-        //public ActionResult Wholesale(string id)
-        //{
-        //    //int x = 1, y = 0, z = x / y;
-        //    if (string.IsNullOrWhiteSpace(id))
-        //    {
-        //        ViewData["ActionName"] = "REGISTER";
-        //    }
-        //    else
-        //    {
-        //        ViewData["ActionName"] = id.ToUpper();
-        //    }
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
-        //        actionResult = View("Index", registerUserLoginUserModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
-        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-        //        actionResult = View("Error", responseObjectModel);
-        //    }
-        //    return actionResult;
-        //}
     }
 }

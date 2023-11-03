@@ -67,74 +67,6 @@
             });
         }
     }
-    //function deliveryInfoSave_onclick() {
-    //    console.log("00000000", "deliveryInfoSave_onclick");
-    //    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    //    var url = "/Home/DeliveryInfo";
-    //    var postData = $("#formDeliveryInfoData").serialize();
-    //    $.ajax({
-    //        url: url,
-    //        type: "POST",
-    //        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-    //        //dataType: "html",
-    //        data: postData,
-    //        //async: false,
-    //        success: function (responseData, textStatus, request) {
-    //            $("#loadingModal").modal('hide');
-    //            if (responseData.success) {
-    //                document.getElementById("divWholesale").innerHTML = responseData.htmlString;
-    //            }
-    //            else {
-    //                document.getElementById("formDeliveryInfoData").innerHTML = responseData.htmlString;
-    //            }
-    //            console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
-    //        },
-    //        error: function (xhr, exception) {
-    //            $("#loadingModal").modal('hide');
-    //            document.getElementById("formDeliveryInfoData").innerHTML = xhr.responseText;
-    //            console.log("00099000", "deliveryInfoSave_onclick error", exception, xhr);
-    //        }
-    //    });
-    //}
-    //function order_onclick() {
-    //    console.log("00000000", "order_onclick", "Enter");
-    //    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    //    var url = "/Wholesale/OrderItemList";
-    //    $.ajax({
-    //        url: url,
-    //        type: "GET",
-    //        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-    //        //dataType: "html",
-    //        //data: postData,
-    //        //async: false,
-    //        success: function (responseData, textStatus, request) {
-    //            $("#loadingModal").modal('hide');
-    //            console.log("00001000", "order_onclick success", responseData.processMessage);
-    //            document.getElementById("divWholesale").innerHTML = responseData.htmlString;
-    //            document.getElementById("divShoppingCart").innerHTML = responseData.shoppingCartHtmlString;
-    //            document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-    //            document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-    //            document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
-    //            document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
-
-    //            //document.getElementById("orderQty1").value = "9";
-    //            //document.getElementById("orderComments1").value = "Ummachi 1";
-    //            //document.getElementById("orderQty2").value = "4";
-    //            //document.getElementById("orderQty3").value = "5";
-    //            //document.getElementById("orderComments3").value = "Ummachi 3";
-    //            //document.getElementById("orderQty4").value = "5";
-    //            //document.getElementById("orderQty5").value = "4";
-    //            //document.getElementById("orderComments5").value = "Ummachi 5";
-    //            console.log("00090000", "order_onclick success", "Exit");
-    //        },
-    //        error: function (xhr, exception) {
-    //            $("#loadingModal").modal('hide');
-    //            console.log("00099000", "order_onclick error", "ERROR???", exception, xhr);
-    //            document.getElementById("divWholesale").innerHTML = xhr.responseText;
-    //            console.log("00090100", "order_onclick error", "Exit");
-    //        }
-    //    });
-    //}
     function orderComments_onchange(index) {
         console.log("orderComments_onchange", "00000000", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -181,50 +113,6 @@
         else {
         }
     }
-    function paymentSave_onclick() {
-        console.log("00000000", "paymentSave_onclick");
-        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        var url = "/Wholesale/Payment";
-        var postData = $("#formPaymentData").serialize();
-        $.ajax({
-            url: url,
-            type: "POST",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            //dataType: "html",
-            data: postData,
-            //async: false,
-            success: function (responseData, textStatus, request) {
-                $("#loadingModal").modal('hide');
-                console.log(responseData);
-                if (responseData.success) {
-                    if (responseData.success) {
-                        document.getElementById("divWholesale").innerHTML = responseData.htmlString;
-                        document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
-                        document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
-                        if (document.getElementById("shoppingCartItemsCount2") != null) {
-                            document.getElementById("shoppingCartItemsCount2").innerHTML = "Empty";
-                            document.getElementById("shoppingCartTotalAmount2").innerHTML = "Cart";
-                        }
-                        document.getElementById("divWholesale").scrollIntoView();
-                    }
-                    else {
-                        document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
-                    }
-                }
-                else {
-                    document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
-                }
-                console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
-                $("#loadingModal").modal('hide');
-            },
-            error: function (xhr, exception) {
-                $("#loadingModal").modal('hide');
-                document.getElementById("formPaymentData").innerHTML = xhr.responseText;
-                console.log("00099000", "paymentSave_onclick error", exception, xhr);
-                $("#loadingModal").modal('hide');
-            }
-        });
-    }
     function removeFromCart_onclick(index) {
         console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -270,6 +158,50 @@
             alert("Please fix errors to continue???");
         }
         return false;
+    }
+    function paymentSave_onclick() {
+        console.log("00000000", "paymentSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Wholesale/Payment";
+        var postData = $("#formPaymentData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log(responseData);
+                if (responseData.success) {
+                    if (responseData.success) {
+                        document.getElementById("divWholesale").innerHTML = responseData.htmlString;
+                        document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
+                        document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
+                        if (document.getElementById("shoppingCartItemsCount2") != null) {
+                            document.getElementById("shoppingCartItemsCount2").innerHTML = "Empty";
+                            document.getElementById("shoppingCartTotalAmount2").innerHTML = "Cart";
+                        }
+                        document.getElementById("divWholesale").scrollIntoView();
+                    }
+                    else {
+                        document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
+                    }
+                }
+                else {
+                    document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
+                }
+                console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
+                $("#loadingModal").modal('hide');
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formPaymentData").innerHTML = xhr.responseText;
+                console.log("00099000", "paymentSave_onclick error", exception, xhr);
+                $("#loadingModal").modal('hide');
+            }
+        });
     }
     function window_onload() {
     }
