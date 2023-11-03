@@ -210,8 +210,6 @@
     <Compile Include="ClassCode\WebUtilities.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RetailSlnController.cs" />
-    <Compile Include="Controllers\TempleController.cs" />
-    <Compile Include="Controllers\WholesaleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -801,8 +799,6 @@
     <Content Include="Views\Home\_ReturnPolicy.cshtml" />
     <Content Include="Views\Home\_SEOPage1.cshtml" />
     <Content Include="Views\Home\_Services.cshtml" />
-    <None Include="Views\Home\_ShoppingCart0.cshtml.zzz" />
-    <None Include="Views\Home\_ShoppingCartData0.cshtml.zzz" />
     <Content Include="Views\Home\_ShoppingCartEmailBody.cshtml" />
     <Content Include="Views\Home\_Testimonials.cshtml" />
     <Content Include="Views\Home\_UpdatePassword.cshtml" />
@@ -837,38 +833,11 @@
     <Content Include="Views\Home\_GiftCertRecipientEmailBody.cshtml" />
     <Content Include="Views\Home\GiftCert.cshtml" />
     <Content Include="Views\Home\GiftCertReceipt.cshtml" />
-    <Content Include="Views\Wholesale\Index.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
     <Content Include="Views\Shared\_Header2.cshtml" />
     <Content Include="Views\Shared\_HeaderMenu2.cshtml" />
-    <Content Include="Views\Wholesale\_RegisterUserLoginUser.cshtml" />
-    <Content Include="Views\Wholesale\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Wholesale\_RegisterUserProfData.cshtml" />
-    <Content Include="Views\Wholesale\_LoginUserProf1.cshtml" />
-    <Content Include="Views\Wholesale\_LoginUserProfData.cshtml" />
-    <Content Include="Views\Wholesale\_RegisterUserProfEmailBody.cshtml" />
-    <Content Include="Views\Wholesale\_RegisterUserProfEmailSubject.cshtml" />
-    <Content Include="Views\Wholesale\_OrderItemList.cshtml" />
     <Content Include="Views\Home\_LoginUserProfGuest.cshtml" />
     <Content Include="Views\Home\_LoginUserProfGuestData.cshtml" />
-    <Content Include="Views\Wholesale\_OrderItemListData.cshtml" />
-    <Content Include="Views\Wholesale\OrderProcess.cshtml" />
-    <Content Include="Views\Wholesale\_AddToCart.cshtml" />
-    <Content Include="Views\Wholesale\_ShoppingCartData_XYZ.cshtml" />
-    <Content Include="Views\Wholesale\_ShoppingCart_XYZ.cshtml" />
-    <Content Include="Views\Wholesale\_DeliveryAddressData.cshtml" />
-    <Content Include="Views\Wholesale\_DeliveryInfo.cshtml" />
-    <Content Include="Views\Wholesale\_DeliveryInfoData.cshtml" />
-    <Content Include="Views\Wholesale\_DeliveryInfoEmailBody.cshtml" />
-    <Content Include="Views\Wholesale\_DeliveryInfoReceiptData.cshtml" />
-    <Content Include="Views\Wholesale\_DeliveryMethodData.cshtml" />
-    <Content Include="Views\Wholesale\_Payment.cshtml" />
-    <Content Include="Views\Wholesale\_PaymentData.cshtml" />
-    <Content Include="Views\Wholesale\_OrderReceipt.cshtml" />
-    <Content Include="Views\Wholesale\_OrderReceiptData.cshtml" />
-    <Content Include="Views\Wholesale\_OrderReceiptDataEmailBody.cshtml" />
-    <Content Include="Views\Wholesale\_OrderReceiptEmailBody.cshtml" />
-    <Content Include="Views\Wholesale\_OrderReceiptEmailSubject.cshtml" />
     <Content Include="Views\Home\OrderListView.cshtml" />
     <Content Include="Views\Home\_OrderListView.cshtml" />
     <Content Include="Views\Home\_OrderListViewData.cshtml" />

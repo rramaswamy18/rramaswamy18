@@ -160,16 +160,16 @@
         {
             addToCartSuccessDisplay = "none;";
         }
-        <span id="addToCartSuccess@(i)" style="display: @addToCartSuccessDisplay; font-family: Arial; font-size: 12px; font-weight: bold;">
+        <span style="display: @addToCartSuccessDisplay; font-family: Arial; font-size: 12px; font-weight: bold;">
             <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
             <span style="color: #0000ff; padding-right: 5px;">Added...@(shoppingCartItemModel?.OrderQty)</span>
             <br style="clear: both;">
         </span>
-        <span id="addToCartFailure@(i)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        @*<span id="addToCartFailure@(i)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
             <i class="fa fa-times" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
             <span style='color: #ff0000;'>Invalid qty</span>
             <br style="clear: both;">
-        </span>
+        </span>*@
         @*<span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>*@
         if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
         {

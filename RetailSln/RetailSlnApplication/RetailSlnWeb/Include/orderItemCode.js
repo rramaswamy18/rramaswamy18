@@ -112,8 +112,17 @@ function removeFromCart_onclick(index) {
     if (document.getElementById("divErrorMessage2") != null) {
         document.getElementById("divErrorMessage2").innerHTML = "";
     }
+    var categoryId;
+    var query = window.location.href;
+    var lastIndexOf1 = query.lastIndexOf('?id=');
+    if (lastIndexOf1 > -1) {
+        categoryId = query.substr(lastIndexOf1 + 4);
+    }
+    else {
+        categoryId = "";
+    }
     try {
-        var url = "/Home/RemoveFromCart/@Model?index=" + index;
+        var url = "/Home/RemoveFromCart/" + categoryId + "?index=" + index;
         $.ajax({
             url: url,
             type: "GET",

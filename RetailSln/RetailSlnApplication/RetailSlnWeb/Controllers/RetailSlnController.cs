@@ -66,7 +66,7 @@ namespace RetailSlnWeb.Controllers
                     processMessage = "SUCCESS!!!";
                     if (long.TryParse(id, out long tempId))
                     {
-                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", long.Parse(id));
+                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", tempId);
                     }
                     else
                     {
@@ -861,7 +861,48 @@ namespace RetailSlnWeb.Controllers
                 ShoppingCartModel shoppingCartModel = retailSlnBL.RemoveFromCart(int.Parse(index), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 success = true;
                 processMessage = "SUCCESS!!!";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", long.Parse(id));
+                if (long.TryParse(id, out long tempId))
+                {
+                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", tempId);
+                }
+                else
+                {
+                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderListView", null);
+                }
+                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while adding item to cart";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult RemoveFromCart2(string id)
+        {
+            ViewData["ActionName"] = "RemoveFromCart";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ShoppingCartModel shoppingCartModel = retailSlnBL.RemoveFromCart(int.Parse(id), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", shoppingCartModel);
                 actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }

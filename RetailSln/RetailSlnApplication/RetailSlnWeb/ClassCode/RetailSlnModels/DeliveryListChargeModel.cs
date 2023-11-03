@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArchitectureLibraryModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,5 +21,9 @@ namespace RetailSlnModels
         public string ChargeValueType {  set; get; }
 
         public float ChargeValue { set; get; }
+
+        public DeliveryListModel DeliveryListModel { set; get; }
+
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

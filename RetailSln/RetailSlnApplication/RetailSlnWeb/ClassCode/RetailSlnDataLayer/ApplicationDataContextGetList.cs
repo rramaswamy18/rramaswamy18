@@ -6,6 +6,7 @@ using RetailSlnModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -644,6 +645,122 @@ namespace RetailSlnDataLayer
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
             }
+        }
+        public static List<DeliveryChargeModel> GetDeliveryCharges(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.DeliveryCharge ORDER BY DeliveryChargeId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<DeliveryChargeModel> deliveryChargeModels = new List<DeliveryChargeModel>();
+                while (sqlDataReader.Read())
+                {
+                    deliveryChargeModels.Add
+                    (
+                        new DeliveryChargeModel
+                        {
+                            DeliveryChargeId = long.Parse(sqlDataReader["DeliveryChargeId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ChargeUnitMeasure = sqlDataReader["ChargeUnitMeasure"].ToString(),
+                            DeliveryChargeAmount = float.Parse(sqlDataReader["DeliveryChargeAmount"].ToString()),
+                            DeliveryListId = long.Parse(sqlDataReader["DeliveryListId"].ToString()),
+                            DeliveryTypeId = (DeliveryTypeEnum)long.Parse(sqlDataReader["DeliveryTypeId"].ToString()),
+                            DemogInfoCountryId = long.Parse(sqlDataReader["DemogInfoCountryId"].ToString()),
+                            UnitId = long.Parse(sqlDataReader["UnitId"].ToString()),
+                            ValueFrom = long.Parse(sqlDataReader["ValueFrom"].ToString()),
+                            ValueTo = long.Parse(sqlDataReader["ValueTo"].ToString()),
+                            ZipCodeFrom = sqlDataReader["ZipCodeFrom"].ToString(),
+                            ZipCodeTo = sqlDataReader["ZipCodeTo"].ToString(),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return deliveryChargeModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<DeliveryListChargeModel> GetDeliveryListCharges( SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.DeliveryListCharge ORDER BY DeliveryListChargeId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<DeliveryListChargeModel> deliveryListChargeModels = new List<DeliveryListChargeModel>();
+                while (sqlDataReader.Read())
+                {
+                    deliveryListChargeModels.Add
+                    (
+                        new DeliveryListChargeModel
+                        {
+                            DeliveryListChargeId = long.Parse(sqlDataReader["DeliveryListChargeId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ChargeTypeDesc = sqlDataReader["ChargeTypeDesc"].ToString(),
+                            ChargeTypeNameDesc = sqlDataReader["ChargeTypeNameDesc"].ToString(),
+                            ChargeValueType = sqlDataReader["ChargeValueType"].ToString(),
+                            DeliveryListId = long.Parse(sqlDataReader["DeliveryListId"].ToString()),
+                            ChargeValue = float.Parse(sqlDataReader["ChargeValue"].ToString()),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return deliveryListChargeModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<DeliveryListModel> GetDeliveryLists(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.DeliveryList ORDER BY DeliveryListId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<DeliveryListModel> deliveryListModels = new List<DeliveryListModel>();
+                while (sqlDataReader.Read())
+                {
+                    deliveryListModels.Add
+                    (
+                        new DeliveryListModel
+                        {
+                            DeliveryListId = long.Parse(sqlDataReader["DeliveryListId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            DeliveryListName = sqlDataReader["DeliveryListName"].ToString(),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return deliveryListModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+
         }
     }
 }

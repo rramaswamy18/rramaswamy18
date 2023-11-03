@@ -23,24 +23,30 @@ namespace RetailSlnCacheData
         public static List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public static List<ItemBundleDiscountModel> ItemBundleDiscountModels { set; get; }
         public static List<CategoryItemHierModel> CategoryItemHierModels { set; get; }
+        public static List<DeliveryListModel> DeliveryListModels { set; get; }
+        public static List<DeliveryListChargeModel> DeliveryListChargeModels { set; get; }
+        public static List<DeliveryChargeModel> DeliveryChargeModels { set; get; }
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
-            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryListChargeModel> deliveryListChargeModels, out List<DeliveryChargeModel> deliveryChargeModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
             ItemBundleItemModels = ItemBundleItemModels;
             ItemModels = itemModels;
             ItemAttribModels = itemAttribModels;
             ItemAttribMasterModels = itemAttribMasterModels;
             CategoryItemHierModels = categoryItemHierModels;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            DeliveryListModels = deliveryListModels;
+            DeliveryListChargeModels = deliveryListChargeModels;
+            DeliveryChargeModels = deliveryChargeModels;
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, deliveryListModels, deliveryListChargeModels, deliveryChargeModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryLayoutModels = categoryLayoutModels;
             CurrencyCultureInfo = new CultureInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<DeliveryListModel> deliveryListModels, List<DeliveryListChargeModel> deliveryListChargeModels, List<DeliveryChargeModel> deliveryChargeModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -66,6 +72,14 @@ namespace RetailSlnCacheData
             foreach (var itemModel in itemModels)
             {
                 itemModel.ItemAttribModels = itemAttribModels.FindAll(x => x.ItemId == itemModel.ItemId);
+            }
+            //
+            foreach (var deliveryListModel in deliveryListModels)
+            {
+                deliveryListModel.DeliveryListChargeModels = new List<DeliveryListChargeModel>();
+                deliveryListModel.DeliveryChargeModels = new List<DeliveryChargeModel>();
+                deliveryListModel.DeliveryListChargeModels.AddRange(deliveryListChargeModels.FindAll(x => x.DeliveryListId == deliveryListModel.DeliveryListId));
+                deliveryListModel.DeliveryChargeModels.AddRange(deliveryChargeModels.FindAll(x => x.DeliveryListId == deliveryListModel.DeliveryListId));
             }
         }
     }

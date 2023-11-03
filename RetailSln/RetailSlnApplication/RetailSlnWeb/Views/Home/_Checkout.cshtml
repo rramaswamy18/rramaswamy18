@@ -4,7 +4,7 @@
         Checkout
     </h2>
     <div class="col-md-6" style="float: left; text-align: left;">
-        <div>
+        <div id="divShoppingCart">
             @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
         </div>
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
@@ -189,5 +189,46 @@
                 $("#loadingModal").modal('hide');
             }
         });
+    }
+    function removeFromCart_onclick(index) {
+        console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        try {
+            var url = "/Home/RemoveFromCart2/" + index;
+            $.ajax({
+                url: url,
+                type: "GET",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (responseData, textStatus, request) {
+                    $('#loadingModal').modal('hide');
+                    console.log("removeFromCart_onclick", "00090000", "SUCCESS!!!");
+                    if (responseData.success) {
+                        document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
+                        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    }
+                    else {
+                        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                    }
+                },
+                error: function (xhr, exception) {
+                    $('#loadingModal').modal('hide');
+                    console.log("removeFromCart_onclick", "00099000", "ERROR???");
+                    console.log(exception, xhr);
+                    var jsonData = JSON.parse(xhr.responseText);
+                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                    if (document.getElementById("divErrorMessage2") != null) {
+                        document.getElementById("divErrorMessage2").innerHTML = jsonData.errorMessage;
+                    }
+                }
+            });
+        }
+        catch (err) {
+            alert("Please fix errors to continue???");
+        }
+        return false;
     }
 </script>

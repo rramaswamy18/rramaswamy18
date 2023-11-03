@@ -32,5 +32,9 @@ namespace RetailSlnModels
         public string ZipCodeFrom { set; get; }
 
         public string ZipCodeTo { set; get; }
+
+        public DeliveryListModel DeliveryListModel { set; get; }
+
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }
