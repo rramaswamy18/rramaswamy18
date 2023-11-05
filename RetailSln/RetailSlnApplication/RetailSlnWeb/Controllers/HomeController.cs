@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace RetailSlnWeb.Controllers
 {
@@ -376,7 +377,8 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            Request.GetOwinContext().Authentication.SignOut();
+            FormsAuthentication.SignOut();
+            Session.Abandon();
             Request.GetOwinContext().Authentication.SignOut();
             Session["SessionObject"] = null;
             Session.Abandon();

@@ -670,12 +670,16 @@ namespace RetailSlnDataLayer
                             DeliveryChargeAmount = float.Parse(sqlDataReader["DeliveryChargeAmount"].ToString()),
                             DeliveryListId = long.Parse(sqlDataReader["DeliveryListId"].ToString()),
                             DeliveryTypeId = (DeliveryTypeEnum)long.Parse(sqlDataReader["DeliveryTypeId"].ToString()),
-                            DemogInfoCountryId = long.Parse(sqlDataReader["DemogInfoCountryId"].ToString()),
+                            DestDemogInfoCityId = sqlDataReader["DestDemogInfoCityId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCityId"].ToString()),
+                            DestDemogInfoCountryId = sqlDataReader["DestDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCountryId"].ToString()),
+                            DestDemogInfoCountyId = sqlDataReader["DestDemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCountyId"].ToString()),
+                            DestDemogInfoSubDivisionId = sqlDataReader["DestDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoSubDivisionId"].ToString()),
+                            DestDemogInfoZipIdFrom = sqlDataReader["DestDemogInfoZipIdFrom"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdFrom"].ToString()),
+                            DestDemogInfoZipIdTo = sqlDataReader["DestDemogInfoZipIdTo"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdTo"].ToString()),
+                            SrceDemogInfoCountryId = sqlDataReader["SrceDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountryId"].ToString()),
                             UnitId = long.Parse(sqlDataReader["UnitId"].ToString()),
                             ValueFrom = long.Parse(sqlDataReader["ValueFrom"].ToString()),
                             ValueTo = long.Parse(sqlDataReader["ValueTo"].ToString()),
-                            ZipCodeFrom = sqlDataReader["ZipCodeFrom"].ToString(),
-                            ZipCodeTo = sqlDataReader["ZipCodeTo"].ToString(),
                         }
                      );
                 }

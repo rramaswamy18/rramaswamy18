@@ -66,11 +66,9 @@ function orderComments_onchange(index) {
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     try {
-        alert(index + " ###" + document.getElementById("orderComments" + index).value + "$$$");
         var orderComments = document.getElementById("orderComments" + index).value;
         if (orderComments === null || orderComments === "") {
             $('#loadingModal').modal('hide');
-            alert(1);
             return;
         }
         var url = "/Home/ShoppingCartComments";

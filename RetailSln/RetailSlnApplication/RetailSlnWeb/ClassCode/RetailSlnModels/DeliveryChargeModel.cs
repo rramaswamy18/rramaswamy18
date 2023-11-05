@@ -21,7 +21,19 @@ namespace RetailSlnModels
 
         public DeliveryTypeEnum DeliveryTypeId { set; get; }
 
-        public long DemogInfoCountryId { set; get; }
+        public long? DestDemogInfoCityId { set; get; }
+
+        public long? DestDemogInfoCountryId { set; get; }
+
+        public long? DestDemogInfoCountyId { set; get; }
+
+        public long? DestDemogInfoSubDivisionId { set; get; }
+
+        public long? DestDemogInfoZipIdFrom { set; get; }
+
+        public long? DestDemogInfoZipIdTo { set; get; }
+
+        public long? SrceDemogInfoCountryId { set; get; }
 
         public long UnitId { set; get; }
 

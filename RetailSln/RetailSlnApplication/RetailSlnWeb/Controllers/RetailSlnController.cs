@@ -139,7 +139,18 @@ namespace RetailSlnWeb.Controllers
                 }
                 else
                 {
-                    actionResult = View("Checkout", checkoutModel);
+                    var ctx = Request.GetOwinContext();
+                    var authManager = ctx.Authentication;
+                    bool loggedIn = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+                    if (loggedIn && Session["SessionObject"] != null)
+                    {
+                        DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        actionResult = View("DeliveryInfo", deliveryInfoModel);
+                    }
+                    else
+                    {
+                        actionResult = View("Checkout", checkoutModel);
+                    }
                 }
             }
             catch (Exception exception)
