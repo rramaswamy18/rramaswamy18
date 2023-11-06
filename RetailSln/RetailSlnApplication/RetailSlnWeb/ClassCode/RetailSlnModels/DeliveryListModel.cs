@@ -6,7 +6,7 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class DeliveryListModel
+    public class DeliveryListModel : AuditInfoModel
     {
         public long DeliveryListId { set; get; }
 

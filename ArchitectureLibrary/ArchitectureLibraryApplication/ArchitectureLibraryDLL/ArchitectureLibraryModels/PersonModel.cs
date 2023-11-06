@@ -23,6 +23,8 @@ namespace ArchitectureLibraryModels
 
         public DocumentModel CertificateDocumentModel { set; get; }
 
+        public long? CorpAcctId { set; get; }
+
         [Display(Name = "Citizenship")]
         [Required(ErrorMessage = "Select Citizenship")]
         public CitizenshipEnum? CitizenshipId { set; get; }

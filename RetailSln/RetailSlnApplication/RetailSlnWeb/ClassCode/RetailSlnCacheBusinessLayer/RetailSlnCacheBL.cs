@@ -9,7 +9,7 @@ namespace RetailSlnCacheBusinessLayer
 {
     public class RetailSlnCacheBL
     {
-        public void Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryListChargeModel> deliveryListChargeModels, out List<DeliveryChargeModel> deliveryChargeModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryListChargeModel> deliveryListChargeModels, out List<DeliveryChargeModel> deliveryChargeModels, List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             ApplicationDataContext.OpenSqlConnection();
             categoryModels = ApplicationDataContext.GetCategorys(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -22,6 +22,8 @@ namespace RetailSlnCacheBusinessLayer
             deliveryListModels = ApplicationDataContext.GetDeliveryLists(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             deliveryListChargeModels = ApplicationDataContext.GetDeliveryListCharges(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             deliveryChargeModels = ApplicationDataContext.GetDeliveryCharges(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            corpAcctModels = ApplicationDataContext.GetCorpAccts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            discountDtlModels = ApplicationDataContext.GetDiscountDtls(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             ApplicationDataContext.CloseSqlConnection();
         }
     }

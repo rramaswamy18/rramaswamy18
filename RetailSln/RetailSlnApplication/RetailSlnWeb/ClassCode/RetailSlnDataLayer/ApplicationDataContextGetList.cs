@@ -766,5 +766,74 @@ namespace RetailSlnDataLayer
             }
 
         }
+        public static List<DiscountDtlModel> GetDiscountDtls(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.DiscountDtl ORDER BY DiscountDtlId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<DiscountDtlModel> discountDtlModels = new List<DiscountDtlModel>();
+                while (sqlDataReader.Read())
+                {
+                    discountDtlModels.Add
+                    (
+                        new DiscountDtlModel
+                        {
+                            DiscountDtlId = long.Parse(sqlDataReader["DiscountDtlId"].ToString()),
+                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                            CorpAcctDiscountPercent = float.Parse(sqlDataReader["CorpAcctDiscountPercent"].ToString()),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return discountDtlModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+
+        }
+        public static List<CorpAcctModel> GetCorpAccts(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.CorpAcct ORDER BY CorpAcctId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<CorpAcctModel> corpAcctModels = new List<CorpAcctModel>();
+                while (sqlDataReader.Read())
+                {
+                    corpAcctModels.Add
+                    (
+                        new CorpAcctModel
+                        {
+                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                            CorpAcctName = sqlDataReader["DeliveryListName"].ToString(),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return corpAcctModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+
+        }
     }
 }

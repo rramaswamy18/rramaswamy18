@@ -26,10 +26,12 @@ namespace RetailSlnCacheData
         public static List<DeliveryListModel> DeliveryListModels { set; get; }
         public static List<DeliveryListChargeModel> DeliveryListChargeModels { set; get; }
         public static List<DeliveryChargeModel> DeliveryChargeModels { set; get; }
+        public static List<CorpAcctModel> CorpAcctModels { set; get; }
+        public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
-            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryListChargeModel> deliveryListChargeModels, out List<DeliveryChargeModel> deliveryChargeModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryListChargeModel> deliveryListChargeModels, out List<DeliveryChargeModel> deliveryChargeModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
             ItemBundleItemModels = ItemBundleItemModels;
             ItemModels = itemModels;
