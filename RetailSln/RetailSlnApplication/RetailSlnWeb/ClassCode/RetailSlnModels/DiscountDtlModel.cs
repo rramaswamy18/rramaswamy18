@@ -14,7 +14,7 @@ namespace RetailSlnModels
 
         public float CorpAcctDiscountPercent {  set; get; }
 
-        public List<CorpAcctModel> CorpAcctModels { set; get; }
+        public CorpAcctModel CorpAcctModel { set; get; }
        
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
