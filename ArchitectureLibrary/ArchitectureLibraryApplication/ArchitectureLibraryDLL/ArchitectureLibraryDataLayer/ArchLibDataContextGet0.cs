@@ -125,6 +125,7 @@ namespace ArchitectureLibraryDataLayer
                             },
                         },
                         AspNetUserId = sqlDataReader["AspNetUserId"].ToString(),
+                        CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
                         DateOfBirth = sqlDataReader["DateOfBirth"].ToString() == "" ? (DateTime?)null : DateTime.Parse(sqlDataReader["DateOfBirth"].ToString()),
                         DriverLicenseDemogInfoSubDivisionId = sqlDataReader["DriverLicenseDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DriverLicenseDemogInfoSubDivisionId"].ToString()),
                         DriverLicenseExpiryDate = sqlDataReader["DriverLicenseExpiryDate"].ToString() == "" ? (DateTime?)null : DateTime.Parse(sqlDataReader["DriverLicenseExpiryDate"].ToString()),

@@ -222,6 +222,7 @@ namespace ArchitectureLibraryBusinessLayer
                                 ControllerName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.ControllerName,
                                 ActionName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.ActionName,
                                 AspNetUserId = personModel.AspNetUserModel.AspNetUserId,
+                                CorpAcctId = personModel.CorpAcctId.Value,
                                 ClientId = clientId,
                                 EmailAddress = personModel.AspNetUserModel.Email ?? null,
                                 FirstName = personModel.FirstName,

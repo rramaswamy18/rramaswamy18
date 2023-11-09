@@ -15,6 +15,7 @@ namespace ArchitectureLibraryModels
         public string ActionName { set; get; }
         public string AspNetUserId { set; get; }
         public long ClientId { set; get; }
+        public long CorpAcctId { set; get; }
         public string EmailAddress { set; get; }
         public string FirstName { set; get; }
         public long InitialsTextId { set; get; }
