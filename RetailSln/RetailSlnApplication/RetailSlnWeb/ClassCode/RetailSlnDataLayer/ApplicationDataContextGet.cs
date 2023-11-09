@@ -72,11 +72,15 @@ namespace RetailSlnDataLayer
                             DeliveryChargeId = long.Parse(sqlDataReader["DeliveryChargeId"].ToString()),
                             ChargeUnitMeasure = sqlDataReader["ChargeUnitMeasure"].ToString(),
                             DeliveryChargeAmount = float.Parse(sqlDataReader["DeliveryChargeAmount"].ToString()),
+                            DeliveryChargeAmountAdditional = float.Parse(sqlDataReader["DeliveryChargeAmountAdditional"].ToString()),
+                            DeliveryTime = sqlDataReader["DeliveryTime"].ToString(),
                             UnitId = long.Parse(sqlDataReader["UnitId"].ToString()),
                             ValueFrom = long.Parse(sqlDataReader["ValueFrom"].ToString()),
                             ValueTo = long.Parse(sqlDataReader["ValueTo"].ToString()),
-                            ZipCodeFrom = sqlDataReader["ZipCodeFrom"].ToString(),
-                            ZipCodeTo = sqlDataReader["ZipCodeTo"].ToString(),
+                            DestDemogInfoZipIdFrom = long.Parse(sqlDataReader["DestDemogInfoZipIdFrom"].ToString()),
+                            DestDemogInfoZipIdTo = long.Parse(sqlDataReader["DestDemogInfoZipIdTo"].ToString()),
+                            FuelChargePersent = float.Parse(sqlDataReader["FuelChargePersent"].ToString()),
+                            GSTPersent = float.Parse(sqlDataReader["GSTPersent"].ToString()),
                         }
                     );
                 }
@@ -93,11 +97,14 @@ namespace RetailSlnDataLayer
                             DeliveryChargeId = long.Parse(sqlDataReader["DeliveryChargeId"].ToString()),
                             ChargeUnitMeasure = sqlDataReader["ChargeUnitMeasure"].ToString(),
                             DeliveryChargeAmount = float.Parse(sqlDataReader["DeliveryChargeAmount"].ToString()),
+                            DeliveryChargeAmountAdditional = float.Parse(sqlDataReader["DeliveryChargeAmountAdditional"].ToString()),
                             UnitId = long.Parse(sqlDataReader["UnitId"].ToString()),
                             ValueFrom = long.Parse(sqlDataReader["ValueFrom"].ToString()),
                             ValueTo = long.Parse(sqlDataReader["ValueTo"].ToString()),
-                            ZipCodeFrom = sqlDataReader["ZipCodeFrom"].ToString(),
-                            ZipCodeTo = sqlDataReader["ZipCodeTo"].ToString(),
+                            DestDemogInfoZipIdFrom = long.Parse(sqlDataReader["DestDemogInfoZipIdFrom"].ToString()),
+                            DestDemogInfoZipIdTo = long.Parse(sqlDataReader["DestDemogInfoZipIdTo"].ToString()),
+                            FuelChargePersent = float.Parse(sqlDataReader["FuelChargePersent"].ToString()),
+                            GSTPersent = float.Parse(sqlDataReader["GSTPersent"].ToString()),
                         }
                     );
                 }
