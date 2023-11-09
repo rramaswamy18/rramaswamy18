@@ -338,7 +338,7 @@ namespace RetailSlnBusinessLayer
                                     //CityName = "City",
                                     //HouseNumber = "123",
                                     //ZipCode = "12345",
-                                    DemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
+                                    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,//long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
                                     //DemogInfoSubDivisionId = 526,
                                 },
                                 //DeliveryInstructions = "Test Delivery Instructions",

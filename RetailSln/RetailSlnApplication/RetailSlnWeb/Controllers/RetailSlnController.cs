@@ -373,7 +373,7 @@ namespace RetailSlnWeb.Controllers
                 ModelState.Clear();
                 TryValidateModel(deliveryInfoDataModel);
                 TryValidateModel(deliveryInfoDataModel.DeliveryAddressModel, "DeliveryAddressModel");
-                if (deliveryInfoDataModel.DeliveryMethodId == RetailSlnEnumerations.DeliveryMethodEnum.PickupFromStore)
+                if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
                 {
                     ModelState["AlternateTelephoneNum"].Errors.Clear();
                     ModelState["PrimaryTelephoneNum"].Errors.Clear();
@@ -445,7 +445,6 @@ namespace RetailSlnWeb.Controllers
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                 };
                 htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
-                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
             actionResult = Json(new { success, processMessage, htmlString });
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");

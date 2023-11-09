@@ -46,10 +46,10 @@ else
                         @if (!Model.Checkout)
                         {
                             <br />
-                            <span>Weight: </span>@shoppingCartItem.WeightValue
-                            <br />
-                            <span>Volume: </span>@shoppingCartItem.VolumeValue
-                        }
+                            <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
+                            @*<br />
+                            <span>Volume: </span>@shoppingCartItem.VolumeValue*@
+                            }
                     </td>
                     <td class="text-right">
                         @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")

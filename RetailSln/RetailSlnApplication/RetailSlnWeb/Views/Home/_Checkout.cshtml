@@ -231,4 +231,41 @@
         }
         return false;
     }
+    function orderComments_onchange(index) {
+        console.log("orderComments_onchange", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        try {
+            var orderComments = document.getElementById("orderComments" + index).value;
+            if (orderComments === null || orderComments === "") {
+                $('#loadingModal').modal('hide');
+                return;
+            }
+            var url = "/Home/ShoppingCartComments";
+            $.ajax({
+                url: url,
+                type: "GET",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { "index": index, "orderComments": orderComments },
+                async: true,
+                success: function (responseData, textStatus, request) {
+                    $('#loadingModal').modal('hide');
+                    console.log("orderComments_onchange", "00090000", "SUCCESS!!!", responseData.success);
+                },
+                error: function (xhr, exception) {
+                    $('#loadingModal').modal('hide');
+                    console.log("orderComments_onchange", "00099000", "ERROR???");
+                    console.log(exception, xhr);
+                    var jsonData = JSON.parse(xhr.responseText);
+                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                }
+            });
+        }
+        catch (err) {
+            alert("Please fix errors to continue???");
+        }
+        return false;
+    }
 </script>

@@ -1,4 +1,5 @@
 ﻿@model RetailSlnModels.DeliveryInfoDataModel
+@using RetailSlnCacheData
 <style>
     #AddressLine1-error, #AddressLine2-error, #BuildingTypeId-error, #CityName-error, #ZipCode-error, #DemogInfoSubDivisionId-error, #HouseNumber-error, #PrimaryTelephoneNum-error, #AlternateTelephoneNum-error, #DeliveryInstructions-error {
         color: #ff0000;
@@ -10,7 +11,14 @@
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     <div style="float: left; padding-right: 5px;">
         @Html.LabelFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new { @class = "col-form-label" })<!--<br /><span style="color: #0000ff; font-weight: bold;">(Required)</span>)-->
-        @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), "---", new { @class = "form-control", disabled = "disabled", style = "font-size: 14px; width: 81px;" })
+        @if (RetailSlnCache.DeliveryDemogInfoCountrySelectListItems.Count > 1)
+        {
+            @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(RetailSlnCache.DeliveryDemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), "---", new { @class = "form-control", style = "font-size: 14px; width: 81px;" })
+        }
+        else
+        {
+            @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(RetailSlnCache.DeliveryDemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), null, new { @class = "form-control", style = "font-size: 14px; width: 81px;" })
+        }
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.DemogInfoCountryId, "", new { @class = "fieldValidationError" }).ToHtmlString()))
     </div>
     <div style="float: left; padding-right: 5px;">
@@ -38,7 +46,7 @@
     <div style="float: left; padding-right: 5px;">
         @Html.HiddenFor(m => m.DeliveryAddressModel.CountryAbbrev)
         @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoCityId)
-        @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoCountryId)
+        @*@Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoCountryId)*@
         @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipId)
         @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipPlusId)
         @Html.HiddenFor(m => m.DeliveryAddressModel.StateAbbrev)
