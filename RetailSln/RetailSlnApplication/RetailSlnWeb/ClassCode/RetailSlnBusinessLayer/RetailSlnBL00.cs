@@ -34,6 +34,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ShoppingCartModel shoppingCartModel;
+                ShoppingCartItemModel shoppingCartItemModel;
                 shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
                 if (shoppingCartModel == null)
                 {
@@ -42,47 +43,59 @@ namespace RetailSlnBusinessLayer
                         ShoppingCartItems = new List<ShoppingCartItemModel>(),
                     };
                 }
-                ItemModel itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == itemId);
-                float heightValue, lengthValue, weightValue, widthValue, itemRate;
-                DimensionUnitEnum dimensionUnitId;
-                WeightUnitEnum weightUnitId;
-                dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue);
-                weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue);
-                heightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue);
-                lengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue);
-                weightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue);
-                widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
-                if (itemModel != null)
+                shoppingCartItemModel = shoppingCartModel.ShoppingCartItems.FirstOrDefault(x => x.ItemId == itemId);
+                if (shoppingCartItemModel != null)
                 {
-                    itemRate = itemModel.ItemRate.Value;
-                    shoppingCartModel.ShoppingCartItems.Add
-                    (
-                        new ShoppingCartItemModel
-                        {
-                            DimensionUnitId = dimensionUnitId,
-                            HeightValue = heightValue,
-                            ItemDesc = itemModel.ItemDesc,
-                            ItemId = itemModel.ItemId,
-                            ItemRate = itemRate,
-                            ItemShortDesc = itemModel.ItemShortDesc,
-                            LengthValue = lengthValue,
-                            OrderAmount = orderQty * itemRate,
-                            OrderComments = "",
-                            OrderQty = orderQty,
-                            VolumeValue = lengthValue * widthValue * heightValue * orderQty,
-                            WeightUnitId = weightUnitId,
-                            WeightValue = weightValue * orderQty,
-                            WidthValue = widthValue,
-                        }
-                    );
-                    UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                    shoppingCartItemModel.OrderQty += orderQty;
+                    shoppingCartItemModel.OrderAmount = shoppingCartItemModel.OrderQty * shoppingCartItemModel.ItemRate;
+                    shoppingCartItemModel.VolumeValue = shoppingCartItemModel.OrderQty * shoppingCartItemModel.LengthValue * shoppingCartItemModel.WidthValue * shoppingCartItemModel.HeightValue;
+                    shoppingCartItemModel.WeightValue = shoppingCartItemModel.OrderQty * shoppingCartItemModel.WeightValue;
                     return shoppingCartModel;
                 }
                 else
                 {
-                    throw new Exception("Error while adding item to shopping cart itemid=" + itemId + " orderQty=" + orderQty);
+                    ItemModel itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == itemId);
+                    float heightValue, lengthValue, weightValue, widthValue, itemRate;
+                    DimensionUnitEnum dimensionUnitId;
+                    WeightUnitEnum weightUnitId;
+                    dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue);
+                    weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue);
+                    heightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue);
+                    lengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue);
+                    weightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue);
+                    widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
+                    if (itemModel != null)
+                    {
+                        itemRate = itemModel.ItemRate.Value;
+                        shoppingCartModel.ShoppingCartItems.Add
+                        (
+                            new ShoppingCartItemModel
+                            {
+                                DimensionUnitId = dimensionUnitId,
+                                HeightValue = heightValue,
+                                ItemDesc = itemModel.ItemDesc,
+                                ItemId = itemModel.ItemId,
+                                ItemRate = itemRate,
+                                ItemShortDesc = itemModel.ItemShortDesc,
+                                LengthValue = lengthValue,
+                                OrderAmount = orderQty * itemRate,
+                                OrderComments = "",
+                                OrderQty = orderQty,
+                                VolumeValue = lengthValue * widthValue * heightValue * orderQty,
+                                WeightUnitId = weightUnitId,
+                                WeightValue = weightValue * orderQty,
+                                WidthValue = widthValue,
+                            }
+                        );
+                        UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                        return shoppingCartModel;
+                    }
+                    else
+                    {
+                        throw new Exception("Error while adding item to shopping cart itemid=" + itemId + " orderQty=" + orderQty);
+                    }
                 }
             }
             catch (Exception exception)
@@ -388,8 +401,8 @@ namespace RetailSlnBusinessLayer
                 shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>();
                 long personId = sessionObjectModel.PersonId;
                 AddAdditionalCharges(totalItemsCount, totalOrderAmount, totalVolumeValue, totalWeightValue, deliveryInfoDataModel.DeliveryAddressModel, shoppingCartModel.ShoppingCartSummaryItems, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AddFirstOrderDiscount(personId, shoppingCartModel.ShoppingCartSummaryItems, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AddDiscounts(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //AddFirstOrderDiscount(personId, shoppingCartModel.ShoppingCartSummaryItems, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //AddDiscounts(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddTotals(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
                 httpSessionStateBase["DeliveryInfoDataModel"] = deliveryInfoDataModel;
             }
@@ -993,24 +1006,41 @@ namespace RetailSlnBusinessLayer
                 {
                     ItemDesc = null,
                     ItemId = null,
+                    ItemRate = 18,
+                    ItemShortDesc = "Discount (18%)",
+                    OrderAmount = -1 * totalOrderAmount * 18 / 100f,
+                    OrderComments = null,
+                    OrderQty = 1,
+                    OrderDetailTypeId = OrderDetailTypeEnum.Discount,
+                }
+            );
+            shoppingCartSummaryItems.Add
+            (
+                new ShoppingCartItemModel
+                {
+                    ItemDesc = null,
+                    ItemId = null,
                     ItemRate = totalOrderAmount,
-                    ItemShortDesc = "Sales Tax Amount",
-                    OrderAmount = totalOrderAmount * 0.1f,
+                    ItemShortDesc = "GST (18%)",
+                    OrderAmount = totalOrderAmount * 0.18f,
                     OrderComments = null,
                     OrderQty = 1,
                     OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
                 }
             );
             var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
+            long orderQty = (long)(totalWeightValue / 1000) + totalWeightValue % 1000 == 0 ? 0 : 1;
             float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0;
-                if (deliveryChargeModel.ChargeUnitMeasure == "WEIGHT")
-                {
-                    shippingAndHandlingChargesByWeight = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
-                }
-                if (deliveryChargeModel.ChargeUnitMeasure == "VOLUME")
-                {
-                    shippingAndHandlingChargesByVolume = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
-                }
+            if (deliveryChargeModel.UnitMeasure == "WEIGHT")
+            {
+                shippingAndHandlingChargesByWeight = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+            }
+            if (deliveryChargeModel.UnitMeasure == "VOLUME")
+            {
+                shippingAndHandlingChargesByVolume = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+            }
+            float shippingAndHandlingChargesAmount = shippingAndHandlingChargesByWeight * orderQty;
+            float fuelCharges = shippingAndHandlingChargesAmount * 15 / 100f;
             shoppingCartSummaryItems.Add
             (
                 new ShoppingCartItemModel
@@ -1018,88 +1048,102 @@ namespace RetailSlnBusinessLayer
                     ItemDesc = null,
                     ItemId = null,
                     ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "Shipping & Handling Charges by Weight",
-                    OrderAmount = shippingAndHandlingChargesByWeight * totalWeightValue / 1000f,
+                    ItemShortDesc = "Shipping & Handling Charges " + orderQty + " KG (" + totalWeightValue + " Grams) - " + deliveryChargeModel.DeliveryModeId,
+                    OrderAmount = shippingAndHandlingChargesAmount,
                     OrderComments = null,
-                    OrderQty = 1,
+                    OrderQty = orderQty,
                     OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
                 }
             );
-            //shoppingCartSummaryItems.Add
-            //(
-            //    new ShoppingCartItemModel
-            //    {
-            //        ItemDesc = null,
-            //        ItemId = null,
-            //        ItemRate = 36,
-            //        ItemShortDesc = "Shipping & Handling Charges by Volume",
-            //        OrderAmount = shippingAndHandlingChargesByVolume,
-            //        OrderComments = null,
-            //        OrderQty = 1,
-            //        OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
-            //    }
-            //);
-        }
-        private void AddFirstOrderDiscount(long personId, List<ShoppingCartItemModel> shoppingCartSummaryItems, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            //int x = 1, y = 0, z = x / y;
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            //See if client is participating in First Discount 
-            //If so, Get Order Count from Order Header
-            //If 0 - add discount if not skip
-            string firstOrderDiscount = ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "RegisterUserProf", "FirstOrderDiscount");
-            if (firstOrderDiscount != "")
-            {
-                try
-                {
-                    int orderHeaderCount = ApplicationDataContext.GetOrderHeaderCount(personId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (orderHeaderCount == 0)
-                    {
-                        shoppingCartSummaryItems.Add
-                        (
-                            new ShoppingCartItemModel
-                            {
-                                ItemDesc = null,
-                                ItemId = null,
-                                ItemRate = 18,
-                                ItemShortDesc = "First Order Discount",
-                                OrderAmount = -1 * float.Parse(firstOrderDiscount),
-                                OrderComments = null,
-                                OrderQty = 1,
-                                OrderDetailTypeId = OrderDetailTypeEnum.Discount,
-                            }
-                        );
-                    }
-                }
-                catch (Exception exception)
-                {
-                    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                    throw;
-                }
-                finally
-                {
-                }
-            }
-        }
-        private void AddDiscounts(List<ShoppingCartItemModel> shoppingCartSummaryItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
             shoppingCartSummaryItems.Add
             (
                 new ShoppingCartItemModel
                 {
                     ItemDesc = null,
                     ItemId = null,
-                    ItemRate = 18,
-                    ItemShortDesc = "Discount",
-                    OrderAmount = -0,
+                    ItemRate = shippingAndHandlingChargesByWeight,
+                    ItemShortDesc = "Fuel Charges (15%)",
+                    OrderAmount = fuelCharges,
                     OrderComments = null,
-                    OrderQty = 1,
-                    OrderDetailTypeId = OrderDetailTypeEnum.Discount,
+                    OrderQty = orderQty,
+                    OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+                }
+            );
+            shoppingCartSummaryItems.Add
+            (
+                new ShoppingCartItemModel
+                {
+                    ItemDesc = null,
+                    ItemId = null,
+                    ItemRate = shippingAndHandlingChargesByWeight,
+                    ItemShortDesc = "GST on S&H, Fuel Charges (18%)",
+                    OrderAmount = (shippingAndHandlingChargesAmount + fuelCharges) * 18 / 100f,
+                    OrderComments = null,
+                    OrderQty = orderQty,
+                    OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
                 }
             );
         }
+        //private void AddFirstOrderDiscount(long personId, List<ShoppingCartItemModel> shoppingCartSummaryItems, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    //See if client is participating in First Discount 
+        //    //If so, Get Order Count from Order Header
+        //    //If 0 - add discount if not skip
+        //    string firstOrderDiscount = ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "RegisterUserProf", "FirstOrderDiscount");
+        //    if (firstOrderDiscount != "")
+        //    {
+        //        try
+        //        {
+        //            int orderHeaderCount = ApplicationDataContext.GetOrderHeaderCount(personId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (orderHeaderCount == 0)
+        //            {
+        //                shoppingCartSummaryItems.Add
+        //                (
+        //                    new ShoppingCartItemModel
+        //                    {
+        //                        ItemDesc = null,
+        //                        ItemId = null,
+        //                        ItemRate = 18,
+        //                        ItemShortDesc = "First Order Discount",
+        //                        OrderAmount = -1 * float.Parse(firstOrderDiscount),
+        //                        OrderComments = null,
+        //                        OrderQty = 1,
+        //                        OrderDetailTypeId = OrderDetailTypeEnum.Discount,
+        //                    }
+        //                );
+        //            }
+        //        }
+        //        catch (Exception exception)
+        //        {
+        //            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //            throw;
+        //        }
+        //        finally
+        //        {
+        //        }
+        //    }
+        //}
+        //private void AddDiscounts(List<ShoppingCartItemModel> shoppingCartSummaryItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    shoppingCartSummaryItems.Add
+        //    (
+        //        new ShoppingCartItemModel
+        //        {
+        //            ItemDesc = null,
+        //            ItemId = null,
+        //            ItemRate = 18,
+        //            ItemShortDesc = "Discount",
+        //            OrderAmount = -0,
+        //            OrderComments = null,
+        //            OrderQty = 1,
+        //            OrderDetailTypeId = OrderDetailTypeEnum.Discount,
+        //        }
+        //    );
+        //}
         private void AddTotals(List<ShoppingCartItemModel> shoppingCartSummaryItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             float totalInvoiceAmount = 0;

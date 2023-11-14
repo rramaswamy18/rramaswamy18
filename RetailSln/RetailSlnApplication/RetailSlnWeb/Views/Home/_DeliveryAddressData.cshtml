@@ -51,12 +51,16 @@
         @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipPlusId)
         @Html.HiddenFor(m => m.DeliveryAddressModel.StateAbbrev)
         @Html.LabelFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
-        @Html.TextBoxFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.ZipCode), style = "width: 126px;" })
+        @Html.TextBoxFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "form-control validate", list = "zipCodeDataList", maxlength = "50", oninput = "javascript: return zipCode_oninput();", onblur = "javascript: return zipCode_onblur();", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.ZipCode), style = "width: 153px;" })
+        <datalist id="zipCodeDataList">
+        </datalist>
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.ZipCode, "", new { id = "ZipCode-error" }).ToHtmlString()))
     </div>
     <div style="float: left;">
         @Html.LabelFor(m => m.DeliveryAddressModel.CityName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
-        @Html.TextBoxFor(m => m.DeliveryAddressModel.CityName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.CityName), style = "width: 162px;" })
+        @Html.TextBoxFor(m => m.DeliveryAddressModel.CityName, new { @class = "form-control validate", list = "cityNameDataList", maxlength = 250, oninput = "javascript: return cityName_oninput();", onblur = "javascript: return cityName_onblur();", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.CityName), style = "width: 162px;" })
+        <datalist id="cityNameDataList">
+        </datalist>
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.CityName, "", new { id = "CityName-error" }).ToHtmlString()))
     </div>
 </div>

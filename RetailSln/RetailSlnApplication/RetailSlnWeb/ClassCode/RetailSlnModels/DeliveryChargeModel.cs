@@ -13,17 +13,17 @@ namespace RetailSlnModels
 
         public long ClientId { set; get; }
 
-        public string ChargeUnitMeasure { set; get; }
-
         public float DeliveryChargeAmount { set; get; }
 
         public float DeliveryChargeAmountAdditional { set; get; }
 
         public long DeliveryListId { set; get; }
 
+        public DeliveryModeEnum? DeliveryModeId { set; get; }
+
         public string DeliveryTime { set; get; }
 
-        public DeliveryTypeEnum DeliveryTypeId { set; get; }
+        public DeliveryTypeEnum? DeliveryTypeId { set; get; }
 
         public long? DestDemogInfoCityId { set; get; }
 
@@ -37,13 +37,15 @@ namespace RetailSlnModels
 
         public long? DestDemogInfoZipIdTo { set; get; }
 
-        public float FuelChargePersent { set; get; }
+        public float FuelChargePercent { set; get; }
 
-        public float GSTPersent { set; get; }
+        public float GSTPercent { set; get; }
 
         public long? SrceDemogInfoCountryId { set; get; }
 
         public long UnitId { set; get; }
+
+        public string UnitMeasure { set; get; }
 
         public long ValueFrom { set; get; }
 

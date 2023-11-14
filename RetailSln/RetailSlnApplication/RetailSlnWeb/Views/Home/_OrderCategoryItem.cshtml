@@ -86,8 +86,8 @@
             {
                 <br style="clear: both;" />
                 @*<div class="center" style="margin-left: 0 auto; margin-right: 0 auto;">
-                    <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
-                </div>*@
+                        <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
+                    </div>*@
                 imageCountIndex = 0;
             }//if (imageCountIndex == imageCountPerRow - 1)
             else
@@ -111,7 +111,7 @@
 {
     int k;
     float itemRate;
-    string addToCartSuccessDisplay;
+    string addToCartSuccessDisplay, defaultOrderQty = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty");
     var shoppingCartItems = ((ShoppingCartModel)Session["ShoppingCartModel"])?.ShoppingCartItems;
     ShoppingCartItemModel shoppingCartItemModel;
     itemRate = itemModel.ItemRate.Value;
@@ -166,10 +166,10 @@
             <br style="clear: both;">
         </span>
         @*<span id="addToCartFailure@(i)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-            <i class="fa fa-times" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
-            <span style='color: #ff0000;'>Invalid qty</span>
-            <br style="clear: both;">
-        </span>*@
+                <i class="fa fa-times" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                <span style='color: #ff0000;'>Invalid qty</span>
+                <br style="clear: both;">
+            </span>*@
         @*<span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>*@
         if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
         {
@@ -180,8 +180,15 @@
         <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
         <br />
         <div style="float: left; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">Qty : </div>
-        <input class="form-control" id="orderQty@(i)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(i));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty")" />
-        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@i, @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
+        <input class="form-control" id="orderQty@(i)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(i));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@defaultOrderQty" />
+        if (defaultOrderQty == "")
+        {
+            <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@i, @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
+        }
+        else
+        {
+            <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@i, '@defaultOrderQty', @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
+        }
     }
     <br style="clear: both;" />
     <span id="itemId@(i)" style="display: none;">@itemModel.ItemId</span>

@@ -3,10 +3,10 @@
     Payment
 </h2>
 <div class="center">
-    <div class="col-md-6" style="float: left; text-align: left;">
+    <div style="float: left; padding-right: 18px; text-align: left; width: 50%;">
         @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
     </div>
-    <div class="col-md-6" style="float: left; text-align: left;">
+    <div style="float: left; padding-left: 18px; text-align: left; width: 50%;">
         <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment&nbsp;&nbsp;Info</h3>
         <form id="formPaymentData">
             @Html.Partial("_PaymentData", Model.PaymentDataModel)

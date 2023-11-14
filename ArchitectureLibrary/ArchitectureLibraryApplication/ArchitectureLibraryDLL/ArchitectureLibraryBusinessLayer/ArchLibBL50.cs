@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.IO;
+using ArchitectureLibraryDataLayer;
 
 namespace ArchitectureLibraryBusinessLayer
 {
@@ -81,14 +82,18 @@ namespace ArchitectureLibraryBusinessLayer
             List<Dictionary<string, string>> searchResultRows;
             try
             {
-                searchResultRows = null;//ApplicationDataContext.GetSqlQueryResult(sqlCommand);
+                ArchLibDataContext.OpenSqlConnection();
+                searchResultRows = ArchLibDataContext.GetSqlQueryResult(sqlCommand, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
             }
-
+            finally
+            {
+                ArchLibDataContext.CloseSqlConnection();
+            }
             return searchResultRows;
         }
         public List<Dictionary<string, string>> SearchCityName(long demogInfoCountryId, string cityName, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -129,9 +134,21 @@ namespace ArchitectureLibraryBusinessLayer
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandText = sqlStmt;
             sqlCommand.CommandType = CommandType.Text;
-            //Add Parameters and restrict the query to the country passed
-            List<Dictionary<string, string>> searchResultRows = new List<Dictionary<string, string>>();
-            searchResultRows = null; //ApplicationDataContext.GetSqlQueryResult(sqlCommand);
+            List<Dictionary<string, string>> searchResultRows;
+            try
+            {
+                ArchLibDataContext.OpenSqlConnection();
+                searchResultRows = ArchLibDataContext.GetSqlQueryResult(sqlCommand, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ArchLibDataContext.CloseSqlConnection();
+            }
             return searchResultRows;
         }
         public List<Dictionary<string, string>> SearchDataZipCodeCityName(long demogInfoCountryId, string zipCode, string cityName, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

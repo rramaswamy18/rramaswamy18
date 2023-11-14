@@ -61,6 +61,56 @@ function addToCart_onclick(index, categoryId) {
         });
     }
 }
+function addToCartGet_onclick(index, defaultOrderQty, categoryId) {
+    console.log("addToCartGet_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    //document.getElementById("addToCart" + index).innerHTML = "";
+    try {
+        var itemId = document.getElementById("itemId" + index).innerText;
+        var orderQty = document.getElementById("orderQty" + index).value;
+        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
+        if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + index).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + index).getAttribute("min") && orderQty <= document.getElementById("orderQty" + index).getAttribute("max")) {
+        }
+        else {
+            $('#loadingModal').modal('hide');
+            document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
+            return false;
+        }
+        var url = "/Home/AddToCart/" + categoryId;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            data: { "itemId": itemId, "orderQty": orderQty },
+            async: true,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCartGet_onclick", "00090000", "SUCCESS!!!");
+                //var jsonData = JSON.parse(responseData);
+                document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
+                document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
+                document.getElementById("orderQty" + index).value = defaultOrderQty;
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCartGet_onclick", "00099000", "ERROR???");
+                console.log(exception, xhr);
+                var jsonData = JSON.parse(xhr.responseText);
+                document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
+            }
+        });
+    }
+    catch (err) {
+        alert("Please fix errors to continue???");
+    }
+    return false;
+}
 function orderComments_onchange(index) {
     console.log("orderComments_onchange", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

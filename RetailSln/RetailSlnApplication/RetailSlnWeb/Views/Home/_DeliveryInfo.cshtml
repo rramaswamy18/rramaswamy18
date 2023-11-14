@@ -1,12 +1,12 @@
 ﻿@model RetailSlnModels.DeliveryInfoModel
-<h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
-    Delivery&nbsp;&nbsp;Info
-</h2>
-<div class="container">
-    <div class="col-md-6" style="text-align: left;">
+<div class="container" id="divOrderProcess">
+    <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+        Delivery&nbsp;&nbsp;Info
+    </h2>
+    <div style="float: left; padding-right: 18px; text-align: left; width: 50%;">
         @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
     </div>
-    <div class="col-md-6" style="text-align: left;">
+    <div style="float: left; padding-left: 18px; text-align: left; width: 50%; ">
         <form id="formDeliveryInfoData">
             @Html.Partial("_DeliveryInfoData", Model.DeliveryInfoDataModel)
         </form>
@@ -14,6 +14,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    var searchResults;
     function deliveryInfoSave_onclick() {
         console.log("00000000", "deliveryInfoSave_onclick");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -44,4 +45,49 @@
             }
         });
     }
+    function paymentSave_onclick() {
+        console.log("00000000", "paymentSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/Payment";
+        var postData = $("#formPaymentData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log(responseData);
+                if (responseData.success) {
+                    if (responseData.success) {
+                        document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                        document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
+                        document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
+                        if (document.getElementById("shoppingCartItemsCount2") != null) {
+                            document.getElementById("shoppingCartItemsCount2").innerHTML = "Empty";
+                            document.getElementById("shoppingCartTotalAmount2").innerHTML = "Cart";
+                        }
+                        document.getElementById("divOrderProcess").scrollIntoView();
+                    }
+                    else {
+                        document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
+                    }
+                }
+                else {
+                    document.getElementById("formPaymentData").innerHTML = responseData.htmlString;
+                }
+                console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
+                $("#loadingModal").modal('hide');
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formPaymentData").innerHTML = xhr.responseText;
+                console.log("00099000", "paymentSave_onclick error", exception, xhr);
+                $("#loadingModal").modal('hide');
+            }
+        });
+    }
 </script>
+<script src="~/Include/searchDataCode.js" type="text/javascript"></script>

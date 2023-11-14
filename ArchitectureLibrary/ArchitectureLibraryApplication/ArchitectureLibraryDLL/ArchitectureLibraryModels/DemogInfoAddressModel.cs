@@ -59,10 +59,10 @@ namespace ArchitectureLibraryModels
 
         public string StateAbbrev { set; get; }
 
-        [Display(Name = "Zip Code")]
-        [RegularExpression(@"^\d{5}$", ErrorMessage = "Zip Code")]
-        [Required(ErrorMessage = "Zip Code")]
-        [StringLength(5, MinimumLength = 5, ErrorMessage = "Zip Code")]
+        [Display(Name = "Postal Code")]
+        //[RegularExpression(@"^\d{5}$", ErrorMessage = "Zip Code")]
+        [Required(ErrorMessage = "Postal Code")]
+        //[StringLength(5, MinimumLength = 5, ErrorMessage = "Zip Code")]
         public string ZipCode { set; get; }
 
         public string ZipPlus4 { set; get; }

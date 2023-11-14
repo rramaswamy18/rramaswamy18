@@ -161,6 +161,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\CategoryStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\CategoryTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryMethodEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemTypeEnum.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
+    <Compile Include="Controllers\GeneralUtilityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RetailSlnController.cs" />
     <Compile Include="Global.asax.cs">
@@ -688,6 +690,7 @@
     <Content Include="Include\javaScriptCode-1.1.1.js" />
     <Content Include="Include\javaScriptCode-1.1.1.min.js" />
     <Content Include="Include\orderItemCode.js" />
+    <Content Include="Include\searchDataCode.js" />
     <Content Include="Include\StyleSheet1.css" />
     <Content Include="Include\StyleSheet1.min.css" />
     <Content Include="Include\StyleSheet2.css" />
@@ -854,6 +857,7 @@
     <Folder Include="ClientSpecific\97_DivineBija.in\Documents\Images\Testimonials\" />
     <Folder Include="ClientSpecific\97_DivineBija.in\Documents\Images_Original\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

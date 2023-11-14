@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -25,6 +26,44 @@ namespace RetailSlnWeb.Controllers
 {
     public partial class HomeController : Controller
     {
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult AddToCart(string id, string itemId, string orderQty)
+        {
+            ViewData["ActionName"] = "AddToCart";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(long.Parse(itemId), long.Parse(orderQty), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                long.TryParse(id, out long tempId);
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", tempId);
+                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+                //actionResult = Json(new { shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                //exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                //actionResult = Json(new { errorMessage = "Error while adding item to cart" }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while adding item to cart";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public ActionResult AddToCart([System.Web.Http.FromUri] string id, [System.Web.Http.FromBody] List<ShoppingCartItemModel> shoppingCartItemModels)
@@ -390,11 +429,23 @@ namespace RetailSlnWeb.Controllers
                     }
                     if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
                     {
-                        ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Zip Code");
+                        ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
                     }
                     if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
                     {
                         ModelState.AddModelError("DeliveryAddressModel.DemogInfoSubDivisionId", "State");
+                    }
+                    if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId == null)
+                    {
+                        ModelState.AddModelError("DeliveryAddressModel.DemogInfoCountryId", "Country");
+                    }
+                    if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId != null && !string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
+                    {
+                        Regex regex = new Regex(DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.Value).PostalCodeRegEx);
+                        if(!regex.IsMatch(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
+                        {
+                            ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
+                        }
                     }
                 }
                 if (ModelState.IsValid)
