@@ -151,7 +151,7 @@ namespace ArchitectureLibraryCacheBusinessLayer
                     (
                         new SelectListItem
                         {
-                            Text = demogInfoCountryModel.CountryAbbrev + " " + demogInfoCountryModel.CountryDesc,
+                            Text = demogInfoCountryModel.CountryDesc + " " + demogInfoCountryModel.CountryAbbrev,
                             Value = demogInfoCountryModel.DemogInfoCountryId.ToString(),
                         }
                     );

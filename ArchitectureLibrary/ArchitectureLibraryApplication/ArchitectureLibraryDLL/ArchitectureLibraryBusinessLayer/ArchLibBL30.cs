@@ -317,6 +317,7 @@ namespace ArchitectureLibraryBusinessLayer
                     checkoutGuestModel.CheckoutGuestEmailAddress = checkoutGuestModel.CheckoutGuestEmailAddress.Trim().ToLower();
                     ArchLibDataContext.OpenSqlConnection();
                     PersonModel personModel = ArchLibDataContext.GetPersonFromEmailAddress(checkoutGuestModel.CheckoutGuestEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    AspNetRoleModel aspNetRoleModel = ArchLibCache.AspNetRoleModels.First(x => x.UserTypeId == (int)UserTypeEnum.GuestRole);
                     if (personModel == null) //Guest User is new User
                     {
                         //Create in the database as Guest User
@@ -325,7 +326,7 @@ namespace ArchitectureLibraryBusinessLayer
                         string firstName = "Guest", lastName = "User";
                         long certificateDocumentId = 0, initialsTextId = 0, signatureTextId = 0;
                         string initialsTextValue = "", signatureTextValue = "";
-                        personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, checkoutGuestModel.CheckoutGuestEmailAddress, null, null, null, null, null, null, null, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserTypeEnum.GuestUser, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, checkoutGuestModel.CheckoutGuestEmailAddress, null, null, null, null, null, null, null, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserTypeEnum.GuestRole, aspNetRoleModel.AspNetRoleId, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     else
                     {
@@ -333,7 +334,7 @@ namespace ArchitectureLibraryBusinessLayer
                     }
                     if (personModel != null)
                     {
-                        if (personModel.AspNetUserModel.UserTypeId == UserTypeEnum.GuestUser)
+                        if (personModel.AspNetUserModel.UserTypeId == UserTypeEnum.GuestRole)
                         {
                             checkoutGuestModel.ResponseObjectModel = new ResponseObjectModel
                             {
@@ -342,13 +343,13 @@ namespace ArchitectureLibraryBusinessLayer
                             };
                             sessionObjectModel = new SessionObjectModel
                             {
-                                AspNetRoleId = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleId,
-                                AspNetRoleName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleName,
-                                ControllerName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.ControllerName,
-                                ActionName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.ActionName,
-                                AspNetUserId = personModel.AspNetUserModel.AspNetUserId,
+                                AspNetRoleId = aspNetRoleModel.AspNetRoleId, //personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleId,
+                                AspNetRoleName = aspNetRoleModel.AspNetRoleName,
+                                ControllerName = aspNetRoleModel.ControllerName,
+                                ActionName = aspNetRoleModel.ActionName,
+                                AspNetUserId = personModel.AspNetUserId,
                                 ClientId = clientId,
-                                EmailAddress = personModel.AspNetUserModel.Email ?? null,
+                                EmailAddress = checkoutGuestModel.CheckoutGuestEmailAddress,
                                 FirstName = personModel.FirstName,
                                 InitialsTextId = (long)personModel.InitialsTextId,
                                 InitialsTextValue = personModel.InitialsTextValue,
@@ -366,19 +367,17 @@ namespace ArchitectureLibraryBusinessLayer
                         }
                         else
                         {
-                            modelStateDictionary.AddModelError("LoginEmailAddress", "Please check your email address");
-                            modelStateDictionary.AddModelError("LoginPassword", "Please check your login password");
-                            modelStateDictionary.AddModelError("", "Unable to login with credentials supplied");
-                            modelStateDictionary.AddModelError("", "It is likely your password is expired");
+                            modelStateDictionary.AddModelError("LoginEmailAddress", "Invalid email address");
+                            modelStateDictionary.AddModelError("LoginPassword", "If this is registered email address");
+                            modelStateDictionary.AddModelError("", "Please use the password to login");
                             sessionObjectModel = null;
                         }
                     }
                     else
                     {
-                        modelStateDictionary.AddModelError("LoginEmailAddress", "Please check your email address");
-                        modelStateDictionary.AddModelError("LoginPassword", "Please check your login password");
-                        modelStateDictionary.AddModelError("", "Unable to login with credentials supplied");
-                        modelStateDictionary.AddModelError("", "It is likely your password is expired");
+                        modelStateDictionary.AddModelError("LoginEmailAddress", "Invalid email address");
+                        modelStateDictionary.AddModelError("LoginPassword", "If this is registered email address");
+                        modelStateDictionary.AddModelError("", "Please use the password to login");
                         sessionObjectModel = null;
                     }
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -672,7 +671,8 @@ namespace ArchitectureLibraryBusinessLayer
                     registerUserProfModel.RegisterEmailAddress = registerUserProfModel.RegisterEmailAddress.Trim().ToLower();
                     registerUserProfModel.ConfirmRegisterEmailAddress = registerUserProfModel.ConfirmRegisterEmailAddress.Trim().ToLower();
                     ArchLibDataContext.OpenSqlConnection();
-                    if (string.IsNullOrWhiteSpace(ArchLibDataContext.SelectAspNetUserFromUserName(registerUserProfModel.RegisterEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId).AspNetUserId))
+                    AspNetUserModel aspNetUserModel = ArchLibDataContext.SelectAspNetUserFromUserName(registerUserProfModel.RegisterEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (string.IsNullOrWhiteSpace(aspNetUserModel.AspNetUserId))
                     {
                         //int x = 1, y = 0, z = x / y;
                         ArchLibDocumentBL archLibDocumentBL = new ArchLibDocumentBL();
@@ -695,7 +695,8 @@ namespace ArchitectureLibraryBusinessLayer
 
                         string firstName = "", lastName = "", initialsTextValue = "", signatureTextValue = "";
                         long initialsTextId = 0, signatureTextId = 0;
-                        ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, null, null, registerUserProfModel.RegisterTelephoneCountryId, registerUserProfModel.TelephoneNumber, resetPasswordQueryString, resetPasswordDateTime, resetPasswordKey, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserTypeEnum.RegularUser, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        string aspNetRoleId = ArchLibCache.AspNetRoleModels.First(x => x.UserTypeId == (int)UserTypeEnum.DefaultRole).AspNetRoleId;
+                        ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, null, null, registerUserProfModel.RegisterTelephoneCountryId, registerUserProfModel.TelephoneNumber, resetPasswordQueryString, resetPasswordDateTime, resetPasswordKey, firstName, lastName, certificateDocumentId, initialsTextId, initialsTextValue, signatureTextId, signatureTextValue, UserTypeEnum.DefaultRole, aspNetRoleId, UserStatusEnum.Inactive, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         string registerUserProfEmailBodyHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailBody", registerUserProfModel);
                         string registerUserProfEmailSubjectHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailSubject", registerUserProfModel);
                         string signatureHtml = ViewToHtmlString(controller, "_SignatureTemplate", registerUserProfModel);
@@ -723,9 +724,35 @@ namespace ArchitectureLibraryBusinessLayer
                     }
                     else
                     {
-                        modelStateDictionary.AddModelError("RegisterEmailAddress", "Email address already registered");
-                        modelStateDictionary.AddModelError("RegisterEmailAddress", "Try with a different email address");
-                        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00098000 :: Exception", new Exception("Email Address already registered"), "", "Email Address already registered");
+                        if (aspNetUserModel.UserTypeId == UserTypeEnum.GuestRole)
+                        {
+                            //Update and send email
+                            registerUserProfModel = new RegisterUserProfModel
+                            {
+                                ResponseObjectModel = new ResponseObjectModel
+                                {
+                                    ColumnCount = 1,
+                                    ListStyleType = "decimal",
+                                    ResponseMessages = new List<string>
+                                    {
+                                        "Your email has been successfully registered",
+                                        "Welcome to our family",
+                                        "Please check your email to complete your registration",
+                                        "Your email could be in Junk/Spam folder",
+                                        "If so, mark this email address as not spam",
+                                    },
+                                    ResponseTypeId = ResponseTypeEnum.Success,
+                                    TextAlign = "left",
+                                },
+                            };
+                            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                        }
+                        else
+                        {
+                            modelStateDictionary.AddModelError("RegisterEmailAddress", "Email address already registered");
+                            modelStateDictionary.AddModelError("RegisterEmailAddress", "Try with a different email address");
+                            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00098000 :: Exception", new Exception("Email Address already registered"), "", "Email Address already registered");
+                        }
                     }
                 }
                 else
@@ -1510,7 +1537,8 @@ namespace ArchitectureLibraryBusinessLayer
                     string loginPasswordEncrypted = EncryptDecrypt.EncryptDataMd5(loginPassword, privateKey);
                     DateTime loginPasswordExpiryDateTime = DateTime.Now.AddDays(180);
                     long certificateDocumentId = 0;
-                    personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, registerTelephoneCountryId, telephoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserTypeEnum.RegularUser, UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string aspNetRoleId = ArchLibCache.AspNetRoleModels.First(x => x.UserTypeId == (int)UserTypeEnum.DefaultRole).AspNetRoleId;
+                    personModel = ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, registerTelephoneCountryId, telephoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserTypeEnum.DefaultRole, aspNetRoleId, UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                     personModel.AspNetUserId = aspNetUserId;
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                     return true;

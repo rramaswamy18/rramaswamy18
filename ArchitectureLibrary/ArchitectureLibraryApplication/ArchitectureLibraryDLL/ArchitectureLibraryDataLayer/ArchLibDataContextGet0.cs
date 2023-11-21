@@ -374,37 +374,37 @@ namespace ArchitectureLibraryDataLayer
                 }
             }
         }
-        private static string GetAspNetRole(string Name, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
+        //private static string GetAspNetRole(string Name, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
 
-                string sqlStmt = "";
-                sqlStmt += "        SELECT *" + Environment.NewLine;
-                sqlStmt += "          FROM ArchLib.AspNetRole WHERE Name = '" + Name + "'" + Environment.NewLine;
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                string aspNetRoleId;
-                if (sqlDataReader.Read())
-                {
-                    aspNetRoleId = sqlDataReader["AspNetRoleId"].ToString();
-                }
-                else
-                {
-                    aspNetRoleId = null;
-                }
-                sqlDataReader.Close();
-                return aspNetRoleId;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //        string sqlStmt = "";
+        //        sqlStmt += "        SELECT *" + Environment.NewLine;
+        //        sqlStmt += "          FROM ArchLib.AspNetRole WHERE Name = '" + Name + "'" + Environment.NewLine;
+        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        string aspNetRoleId;
+        //        if (sqlDataReader.Read())
+        //        {
+        //            aspNetRoleId = sqlDataReader["AspNetRoleId"].ToString();
+        //        }
+        //        else
+        //        {
+        //            aspNetRoleId = null;
+        //        }
+        //        sqlDataReader.Close();
+        //        return aspNetRoleId;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         //private static AspNetUserModel GetAspNetUserFromUserName(string userName, string execUniqueId)
         //{
         //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(), loggedInUserId = "";

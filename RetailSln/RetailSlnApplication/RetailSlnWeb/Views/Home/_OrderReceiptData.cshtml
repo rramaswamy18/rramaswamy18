@@ -88,4 +88,12 @@
             @Model.CreditCardProcessMessage
         </td>
     </tr>
+    @if (Model.AspNetRoleName == "GUESTROLE")
+    {
+        <tr>
+            <th colspan="2" class="text-left" scope="row" style="color: #ff0000;">
+                You checked out as Guest User. A regular user has exotic features. You can register using the same email address
+            </th>
+        </tr>
+    }
 </table>

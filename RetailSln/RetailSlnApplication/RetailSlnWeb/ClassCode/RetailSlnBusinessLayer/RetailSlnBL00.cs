@@ -779,6 +779,7 @@ namespace RetailSlnBusinessLayer
                                 NameAsOnCard = paymentDataModel.CardHolderName,
                             };
                             CreditCardServiceBL creditCardService = new CreditCardServiceBL();
+                            paymentDataModel.AspNetRoleName = sessionObjectModel.AspNetRoleName;
                             paymentDataModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, out string processMessage, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                             paymentDataModel.CreditCardProcessMessage = creditCardDataModel.ProcessMessage;
                             paymentDataModel.CreditCardNumberLast4 = creditCardDataModel.CreditCardNumberLast4;
@@ -1014,21 +1015,7 @@ namespace RetailSlnBusinessLayer
                     OrderDetailTypeId = OrderDetailTypeEnum.Discount,
                 }
             );
-            shoppingCartSummaryItems.Add
-            (
-                new ShoppingCartItemModel
-                {
-                    ItemDesc = null,
-                    ItemId = null,
-                    ItemRate = totalOrderAmount,
-                    ItemShortDesc = "GST (18%)",
-                    OrderAmount = totalOrderAmount * 0.18f,
-                    OrderComments = null,
-                    OrderQty = 1,
-                    OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
-                }
-            );
-            var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
+            var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId));
             long orderQty = (long)(totalWeightValue / 1000) + totalWeightValue % 1000 == 0 ? 0 : 1;
             float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0;
             if (deliveryChargeModel.UnitMeasure == "WEIGHT")
@@ -1040,7 +1027,21 @@ namespace RetailSlnBusinessLayer
                 shippingAndHandlingChargesByVolume = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
             }
             float shippingAndHandlingChargesAmount = shippingAndHandlingChargesByWeight * orderQty;
-            float fuelCharges = shippingAndHandlingChargesAmount * 15 / 100f;
+            float fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
+            shoppingCartSummaryItems.Add
+            (
+                new ShoppingCartItemModel
+                {
+                    ItemDesc = null,
+                    ItemId = null,
+                    ItemRate = totalOrderAmount,
+                    ItemShortDesc = deliveryChargeModel.GSTCaption + " (" + deliveryChargeModel.GSTPercent + "%)",
+                    OrderAmount = totalOrderAmount * deliveryChargeModel.GSTPercent / 100f,
+                    OrderComments = null,
+                    OrderQty = 1,
+                    OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                }
+            );
             shoppingCartSummaryItems.Add
             (
                 new ShoppingCartItemModel
@@ -1048,7 +1049,7 @@ namespace RetailSlnBusinessLayer
                     ItemDesc = null,
                     ItemId = null,
                     ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "Shipping & Handling Charges " + orderQty + " KG (" + totalWeightValue + " Grams) - " + deliveryChargeModel.DeliveryModeId,
+                    ItemShortDesc = "Shipping & Handling Charges " + orderQty + " KG (" + totalWeightValue + " Grams) - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                     OrderAmount = shippingAndHandlingChargesAmount,
                     OrderComments = null,
                     OrderQty = orderQty,
@@ -1062,7 +1063,7 @@ namespace RetailSlnBusinessLayer
                     ItemDesc = null,
                     ItemId = null,
                     ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "Fuel Charges (15%)",
+                    ItemShortDesc = "Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%)",
                     OrderAmount = fuelCharges,
                     OrderComments = null,
                     OrderQty = orderQty,
@@ -1076,8 +1077,8 @@ namespace RetailSlnBusinessLayer
                     ItemDesc = null,
                     ItemId = null,
                     ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "GST on S&H, Fuel Charges (18%)",
-                    OrderAmount = (shippingAndHandlingChargesAmount + fuelCharges) * 18 / 100f,
+                    ItemShortDesc = "GST on S&H, Fuel Charges (" + deliveryChargeModel.GSTPercent + "%)",
+                    OrderAmount = (shippingAndHandlingChargesAmount + fuelCharges) * deliveryChargeModel.GSTPercent / 100f,
                     OrderComments = null,
                     OrderQty = orderQty,
                     OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,

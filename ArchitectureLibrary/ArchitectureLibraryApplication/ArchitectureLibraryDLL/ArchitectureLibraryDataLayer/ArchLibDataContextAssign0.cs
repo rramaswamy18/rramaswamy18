@@ -28,6 +28,23 @@ namespace ArchitectureLibraryDataLayer
             };
             return applicationDefaultModel;
         }
+        private static AspNetRoleModel AssignAspNetRole(SqlDataReader sqlDataReader, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //string methodName = MethodBase.GetCurrentMethod().Name;
+            //ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            //exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            AspNetRoleModel aspNetRoleModel = new AspNetRoleModel
+            {
+                AspNetRoleId = sqlDataReader["AspNetRoleId"].ToString(),
+                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                ActionName = sqlDataReader["ActionName"].ToString(),
+                AspNetRoleName = sqlDataReader["AspNetRoleName"].ToString(),
+                ControllerName = sqlDataReader["ControllerName"].ToString(),
+                Name = sqlDataReader["Name"].ToString(),
+                UserTypeId = long.Parse(sqlDataReader["UserTypeId"].ToString()),
+            };
+            return aspNetRoleModel;
+        }
         private static AspNetRoleParentMenu AssignAspNetRoleParentMenu(SqlDataReader sqlDataReader, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //string methodName = MethodBase.GetCurrentMethod().Name;

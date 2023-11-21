@@ -156,7 +156,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters["@StatusId"].Value = (long)personModel.StatusId;
                 sqlCommand.Parameters["@SuffixId"].Value = (long)personModel.SuffixId;
                 sqlCommand.Parameters["@UpdUserId"].Value = personModel.UpdUserId;
-                sqlCommand.ExecuteNonQuery();
+                personModel.PersonId = long.Parse(sqlCommand.ExecuteScalar().ToString());
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
             }

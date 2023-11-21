@@ -1,4 +1,5 @@
-﻿using ArchitectureLibraryModels;
+﻿using ArchitectureLibraryEnumerations;
+using ArchitectureLibraryModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,8 +10,12 @@ namespace RetailSlnModels
 {
     public class PaymentDataModel
     {
+        public string AspNetRoleName { set; get; }
+
         public long CreditCardDataId { set; get; }
+
         public long GiftCertId { set; get; }
+
         public long OrderHeaderId { set; get; }
 
         [Display(Name = "Expiry")]

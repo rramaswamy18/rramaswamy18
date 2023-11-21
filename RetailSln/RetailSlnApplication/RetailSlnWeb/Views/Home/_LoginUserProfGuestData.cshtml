@@ -33,7 +33,7 @@
 
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.ConfirmCheckoutGuestEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.ConfirmCheckoutGuestEmailAddress, new { @class = "form-control validate", oncopy = "javascript: return false;", oncut = "javascript: return false;", ondrag = "javascript: return false;", ondrop = "javascript: return false;", onpaste = "javascript: return false;", onselectstart = "javascript: return false;", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmCheckoutGuestEmailAddress), style = "width: 90%;" })
+    @Html.TextBoxFor(m => m.ConfirmCheckoutGuestEmailAddress, new { autocomplete = "off", @class = "form-control validate", oncopy = "javascript: return false;", oncut = "javascript: return false;", ondrag = "javascript: return false;", ondrop = "javascript: return false;", onpaste = "javascript: return false;", onselectstart = "javascript: return false;", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmCheckoutGuestEmailAddress), style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ConfirmCheckoutGuestEmailAddress, "", new { id = "ConfirmCheckoutGuestEmailAddress-error" }).ToHtmlString()))
 </div>
 

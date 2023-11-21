@@ -23,7 +23,7 @@ namespace ArchitectureLibraryCreditCardBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                string terminalType = "1", transactionType = "7";
+                string terminalType = "2", transactionType = "7";
                 string creditCardType;
                 string cardExpiry = creditCardExpMM + creditCardExpYear.Substring(2);
                 switch (creditCardNumber.Substring(0, 1))

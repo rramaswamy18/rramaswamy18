@@ -10,6 +10,9 @@ namespace RetailSlnModels
 {
     public class DeliveryInfoDataModel
     {
+        [Required(ErrorMessage = "Country")]
+        public long? AlternateTelephoneDemogInfoCountryId { set; get; }
+
         [Display(Name = "Alt. Phone#")]
         [Required(ErrorMessage = "Alternate phone#")]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "10 digit phone#")]
@@ -27,6 +30,9 @@ namespace RetailSlnModels
         public DeliveryMethodEnum? DeliveryMethodId { set; get; }
 
         public DeliveryTypeEnum? DeliveryTypeId { set; get; }
+
+        [Required(ErrorMessage = "Country")]
+        public long? PrimaryTelephoneDemogInfoCountryId { set; get; }
 
         [Display(Name = "Prim. Phone#")]
         [Required(ErrorMessage = "Primary phone#")]

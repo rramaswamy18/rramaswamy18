@@ -36,6 +36,29 @@ namespace ArchitectureLibraryDataLayer
             }
             return applicationDefaultModels;
         }
+        public static List<AspNetRoleModel> GetAspNetRoles(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<AspNetRoleModel> aspNetRoleModels = new List<AspNetRoleModel>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM ArchLib.AspNetRole ORDER BY UserTypeId", sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    aspNetRoleModels.Add(AssignAspNetRole(sqlDataReader, clientId, ipAddress, execUniqueId, loggedInUserId));
+                }
+                sqlDataReader.Close();
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            return aspNetRoleModels;
+        }
         public static List<AspNetRoleParentMenu> GetAspNetRoleParentMenus(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

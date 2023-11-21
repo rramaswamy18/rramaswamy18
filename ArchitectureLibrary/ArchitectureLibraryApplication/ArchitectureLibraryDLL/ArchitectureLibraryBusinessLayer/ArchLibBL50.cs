@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.IO;
 using ArchitectureLibraryDataLayer;
+using System.Reflection.Emit;
 
 namespace ArchitectureLibraryBusinessLayer
 {
@@ -49,33 +50,37 @@ namespace ArchitectureLibraryBusinessLayer
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             string sqlStmt = "";
-            sqlStmt += "        SELECT TOP 25" + Environment.NewLine;
-            sqlStmt += "               DemogInfoCountry.DemogInfoCountryId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCountry.CountryAbbrev" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoSubDivision.DemogInfoSubDivisionId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoSubDivision.StateAbbrev" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCounty.DemogInfoCountyId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCounty.CountyName" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCity.DemogInfoCityId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCity.CityName" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoZip.DemogInfoZipId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoZip.ZipCode" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoZipPlus.DemogInfoZipPlusId" + Environment.NewLine;
-            sqlStmt += "          FROM ArchLib.DemogInfoCountry" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoSubDivision" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoCounty" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoCity" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoZip" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoCity.DemogInfoCityId = DemogInfoZip.DemogInfoCityId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoZipPlus" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId" + Environment.NewLine;
-            sqlStmt += "         WHERE DemogInfoZip.ZipCode LIKE '" + zipCode + "%'" + Environment.NewLine;
-            sqlStmt += "           AND DemogInfoZipPlus.ZipPlus4 = ''" + Environment.NewLine;
-            sqlStmt += "           AND DemogInfoCountry.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
-            sqlStmt += "      ORDER BY DemogInfoZip.ZipCode" + Environment.NewLine;
+            sqlStmt += "        SELECT TOP 10" + Environment.NewLine;
+            sqlStmt += "               DemogInfoData.DemogInfoCountryId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.CountryAbbrev" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoSubDivisionId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.StateAbbrev" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.SubDivisionDesc" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoCountyId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.CountyName" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoCityId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.CityName" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoZipId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.ZipCode" + Environment.NewLine;
+            sqlStmt += "          FROM ArchLib.DemogInfoData" + Environment.NewLine;
+            sqlStmt += "         WHERE DemogInfoData.ZipCode LIKE '" + zipCode + "%'" + Environment.NewLine;
+            sqlStmt += "           AND DemogInfoData.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
+            sqlStmt += "      ORDER BY DemogInfoData.ZipCode" + Environment.NewLine;
+            //sqlStmt += "          FROM ArchLib.DemogInfoCountry" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoSubDivision" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoCounty" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoCity" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoZip" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoCity.DemogInfoCityId = DemogInfoZip.DemogInfoCityId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoZipPlus" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId" + Environment.NewLine;
+            //sqlStmt += "         WHERE DemogInfoZip.ZipCode LIKE '" + zipCode + "%'" + Environment.NewLine;
+            //sqlStmt += "           AND DemogInfoZipPlus.ZipPlus4 = ''" + Environment.NewLine;
+            //sqlStmt += "           AND DemogInfoCountry.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
+            //sqlStmt += "      ORDER BY DemogInfoZip.ZipCode" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandText = sqlStmt;
             sqlCommand.CommandType = CommandType.Text;
@@ -103,34 +108,50 @@ namespace ArchitectureLibraryBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             string sqlStmt = "";
             sqlStmt += "" + Environment.NewLine;
-            sqlStmt += "        SELECT TOP 25" + Environment.NewLine;
-            sqlStmt += "               DemogInfoCountry.DemogInfoCountryId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCountry.CountryAbbrev" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoSubDivision.DemogInfoSubDivisionId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoSubDivision.StateAbbrev" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCounty.DemogInfoCountyId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCounty.CountyName" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCity.DemogInfoCityId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoCity.CityName" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoZip.DemogInfoZipId" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoZip.ZipCode" + Environment.NewLine;
-            sqlStmt += "              ,DemogInfoZipPlus.DemogInfoZipPlusId" + Environment.NewLine;
-            sqlStmt += "          FROM ArchLib.DemogInfoCountry" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoSubDivision" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoCounty" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoCity" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoZip" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoCity.DemogInfoCityId = DemogInfoZip.DemogInfoCityId" + Environment.NewLine;
-            sqlStmt += "    INNER JOIN ArchLib.DemogInfoZipPlus" + Environment.NewLine;
-            sqlStmt += "            ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId" + Environment.NewLine;
-            sqlStmt += "         WHERE DemogInfoCity.CityName LIKE '" + cityName + "%'" + Environment.NewLine;
-            sqlStmt += "           AND DemogInfoZipPlus.ZipPlus4 = ''" + Environment.NewLine;
-            sqlStmt += "           AND DemogInfoCountry.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
-            //sqlStmt += "           AND DemogInfoZip.ZipCode <> ''" + Environment.NewLine;
-            sqlStmt += "      ORDER BY DemogInfoCity.CityName" + Environment.NewLine;
+            sqlStmt += "        SELECT TOP 10" + Environment.NewLine;
+            sqlStmt += "               DemogInfoData.DemogInfoCountryId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.CountryAbbrev" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoSubDivisionId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.StateAbbrev" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.SubDivisionDesc" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoCountyId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.CountyName" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoCityId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.CityName" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.DemogInfoZipId" + Environment.NewLine;
+            sqlStmt += "              ,DemogInfoData.ZipCode" + Environment.NewLine;
+            sqlStmt += "          FROM ArchLib.DemogInfoData" + Environment.NewLine;
+            sqlStmt += "         WHERE DemogInfoData.CityName LIKE '" + cityName + "%'" + Environment.NewLine;
+            sqlStmt += "           AND DemogInfoData.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
+            sqlStmt += "      ORDER BY DemogInfoData.CityName" + Environment.NewLine;
+            //sqlStmt += "        SELECT TOP 25" + Environment.NewLine;
+            //sqlStmt += "               DemogInfoCountry.DemogInfoCountryId" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoCountry.CountryAbbrev" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoSubDivision.DemogInfoSubDivisionId" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoSubDivision.StateAbbrev" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoCounty.DemogInfoCountyId" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoCounty.CountyName" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoCity.DemogInfoCityId" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoCity.CityName" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoZip.DemogInfoZipId" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoZip.ZipCode" + Environment.NewLine;
+            //sqlStmt += "              ,DemogInfoZipPlus.DemogInfoZipPlusId" + Environment.NewLine;
+            //sqlStmt += "          FROM ArchLib.DemogInfoCountry" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoSubDivision" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoCounty" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoCity" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoZip" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoCity.DemogInfoCityId = DemogInfoZip.DemogInfoCityId" + Environment.NewLine;
+            //sqlStmt += "    INNER JOIN ArchLib.DemogInfoZipPlus" + Environment.NewLine;
+            //sqlStmt += "            ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId" + Environment.NewLine;
+            //sqlStmt += "         WHERE DemogInfoCity.CityName LIKE '" + cityName + "%'" + Environment.NewLine;
+            //sqlStmt += "           AND DemogInfoZipPlus.ZipPlus4 = ''" + Environment.NewLine;
+            //sqlStmt += "           AND DemogInfoCountry.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
+            ////sqlStmt += "           AND DemogInfoZip.ZipCode <> ''" + Environment.NewLine;
+            //sqlStmt += "      ORDER BY DemogInfoCity.CityName" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandText = sqlStmt;
             sqlCommand.CommandType = CommandType.Text;
@@ -314,48 +335,6 @@ namespace ArchitectureLibraryBusinessLayer
                 return stringWriter.GetStringBuilder().ToString();
             }
         }
-        //public string GenerateHtmlStringFromView(Controller controller, string viewName, object model)
-        //{
-        //    if (string.IsNullOrEmpty(viewName))
-        //    {
-        //        viewName = controller.ControllerContext.RouteData.GetRequiredString("action");
-        //    }
-        //    controller.ViewData.Model = model;
-
-        //    using (var stringWriter = new StringWriter())
-        //    {
-        //        var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, viewName);
-        //        var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, stringWriter);
-        //        viewResult.View.Render(viewContext, stringWriter);
-        //        return stringWriter.GetStringBuilder().ToString();
-        //    }
-        //}
-        //public T CreateController<T>(RouteData routeData = null) where T : Controller, new()
-        //{
-        //    //Create a disconnected controller instance
-        //    T controller = new T();
-        //    //Get context wrapper from HttpContext if available
-        //    HttpContextBase wrapper;
-        //    if (HttpContext.Current != null)
-        //    {
-        //        wrapper = new HttpContextWrapper(HttpContext.Current);
-        //    }
-        //    else
-        //    {
-        //        throw new InvalidOperationException("Can't create Controller Context if no active HttpContext instance is available.");
-        //    }
-        //    if (routeData == null)
-        //    {
-        //        routeData = new RouteData();
-        //    }
-        //    // add the controller routing if not existing
-        //    if (!routeData.Values.ContainsKey("controller") && !routeData.Values.ContainsKey("Controller"))
-        //    {
-        //        routeData.Values.Add("controller", controller.GetType().Name.ToLower().Replace("controller", ""));
-        //    }
-        //    controller.ControllerContext = new ControllerContext(wrapper, routeData, controller);
-        //    return controller;
-        //}
     }
 }
 //https://www.codemag.com/article/1312081/Rendering-ASP.NET-MVC-Razor-Views-to-String

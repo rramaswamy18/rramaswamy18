@@ -45,10 +45,12 @@ namespace RetailSlnDataLayer
         public static void AssignDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@AlternateTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.AlternateTelephoneDemogInfoCountryId;
             sqlCommand.Parameters["@AlternateTelephoneNum"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.AlternateTelephoneNum) ? (object)DBNull.Value : deliveryInfoDataModel.AlternateTelephoneNum;
             sqlCommand.Parameters["@DeliveryAddressId"].Value = deliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId;
             sqlCommand.Parameters["@DeliveryInstructions"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryInstructions) ? (object)DBNull.Value : deliveryInfoDataModel.DeliveryInstructions;
             sqlCommand.Parameters["@OrderHeaderId"].Value = (int)deliveryInfoDataModel.OrderHeaderId;
+            sqlCommand.Parameters["@PrimaryTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.PrimaryTelephoneDemogInfoCountryId;
             sqlCommand.Parameters["@PrimaryTelephoneNum"].Value = deliveryInfoDataModel.PrimaryTelephoneNum;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }

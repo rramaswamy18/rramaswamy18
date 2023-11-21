@@ -58,6 +58,37 @@
 </div>
 <script type="text/javascript">
     var searchResults;
+    function checkoutGuestUser_onclick() {
+        console.log("00000000", "loginUserProfGuestSave_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/CheckoutGuest";
+        var postData = $("#formLoginUserProfGuestData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                if (responseData.success) {
+                    document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                    document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
+                    document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
+                }
+                else {
+                    document.getElementById("formLoginUserProfGuestData").innerHTML = responseData.htmlString;
+                }
+                console.log("00001000", "loginUserProfGuestSave_onclick success", responseData.processMessage);
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formLoginUserProfGuestData").innerHTML = xhr.responseText;
+                console.log("00099000", "loginUserProfGuestSave_onclick", "ERROR???", exception, xhr);
+            }
+        });
+    }
     function checkoutLoginUser_onclick() {
         console.log("00000000", "checkoutLoginUser_onclick", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -72,7 +103,6 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                console.log(responseData);
                 if (responseData.success) {
                     document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
                 }
@@ -161,10 +191,11 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                console.log(responseData);
                 if (responseData.success) {
                     if (responseData.success) {
                         document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                        document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
+                        document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
                         document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
                         document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
                         if (document.getElementById("shoppingCartItemsCount2") != null) {
@@ -205,7 +236,6 @@
                 async: true,
                 success: function (responseData, textStatus, request) {
                     $('#loadingModal').modal('hide');
-                    console.log("removeFromCart_onclick", "00090000", "SUCCESS!!!");
                     if (responseData.success) {
                         document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
                         document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
@@ -217,8 +247,6 @@
                 },
                 error: function (xhr, exception) {
                     $('#loadingModal').modal('hide');
-                    console.log("removeFromCart_onclick", "00099000", "ERROR???");
-                    console.log(exception, xhr);
                     var jsonData = JSON.parse(xhr.responseText);
                     document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
                     if (document.getElementById("divErrorMessage2") != null) {
@@ -253,12 +281,9 @@
                 async: true,
                 success: function (responseData, textStatus, request) {
                     $('#loadingModal').modal('hide');
-                    console.log("orderComments_onchange", "00090000", "SUCCESS!!!", responseData.success);
                 },
                 error: function (xhr, exception) {
                     $('#loadingModal').modal('hide');
-                    console.log("orderComments_onchange", "00099000", "ERROR???");
-                    console.log(exception, xhr);
                     var jsonData = JSON.parse(xhr.responseText);
                     document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
                 }

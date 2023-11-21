@@ -36,7 +36,8 @@ namespace RetailSlnBusinessLayer
                     string loginPasswordEncrypted = EncryptDecrypt.EncryptDataMd5(loginPassword, privateKey);
                     DateTime loginPasswordExpiryDateTime = DateTime.Now.AddDays(30);
                     long certificateDocumentId = 0;
-                    ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, registerUserProfModel.RegisterTelephoneCountryId, phoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserTypeEnum.RegularUser, UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string aspNetRoleId = ArchLibCache.AspNetRoleModels.First(x => x.UserTypeId == (int)UserTypeEnum.DefaultRole).AspNetRoleId;
+                    ArchLibDataContext.CreateRegisterUser(aspNetUserId, registerUserProfModel.RegisterEmailAddress, loginPasswordEncrypted, loginPasswordExpiryDateTime, registerUserProfModel.RegisterTelephoneCountryId, phoneNumber, null, null, null, firstName, lastName, certificateDocumentId, 0, "", 0, "", UserTypeEnum.DefaultRole, aspNetRoleId, UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                     aspNetUserModel = ArchLibDataContext.SelectAspNetUserFromUserName(registerUserProfModel.RegisterEmailAddress, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                     return true;

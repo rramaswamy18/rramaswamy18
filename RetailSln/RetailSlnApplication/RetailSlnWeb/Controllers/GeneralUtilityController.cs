@@ -3,6 +3,8 @@ using ArchitectureLibraryCacheData;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using RetailSlnCacheData;
+using RetailSlnModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,30 @@ namespace RetailSlnWeb.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult DemongInfoStates(string id)
+        {
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                processMessage = "SUCCESS!!!";
+                success = true;
+                htmlString = archLibBL.ViewToHtmlString(this, "_DemongInfoStates", id);
+            }
+            catch
+            {
+                processMessage = "ERROR???";
+                success = false;
+                htmlString = "Error while loading states for country id = " + id;
+            }
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            return actionResult;
         }
 
         [AllowAnonymous]

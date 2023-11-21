@@ -21,6 +21,7 @@ using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace RetailSlnWeb.Controllers
 {
@@ -287,8 +288,9 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
             bool success;
             string processMessage, htmlString;
             try
@@ -299,8 +301,6 @@ namespace RetailSlnWeb.Controllers
                 SessionObjectModel sessionObjectModel = archLibBL.CheckoutGuest(ref checkoutGuestModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
-                    success = true;
-                    processMessage = "SUCCESS!!!";
                     Session["SessionObject"] = sessionObjectModel;
                     Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
                     var identity = new ClaimsIdentity
@@ -317,17 +317,20 @@ namespace RetailSlnWeb.Controllers
                     var ctx = Request.GetOwinContext();
                     var authManager = ctx.Authentication;
                     authManager.SignIn(identity);
+                    DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
-                    processMessage = "ERROR???";
-                    string redirectUrl = Url.Action(sessionObjectModel.ActionName, sessionObjectModel.ControllerName);
-                    actionResult = Json(new { success, processMessage, redirectUrl });
+                    processMessage = "SUCCESS!!!";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", deliveryInfoModel);
+                    string loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
+                    string loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
+                    actionResult = Json(new { success, processMessage, htmlString, loggedInUserFullName, loggedInUserEmailAddress });
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                 }
                 else
                 {
                     success = false;
                     processMessage = "ERROR???";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", checkoutGuestModel);
+                    htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", checkoutGuestModel);
                     actionResult = Json(new { success, processMessage, htmlString });
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
@@ -859,6 +862,24 @@ namespace RetailSlnWeb.Controllers
                         success = true;
                         processMessage = "SUCCESS";
                         htmlString = archLibBL.ViewToHtmlString(this, "_OrderReceipt", orderReceiptModel);
+                        var sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                        string loggedInUserFullName, loggedInUserEmailAddress;
+                        if (sessionObjectModel.AspNetRoleName == "GUESTROLE")
+                        {
+                            FormsAuthentication.SignOut();
+                            Session.Abandon();
+                            Request.GetOwinContext().Authentication.SignOut();
+                            Session["SessionObject"] = null;
+                            Session.Abandon();
+                            loggedInUserFullName = "";
+                            loggedInUserEmailAddress = "";
+                        }
+                        else
+                        {
+                            loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
+                            loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
+                        }
+                        actionResult = Json(new { success, processMessage, htmlString, loggedInUserFullName, loggedInUserEmailAddress });
                     }
                     else
                     {
@@ -870,6 +891,7 @@ namespace RetailSlnWeb.Controllers
                             ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                         };
                         htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
+                        actionResult = Json(new { success, processMessage, htmlString });
                     }
                 }
                 else
@@ -881,6 +903,7 @@ namespace RetailSlnWeb.Controllers
                         ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                     };
                     htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
+                    actionResult = Json(new { success, processMessage, htmlString });
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -896,9 +919,9 @@ namespace RetailSlnWeb.Controllers
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                 };
                 htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
+                actionResult = Json(new { success, processMessage, htmlString });
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
             }
-            actionResult = Json(new { success, processMessage, htmlString });
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }

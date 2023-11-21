@@ -1,0 +1,13 @@
+﻿@model string
+@using ArchitectureLibraryCacheData
+@{
+    var demogInfoSubDivisions = DemogInfoCache.DemogInfoSubDivisionSelectListItems[long.Parse(@Model)];
+    if (demogInfoSubDivisions.Count > 1)
+    {
+<option value="">---</option>
+    }
+    foreach (var demogInfoSubDivision in demogInfoSubDivisions)
+    {
+<option value="@demogInfoSubDivision.Value">@demogInfoSubDivision.Text</option>
+    }
+}

@@ -21,6 +21,7 @@ namespace ArchitectureLibraryCacheData
         public static string ValidationSummaryMessageSuccess { get { return "Process completed successfully!!!"; } }
         public static List<ApplicationDefaultModel> ApplicationDefaultModels { set; get; }
         public static List<ClientModel> ClientModels { get; set; }
+        public static List<AspNetRoleModel> AspNetRoleModels { set; get; }
         public static List<AspNetRoleParentMenu> AspNetRoleParentMenus { get; set; }
         public static List<UserProfileMetaDataModel> UserProfileMetaDatas { get; set; }
         public static string GetApplicationDefault(long clientId, string kvpKey, string kvpSubKey)
@@ -39,10 +40,11 @@ namespace ArchitectureLibraryCacheData
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             ArchLibCacheBL archLibCacheBL = new ArchLibCacheBL();
-            archLibCacheBL.Initialize(out List<ApplicationDefaultModel> applicationDefaultModels, out List<ClientModel> clientModels, out List<AspNetRoleParentMenu> aspNetRoleParentMenus, out List<UserProfileMetaDataModel> userProfileMetaDataModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            archLibCacheBL.Initialize(out List<ApplicationDefaultModel> applicationDefaultModels, out List<ClientModel> clientModels, out List<AspNetRoleModel> aspNetRoleModels, out List<AspNetRoleParentMenu> aspNetRoleParentMenus, out List<UserProfileMetaDataModel> userProfileMetaDataModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             ApplicationDefaultModels = applicationDefaultModels;
             ClientModels = clientModels;
             AspNetRoleParentMenus = aspNetRoleParentMenus;
+            AspNetRoleModels = aspNetRoleModels;
             UserProfileMetaDatas = userProfileMetaDataModels;
             BuildCacheModels(applicationDefaultModels, clientModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             ClientId = clientId;

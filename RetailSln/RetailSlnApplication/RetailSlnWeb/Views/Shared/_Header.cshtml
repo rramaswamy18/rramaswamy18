@@ -41,103 +41,93 @@
         margin-left: -10px;
     }
 </style>
-<div style="float: left;">
-    <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: 171px; width: 171px;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" />
+<div style="border: 0px none; margin-left: 0 auto; margin-right: 0 auto; padding: 0px; width: 100%;">
+    <div style="float: left; text-align: left; vertical-align: top;">
+        <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: auto; max-height: 171px; max-width: 171px; width: 100%;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" />
+    </div>
+    <div style="float: right; text-align: left; vertical-align: top;">
+        <div style="display: table;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; padding-right: 9px; vertical-align: top;">
+                    <div style="display: table;">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; text-align: center; vertical-align: top;">
+                                <i class="fa fa-envelope" style="padding-right: 6px;"></i>
+                            </div>
+                            <div style="display: table-cell; vertical-align: top;">
+                                <a href="@Url.Action("ContactUs", "Home")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessEmail", "")</a>
+                            </div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; text-align: center; vertical-align: top;">
+                                <i class="fa fa-phone" style="padding-right: 9px;"></i>
+                            </div>
+                            <div style="display: table-cell; vertical-align: top;">
+                                <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>
+                            </div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; text-align: center; vertical-align: top;">
+                                <img class="img-responsive" src="~/Images/SMSIcon2.png" style="height: 27px; padding-right: 5px; width: 27px;" />
+                            </div>
+                            <div style="display: table-cell; vertical-align: top;">
+                                <a href="sms:@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+                            </div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; text-align: center; vertical-align: top;">
+                                <i class="fa fa-dot-circle-o" style="height: 27px; padding-right: 5px; width: 27px;"></i>
+                            </div>
+                            <div style="display: table-cell; vertical-align: top;">
+                                @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")<br />@ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")<br />@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")-@ArchLibCache.GetApplicationDefault(clientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryAbbrev", "")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: table-cell; vertical-align: top;">
+                    <div style="display: table; vertical-align: top;">
+                        <div style="display: table-row; vertical-align: top;">
+                            <div style="display: table-cell; text-align: right; vertical-align: top;">
+                                <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="max-height: 99px; max-width: 189px; height: auto; padding-bottom: 2px; width: 100%;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
+                            </div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="background-color: #c3c3c3; display: table-cell; font-weight: bold; text-align: right; vertical-align: top; ">
+                                @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: left; vertical-align: top;">
+        <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span>
+        &nbsp;
+        <span style="color: #dc3131; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span>
+        &nbsp;
+        <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
+        <br />
+        <span style="font-weight: 900; color: #000000;">
+            A story of motivation, passion and unconditional commitment
+        </span>
+        <div style="display: table;">
+            <div style="display: table-row;">
+                <div style="display: table-cell;">
+                    <i class="fa" style="font-size: 24px">&#xf07a;</i>
+                    <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
+                    <br />
+                    <span style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;">Checkout</span>
+                </div>
+                <div style="display: table-cell; padding-left: 9px;">
+                    @Html.Partial("_HeaderMenu")
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div style="float: right; padding-left: 9px;">
-    <table style="padding: 0px;">
-        <tr>
-            <td style="vertical-align: top; width: 180px;">
-                <table>
-                    <tr>
-                        <td style="padding-right: 3px; text-align: right; vertical-align: top;">
-                            <i class="fa fa-envelope" style="padding-right: 6px;"></i>
-                        </td>
-                        <td style="padding-right: 3px; text-align: left; vertical-align: top;">
-                            <a href="@Url.Action("ContactUs", "Home")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessEmail", "")</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right;">
-                            <i class="fa fa-phone" style="padding-right: 9px;"></i>
-                        </td>
-                        <td style="text-align: left;">
-                            <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right;">
-                            <img class="img-responsive" src="~/Images/SMSIcon2.png" style="height: 27px; padding-right: 5px; width: 27px;" />
-                        </td>
-                        <td style="text-align: left;">
-                            <a href="sms:@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #54595f; font-family: Robot, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center; vertical-align: top;">
-                            <i class="fa fa-dot-circle-o" style="height: 27px; padding-right: 5px; width: 27px;"></i>
-                        </td>
-                        <td style="text-align: left;">
-                            @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")<br />@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")-@ArchLibCache.GetApplicationDefault(clientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryAbbrev", "")
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td style="vertical-align: top; width: 171px;">
-                <table>
-                    <tr>
-                        <td style="text-align: right;">
-                            <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="padding-bottom: 2px;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="background-color: #c3c3c3; font-weight: bold; padding-left: 3px; padding-right: 3px; text-align: left; vertical-align: top;">
-                            @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-<div style="padding-left: 27px; text-align: left;">
-    <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span>
-    &nbsp;
-    <span style="color: #dc3131; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span>
-    &nbsp;
-    <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
-    <br />
-    <span style="font-weight: 900; color: #000000;">
-        A story of motivation, passion and unconditional commitment
-    </span>
-    <table>
-        <tr>
-            <td>
-                <table style="padding: 0px;">
-                    <tr>
-                        @*<td style="text-align: left; vertical-align: bottom; white-space: nowrap;">
-                                <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;" title="Register, Login, Reset Password, Contact Us">
-                                    <img alt="Register, Login, Reset Password, Contact Us" src="~/Images/SignIn.png" style="height: 45px; width: 45px;" title="Click to perform Register, Login, Reset Password, Contact Us" /><br />
-                                    Sign In
-                                </a>
-                            </td>*@
-                        <td style="padding-left: 9px; text-align: left; vertical-align: bottom; white-space: nowrap;">
-                            <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
-                                <i class="fa" style="font-size: 24px">&#xf07a;</i><span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
-                                <br />
-                                <span style="color: #000000; text-decoration: underline;">Checkout</span>
-                            </a>
-                        </td>
-                        <td style="padding-left: 18px; text-align: left; vertical-align: bottom; white-space: nowrap;">
-                            @Html.Partial("_HeaderMenu")
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-<br style="clear: both;" />
 <script type="text/javascript">
     var url = "/Home/ShoppingCartSummary/";
     $.ajax({

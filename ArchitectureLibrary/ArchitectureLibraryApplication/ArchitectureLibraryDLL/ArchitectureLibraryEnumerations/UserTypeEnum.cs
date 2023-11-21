@@ -9,13 +9,15 @@ namespace ArchitectureLibraryEnumerations
 {
     public enum UserTypeEnum : int
     {
+        [Description("Default Role")]
+        DefaultRole = 100,
         [Description("System Administrator")]
-        SystemAdmin = 100,
+        SystAdmin = 200,
         [Description("Application Administrator")]
-        ApplicationAdmin = 200,
-        [Description("Regular User")]
-        RegularUser = 300,
-        [Description("Guest User")]
-        GuestUser = 400,
+        ApplAdmin = 300,
+        [Description("Guest Role")]
+        GuestRole = 400,
+        [Description("Wholesale Role")]
+        WholesaleRole = 500,
     }
 }

@@ -21,37 +21,5 @@ else
     <form id="formLoginUserProfGuestData">
         @Html.Partial("_LoginUserProfGuestData", Model)
     </form>
-    <button class="loginRegisterbtn" id="loginUserProfGuestSave" onclick="javascript: return loginUserProfGuestSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 93%;" type="button">checkout guest</button>
-    <script type="text/javascript">
-        function loginUserProfGuestSave_onclick() {
-            console.log("00000000", "loginUserProfGuestSave_onclick", "ENTER!!!");
-            $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-            var url = "/Home/CheckoutGuest";
-            var postData = $("#formLoginUserProfGuestData").serialize();
-            $.ajax({
-                url: url,
-                type: "POST",
-                contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-                //dataType: "html",
-                data: postData,
-                //async: false,
-                success: function (responseData, textStatus, request) {
-                    $("#loadingModal").modal('hide');
-                    console.log(responseData);
-                    if (responseData.success) {
-                        document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-                    }
-                    else {
-                        document.getElementById("formLoginUserProfGuestData").innerHTML = responseData.htmlString;
-                    }
-                    console.log("00001000", "loginUserProfGuestSave_onclick success", responseData.processMessage);
-                },
-                error: function (xhr, exception) {
-                    $("#loadingModal").modal('hide');
-                    document.getElementById("formLoginUserProfGuestData").innerHTML = xhr.responseText;
-                    console.log("00099000", "loginUserProfGuestSave_onclick", "ERROR???", exception, xhr);
-                }
-            });
-        }
-    </script>
+    <button class="loginRegisterbtn" id="checkoutGuestUser" onclick="javascript: return checkoutGuestUser_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 93%;" type="button">checkout guest</button>
 }

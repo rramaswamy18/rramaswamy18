@@ -538,6 +538,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,SuffixId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
+            sqlStmt += "        OUTPUT INSERTED.PersonId" + Environment.NewLine;
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @AddUserId" + Environment.NewLine;
             sqlStmt += "              ,@AspNetUserId" + Environment.NewLine;

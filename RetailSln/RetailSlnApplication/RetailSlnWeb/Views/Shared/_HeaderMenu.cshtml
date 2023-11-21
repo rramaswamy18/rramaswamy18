@@ -1,5 +1,5 @@
 ﻿@{
-    string viewDataActionName, selectedMenu, loggedInUserFullName, urlString, redirectUrlString;
+    string viewDataActionName, selectedMenu, loggedInUserFullName, loggedInUserEmailAddress, urlString, redirectUrlString;
     try
     {
         viewDataActionName = ViewData["ActionName"].ToString();
@@ -13,11 +13,13 @@
     {
         sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
         loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
+        loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
     }
     else
     {
         sessionObjectModel = null;
         loggedInUserFullName = "";
+        loggedInUserEmailAddress = "";
     }
 }
 <style>
@@ -181,11 +183,8 @@
                 }*@
         }
     </ul>
-    @if (sessionObjectModel != null)
-    {
-        <br style="clear: both;" />
-        <span style="color: #000000; font-size: 15px; font-weight: bold; padding-left: 5px; vertical-align: top;">@loggedInUserFullName<span style="padding-left: 5px;">@sessionObjectModel.EmailAddress</span></span>
-    }
+    <br style="clear: both;" />
+    <span style="font-size: 15px; font-weight: bold; padding-left: 5px; vertical-align: top;"><span id="loggedInUserFullName" style="color: #000000;">@loggedInUserFullName</span><span id="loggedInUserEmailAddress" style="padding-left: 5px;">@loggedInUserEmailAddress</span></span>
 </div>
 <div id="divErrorMessage" style="color: #ff0000; font-family: Arial; font-size: 14px; font-weight: bold; text-align: left;"></div>
 <script type="text/javascript">
