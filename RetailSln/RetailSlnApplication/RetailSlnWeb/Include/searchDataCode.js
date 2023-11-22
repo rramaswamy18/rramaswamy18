@@ -14,6 +14,8 @@
         success: function (responseData, textStatus, request) {
             $("#loadingModal").modal('hide');
             if (responseData.success) {
+                document.getElementById("PrimaryTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
+                document.getElementById("AlternateTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
                 document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId").innerHTML = responseData.htmlString;
             }
             else {

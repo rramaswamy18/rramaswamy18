@@ -342,20 +342,13 @@ namespace RetailSlnBusinessLayer
                         {
                             DeliveryInfoDataModel = new DeliveryInfoDataModel
                             {
-                                //AlternateTelephoneNum = "2345678901",
+                                AlternateTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
                                 DeliveryAddressModel = new DemogInfoAddressModel
                                 {
-                                    //AddressLine1 = "A1",
-                                    //AddressLine2 = "A2",
                                     BuildingTypeId = BuildingTypeEnum._,
-                                    //CityName = "City",
-                                    //HouseNumber = "123",
-                                    //ZipCode = "12345",
                                     DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,//long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
-                                    //DemogInfoSubDivisionId = 526,
                                 },
-                                //DeliveryInstructions = "Test Delivery Instructions",
-                                //PrimaryTelephoneNum = "1234567890",
+                                PrimaryTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
                             },                           
                             ShoppingCartModel = shoppingCartModel,
                         };
@@ -382,7 +375,9 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev");//DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId).CountryAbbrev;
+                DemogInfoCountryModel demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId);
+                deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = demogInfoCountryModel.CountryAbbrev;
+                deliveryInfoDataModel.DeliveryAddressModel.CountryDesc = demogInfoCountryModel.CountryDesc;
                 deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = DemogInfoCache.DemogInfoSubDivisionModels.First(x => x.DemogInfoSubDivisionId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId).StateAbbrev;
                 deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = 0;
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];

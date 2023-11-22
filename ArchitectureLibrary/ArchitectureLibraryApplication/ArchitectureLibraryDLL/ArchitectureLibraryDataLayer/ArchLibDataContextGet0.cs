@@ -342,6 +342,7 @@ namespace ArchitectureLibraryDataLayer
                         UserName = sqlDataReader["UserName"].ToString(),
                         LoginPassword = sqlDataReader["LoginPassword"].ToString(),
                         ResetPasswordQueryString = sqlDataReader["ResetPasswordQueryString"].ToString(),
+                        UserTypeId = (UserTypeEnum)long.Parse(sqlDataReader["UserTypeId"].ToString()),
                         PersonModel = new PersonModel
                         {
                             FirstName = sqlDataReader["FirstName"].ToString(),

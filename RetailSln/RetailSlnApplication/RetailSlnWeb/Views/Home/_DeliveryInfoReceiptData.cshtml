@@ -10,16 +10,18 @@
             Delivery Address
         </th>
         <td class="text-left" scope="col" style="vertical-align: top;">
-            @Model.DeliveryAddressModel.AddressLine1&nbsp;@Model.DeliveryAddressModel.BuildingTypeId&nbsp;@Model.DeliveryAddressModel.HouseNumber
+            @Model.DeliveryAddressModel.AddressLine1&nbsp;@(Model.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryAddressModel.BuildingTypeId)&nbsp;@Model.DeliveryAddressModel.HouseNumber
             @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
             {
                 <br />
                 @Model.DeliveryAddressModel.AddressLine2
             }
             <br />
-            @Model.DeliveryAddressModel.CityName&nbsp;@Model.DeliveryAddressModel.StateAbbrev&nbsp;@Model.DeliveryAddressModel.ZipCode
+            @Model.DeliveryAddressModel.CityName
             <br />
-            @Model.DeliveryAddressModel.CountryAbbrev
+            @Model.DeliveryAddressModel.StateAbbrev&nbsp;@Model.DeliveryAddressModel.ZipCode
+            <br />
+            @Model.DeliveryAddressModel.CountryDesc&nbsp;-&nbsp;@Model.DeliveryAddressModel.CountryAbbrev
         </td>
     </tr>
     <tr>

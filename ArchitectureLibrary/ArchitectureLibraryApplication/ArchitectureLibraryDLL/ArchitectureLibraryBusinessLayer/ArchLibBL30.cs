@@ -672,6 +672,9 @@ namespace ArchitectureLibraryBusinessLayer
                     registerUserProfModel.ConfirmRegisterEmailAddress = registerUserProfModel.ConfirmRegisterEmailAddress.Trim().ToLower();
                     ArchLibDataContext.OpenSqlConnection();
                     AspNetUserModel aspNetUserModel = ArchLibDataContext.SelectAspNetUserFromUserName(registerUserProfModel.RegisterEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string aspNetUserId, resetPasswordQueryString;
+                    string resetPasswordDateTime = DateTime.Now.AddDays(5).ToString("yyyy-MM-dd HH:mm:ss");
+                    string resetPasswordKey = GenerateRandomKey(8);
                     if (string.IsNullOrWhiteSpace(aspNetUserModel.AspNetUserId))
                     {
                         //int x = 1, y = 0, z = x / y;
@@ -679,17 +682,15 @@ namespace ArchitectureLibraryBusinessLayer
                         //string documentCategoryName = "Certificate", documentCategoryDesc = "Certificate";
                         long certificateDocumentId = 0; //archLibDocumentBL.CreateEmptyDocument(documentCategoryName, documentCategoryDesc, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00005000 :: After Certificate Document", "certificateDocumentId", certificateDocumentId.ToString());
-                        string aspNetUserId = Guid.NewGuid().ToString();
+                        aspNetUserId = Guid.NewGuid().ToString();
                         string privateKey = ArchLibCache.GetPrivateKey(clientId);
                         Random random = new Random();
-                        string resetPasswordDateTime = DateTime.Now.AddDays(5).ToString("yyyy-MM-dd HH:mm:ss");
-                        string resetPasswordKey = GenerateRandomKey(8);
                         registerUserProfModel.ResetPasswordKey = resetPasswordKey;
                         string randomNumber1 = random.Next(0, 999999999).ToString();
                         string randomNumber2 = random.Next(0, 999999999).ToString();
                         string currentDateTime = DateTime.Now.ToString("yyyyMMddHHmmssfffff");
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Before Generating the Password String Query", "Username", registerUserProfModel.RegisterEmailAddress);
-                        string resetPasswordQueryString = aspNetUserId + "_" + currentDateTime + "_" + randomNumber1 + "_" + randomNumber2;
+                        resetPasswordQueryString = aspNetUserId + "_" + currentDateTime + "_" + randomNumber1 + "_" + randomNumber2;
                         registerUserProfModel.ResetPasswordQueryString = resetPasswordQueryString;
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001200 :: After Generating the Password Query String ", "Username", registerUserProfModel.RegisterEmailAddress);
 
@@ -726,7 +727,19 @@ namespace ArchitectureLibraryBusinessLayer
                     {
                         if (aspNetUserModel.UserTypeId == UserTypeEnum.GuestRole)
                         {
-                            //Update and send email
+                            aspNetUserId = aspNetUserModel.AspNetUserId;
+                            Random random = new Random();
+                            string randomNumber1 = random.Next(0, 999999999).ToString();
+                            string randomNumber2 = random.Next(0, 999999999).ToString();
+                            string currentDateTime = DateTime.Now.ToString("yyyyMMddHHmmssfffff");
+                            resetPasswordQueryString = aspNetUserId + "_" + currentDateTime + "_" + randomNumber1 + "_" + randomNumber2;
+                            registerUserProfModel.ResetPasswordQueryString = resetPasswordQueryString;
+                            registerUserProfModel.ResetPasswordKey = resetPasswordKey;
+                            ArchLibDataContext.UpdAspNetUser2(aspNetUserId, resetPasswordDateTime, resetPasswordKey, resetPasswordQueryString, (long)UserTypeEnum.DefaultRole, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            string registerUserProfEmailBodyHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailBody", registerUserProfModel);
+                            string registerUserProfEmailSubjectHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailSubject", registerUserProfModel);
+                            string signatureHtml = ViewToHtmlString(controller, "_SignatureTemplate", registerUserProfModel);
+                            SendEmail(registerUserProfModel.RegisterEmailAddress, registerUserProfEmailSubjectHtml, registerUserProfEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                             registerUserProfModel = new RegisterUserProfModel
                             {
                                 ResponseObjectModel = new ResponseObjectModel
@@ -852,8 +865,9 @@ namespace ArchitectureLibraryBusinessLayer
                     resetPasswordModel.ResetPasswordEmailAddress = resetPasswordModel.ResetPasswordEmailAddress.Trim().ToLower();
                     resetPasswordModel.ConfirmResetPasswordEmailAddress = resetPasswordModel.ConfirmResetPasswordEmailAddress.Trim().ToLower();
                     ArchLibDataContext.OpenSqlConnection();
-                    string aspNetUserId = ArchLibDataContext.SelectAspNetUserFromUserName(resetPasswordModel.ResetPasswordEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId).AspNetUserId;
-                    if (!string.IsNullOrWhiteSpace(aspNetUserId))
+                    AspNetUserModel aspNetUserModel = ArchLibDataContext.SelectAspNetUserFromUserName(resetPasswordModel.ResetPasswordEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string aspNetUserId = aspNetUserModel.AspNetUserId;
+                    if (!string.IsNullOrWhiteSpace(aspNetUserId) && aspNetUserModel.UserTypeId != UserTypeEnum.GuestRole)
                     {
                         //int x = 1, y = 0, z = x / y;
                         string privateKey = ArchLibCache.GetPrivateKey(clientId);

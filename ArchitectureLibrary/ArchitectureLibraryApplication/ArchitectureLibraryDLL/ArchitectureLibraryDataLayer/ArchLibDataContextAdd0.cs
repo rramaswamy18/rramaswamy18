@@ -105,6 +105,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters["@CityName"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.CityName) ? (object)DBNull.Value : demogInfoAddressModel.CityName;
                 sqlCommand.Parameters["@Comments"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.Comments) ? (object)DBNull.Value : demogInfoAddressModel.Comments;
                 sqlCommand.Parameters["@CountryAbbrev"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.CountryAbbrev) ? (object)DBNull.Value : demogInfoAddressModel.CountryAbbrev;
+                sqlCommand.Parameters["@CountryDesc"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.CountryDesc) ? (object)DBNull.Value : demogInfoAddressModel.CountryDesc;
                 sqlCommand.Parameters["@CountyName"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.CountyName) ? (object)DBNull.Value : demogInfoAddressModel.CountyName;
                 sqlCommand.Parameters["@DemogInfoCityId"].Value = demogInfoAddressModel.DemogInfoCityId == null ? (object)DBNull.Value : (long)demogInfoAddressModel.DemogInfoCityId;
                 sqlCommand.Parameters["@DemogInfoCountryId"].Value = demogInfoAddressModel.DemogInfoCountryId == null ? (object)DBNull.Value : (long)demogInfoAddressModel.DemogInfoCountryId;

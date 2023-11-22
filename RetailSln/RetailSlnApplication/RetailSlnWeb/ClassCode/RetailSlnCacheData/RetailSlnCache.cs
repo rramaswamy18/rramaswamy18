@@ -109,7 +109,7 @@ namespace RetailSlnCacheData
                 (
                     new SelectListItem
                     {
-                        Text = demogInfoCountryModel.CountryDesc,
+                        Text = demogInfoCountryModel.CountryDesc + " " + demogInfoCountryModel.CountryAbbrev,
                         Value = demogInfoCountryModel.DemogInfoCountryId.ToString(),
                     }
                 );

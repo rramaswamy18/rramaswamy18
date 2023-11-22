@@ -1,6 +1,10 @@
 --1_PopulateItem_DivineBija.com.sql
 use [DivineBija.com]
 /*
+SELECT Category, COUNT(*) FROM dbo.DivineBija_Products GROUP BY Category
+UNION
+SELECT Category, COUNT(*) FROM dbo.DivineBija_Books GROUP BY Category
+
 SELECT DISTINCT [Category] FROM DivineBija_Products
     SELECT DivineBija_Products.ItemId, DivineBija_Products.Description, DivineBija_Products_3.Description
       FROM DivineBija_Products
@@ -108,7 +112,7 @@ ORDER BY Id
 
 --Type --> Books
 INSERT RetailSlnSch.Item(ItemId, ClientId, ItemDesc, ItemRate, ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ProductItemId, UploadImageFileName)
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, MRP AS ItemRate, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 200 AS ItemTypeId, ItemId AS ProductItemId, Image1 AS UploadImageFileName
+SELECT Id + 220, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, RateUSD AS ItemRate, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 200 AS ItemTypeId, ItemId AS ProductItemId, Image1 AS UploadImageFileName
 FROM dbo.DivineBija_Books --WHERE [Item Type] = 'ITEM'
 --GROUP BY RTRIM(LTRIM(ProductDesc)), MRP
 --ORDER BY RTRIM(LTRIM(ProductDesc)), MRP
@@ -192,6 +196,7 @@ ORDER BY Id
 --Item Bundle
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 7 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+DECLARE @ClientId BIGINT = 98
 SELECT 98 AS ClientId, 7 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE [Item Type] = 'Bundle'
 ORDER BY Id

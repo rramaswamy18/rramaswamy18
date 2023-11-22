@@ -35,6 +35,8 @@ namespace ArchitectureLibraryModels
 
         public string CountryAbbrev { set; get; }
 
+        public string CountryDesc { set; get; }
+
         public string CountyName { set; get; }
 
         public long? DemogInfoCityId { set; get; }

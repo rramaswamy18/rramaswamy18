@@ -26,6 +26,17 @@ namespace ArchitectureLibraryDataLayer
             sqlCommand.Parameters["@UpdUserName"].Value = aspNetUserModel.UpdUserName ?? "";// : aspNetUserModel.UpdUserName;
             sqlCommand.ExecuteNonQuery();
         }
+        public static void UpdAspNetUser2(string aspNetUserId, string resetPasswordExpiryDateTime, string resetPasswordKey, string resetPasswordQueryString, long userTypeId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpd2(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@ResetPasswordExpiryDateTime"].Value = resetPasswordExpiryDateTime;
+            sqlCommand.Parameters["@ResetPasswordKey"].Value = resetPasswordKey;
+            sqlCommand.Parameters["@ResetPasswordQueryString"].Value = resetPasswordQueryString;
+            sqlCommand.Parameters["@UserTypeId"].Value = userTypeId;
+            sqlCommand.Parameters["@UpdUserId"].Value = aspNetUserId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
         public static void UpdPerson(PersonModel personModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
         {
             SqlCommand sqlCommand = BuildSqlCommandPersonUpd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);

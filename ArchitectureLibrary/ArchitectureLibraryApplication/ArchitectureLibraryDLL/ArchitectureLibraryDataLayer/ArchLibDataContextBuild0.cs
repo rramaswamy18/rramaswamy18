@@ -4,6 +4,7 @@ using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -178,6 +179,29 @@ namespace ArchitectureLibraryDataLayer
             sqlCommand.Parameters.AddWithValue("@UpdUserName", System.DBNull.Value);
             return sqlCommand;
         }
+        private static SqlCommand BuildSqlCommandAspNetUserUpd2(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "";
+            sqlStmt += "        UPDATE ArchLib.AspNetUser" + Environment.NewLine;
+            sqlStmt += "           SET " + Environment.NewLine;
+            sqlStmt += "               ResetPasswordExpiryDateTime = @ResetPasswordExpiryDateTime" + Environment.NewLine;
+            sqlStmt += "              ,ResetPasswordKey = @ResetPasswordKey" + Environment.NewLine;
+            sqlStmt += "              ,ResetPasswordQueryString = @ResetPasswordQueryString" + Environment.NewLine;
+            sqlStmt += "              ,UserTypeId = @UserTypeId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId = @UpdUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserName = SUSER_NAME()" + Environment.NewLine;
+            sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
+            sqlStmt += "         WHERE " + Environment.NewLine;
+            sqlStmt += "               AspNetUserId = @AspNetUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@ResetPasswordExpiryDateTime", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ResetPasswordKey", SqlDbType.NVarChar, 18);
+            sqlCommand.Parameters.Add("@ResetPasswordQueryString", SqlDbType.NVarChar, 1024);
+            sqlCommand.Parameters.Add("@UserTypeId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@UpdUserId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters.Add("@AspNetUserId", SqlDbType.NVarChar, 128);
+            return sqlCommand;
+        }
         private static SqlCommand BuildSqlCommandPersonUpd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string sqlStmt = "";
@@ -317,6 +341,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlStmt += "              ,CityName" + Environment.NewLine;
                 sqlStmt += "              ,Comments" + Environment.NewLine;
                 sqlStmt += "              ,CountryAbbrev" + Environment.NewLine;
+                sqlStmt += "              ,CountryDesc" + Environment.NewLine;
                 sqlStmt += "              ,CountyName" + Environment.NewLine;
                 sqlStmt += "              ,DemogInfoCityId" + Environment.NewLine;
                 sqlStmt += "              ,DemogInfoCountryId" + Environment.NewLine;
@@ -343,6 +368,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlStmt += "              ,@CityName" + Environment.NewLine;
                 sqlStmt += "              ,@Comments" + Environment.NewLine;
                 sqlStmt += "              ,@CountryAbbrev" + Environment.NewLine;
+                sqlStmt += "              ,@CountryDesc" + Environment.NewLine;
                 sqlStmt += "              ,@CountyName" + Environment.NewLine;
                 sqlStmt += "              ,@DemogInfoCityId" + Environment.NewLine;
                 sqlStmt += "              ,@DemogInfoCountryId" + Environment.NewLine;
@@ -367,6 +393,7 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters.AddWithValue("@CityName", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@Comments", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@CountryAbbrev", DBNull.Value);
+                sqlCommand.Parameters.AddWithValue("@CountryDesc", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@CountyName", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@DemogInfoCityId", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@DemogInfoCountryId", DBNull.Value);

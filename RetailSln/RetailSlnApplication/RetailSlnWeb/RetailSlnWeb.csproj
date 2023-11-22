@@ -1233,6 +1233,10 @@
     <Content Include="Views\Home\_ShoppingCartData.cshtml" />
     <Content Include="Views\Home\_ShoppingCartLink.cshtml" />
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
+    <Content Include="Views\Home\ItemImageListView.cshtml" />
+    <Content Include="Views\Home\_ItemImageListView.cshtml" />
+    <Content Include="Views\Home\_ItemSpecList.cshtml" />
+    <Content Include="Views\Home\ItemSpecList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
