@@ -4,6 +4,7 @@ using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,22 @@ namespace ArchitectureLibraryDataLayer
 {
     public static partial class ArchLibDataContext
     {
+        public static void UpdAspNetUserRole2(string aspNetUserId, string aspNetRoleId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            string sqlStmt = "";
+            sqlStmt += "        UPDATE ArchLib.AspNetUserRole" + Environment.NewLine;
+            sqlStmt += "           SET AspNetRoleId = @AspNetRoleId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId = @AspNetUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserName = SUSER_NAME()" + Environment.NewLine;
+            sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
+            sqlStmt += "         WHERE AspNetUserId = @AspNetUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@AspNetRoleId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters.Add("@AspNetUserId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters["@AspNetRoleId"].Value = aspNetRoleId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = aspNetUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
         public static void UpdAspNetUser(AspNetUserModel aspNetUserModel, string aspNetUserId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
         {
             SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);

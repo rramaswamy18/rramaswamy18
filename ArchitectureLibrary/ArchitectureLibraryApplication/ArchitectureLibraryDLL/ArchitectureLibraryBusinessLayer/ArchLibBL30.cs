@@ -565,7 +565,7 @@ namespace ArchitectureLibraryBusinessLayer
                     QueryString = queryString,
                     RegisterUserProfModel = new RegisterUserProfModel
                     {
-                        RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
+                        RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
                         ResponseObjectModel = new ResponseObjectModel
                         {
                             ResponseTypeId = ResponseTypeEnum.Success,
@@ -705,6 +705,7 @@ namespace ArchitectureLibraryBusinessLayer
                         SendEmail(registerUserProfModel.RegisterEmailAddress, registerUserProfEmailSubjectHtml, registerUserProfEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                         registerUserProfModel = new RegisterUserProfModel
                         {
+                            RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
                             ResponseObjectModel = new ResponseObjectModel
                             {
                                 ColumnCount = 1,
@@ -736,12 +737,14 @@ namespace ArchitectureLibraryBusinessLayer
                             registerUserProfModel.ResetPasswordQueryString = resetPasswordQueryString;
                             registerUserProfModel.ResetPasswordKey = resetPasswordKey;
                             ArchLibDataContext.UpdAspNetUser2(aspNetUserId, resetPasswordDateTime, resetPasswordKey, resetPasswordQueryString, (long)UserTypeEnum.DefaultRole, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            ArchLibDataContext.UpdAspNetUserRole2(aspNetUserId, ArchLibCache.AspNetRoleModels.First(x => x.UserTypeId == (long)UserTypeEnum.DefaultRole).AspNetRoleId, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                             string registerUserProfEmailBodyHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailBody", registerUserProfModel);
                             string registerUserProfEmailSubjectHtml = ViewToHtmlString(controller, "_RegisterUserProfEmailSubject", registerUserProfModel);
                             string signatureHtml = ViewToHtmlString(controller, "_SignatureTemplate", registerUserProfModel);
                             SendEmail(registerUserProfModel.RegisterEmailAddress, registerUserProfEmailSubjectHtml, registerUserProfEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                             registerUserProfModel = new RegisterUserProfModel
                             {
+                                RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
                                 ResponseObjectModel = new ResponseObjectModel
                                 {
                                     ColumnCount = 1,

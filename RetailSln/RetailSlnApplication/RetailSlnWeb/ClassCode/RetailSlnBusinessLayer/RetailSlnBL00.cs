@@ -235,7 +235,10 @@ namespace RetailSlnBusinessLayer
                             ResponseTypeId = ResponseTypeEnum.Success,
                         },
                     },
-                    RegisterUserProfModel = new RegisterUserProfModel(),
+                    RegisterUserProfModel = new RegisterUserProfModel
+                    {
+                        RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
+                    },
                     ResetPasswordModel = new ResetPasswordModel(),
                     ShoppingCartModel = CheckoutValidate(httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
                 };
