@@ -1242,6 +1242,8 @@
     <Content Include="Views\Home\ShippingPolicy.cshtml" />
     <Content Include="Views\Home\_ShippingPolicy.cshtml" />
     <Content Include="Views\Home\_TermsofService.cshtml" />
+    <Content Include="Views\Home\_RefundPolicy.cshtml" />
+    <Content Include="Views\Home\RefundPolicy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

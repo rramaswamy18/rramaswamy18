@@ -498,6 +498,31 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [Route("RefundPolicy")]
+        public ActionResult RefundPolicy()
+        {
+            ViewData["ActionName"] = "RefundPolicy";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                RefundPolicyModel refundPolicyModel = archLibBL.RefundPolicy(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("RefundPolicy", refundPolicyModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+        [AllowAnonymous]
+        [HttpGet]
         [Route("RegisterLoginContactResetPassword")]
         public ActionResult RegisterLoginContactResetPassword(string id)
         {

@@ -437,6 +437,11 @@ namespace ArchitectureLibraryBusinessLayer
         {
             return new ProductsAndServicesModel();
         }
+        //ReturnPolicy GET
+        public RefundPolicyModel RefundPolicy(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            return new RefundPolicyModel();
+        }
         //RegisterLoginContactResetPassword GET
         public RegisterLoginContactResetPasswordModel RegisterLoginContactResetPassword(string queryString, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

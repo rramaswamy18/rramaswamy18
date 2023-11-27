@@ -294,6 +294,7 @@
     <Compile Include="ArchitectureLibraryModels\PrivacyPolicyModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ProductsAndServicesModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ProductsModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\RefundPolicyModel.cs" />
     <Compile Include="ArchitectureLibraryModels\RegisterLoginContactResetPasswordModel.cs" />
     <Compile Include="ArchitectureLibraryModels\RegisterUserLoginUserModel.cs" />
     <Compile Include="ArchitectureLibraryModels\RegisterUserProfModel.cs" />
