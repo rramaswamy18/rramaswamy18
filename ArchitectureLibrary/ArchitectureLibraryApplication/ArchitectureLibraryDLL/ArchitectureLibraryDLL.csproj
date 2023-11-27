@@ -304,6 +304,8 @@
     <Compile Include="ArchitectureLibraryModels\SearchDataModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ServicesModel.cs" />
     <Compile Include="ArchitectureLibraryModels\SessionObjectModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\ShippingPolicyModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\TermsofServiceModel.cs" />
     <Compile Include="ArchitectureLibraryModels\TestimonialsModel.cs" />
     <Compile Include="ArchitectureLibraryModels\UpdatePasswordModel.cs" />
     <Compile Include="ArchitectureLibraryModels\UserProfileMetaDataModel.cs" />

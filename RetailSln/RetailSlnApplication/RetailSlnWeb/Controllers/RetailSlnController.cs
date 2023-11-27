@@ -1047,7 +1047,7 @@ namespace RetailSlnWeb.Controllers
                 shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
                 if (shoppingCartModel == null)
                 {
-                    actionResult = Json(new { shoppingCartItemsCount = "Empty", shoppingCartTotalAmount = "Cart" }, JsonRequestBehavior.AllowGet);
+                    actionResult = Json(new { shoppingCartItemsCount = "", shoppingCartTotalAmount = "" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {

@@ -26,7 +26,7 @@ function addToCart_onclick(index, categoryId) {
     }
     if (jsonDatas.length === 0) {
         $('#loadingModal').modal('hide');
-        document.getElementById("divErrorMessage").innerHTML = "Please enter order quantity for a min of 1 of item";
+        document.getElementById("divErrorMessage").innerHTML = "Please enter order quantity for a min of 1 item";
         alert(document.getElementById("divErrorMessage").innerHTML);
     }
     else {

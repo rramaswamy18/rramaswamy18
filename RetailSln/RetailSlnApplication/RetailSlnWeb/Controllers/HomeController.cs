@@ -801,6 +801,58 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [Route("ShippingPolicy")]
+        public ActionResult ShippingPolicy()
+        {
+            ViewData["ActionName"] = "ShippingPolicy";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                ShippingPolicyModel shippingPolicyModel = archLibBL.ShippingPolicy(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("ShippingPolicy", shippingPolicyModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("TermsofService")]
+        public ActionResult TermsofService()
+        {
+            ViewData["ActionName"] = "TermsofService";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                TermsofServiceModel termsofServiceModel = archLibBL.TermsofService(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("TermsofService", termsofServiceModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
         [Route("SEOPage1")]
         public ActionResult SEOPage1()
         {

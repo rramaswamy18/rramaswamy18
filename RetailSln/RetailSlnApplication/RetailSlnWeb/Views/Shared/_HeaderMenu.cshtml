@@ -43,7 +43,7 @@
             display: inline;
             float: left;
             font-family: sans-serif;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 900;
             text-decoration: underline;
             text-decoration-color: #000000;
@@ -65,7 +65,7 @@
                 text-underline-offset: 5px;
             }
 </style>
-<div class="menu" style="margin: 0 auto; text-align: center; width: 100%;">
+<div class="menu" style="margin: 0 auto; text-align: center;">
     <ul class="menuul">
         @{
             var menuLayoutModels = ArchitectureLibraryMenuCacheData.ArchLibMenuCache.ParentMenuLayoutModels["HEADERMENU"];
@@ -144,49 +144,53 @@
                         break;
                 }
             }
+    <li style="font-size: 15px; font-weight: bold;">
+        <span style="font-size: 15px; font-weight: bold; padding-left: 5px; vertical-align: top;"><span id="loggedInUserFullName" style="color: #000000;">@loggedInUserFullName</span><span id="loggedInUserEmailAddress" style="padding-left: 5px;">@loggedInUserEmailAddress</span></span>
+        <br />
+        <span id="divErrorMessage" style="color: #ff0000; font-family: Arial; font-size: 14px; font-weight: bold; text-align: left;"></span>
+    </li>
+            
             @*<li class="menuli">
-                    <div class="dropdown">
-                        <a class=" dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px; font-size: 13px; width: 45px;">ADMIN&#9660;</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border: none; background-color: #ffffff;">
-                            <a class="dropdown-item" href="#" style="border: none; font-size: 14px; text-align: left; width: 100%;"><span style="color: #000000; padding-right: 12px;">&#8226;</span>User Profile</a>
-                            <a class="dropdown-item" href="#" style="border: none; font-size: 14px; text-align: left; width: 100%;"><span style="color: #000000; padding-right: 12px;">&#8226;</span>Class Enroll</a>
-                        </div>
+                <div class="dropdown">
+                    <a class=" dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px; font-size: 13px; width: 45px;">ADMIN&#9660;</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border: none; background-color: #ffffff;">
+                        <a class="dropdown-item" href="#" style="border: none; font-size: 14px; text-align: left; width: 100%;"><span style="color: #000000; padding-right: 12px;">&#8226;</span>User Profile</a>
+                        <a class="dropdown-item" href="#" style="border: none; font-size: 14px; text-align: left; width: 100%;"><span style="color: #000000; padding-right: 12px;">&#8226;</span>Class Enroll</a>
                     </div>
-                </li>*@
+                </div>
+            </li>*@
             @*if (sessionObjectModel == null)
-                {
-                    <li class="menuli"><a href="@Url.Action("RegisterUserLoginUser", "Home")" style="width: 45px;">REGISTER / LOGIN</a></li>
-                }
-                else
-                {
-                    <li class="menuli"><a href="@Url.Action("Logout", "Home")" style="width: 45px;">LOGOUT</a></li>
-                }*@
+            {
+                <li class="menuli"><a href="@Url.Action("RegisterUserLoginUser", "Home")" style="width: 45px;">REGISTER / LOGIN</a></li>
+            }
+            else
+            {
+                <li class="menuli"><a href="@Url.Action("Logout", "Home")" style="width: 45px;">LOGOUT</a></li>
+            }*@
             @*if (sessionObjectModel == null)
+            {
+            }
+            else
+            {
+                if (sessionObjectModel.AspNetRoleName == "Admin")
                 {
-                }
-                else
-                {
-                    if (sessionObjectModel.AspNetRoleName == "Admin")
-                    {
-                        <li class="menuli">
-                            <div class="dropdown">
-                                <a class=" dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px; font-size: 13px; width: @ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].HrefWidth;">@ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].LinkText&#9660;</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border: none; background-color: #ffffff;">
-                                    @for (int j = 0; j < ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].ChildMenuListModels.Count; j++)
-                                    {
-                                        <a class="dropdown-item" href="#" style="border: none; font-size: 14px; text-align: left; width: 100%;">&#8226;&nbsp;@ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].ChildMenuListModels[j].LinkText</a>
-                                    }
-                                </div>
+                    <li class="menuli">
+                        <div class="dropdown">
+                            <a class=" dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px; font-size: 13px; width: @ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].HrefWidth;">@ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].LinkText&#9660;</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border: none; background-color: #ffffff;">
+                                @for (int j = 0; j < ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].ChildMenuListModels.Count; j++)
+                                {
+                                    <a class="dropdown-item" href="#" style="border: none; font-size: 14px; text-align: left; width: 100%;">&#8226;&nbsp;@ArchitectureLibraryMenuCacheData.ArchLibMenuCache.MenuListModels_1[i].ChildMenuListModels[j].LinkText</a>
+                                }
                             </div>
-                        </li>
-                    }
-                }*@
+                        </div>
+                    </li>
+                }
+            }*@
         }
     </ul>
-    <br style="clear: both;" />
-    <span style="font-size: 15px; font-weight: bold; padding-left: 5px; vertical-align: top;"><span id="loggedInUserFullName" style="color: #000000;">@loggedInUserFullName</span><span id="loggedInUserEmailAddress" style="padding-left: 5px;">@loggedInUserEmailAddress</span></span>
 </div>
-<div id="divErrorMessage" style="color: #ff0000; font-family: Arial; font-size: 14px; font-weight: bold; text-align: left;"></div>
+<br style="clear: both;" />
 <script type="text/javascript">
     jQuery(document).ready(function () {
         jQuery(".menu").meanmenu();

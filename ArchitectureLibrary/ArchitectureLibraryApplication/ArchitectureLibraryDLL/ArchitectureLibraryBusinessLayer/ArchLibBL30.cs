@@ -1032,6 +1032,16 @@ namespace ArchitectureLibraryBusinessLayer
         {
             return new ServicesModel();
         }
+        //ShippingPolicy GET
+        public ShippingPolicyModel ShippingPolicy(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            return new ShippingPolicyModel();
+        }
+        //TermsofService GET
+        public TermsofServiceModel TermsofService(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            return new TermsofServiceModel();
+        }
         //Testimonials GET
         public TestimonialsModel Testimonials(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

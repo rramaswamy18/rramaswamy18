@@ -1,36 +1,36 @@
 ﻿@model RetailSlnModels.ShoppingCartModel
 @if (Model != null && Model.ShoppingCartItems != null)
 {
-    <table style="padding: 5px;">
-        <tr>
-            @if (Model.Checkout && 1 == 0)
+    <div style="display: table; width: 100%;">
+        <div style="display: table-row;">
+            @if (Model.Checkout)
             {
-                <td class="col-md-4" style="padding: 5px; vertical-align: top;">
+                <div style="display: table-cell; float: left; vertical-align: top;">
                     <a href="javascript: void(0);" onclick="javascript: return document.getElementById('tableOrderItemListData').scrollIntoView();" style="text-decoration: underline;">
                         <h3 style="font-size: 24px; font-weight: bold;">
                             Back to top
                         </h3>
                     </a>
-                </td>
+                </div>
             }
-            <td style="padding: 5px; text-align: center; vertical-align: top; width: 60%;">
+            <div style="display: table-cell; text-align: center; vertical-align: top;">
                 <h3 style="color: #ff9900; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; ">
                     Shopping&nbsp;&nbsp;Cart
                 </h3>
-            </td>
-            @if (Model.Checkout && 1 == 0)
+            </div>
+            @if (Model.Checkout)
             {
-                <td class="col-md-4" style="padding: 5px; vertical-align: top; white-space: nowrap;">
+                <div style="display: table-cell; float: right; vertical-align: top;">
                     <h3>
+                        <i class="fa" style="font-size: 24px">&#xf07a;</i>
+                        &nbsp;
                         <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
-                            <i class="fa" style="font-size: 24px">&#xf07a;</i>
-                            &nbsp;
                             <span style="color: #000000; font-size: 24px; text-decoration: underline;">Checkout</span>
                         </a>
                     </h3>
-                </td>
+                </div>
             }
-        </tr>
-    </table>
+        </div>
+    </div>
 }
 @Html.Partial("_ShoppingCartData", Model)

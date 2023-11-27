@@ -1238,6 +1238,10 @@
     <Content Include="Views\Home\_ItemImageListView.cshtml" />
     <Content Include="Views\Home\_ItemSpecList.cshtml" />
     <Content Include="Views\Home\ItemSpecList.cshtml" />
+    <Content Include="Views\Home\TermsofService.cshtml" />
+    <Content Include="Views\Home\ShippingPolicy.cshtml" />
+    <Content Include="Views\Home\_ShippingPolicy.cshtml" />
+    <Content Include="Views\Home\_TermsofService.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
