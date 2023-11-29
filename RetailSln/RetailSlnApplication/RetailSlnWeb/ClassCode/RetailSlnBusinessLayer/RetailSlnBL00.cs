@@ -1014,6 +1014,7 @@ namespace RetailSlnBusinessLayer
                     OrderDetailTypeId = OrderDetailTypeEnum.Discount,
                 }
             );
+            var salesTaxListModels = ArchLibCache.SalesTaxListModels.FindAll(x => x.SrceDemogInfoCountryId == RetailSlnCache.DefaultDeliveryDemogInfoCountryId && x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId));
             var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId));
             long orderQty = (long)(totalWeightValue / 1000) + totalWeightValue % 1000 == 0 ? 0 : 1;
             float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0;
@@ -1027,20 +1028,23 @@ namespace RetailSlnBusinessLayer
             }
             float shippingAndHandlingChargesAmount = shippingAndHandlingChargesByWeight * orderQty;
             float fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
-            shoppingCartSummaryItems.Add
-            (
-                new ShoppingCartItemModel
-                {
-                    ItemDesc = null,
-                    ItemId = null,
-                    ItemRate = totalOrderAmount,
-                    ItemShortDesc = deliveryChargeModel.GSTCaption + " (" + deliveryChargeModel.GSTPercent + "%)",
-                    OrderAmount = totalOrderAmount * deliveryChargeModel.GSTPercent / 100f,
-                    OrderComments = null,
-                    OrderQty = 1,
-                    OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
-                }
-            );
+            foreach (var salesTaxListModel in salesTaxListModels)
+            {
+                shoppingCartSummaryItems.Add
+                (
+                    new ShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = totalOrderAmount,
+                        ItemShortDesc = salesTaxListModel.SalesTaxCaptionId + " (" + salesTaxListModel.SalesTaxRate + "%)",
+                        OrderAmount = totalOrderAmount * salesTaxListModel.SalesTaxRate / 100f,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                    }
+                );
+            }
             shoppingCartSummaryItems.Add
             (
                 new ShoppingCartItemModel

@@ -303,6 +303,7 @@
     <Compile Include="ArchitectureLibraryModels\ResetPasswordModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ResponseObjectModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ReturnPolicyModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\SalesTaxListModel.cs" />
     <Compile Include="ArchitectureLibraryModels\SearchDataModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ServicesModel.cs" />
     <Compile Include="ArchitectureLibraryModels\SessionObjectModel.cs" />

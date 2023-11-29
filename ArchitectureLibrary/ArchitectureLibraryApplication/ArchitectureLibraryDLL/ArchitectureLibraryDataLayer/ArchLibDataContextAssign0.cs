@@ -167,5 +167,29 @@ namespace ArchitectureLibraryDataLayer
             };
             return userProfileMetaDataModeu;
         }
+        private static SalesTaxListModel AssignSalesTaxList(SqlDataReader sqlDataReader, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            SalesTaxListModel salesTaxListModeu = new SalesTaxListModel
+            {
+                SalesTaxListId = long.Parse(sqlDataReader["SalesTaxListId"].ToString()),
+                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                BegEffDate = DateTime.Parse(sqlDataReader["BegEffDate"].ToString()),
+                DestDemogInfoCountryId = sqlDataReader["DestDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCountryId"].ToString()),
+                DestDemogInfoSubDivisionId = sqlDataReader["DestDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoSubDivisionId"].ToString()),
+                DestDemogInfoCountyId = sqlDataReader["DestDemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCountyId"].ToString()),
+                DestDemogInfoCityId = sqlDataReader["DestDemogInfoCityId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCityId"].ToString()),
+                DestDemogInfoZipId = sqlDataReader["DestDemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipId"].ToString()),
+                EndEffDate = DateTime.Parse(sqlDataReader["EndEffDate"].ToString()),
+                SalesTaxCaptionId = sqlDataReader["SalesTaxCaptionId"].ToString(),
+                SrceDemogInfoCountryId = sqlDataReader["SrceDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountryId"].ToString()),
+                SrceDemogInfoSubDivisionId = sqlDataReader["SrceDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoSubDivisionId"].ToString()),
+                SrceDemogInfoCountyId = sqlDataReader["SrceDemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountyId"].ToString()),
+                SrceDemogInfoCityId = sqlDataReader["SrceDemogInfoCityId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCityId"].ToString()),
+                SrceDemogInfoZipId = sqlDataReader["SrceDemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoZipId"].ToString()),
+                SalesTaxRate = float.Parse(sqlDataReader["SalesTaxRate"].ToString()),
+                ShowOnInvoice = bool.Parse(sqlDataReader["ShowOnInvoice"].ToString()),
+            };
+            return salesTaxListModeu;
+        }
     }
 }

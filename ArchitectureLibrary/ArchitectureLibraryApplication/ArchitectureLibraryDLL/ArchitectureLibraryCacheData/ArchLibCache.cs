@@ -24,6 +24,7 @@ namespace ArchitectureLibraryCacheData
         public static List<AspNetRoleModel> AspNetRoleModels { set; get; }
         public static List<AspNetRoleParentMenu> AspNetRoleParentMenus { get; set; }
         public static List<UserProfileMetaDataModel> UserProfileMetaDatas { get; set; }
+        public static List<SalesTaxListModel> SalesTaxListModels { get; set; }
         public static string GetApplicationDefault(long clientId, string kvpKey, string kvpSubKey)
         {
             return ClientModels.FirstOrDefault(x => x.ClientId == clientId).ApplicationDefaultModels.FirstOrDefault(x => x.ClientId == clientId && x.KVPKey == kvpKey && x.KVPSubKey == kvpSubKey).KVPValue;
@@ -40,12 +41,13 @@ namespace ArchitectureLibraryCacheData
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             ArchLibCacheBL archLibCacheBL = new ArchLibCacheBL();
-            archLibCacheBL.Initialize(out List<ApplicationDefaultModel> applicationDefaultModels, out List<ClientModel> clientModels, out List<AspNetRoleModel> aspNetRoleModels, out List<AspNetRoleParentMenu> aspNetRoleParentMenus, out List<UserProfileMetaDataModel> userProfileMetaDataModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            archLibCacheBL.Initialize(out List<ApplicationDefaultModel> applicationDefaultModels, out List<ClientModel> clientModels, out List<AspNetRoleModel> aspNetRoleModels, out List<AspNetRoleParentMenu> aspNetRoleParentMenus, out List<UserProfileMetaDataModel> userProfileMetaDataModels, out List<SalesTaxListModel> salesTaxListModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             ApplicationDefaultModels = applicationDefaultModels;
             ClientModels = clientModels;
             AspNetRoleParentMenus = aspNetRoleParentMenus;
             AspNetRoleModels = aspNetRoleModels;
             UserProfileMetaDatas = userProfileMetaDataModels;
+            SalesTaxListModels = salesTaxListModels;
             BuildCacheModels(applicationDefaultModels, clientModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             ClientId = clientId;
             ClientName = Utilities.GetApplicationValue("ClientName");
