@@ -13,32 +13,31 @@
         line-height: 24px;
     }
 </style>
-<div style="padding-left: 9%; padding-right: 27%; text-align: left;">
+<br style="clear: both;" />
+<div class="center" style="padding-left: 12%; padding-right: 12%; text-align: left;">
     <h1 style="color: #000000; font-weight: bold;">Refund Policy</h1>
     <div class="textclass">
         We have a 7-day return policy, which means you have 7 days after receiving your item to request a return and refund.
         <br /><br />
         To be eligible for a return, your item must be in the same condition that you received it, unworn or unused, with tags, and in its original packaging. You’ll also need the receipt or proof of purchase.
         <br /><br />
-        To start a return, you can contact us at <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Contact Us Here</a>.
-        You can also email us at <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")</a>
+        To start a return, you can reach us at
         <br />
-        Please note that returns will need to be sent to the following address:
+        <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Click here to Contact Us</a>
         <br />
-        @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")
-        Divine Bija India Private Limited,
+        <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Click here to Email Us</a>
+        <br /><br />
+        <span style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold;">Please note that returns will need to be sent to the following address:</span>
         <br />
-        @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
-        No.178/4 Selvambigai Nagar,
+        <span style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span>
         <br />
-        @ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")
-        Attipattu,
+        <span style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")</span>
         <br />
-        @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "") - @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
-        Chennai - 600 120,
+        <span style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")</span>
         <br />
-        @ArchLibCache.GetApplicationDefault(clientId, "AddressStateName", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", "")
-        Tamil Nadu, India
+        <span style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "") - @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")</span>
+        <br />
+        <span style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressStateName", "") - @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", "")</span>
         <br /><br />
         If your return is accepted, we’ll send you a return shipping label, as well as instructions on how and where to send your package. Items sent back to us without first requesting a return will not be accepted.
         <br /><br />

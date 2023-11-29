@@ -1170,7 +1170,7 @@
     <Content Include="Views\Home\_Payment.cshtml" />
     <Content Include="Views\Home\_PaymentData.cshtml" />
     <Content Include="Views\Home\_PicGallery.cshtml" />
-    <Content Include="Views\Home\_PrivacyPolicy.cshtml" />
+    <Content Include="Views\Home\_PrivacyPolicy1.cshtml" />
     <Content Include="Views\Home\_Products.cshtml" />
     <Content Include="Views\Home\_ProductsAndServices.cshtml" />
     <Content Include="Views\Home\_RegisterLoginContactResetPassword.cshtml" />
@@ -1244,6 +1244,10 @@
     <Content Include="Views\Home\_TermsofService.cshtml" />
     <Content Include="Views\Home\_RefundPolicy.cshtml" />
     <Content Include="Views\Home\RefundPolicy.cshtml" />
+    <Content Include="Views\Home\_PrivacyPolicy.cshtml" />
+    <Content Include="Views\Home\_CookiePolicy.cshtml" />
+    <Content Include="Views\Home\CookiePolicy.cshtml" />
+    <Content Include="Views\Home\OrdersReturns.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

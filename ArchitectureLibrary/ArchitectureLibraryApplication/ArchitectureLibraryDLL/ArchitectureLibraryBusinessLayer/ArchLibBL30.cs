@@ -29,6 +29,11 @@ namespace ArchitectureLibraryBusinessLayer
         {
             return new AboutUsModel { Temp = "Ummachi Kapathu" };
         }
+        //PrivacyPolicy GET
+        public CookiePolicyModel CookiePolicy(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            return new CookiePolicyModel();
+        }
         //ContactUs GET
         public ContactUsModel ContactUs(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

@@ -283,6 +283,7 @@
     <Compile Include="ArchitectureLibraryModels\CodeDataModel.cs" />
     <Compile Include="ArchitectureLibraryModels\CodeTypeModel.cs" />
     <Compile Include="ArchitectureLibraryModels\ContactUsModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\CookiePolicyModel.cs" />
     <Compile Include="ArchitectureLibraryModels\DemogInfoAddressModel.cs" />
     <Compile Include="ArchitectureLibraryModels\DemogInfoCountryModel.cs" />
     <Compile Include="ArchitectureLibraryModels\DemogInfoSubDivisionModel.cs" />

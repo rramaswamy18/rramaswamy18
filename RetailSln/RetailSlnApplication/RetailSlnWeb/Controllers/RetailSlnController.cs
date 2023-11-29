@@ -772,6 +772,14 @@ namespace RetailSlnWeb.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("OrdersReturns")]
+        public ActionResult OrdersReturns()
+        {
+            return View();
+        }
+
         [AjaxAuthorize]
         [Authorize]
         [HttpPost]
