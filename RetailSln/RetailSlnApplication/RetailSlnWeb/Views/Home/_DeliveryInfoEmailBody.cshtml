@@ -45,7 +45,7 @@
             Delivery Instructions
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
-            @Model.DeliveryInstructions
+            @Html.Raw(Model.DeliveryInstructions?.Replace("\n", "<br />"))
         </td>
     </tr>
 </table>

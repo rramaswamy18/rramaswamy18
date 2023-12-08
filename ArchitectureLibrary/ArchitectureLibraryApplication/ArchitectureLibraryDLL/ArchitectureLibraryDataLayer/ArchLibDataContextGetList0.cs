@@ -159,7 +159,7 @@ namespace ArchitectureLibraryDataLayer
             List<SalesTaxListModel> salesTaxListModels = new List<SalesTaxListModel>();
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM ArchLib.SalesTaxList ORDER BY SalesTaxListId", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM ArchLib.SalesTaxList WHERE ShowOnInvoice = 1 ORDER BY SalesTaxListId", sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 while (sqlDataReader.Read())
                 {

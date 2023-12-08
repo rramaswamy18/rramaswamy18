@@ -11,5 +11,7 @@ namespace ArchitectureLibraryEnumerations
     {
         [Description("Gram(s)")]
         Grams = 100,
+        [Description("Kilogram(s)")]
+        Kilograms = 200,
     }
 }

@@ -12,5 +12,7 @@
             @Html.Partial("_PaymentData", Model.PaymentDataModel)
         </form>
         <center><button class="loginRegisterbtn" id="paymentSave" onclick="javascript: return paymentSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process Payment</button></center>
+        <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery&nbsp;&nbsp;Info</h3>
+        @Html.Partial("_DeliveryInfoAddressData", Model.DeliveryInfoDataModel)
     </div>
 </div>

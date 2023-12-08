@@ -178,9 +178,10 @@ namespace ArchitectureLibraryDataLayer
                 DestDemogInfoSubDivisionId = sqlDataReader["DestDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoSubDivisionId"].ToString()),
                 DestDemogInfoCountyId = sqlDataReader["DestDemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCountyId"].ToString()),
                 DestDemogInfoCityId = sqlDataReader["DestDemogInfoCityId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoCityId"].ToString()),
-                DestDemogInfoZipId = sqlDataReader["DestDemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipId"].ToString()),
+                DestDemogInfoZipIdFrom = sqlDataReader["DestDemogInfoZipIdFrom"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdFrom"].ToString()),
+                DestDemogInfoZipIdTo = sqlDataReader["DestDemogInfoZipIdTo"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdTo"].ToString()),
                 EndEffDate = DateTime.Parse(sqlDataReader["EndEffDate"].ToString()),
-                SalesTaxCaptionId = sqlDataReader["SalesTaxCaptionId"].ToString(),
+                SalesTaxCaptionId = (SalesTaxCaptionEnum)int.Parse(sqlDataReader["SalesTaxCaptionId"].ToString()),
                 SrceDemogInfoCountryId = sqlDataReader["SrceDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountryId"].ToString()),
                 SrceDemogInfoSubDivisionId = sqlDataReader["SrceDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoSubDivisionId"].ToString()),
                 SrceDemogInfoCountyId = sqlDataReader["SrceDemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountyId"].ToString()),
@@ -188,6 +189,7 @@ namespace ArchitectureLibraryDataLayer
                 SrceDemogInfoZipId = sqlDataReader["SrceDemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoZipId"].ToString()),
                 SalesTaxRate = float.Parse(sqlDataReader["SalesTaxRate"].ToString()),
                 ShowOnInvoice = bool.Parse(sqlDataReader["ShowOnInvoice"].ToString()),
+                TaxRegionName = sqlDataReader["TaxRegionName"].ToString(),
             };
             return salesTaxListModeu;
         }

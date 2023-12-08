@@ -249,6 +249,7 @@
     <Compile Include="ArchitectureLibraryEnumerations\MaritalStatusEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\PackageTypeEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\ResponseTypeEnum.cs" />
+    <Compile Include="ArchitectureLibraryEnumerations\SalesTaxCaptionEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\SalutationEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\StatusEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\SuffixEnum.cs" />

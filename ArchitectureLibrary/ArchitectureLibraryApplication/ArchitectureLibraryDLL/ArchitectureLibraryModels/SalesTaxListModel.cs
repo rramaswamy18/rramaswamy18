@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArchitectureLibraryEnumerations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,13 @@ namespace ArchitectureLibraryModels
 
         public long? DestDemogInfoCityId { set; get; }
 
-        public long? DestDemogInfoZipId { set; get; }
+        public long? DestDemogInfoZipIdFrom { set; get; }
+
+        public long? DestDemogInfoZipIdTo { set; get; }
 
         public DateTime EndEffDate { set; get; }
 
-        public string SalesTaxCaptionId { set; get; }
+        public SalesTaxCaptionEnum SalesTaxCaptionId { set; get; }
 
         public float SalesTaxRate { set; get; }
 
@@ -41,6 +44,8 @@ namespace ArchitectureLibraryModels
         public long? SrceDemogInfoCityId { set; get; }
 
         public long? SrceDemogInfoZipId { set; get; }
+
+        public string TaxRegionName { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

@@ -1,4 +1,5 @@
-﻿using ArchitectureLibraryModels;
+﻿using ArchitectureLibraryEnumerations;
+using ArchitectureLibraryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,12 @@ namespace RetailSlnModels
         public long? DeliveryAddressId { set; get; }
         public long? OrderHeaderId { set; get; }
         public float? ShoppingCartTotalAmount { set; get; }
+        public long? TotalItemsCount { set; get; }
+        public float? TotalVolumeValue { set; get; }
+        public float? TotalWeightValue { set; get; }
+        public long TotalVolumeValueRounded { set; get; }
+        public long TotalWeightValueRounded { set; get; }
+        public WeightUnitEnum? TotalWeightValueRoundedUnit { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartItems { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartSummaryItems { set; get; }
         public ResponseObjectModel ResponseObjectModel { get; set; }

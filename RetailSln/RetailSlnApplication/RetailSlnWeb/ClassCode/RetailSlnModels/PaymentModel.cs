@@ -8,6 +8,7 @@ namespace RetailSlnModels
 {
     public class PaymentModel
     {
+        public DeliveryInfoDataModel DeliveryInfoDataModel { set; get; }
         public PaymentDataModel PaymentDataModel { set; get; }
         public ShoppingCartModel ShoppingCartModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }

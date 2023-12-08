@@ -8,7 +8,7 @@
     #SenderEmailAddress-error, #SenderPassword-error, #RecepientEmailAddress-error, #ConfirmRecipientEmailAddress-error, #SenderFullName-error, #RecipientFullName-error, #GiftCertAmount-error, #GiftCertMessage-error, #CaptchaAnswer-error, #CreditCardNumber-error, #CVV-error, #CardExpiryMM-error, #CardExpiryYYYY-error, #CardHolderName-error, #SelectedTemplateName-error {
         color: #ff0000;
         display: block;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: bold;
     }
 </style>
@@ -81,7 +81,7 @@
 <div class="col-md-6" style="text-align: left;">
     <h3 style="color: #000000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Sender&nbsp;&nbsp;Info</h3>
     <div class="row" style="padding-left: 18px; padding-right: 18px;">
-        @Html.LabelFor(m => m.SenderEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required) - <span style="color: #ff0000;">must be registered</span></span>
+        @Html.LabelFor(m => m.SenderEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required) - <span style="color: #ff0000;">must be already registered</span></span>
         @Html.TextBoxFor(m => m.SenderEmailAddress, new { @class = "form-control validate", onchange = "javascript: return senderEmailAddress_onchange();", placeholder = "Enter " + @Html.DisplayNameFor(m => m.SenderEmailAddress) + " - must be registered", style = "width: 90%;", title = "Enter " + @Html.DisplayNameFor(m => m.SenderEmailAddress) + " - must be registered" })
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SenderEmailAddress, "", new { id = "SenderEmailAddress-error" }).ToHtmlString()))
     </div>

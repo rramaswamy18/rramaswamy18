@@ -120,8 +120,6 @@ namespace RetailSlnDataLayer
                             DestDemogInfoZipIdFrom = sqlDataReader["DestDemogInfoZipIdFrom"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdFrom"].ToString()),
                             DestDemogInfoZipIdTo = sqlDataReader["DestDemogInfoZipIdTo"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdTo"].ToString()),
                             FuelChargePercent = float.Parse(sqlDataReader["FuelChargePercent"].ToString()),
-                            GSTCaption = sqlDataReader["GSTCaption"].ToString(),
-                            GSTPercent = float.Parse(sqlDataReader["GSTPercent"].ToString()),
                             SrceDemogInfoCountryId = sqlDataReader["SrceDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountryId"].ToString()),
                             UnitId = long.Parse(sqlDataReader["UnitId"].ToString()),
                             UnitMeasure = sqlDataReader["UnitMeasure"].ToString(),

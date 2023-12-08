@@ -45,6 +45,71 @@
             }
         });
     }
+    function giftCertBalance_onclick() {
+        console.log("00000000", "giftCertBalance_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/GiftCertBalance?";
+        var jsonData, jsonDataString;
+        //var queryString = "giftCertNumber=" + document.getElementById("GiftCertNumber").value + "&giftCertKey=" + document.getElementById("GiftCertKey").value;
+        jsonData = {};
+        jsonData.GiftCertNumber = document.getElementById("GiftCertNumber").value;
+        jsonData.GiftCertKey = document.getElementById("GiftCertKey").value;
+        jsonDataString = JSON.stringify(jsonData);
+        $.ajax({
+            url: url,//+ queryString,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            data: jsonDataString,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                if (responseData.success) {
+                    document.getElementById("giftCertBalanceAmount").innerHTML = responseData.giftCertBalanceAmount;
+                }
+                else {
+                    document.getElementById("giftCertBalanceAmount").innerHTML = responseData.errorMessage;
+                }
+                console.log("00090000", "giftCertBalance_onclick", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("giftCertBalanceAmount").innerHTML = xhr.responseText.errorMessage;
+                console.log("00099000", "giftCertBalance_onclick", "ERROR???", exception, xhr);
+            }
+        });
+        return false;
+    }
+    function giftCertBalance_onclick_backup() {
+        console.log("00000000", "giftCertBalance_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/GiftCertBalance?";
+        var queryString = "giftCertNumber=" + document.getElementById("GiftCertNumber").value + "&giftCertKey=" + document.getElementById("GiftCertKey").value;
+        $.ajax({
+            url: url + queryString,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            //data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                if (responseData.success) {
+                    document.getElementById("giftCertBalanceAmount").innerHTML = responseData.giftCertBalanceAmount;
+                }
+                else {
+                    document.getElementById("giftCertBalanceAmount").innerHTML = responseData.errorMessage;
+                }
+                console.log("00090000", "giftCertBalance_onclick", "SUCCESS!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("giftCertBalanceAmount").innerHTML = xhr.responseText.errorMessage;
+                console.log("00099000", "giftCertBalance_onclick", "ERROR???", exception, xhr);
+            }
+        });
+        return false;
+    }
     function paymentSave_onclick() {
         console.log("00000000", "paymentSave_onclick");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

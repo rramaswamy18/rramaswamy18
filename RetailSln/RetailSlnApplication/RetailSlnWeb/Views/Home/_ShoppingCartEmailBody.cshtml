@@ -55,6 +55,7 @@ int index = 0;
 </table>
 <br />
 index = 0;
+bool totalWeightFlag = true;
 <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
     <tr>
         <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
@@ -76,6 +77,12 @@ index = 0;
             </th>
             <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
                 @shoppingCartSummary.ItemShortDesc
+                @if (totalWeightFlag)
+                {
+                    totalWeightFlag = false;
+                    <br />
+                    <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.TotalWeightValue&nbsp;Grams</span>
+                }
             </td>
             <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
                 @shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")

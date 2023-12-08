@@ -562,10 +562,20 @@ namespace RetailSlnWeb.Controllers
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                //actionResult = Json(new { errorMessage = "Error ocurred while checking out" }, JsonRequestBehavior.AllowGet);
-                ModelState.AddModelError("", "Gift Cert / POST");
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
+                giftCertModel.CaptchaAnswer = null;
+                giftCertModel.CaptchaNumber0 = Session["CaptchaNumberLogin0"].ToString();
+                giftCertModel.CaptchaNumber1 = Session["CaptchaNumberLogin1"].ToString();
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = PartialView("_Error");
+                giftCertModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                actionResult = PartialView("_GiftCertData", giftCertModel);
+                //actionResult = Json(new { errorMessage = "Error ocurred while checking out" }, JsonRequestBehavior.AllowGet);
+                //ModelState.AddModelError("", "Gift Cert / POST");
+                //archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //actionResult = PartialView("_Error");
                 //Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
             return actionResult;
@@ -573,8 +583,8 @@ namespace RetailSlnWeb.Controllers
 
         [Authorize]
         [AjaxAuthorize]
-        [HttpGet]
-        public ActionResult GiftCertBalance(string giftCertNumber, string giftCertKey)
+        [HttpPost]
+        public ActionResult GiftCertBalance(GiftCertModel giftCertModel)
         {
             ViewData["ActionName"] = "GiftCertBalance";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -584,7 +594,7 @@ namespace RetailSlnWeb.Controllers
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             try
             {
-                retailSlnBL.GiftCertBalance(giftCertNumber, giftCertKey, out string errorMessage, out float? giftCertBalAmount, clientId, ipAddress, execUniqueId, loggedInUserId);
+                retailSlnBL.GiftCertBalance(giftCertModel.GiftCertNumber.ToString(), giftCertModel.GiftCertKey, out string errorMessage, out float? giftCertBalAmount, clientId, ipAddress, execUniqueId, loggedInUserId);
                 bool success;
                 string giftCertBalanceAmount;
                 if (errorMessage == "")
@@ -610,6 +620,46 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
+
+        //[Authorize]
+        //[AjaxAuthorize]
+        //[HttpGet]
+        //public ActionResult GiftCertBalance(string giftCertNumber, string giftCertKey)
+        //{
+        //    ViewData["ActionName"] = "GiftCertBalance";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    try
+        //    {
+        //        retailSlnBL.GiftCertBalance(giftCertNumber, giftCertKey, out string errorMessage, out float? giftCertBalAmount, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        bool success;
+        //        string giftCertBalanceAmount;
+        //        if (errorMessage == "")
+        //        {
+        //            success = true;
+        //            giftCertBalanceAmount = giftCertBalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //        }
+        //        else
+        //        {
+        //            success = false;
+        //            giftCertBalanceAmount = "";
+        //        }
+        //        actionResult = Json(new { success, errorMessage, giftCertBalanceAmount }, JsonRequestBehavior.AllowGet);
+        //        //int x = 1, y = 0, z = x / y;
+        //        //actionResult = Json(new { success = false, errorMessage = "Invalid Gift Cert Number/Key", giftCertBalanceAmount = "" }, JsonRequestBehavior.AllowGet);
+        //        //actionResult = Json(new { success = true, errorMessage = "", giftCertBalanceAmount = "$180.27" }, JsonRequestBehavior.AllowGet);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        actionResult = Json(new { success = false, errorMessage = "System error occurred" }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return actionResult;
+        //}
 
         [AllowAnonymous]
         [HttpGet]

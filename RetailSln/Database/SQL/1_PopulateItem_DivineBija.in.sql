@@ -1,7 +1,95 @@
 --1_PopulateItem_DivineBija.int.sql
+/*
+    TRUNCATE TABLE [DivineBija.in].[ArchLib].[SalesTaxList]
+    TRUNCATE TABLE [SalesTaxList]
+    INSERT [SalesTaxList](ClientId, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipIdFrom, DestDemogInfoZipIdTo, ShowOnInvoice, SalesTaxCaptionId, SalesTaxRate)
+    SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
+		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
+		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 100 AS SalesTaxCaptionId, StateRate AS SalesTaxRate
+	  FROM SalesTaxRate_USAByZip
+INNER JOIN DemogInfoZip
+        ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN DemogInfoCity
+        ON DemogInfoZip.DemogInfoCityId = DemogInfoCity.DemogInfoCityId
+INNER JOIN DemogInfoCounty
+        ON DemogInfoCity.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId
+INNER JOIN DemogInfoSubDivision
+        ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+UNION
+SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
+		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
+		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 200 AS SalesTaxCaptionId, EstimatedCountyRate AS SalesTaxRate
+	  FROM SalesTaxRate_USAByZip
+INNER JOIN DemogInfoZip
+        ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN DemogInfoCity
+        ON DemogInfoZip.DemogInfoCityId = DemogInfoCity.DemogInfoCityId
+INNER JOIN DemogInfoCounty
+        ON DemogInfoCity.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId
+INNER JOIN DemogInfoSubDivision
+        ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+UNION
+SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
+		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
+		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 300 AS SalesTaxCaptionId, EstimatedCityRate AS SalesTaxRate
+	  FROM SalesTaxRate_USAByZip
+INNER JOIN DemogInfoZip
+        ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN DemogInfoCity
+        ON DemogInfoZip.DemogInfoCityId = DemogInfoCity.DemogInfoCityId
+INNER JOIN DemogInfoCounty
+        ON DemogInfoCity.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId
+INNER JOIN DemogInfoSubDivision
+        ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+UNION
+SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
+		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
+		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 400 AS SalesTaxCaptionId, EstimatedSpecialRate AS SalesTaxRate
+	  FROM SalesTaxRate_USAByZip
+INNER JOIN DemogInfoZip
+        ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN DemogInfoCity
+        ON DemogInfoZip.DemogInfoCityId = DemogInfoCity.DemogInfoCityId
+INNER JOIN DemogInfoCounty
+        ON DemogInfoCity.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId
+INNER JOIN DemogInfoSubDivision
+        ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+UNION
+SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
+		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
+		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 1 AS ShowOnInvoice, 500 AS SalesTaxCaptionId, EstimatedCombinedRate AS SalesTaxRate
+	  FROM SalesTaxRate_USAByZip
+INNER JOIN DemogInfoZip
+        ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN DemogInfoCity
+        ON DemogInfoZip.DemogInfoCityId = DemogInfoCity.DemogInfoCityId
+INNER JOIN DemogInfoCounty
+        ON DemogInfoCity.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId
+INNER JOIN DemogInfoSubDivision
+        ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+SELECT DISTINCT StateName FROM SalesTaxRate_USAByZip WHERE NOT EXISTS(SELECT 1 FROM DemogInfoSubDivision WHERE SalesTaxRate_USAByZip.StateName = DemogInfoSubDivision.StateAbbrev)
+DROP TABLE IF EXISTS #TEMP1
+    SELECT StateAbbrev, CityName
+      INTO #TEMP1
+	  FROM DemogInfoSubDivision
+INNER JOIN DemogInfoCounty
+        ON DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId 
+INNER JOIN DemogInfoCity
+        ON DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId
+SELECT DISTINCT StateName, TaxRegionName, StateAbbrev, CityName FROM SalesTaxRate_USAByZip
+LEFT JOIN #TEMP1 ON StateName = StateAbbrev AND TaxRegionName = CityName
+WHERE CityName IS NULL
+ORDER BY 1
+*/
+/*
 use [DivineBija.in]
 SELECT DISTINCT StateName FROM IndiaCityPIN ORDER BY 1
-SELECT DISTINCT SubDivisionDesc FROM ArchLib.DemogInfoSubDivision WHERE DemogInfoCountryId = 106 ORDER BY 1
+SELECT DemogInfoSubDivisionId, SubDivisionDesc FROM ArchLib.DemogInfoSubDivision WHERE DemogInfoCountryId = 106 ORDER BY 1
 SELECT SrceDemogInfoCountry.CountryAbbrev, DestDemogInfoCountry.CountryAbbrev, DestDemogInfoSubDivision.SubDivisionDesc, '' AS CountyName, '' AS CityName, SalesTaxCaptionId, SalesTaxRate, ShowOnInvoice
 FROM ArchLib.SalesTaxList
 INNER JOIN ArchLib.DemogInfoCountry AS SrceDemogInfoCountry ON SalesTaxList.SrceDemogInfoCountryId = SrceDemogInfoCountry.DemogInfoCountryId
@@ -18,7 +106,7 @@ INNER JOIN ArchLib.DemogInfoCounty AS DestDemogInfoCounty ON SalesTaxList.DestDe
 INNER JOIN ArchLib.DemogInfoCity AS DestDemogInfoCity ON SalesTaxList.DestDemogInfoCityId = DestDemogInfoCity.DemogInfoCityId
 WHERE DestDemogInfoCountyId IS NOT NULL
 ORDER BY SrceDemogInfoCountry.CountryAbbrev, DestDemogInfoCountry.CountryAbbrev, DestDemogInfoSubDivision.SubDivisionDesc, CountyName, CityName, ShowOnInvoice, SalesTaxCaptionId
-/*
+
 TRUNCATE TABLE ArchLib.SalesTaxList
 INSERT ArchLib.SalesTaxList(ClientId, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipId, SalesTaxCaptionId, SalesTaxRate, SrceDemogInfoCountryId, ShowOnInvoice)
 SELECT 97 AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCountyId AS DestDemogInfoCountyId, DemogInfoCityId AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Sales Tax' AS SalesTaxCaptionId, REPLACE(SalesTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 1 AS ShowOnInvoice

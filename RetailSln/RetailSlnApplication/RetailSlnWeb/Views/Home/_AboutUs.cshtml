@@ -368,6 +368,29 @@
     </div>
     <hr style="border-color: #000000; border-style: solid; border-width: 1px;" />
 </div>
+<div style="font-family: 'Lucida Calligraphy', Arial, Helvetica, sans-serif, Verdana; font-size: 14px; padding-left: 72px; padding-right: 40px; text-align: justify;">
+    <div style="float: left;">
+        <span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</span>
+        <br />
+        <span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")</span>
+        <br />
+        <span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")</span>
+        <br />
+        <span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "") - @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")</span>
+        <br />
+        <span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AddressStateName", "") - @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", "")</span>
+    </div>
+    <div style="float: left; padding-left: 63px;">
+        <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Click here to Contact Us</a>
+        <br />
+        <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Click here to Email Us</a>
+        <br /><br />
+        <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a> - Phone
+        <br />
+        <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a> - SMS / Message / Text
+    </div>
+    <br style="clear: both;" />
+</div>
 <script type="text/javascript">
     language_onchange();
     function language_onchange() {

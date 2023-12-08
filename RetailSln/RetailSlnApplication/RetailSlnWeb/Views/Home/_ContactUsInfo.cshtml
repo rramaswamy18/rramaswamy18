@@ -12,6 +12,10 @@
             <span style="padding: 5px; font-size: 27px; font-weight: bold; text-align: left;">
                 @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") - Phone
             </span>
+            <br />
+            <span style="padding: 5px; font-size: 27px; font-weight: bold; text-align: left;">
+                @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "") - SMS / Text / Message
+            </span>
         </td>
     </tr>
     <tr>
@@ -20,8 +24,18 @@
         </td>
         <td style="padding: 5px; vertical-align: top;">
             <span style="padding: 5px; font-size: 24px; font-weight: bold; text-align: left;">
-                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")<br />
-                @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")<br />
+                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")
+            </span>
+            <br />
+            <span style="padding: 5px; font-size: 24px; font-weight: bold; text-align: left;">
+                @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
+            </span>
+            <br />
+            <span style="padding: 5px; font-size: 24px; font-weight: bold; text-align: left;">
+                @ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")
+            </span>
+            <br />
+            <span style="padding: 5px; font-size: 24px; font-weight: bold; text-align: left;">
                 @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
             </span>
         </td>

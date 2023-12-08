@@ -43,14 +43,9 @@ else
                     </td>
                     <td class="text-left">
                         @shoppingCartItem.ItemShortDesc
-                        @if (!Model.Checkout)
-                        {
-                            <br />
-                            <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
-                            @*<br />
-                                <span>Volume: </span>@shoppingCartItem.VolumeValue*@
-                        }
-                    </td>
+                        <br />
+                        <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
+                        </td>
                     <td class="text-right">
                         @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                     </td>
@@ -82,6 +77,7 @@ else
     if (Model != null && Model.ShoppingCartSummaryItems != null && Model.ShoppingCartSummaryItems.Count != 0)
     {
         index = 0;
+        bool totalWeightFlag = true;
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
         <table class="table table-striped">
             <tr>
@@ -102,6 +98,12 @@ else
                     <th scope="row">@(index + ".")</th>
                     <td class="text-left">
                         @shoppingCartSummary.ItemShortDesc
+                        @if (totalWeightFlag)
+                        {
+                            totalWeightFlag = false;
+                            <br />
+                            <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.TotalWeightValue&nbsp;Grams</span>
+                        }
                     </td>
                     <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
                 </tr>

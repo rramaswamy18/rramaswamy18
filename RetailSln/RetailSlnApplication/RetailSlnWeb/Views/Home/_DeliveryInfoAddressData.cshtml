@@ -1,0 +1,47 @@
+﻿@model RetailSlnModels.DeliveryInfoDataModel
+<table style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; padding: 5px;">
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            Delivery Address
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            @Model.DeliveryAddressModel.AddressLine1&nbsp;@(Model.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryAddressModel.BuildingTypeId)&nbsp;@Model.DeliveryAddressModel.HouseNumber
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+            {
+                <br />
+                @Model.DeliveryAddressModel.AddressLine2
+            }
+            <br />
+            @Model.DeliveryAddressModel.CityName
+            <br />
+            @Model.DeliveryAddressModel.StateAbbrev&nbsp;@Model.DeliveryAddressModel.ZipCode
+            <br />
+            @Model.DeliveryAddressModel.CountryDesc&nbsp;-&nbsp;@Model.DeliveryAddressModel.CountryAbbrev
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            Primary Telpehone#
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            @long.Parse(Model.PrimaryTelephoneNum).ToString("(###) ###-####")
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            Alternate Telpehone#
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            @long.Parse(Model.AlternateTelephoneNum).ToString("(###) ###-####")
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            Delivery Instructions
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: none;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            @Html.Raw(Model.DeliveryInstructions?.Replace("\n", "<br />"))
+        </td>
+    </tr>
+</table>
+

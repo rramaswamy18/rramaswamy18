@@ -1,13 +1,9 @@
 ﻿@model RetailSlnModels.CheckoutModel
-<div class="container" id="divOrderProcess">
+<div class="center" id="divOrderProcess">
     <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
         Checkout
     </h2>
-    <div class="col-md-6" style="float: left; text-align: left;">
-        <div id="divShoppingCart">
-            @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
-        </div>
-        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+    <div class="col-md-6" style="float: left; padding-right: 18px; text-align: left;">
         <h3 style="font-weight: bold;">L O G I N <span style="color: #ff0000;">(Returning users)</span></h3>
         @if (!ViewData.ModelState.IsValid)
         {
@@ -50,8 +46,12 @@
                 </li>
             </ul>
         }
+        <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+        <div id="divShoppingCart">
+            @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+        </div>
     </div>
-    <div class="col-md-6" style="float: left; text-align: left;">
+    <div class="col-md-6" style="float: left; padding-left: 18px; text-align: left;">
         @Html.Partial("_LoginUserProfGuest", Model.CheckoutGuestModel)
         @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
     </div>
@@ -151,13 +151,18 @@
         console.log("00000000", "giftCertBalance_onclick", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         var url = "/Home/GiftCertBalance?";
-        var queryString = "giftCertNumber=" + document.getElementById("GiftCertNumber").value + "&giftCertKey=" + document.getElementById("GiftCertKey").value;
+        var jsonData, jsonDataString;
+        //var queryString = "giftCertNumber=" + document.getElementById("GiftCertNumber").value + "&giftCertKey=" + document.getElementById("GiftCertKey").value;
+        jsonData = {};
+        jsonData.GiftCertNumber = document.getElementById("GiftCertNumber").value;
+        jsonData.GiftCertKey = document.getElementById("GiftCertKey").value;
+        jsonDataString = JSON.stringify(jsonData);
         $.ajax({
-            url: url + queryString,
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            //dataType: "html",
-            //data: postData,
+            url: url,//+ queryString,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            data: jsonDataString,
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');

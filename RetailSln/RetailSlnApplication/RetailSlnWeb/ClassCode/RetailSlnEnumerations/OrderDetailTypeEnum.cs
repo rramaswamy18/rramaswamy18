@@ -12,24 +12,28 @@ namespace RetailSlnEnumerations
         Item = 100,
         [Description("Total Order Amount")]
         TotalOrderAmount = 200,
+        [Description("Discount Amount")]
+        DiscountAmount = 300,
+        [Description("Total Order Amount after Discount")]
+        TotalOrderAmountAfterDiscount = 400,
         [Description("Sales Tax Amount")]
-        SalesTaxAmount = 300,
+        SalesTaxAmount = 500,
         [Description("Shipping & Handling Charges")]
-        ShippingHandlingCharges = 400,
+        ShippingHandlingCharges = 600,
         [Description("Additional Charges")]
-        AdditionalCharges = 500,
+        AdditionalCharges = 700,
         [Description("Discount")]
         Discount = 600,
         [Description("Total Invoice Amount")]
-        TotalInvoiceAmount = 700,
+        TotalInvoiceAmount = 800,
         [Description("Amount Paid by Gift Cert ")]
-        AmountPaidByGiftCert = 800,
+        AmountPaidByGiftCert = 900,
         [Description("Amount Paid by Credit Card")]
-        AmountPaidByCreditCard = 900,
+        AmountPaidByCreditCard = 1000,
         [Description("Total Amount Paid")]
-        TotalAmountPaid = 1000,
+        TotalAmountPaid = 1100,
         [Description("Balance Due")]
-        BalanceDue = 1100,
+        BalanceDue = 1200,
         [Description("Other")]
         Other = 9900,
     }

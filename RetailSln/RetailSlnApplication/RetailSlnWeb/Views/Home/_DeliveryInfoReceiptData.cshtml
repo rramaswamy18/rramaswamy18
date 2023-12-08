@@ -45,7 +45,7 @@
             Delivery Instructions
         </th>
         <td class="text-left" scope="col" style="vertical-align: top;">
-            @Model.DeliveryInstructions
+            @Html.Raw(Model.DeliveryInstructions?.Replace("\n", "<br />"))
         </td>
     </tr>
 </table>

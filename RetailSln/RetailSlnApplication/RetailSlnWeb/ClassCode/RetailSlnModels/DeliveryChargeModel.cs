@@ -39,10 +39,6 @@ namespace RetailSlnModels
 
         public float FuelChargePercent { set; get; }
 
-        public string GSTCaption { set; get; }
-
-        public float GSTPercent { set; get; }
-
         public long? SrceDemogInfoCountryId { set; get; }
 
         public long UnitId { set; get; }
