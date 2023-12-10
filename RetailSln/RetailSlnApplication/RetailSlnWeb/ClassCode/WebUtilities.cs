@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace SchoolPrdWeb.ClassCode
+namespace RetailSlnWeb.ClassCode
 {
     public static class WebUtilities
     {

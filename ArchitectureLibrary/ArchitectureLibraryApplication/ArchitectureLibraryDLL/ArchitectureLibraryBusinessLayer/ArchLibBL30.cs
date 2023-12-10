@@ -422,6 +422,71 @@ namespace ArchitectureLibraryBusinessLayer
                 }
             }
         }
+        //Index GET
+        public IndexModel Index(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                modelStateDictionary.Clear();
+                IndexModel indexModel = new IndexModel
+                {
+                    LoginUserProfModel = new LoginUserProfModel
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Success,
+                        },
+                    },
+                    RegisterUserProfModel = new RegisterUserProfModel
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Success,
+                        },
+                    },
+                };
+                List<string> numberSessions = new List<string>
+                {
+                    "CaptchaNumberLogin0",
+                    "CaptchaNumberLogin1",
+                    "CaptchaNumberRegister0",
+                    "CaptchaNumberRegister1",
+                };
+                GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
+                if (indexModel.LoginUserProfModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    indexModel.LoginUserProfModel.CaptchaAnswerLogin = null;
+                    indexModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
+                    indexModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
+                }
+                if (indexModel.RegisterUserProfModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Error)
+                {
+                    ;
+                }
+                else
+                {
+                    indexModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
+                    indexModel.RegisterUserProfModel.CaptchaNumberRegister0 = httpSessionStateBase["CaptchaNumberRegister0"].ToString();
+                    indexModel.RegisterUserProfModel.CaptchaNumberRegister1 = httpSessionStateBase["CaptchaNumberRegister1"].ToString();
+                }
+                return indexModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
         //PrivacyPolicy GET
         public PrivacyPolicyModel PrivacyPolicy(Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

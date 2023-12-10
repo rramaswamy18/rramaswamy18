@@ -1,0 +1,7 @@
+﻿<hgroup style="color: #a54000; font-weight: bold;">
+    <h2 style="font-weight: bold;">Error occurred while processing your request</h2>
+</hgroup>
+@if (!ViewData.ModelState.IsValid)
+{
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { style = "color: #ff0000; column-count: 1; font-size: 20px; font-weight: bold;" }).ToHtmlString()))
+}

@@ -290,6 +290,7 @@
     <Compile Include="ArchitectureLibraryModels\DemogInfoSubDivisionModel.cs" />
     <Compile Include="ArchitectureLibraryModels\FAQsModel.cs" />
     <Compile Include="ArchitectureLibraryModels\CheckoutGuestModel.cs" />
+    <Compile Include="ArchitectureLibraryModels\IndexModel.cs" />
     <Compile Include="ArchitectureLibraryModels\LoginUserProfModel.cs" />
     <Compile Include="ArchitectureLibraryModels\PersonModel.cs" />
     <Compile Include="ArchitectureLibraryModels\PicGalleryModel.cs" />

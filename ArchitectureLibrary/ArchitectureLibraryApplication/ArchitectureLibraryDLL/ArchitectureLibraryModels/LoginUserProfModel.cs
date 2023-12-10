@@ -8,7 +8,7 @@ namespace ArchitectureLibraryModels
 {
     public class LoginUserProfModel
     {
-        [Required(ErrorMessage = "Please enter login catcha answer")]
+        [Required(ErrorMessage = "Please enter login captcha answer")]
         [Display(Name = "Login captcha answer")]
         public string CaptchaAnswerLogin { set; get; }
 

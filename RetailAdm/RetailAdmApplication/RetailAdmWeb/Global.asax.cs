@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ArchitectureLibraryCacheData;
+using RetailAdmWeb.ClassCode;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,6 +18,16 @@ namespace RetailAdmWeb
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            Bootstrap.Initialize(HttpContext.Current);
+        }
+        protected void Application_BeginRequest()
+        {
+            if (!Context.Request.IsSecureConnection && !Context.Request.IsLocal && ArchLibCache.RedirectToHttps) // to avoid switching to https when local testing
+            {
+                // Only insert an "s" to the "http:", and avoid replacing wrongly http: in the url parameters
+                Response.Redirect(Context.Request.Url.ToString().Insert(4, "s"));
+            }
         }
     }
 }

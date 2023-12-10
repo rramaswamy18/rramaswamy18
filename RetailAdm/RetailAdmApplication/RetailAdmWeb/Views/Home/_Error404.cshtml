@@ -1,0 +1,13 @@
+﻿<div style="font-family: Arial, Helvetica, sans-serif, Verdana;">
+    <br style="clear: both;" />
+    @{
+        try
+        {
+            <p style="color: #000000; font-family: Arial; font-weight: bold; padding-left: 72px; padding-right: 297px; text-align: justify;">@HttpContext.Current.Session["RequestUrl"].ToString()</p>
+        }
+        catch
+        {
+        }
+    }
+    <p style="font-weight: bold; padding-left: 72px; padding-right: 297px; text-align: justify;">The above URL is not part of the website and you have been redirected here</p>
+</div>
