@@ -11,24 +11,28 @@ namespace RetailSlnConsoleApp1
         public static void Main(string[] args)
         {
             Console.WriteLine("Process Started");
-            TestResizeImage();
+            //TestResizeImage();
             //TestDivineBijaCreateImagesForItems();
-            //TestDivineBijaResizeImages();
+            TestDivineBijaResizeImages();
             //TestDivineBijaResizeProductsImages();
             Console.WriteLine("Process Completed");
-            //Console.ReadKey();
+            Console.ReadKey();
         }
         private static void TestResizeImage()
         {
             Class1 class1 = new Class1();
             string inputFullFileName, outputFullFileName;
 
-            inputFullFileName = @"C:\Common\Images\DivineBija_20230927\UploadedImages\DB100350-2.jpg";
-            outputFullFileName = @"C:\Code\rramaswamy18\RetailSln\RetailSlnApplication\RetailSlnWeb\ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item342.png";
+            inputFullFileName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\DB100474-2.jpg";
+            outputFullFileName = @"C:\Common\Images\DivineBija\DivineBija_20230927\Items\Item166.png";
             class1.ResizeImage(inputFullFileName, outputFullFileName, 180, 189);
 
-            inputFullFileName = @"C:\Common\Images\DivineBija_20230927\UploadedImages\DB100920-1.jpg";
-            outputFullFileName = @"C:\Code\rramaswamy18\RetailSln\RetailSlnApplication\RetailSlnWeb\ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item344.png";
+            inputFullFileName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\DB100631-2.jpg";
+            outputFullFileName = @"C:\Common\Images\DivineBija\DivineBija_20230927\Items\Item1.png";
+            class1.ResizeImage(inputFullFileName, outputFullFileName, 180, 189);
+
+            inputFullFileName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\DB100920-2.jpg";
+            outputFullFileName = @"C:\Common\Images\DivineBija\DivineBija_20230927\Items\Item2.png";
             class1.ResizeImage(inputFullFileName, outputFullFileName, 180, 189);
         }
         private static void TestDivineBijaCreateImagesForItems()
@@ -45,8 +49,8 @@ namespace RetailSlnConsoleApp1
         }
         private static void TestDivineBijaResizeImages()
         {
-            string inputDirectoryName = @"C:\Common\Images\DivineBija_20230927\UploadedImages\";
-            string outputDirectoryName = @"C:\Common\Images\DivineBija_20230927\Items\";
+            string inputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\";
+            string outputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\Items\";
             string databaseConnectionString = "DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.in;";
             Class1 class1 = new Class1();
             class1.DivineBijaResizeImages(databaseConnectionString, inputDirectoryName, outputDirectoryName);

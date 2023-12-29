@@ -50,15 +50,15 @@ else
                     $("#loadingModal").modal('hide');
                     console.log("00001000", "registerUserSave_onclick success", responseData.processMessage);
                     document.getElementById("formRegisterUserProfData").innerHTML = responseData.htmlString;
-                    document.getElementById("divScrollIntoViewRegister").scrollIntoView();
+                    //document.getElementById("divScrollIntoViewRegister").scrollIntoView();
                     console.log("00090000", "registerUserSave_onclick success", "Exit");
                 },
                 error: function (xhr, exception) {
                     $("#loadingModal").modal('hide');
                     console.log("00099000", "registerUserSave_onclick error", "ERROR???", exception, xhr);
                     document.getElementById("formRegisterUserProfData").innerHTML = xhr.responseText;
-                    console.log("00090100", "enrollmentSave_onclick error", "Exit");
-                    document.getElementById("divScrollIntoViewRegister").scrollIntoView();
+                    console.log("00090100", "registerUserSave_onclick error", "Exit");
+                    //document.getElementById("divScrollIntoViewRegister").scrollIntoView();
                 }
             });
         }

@@ -191,9 +191,9 @@
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
                 console.log("checkoutValidate_onclick", "00099000", "ERROR???");
-                document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout???";
+                document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout";
                 if (document.getElementById("divErrorMessage2") != null) {
-                    document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                    document.getElementById("divErrorMessage2").innerHTML = "Error while validating checkout";
                 }
             }
         });

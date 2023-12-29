@@ -4,6 +4,19 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    ArchitectureLibraryModels.SessionObjectModel sessionObjectModel;
+    string loggedInUserEmailAddress;
+    if (Session["SessionObject"] != null)
+    {
+        sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
+        loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
+    }
+    else
+    {
+        sessionObjectModel = null;
+        loggedInUserEmailAddress = "";
+    }
+    loggedInUserEmailAddress = "longemailaddress@longcompany.com";
 }
 <style>
     .starchecked {
@@ -45,37 +58,27 @@
     <div style="float: left; text-align: left; vertical-align: top;">
         <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: auto; max-height: 171px; max-width: 171px; width: 100%;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" />
     </div>
-    <div style="float: right; text-align: left; vertical-align: top;">
-        <div style="display: table;">
-            <div style="display: table-row;">
-                <div style="display: table-cell; vertical-align: top;">
-                    <div style="display: table; vertical-align: top;">
-                        <div style="display: table-row; vertical-align: top;">
-                            <div style="display: table-cell; padding-right: 3px; text-align: right; vertical-align: top;">
-                                <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="height: 27px; padding-bottom: 2px; width: 27px;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
-                            </div>
-                            <div style="background-color: #c3c3c3; display: table-cell; font-weight: bold; padding-left: 4px; padding-right: 4px; text-align: right; vertical-align: top; ">
-                                @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display: table; vertical-align: top;">
-                        <div style="display: table-row; vertical-align: top;">
-                            <div style="display: table-cell;">
-                                <i class="fa" style="font-size: 24px">&#xf07a;</i>
-                                <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>
-                                &nbsp;&nbsp;
-                                <span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
-                            </div>
-                            <div style="display: table-cell; padding-left: 9px;">
-                                <a href="javascript: void(0);" onclick="javascript: return checkoutValidate_onclick();" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;">Checkout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <table style="float: right;">
+        <tr>
+            <td></td>
+            <td style="text-align: right; width: 171px;">
+                <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="height: 72px; padding-bottom: 2px; width: 171px;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: right;">
+                @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right;">
+                <span id="loggedInUserEmailAddress" style="color: #0000ff; display: table-cell; font-size: 12px; font-weight: bold; vertical-align: top;">
+                    @loggedInUserEmailAddress
+                </span>
+            </td>
+        </tr>
+    </table>
     <div style="text-align: center; vertical-align: top;">
         <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span>
         &nbsp;
@@ -83,6 +86,23 @@
         &nbsp;
         <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
         @Html.Partial("_HeaderMenu")
+        <div style="display: table; vertical-align: top;">
+            <div style="display: table-row; vertical-align: top;">
+                <div style="display: table-cell;">
+                    <i class="fa" style="font-size: 24px">&#xf07a;</i>
+                    <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>
+                    &nbsp;&nbsp;
+                    <span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
+                </div>
+                <div style="display: table-cell; padding-left: 9px;">
+                    <a href="javascript: void(0);" onclick="javascript: return checkoutValidate_onclick();" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;">Checkout</a>
+                </div>
+                <div style="display: table-cell; padding-left: 9px; vertical-align: middle;">
+                    <span id="divErrorMessage" style="color: #ff0000; display: table-cell; font-family: Arial; font-size: 13px; font-weight: bold; padding: 0px; text-align: left; vertical-align: top;">
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <br style="clear: both;" />
@@ -146,9 +166,9 @@
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
                 console.log("checkoutValidate_onclick", "00099000", "ERROR???");
-                document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout???";
+                document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout";
                 if (document.getElementById("divErrorMessage2") != null) {
-                    document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                    document.getElementById("divErrorMessage2").innerHTML = "Error while validating checkout";
                 }
             }
         });
