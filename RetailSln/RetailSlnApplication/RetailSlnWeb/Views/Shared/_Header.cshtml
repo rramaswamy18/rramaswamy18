@@ -16,7 +16,7 @@
         sessionObjectModel = null;
         loggedInUserEmailAddress = "";
     }
-    loggedInUserEmailAddress = "longemailaddress@longcompany.com";
+    //loggedInUserEmailAddress = "longemailaddress@longcompany.com";
 }
 <style>
     .starchecked {
@@ -61,21 +61,19 @@
     <table style="float: right;">
         <tr>
             <td></td>
-            <td style="text-align: right; width: 171px;">
+            <td style="padding-right: 3px; text-align: right; width: 171px;">
                 <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="height: 72px; padding-bottom: 2px; width: 171px;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
             </td>
         </tr>
         <tr>
             <td></td>
-            <td style="text-align: right;">
-                @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol
+            <td style="padding-right: 3px; text-align: left; width: 171px;">
+                <div style="background-color: #d3d3d3; color: #000000; font-weight: bold; padding-left: 3px; width: 171px ">@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol</div>
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: right;">
-                <span id="loggedInUserEmailAddress" style="color: #0000ff; display: table-cell; font-size: 12px; font-weight: bold; vertical-align: top;">
-                    @loggedInUserEmailAddress
-                </span>
+            <td colspan="2" id="loggedInUserEmailAddress" style="color: #0000ff; display: table-cell; font-size: 12px; font-weight: bold; padding-right: 3px; text-align: right; vertical-align: top;">
+                @loggedInUserEmailAddress
             </td>
         </tr>
     </table>

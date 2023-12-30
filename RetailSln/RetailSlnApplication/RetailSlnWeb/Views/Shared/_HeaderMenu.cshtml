@@ -1,5 +1,5 @@
 ﻿@{
-    string viewDataActionName, selectedMenu, loggedInUserFullName, loggedInUserEmailAddress, urlString, redirectUrlString;
+    string viewDataActionName, selectedMenu, urlString, redirectUrlString;
     try
     {
         viewDataActionName = ViewData["ActionName"].ToString();
@@ -12,14 +12,10 @@
     if (Session["SessionObject"] != null)
     {
         sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
-        loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
-        loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
     }
     else
     {
         sessionObjectModel = null;
-        loggedInUserFullName = "";
-        loggedInUserEmailAddress = "";
     }
 }
 <style>
@@ -183,13 +179,6 @@
                 }*@
         }
     </ul>
-    @*<div style="display: table;">
-        <div style="display: table-row;">
-            <div id="loggedInUserEmailAddress" style="color: #0000ff; display: table-cell; font-size: 12px; padding: 0px; vertical-align: top;">
-                @loggedInUserEmailAddress
-            </div>
-        </div>
-    </div>*@
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function () {
