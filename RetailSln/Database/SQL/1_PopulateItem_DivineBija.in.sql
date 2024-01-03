@@ -1,5 +1,16 @@
---1_PopulateItem_DivineBija.int.sql
+--1_PopulateItem_DivineBija.in.sql
 --Dec 20 2024
+/*
+SELECT Category, COUNT(*) FROM DivineBija_Products GROUP BY Category
+UNION
+SELECT Category, COUNT(*) FROM DivineBija_Books GROUP BY Category
+ORDER BY 1
+
+SELECT Category.CategoryDesc, COUNT(*) FROM RetailSlnSch.CategoryItemHier
+INNER JOIN RetailSlnSch.Category ON ParentCategoryId = Category.CategoryId
+WHERE ItemId IS NOT NULL GROUP BY Category.CategoryDesc
+ORDER BY 1
+*/
 TRUNCATE TABLE RetailSlnSch.CategoryItemHier
 DELETE RetailSlnSch.Item
 DBCC CHECKIDENT ('RetailSlnSch.Item', RESEED, 0);
@@ -11,11 +22,11 @@ DECLARE @ClientId BIGINT = 97
 SET IDENTITY_INSERT RetailSlnSch.Item ON
 
 INSERT RetailSlnSch.Item(ItemId, ClientId, ItemDesc, ItemRate, ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ProductItemId, UploadImageFileName)
-SELECT Id, 97 AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Rate INR] AS ItemRate, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, [Item 180] + '.jpg' AS UploadImageFileName
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Rate INR] AS ItemRate, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, [Top 450] + '.jpg' AS UploadImageFileName
 FROM dbo.DivineBija_Products WHERE [Item Type] = 'ITEMS'
 UNION
 --Type --> Item Bundle
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Rate INR] AS ItemRate, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 300 AS ItemTypeId, ItemId AS ProductItemId, [Item 180] + '.jpg' AS UploadImageFileName
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Rate INR] AS ItemRate, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 300 AS ItemTypeId, ItemId AS ProductItemId, [Top 450] + '.jpg' AS UploadImageFileName
 FROM dbo.DivineBija_Products WHERE [Item Type] = 'BUNDLE'
 UNION
 --Type --> Books
@@ -49,14 +60,15 @@ FROM dbo.DivineBija_Products_3 WHERE [Prod Code] <> '' AND ItemAttrib.ItemId = D
 --Begin CategoryHierItem
 TRUNCATE TABLE RetailSlnSch.CategoryItemHier
 
+DECLARE @ClientId BIGINT = 97
 --Start
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 1 AS SeqNum, 8 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem
 
 --Categories
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 5 AS CategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 5 AS CategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 5 AS CategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 5 AS CategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 1 AS SeqNum, 102 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 2 AS SeqNum, 118 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 3 AS SeqNum, 113 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
@@ -67,7 +79,8 @@ SELECT @ClientId AS ClientId, 8 AS CategoryId, 7 AS SeqNum, 117 AS CategoryId, N
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 8 AS SeqNum, 7 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 9 AS SeqNum, 100 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 10 AS SeqNum, 101 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 8 AS CategoryId, 11 AS SeqNum, 5 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
+--SELECT @ClientId AS ClientId, 8 AS CategoryId, 11 AS SeqNum, 5 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 8 AS CategoryId, 11 AS SeqNum, 6 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
 
 --Homa Items
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
@@ -122,7 +135,7 @@ ORDER BY Id
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 7 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT 98 AS ClientId, 7 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Products WHERE [Item Type] = 'Bundle'
+FROM DivineBija_Products WHERE Category = 'Item Bundle'
 ORDER BY Id
 
 --Religious Books
@@ -140,43 +153,45 @@ FROM DivineBija_Books WHERE Category = 'Kids Books'
 ORDER BY Id
 
 --Other
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 6 AS ParentCategoryId, ItemId - 100 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM RetailSlnSch.Item WHERE ItemId BETWEEN 208 AND 215
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 6 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+--SELECT 98 AS ClientId, 6 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+--FROM DivineBija_Products WHERE [Item Type] = 'Return Gift'
+--ORDER BY Id
 
---Item Bundle
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 7 AS ParentCategoryId, ItemId - 338 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM RetailSlnSch.Item WHERE ItemId BETWEEN 341 AND 346
+--Other
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 6 AS ParentCategoryId, ItemId - 100 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+--FROM RetailSlnSch.Item WHERE ItemId BETWEEN 208 AND 215
 
---Featured Items All
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 2 AS ParentCategoryId, ItemId - 0 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM RetailSlnSch.Item WHERE ItemId BETWEEN 1 AND 9
+----Featured Items All
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 2 AS ParentCategoryId, ItemId - 0 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+--FROM RetailSlnSch.Item WHERE ItemId BETWEEN 1 AND 9
 
---New Arrivals All
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 4 AS ParentCategoryId, ItemId - 20 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM RetailSlnSch.Item WHERE ItemId BETWEEN 21 AND 29
+----New Arrivals All
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 4 AS ParentCategoryId, ItemId - 20 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+--FROM RetailSlnSch.Item WHERE ItemId BETWEEN 21 AND 29
 
---Featured Items Summary
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 1 AS SeqNum, NULL AS CategoryId, 1 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 2 AS SeqNum, NULL AS CategoryId, 2 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 3 AS SeqNum, NULL AS CategoryId, 3 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 4 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem
+----Featured Items Summary
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 1 AS SeqNum, NULL AS CategoryId, 1 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 2 AS SeqNum, NULL AS CategoryId, 2 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 3 AS SeqNum, NULL AS CategoryId, 3 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 1 AS ParentCategoryId, 4 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem
 
---New Arrivals Summary
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 1 AS SeqNum, NULL AS CategoryId, 11 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 2 AS SeqNum, NULL AS CategoryId, 12 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 3 AS SeqNum, NULL AS CategoryId, 13 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 4 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem
+----New Arrivals Summary
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 1 AS SeqNum, NULL AS CategoryId, 11 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 2 AS SeqNum, NULL AS CategoryId, 12 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 3 AS SeqNum, NULL AS CategoryId, 13 AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 3 AS ParentCategoryId, 4 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, '' ProcessType, 'Item' AS CategoryOrItem
 
---Featured Items  & New Arrivals
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, 5 AS ParentCategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 5 AS ParentCategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem
+----Featured Items  & New Arrivals
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+--SELECT @ClientId AS ClientId, 5 AS ParentCategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 5 AS ParentCategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem
 
 --End CategoryHierItem
 
@@ -184,7 +199,7 @@ SELECT @ClientId AS ClientId, 5 AS ParentCategoryId, 2 AS SeqNum, 4 AS CategoryI
     TRUNCATE TABLE [DivineBija.in].[ArchLib].[SalesTaxList]
     TRUNCATE TABLE [SalesTaxList]
     INSERT [SalesTaxList](ClientId, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipIdFrom, DestDemogInfoZipIdTo, ShowOnInvoice, SalesTaxCaptionId, SalesTaxRate)
-    SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+    SELECT @ClientId AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
 	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
 		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
 		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 100 AS SalesTaxCaptionId, StateRate AS SalesTaxRate
@@ -198,7 +213,7 @@ INNER JOIN DemogInfoCounty
 INNER JOIN DemogInfoSubDivision
         ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
 UNION
-SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+SELECT @ClientId AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
 	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
 		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
 		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 200 AS SalesTaxCaptionId, EstimatedCountyRate AS SalesTaxRate
@@ -212,7 +227,7 @@ INNER JOIN DemogInfoCounty
 INNER JOIN DemogInfoSubDivision
         ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
 UNION
-SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+SELECT @ClientId AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
 	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
 		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
 		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 300 AS SalesTaxCaptionId, EstimatedCityRate AS SalesTaxRate
@@ -226,7 +241,7 @@ INNER JOIN DemogInfoCounty
 INNER JOIN DemogInfoSubDivision
         ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
 UNION
-SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+SELECT @ClientId AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
 	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
 		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
 		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 0 AS ShowOnInvoice, 400 AS SalesTaxCaptionId, EstimatedSpecialRate AS SalesTaxRate
@@ -240,7 +255,7 @@ INNER JOIN DemogInfoCounty
 INNER JOIN DemogInfoSubDivision
         ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
 UNION
-SELECT 97 AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
+SELECT @ClientId AS ClientId, DemogInfoSubDivision.DemogInfoCountryId AS DestDemogInfoCountryId
 	      ,DemogInfoSubDivision.DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId AS DestDemogInfoCountyId
 		  ,DemogInfoCity.DemogInfoCityId AS DestDemogInfoCityId, DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdFrom
 		  ,DemogInfoZip.DemogInfoZipId AS DestDemogInfoZipIdTo, 1 AS ShowOnInvoice, 500 AS SalesTaxCaptionId, EstimatedCombinedRate AS SalesTaxRate
@@ -290,20 +305,20 @@ ORDER BY SrceDemogInfoCountry.CountryAbbrev, DestDemogInfoCountry.CountryAbbrev,
 
 TRUNCATE TABLE ArchLib.SalesTaxList
 INSERT ArchLib.SalesTaxList(ClientId, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipId, SalesTaxCaptionId, SalesTaxRate, SrceDemogInfoCountryId, ShowOnInvoice)
-SELECT 97 AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCountyId AS DestDemogInfoCountyId, DemogInfoCityId AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Sales Tax' AS SalesTaxCaptionId, REPLACE(SalesTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 1 AS ShowOnInvoice
+SELECT @ClientId AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, DemogInfoCountyId AS DestDemogInfoCountyId, DemogInfoCityId AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Sales Tax' AS SalesTaxCaptionId, REPLACE(SalesTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 1 AS ShowOnInvoice
 FROM SalesTax_California
 WHERE DemogInfoCountyId IS NOT NULL AND DemogInfoCityId IS NOT NULL
 UNION
-SELECT 97 AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'State Tax' AS SalesTaxCaptionId, REPLACE(StateTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 0 AS ShowOnInvoice
+SELECT @ClientId AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'State Tax' AS SalesTaxCaptionId, REPLACE(StateTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 0 AS ShowOnInvoice
 FROM SalesTax_USA
 UNION
-SELECT 97 AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Avg Local Tax' AS SalesTaxCaptionId, REPLACE(AvgLocalTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 0 AS ShowOnInvoice
+SELECT @ClientId AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Avg Local Tax' AS SalesTaxCaptionId, REPLACE(AvgLocalTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 0 AS ShowOnInvoice
 FROM SalesTax_USA
 UNION
-SELECT 97 AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Max Local Tax' AS SalesTaxCaptionId, REPLACE(MaxLocalTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 0 AS ShowOnInvoice
+SELECT @ClientId AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Max Local Tax' AS SalesTaxCaptionId, REPLACE(MaxLocalTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 0 AS ShowOnInvoice
 FROM SalesTax_USA
 UNION
-SELECT 97 AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Sales Tax' AS SalesTaxCaptionId, REPLACE(CombinedTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 1 AS ShowOnInvoice
+SELECT @ClientId AS ClientId, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId, NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, NULL AS DestDemogInfoZipId, 'Sales Tax' AS SalesTaxCaptionId, REPLACE(CombinedTaxRate, '%', '') AS SalesTaxRate, 236 AS SrceDemogInfoCountryId, 1 AS ShowOnInvoice
 FROM SalesTax_USA
 */
 /*
