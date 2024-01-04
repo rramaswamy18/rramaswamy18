@@ -10,7 +10,13 @@ namespace RetailSlnModels
     {
         public long CorpAcctId { set; get; }
 
+        public long ClientId { set; get; }
+
         public string CorpAcctName { set; get;}
+
+        public string TaxIdentNum { set; get; }
+
+        public long DemogInfoAddressId { set; get; }
 
         public List<DiscountDtlModel> DiscountDtlModels  { set; get; }
 
