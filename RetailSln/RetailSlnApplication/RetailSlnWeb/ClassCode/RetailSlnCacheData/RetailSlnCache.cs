@@ -81,9 +81,26 @@ namespace RetailSlnCacheData
                 itemAttribModel.ItemAttribMasterModel = itemAttribMasterModels.First(x => x.ItemAttribMasterId == itemAttribModel.ItemAttribMasterId);
             }
             //
+            ItemAttribModel itemAttribModel1;
             foreach (var itemModel in itemModels)
             {
                 itemModel.ItemAttribModels = itemAttribModels.FindAll(x => x.ItemId == itemModel.ItemId);
+                itemModel.ItemDescAttrib = "";
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 16); //Show Weight
+                if (itemAttribModel1 != null)
+                {
+                    itemModel.ItemDescAttrib = itemAttribModel1.ItemAttribValue + " " + itemAttribModel1.ItemAttribUnitValue;
+                }
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 17); //Show Volume
+                if (itemAttribModel1 != null)
+                {
+                    itemModel.ItemDescAttrib = itemAttribModel1.ItemAttribValue + " " + itemAttribModel1.ItemAttribUnitValue;
+                }
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 18); //Show Count
+                if (itemAttribModel1 != null)
+                {
+                    itemModel.ItemDescAttrib = itemAttribModel1.ItemAttribValue + " " + itemAttribModel1.ItemAttribUnitValue;
+                }
             }
             //
             foreach (var deliveryListModel in deliveryListModels)

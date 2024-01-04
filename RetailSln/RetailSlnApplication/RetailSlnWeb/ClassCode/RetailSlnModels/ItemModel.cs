@@ -28,11 +28,17 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter description")]
         public string ItemDesc { set; get; }
 
+        public string ItemDescAttrib { set; get; }
+
         public string ItemName { set; get; }
 
         [Display(Name = "Item Rate")]
         [Required(ErrorMessage = "Please enter rate")]
         public float? ItemRate { set; get; }
+
+        [Display(Name = "MSRP")]
+        [Required(ErrorMessage = "Please enter MSRP")]
+        public float? ItemRateMSRP { set; get; }
 
         [Display(Name = "Short Desc.")]
         [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
