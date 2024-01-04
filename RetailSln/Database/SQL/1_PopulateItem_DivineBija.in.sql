@@ -43,24 +43,95 @@ INSERT RetailSlnSch.ItemAttrib(ClientId, ItemId, ItemAttribMasterId, ItemAttribV
 SELECT ItemAttribMaster.ClientId, Item.ItemId, ItemAttribMaster.ItemAttribMasterId, '' ItemAttribValue, '' ItemAttribUnitValue, SeqNum
   FROM RetailSlnSch.Item, RetailSlnSch.ItemAttribMaster
 ORDER BY ItemId, SeqNum
-UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products_3.Length, ItemAttribUnitValue = 100
-FROM dbo.DivineBija_Products_3 WHERE Length <> '' AND ItemAttrib.ItemId = DivineBija_Products_3.ItemId AND ItemAttribMasterId = 1
-UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products_3.Width, ItemAttribUnitValue = 100
-FROM dbo.DivineBija_Products_3 WHERE Width <> '' AND ItemAttrib.ItemId = DivineBija_Products_3.ItemId AND ItemAttribMasterId = 2
-UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products_3.Height, ItemAttribUnitValue = 100
-FROM dbo.DivineBija_Products_3 WHERE Height <> '' AND ItemAttrib.ItemId = DivineBija_Products_3.ItemId AND ItemAttribMasterId = 3
-UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products_3.Width, ItemAttribUnitValue = 100
-FROM dbo.DivineBija_Products_3 WHERE Width <> '' AND ItemAttrib.ItemId = DivineBija_Products_3.ItemId AND ItemAttribMasterId = 4
-UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products_3.[HSN Code]
-FROM dbo.DivineBija_Products_3 WHERE [HSN Code] <> '' AND ItemAttrib.ItemId = DivineBija_Products_3.ItemId AND ItemAttribMasterId = 5
-UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products_3.[Prod Code]
-FROM dbo.DivineBija_Products_3 WHERE [Prod Code] <> '' AND ItemAttrib.ItemId = DivineBija_Products_3.ItemId AND ItemAttribMasterId = 6
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Length, ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE Length <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 1
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Width, ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE Width <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 2
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Height, ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE Height <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 3
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Weight, ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE Weight <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 4 AND [Weight Unit] = 'G'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Weight, ItemAttribUnitValue = 200
+FROM dbo.DivineBija_Products WHERE Weight <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 4 AND [Weight Unit] = 'KG'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[HSN Code]
+FROM dbo.DivineBija_Products WHERE [HSN Code] <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 5
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Prod Code]
+FROM dbo.DivineBija_Products WHERE [Prod Code] <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 6
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Fluid Vol], ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE [Fluid Vol] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 7 AND [Fluid Vol Unit] = 'L'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Fluid Vol], ItemAttribUnitValue = 200
+FROM dbo.DivineBija_Products WHERE [Fluid Vol] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 7 AND [Fluid Vol Unit] = 'ML'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Color
+FROM dbo.DivineBija_Products WHERE Color <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 8
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Package, ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE Package <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 9 AND [Package] = 'Box'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Package, ItemAttribUnitValue = 200
+FROM dbo.DivineBija_Products WHERE Package <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 9 AND [Package] = 'Container'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Package, ItemAttribUnitValue = 300
+FROM dbo.DivineBija_Products WHERE Package <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 9 AND [Package] = 'Packet'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Size
+FROM dbo.DivineBija_Products WHERE Size <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 10
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Material
+FROM dbo.DivineBija_Products WHERE Material <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 11
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Cone(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 200
+FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Cup(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 300
+FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Piece(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 400
+FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Set(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 500
+FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Stem(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 600
+FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Stick(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Books.Publisher
+FROM dbo.DivineBija_Books WHERE Publisher <> '' AND ItemAttrib.ItemId = DivineBija_Books.ItemId AND ItemAttribMasterId = 13
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Books.PageCount
+FROM dbo.DivineBija_Books WHERE PageCount <> '' AND ItemAttrib.ItemId = DivineBija_Books.ItemId AND ItemAttribMasterId = 14
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Weight, ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE Weight <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 15 AND [Weight Unit] = 'G'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = CAST(DivineBija_Products.Weight AS FLOAT) * 1000, ItemAttribUnitValue = 200
+FROM dbo.DivineBija_Products WHERE Weight <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 15 AND [Weight Unit] = 'KG'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Weight]
+FROM dbo.DivineBija_Products WHERE [Show Weight] <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 16
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Volume]
+FROM dbo.DivineBija_Products WHERE [Show Volume] <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 17
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Count]
+FROM dbo.DivineBija_Products WHERE [Show Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.ItemId AND ItemAttribMasterId = 18
 --End Item Attributes
 
 --Begin CategoryHierItem
 TRUNCATE TABLE RetailSlnSch.CategoryItemHier
 
-DECLARE @ClientId BIGINT = 97
 --Start
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 1 AS SeqNum, 8 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem

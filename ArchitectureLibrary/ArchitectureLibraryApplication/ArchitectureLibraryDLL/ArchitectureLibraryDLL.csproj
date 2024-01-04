@@ -251,6 +251,7 @@
     <Compile Include="ArchitectureLibraryEnumerations\CitizenshipEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\CodeTypeEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\ContactUsTypeEnum.cs" />
+    <Compile Include="ArchitectureLibraryEnumerations\CountEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\DimensionUnitEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\FluidVolumeUnitEnum.cs" />
     <Compile Include="ArchitectureLibraryEnumerations\GenericStatusEnum.cs" />

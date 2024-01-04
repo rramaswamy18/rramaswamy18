@@ -1046,6 +1046,7 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Image_001.webp" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Image_002.webp" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Image_003.webp" />
+    <Content Include="Documents\PhonePePayPagePayLoadTemplate.json" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Images\Checkout.jpg" />
     <Content Include="Images\Comments.png" />

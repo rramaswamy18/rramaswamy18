@@ -13,5 +13,7 @@ namespace ArchitectureLibraryEnumerations
         Box = 100,
         [Description("Container")]
         Container = 200,
+        [Description("Packet")]
+        Packet = 300,
     }
 }
