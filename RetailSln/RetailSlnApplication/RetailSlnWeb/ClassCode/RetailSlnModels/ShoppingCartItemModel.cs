@@ -17,6 +17,10 @@ namespace RetailSlnModels
 
         public string ItemDesc { set; get; }
 
+        public float? ItemDiscountAmount { set; get; }
+
+        public float? ItemDiscountPercent { set; get; }
+
         public float? ItemRate { set; get; }
 
         public string ItemShortDesc { set; get; }
@@ -35,8 +39,12 @@ namespace RetailSlnModels
 
         public float? OrderAmount { set; get; }
 
+        public float? OrderAmountBeforeDiscount { set; get; }
+
         public string OrderComments { set; get; }
 
         public OrderDetailTypeEnum OrderDetailTypeId { set; get; }
+
+        public List<ShoppingCartItemModel> ShoppingCartItemSummarys { set; get; }
     }
 }

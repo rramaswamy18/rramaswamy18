@@ -181,6 +181,7 @@ namespace ArchitectureLibraryDataLayer
                 DestDemogInfoZipIdFrom = sqlDataReader["DestDemogInfoZipIdFrom"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdFrom"].ToString()),
                 DestDemogInfoZipIdTo = sqlDataReader["DestDemogInfoZipIdTo"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DestDemogInfoZipIdTo"].ToString()),
                 EndEffDate = DateTime.Parse(sqlDataReader["EndEffDate"].ToString()),
+                LineItemLevelName = sqlDataReader["LineItemLevelName"].ToString(),
                 SalesTaxCaptionId = (SalesTaxCaptionEnum)int.Parse(sqlDataReader["SalesTaxCaptionId"].ToString()),
                 SrceDemogInfoCountryId = sqlDataReader["SrceDemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoCountryId"].ToString()),
                 SrceDemogInfoSubDivisionId = sqlDataReader["SrceDemogInfoSubDivisionId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["SrceDemogInfoSubDivisionId"].ToString()),

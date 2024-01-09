@@ -494,6 +494,7 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 success = false;
                 processMessage = "ERROR???";
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 deliveryInfoDataModel.ResponseObjectModel = new ResponseObjectModel
                 {
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,

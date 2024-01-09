@@ -24,9 +24,10 @@ else
             <th scope="col">#</th>
             <th scope="col">Item#</th>
             <th scope="col">Item Desc</th>
-            <th class="text-right" scope="col">Rate</th>
             <th class="text-center" scope="col">Qty</th>
+            <th class="text-right" scope="col">Rate</th>
             <th class="text-right" scope="col">Amount</th>
+            <th class="text-center" scope="col">Other</th>
         </tr>
         @{
             foreach (var shoppingCartItem in Model.ShoppingCartItems)
@@ -45,15 +46,18 @@ else
                         @shoppingCartItem.ItemShortDesc
                         <br />
                         <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
-                        </td>
-                    <td class="text-right">
-                        @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                     </td>
                     <td class="text-center">
                         @shoppingCartItem.OrderQty
                     </td>
                     <td class="text-right">
+                        @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                    </td>
+                    <td class="text-right">
                         @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                    </td>
+                    <td>
+
                     </td>
                 </tr>
                 <tr>

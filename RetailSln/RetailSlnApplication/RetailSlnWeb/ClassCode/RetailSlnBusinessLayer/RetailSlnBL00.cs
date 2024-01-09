@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace RetailSlnBusinessLayer
 {
@@ -90,6 +91,7 @@ namespace RetailSlnBusinessLayer
                                 DimensionUnitId = dimensionUnitId,
                                 HeightValue = heightValue,
                                 ItemDesc = itemModel.ItemDesc,
+                                ItemDiscountPercent = null,
                                 ItemId = itemModel.ItemId,
                                 ItemRate = itemRate,
                                 ItemShortDesc = itemModel.ItemShortDesc,
@@ -173,6 +175,7 @@ namespace RetailSlnBusinessLayer
                                 DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue),
                                 HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue),
                                 ItemDesc = itemModel.ItemDesc,
+                                ItemDiscountPercent = null,
                                 ItemId = itemModel.ItemId,
                                 ItemRate = itemModel.ItemRate,
                                 ItemShortDesc = itemModel.ItemShortDesc,
@@ -331,7 +334,6 @@ namespace RetailSlnBusinessLayer
                 }
                 else
                 {
-                    //shoppingCartModel.ShoppingCartSummaryItems = null;
                     if (shoppingCartModel.ShoppingCartItems.Count > 0 && shoppingCartModel.ShoppingCartTotalAmount > 0)
                     {
                         ;
@@ -361,7 +363,6 @@ namespace RetailSlnBusinessLayer
                 ShoppingCartModel shoppingCartModel;
                 DeliveryInfoModel deliveryInfoModel;
                 shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
-                //shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>();
                 shoppingCartModel.Checkout = false;
                 httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
                 if (shoppingCartModel == null)
@@ -430,22 +431,10 @@ namespace RetailSlnBusinessLayer
                         OrderDetailTypeId = OrderDetailTypeEnum.TotalOrderAmount,
                     }
                 };
+                ApplyDiscounts(shoppingCartModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ItemModel itemModel;
-                float totalOrderAmount = 0, totalVolumeValue = 0, totalWeightValue = 0, itemRate;
-                foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
-                {
-                    itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItem.ItemId);
-                    itemRate = itemModel.ItemRate.Value;
-                    totalOrderAmount += itemRate * shoppingCartItem.OrderQty.Value;
-                    totalVolumeValue += shoppingCartItem.VolumeValue.Value;
-                    totalWeightValue += shoppingCartItem.WeightValue.Value;
-                }
-                //shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>();
                 long personId = sessionObjectModel.PersonId;
                 AddAdditionalCharges(shoppingCartModel, deliveryInfoDataModel.DeliveryAddressModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //AddFirstOrderDiscount(personId, shoppingCartModel.ShoppingCartSummaryItems, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //AddDiscounts(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddTotals(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
                 httpSessionStateBase["DeliveryInfoDataModel"] = deliveryInfoDataModel;
             }
@@ -473,24 +462,9 @@ namespace RetailSlnBusinessLayer
                 {
                     CaptchaNumber0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString(),
                     CaptchaNumber1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString(),
-
-                    //CaptchaAnswer = (int.Parse(httpSessionStateBase["CaptchaNumberLogin0"].ToString()) + int.Parse(httpSessionStateBase["CaptchaNumberLogin1"].ToString())).ToString(),
-                    //CardExpiryMM = "09",
-                    //CardExpiryYYYY = "2025",
-                    //CardHolderName = "Ravi Ramaswamy",
-                    //CreditCardNumber = "4111111111111111",
-                    //CVV = "123",
-                    //ConfirmRecipientEmailAddress = "test2@email.com",
-                    //GiftCertAmount = 108,
-                    //GiftCertMessage = "Happy Birthday!!!",
-                    //RecipientFullName = "Mary Aguilar",
-                    //RecipientEmailAddress = "test2@email.com",
-                    //SenderEmailAddress = "test1@email.com",
-                    //SenderPassword = "Login9#9Password",
-                    //SenderFullName = "John Smith",
                 };
                 return giftCertModel;
-            }            
+            }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
@@ -749,11 +723,6 @@ namespace RetailSlnBusinessLayer
                             DeliveryInfoDataModel = deliveryInfoDataModel,
                             PaymentDataModel = new PaymentDataModel
                             {
-                                //CardExpiryMM = "09",
-                                //CardExpiryYYYY = "2025",
-                                //CardHolderName = "John Miller",
-                                //CreditCardNumber = "4111111111111111",
-                                //CVV = "123",
                                 EmailAddress = sessionObjectModel.EmailAddress,
                                 OrderAmount = shoppingCartModel.ShoppingCartSummaryItems[shoppingCartModel.ShoppingCartSummaryItems.Count - 1].OrderAmount.Value,
                             },
@@ -1099,20 +1068,39 @@ namespace RetailSlnBusinessLayer
             float fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
             foreach (var salesTaxListModel in salesTaxListModels)
             {
-                shoppingCartSummaryItems.Add
-                (
-                    new ShoppingCartItemModel
+                if (salesTaxListModel.LineItemLevelName == "SUMMARY")
+                {
+                    shoppingCartSummaryItems.Add
+                    (
+                        new ShoppingCartItemModel
+                        {
+                            ItemDesc = null,
+                            ItemId = null,
+                            ItemRate = totalOrderAmount,
+                            ItemShortDesc = salesTaxListModel.SalesTaxCaptionId + " (" + salesTaxListModel.SalesTaxRate + "%)",
+                            OrderAmount = totalOrderAmount * salesTaxListModel.SalesTaxRate / 100f,
+                            OrderComments = null,
+                            OrderQty = 1,
+                            OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                        }
+                    );
+                }
+                else
+                {
+                    foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
                     {
-                        ItemDesc = null,
-                        ItemId = null,
-                        ItemRate = totalOrderAmount,
-                        ItemShortDesc = salesTaxListModel.SalesTaxCaptionId + " (" + salesTaxListModel.SalesTaxRate + "%)",
-                        OrderAmount = totalOrderAmount * salesTaxListModel.SalesTaxRate / 100f,
-                        OrderComments = null,
-                        OrderQty = 1,
-                        OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                        var itemAttribValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItem.ItemId).ItemAttribModels.ToList().First(x => x.ItemAttribMasterModel.AttribName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemAttribValue;
+                        shoppingCartItem.ShoppingCartItemSummarys.Add
+                        (
+                            new ShoppingCartItemModel
+                            {
+                                ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
+                                ItemRate = float.Parse(itemAttribValue),
+                                OrderAmount = float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount / 100f,
+                            }
+                        );
                     }
-                );
+                }
             }
             shoppingCartSummaryItems.Add
             (
@@ -1240,6 +1228,39 @@ namespace RetailSlnBusinessLayer
                     OrderDetailTypeId = OrderDetailTypeEnum.BalanceDue,
                 }
             );
+        }
+        private void ApplyDiscounts(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string itemIds = "", prefixString = "";
+            foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
+            {
+                itemIds += prefixString + shoppingCartItem.ItemId;
+                prefixString = ", ";
+            }
+            string sqlStmt = "SELECT * FROM RetailSlnSch.ItemDiscount WHERE ClientId = " + clientId + " AND CorpAcctId = " + sessionObjectModel.CorpAcctId + " AND ItemId IN(" + itemIds + ")";
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            ShoppingCartItemModel shoppingCartItemModel;
+            float discountPercent, itemRateAfterDiscount;
+            while (sqlDataReader.Read())
+            {
+                shoppingCartItemModel = shoppingCartModel.ShoppingCartItems.First(x => x.ItemId == long.Parse(sqlDataReader["ItemId"].ToString()));
+                discountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString());
+                itemRateAfterDiscount = shoppingCartItemModel.ItemRate.Value * discountPercent / 100f;
+                shoppingCartItemModel.ShoppingCartItemSummarys = new List<ShoppingCartItemModel>
+                {
+                    new ShoppingCartItemModel
+                    {
+                        ItemShortDesc = discountPercent.ToString() + "%",
+                        ItemRate = itemRateAfterDiscount,
+                        OrderAmount = shoppingCartItemModel.OrderQty * itemRateAfterDiscount * -1,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.Discount,
+                    }
+                };
+            }
+            sqlDataReader.Close();
         }
         private void UpdatePayments(string giftCertLast4, float? giftCertPaymentAmount, string creditCardLast4, string creditCardProcessUniqueRef, float? creditCardPaymentAmount, List<ShoppingCartItemModel> shoppingCartSummaryItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

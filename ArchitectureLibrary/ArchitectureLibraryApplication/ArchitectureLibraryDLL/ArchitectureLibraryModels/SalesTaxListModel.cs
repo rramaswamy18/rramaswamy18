@@ -29,6 +29,8 @@ namespace ArchitectureLibraryModels
 
         public DateTime EndEffDate { set; get; }
 
+        public string LineItemLevelName { set; get; }
+
         public SalesTaxCaptionEnum SalesTaxCaptionId { set; get; }
 
         public float SalesTaxRate { set; get; }

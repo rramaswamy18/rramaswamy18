@@ -18,6 +18,8 @@ namespace RetailSlnModels
 
         public long DemogInfoAddressId { set; get; }
 
+        public DemogInfoAddressModel DemogInfoAddressModel { set; get; }
+
         public List<DiscountDtlModel> DiscountDtlModels  { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }

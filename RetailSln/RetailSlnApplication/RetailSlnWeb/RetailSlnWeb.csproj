@@ -192,6 +192,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleDiscountModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemImageListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemImageModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemImageSrcSetModel.cs" />

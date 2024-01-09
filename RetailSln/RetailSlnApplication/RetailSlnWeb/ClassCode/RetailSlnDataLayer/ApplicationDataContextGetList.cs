@@ -73,6 +73,8 @@ namespace RetailSlnDataLayer
                         {
                             CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
                             CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                            TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
+                            DemogInfoAddressId = long.Parse(sqlDataReader["DemogInfoAddressId"].ToString()),
                         }
                      );
                 }
