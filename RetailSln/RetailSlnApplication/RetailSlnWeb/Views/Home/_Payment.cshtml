@@ -1,18 +1,26 @@
 ﻿@model RetailSlnModels.PaymentModel
-<h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+@{ 
+    Model.ShoppingCartModel.Checkout = false;
+    Model.ShoppingCartModel.ShowDiscountsAdditionalCharges = true;
+}
+@*<h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
     Payment
-</h2>
+</h2>*@
 <div class="center">
-    <div style="float: left; padding-right: 18px; text-align: left; width: 50%;">
-        @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
-    </div>
     <div style="float: left; padding-left: 18px; text-align: left; width: 50%;">
         <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment&nbsp;&nbsp;Info</h3>
         <form id="formPaymentData">
             @Html.Partial("_PaymentData", Model.PaymentDataModel)
         </form>
         <center><button class="loginRegisterbtn" id="paymentSave" onclick="javascript: return paymentSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process Payment</button></center>
+    </div>
+    <div style="float: left; padding-left: 18px; text-align: left; width: 50%;">
         <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery&nbsp;&nbsp;Info</h3>
+        @Html.Partial("_PaymentSummaryData", Model.PaymentDataModel)
         @Html.Partial("_DeliveryInfoAddressData", Model.DeliveryInfoDataModel)
+    </div>
+    <br style="clear: both;" />
+    <div style="text-align: left; width: 100%;">
+        @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
     </div>
 </div>

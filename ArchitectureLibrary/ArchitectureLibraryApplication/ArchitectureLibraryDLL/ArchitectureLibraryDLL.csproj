@@ -102,6 +102,9 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Razorpay, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\RetailSln\RetailSlnApplication\packages\Razorpay.3.1.0\lib\net47\Razorpay.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=110.2.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\..\RetailSln\RetailSlnApplication\packages\RestSharp.110.2.0\lib\net471\RestSharp.dll</HintPath>
     </Reference>
@@ -204,6 +207,7 @@
     <Compile Include="ArchitectureLibraryClassCode\AjaxAuthorizeAttribute.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardBusinessLayer\CreditCardNuveiBL.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardBusinessLayer\CreditCardPhonePeBL.cs" />
+    <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardBusinessLayer\CreditCardRazorPayBL.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardBusinessLayer\CreditCardServiceBL.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardBusinessLayer\CreditCardTestBL.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchitectureLibraryCreditCardAdd0.cs" />
@@ -217,6 +221,8 @@
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardModels\PhonePePayLoad.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardModels\PhonePeRedirectInfo.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardModels\PhonePeRestResponseObject.cs" />
+    <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardModels\RazorPayRequest.cs" />
+    <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardModels\RazorPayResponse.cs" />
     <Compile Include="ArchitectureLibraryDataLayer\ArchLibDataContext.cs" />
     <Compile Include="ArchitectureLibraryDataLayer\ArchLibDataContextAdd0.cs" />
     <Compile Include="ArchitectureLibraryDataLayer\ArchLibDataContextAssign0.cs" />

@@ -27,7 +27,12 @@ else
             <th class="text-center" scope="col">Qty</th>
             <th class="text-right" scope="col">Rate</th>
             <th class="text-right" scope="col">Amount</th>
-            <th class="text-center" scope="col">Other</th>
+            @if (Model.ShowDiscountsAdditionalCharges)
+            {
+                <th class="text-center" scope="col">
+                    Other
+                </th>
+            }
         </tr>
         @{
             foreach (var shoppingCartItem in Model.ShoppingCartItems)
@@ -56,9 +61,60 @@ else
                     <td class="text-right">
                         @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                     </td>
-                    <td>
+                    @if (Model.ShowDiscountsAdditionalCharges)
+                    {
+                        <td>
+                            <table class="table table-condensed table-responsive table-striped">
+                                <tr>
+                                    <th>
+                                        Desc
+                                    </th>
+                                    <th>
 
-                    </td>
+                                    </th>
+                                    <th class="text-right">
+                                        %
+                                    </th>
+                                    <th class="text-right">
+                                        Amt
+                                    </th>
+                                </tr>
+                                @if (shoppingCartItem.ItemRateBeforeDiscount != shoppingCartItem.ItemRate)
+                                {
+                                <tr>
+                                    <th scope="row">
+                                        Rate
+                                    </th>
+                                    <td class="text-right">
+                                        @shoppingCartItem.ItemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                    </td>
+                                    <td class="text-right">
+                                        @(shoppingCartItem.ItemDiscountPercent.Value.ToString("#0.00") + "%")
+                                    </td>
+                                    <td class="text-right">
+                                        @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                    </td>
+                                </tr>
+                                }
+                                @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
+                                {
+                                    <tr>
+                                        <th scope="row">
+                                            @shoppingCartItemSummary.ItemShortDesc
+                                        </th>
+                                        <td>
+                                        </td>
+                                        <td class="text-right">
+                                            @shoppingCartItemSummary.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                        </td>
+                                        <td class="text-right">
+                                            @shoppingCartItemSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <td></td>
@@ -111,6 +167,10 @@ else
                     </td>
                     <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
                 </tr>
+                if (!Model.ShowDiscountsAdditionalCharges)
+                {
+                    break;
+                }
             }
         </table>
     }

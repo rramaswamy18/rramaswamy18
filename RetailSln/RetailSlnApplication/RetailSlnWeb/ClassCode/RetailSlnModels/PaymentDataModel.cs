@@ -77,6 +77,7 @@ namespace RetailSlnModels
 
         public string CreditCardNumberLast4 { set; get; }
 
+        [Display(Name = "Email Address")]
         public string EmailAddress { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }

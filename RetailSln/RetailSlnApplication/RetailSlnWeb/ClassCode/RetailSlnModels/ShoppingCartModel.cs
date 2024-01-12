@@ -13,6 +13,7 @@ namespace RetailSlnModels
         public long? DeliveryAddressId { set; get; }
         public long? OrderHeaderId { set; get; }
         public float? ShoppingCartTotalAmount { set; get; }
+        public bool ShowDiscountsAdditionalCharges { set; get; }
         public long? TotalItemsCount { set; get; }
         public float? TotalVolumeValue { set; get; }
         public float? TotalWeightValue { set; get; }

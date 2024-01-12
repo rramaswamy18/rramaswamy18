@@ -23,6 +23,8 @@ namespace RetailSlnModels
 
         public float? ItemRate { set; get; }
 
+        public float? ItemRateBeforeDiscount { set; get; }
+
         public string ItemShortDesc { set; get; }
 
         public float? LengthValue { set; get; }

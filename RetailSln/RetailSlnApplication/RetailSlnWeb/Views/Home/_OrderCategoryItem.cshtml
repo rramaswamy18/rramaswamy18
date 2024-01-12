@@ -25,6 +25,10 @@
         @Html.Partial("_ShoppingCartLink")
         @BuildOrderCategoryItem(categoryItemHierModels)
         <div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
+            @{ 
+                shoppingCartModel.Checkout = true;
+                shoppingCartModel.ShowDiscountsAdditionalCharges = false;
+            }
             @Html.Partial("_ShoppingCart", shoppingCartModel)
         </div>
     </div>
@@ -103,7 +107,7 @@
 {
     int k;
     float itemRate;
-    string addToCartSuccessDisplay, defaultOrderQty = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty");
+    string defaultOrderQty = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty");
     var shoppingCartItems = ((ShoppingCartModel)Session["ShoppingCartModel"])?.ShoppingCartItems;
     ShoppingCartItemModel shoppingCartItemModel;
     itemRate = itemModel.ItemRate.Value;
