@@ -25,7 +25,7 @@
         @Html.Partial("_ShoppingCartLink")
         @BuildOrderCategoryItem(categoryItemHierModels)
         <div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
-            @{ 
+            @{
                 shoppingCartModel.Checkout = true;
                 shoppingCartModel.ShowDiscountsAdditionalCharges = false;
             }
@@ -38,6 +38,7 @@
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
     string categoryOrItem, imageDivWidth, imageHeight, imageWidth;
+    int categoryCountIndex = 0, categoryCountPerRow = 3;
     int imageIndex = -1, imageCountIndex = 0, imageCountPerRow;
     List<CategoryItemHierModel> categoryItemHierModelsRecursive;
     CategoryLayoutModel categoryLayoutModel;
@@ -71,6 +72,7 @@
             {
                 if (categoryItemHierModel.CategoryId != null)
                 {
+                    categoryCountIndex++;
                     <div style="border-radius: 25px; color: #000000; display: inline-block; font-size: 20px; font-weight: bold; padding: 18px;">
                         @BuildCategory(categoryItemHierModel.CategoryModel, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
                     </div>
@@ -80,19 +82,24 @@
                     imageIndex++;
                     imageCountIndex++;
                     <div style="display: inline-block; padding: 18px; vertical-align: top; width: @imageDivWidth;">
-                        @BuildItem(categoryItemHierModel.ItemModel, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                        @BuildItem(categoryItemHierModel.ItemModel, categoryItemHierModel.SeqNum, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
                     </div>
                 }//else (categoryItemHierModel.CategoryId != null)
             }//else (categoryItemHierModel.ProcessType == "ParentCategoryName")
         }//else (categoryItemHierModel.ProcessType == "Recursive")
+        if (categoryCountIndex == categoryCountPerRow)
+        {
+            <br style="clear: both;" />
+            categoryCountIndex = 0;
+        }//if (categoryCountIndex == categoryCountPerRow)
         if (imageCountIndex == imageCountPerRow)
         {
             <br style="clear: both;" />
             imageCountIndex = 0;
-        }//if (imageCountIndex == imageCountPerRow - 1)
+        }//if (imageCountIndex == imageCountPerRow)
     }//foreach (var categoryItemHierModel in categoryItemHierModels)
-    <br style="clear: both;" />
-    <span style="color: #000000;">@(imageIndex + 1)</span>
+    @*<br style="clear: both;" />
+        <span style="color: #000000;">@(imageIndex + 1)</span>*@
 }@*helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)*@
 @helper BuildCategory(CategoryModel categoryModel, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
@@ -103,7 +110,7 @@
         </div>
     </a>
 }
-@helper BuildItem(ItemModel itemModel, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+@helper BuildItem(ItemModel itemModel, float seqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
     int k;
     float itemRate;
@@ -126,7 +133,23 @@
         <span class="fa fa-star-o" style="color: #ff9900;"></span>
     }
     <br style="clear: both;">
-    <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">@itemModel.ItemShortDesc</div>
+    <div style="text-align: left; width: 100%;">
+        <span style="color: #000000; font-size: 12px; font-weight: normal;">@((imageIndex + 1) + ". " + itemModel.ItemShortDesc0 + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>
+        <br />
+        <span style="color: #000000; font-size: 13px; font-weight: 900;">@itemModel.ItemShortDesc1</span>
+        @if (itemModel.ItemAttributesForDisplay.Count > 0)
+        {
+            <br />
+            foreach (var itemAttributeForDisplay in itemModel.ItemAttributesForDisplay)
+            {
+                if (itemAttributeForDisplay.Key != "ProductCode" && itemAttributeForDisplay.Key != "HSNCode")
+                {
+                <span style="color: #000000; font-size: 12px; font-weight: 600;">@itemAttributeForDisplay.Value</span>
+                }
+            }
+            <br />
+        }
+    </div>
     if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     {
         <span style="color: #a54000; font-family: Arial; font-size: 15px; font-style: italic; font-weight: 900; text-decoration: underline;">Out of Stock&nbsp;</span>

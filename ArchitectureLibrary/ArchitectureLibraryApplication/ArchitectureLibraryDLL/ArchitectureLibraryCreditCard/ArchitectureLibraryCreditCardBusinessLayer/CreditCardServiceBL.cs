@@ -11,7 +11,15 @@ namespace ArchitectureLibraryCreditCardBusinessLayer
 {
     public class CreditCardServiceBL
     {
-        public bool ProcessCreditCard(CreditCardDataModel creditCardDataModel, out string processMessage, SqlConnection sqlConnection, out object creditCardResponseObject, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInuserId = "")
+        public bool ProcessCreditCard(CreditCardDataModel creditCardDataModel, SqlConnection sqlConnection, out string processMessage, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInuserId = "")
+        {
+            processMessage = "";
+            creditCardDataModel.CreditCardNumberLast4 = "";
+            creditCardDataModel.CreditCardDataId = -1;
+            creditCardDataModel.ProcessMessage = processMessage;
+            return true;
+        }
+        public bool ProcessCreditCard(CreditCardDataModel creditCardDataModel, SqlConnection sqlConnection, out string processMessage, out object creditCardResponseObject, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInuserId = "")
         {
             bool returnValue = ProcessCreditCard(creditCardDataModel.CreditCardAmount, creditCardDataModel.CurrencyCode, creditCardDataModel.CreditCardNumber, creditCardDataModel.CreditCardSecCode, creditCardDataModel.CreditCardExpMM, creditCardDataModel.CreditCardExpYear, creditCardDataModel.NameAsOnCard, creditCardDataModel.CreditCardProcessor, creditCardDataModel.CreditCardTranType, creditCardDataModel.CreditCardKVPs, out string cardNumberLast4, out long creditCardDataId, out processMessage, sqlConnection, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInuserId);
             creditCardDataModel.CreditCardNumberLast4 = cardNumberLast4;

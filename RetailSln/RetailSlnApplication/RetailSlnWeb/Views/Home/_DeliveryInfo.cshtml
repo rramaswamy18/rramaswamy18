@@ -7,7 +7,7 @@
     <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" />
     <input type="hidden" id="razorpay_order_id" name="razorpay_order_id" />
     <input type="hidden" id="razorpay_signature" name="razorpay_signature" />
-    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" hidden>Submit</button>
+    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" style="display: none;">Submit</button>
 </form>
 <div class="container" id="divOrderProcess">
     <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
@@ -154,10 +154,12 @@
                             "order_id": jsonObject.OrderId,
                             "handler": function (response) {
                                 console.log(9.18, response);
+                                debugger;
                                 //document.getElementById(("formRazorPayReturn").action = "/Home/RazorPayReturn";
                                 document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                                 document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
                                 document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                                document.getElementById('rzp-paymentresponse').style.display = "block";
                                 document.getElementById('rzp-paymentresponse').click();
                             },
                             "prefill": {

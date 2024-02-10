@@ -269,12 +269,14 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category116.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category117.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category118.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category119.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category2.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category3.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category4.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category5.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category6.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category7.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category\Category9.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Favicon.ico" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item1.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item10.png" />
@@ -550,7 +552,13 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item343.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item344.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item345.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item346.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item347.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item348.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item349.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item35.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item350.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item351.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item36.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item37.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item38.png" />
@@ -1062,6 +1070,7 @@
     <Content Include="Images\SMSIcon1.png" />
     <Content Include="Images\SMSIcon2.png" />
     <Content Include="Images\SMSIcon3.png" />
+    <Content Include="Images\WhatsApp1.png" />
     <Content Include="Images_Original\Addtocart.png" />
     <Content Include="Images_Original\Checkout.jpg" />
     <Content Include="Images_Original\Comments.png" />

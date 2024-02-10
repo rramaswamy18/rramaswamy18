@@ -21,16 +21,16 @@ DECLARE @ClientId BIGINT = 97
 --Type -> Item
 SET IDENTITY_INSERT RetailSlnSch.Item ON
 
-INSERT RetailSlnSch.Item(ItemId, ClientId, ItemDesc, ItemRate, ItemRateMSRP, ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ProductItemId, UploadImageFileName)
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, [Top 450] + '.jpg' AS UploadImageFileName
+INSERT RetailSlnSch.Item(ItemId, ClientId, ItemDesc, ItemRate, ItemRateMSRP, ItemShortDesc0, ItemShortDesc1, ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ProductItemId, UploadImageFileName)
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0, RTRIM(LTRIM(Description1)) AS ItemShortDesc1, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, [Top 450] + '.jpg' AS UploadImageFileName
 FROM dbo.DivineBija_Products WHERE [Item Type] = 'ITEMS'
 UNION
 --Type --> Item Bundle
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, [Top 450] + '.jpg' AS UploadImageFileName
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0, RTRIM(LTRIM(Description1)) AS ItemShortDesc1, RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, [Top 450] + '.jpg' AS UploadImageFileName
 FROM dbo.DivineBija_Products WHERE [Item Type] = 'BUNDLE'
 UNION
 --Type --> Books
-SELECT Id + 220, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 200 AS ItemTypeId, ItemId AS ProductItemId, Image1 AS UploadImageFileName
+SELECT Id + 226, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(ProductDesc0)) AS ItemShortDesc0, RTRIM(LTRIM(ProductDesc1)) AS ItemShortDesc1, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId, 200 AS ItemTypeId, ItemId AS ProductItemId, Image1 AS UploadImageFileName
 FROM dbo.DivineBija_Books --WHERE [Item Type] = 'ITEM'
 ORDER BY Id
 
@@ -89,6 +89,9 @@ FROM dbo.DivineBija_Products WHERE Size <> '' AND ItemAttrib.ItemId = DivineBija
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.Material
 FROM dbo.DivineBija_Products WHERE Material <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 11
 
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Weight Attribute]
+FROM dbo.DivineBija_Products WHERE [Weight Attribute] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 24
+
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 100
 FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Cone(s)'
 
@@ -128,6 +131,15 @@ FROM dbo.DivineBija_Products WHERE [Show Volume] <> '' AND ItemAttrib.ItemId = D
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Count]
 FROM dbo.DivineBija_Products WHERE [Show Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 18
 
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Color]
+FROM dbo.DivineBija_Products WHERE [Show Color] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 22
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Size]
+FROM dbo.DivineBija_Products WHERE [Show Size] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 23
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Weight Attribute]
+FROM dbo.DivineBija_Products WHERE [Show Weight Attribute] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 25
+
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = REPLACE(DivineBija_Products.[Central GST], '%', '')
 FROM dbo.DivineBija_Products WHERE [Central GST] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 19
 
@@ -148,6 +160,7 @@ FROM dbo.DivineBija_Books WHERE [Central GST] <> '' AND DivineBija_Books.[State 
 --End Item Attributes
 
 --Begin CategoryHierItem
+--DECLARE @ClientId BIGINT = 97
 TRUNCATE TABLE RetailSlnSch.CategoryItemHier
 
 --Start
@@ -158,6 +171,7 @@ SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 1 AS SeqNum, 8 AS CategoryI
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 --SELECT @ClientId AS ClientId, 5 AS CategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
 --SELECT @ClientId AS ClientId, 5 AS CategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 8 AS CategoryId, 0 AS SeqNum, 9 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 1 AS SeqNum, 102 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 2 AS SeqNum, 118 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 3 AS SeqNum, 113 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
@@ -167,79 +181,95 @@ SELECT @ClientId AS ClientId, 8 AS CategoryId, 6 AS SeqNum, 116 AS CategoryId, N
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 7 AS SeqNum, 117 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 8 AS SeqNum, 7 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 9 AS SeqNum, 100 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 8 AS CategoryId, 10 AS SeqNum, 101 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 8 AS CategoryId, 10 AS SeqNum, 119 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
 --SELECT @ClientId AS ClientId, 8 AS CategoryId, 11 AS SeqNum, 5 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
 SELECT @ClientId AS ClientId, 8 AS CategoryId, 11 AS SeqNum, 6 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
 
 --Homa Items
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 102 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 102 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 102 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Homa Items'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Pooja Items
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 118 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 118 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 118 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Pooja Items'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Abhishekam
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 113 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 113 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 113 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Abhishegam'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Deepam
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 114 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 114 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 114 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Deepam'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Rituals
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 115 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 115 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 115 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Rituals'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Sumangali
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 116 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 116 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 116 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Sumangali'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Thamboolam
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 117 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 117 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 117 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Thamboolam'
-ORDER BY Id
+ORDER BY SeqNum
+
+--Vehicle Ornaments
+INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+SELECT @ClientId AS ClientId, 119 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 119 AS ParentCategoryId, ItemId AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+FROM DivineBija_Products WHERE Category = 'Vehicle Ornaments'
+ORDER BY SeqNum
 
 --Item Bundle
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 7 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT 98 AS ClientId, 7 AS ParentCategoryId, Id - 0 AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT 98 AS ClientId, 7 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Products WHERE Category = 'Item Bundle'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Religious Books
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 100 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 100 AS ParentCategoryId, ItemId AS SeqNum, NULL AS CategoryId, Id + 220 AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 100 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id + 226 AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Books WHERE Category = 'Religious Books'
-ORDER BY Id
+ORDER BY SeqNum
 
 --Kids Books
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 101 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 101 AS ParentCategoryId, ItemId AS SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 101 AS ParentCategoryId, ItemId AS SeqNum, NULL AS CategoryId, Id + 226 AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
 FROM DivineBija_Books WHERE Category = 'Kids Books'
-ORDER BY Id
+ORDER BY SeqNum
+
+--All Items
+INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+SELECT @ClientId AS ClientId, 9 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 9 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+FROM DivineBija_Products UNION
+SELECT @ClientId AS ClientId, 9 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id + 226 AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+FROM DivineBija_Books
+ORDER BY SeqNum
 
 --Other
 --INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
@@ -788,4 +818,29 @@ SELECT * FROM RetailSlnSch.CategoryItem
 UPDATE RetailSlnSch.ItemImageSrcSet SET ImageHeight = 450, ImageWidth = 450 WHERE SeqNum = 1
 UPDATE RetailSlnSch.ItemImageSrcSet SET ImageHeight = 630, ImageWidth = 630 WHERE SeqNum = 2
 UPDATE RetailSlnSch.ItemImageSrcSet SET ImageHeight = 810, ImageWidth = 810 WHERE SeqNum = 3
+--Camel Case
+DECLARE @Index          INT
+DECLARE @Char           CHAR(1)
+DECLARE @PrevChar       CHAR(1)
+DECLARE @InputString    VARCHAR(4000)
+DECLARE @OutputString   VARCHAR(4000)
+
+SELECT Id, ProductDesc1, ProductDesc FROM DivineBija_Books
+
+SET @OutputString = LOWER(@InputString)
+SET @Index = 1
+
+WHILE @Index <= LEN(@InputString)
+BEGIN
+    SET @Char     = SUBSTRING(@InputString, @Index, 1)
+    SET @PrevChar = CASE WHEN @Index = 1 THEN ' '
+                         ELSE SUBSTRING(@InputString, @Index - 1, 1)
+                    END
+
+    IF @PrevChar IN (' ', ';', ':', '!', '?', ',', '.', '_', '-', '/', '&', '''', '(')
+        SET @OutputString = STUFF(@OutputString, @Index, 1, UPPER(@Char))
+
+    SET @Index = @Index + 1
+END
+SELECT @InputString, @OutputString
 */

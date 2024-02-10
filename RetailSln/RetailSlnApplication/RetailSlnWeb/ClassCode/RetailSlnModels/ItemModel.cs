@@ -23,6 +23,8 @@ namespace RetailSlnModels
 
         public string ImageName { set; get; }
 
+        public Dictionary<string, string> ItemAttributesForDisplay { set; get; }
+
         [Display(Name = "Description")]
         [MaxLength(1024, ErrorMessage = "Desc not to exceed 1024 characters")]
         [Required(ErrorMessage = "Please enter description")]
@@ -39,6 +41,16 @@ namespace RetailSlnModels
         [Display(Name = "MSRP")]
         [Required(ErrorMessage = "Please enter MSRP")]
         public float? ItemRateMSRP { set; get; }
+
+        [Display(Name = "Short Desc.")]
+        [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
+        [Required(ErrorMessage = "Please enter short description")]
+        public string ItemShortDesc0 { set; get; }
+
+        [Display(Name = "Short Desc.")]
+        [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
+        [Required(ErrorMessage = "Please enter short description")]
+        public string ItemShortDesc1 { set; get; }
 
         [Display(Name = "Short Desc.")]
         [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]

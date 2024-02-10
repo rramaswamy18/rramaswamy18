@@ -53,7 +53,7 @@ namespace RetailSlnConsoleApp1
         }
         public void DivineBijaResizeImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
         {
-            int resizedWidth = 180, resizedHeight = 189, itemId;
+            int resizedWidth = 225, resizedHeight = 234, itemId;
             string inputFullFileName, outputFullFileName;
             SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
             sqlConnection.Open();
@@ -72,12 +72,12 @@ namespace RetailSlnConsoleApp1
                     }
                     else
                     {
-                        Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), sqlDataReader["UploadImageFileName"].ToString(), sqlDataReader["ItemShortDesc"].ToString());
+                        Console.WriteLine("Error 1 {0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), sqlDataReader["UploadImageFileName"].ToString(), sqlDataReader["ItemShortDesc"].ToString());
                     }
                 }
                 else
                 {
-                    Console.WriteLine("{0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), "Empty", sqlDataReader["ItemShortDesc"].ToString());
+                    Console.WriteLine("Error 2 {0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), "Empty", sqlDataReader["ItemShortDesc"].ToString());
                 }
             }
             sqlDataReader.Close();

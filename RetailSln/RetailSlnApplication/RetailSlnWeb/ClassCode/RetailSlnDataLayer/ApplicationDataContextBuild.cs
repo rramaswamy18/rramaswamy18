@@ -255,7 +255,9 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@ExpectedAvailability", SqlDbType.NVarChar, 50);
             sqlCommand.Parameters.Add("@ItemDesc", SqlDbType.NVarChar, 250);
             sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
-            sqlCommand.Parameters.Add("@ItemShortDesc", SqlDbType.NVarChar, 250);
+            sqlCommand.Parameters.Add("@ItemShortDesc0", SqlDbType.NVarChar, 512);
+            sqlCommand.Parameters.Add("@ItemShortDesc1", SqlDbType.NVarChar, 512);
+            sqlCommand.Parameters.Add("@ItemShortDesc", SqlDbType.NVarChar, 512);
             sqlCommand.Parameters.Add("@ItemStarCount", SqlDbType.Int);
             sqlCommand.Parameters.Add("@ItemStatusId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);

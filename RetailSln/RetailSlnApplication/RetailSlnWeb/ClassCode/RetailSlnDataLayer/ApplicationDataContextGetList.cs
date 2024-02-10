@@ -353,7 +353,7 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemHier ORDER BY CategoryItemHierId" + Environment.NewLine;
+                sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemHier ORDER BY ParentCategoryId, SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 List<CategoryItemHierModel> categoryItemHierModels = new List<CategoryItemHierModel>();
@@ -443,6 +443,8 @@ namespace RetailSlnDataLayer
                             ImageName = sqlDataReader["ImageName"].ToString(),
                             ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
                             ItemRateMSRP = float.Parse(sqlDataReader["ItemRateMSRP"].ToString()),
+                            ItemShortDesc0 = sqlDataReader["ItemShortDesc0"].ToString(),
+                            ItemShortDesc1 = sqlDataReader["ItemShortDesc1"].ToString(),
                             ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
                             ItemStarCount = 4,
                             ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),

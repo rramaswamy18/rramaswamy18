@@ -528,7 +528,7 @@ namespace RetailSlnBusinessLayer
                             NameAsOnCard = giftCertModel.CardHolderName,
                         };
                         CreditCardServiceBL creditCardService = new CreditCardServiceBL();
-                        giftCertModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, out string processMessage, ApplicationDataContext.SqlConnectionObject, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        giftCertModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         giftCertModel.CreditCardLast4 = creditCardDataModel.CreditCardNumberLast4;
                         giftCertModel.CreditCardProcessMessage = processMessage;
                         RegisterUserProfModel registerUserProfModel = new RegisterUserProfModel
@@ -810,7 +810,7 @@ namespace RetailSlnBusinessLayer
                             };
                             CreditCardServiceBL creditCardService = new CreditCardServiceBL();
                             paymentDataModel.AspNetRoleName = sessionObjectModel.AspNetRoleName;
-                            paymentDataModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, out string processMessage, ApplicationDataContext.SqlConnectionObject, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            paymentDataModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                             paymentDataModel.CreditCardProcessMessage = creditCardDataModel.ProcessMessage;
                             paymentDataModel.CreditCardNumberLast4 = creditCardDataModel.CreditCardNumberLast4;
                             paymentDataModel.CreditCardDataId = creditCardDataModel.CreditCardDataId;
