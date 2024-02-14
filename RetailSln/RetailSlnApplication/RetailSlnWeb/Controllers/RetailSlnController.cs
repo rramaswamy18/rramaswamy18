@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -448,7 +449,7 @@ namespace RetailSlnWeb.Controllers
                     if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId != null && !string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
                     {
                         Regex regex = new Regex(DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.Value).PostalCodeRegEx);
-                        if(!regex.IsMatch(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
+                        if (!regex.IsMatch(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
                         {
                             ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
                         }
@@ -786,6 +787,39 @@ namespace RetailSlnWeb.Controllers
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("Error");
                 Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("OrderCategoryItem1")]
+        public ActionResult OrderCategoryItem1(string id, string pageNum)
+        {
+            ViewData["ActionName"] = "OrderCategoryItem";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            try
+            {
+                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                {
+                    ParentCategoryId = long.Parse(id),
+                    PageNum = int.TryParse(pageNum, out int tempLong) ? int.Parse(pageNum) : 1,
+                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                };
+                actionResult = View("OrderCategoryItem1", orderCategoryItemModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Order Category Item / GET");
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error");
             }
             return actionResult;
         }

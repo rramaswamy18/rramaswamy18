@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="col-md-6" style="float: left; padding-left: 18px; text-align: left;">
-        @Html.Partial("_LoginUserProfGuest", Model.CheckoutGuestModel)
+        @*@Html.Partial("_LoginUserProfGuest", Model.CheckoutGuestModel)*@
         @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
     </div>
 </div>
@@ -149,6 +149,7 @@
                 else {
                     document.getElementById("formDeliveryInfoData").innerHTML = responseData.htmlString;
                 }
+                document.getElementById("formPaymentData").scrollIntoView();
                 console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
             },
             error: function (xhr, exception) {

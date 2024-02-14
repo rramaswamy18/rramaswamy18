@@ -53,7 +53,7 @@ namespace RetailSlnConsoleApp1
         }
         public void DivineBijaResizeImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
         {
-            int resizedWidth = 225, resizedHeight = 234, itemId;
+            int resizedWidth = 252, resizedHeight = 261, itemId;
             string inputFullFileName, outputFullFileName;
             SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
             sqlConnection.Open();

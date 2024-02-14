@@ -5,6 +5,7 @@ using ArchitectureLibraryCreditCardModels;
 using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
+using ArchitectureLibraryPDFLibrary;
 using ArchitectureLibraryUtility;
 using RetailSlnCacheData;
 using RetailSlnDataLayer;
@@ -182,6 +183,7 @@ namespace RetailSlnBusinessLayer
                             {
                                 DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue),
                                 HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue),
+                                HSNCode = itemModel.ItemAttributesForDisplay["HSNCode"],
                                 ItemDesc = itemModel.ItemDesc,
                                 ItemDiscountPercent = null,
                                 ItemId = itemModel.ItemId,
@@ -193,6 +195,7 @@ namespace RetailSlnBusinessLayer
                                 OrderAmountBeforeDiscount = orderQty * itemModel.ItemRate,
                                 OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                 OrderQty = orderQty,
+                                ProductCode = itemModel.ItemAttributesForDisplay["ProductCode"],
                                 WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue),
                                 WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue),
                                 WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue),
@@ -702,6 +705,7 @@ namespace RetailSlnBusinessLayer
                 string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailBody", orderReceiptModel);
                 string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplate", orderReceiptModel);
                 emailBodyHtml += signatureHtml;
+                PDFUtility pDFUtility = new PDFUtility();
                 archLibBL.SendEmail(paymentDataModel.EmailAddress, emailSubjectText, emailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return orderReceiptModel;
             }

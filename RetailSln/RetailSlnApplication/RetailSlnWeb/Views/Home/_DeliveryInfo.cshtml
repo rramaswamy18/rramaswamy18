@@ -47,6 +47,7 @@
                 else {
                     document.getElementById("formDeliveryInfoData").innerHTML = responseData.htmlString;
                 }
+                document.getElementById("formPaymentData").scrollIntoView();
                 console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
             },
             error: function (xhr, exception) {

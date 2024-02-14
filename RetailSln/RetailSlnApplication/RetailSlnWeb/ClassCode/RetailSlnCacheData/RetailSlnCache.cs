@@ -99,26 +99,37 @@ namespace RetailSlnCacheData
                 if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
                 {
                     itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 4); //Weight
-                    itemModel.ItemAttributesForDisplay["Weight"] = "Weight " + itemAttribModel1.ItemAttribValue + " " + (WeightUnitEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
+                    itemModel.ItemAttributesForDisplay["Weight"] = "Weight " + itemAttribModel1.ItemAttribValue + " " + LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("WeightUnit", execUniqueId).First(a => a.CodeDataNameId == int.Parse(itemAttribModel1.ItemAttribUnitValue)).CodeDataDesc3;//(WeightUnitEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
                 }
                 itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 17); //Show Volume
                 if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
                 {
                     itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 7); //Fluid Volume
-                    itemModel.ItemAttributesForDisplay["Volume"] = "Volume " + itemAttribModel1.ItemAttribValue + " " + (FluidVolumeUnitEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
+                    itemModel.ItemAttributesForDisplay["Volume"] = "Volume " + itemAttribModel1.ItemAttribValue + " " + LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("FluidVolumeUnit", execUniqueId).First(a => a.CodeDataNameId == int.Parse(itemAttribModel1.ItemAttribUnitValue)).CodeDataDesc3;//(WeightUnitEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
                 }
                 itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 18); //Show Count
                 if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
                 {
-                    try
-                    {
-                        itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 12); //Count
-                        itemModel.ItemAttributesForDisplay["Count"] = "Count " + itemAttribModel1.ItemAttribValue + " " + (CountEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(itemModel.ItemId + " " + exception.Message);
-                    }
+                    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 12); //Count
+                    itemModel.ItemAttributesForDisplay["Count"] = "Count " + itemAttribModel1.ItemAttribValue + " " + (CountEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
+                }
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 22); //Show Color
+                if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
+                {
+                    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 8); //Color
+                    itemModel.ItemAttributesForDisplay["Color"] = "Color " + itemAttribModel1.ItemAttribValue;
+                }
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 23); //Show Size
+                if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
+                {
+                    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 10); //Size
+                    itemModel.ItemAttributesForDisplay["Size"] = "Size " + itemAttribModel1.ItemAttribValue;
+                }
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 25); //Show Weight Attribute
+                if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
+                {
+                    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 24); //Weight Attribute
+                    itemModel.ItemAttributesForDisplay["WeightAttribute"] = "Weight " + itemAttribModel1.ItemAttribValue;
                 }
             }
             //

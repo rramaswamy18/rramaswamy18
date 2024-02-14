@@ -7,29 +7,91 @@ int index = 0;
         <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">#</th>
         <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Id</th>
         <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">Item Desc</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Rate</th>
         <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Qty</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Rate</th>
         <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Amount</th>
+        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Other</th>
     </tr>
     @{
         foreach (var shoppingCartItem in Model.ShoppingCartItems)
         {
             index++;
-            <tr>
-                <th scope="row" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@(index + ".")</th>
-                <td style="border-collapse: collapse; border-color: #000000; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
-                    @shoppingCartItem.ItemId
-                </td>
-                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
-                    @shoppingCartItem.ItemShortDesc
-                </td>
-                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
-                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderQty</td>
-                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
-            </tr>
-            <tr>
+        <tr>
+            <th scope="row" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@(index + ".")</th>
+            <td style="border-collapse: collapse; border-color: #000000; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+                @shoppingCartItem.ItemId
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                @shoppingCartItem.ItemShortDesc
+                <br />
+                HSN : @shoppingCartItem.HSNCode
+                <br />
+                SKN : @shoppingCartItem.ProductCode
+                <br />
+                Weight : @(shoppingCartItem.WeightValue + " " + shoppingCartItem.WeightUnitId)
+                @*<br />
+                Volume : @(shoppingCartItem.VolumeValue + " Cubic " + shoppingCartItem.DimensionUnitId)*@
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderQty</td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                <table class="table table-condensed table-responsive table-striped">
+                    <tr>
+                        <th>
+                            Desc
+                        </th>
+                        <th>
+                        </th>
+                        <th class="text-right">
+                            %
+                        </th>
+                        <th class="text-right">
+                            Amt
+                        </th>
+                    </tr>
+                    @if (shoppingCartItem.ItemRateBeforeDiscount != shoppingCartItem.ItemRate)
+                    {
+                        <tr>
+                            <th scope="row">
+                                Rate
+                            </th>
+                            <td class="text-right">
+                                <span style="color: #000000; font-weight: bold;">MSRP</span><br />
+                                @shoppingCartItem.ItemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                            </td>
+                            <td class="text-right">
+                                <span style="color: #000000; font-weight: bold;">Disc.</span><br />
+                                @(shoppingCartItem.ItemDiscountPercent.Value.ToString("#0.00") + "%")
+                            </td>
+                            <td class="text-right">
+                                <span style="color: #000000; font-weight: bold;">After Disc.</span><br />
+                                @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
+                    {
+                        <tr>
+                            <th scope="row">
+                                @shoppingCartItemSummary.ItemShortDesc
+                            </th>
+                            <td>
+                            </td>
+                            <td class="text-right">
+                                @(shoppingCartItemSummary.ItemRate.Value.ToString("#0.00") + "%")
+                            </td>
+                            <td class="text-right">
+                                @shoppingCartItemSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+            @*<tr style="display: none;">
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;"></td>
-                <td colspan="5" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                <td colspan="6" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
                     Weight :&nbsp;
                     @shoppingCartItem.WeightValue
                     &nbsp;
@@ -39,16 +101,18 @@ int index = 0;
                     @shoppingCartItem.VolumeValue
                     &nbsp;
                     Cubic&nbsp;@shoppingCartItem.DimensionUnitId
+                    <br />
+                    @(shoppingCartItem.HSNCode + " / " + shoppingCartItem.ProductCode)
                 </td>
-            </tr>
+            </tr>*@
             if (!string.IsNullOrWhiteSpace(shoppingCartItem.OrderComments))
             {
-                <tr>
-                    <td></td>
-                    <td colspan="5" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
-                        @Html.DisplayFor(m => shoppingCartItem.OrderComments)
-                    </td>
-                </tr>
+        <tr>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;"></td>
+            <td colspan="6" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+                @Html.DisplayFor(m => shoppingCartItem.OrderComments)
+            </td>
+        </tr>
             }
         }
     }

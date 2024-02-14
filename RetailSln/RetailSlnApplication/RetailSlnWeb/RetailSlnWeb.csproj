@@ -201,6 +201,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecListAddEditModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderCategoryItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailItemBundle.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderModel.cs" />
@@ -286,7 +287,6 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item103.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item104.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item105.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item106.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item107.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item108.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item109.png" />
@@ -1263,6 +1263,8 @@
     <Content Include="Views\Home\OrdersReturns.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoAddressData.cshtml" />
     <Content Include="Views\Home\_PaymentSummaryData.cshtml" />
+    <Content Include="Views\Home\OrderCategoryItem1.cshtml" />
+    <Content Include="Views\Home\_OrderCategoryItem1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

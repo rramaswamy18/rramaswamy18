@@ -34,7 +34,7 @@
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
     </div>
 }
-<div class="row" style="padding-left: 18px; padding-right: 18px;">
+<div class="row" style="display: none; padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.GiftCertNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <div>
         @Html.TextBoxFor(m => m.GiftCertNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertNumber), style = "float: left; padding-right: 18px; width: 76%;", type = "password" })
@@ -45,7 +45,7 @@
     </div>
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertNumber, "", new { id = "GiftCertNumber-error" }).ToHtmlString()))
 </div>
-<div class="row" style="padding-left: 18px; padding-right: 18px;">
+<div class="row" style="display: none; padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.GiftCertKey, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <div>
         @Html.TextBoxFor(m => m.GiftCertKey, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertKey), style = "float: left; padding-right: 18px; width: 76%;", type = "password" })
@@ -56,7 +56,7 @@
     </div>
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertKey, "", new { id = "GiftCertKey-error" }).ToHtmlString()))
 </div>
-<div class="row" style="padding-left: 18px; padding-right: 18px;">
+<div class="row" style="display: none; padding-left: 18px; padding-right: 18px;">
     <button class="btn btn-primary" id="giftCertBalance" onclick="javascript: return giftCertBalance_onclick();" style="font-weight: bold;">Get Gift Cert Balance</button>
     <span id="giftCertBalanceAmount" style="color: #a54000; font-family: Arial; font-size: 14px; font-weight: bold;"></span>
     <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />

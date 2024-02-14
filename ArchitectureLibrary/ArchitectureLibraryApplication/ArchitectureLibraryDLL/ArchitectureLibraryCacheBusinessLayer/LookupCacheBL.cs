@@ -52,6 +52,8 @@ namespace ArchitectureLibraryCacheBusinessLayer
                         CodeDataDesc0 = sqlDataReader["CodeDataDesc0"].ToString(),
                         CodeDataDesc1 = sqlDataReader["CodeDataDesc1"].ToString(),
                         CodeDataDesc2 = sqlDataReader["CodeDataDesc2"].ToString(),
+                        CodeDataDesc3 = sqlDataReader["CodeDataDesc3"].ToString(),
+                        CodeDataDesc4 = sqlDataReader["CodeDataDesc4"].ToString(),
                         CodeDataId = long.Parse(sqlDataReader["CodeDataId"].ToString()),
                         CodeDataNameDesc = sqlDataReader["CodeDataNameDesc"].ToString(),
                         CodeDataNameId = long.Parse(sqlDataReader["CodeDataNameId"].ToString()),

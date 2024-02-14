@@ -17,6 +17,8 @@ namespace ArchitectureLibraryModels
         public string CodeDataDesc0 { set; get; }
         public string CodeDataDesc1 { set; get; }
         public string CodeDataDesc2 { set; get; }
+        public string CodeDataDesc3 { set; get; }
+        public string CodeDataDesc4 { set; get; }
         public CodeTypeModel CodeTypeModel { set; get; }
     }
 }

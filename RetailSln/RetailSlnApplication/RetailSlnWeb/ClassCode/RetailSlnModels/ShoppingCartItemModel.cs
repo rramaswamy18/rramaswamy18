@@ -15,6 +15,8 @@ namespace RetailSlnModels
 
         public float? HeightValue { set; get; }
 
+        public string HSNCode { set; get; }
+
         public string ItemDesc { set; get; }
 
         public float? ItemDiscountAmount { set; get; }
@@ -28,6 +30,8 @@ namespace RetailSlnModels
         public string ItemShortDesc { set; get; }
 
         public float? LengthValue { set; get; }
+
+        public string ProductCode { set; get; }
 
         public float? VolumeValue { set; get; }
 

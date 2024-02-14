@@ -134,6 +134,7 @@
     }
     <br style="clear: both;">
     <div style="text-align: left; width: 100%;">
+        @*<span style="color: #000000; font-size: 12px; font-weight: normal;">@((imageIndex + 1) + ". (" + seqNum + ") " + itemModel.ItemShortDesc0 + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>*@
         <span style="color: #000000; font-size: 12px; font-weight: normal;">@((imageIndex + 1) + ". " + itemModel.ItemShortDesc0 + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>
         <br />
         <span style="color: #000000; font-size: 13px; font-weight: 900;">@itemModel.ItemShortDesc1</span>
@@ -144,7 +145,7 @@
             {
                 if (itemAttributeForDisplay.Key != "ProductCode" && itemAttributeForDisplay.Key != "HSNCode")
                 {
-                <span style="color: #000000; font-size: 12px; font-weight: 600;">@itemAttributeForDisplay.Value</span>
+                    <span style="color: #000000; font-size: 12px; font-weight: 600;">@itemAttributeForDisplay.Value</span>
                 }
             }
             <br />
@@ -164,40 +165,19 @@
             <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
             <br />
         }
-        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+        @*<a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>*@
     }//if ()
     else
     {
-        @*shoppingCartItemModel = shoppingCartItems?.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
-            //if (shoppingCartItems != null && shoppingCartItems.FindIndex(x => x.ItemId == itemModel.ItemId) > -1)
-            if (shoppingCartItemModel != null)
-            {
-                addToCartSuccessDisplay = "block";
-            }
-            else
-            {
-                addToCartSuccessDisplay = "none;";
-            }
-            <span style="display: @addToCartSuccessDisplay; font-family: Arial; font-size: 12px; font-weight: bold;">
-                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-                <span style="color: #0000ff; padding-right: 5px;">Added...@(shoppingCartItemModel?.OrderQty)</span>
-                <br style="clear: both;">
-            </span>*@
-        @*<span id="addToCartFailure@(i)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                <i class="fa fa-times" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
-                <span style='color: #ff0000;'>Invalid qty</span>
-                <br style="clear: both;">
-            </span>*@
-        @*<span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>*@
         if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
         {
             <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
             <br style="clear: both;" />
         }
-        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        @*<a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
         <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
-        <br />
+        <br />*@
         <div style="float: left; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">Qty : </div>
         <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@defaultOrderQty" />
         if (defaultOrderQty == "")

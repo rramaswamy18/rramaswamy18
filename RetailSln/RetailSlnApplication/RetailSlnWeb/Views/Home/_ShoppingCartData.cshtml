@@ -51,6 +51,8 @@ else
                         @shoppingCartItem.ItemShortDesc
                         <br />
                         <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
+                        <br />
+                        @("HSN " + shoppingCartItem.HSNCode + ", SKN " + shoppingCartItem.ProductCode) 
                     </td>
                     <td class="text-center">
                         @shoppingCartItem.OrderQty
@@ -70,7 +72,6 @@ else
                                         Desc
                                     </th>
                                     <th>
-
                                     </th>
                                     <th class="text-right">
                                         %
@@ -86,12 +87,15 @@ else
                                         Rate
                                     </th>
                                     <td class="text-right">
+                                        <span style="color: #000000; font-weight: bold;">MSRP</span><br />
                                         @shoppingCartItem.ItemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                                     </td>
                                     <td class="text-right">
+                                        <span style="color: #000000; font-weight: bold;">Disc.</span><br />
                                         @(shoppingCartItem.ItemDiscountPercent.Value.ToString("#0.00") + "%")
                                     </td>
                                     <td class="text-right">
+                                        <span style="color: #000000; font-weight: bold;">After Disc.</span><br />
                                         @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                                     </td>
                                 </tr>
@@ -105,7 +109,7 @@ else
                                         <td>
                                         </td>
                                         <td class="text-right">
-                                            @shoppingCartItemSummary.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                            @(shoppingCartItemSummary.ItemRate.Value.ToString("#0.00") + "%")
                                         </td>
                                         <td class="text-right">
                                             @shoppingCartItemSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
