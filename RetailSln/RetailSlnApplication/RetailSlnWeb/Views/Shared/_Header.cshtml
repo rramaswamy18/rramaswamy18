@@ -18,158 +18,145 @@
     }
     //loggedInUserEmailAddress = "longemailaddress@longcompany.com";
 }
-<style>
-    .starchecked {
-        color: #ff9900;
-    }
-
-    .badge {
-        padding-left: 9px;
-        padding-right: 9px;
-        -webkit-border-radius: 9px;
-        -moz-border-radius: 9px;
-        border-radius: 9px;
-    }
-
-    .label-warning[href],
-    .badge-warning[href] {
-        background-color: #c67605;
-    }
-
-    .shoppingCartTotalAmount {
-        font-size: 15px;
-        background: #0000ff;
-        color: #ffffff;
-        padding: 0 5px;
-        vertical-align: top;
-        margin-left: -10px;
-    }
-
-    .shoppingCartItemsCount {
-        font-size: 15px;
-        background: #ff0000;
-        color: #ffffff;
-        padding: 0 5px;
-        vertical-align: top;
-        margin-left: -10px;
-    }
-</style>
-<div style="border: 0px none; margin-left: 0 auto; margin-right: 0 auto; padding: 0px; width: 100%;">
-    <div style="float: left; text-align: left; vertical-align: top;">
-        <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: auto; max-height: 171px; max-width: 171px; width: 100%;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" />
+<div class="container-fluid sticky-top">
+    <div class="row hidden-sm hidden-xs" style="background-color: #ffffff;">
+        <div class="col-md-1 col-lg-1" style="padding-top: 5px; z-index:2345;">
+            <a href="@Url.Action("Index", "Home")">
+                <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="90" height="96" title="@imageTitle" />
+            </a>
+        </div>
+        <div class="col-md-11 col-lg-11 p-0">
+            <nav class="navbar navbar-default">
+                <div class="row">
+                    <div class="col-md-12" style="background-color: whitesmoke">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <!-- Brand Name -->
+                            <div class="navbar-brand" title="@imageTitle">
+                                <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">
+                                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")
+                                </span>
+                                &nbsp;
+                                <span style="color: #dc3131; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">
+                                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")
+                                </span>
+                                &nbsp;
+                                <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">
+                                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")
+                                </span>
+                            </div>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right menuLinkDark">
+                            <li>
+                                <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divShoppingCart').scrollIntoView();" style="padding: 7px;">
+                                    <div class="cart-badge">
+                                        <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>
+                                        <span id="shoppingCartItemsCount" style="display: none;"></span>
+                                        <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount" style="background-color: #9a031e;">
+                                        </span><!-- Order Amount -->
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);" onclick="javascript: return checkoutValidate_onclick();">
+                                    Checkout
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divContainer').scrollIntoView();">
+                                    <i class="fa fa-arrow-up"></i>
+                                    &nbsp;
+                                    Back to top
+                                </a>
+                            </li>
+                        </ul>
+                        <form class="navbar-form" role="search">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search" name="searchTerm" id="searchTerm" />
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" id="searchTermButton" onclick="javascript: return searchTermButton_onclick('searchTerm');" type="button">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row menuLinkLight">
+                    <div class="col-md-12 col-lg-12" style="background-color: #9a031e;">
+                        @Html.Partial("_HeaderMenu")
+                    </div>
+                </div>
+            </nav>
+        </div>
     </div>
-    <table style="float: right;">
-        <tr>
-            <td></td>
-            <td style="padding-right: 3px; text-align: right; width: 171px;">
-                <img class="img-responsive" alt="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/CountryFlag.webp" style="height: 72px; padding-bottom: 2px; width: 171px;" title="@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol" />
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td style="padding-right: 3px; text-align: left; width: 171px;">
-                <div style="background-color: #d3d3d3; color: #000000; font-weight: bold; padding-left: 3px; width: 171px ">@ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev") - @ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyName") - @RetailSlnCacheData.RetailSlnCache.CurrencySymbol</div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" id="loggedInUserEmailAddress" style="color: #0000ff; display: table-cell; font-size: 12px; font-weight: bold; padding-right: 3px; text-align: right; vertical-align: top;">
-                @loggedInUserEmailAddress
-            </td>
-        </tr>
-    </table>
-    <div style="text-align: center; vertical-align: top;">
-        <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span>
-        &nbsp;
-        <span style="color: #dc3131; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span>
-        &nbsp;
-        <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
-        @Html.Partial("_HeaderMenu")
-        <div style="display: table; vertical-align: top;">
-            <div style="display: table-row; vertical-align: top;">
-                <div style="display: table-cell;">
-                    <i class="fa" style="font-size: 24px">&#xf07a;</i>
-                    <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartItemsCount"></span>
-                    &nbsp;&nbsp;
-                    <span class="badge badge-warning shoppingCartTotalAmount" id="shoppingCartTotalAmount"></span>
+    <div class="row hidden-lg hidden-md hidden-print" style="background-color: #ffffff;">
+        <div class="col-sm-12 col-xs-12">
+            <nav class="navbar navbar-default">
+                <div class="row menuLinkDark" style="background-color: whitesmoke">
+                    @*<div class="col-sm-2 col-xs-2" style="padding-top: 5px; padding-right: 0px; margin: 5px;">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="90" height="96" title="@imageTitle" />
+                        </a>
+                    </div>*@
+                    <div class="col-sm-5 col-xs-5">
+                        <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">
+                            @ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")
+                        </span>
+                        &nbsp;
+                        <span style="color: #dc3131; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">
+                            @ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")
+                        </span>
+                        &nbsp;
+                        <span style="color: #000000; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: 900;">
+                            @ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")
+                        </span>
+                    </div>
+                    <div class="col-sm-2 col-xs-2" style="font-size: 30px; padding-top: 7px; text-align: right;">
+                        <i class="glyphicon glyphicon-th-list" id="toggle-icon"></i>
+                    </div>
                 </div>
-                <div style="display: table-cell; padding-left: 9px;">
-                    <a href="javascript: void(0);" onclick="javascript: return checkoutValidate_onclick();" style="color: #000000; font-size: 18px; font-weight: bold; text-decoration: underline;">Checkout</a>
+                <div class="collapsible-content" id="myCollapsible">
+                    <div class="row menuLinkDark">
+                        <div class="col-sm-2 col-xs-2 text-center" style="padding-left: 3px;">
+                            <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divShoppingCart').scrollIntoView();" style="padding: 7px;">
+                                <div class="cart-badge">
+                                    <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>
+                                    <span id="shoppingCartItemsCount2" style="display: none;"></span>
+                                    <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount2" style="background-color: #9a031e;">
+                                    </span><!-- Order Amount -->
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 text-center" style="padding-top: 27px;">
+                            <a href="javascript: void(0);" onclick="javascript: return checkoutValidate_onclick();">
+                                Checkout
+                            </a>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 text-center" style="padding-top: 27px;">
+                            <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divContainer').scrollIntoView();">
+                                <i class="fa fa-arrow-up"></i>
+                                &nbsp;
+                                Back to top
+                            </a>
+                        </div>
+                        <div class="col-sm-5 col-xs-5 text-center">
+                            <form class="navbar-form" role="search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search" name="searchTerm2" id="searchTerm2">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" id="searchTermButton2" onclick="javascript: return searchTermButton_onclick('searchTerm2');" type="button">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    @Html.Partial("_HeaderMenuHamburger")
                 </div>
-                <div style="display: table-cell; padding-left: 9px; vertical-align: middle;">
-                    <span id="divErrorMessage" style="color: #ff0000; display: table-cell; font-family: Arial; font-size: 13px; font-weight: bold; padding: 0px; text-align: left; vertical-align: top;">
-                    </span>
-                </div>
-            </div>
+            </nav>
         </div>
     </div>
 </div>
-<br style="clear: both;" />
-<script type="text/javascript">
-    var url = "/Home/ShoppingCartSummary/";
-    $.ajax({
-        url: url,
-        type: "GET",
-        dataType: "html",
-        async: true,
-        success: function (responseData, textStatus, request) {
-            var jsonData = JSON.parse(responseData);
-            document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
-            document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
-            if (document.getElementById("shoppingCartItemsCount2") != null) {
-                document.getElementById("shoppingCartItemsCount2").innerHTML = jsonData.shoppingCartItemsCount;
-                document.getElementById("shoppingCartTotalAmount2").innerHTML = jsonData.shoppingCartTotalAmount;
-            }
-        },
-        error: function (xhr, exception) {
-            console.log(43, "ERROR???", exception, xhr);
-        }
-    });
-    function checkoutValidate_onclick() {
-        console.log("00000000", "checkoutValidate_onclick", "Enter");
-        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        document.getElementById("divErrorMessage").innerHTML = "";
-        if (document.getElementById("divErrorMessage2") != null) {
-            document.getElementById("divErrorMessage2").innerHTML = "";
-        }
-        var url = "/Home/CheckoutValidate";
-        $.ajax({
-            url: url,
-            type: "POST",
-            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            dataType: "json",
-            async: true,
-            success: function (responseData, textStatus, request) {
-                console.log(responseData);
-                $('#loadingModal').modal('hide');
-                console.log("00001000", "checkoutValidate_onclick success", responseData.processMessage);
-                if (responseData.success) {
-                    if (responseData.success) {
-                        window.location.href = "/Checkout/";
-                    }
-                    else {
-                        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                        if (document.getElementById("divErrorMessage2") != null) {
-                            document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
-                        }
-                    }
-                }
-                else {
-                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                    if (document.getElementById("divErrorMessage2") != null) {
-                        document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
-                    }
-                }
-                console.log("00090000", "checkoutValidate_onclick success", "Exit");
-            },
-            error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
-                console.log("checkoutValidate_onclick", "00099000", "ERROR???");
-                document.getElementById("divErrorMessage").innerHTML = "Error while validating checkout";
-                if (document.getElementById("divErrorMessage2") != null) {
-                    document.getElementById("divErrorMessage2").innerHTML = "Error while validating checkout";
-                }
-            }
-        });
-        return false;
-    }
-</script>
+<script src="~/Include/orderItemCode0.js" type="text/javascript"></script>

@@ -1165,6 +1165,14 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        //[Route("SearchResult")]
+        public ActionResult SearchResult(string id)
+        {
+            return View("SearchResult", (object)id);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
         public ActionResult ShoppingCartComments(int index, string orderComments)
         {
             ViewData["ActionName"] = "ShoppingCartComments";

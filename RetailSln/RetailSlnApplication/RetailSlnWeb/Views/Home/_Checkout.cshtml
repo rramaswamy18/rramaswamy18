@@ -243,7 +243,7 @@
                                 "address": jsonObject.Address
                             },
                             "theme": {
-                                "color": "#F37254"
+                                "color": "#f37254"
                             }
                         };
                         var rzp1 = new Razorpay(options);
@@ -253,12 +253,10 @@
                         document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
                         document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
                         document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
-                        document.getElementById("shoppingCartItemsCount").innerHTML = "Empty";
-                        document.getElementById("shoppingCartTotalAmount").innerHTML = "Cart";
-                        if (document.getElementById("shoppingCartItemsCount2") != null) {
-                            document.getElementById("shoppingCartItemsCount2").innerHTML = "Empty";
-                            document.getElementById("shoppingCartTotalAmount2").innerHTML = "Cart";
-                        }
+                        document.getElementById("shoppingCartItemsCount").innerHTML = "";
+                        document.getElementById("shoppingCartTotalAmount").innerHTML = "";
+                        document.getElementById("shoppingCartItemsCount2").innerHTML = "";
+                        document.getElementById("shoppingCartTotalAmount2").innerHTML = "";
                     }
                     //document.getElementById("divOrderProcess").scrollIntoView();
                 }
@@ -303,9 +301,6 @@
                     $('#loadingModal').modal('hide');
                     var jsonData = JSON.parse(xhr.responseText);
                     document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                    if (document.getElementById("divErrorMessage2") != null) {
-                        document.getElementById("divErrorMessage2").innerHTML = jsonData.errorMessage;
-                    }
                 }
             });
         }

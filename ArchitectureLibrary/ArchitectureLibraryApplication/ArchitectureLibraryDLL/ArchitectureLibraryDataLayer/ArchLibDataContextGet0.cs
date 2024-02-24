@@ -109,6 +109,7 @@ namespace ArchitectureLibraryDataLayer
                             PhoneNumberConfirmed = bool.Parse(sqlDataReader["PhoneNumberConfirmed"].ToString()),
                             ResetPasswordExpiryDateTime = sqlDataReader["ResetPasswordExpiryDateTime"].ToString(),
                             ResetPasswordQueryString = sqlDataReader["ResetPasswordQueryString"].ToString(),
+                            TelephoneCountryId = long.Parse(sqlDataReader["TelephoneCountryId"].ToString()),
                             UserName = sqlDataReader["UserName"].ToString(),
                             UserStatusId = (UserStatusEnum)int.Parse(sqlDataReader["UserStatusId"].ToString()),
                             UserTypeId = sqlDataReader["UserTypeId"].ToString() == "" ? (UserTypeEnum?)null : (UserTypeEnum)int.Parse(sqlDataReader["UserTypeId"].ToString()),

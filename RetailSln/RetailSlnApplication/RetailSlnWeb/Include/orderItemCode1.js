@@ -1,5 +1,5 @@
 ﻿//Sriramajayam
-//orderItemCode.js
+//orderItemCode1.js
 function addToCart_onclick(index, categoryId) {
     console.log("addToCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -92,8 +92,6 @@ function addToCartGet_onclick(index, defaultOrderQty, categoryId) {
                 document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
                 document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                 document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
-                document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
                 document.getElementById("orderQty" + index).value = defaultOrderQty;
             },
             error: function (xhr, exception) {
@@ -157,9 +155,6 @@ function removeFromCart_onclick(index) {
     console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
-    if (document.getElementById("divErrorMessage2") != null) {
-        document.getElementById("divErrorMessage2").innerHTML = "";
-    }
     var categoryId;
     var query = window.location.href;
     var lastIndexOf1 = query.lastIndexOf('?id=');
@@ -184,8 +179,6 @@ function removeFromCart_onclick(index) {
                     document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
-                    document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
@@ -197,9 +190,6 @@ function removeFromCart_onclick(index) {
                 console.log(exception, xhr);
                 var jsonData = JSON.parse(xhr.responseText);
                 document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                if (document.getElementById("divErrorMessage2") != null) {
-                    document.getElementById("divErrorMessage2").innerHTML = jsonData.errorMessage;
-                }
             }
         });
     }

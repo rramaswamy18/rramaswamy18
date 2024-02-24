@@ -43,7 +43,7 @@
         </script>*@
     <!-- End Google Tag Manager -->
 </head>
-<body style="margin-left: auto; margin-right: auto; max-width: 1350px; padding: 0px;">
+<body style="margin-left: auto; margin-right: auto; max-width: 100%; padding: 0px;">
     <!-- Google Tag Manager (noscript) -->
     @*<noscript>
             <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDPL9DB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -51,6 +51,9 @@
     <!-- End Google Tag Manager (noscript) -->
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#toggle-icon').click(function () {
+                $('#myCollapsible').toggleClass('show');
+            });
             window_onload();
         });
         function window_onload() {
@@ -58,8 +61,8 @@
             alert("Implement window on load in your page");
         }
     </script>
-    <div class="center" id="divContainer" style="max-width: 1350px; padding: 0px; text-align: center; width: 100%;">
-        @Html.Partial("_Header")
+    @Html.Partial("_Header")
+    <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">
         @RenderBody()
         @Html.Partial("_Footer")
     </div>
