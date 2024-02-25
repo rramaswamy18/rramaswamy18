@@ -1,13 +1,13 @@
-﻿@model ArchitectureLibraryModels.ContactUsModel
+﻿@using ArchitectureLibraryCacheData
+@model ArchitectureLibraryModels.ContactUsModel
 <style>
-    #FirstName-error, #LastName-error, #EmailAddress-error, #PhoneNumber-error, #CommentsRequests-error, #CaptchaAnswerContactUs-error {
+    #FirstName-error, #LastName-error, #EmailAddress-error, #PhoneNumber-error, #CommentsRequests-error, #CaptchaAnswerContactUs-error, #ContactUsTypeId-error {
         color: #ff0000;
         display: block;
         font-size: 14px;
         font-weight: bold;
     }
 </style>
-@Html.HiddenFor(m => m.ContactUsTypeId)
 @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
 {
     <div class="row validationSummaryMessage" id="divContactUsValidationSummaryMessage">
@@ -26,40 +26,48 @@
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
     </div>
 }
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-    @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.FirstName), style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, "", new { id = "FirstName-error" }).ToHtmlString()))
+<div class="col-md-6" style="float: left; text-align: left;">
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.ContactUsTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.DropDownListFor(m => m.ContactUsTypeId, new SelectList(LookupCache.CodeTypeSelectListItems["ContactType"]["CodeDataNameId"], "Value", "Text", Model.ContactUsTypeId), "--- Select ---", new { @class = "form-control", style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ContactUsTypeId, "", new { id = "ContactUsTypeId-error" }).ToHtmlString()))
+    </div>
+
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.FirstName), style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, "", new { id = "FirstName-error" }).ToHtmlString()))
+    </div>
+
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.ContactUsTelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.ContactUsTelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ContactUsTelephoneNumber), style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ContactUsTelephoneNumber, "", new { id = "PhoneNumber-error" }).ToHtmlString()))
+    </div>
 </div>
+<div class="col-md-6" style="float: right; text-align: left;">
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error" }).ToHtmlString()))
+    </div>
 
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-    @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LastName), style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LastName, "", new { id = "LastName-error" }).ToHtmlString()))
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LastName), style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LastName, "", new { id = "LastName-error" }).ToHtmlString()))
+    </div>
+
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.CaptchaAnswerContactUs, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberContactUs0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberContactUs1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
+        @Html.TextBoxFor(m => m.CaptchaAnswerContactUs, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberContactUs0 + " + " + @Model.CaptchaNumberContactUs1 + " =?", style = "width: 90%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerContactUs, "", new { id = "CaptchaAnswerContactUs-error" }).ToHtmlString()))
+    </div>
 </div>
-
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-
-    @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error" }).ToHtmlString()))
-</div>
-
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-
-    @Html.LabelFor(m => m.ContactUsTelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.ContactUsTelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ContactUsTelephoneNumber), style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ContactUsTelephoneNumber, "", new { id = "PhoneNumber-error" }).ToHtmlString()))
-</div>
-
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-    @Html.LabelFor(m => m.CommentsRequests, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextAreaFor(model => model.CommentsRequests, new { @class = "form-control", placeholder = "Write a comment......", style = "height: 135px; width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CommentsRequests, "", new { id = "CommentsRequests-error" }).ToHtmlString()))
-</div>
-
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-    @Html.LabelFor(m => m.CaptchaAnswerContactUs, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberContactUs0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberContactUs1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
-    @Html.TextBoxFor(m => m.CaptchaAnswerContactUs, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberContactUs0 + " + " + @Model.CaptchaNumberContactUs1 + " =?", style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerContactUs, "", new { id = "CaptchaAnswerContactUs-error" }).ToHtmlString()))
+<div class="col-md-12" style="text-align: left;">
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
+        @Html.LabelFor(m => m.CommentsRequests, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        @Html.TextAreaFor(model => model.CommentsRequests, new { @class = "form-control", placeholder = "Write a comment......", style = "height: 135px; width: 95%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CommentsRequests, "", new { id = "CommentsRequests-error" }).ToHtmlString()))
+    </div>
 </div>

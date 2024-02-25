@@ -71,7 +71,75 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult AddToCart([System.Web.Http.FromUri] string id, [System.Web.Http.FromBody] List<ShoppingCartItemModel> shoppingCartItemModels)
+        public ActionResult AddToCart(AddToCartModel addToCartModel)
+        {
+            ViewData["ActionName"] = "AddToCart";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = false;
+                if (addToCartModel.ShoppingCartItemModels != null)
+                {
+                    foreach (var shoppingCartItemModel in addToCartModel.ShoppingCartItemModels)
+                    {
+                        if (shoppingCartItemModel.OrderQty != null)
+                        {
+                            success = true;
+                            break;
+                        }
+                    }
+                }
+                if (!success)
+                {
+                    processMessage = "ERROR???";
+                    htmlString = "Please enter order quantity for a min of 1 item";
+                    actionResult = Json(new { success, processMessage, htmlString });
+                }
+                else
+                {
+                    ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(addToCartModel.ShoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    if (addToCartModel.CategoryId != null)
+                    {
+                        OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                        {
+                            ParentCategoryId = addToCartModel.CategoryId.Value,
+                            PageNum = addToCartModel.PageNum.Value,
+                            PageSize = addToCartModel.PageSize.Value,
+                            TotalRowCount = addToCartModel.TotalRowCount.Value,
+                        };
+                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
+                    }
+                    else
+                    {
+                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderListView", null);
+                    }
+                    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while adding item to cart";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult AddToCartBackup([System.Web.Http.FromUri] string id, [System.Web.Http.FromBody] List<ShoppingCartItemModel> shoppingCartItemModels)
         {
             ViewData["ActionName"] = "AddToCart";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -793,8 +861,8 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("OrderCategoryItem1")]
-        public ActionResult OrderCategoryItem1(string id, string pageNum)
+        [Route("OrderCategoryItem")]
+        public ActionResult OrderCategoryItem(string id, string pageNum)
         {
             ViewData["ActionName"] = "OrderCategoryItem";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -811,7 +879,7 @@ namespace RetailSlnWeb.Controllers
                     PageNum = int.TryParse(pageNum, out int tempLong) ? int.Parse(pageNum) : 1,
                     PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
                 };
-                actionResult = View("OrderCategoryItem1", orderCategoryItemModel);
+                actionResult = View("OrderCategoryItem", orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -826,8 +894,8 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("OrderCategoryItem")]
-        public ActionResult OrderCategoryItem(string id)
+        [Route("OrderCategoryItemAll")]
+        public ActionResult OrderCategoryItemAll(string id)
         {
             ViewData["ActionName"] = "OrderCategoryItem";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -1090,7 +1158,7 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult RemoveFromCart(string id, string index)
+        public ActionResult RemoveFromCart(string id, string pageNum, string index)
         {
             ViewData["ActionName"] = "RemoveFromCart";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
@@ -1109,7 +1177,14 @@ namespace RetailSlnWeb.Controllers
                 processMessage = "SUCCESS!!!";
                 if (long.TryParse(id, out long tempId))
                 {
-                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", tempId);
+                    OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                    {
+                        ParentCategoryId = tempId,
+                        PageNum = int.Parse(pageNum),
+                        PageSize = 50,
+                        TotalRowCount = 658,
+                    };
+                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
                 }
                 else
                 {

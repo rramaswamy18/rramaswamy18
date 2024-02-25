@@ -11,13 +11,13 @@ namespace ArchitectureLibraryEnumerations
     {
         [Description("")]
         _ = 0,
-        [Description("Request")]
+        [Description("Comments")]
         Request = 100,
         [Description("Question")]
         Question = 200,
-        [Description("Comments")]
-        Comments = 300,
-        [Description("Other")]
-        Other = 9900,
+        [Description("Request new item")]
+        RequestNewItem = 300,
+        [Description("Request to be wholesale dealer")]
+        RequestWholesaleDealer = 400,
     }
 }

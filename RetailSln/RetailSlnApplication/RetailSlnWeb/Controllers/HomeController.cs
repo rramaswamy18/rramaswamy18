@@ -4,11 +4,13 @@ using ArchitectureLibraryClassCode;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using RetailSlnModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
@@ -47,7 +49,13 @@ namespace RetailSlnWeb.Controllers
                 }
                 else
                 {
-                    actionResult = View("Index");
+                    OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                    {
+                        ParentCategoryId = 0,
+                        PageNum = 1,
+                        PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                    };
+                    actionResult = View("Index", orderCategoryItemModel);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 }
             }

@@ -1,17 +1,34 @@
-﻿@model long
+﻿@model OrderCategoryItemModel
 @using ArchitectureLibraryCacheData
 @using RetailSlnEnumerations
 @using RetailSlnCacheData
 @using RetailSlnModels
 @{
-    @BuildOrderCategoryItemHier(Model)
+    @BuildOrderCategoryItemHier(Model.ParentCategoryId)
 }
 @helper BuildOrderCategoryItemHier(long parentCategoryId)
 {
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[parentCategoryId];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    int pageSize = Model.PageSize;
+    int startIndex = (Model.PageNum - 1) * pageSize;
+    int totalCount = categoryLayoutModel.CategoryItemHierModels.Count;
+    if (categoryLayoutModel.CategoryItemHierModels[0].ItemId == null)
+    {
+        totalCount--;
+        startIndex++;
+    }
+    int pageCount = totalCount / pageSize;
+    if (totalCount % Model.PageSize != 0)
+    {
+        pageCount++;
+    }
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.Skip(startIndex).Take(pageSize).ToList();
+    if (categoryLayoutModel.CategoryItemHierModels[0].ItemId == null)
+    {
+        categoryItemHierModels.Insert(0, categoryLayoutModel.CategoryItemHierModels[0]);
+    }
     var shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
     if (shoppingCartModel == null)
     {
@@ -23,7 +40,17 @@
     }
     <div id="divOrderItem" class="center" style="vertical-align: bottom; width: 100%;">
         <div id="divErrorMessage" style="color: #ff0000; font-family: Arial; font-size: 13px; font-weight: bold;"></div>
+        @if (Model.ParentCategoryId != 0)
+        {
+            @BuildPaginationLinks(pageCount)
+        }
+        <br style="clear: both;" />
         @BuildOrderCategoryItem(categoryItemHierModels)
+        <br style="clear: both;" />
+        @if (Model.ParentCategoryId != 0)
+        {
+            @BuildPaginationLinks(pageCount)
+        }
         <div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
             @{
                 shoppingCartModel.Checkout = true;
@@ -33,6 +60,62 @@
         </div>
     </div>
 }@*helper BuildOrderCategoryItemHier(long parentCategoryId)*@
+@helper BuildPaginationLinks(int pageCount)
+{
+    <ul class="pagination">
+        @if (Model.PageNum == 1)
+        {
+            <li class="page-item">
+                <span class="page-link">First</span>
+            </li>
+            <li class="page-item">
+                <span class="page-link">Prev</span>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a alt="Page# 1" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = 1 })" , title="Jump to page# 1">First</a>
+            </li>
+            <li class="page-item">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = (Model.PageNum - 1) })" , title="Jump to page# @(Model.PageNum - 1)">Prev</a>
+            </li>
+        }
+        @for (int i = 1; i <= pageCount; i++)
+        {
+            if (i == Model.PageNum)
+            {
+                <li class="page-item active">
+                    <a alt="Page# @i" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = i })" , title="Jump to page# @i">@i</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a alt="Page# @i" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = i })" , title="Jump to page# @i">@i</a>
+                </li>
+            }
+        }
+        @if (Model.PageNum == pageCount)
+        {
+            <li class="page-item">
+                <span class="page-link">Next</span>
+            </li>
+            <li class="page-item">
+                <span class="page-link">Last</span>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a alt="Page# @(Model.PageNum + 1)" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = (Model.PageNum + 1) })" , title="Jump to page# @(Model.PageNum + 1)">Next</a>
+            </li>
+            <li class="page-item">
+                <a alt="Page# @pageCount" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = pageCount })" , title="Jump to page# @pageCount">Last</a>
+            </li>
+        }
+    </ul>
+}
 @helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)
 {
     long clientId = ArchLibCache.ClientId;
@@ -55,6 +138,7 @@
         {
             categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[categoryItemHierModel.CategoryModel.CategoryId.Value];
             categoryItemHierModelsRecursive = categoryLayoutModel.CategoryItemHierModels;
+            <br style="clear: both;" />
             @BuildOrderCategoryItem(categoryItemHierModelsRecursive)
         }//if (categoryItemHierModel.ProcessType == "Recursive")
         else
@@ -133,8 +217,7 @@
     }
     <br style="clear: both;">
     <div style="text-align: left; width: 100%;">
-        @*<span style="color: #000000; font-size: 12px; font-weight: normal;">@((imageIndex + 1) + ". (" + seqNum + ") " + itemModel.ItemShortDesc0 + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>*@
-        <span style="color: #000000; font-size: 12px; font-weight: normal;">@((imageIndex + 1) + ". " + itemModel.ItemShortDesc0 + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>
+        <span style="color: #000000; font-size: 12px; font-weight: normal;">@((imageIndex + 1) + ". (" + seqNum + ") " + itemModel.ItemShortDesc0 + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>
         <br />
         <span style="color: #000000; font-size: 13px; font-weight: 900;">@itemModel.ItemShortDesc1</span>
         @if (itemModel.ItemAttributesForDisplay.Count > 0)
@@ -164,24 +247,45 @@
             <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
             <br />
         }
-        @*<a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-            <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>*@
+        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
     }//if ()
     else
     {
+        @*shoppingCartItemModel = shoppingCartItems?.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
+            //if (shoppingCartItems != null && shoppingCartItems.FindIndex(x => x.ItemId == itemModel.ItemId) > -1)
+            if (shoppingCartItemModel != null)
+            {
+                addToCartSuccessDisplay = "block";
+            }
+            else
+            {
+                addToCartSuccessDisplay = "none;";
+            }
+            <span style="display: @addToCartSuccessDisplay; font-family: Arial; font-size: 12px; font-weight: bold;">
+                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                <span style="color: #0000ff; padding-right: 5px;">Added...@(shoppingCartItemModel?.OrderQty)</span>
+                <br style="clear: both;">
+            </span>*@
+        @*<span id="addToCartFailure@(i)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                <i class="fa fa-times" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                <span style='color: #ff0000;'>Invalid qty</span>
+                <br style="clear: both;">
+            </span>*@
+        @*<span id="addToCart@(i)" style="font-family: Arial; font-size: 12px; font-weight: bold;"><br /></span>*@
         if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
         {
             <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 15px; font-weight:bold; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">View Item(s)</a>
             <br style="clear: both;" />
         }
-        @*<a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-            <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
-            <br />*@
+        <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 14px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+        <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 14px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+        <br />
         <div style="float: left; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">Qty : </div>
         <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@defaultOrderQty" />
         if (defaultOrderQty == "")
         {
-            <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@imageIndex, @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
+            <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
         }
         else
         {

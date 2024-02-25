@@ -3,7 +3,9 @@
 <form id="formContactUsData">
     @Html.Partial("_ContactUsData", Model)
 </form>
-<button class="loginRegisterbtn" id="contactUsSave" onclick="javascript: return contactUsSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">submit</button>
+<div class="col-md-12" style="text-align: center;">
+    <button class="loginRegisterbtn" id="contactUsSave" onclick="javascript: return contactUsSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 50%;" type="button">submit</button>
+</div>
 <br style="clear: both;" />
 <script type="text/javascript">
     function contactUsSave_onclick() {

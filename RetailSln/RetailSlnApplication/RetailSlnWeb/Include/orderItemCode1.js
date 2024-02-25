@@ -1,6 +1,74 @@
 ﻿//Sriramajayam
 //orderItemCode1.js
-function addToCart_onclick(index, categoryId) {
+function addToCart_onclick(categoryId, pageNum, pageSize, totalRowCount) {
+    console.log("addToCart_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    var jsonPostData = {};
+    var shoppingCartItemModels = [];
+    var shoppingCartItemModel, orderQtyHtmlElement, itemId, orderQty, orderComments;
+    for (var i = 0; ; i++) {
+        orderQtyHtmlElement = document.getElementById("orderQty" + i);
+        if (orderQtyHtmlElement == null) {
+            break;
+        }
+        else {
+            orderQty = document.getElementById("orderQty" + i).value;
+            if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + i).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + i).getAttribute("min") && orderQty <= document.getElementById("orderQty" + i).getAttribute("max")) {
+                itemId = document.getElementById("itemId" + i).innerText;
+                orderComments = "";//document.getElementById("orderComments" + i).value;
+                shoppingCartItemModel = {};
+                shoppingCartItemModel.ItemId = itemId;
+                shoppingCartItemModel.OrderQty = orderQty;
+                shoppingCartItemModel.OrderComments = orderComments;
+                shoppingCartItemModels.push(shoppingCartItemModel);
+            }
+        }
+    }
+    if (shoppingCartItemModels.length === 0) {
+        $('#loadingModal').modal('hide');
+        document.getElementById("divErrorMessage").innerHTML = "Please enter order quantity for a min of 1 item";
+        alert(document.getElementById("divErrorMessage").innerHTML);
+    }
+    else {
+        var jsonPostDataString;
+        jsonPostData.CategoryId = categoryId;
+        jsonPostData.PageNum = pageNum;
+        jsonPostData.PageSize = pageSize;
+        jsonPostData.TotalRowCount = totalRowCount;
+        jsonPostData.ShoppingCartItemModels = shoppingCartItemModels;
+        jsonPostDataString = JSON.stringify(jsonPostData);
+        console.log(-999, jsonPostDataString);
+        var url = "/Home/AddToCart/";
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "addToCart_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
+                }
+                else {
+                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                }
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCart_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+}
+function addToCart_onclickBackup(index, categoryId) {
     console.log("addToCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
@@ -179,6 +247,8 @@ function removeFromCart_onclick(index) {
                     document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;

@@ -48,7 +48,7 @@ namespace ArchitectureLibraryBusinessLayer
                 {
                     CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString(),
                     CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString(),
-                    ContactUsTypeId = ContactUsTypeEnum.Request,
+                    ContactUsTypeId = null,
                 };
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return contactUsModel;
