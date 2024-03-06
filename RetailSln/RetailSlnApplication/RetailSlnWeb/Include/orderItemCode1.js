@@ -68,67 +68,6 @@ function addToCart_onclick(categoryId, pageNum, pageSize, totalRowCount) {
         });
     }
 }
-function addToCart_onclickBackup(index, categoryId) {
-    console.log("addToCart_onclick", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
-    var jsonDatas = [];
-    var jsonData, jsonDataString, orderQtyHtmlElement, itemId, orderQty, orderComments;
-    for (var i = 0; ; i++) {
-        orderQtyHtmlElement = document.getElementById("orderQty" + i);
-        if (orderQtyHtmlElement == null) {
-            break;
-        }
-        else {
-            orderQty = document.getElementById("orderQty" + i).value;
-            if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + i).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + i).getAttribute("min") && orderQty <= document.getElementById("orderQty" + i).getAttribute("max")) {
-                itemId = document.getElementById("itemId" + i).innerText;
-                orderComments = "";//document.getElementById("orderComments" + i).value;
-                jsonData = {};
-                jsonData.ItemId = itemId;
-                jsonData.OrderQty = orderQty;
-                jsonData.OrderComments = orderComments;
-                jsonDatas.push(jsonData);
-            }
-        }
-    }
-    if (jsonDatas.length === 0) {
-        $('#loadingModal').modal('hide');
-        document.getElementById("divErrorMessage").innerHTML = "Please enter order quantity for a min of 1 item";
-        alert(document.getElementById("divErrorMessage").innerHTML);
-    }
-    else {
-        jsonDataString = JSON.stringify(jsonDatas);
-        console.log(jsonDataString);
-        var url = "/Home/AddToCart/" + categoryId;
-        $.ajax({
-            url: url,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: jsonDataString,
-            success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
-                console.log("00001000", "addToCart_onclick success", responseData.processMessage);
-                if (responseData.success) {
-                    document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
-                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
-                    document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
-                }
-                else {
-                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                }
-            },
-            error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
-                console.log("addToCart_onclick", "00099000", "ERROR???");
-                console.log(xhr, exception);
-            }
-        });
-    }
-}
 function addToCartGet_onclick(index, defaultOrderQty, categoryId) {
     console.log("addToCartGet_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -223,22 +162,24 @@ function removeFromCart_onclick(index) {
     console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
-    var categoryId;
-    var query = window.location.href;
-    var lastIndexOf1 = query.lastIndexOf('?id=');
-    if (lastIndexOf1 > -1) {
-        categoryId = query.substr(lastIndexOf1 + 4);
-    }
-    else {
-        categoryId = "";
-    }
+    var jsonPostData =
+    {
+        ParentCategoryId: document.getElementById("ParentCategoryId").value,
+        PageNum: document.getElementById("PageNum").value,
+        PageSize: document.getElementById("PageSize").value,
+        TotalRowCount: document.getElementById("TotalRowCount").value,
+        RemoveFromCartIndex: index,
+    };
+    var jsonPostDataString = JSON.stringify(jsonPostData);
     try {
-        var url = "/Home/RemoveFromCart/" + categoryId + "?index=" + index;
+        var url = "/Home/RemoveFromCart/";
         $.ajax({
             url: url,
-            type: "GET",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
             //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
             dataType: "json",
+            data: jsonPostDataString,
             async: true,
             success: function (responseData, textStatus, request) {
                 $('#loadingModal').modal('hide');

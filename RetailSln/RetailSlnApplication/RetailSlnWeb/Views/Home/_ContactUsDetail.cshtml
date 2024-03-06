@@ -1,5 +1,5 @@
 ﻿@model ArchitectureLibraryModels.ContactUsModel
-<h3 style="font-weight: bold; letter-spacing: 9px; text-transform: uppercase;">contact us</h3>
+<h3 id="divContactUsScrollIntoView" style="font-weight: bold; letter-spacing: 9px; text-transform: uppercase;">contact us</h3>
 <form id="formContactUsData">
     @Html.Partial("_ContactUsData", Model)
 </form>
@@ -8,6 +8,7 @@
 </div>
 <br style="clear: both;" />
 <script type="text/javascript">
+    document.getElementById("divContactUsScrollIntoView").scrollIntoView();
     function contactUsSave_onclick() {
         console.log("00000000", "contactUsSave_onclick");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

@@ -65,5 +65,13 @@ namespace RetailSlnWeb.Controllers
 
             return Json(sqlQueryResults, JsonRequestBehavior.AllowGet);
         }
+
+        //[Authorize]
+        [HttpGet]
+        [Route("SqlResult")]
+        public ActionResult SqlResult()
+        {
+            return View();
+        }
     }
 }

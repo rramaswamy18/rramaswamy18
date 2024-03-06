@@ -2,12 +2,11 @@
 <div class="center">
     @if (!ViewData.ModelState.IsValid)
     {
-        <ul id="divContactUsScrollIntoView" style="font-weight: bold;"></ul><!--This is dummy for scroll into view-->
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
     }
     else
     {
-        <div class="col-md-12" style="background-color: #f2f2f2; border-radius: 5px; padding: 18px; text-align: left; ">
+        <div class="col-md-12" style="border-radius: 5px; padding: 18px; text-align: left; ">
             @Html.Partial("_ContactUsDetail")
             <br />
             @Html.Partial("_ContactUsInfo")

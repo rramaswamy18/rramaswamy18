@@ -93,6 +93,7 @@ namespace ArchitectureLibraryDataLayer
             sqlCommand.Parameters["@FirstName"].Value = contactUsModel.FirstName;
             sqlCommand.Parameters["@LastName"].Value = contactUsModel.LastName;
             sqlCommand.Parameters["@EmailAddress"].Value = contactUsModel.EmailAddress;
+            sqlCommand.Parameters["@TelephoneCountryId"].Value = contactUsModel.ContactUsTelephoneCountryId;
             sqlCommand.Parameters["@TelephoneNumber"].Value = contactUsModel.ContactUsTelephoneNumber;
             sqlCommand.Parameters["@CommentsRequests"].Value = contactUsModel.CommentsRequests ?? (object)DBNull.Value;// : contactUsModel.CommentsRequests;
         }
@@ -164,6 +165,7 @@ namespace ArchitectureLibraryDataLayer
                 MetaDataName = sqlDataReader["MetaDataName"].ToString(),
                 SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
                 IsMapped = bool.Parse(sqlDataReader["IsMapped"].ToString()),
+                IsMandatory = bool.Parse(sqlDataReader["IsMandatory"].ToString()),
             };
             return userProfileMetaDataModeu;
         }

@@ -211,6 +211,7 @@
     <Compile Include="ClassCode\RetailSlnModels\OrderReceiptModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
@@ -940,6 +941,7 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item97.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item98.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item99.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images_Original\DivineBijaBanner.jpg" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\GiftCertificate\Templates\GiftCertSelectTemplate.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\GiftCertificate\Templates\GiftCertTemplate.jpg" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\GiftCertificate\Templates\GiftCertTemplate0.jpg" />
@@ -1368,16 +1370,25 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Image_003.webp" />
     <Content Include="Documents\PhonePePayPagePayLoadTemplate.json" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
-    <Content Include="Images\Checkout.jpg" />
+    <Content Include="Images\Checkout1.jpg" />
+    <Content Include="Images\Checkout2.png" />
     <Content Include="Images\Comments.png" />
     <Content Include="Images\Delete.jpg" />
     <Content Include="Images\Loading1.gif" />
+    <Content Include="Images\Logout1.png" />
+    <Content Include="Images\Logout2.png" />
     <Content Include="Images\NoImage_0.png" />
     <Content Include="Images\OutofStock.png" />
     <Content Include="Images\PickupMyOrder.png" />
+    <Content Include="Images\PostalMail1.png" />
+    <Content Include="Images\PostalMail2.jpg" />
+    <Content Include="Images\PostalMail3.jpg" />
     <Content Include="Images\PreLoader.gif" />
+    <Content Include="Images\Register1.png" />
     <Content Include="Images\ShipMyOrder.png" />
-    <Content Include="Images\SignIn.png" />
+    <Content Include="Images\ShoppingCart1.png" />
+    <Content Include="Images\SignIn1.png" />
+    <Content Include="Images\SignIn2.png" />
     <Content Include="Images\SMSIcon1.png" />
     <Content Include="Images\SMSIcon2.png" />
     <Content Include="Images\SMSIcon3.png" />
@@ -1401,7 +1412,6 @@
     <Content Include="Include\orderItemCode0.js" />
     <Content Include="Include\orderItemCode2.js" />
     <Content Include="Include\searchDataCode.js" />
-    <Content Include="Include\StyleSheet1_zzz.css" />
     <Content Include="Include\StyleSheet1.css" />
     <Content Include="Include\StyleSheet1.min.css" />
     <Content Include="Include\StyleSheet2.css" />
@@ -1556,7 +1566,6 @@
     <Content Include="Views\Home\_OrderListViewData.cshtml" />
     <Content Include="Views\Home\_ShoppingCart.cshtml" />
     <Content Include="Views\Home\_ShoppingCartData.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartLink_zzz.cshtml" />
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
     <Content Include="Views\Home\ItemImageListView.cshtml" />
     <Content Include="Views\Home\_ItemImageListView.cshtml" />
@@ -1580,15 +1589,22 @@
     <Content Include="Views\Home\_SearchResultCategory.cshtml" />
     <Content Include="Views\Home\_SearchResultItem.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
-    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuHamburger.cshtml" />
+    <Content Include="Views\Home\_ContactUsData1.cshtml" />
+    <Content Include="Views\Home\_ContactUsDetail1.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
+    <Content Include="Views\Home\_ItemBundleItemListView.cshtml" />
+    <Content Include="Views\Home\ItemBundleItemListView.cshtml" />
+    <Content Include="Views\GeneralUtility\SqlResult.cshtml" />
+    <Content Include="Views\GeneralUtility\_SqlResult.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuTop.cshtml" />
+    <Content Include="Views\Home\RazorPayReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientSpecific\3_RetailSln\Documents\Images\Testimonials\" />
     <Folder Include="ClientSpecific\3_RetailSln\Documents\Images_Original\" />
     <Folder Include="ClientSpecific\97_DivineBija.in\Documents\Images\Testimonials\" />
-    <Folder Include="ClientSpecific\97_DivineBija.in\Documents\Images_Original\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Default\" />
     <Folder Include="Views\RetailApi\" />

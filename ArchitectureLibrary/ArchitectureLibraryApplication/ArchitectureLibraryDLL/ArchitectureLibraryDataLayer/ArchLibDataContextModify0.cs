@@ -42,9 +42,9 @@ namespace ArchitectureLibraryDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                UpdPerson1(personModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdPerson2(personModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 UpdAspNetUser1(personModel.AspNetUserModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                UpdDemogInfoAddress(personModel.HomeDemogInfoAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //UpdDemogInfoAddress(personModel.HomeDemogInfoAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return;
             }
             catch (Exception exception)

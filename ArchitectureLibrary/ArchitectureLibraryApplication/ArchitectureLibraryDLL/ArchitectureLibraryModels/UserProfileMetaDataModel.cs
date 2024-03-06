@@ -13,5 +13,6 @@ namespace ArchitectureLibraryModels
         public string MetaDataName { set; get; }
         public float SeqNum { set; get; }
         public bool IsMapped { set; get; }
+        public bool IsMandatory { set; get; }
     }
 }

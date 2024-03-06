@@ -555,6 +555,7 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
+
         [AllowAnonymous]
         [HttpGet]
         [Route("RegisterLoginContactResetPassword")]

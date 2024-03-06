@@ -49,6 +49,7 @@ namespace ArchitectureLibraryBusinessLayer
                     CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString(),
                     CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString(),
                     ContactUsTypeId = null,
+                    ContactUsTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
                 };
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return contactUsModel;
@@ -91,10 +92,10 @@ namespace ArchitectureLibraryBusinessLayer
                     SendEmail(contactUsModel.EmailAddress, contactUsEmailSubjectHtml, contactUsEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                     contactUsModel = new ContactUsModel
                     {
-                        ContactUsTypeId = ContactUsTypeEnum.Request,
+                        ContactUsTypeId = null,
                         ResponseObjectModel = new ResponseObjectModel
                         {
-                            ColumnCount = 1,
+                            ColumnCount = 3,
                             ListStyleType = "decimal",
                             ResponseMessages = new List<string>
                             {
@@ -841,7 +842,7 @@ namespace ArchitectureLibraryBusinessLayer
                         else
                         {
                             modelStateDictionary.AddModelError("RegisterEmailAddress", "Email address already registered");
-                            modelStateDictionary.AddModelError("RegisterEmailAddress", "Try with a different email address");
+                            //modelStateDictionary.AddModelError("RegisterEmailAddress", "Try with a different email address");
                             exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00098000 :: Exception", new Exception("Email Address already registered"), "", "Email Address already registered");
                         }
                     }

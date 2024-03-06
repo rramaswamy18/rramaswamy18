@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
+using static System.Collections.Specialized.BitVector32;
 
 namespace RetailSlnBusinessLayer
 {
@@ -356,7 +357,7 @@ namespace RetailSlnBusinessLayer
                     }
                     else
                     {
-                        shoppingCartModel = null;
+                        throw new Exception("Shopping Cart is Empty");
                     }
                 }
                 return shoppingCartModel;
@@ -527,7 +528,7 @@ namespace RetailSlnBusinessLayer
                             CreditCardProcessor = creditCardProcessor,
                             CreditCardSecCode = giftCertModel.CVV,
                             CreditCardTranType = "PAYMENT",
-                            CurrencyCode = "USD",
+                            CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
                             NameAsOnCard = giftCertModel.CardHolderName,
                         };
                         CreditCardServiceBL creditCardService = new CreditCardServiceBL();
@@ -706,7 +707,12 @@ namespace RetailSlnBusinessLayer
                 string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplate", orderReceiptModel);
                 emailBodyHtml += signatureHtml;
                 PDFUtility pDFUtility = new PDFUtility();
-                archLibBL.SendEmail(paymentDataModel.EmailAddress, emailSubjectText, emailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+                pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, @"C:\Code\rramaswamy18\RetailSln\Email\" + orderReceiptModel.PaymentDataModel.OrderHeaderId + ".pdf");
+                List<string> emailAttachmentFileNames = new List<string>
+                {
+                    @"C:\Code\rramaswamy18\RetailSln\Email\" + orderReceiptModel.PaymentDataModel.OrderHeaderId + ".pdf",
+                };
+                archLibBL.SendEmail(paymentDataModel.EmailAddress, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return orderReceiptModel;
             }
             catch (Exception exception)
@@ -743,6 +749,7 @@ namespace RetailSlnBusinessLayer
                             PaymentDataModel = new PaymentDataModel
                             {
                                 EmailAddress = sessionObjectModel.EmailAddress,
+                                UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
                                 OrderAmount = shoppingCartModel.ShoppingCartSummaryItems[shoppingCartModel.ShoppingCartSummaryItems.Count - 1].OrderAmount.Value,
                             },
                             ShoppingCartModel = shoppingCartModel,
@@ -796,6 +803,7 @@ namespace RetailSlnBusinessLayer
                     if (modelStateDictionary.IsValid)
                     {
                         paymentDataModel.EmailAddress = sessionObjectModel.EmailAddress;
+                        paymentDataModel.UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
                         if (creditCardPaymentAmount > 0)
                         {
                             string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
@@ -809,8 +817,10 @@ namespace RetailSlnBusinessLayer
                                 CreditCardProcessor = creditCardProcessor,
                                 CreditCardSecCode = paymentDataModel.CVV,
                                 CreditCardTranType = "PAYMENT",
-                                CurrencyCode = "USD",
-                                NameAsOnCard = paymentDataModel.CardHolderName,
+                                CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                                EmailAddress = sessionObjectModel.EmailAddress,
+                                NameAsOnCard = string.IsNullOrWhiteSpace(paymentDataModel.CardHolderName) ? sessionObjectModel.FirstName + " " + sessionObjectModel.LastName : paymentDataModel.CardHolderName,
+                                TelephoneNumber = sessionObjectModel.PhoneNumber,
                             };
                             CreditCardServiceBL creditCardService = new CreditCardServiceBL();
                             paymentDataModel.AspNetRoleName = sessionObjectModel.AspNetRoleName;
@@ -818,6 +828,7 @@ namespace RetailSlnBusinessLayer
                             paymentDataModel.CreditCardProcessMessage = creditCardDataModel.ProcessMessage;
                             paymentDataModel.CreditCardNumberLast4 = creditCardDataModel.CreditCardNumberLast4;
                             paymentDataModel.CreditCardDataId = creditCardDataModel.CreditCardDataId;
+                            httpSessionStateBase["CreditCardDataId"] = paymentDataModel.CreditCardDataId;
                             creditCardNumberLast4 = creditCardDataModel.CreditCardNumberLast4;
                             if (paymentDataModel.CreditCardProcessStatus)
                             {
@@ -836,6 +847,7 @@ namespace RetailSlnBusinessLayer
                             paymentDataModel.CreditCardProcessMessage = "Not Required";
                             creditCardProcessMessage = paymentDataModel.CreditCardProcessMessage;
                         }
+                        httpSessionStateBase["PaymentDataModel"] = paymentDataModel;
                         if (paymentDataModel.CreditCardProcessStatus)
                         {
                             UpdatePayments(giftCertNumberLast4, giftCertPaymentAmount, creditCardNumberLast4, creditCardProcessMessage, creditCardPaymentAmount, shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -878,175 +890,33 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
-        //POST PaymentBackup
-        //public void PaymentBackup(ref PaymentDataModel paymentDataModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        ApplicationDataContext.OpenSqlConnection();
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
-        //        ShoppingCartModel shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
-        //        float orderAmount, giftCertPaymentAmount, giftCertBalanceAmount, creditCardPaymentAmount;
-        //        string giftCertNumberLast4 = null, creditCardNumberLast4 = null, creditCardProcessMessage = "";
-        //        orderAmount = (float)paymentDataModel.OrderAmount;
-        //        GiftCertModel giftCertModel = null;
-        //        if (modelStateDictionary.IsValid)
-        //        {
-        //            if (!string.IsNullOrWhiteSpace(paymentDataModel.GiftCertNumber))
-        //            {
-        //                giftCertModel = ProcessGiftCardPayment(paymentDataModel.GiftCertNumber, paymentDataModel.GiftCertKey, orderAmount, out giftCertPaymentAmount, out giftCertBalanceAmount, modelStateDictionary, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                giftCertNumberLast4 = paymentDataModel.GiftCertNumber.Substring(paymentDataModel.GiftCertNumber.Length - 4);
-        //                paymentDataModel.GiftCertNumberLast4 = giftCertNumberLast4;
-        //                creditCardPaymentAmount = orderAmount - giftCertPaymentAmount;
-        //            }
-        //            else
-        //            {
-        //                creditCardPaymentAmount = orderAmount;
-        //                giftCertPaymentAmount = 0;
-        //            }
-        //            paymentDataModel.GiftCertPaymentAmount = giftCertPaymentAmount;
-        //            paymentDataModel.CreditCardPaymentAmount = creditCardPaymentAmount;
-        //            if (modelStateDictionary.IsValid)
-        //            {
-        //                paymentDataModel.EmailAddress = sessionObjectModel.EmailAddress;
-        //                if (creditCardPaymentAmount > 0)
-        //                {
-        //                    string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
-        //                    CreditCardDataModel creditCardDataModel = new CreditCardDataModel
-        //                    {
-        //                        CreditCardAmount = creditCardPaymentAmount.ToString("0.00"),
-        //                        CreditCardExpMM = paymentDataModel.CardExpiryMM,
-        //                        CreditCardExpYear = paymentDataModel.CardExpiryYYYY,
-        //                        CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId),
-        //                        CreditCardNumber = paymentDataModel.CreditCardNumber,
-        //                        CreditCardProcessor = creditCardProcessor,
-        //                        CreditCardSecCode = paymentDataModel.CVV,
-        //                        CreditCardTranType = "PAYMENT",
-        //                        CurrencyCode = "USD",
-        //                        NameAsOnCard = paymentDataModel.CardHolderName,
-        //                    };
-        //                    CreditCardServiceBL creditCardService = new CreditCardServiceBL();
-        //                    paymentDataModel.AspNetRoleName = sessionObjectModel.AspNetRoleName;
-        //                    paymentDataModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, out string processMessage, ApplicationDataContext.SqlConnectionObject, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                    paymentDataModel.CreditCardProcessMessage = creditCardDataModel.ProcessMessage;
-        //                    paymentDataModel.CreditCardNumberLast4 = creditCardDataModel.CreditCardNumberLast4;
-        //                    paymentDataModel.CreditCardDataId = creditCardDataModel.CreditCardDataId;
-        //                    creditCardNumberLast4 = creditCardDataModel.CreditCardNumberLast4;
-        //                    if (paymentDataModel.CreditCardProcessStatus)
-        //                    {
-        //                        creditCardProcessMessage = paymentDataModel.CreditCardProcessMessage;
-        //                    }
-        //                    else
-        //                    {
-        //                        modelStateDictionary.AddModelError("", creditCardDataModel.ProcessMessage);
-        //                        modelStateDictionary.AddModelError("CreditCardNumber", creditCardDataModel.ProcessMessage);
-        //                        modelStateDictionary.AddModelError("CardHolderName", creditCardDataModel.ProcessMessage);
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    paymentDataModel.CreditCardProcessStatus = true;
-        //                    paymentDataModel.CreditCardProcessMessage = "Not Required";
-        //                    creditCardProcessMessage = paymentDataModel.CreditCardProcessMessage;
-        //                }
-        //                if (paymentDataModel.CreditCardProcessStatus)
-        //                {
-        //                    UpdatePayments(giftCertNumberLast4, giftCertPaymentAmount, creditCardNumberLast4, creditCardProcessMessage, creditCardPaymentAmount, shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                    DeliveryInfoDataModel deliveryInfoDataModel = (DeliveryInfoDataModel)httpSessionStateBase["DeliveryInfoDataModel"];
-        //                    OrderModel orderModel = new OrderModel
-        //                    {
-        //                        DeliveryInfoModel = new DeliveryInfoModel
-        //                        {
-        //                            DeliveryInfoDataModel = deliveryInfoDataModel,
-        //                        },
-        //                        OrderHeaderModel = new OrderHeaderModel
-        //                        {
-        //                            DimensionUnitId = DimensionUnitEnum.Centimeter,
-        //                            OrderDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-        //                            OrderNumber = 1,
-        //                            OrderStatusId = OrderStatusEnum.Open,
-        //                            PersonId = sessionObjectModel.PersonId,
-        //                            VolumeValue = 0,
-        //                            WeightUnitId = WeightUnitEnum.Grams,
-        //                            WeightValue = 0,
-        //                            OrderDetailModels = new List<OrderDetailModel>(),
-        //                            OrderSummaryModels = new List<OrderDetailModel>(),
-        //                        },
-        //                    };
-        //                    ItemModel itemModel;
-        //                    float itemRate;
-        //                    foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
-        //                    {
-        //                        itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItem.ItemId);
-        //                        itemRate = itemModel.ItemRate.Value;
-        //                        orderModel.OrderHeaderModel.OrderDetailModels.Add
-        //                        (
-        //                            new OrderDetailModel
-        //                            {
-        //                                ItemDesc = itemModel.ItemDesc,
-        //                                ItemRate = itemRate,
-        //                                ItemShortDesc = itemModel.ItemShortDesc,
-        //                                ItemId = itemModel.ItemId,
-        //                                OrderAmount = itemRate * shoppingCartItem.OrderQty.Value,
-        //                                OrderComments = shoppingCartItem.OrderComments,
-        //                                OrderDetailTypeId = OrderDetailTypeEnum.Item,
-        //                                OrderQty = (long)shoppingCartItem.OrderQty,
-        //                                VolumeValue = shoppingCartItem.VolumeValue.Value,
-        //                                WeightValue = shoppingCartItem.WeightValue.Value,
-        //                            }
-        //                        );
-        //                    }
-        //                    foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartSummaryItems)
-        //                    {
-        //                        orderModel.OrderHeaderModel.OrderDetailModels.Add
-        //                        (
-        //                            new OrderDetailModel
-        //                            {
-        //                                ItemDesc = null,
-        //                                ItemRate = shoppingCartItem.OrderAmount.Value,
-        //                                ItemShortDesc = shoppingCartItem.ItemShortDesc,
-        //                                ItemId = shoppingCartItem.ItemId,
-        //                                OrderAmount = shoppingCartItem.OrderAmount.Value,
-        //                                OrderComments = shoppingCartItem.OrderComments,
-        //                                OrderDetailTypeId = shoppingCartItem.OrderDetailTypeId,
-        //                                OrderQty = 1,
-        //                            }
-        //                        );
-        //                    }
-        //                    ApplicationDataContext.CreateOrder(orderModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                    paymentDataModel.OrderHeaderId = orderModel.OrderHeaderModel.OrderHeaderId;
-        //                    ApplicationDataContext.CreatePayment(paymentDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                    if (giftCertModel != null)
-        //                    {
-        //                        ApplicationDataContext.ModifyGiftCertBalance(giftCertModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                    }
-        //                    paymentDataModel.ResponseObjectModel = new ResponseObjectModel
-        //                    {
-        //                        ResponseTypeId = ResponseTypeEnum.Success,
-        //                        ResponseMessages = new List<string>
-        //                        {
-        //                            "Your order has been processed",
-        //                            "Below is the summary of the invoice",
-        //                            "Please check your email",
-        //                        },
-        //                    };
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        ApplicationDataContext.CloseSqlConnection();
-        //    }
-        //}
+        public OrderReceiptModel Payment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+                ApplicationDataContext.OpenSqlConnection();
+                PaymentDataModel paymentDataModel = (PaymentDataModel)httpSessionStateBase["PaymentDataModel"];
+                paymentDataModel.CreditCardProcessMessage = razorpay_payment_id;
+                creditCardServiceBL.UpdCreditCardData(paymentDataModel.CreditCardDataId, razorpay_payment_id, razorpay_order_id, razorpay_signature, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CreateOrder(ref paymentDataModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.CreatePayment(paymentDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                OrderReceiptModel orderReceiptModel = OrderReceipt(paymentDataModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                return orderReceiptModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
         public ShoppingCartModel RemoveFromCart(int index, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1681,6 +1551,14 @@ namespace RetailSlnBusinessLayer
                         { "NuveiRequestUri", ArchLibCache.GetApplicationDefault(clientId, "NuveiRequestUri", "") },
                         { "NuveiTerminalId", ArchLibCache.GetApplicationDefault(clientId, "NuveiTerminalId", "") },
                         { "NuveiSharedSecret", ArchLibCache.GetApplicationDefault(clientId, "NuveiSharedSecret", "") },
+                    };
+                    break;
+                case "RAZORPAYTEST":
+                    creditCardKVPs = new Dictionary<string, string>
+                    {
+                        { "PrivateKey", ArchLibCache.GetPrivateKey(clientId) },
+                        { "ApiKey", ArchLibCache.GetApplicationDefault(clientId, creditCardProcessor, "ApiKey") },
+                        { "ApiSecret", ArchLibCache.GetApplicationDefault(clientId, creditCardProcessor, "ApiSecret") },
                     };
                     break;
                 default:

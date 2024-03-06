@@ -1,133 +1,179 @@
-﻿@{
-    string redirectUrlString, selectedMenu = "", urlString, viewDataActionName;
-    int i;
-    var menuLayoutModels = ArchitectureLibraryMenuCacheData.ArchLibMenuCache.ParentMenuLayoutModels["HEADERMENU"];
-    try
-    {
-        viewDataActionName = ViewData["ActionName"].ToString();
-    }
-    catch
-    {
-        viewDataActionName = "";
-    }
-    ArchitectureLibraryModels.SessionObjectModel sessionObjectModel;
-    if (Session["SessionObject"] != null)
-    {
-        sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
-    }
-    else
-    {
-        sessionObjectModel = null;
-    }
-    ArchitectureLibraryMenuModels.MenuLayoutModel menuLayoutModel;
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    //DivineBija.in --> 97
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    int mainCategoryCount = 5;
 }
-<ul class="nav navbar-nav">
-    @{
-        for (i = 0; i < menuLayoutModels.Count; i++)
-        {
-            menuLayoutModel = menuLayoutModels[i];
-            if (menuLayoutModel.MenuListModel.MenuListNameDesc == "REGISTER")
-            {
-                break;
-            }
-            if (viewDataActionName == menuLayoutModel.MenuUrlAction.ActionName || "id=" + viewDataActionName == menuLayoutModel.MenuUrlAction.QueryString)
-            {
-                selectedMenu = "active";
-            }
-            else
-            {
-                selectedMenu = "";
-            }
-            urlString = Url.Action(menuLayoutModel.MenuUrlAction.ActionName, menuLayoutModel.MenuUrlAction.ControllerName);
-            <li>
-                <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #ffffff; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                    @menuLayoutModel.MenuUrlAction.LinkText
-                </a>
-            </li>
-        }
+<style>
+    .navClass {
+        background-color: #9a031e;
+        padding: 0;
+        padding-bottom: 9px;
+        padding-top: 9px;
+        position: relative;
+        /*font-size: 100%;*/
+        text-align: left;
+        transition: background-color 0.3s ease; /* Smooth color transition */
     }
-</ul>
-<ul class="nav navbar-nav navbar-right">
-    @{
-        for (; i < menuLayoutModels.Count; i++)
-        {
-            menuLayoutModel = menuLayoutModels[i];
-            urlString = Url.Action(menuLayoutModel.MenuUrlAction.ActionName, menuLayoutModel.MenuUrlAction.ControllerName);
-            if (string.IsNullOrWhiteSpace(menuLayoutModel.MenuUrlAction.RedirectActionName))
-            {
-                redirectUrlString = "";
+
+        .navClass ul {
+            display: inline-block;
+            /*font-size: 100%;*/
+            list-style-type: none;
+            margin: 0.5em;
+            overflow: hidden;
+            padding-left: 0;
+        }
+
+        .navClass li {
+            /*border-bottom: 1px solid #002171;*/
+            display: inline-flex;
+            padding-right: 18px;
+        }
+
+        .navClass a {
+            text-decoration: none;
+            display: block;
+        }
+
+        .navClass a {
+            text-decoration: underline;
+            display: block;
+        }
+
+            .navClass a.active {
+                text-decoration: underline;
+                text-decoration-color: #61ce70;
+                text-decoration-thickness: 2px;
+                text-underline-offset: 4px;
             }
-            else
-            {
-                redirectUrlString = Url.Action(menuLayoutModel.MenuUrlAction.RedirectActionName, menuLayoutModel.MenuUrlAction.RedirectControllerName);
-                if (!string.IsNullOrWhiteSpace(menuLayoutModel.MenuUrlAction.RedirectQueryString))
-                {
-                    redirectUrlString += "?" + menuLayoutModel.MenuUrlAction.RedirectQueryString;
-                }
-                if (!string.IsNullOrWhiteSpace(menuLayoutModel.MenuUrlAction.RedirectMessage))
-                {
-                    redirectUrlString += "?id=" + menuLayoutModel.MenuUrlAction.RedirectMessageId;
-                }
+
+            .navClass a:hover {
+                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+                /*color: cornflowerblue !important;
+                color: #a52f00;
+                background-color: #000000;*/
+                text-decoration: underline;
+                text-decoration-color: cornflowerblue !important;
+                text-decoration-thickness: 2px;
+                text-underline-offset: 4px;
             }
-            switch (menuLayoutModel.MenuUrlAction.AccessType)
+
+        .navClass ul ul {
+            position: absolute;
+            display: none;
+            padding: 0;
+        }
+
+            .navClass ul ul li {
+                background-color: #9a031e;
+                display: block;
+                margin-left: 0;
+                padding-bottom: 5px;
+                padding-left: 9px;
+                text-align: left;
+                /*width: 15em;*/
+            }
+
+        .navClass li:hover ul {
+            display: block;
+        }
+</style>
+<nav class="navClass">
+    <ul>
+        <li>
+            <span id="menuCategoryId0" style="display: none;">-1</span>
+            <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
+                Home
+            </a>
+        </li>
+        @{
+            int i, index = 0;
+            for (i = 0; i < mainCategoryCount && i < categoryItemHierModels.Count; i++)
             {
-                case "PUBLIC": //Show this menu logged in or not
+                index++;
+                <li>
+                    <span id="menuCategoryId@(index)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
+                    <a id="menuItem@(index)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryId, 1, @index);" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                        @categoryItemHierModels[i].CategoryModel.CategoryDesc
+                    </a>
+                </li>
+            }
+        }
+        <li>
+            <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+            <ul>
+                @for (; i < categoryItemHierModels.Count; i++)
+                {
+                    index++;
                     <li>
-                        <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #ffffff; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                            @menuLayoutModel.MenuUrlAction.LinkText
+                        <span id="menuCategoryId@(index)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
+                        <a id="menuItem@(index)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryId, 1, @index);" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                            @categoryItemHierModels[i].CategoryModel.CategoryDesc
                         </a>
                     </li>
-                    break;
-                case "SECURED20": //Show this menu when logged in and when not logged as disabled
-                    if (sessionObjectModel == null)
-                    {
-                        <li style="vertical-align: middle;">
-                            <a href="javascript: void(0);" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #a0a0a0; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                                @menuLayoutModel.MenuUrlAction.LinkText
-                            </a>
-                        </li>
+                }
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <span id="selectedCategoryDesc" style="color: #61ce70; font-weight: bold;">All Items (Products)</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<script type="text/javascript">
+    var categoryCount = parseInt("@categoryItemHierModels.Count");
+    function categoryId_onclick(categoryId, pageNum) {
+        console.log("categoryId_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        var url = "@Url.Action("OrderCategoryItem", "Home")" + "?id=" + categoryId + "&pageNum=" + pageNum;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "categoryId_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("selectedCategoryDesc").innerHTML = "";
+                    var menuItemObject, menuCategoryIdObject;
+                    for (var i = 1; i < categoryCount; i++) {
+                        menuItemObject = document.getElementById("menuItem" + i);
+                        menuCategoryIdObject = document.getElementById("menuCategoryId" + i);
+                        if (menuCategoryIdObject.innerHTML == categoryId) {
+                            menuItemObject.className = "active";
+                            //console.log(menuItemObject);
+                            document.getElementById("selectedCategoryDesc").innerHTML = menuItemObject.innerHTML;
+                        }
+                        else {
+                            menuItemObject.className = "";
+                        }
                     }
-                    else
-                    {
-                        <li>
-                            <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #ffffff; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                                @menuLayoutModel.MenuUrlAction.LinkText
-                            </a>
-                        </li>
-                    }
-                    break;
-                @*case "SECURED40": //Show this menu only when not logged in
-                    if (sessionObjectModel == null)
-                    {
-                        <li>
-                            <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #ffffff; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                                @menuLayoutModel.MenuUrlAction.LinkText
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                    }
-                    break;*@
-                case "SECURED60": //Show this menu when not logged in and when logged as disabled
-                    if (sessionObjectModel == null)
-                    {
-                        <li>
-                            <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #ffffff; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                                @menuLayoutModel.MenuUrlAction.LinkText
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li style="vertical-align: middle;">
-                            <a href="javascript: void(0);" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #a0a0a0; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                                @menuLayoutModel.MenuUrlAction.LinkText
-                            </a>
-                        </li>
-                    }
-                    break;
+                    document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                    document.getElementById("divContainer").scrollIntoView();
+                }
+                else {
+                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                    document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                }
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("categoryId_onclick", "00099000", "ERROR???");
+                document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+                document.getElementById("divErrorMessage2").innerHTML = "Error occurred";
+                console.log(xhr, exception);
             }
-        }
+        });
     }
-</ul>
+</script>

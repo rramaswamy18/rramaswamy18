@@ -18,10 +18,14 @@ namespace RetailSlnModels
         [Display(Name = "Expected Availability")]
         public string ExpectedAvailability { set; get; }
 
+        public string ExpectedAvailabilityFormatted { set; get; }
+
         [Display(Name = "Select Image")]
         public HttpPostedFileBase HttpPostedFileBase { get; set; }
 
         public string ImageName { set; get; }
+
+        public string ImageTitle { set; get; }
 
         public Dictionary<string, string> ItemAttributesForDisplay { set; get; }
 
@@ -38,6 +42,8 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter rate")]
         public float? ItemRate { set; get; }
 
+        public string ItemRateFormatted { set; get; }
+
         [Display(Name = "MSRP")]
         [Required(ErrorMessage = "Please enter MSRP")]
         public float? ItemRateMSRP { set; get; }
@@ -51,6 +57,16 @@ namespace RetailSlnModels
         [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
         [Required(ErrorMessage = "Please enter short description")]
         public string ItemShortDesc1 { set; get; }
+
+        [Display(Name = "Short Desc.")]
+        [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
+        [Required(ErrorMessage = "Please enter short description")]
+        public string ItemShortDesc2 { set; get; }
+
+        [Display(Name = "Short Desc.")]
+        [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
+        [Required(ErrorMessage = "Please enter short description")]
+        public string ItemShortDesc3 { set; get; }
 
         [Display(Name = "Short Desc.")]
         [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]

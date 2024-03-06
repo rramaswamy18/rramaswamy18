@@ -94,6 +94,19 @@ namespace ArchitectureLibraryDataLayer
             sqlCommand.Parameters["@AspNetUserId"].Value = personModel.AspNetUserId;
             sqlCommand.ExecuteNonQuery();
         }
+        public static void UpdPerson2(PersonModel personModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
+        {
+            SqlCommand sqlCommand = BuildSqlCommandPersonUpd2(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);
+            sqlCommand.Parameters["@FirstName"].Value = personModel.FirstName;
+            sqlCommand.Parameters["@LastName"].Value = personModel.LastName;
+            sqlCommand.Parameters["@MaritalStatusId"].Value = personModel.MaritalStatusId ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@MiddleName"].Value = personModel.MiddleName ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@SalutationId"].Value = personModel.SalutationId;
+            sqlCommand.Parameters["@SuffixId"].Value = personModel.SuffixId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInuserId;
+            sqlCommand.Parameters["@AspNetUserId"].Value = personModel.AspNetUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
         public static void UpdAspNetUser1(AspNetUserModel aspNetUserModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInuserId)
         {
             SqlCommand sqlCommand = BuildSqlCommandAspNetUserUpd1(sqlConnection, clientId, ipAddress, execUniqueId, loggedInuserId);

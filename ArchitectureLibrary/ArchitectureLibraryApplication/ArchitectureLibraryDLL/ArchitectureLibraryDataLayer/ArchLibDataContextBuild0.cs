@@ -26,6 +26,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,FirstName" + Environment.NewLine;
             sqlStmt += "              ,LastName" + Environment.NewLine;
             sqlStmt += "              ,EmailAddress" + Environment.NewLine;
+            sqlStmt += "              ,TelephoneCountryId" + Environment.NewLine;
             sqlStmt += "              ,TelephoneNumber" + Environment.NewLine;
             sqlStmt += "              ,CommentsRequests" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
@@ -36,6 +37,7 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,@FirstName" + Environment.NewLine;
             sqlStmt += "              ,@LastName" + Environment.NewLine;
             sqlStmt += "              ,@EmailAddress" + Environment.NewLine;
+            sqlStmt += "              ,@TelephoneCountryId" + Environment.NewLine;
             sqlStmt += "              ,@TelephoneNumber" + Environment.NewLine;
             sqlStmt += "              ,@CommentsRequests" + Environment.NewLine;
             #endregion
@@ -45,6 +47,7 @@ namespace ArchitectureLibraryDataLayer
             sqlCommand.Parameters.AddWithValue("@FirstName", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@LastName", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@EmailAddress", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@TelephoneCountryId", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@TelephoneNumber", System.DBNull.Value);
             sqlCommand.Parameters.AddWithValue("@CommentsRequests", System.DBNull.Value);
             return sqlCommand;
@@ -247,6 +250,49 @@ namespace ArchitectureLibraryDataLayer
             sqlStmt += "              ,SignatureTextId = @SignatureTextId" + Environment.NewLine;
             sqlStmt += "              ,SignatureTextValue = @SignatureTextValue" + Environment.NewLine;
             sqlStmt += "              ,SSN = @SSN" + Environment.NewLine;
+            sqlStmt += "              ,SuffixId = @SuffixId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId = @LoggedInUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserName = SUSER_NAME()" + Environment.NewLine;
+            sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
+            sqlStmt += "         WHERE " + Environment.NewLine;
+            sqlStmt += "               AspNetUserId = @AspNetUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("@CitizenshipId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@CertificateDocumentId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@DateOfBirth", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@DriverLicenseDemogInfoSubDivisionId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@DriverLicenseExpiryDate", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@DriverLicenseNumber", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@DriverLicenseType", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@ElectronicSignatureConsent", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@ElectronicSignatureConsentAccepted", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@FirstName", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@InitialsTextId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@InitialsTextValue", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@LastName", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@MaritalStatusId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@MiddleName", System.DBNull.Value);
+            //sqlCommand.Parameters.AddWithValue("@MilitaryServiceId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@NicknameFirst", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@NicknameLast", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@SalutationId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@SignatureTextId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@SignatureTextValue", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@SSN", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@SuffixId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@LoggedInUserId", System.DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@AspNetUserId", System.DBNull.Value);
+            return sqlCommand;
+        }
+        private static SqlCommand BuildSqlCommandPersonUpd2(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "";
+            sqlStmt += "        UPDATE ArchLib.Person" + Environment.NewLine;
+            sqlStmt += "           SET " + Environment.NewLine;
+            sqlStmt += "               FirstName = @FirstName" + Environment.NewLine;
+            sqlStmt += "              ,LastName = @LastName" + Environment.NewLine;
+            sqlStmt += "              ,MiddleName = @MiddleName" + Environment.NewLine;
+            sqlStmt += "              ,SalutationId = @SalutationId" + Environment.NewLine;
             sqlStmt += "              ,SuffixId = @SuffixId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId = @LoggedInUserId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserName = SUSER_NAME()" + Environment.NewLine;

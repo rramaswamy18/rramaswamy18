@@ -16,6 +16,8 @@ namespace ArchitectureLibraryMenuModels
         public string ActionName { set; get; }
         public string AjaxUpdateTargetId { set; get; }
         public string ControllerName { set; get; }
+        public string DropDownMenuName { set; get; }
+        public string DropDownMenuType { set; get; }
         public string HrefTarget { set; get; }
         public string HrefWidth { set; get; }
         public string LinkText { set; get; }

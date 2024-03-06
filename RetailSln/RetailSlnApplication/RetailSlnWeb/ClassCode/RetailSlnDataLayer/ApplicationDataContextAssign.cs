@@ -84,6 +84,8 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ItemDesc"].Value = itemModel.ItemDesc;
             sqlCommand.Parameters["@ItemShortDesc0"].Value = itemModel.ItemShortDesc0;
             sqlCommand.Parameters["@ItemShortDesc1"].Value = itemModel.ItemShortDesc1;
+            sqlCommand.Parameters["@ItemShortDesc2"].Value = itemModel.ItemShortDesc2 ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ItemShortDesc3"].Value = itemModel.ItemShortDesc3 ?? (object)DBNull.Value;
             sqlCommand.Parameters["@ItemShortDesc"].Value = itemModel.ItemShortDesc;
             sqlCommand.Parameters["@ItemStarCount"].Value = (int)itemModel.ItemStarCount;
             sqlCommand.Parameters["@ItemStatusId"].Value = (int)itemModel.ItemStatusId;

@@ -18,25 +18,6 @@
     margin-bottom: 0px;
 }
 
-.add-on .input-group-btn > .btn {
-    border-left-width: 0;
-    left: -2px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-/* stop the glowing blue shadow */
-.add-on .form-control:focus {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    border-color: #cccccc;
-}
-
-.navbar-nav li a:hover {
-    filter: brightness(85%) !important;
-    color: cornflowerblue !important;
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-}
-
 #myCollapsible .input-group, #myCollapsible .btn {
     width: 100%;
 }
@@ -47,43 +28,6 @@
 
     .collapsible-content.show {
         display: block;
-    }
-
-.menuLinkLight a {
-    color: #ffffff /*!important*/;
-    font-weight: bold;
-}
-
-.menuLinkDark a {
-    color: #000000 !important;
-    font-weight: bold;
-}
-
-.link-container {
-    /* Add styles to make it look like a link */
-    display: inline-block;
-    padding: 5px 10px;
-    border: 2px solid white;
-    background-color: #9a031e; /* Blue color */
-    color: #fff; /* White text color */
-    text-decoration: none; /* Remove default underline */
-    border-radius: 5px; /* Rounded corners */
-    transition: background-color 0.3s ease; /* Smooth color transition */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-    .link-container:hover {
-        filter: brightness(85%) !important;
-        color: cornflowerblue !important;
-        box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .link-container a {
-        /* Inherit text styles from parent div */
-        color: inherit;
-        text-decoration: none;
     }
 
 .validationSummaryMessage {
@@ -105,33 +49,6 @@
     font-weight: bold;
 }
 
-/* Add padding to containers */
-/*.container {
-    padding: 16px;
-    background-color: white;
-}*/
-
-/* Full-width input fields */
-/*input[type=text], input[type=password] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    display: inline-block;
-    border: none;
-    background: #f1f1f1;
-}
-
-    input[type=text]:focus, input[type=password]:focus {
-        background-color: #ddd;
-        outline: none;
-    }*/
-
-/* Overwrite default styles of hr */
-hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-}
-
 /* Set a style for the submit button */
 .loginRegisterbtn {
     background-color: #04aa6d;
@@ -151,12 +68,7 @@ hr {
     }
 
 /* Add a blue text color to links */
-a {
+/*a {
     color: dodgerblue;
 }
-
-/* Set a grey background color and center the text of the "sign in" section */
-.signin {
-    background-color: #f1f1f1;
-    text-align: center;
-}
+*/

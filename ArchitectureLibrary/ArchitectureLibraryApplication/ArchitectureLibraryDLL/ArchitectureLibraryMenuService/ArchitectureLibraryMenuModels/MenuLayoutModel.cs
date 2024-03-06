@@ -17,5 +17,6 @@ namespace ArchitectureLibraryMenuModels
         public MenuListModel MenuListModel { set; get; }
         public MenuUrlAction MenuUrlAction { set; get; }
         public MenuListModel ParentMenuListModel { set; get; }
+        public List<MenuLayoutModel> ChildMenuLayoutModels { set; get; }
     }
 }

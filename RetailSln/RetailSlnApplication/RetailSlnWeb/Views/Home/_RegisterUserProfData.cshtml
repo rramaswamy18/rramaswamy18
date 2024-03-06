@@ -9,21 +9,21 @@
 </style>
 @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
 {
-    <div class="row validationSummaryMessage">
+    @*<div class="row validationSummaryMessage">
         @Model.ResponseObjectModel.ValidationSummaryMessage
-    </div>
+    </div>*@
 }
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="row">
+    @*<div class="row">
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
-    </div>
+    </div>*@
 }
 @if (Model != null && Model.ResponseObjectModel != null)
 {
-    <div class="row">
+    @*<div class="row">
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-    </div>
+    </div>*@
 }
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.RegisterEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>

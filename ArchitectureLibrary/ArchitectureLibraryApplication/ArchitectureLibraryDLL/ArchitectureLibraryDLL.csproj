@@ -213,6 +213,7 @@
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchitectureLibraryCreditCardAdd0.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchitectureLibraryCreditCardAssign0.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchitectureLibraryCreditCardBuild0.cs" />
+    <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchitectureLibraryCreditCardUpd0.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchLibCreditCardDataContext.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardDataLayer\ArchLibCreditCardDataContextCreate0.cs" />
     <Compile Include="ArchitectureLibraryCreditCard\ArchitectureLibraryCreditCardModels\CreditCardDataModel.cs" />

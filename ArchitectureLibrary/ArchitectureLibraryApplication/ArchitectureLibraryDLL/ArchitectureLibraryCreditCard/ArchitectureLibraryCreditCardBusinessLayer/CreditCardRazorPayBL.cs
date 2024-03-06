@@ -57,9 +57,10 @@ namespace ArchitectureLibraryCreditCardBusinessLayer
                 Utils.verifyPaymentSignature(attributes);
                 return true;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw;
+                Console.WriteLine(exception.Message);
+                return false;
             }
         }
     }

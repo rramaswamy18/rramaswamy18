@@ -9,21 +9,21 @@
 </style>
 @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
 {
-    <div class="row validationSummaryMessage" id="divLoginUserProfValidationSummaryMessage">
+    @*<div class="row validationSummaryMessage" id="divLoginUserProfValidationSummaryMessage">
         @Model.ResponseObjectModel.ValidationSummaryMessage
-    </div>
+    </div>*@
 }
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="row" id="divLoginUserProfValidationSummary">
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
-    </div>
+    @*<div class="row" id="divLoginUserProfValidationSummary">
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(true, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+    </div>*@
 }
 @if (Model != null && Model.ResponseObjectModel != null)
 {
-    <div class="row" id="divLoginUserProfResponseObject">
+    @*<div class="row" id="divLoginUserProfResponseObject">
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-    </div>
+    </div>*@
 }
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.LoginEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>

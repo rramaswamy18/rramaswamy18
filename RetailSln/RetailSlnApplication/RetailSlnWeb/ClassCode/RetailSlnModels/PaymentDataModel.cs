@@ -80,6 +80,9 @@ namespace RetailSlnModels
         [Display(Name = "Email Address")]
         public string EmailAddress { set; get; }
 
+        [Display(Name = "User Name")]
+        public string UserFullName { set; get; }
+
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

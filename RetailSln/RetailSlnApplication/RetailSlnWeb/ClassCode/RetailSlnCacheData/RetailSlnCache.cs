@@ -50,15 +50,15 @@ namespace RetailSlnCacheData
             DeliveryChargeModels = deliveryChargeModels;
             CorpAcctModels = corpAcctModels;
             DiscountDtlModels = discountDtlModels;
+            CurrencyCultureInfo = new CultureInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
+            CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
+            var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
+            CurrencySymbol = regionInfo.CurrencySymbol;
             BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, deliveryListModels, deliveryListChargeModels, deliveryChargeModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
             CategoryLayoutModels = categoryLayoutModels;
-            CurrencyCultureInfo = new CultureInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
-            CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
-            var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
-            CurrencySymbol = regionInfo.CurrencySymbol;
         }
         private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<DeliveryListModel> deliveryListModels, List<DeliveryListChargeModel> deliveryListChargeModels, List<DeliveryChargeModel> deliveryChargeModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -86,6 +86,21 @@ namespace RetailSlnCacheData
             ItemAttribModel itemAttribModel1;
             foreach (var itemModel in itemModels)
             {
+                itemModel.ItemRateFormatted = itemModel.ItemRate.Value.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                itemModel.ImageTitle = itemModel.ItemShortDesc0 + " " + itemModel.ItemShortDesc1;
+                itemModel.ImageTitle += string.IsNullOrWhiteSpace(itemModel.ItemShortDesc2) ? "" : " " + itemModel.ItemShortDesc2;
+                itemModel.ImageTitle += string.IsNullOrWhiteSpace(itemModel.ItemShortDesc3) ? "" : " " + itemModel.ItemShortDesc3;
+                itemModel.ItemShortDesc = itemModel.ImageTitle;
+                if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
+                {
+                    itemModel.ImageTitle += " Sold Out";
+                    if (string.IsNullOrEmpty(itemModel.ExpectedAvailability))
+                    {
+                        itemModel.ExpectedAvailability = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
+                    }
+                    itemModel.ExpectedAvailabilityFormatted = DateTime.Parse(itemModel.ExpectedAvailability).ToString("MMM-dd");
+                    itemModel.ImageTitle += " Expected to be available on " + itemModel.ExpectedAvailabilityFormatted;
+                }
                 itemModel.ItemAttributesForDisplay = new Dictionary<string, string>();
                 itemModel.ItemAttribModels = itemAttribModels.FindAll(x => x.ItemId == itemModel.ItemId);
 

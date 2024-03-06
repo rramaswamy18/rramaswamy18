@@ -60,6 +60,8 @@ namespace ArchitectureLibraryMenuCacheData
                         ActionName = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "ActionName").MenuKVPValueData,
                         AjaxUpdateTargetId = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "AjaxUpdateTargetId").MenuKVPValueData,
                         ControllerName = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "ControllerName").MenuKVPValueData,
+                        DropDownMenuName = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "DropDownMenuName").MenuKVPValueData,
+                        DropDownMenuType = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "DropDownMenuType").MenuKVPValueData,
                         //HrefTarget = menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "HrefTarget").MenuKVPValueData,
                         HrefWidth = "100%",//menuListModel.MenuKVPModels.First(x => x.MenuKVPKeyData == "HrefWidth").MenuKVPValueData,
                         LinkText = menuLayoutModelTemp.MenuListDesc,

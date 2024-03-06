@@ -1,33 +1,35 @@
 ﻿using ArchitectureLibraryCreditCardDataLayer;
 using ArchitectureLibraryCreditCardModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace ArchitectureLibraryCreditCardBusinessLayer
 {
     public class CreditCardServiceBL
     {
-        public bool ProcessCreditCard(CreditCardDataModel creditCardDataModel, SqlConnection sqlConnection, out string processMessage, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInuserId = "")
-        {
-            processMessage = "";
-            creditCardDataModel.CreditCardNumberLast4 = "";
-            creditCardDataModel.CreditCardDataId = -1;
-            creditCardDataModel.ProcessMessage = processMessage;
-            return true;
-        }
+        //public bool ProcessCreditCard(CreditCardDataModel creditCardDataModel, SqlConnection sqlConnection, out string processMessage, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInuserId = "")
+        //{
+        //    processMessage = "";
+        //    creditCardDataModel.CreditCardNumberLast4 = "";
+        //    creditCardDataModel.CreditCardDataId = -1;
+        //    creditCardDataModel.ProcessMessage = processMessage;
+        //    return true;
+        //}
         public bool ProcessCreditCard(CreditCardDataModel creditCardDataModel, SqlConnection sqlConnection, out string processMessage, out object creditCardResponseObject, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInuserId = "")
         {
-            bool returnValue = ProcessCreditCard(creditCardDataModel.CreditCardAmount, creditCardDataModel.CurrencyCode, creditCardDataModel.CreditCardNumber, creditCardDataModel.CreditCardSecCode, creditCardDataModel.CreditCardExpMM, creditCardDataModel.CreditCardExpYear, creditCardDataModel.NameAsOnCard, creditCardDataModel.CreditCardProcessor, creditCardDataModel.CreditCardTranType, creditCardDataModel.CreditCardKVPs, out string cardNumberLast4, out long creditCardDataId, out processMessage, sqlConnection, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInuserId);
+            bool returnValue = ProcessCreditCard(creditCardDataModel.CreditCardAmount, creditCardDataModel.CurrencyCode, creditCardDataModel.CreditCardNumber, creditCardDataModel.CreditCardSecCode, creditCardDataModel.CreditCardExpMM, creditCardDataModel.CreditCardExpYear, creditCardDataModel.NameAsOnCard, creditCardDataModel.CreditCardProcessor, creditCardDataModel.CreditCardTranType, creditCardDataModel.CreditCardKVPs, creditCardDataModel.EmailAddress, creditCardDataModel.TelephoneNumber, out string cardNumberLast4, out long creditCardDataId, out processMessage, sqlConnection, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInuserId);
             creditCardDataModel.CreditCardNumberLast4 = cardNumberLast4;
             creditCardDataModel.CreditCardDataId = creditCardDataId;
             creditCardDataModel.ProcessMessage = processMessage;
             return returnValue;
         }
-        public bool ProcessCreditCard(string creditCardAmount, string currencyCode, string creditCardNumber, string creditCardSecCode, string creditCardExpMM, string creditCardExpYear, string nameAsOnCard, string creditCardProcessor, string creditCardTranType, Dictionary<string, string> creditCardKVPs, out string cardNumberLast4, out long creditCardDataId, out string processMessage, SqlConnection sqlConnection, out object creditCardResponseObject, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInUserId = "")
+        public bool ProcessCreditCard(string creditCardAmount, string currencyCode, string creditCardNumber, string creditCardSecCode, string creditCardExpMM, string creditCardExpYear, string nameAsOnCard, string creditCardProcessor, string creditCardTranType, Dictionary<string, string> creditCardKVPs, string emailAddress, string telephoneNumber, out string cardNumberLast4, out long creditCardDataId, out string processMessage, SqlConnection sqlConnection, out object creditCardResponseObject, long clientId = 0, string ipAddress = "", string execUniqueId = "", string loggedInUserId = "")
         {
             bool returnValue;
             string requestData, responseData;
@@ -98,18 +100,27 @@ namespace ArchitectureLibraryCreditCardBusinessLayer
                     {
                         Address = "",
                         Amount = creditCardAmount,
-                        ApiKey = "rzp_test_PSawHylUJK5KZi",
-                        ApiSecret = "Zz8yhAXr1BMLKHfPLSHR7TpH",
-                        Name = "Fake name",
-                        Email = "fake@fakemail.com",
-                        PhoneNumber = "912084422881",
-                        Currency = "INR",
+                        ApiKey = creditCardKVPs["ApiKey"],
+                        ApiSecret = creditCardKVPs["ApiSecret"],
+                        Name = nameAsOnCard,
+                        Email = emailAddress,
+                        PhoneNumber = telephoneNumber,
+                        Currency = currencyCode,
                         Receipt = Guid.NewGuid().ToString(),
                         PaymentCapture = "1"
                     };
                     RazorPayResponse razorPayResponse = creditCardRazorPayBL.ProcessCreditCard(razorPayRequest);
+                    creditCardDataModel = new CreditCardDataModel
+                    {
+                        CreditCardProcessor = creditCardProcessor,
+                        ProcessMessage = "INITIATED",
+                        RequestData = JsonConvert.SerializeObject(razorPayRequest),
+                        ResponseData = JsonConvert.SerializeObject(razorPayResponse),
+                        StatusNameDesc = "SUCCESS",
+                    };
+                    ArchLibCreditCardDataContext.CreateCreditCardData(creditCardDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    creditCardDataId = creditCardDataModel.CreditCardDataId;
                     creditCardResponseObject = razorPayResponse;
-                    creditCardDataId = 0;
                     cardNumberLast4 = "";
                     returnValue = true;
                     processMessage = "Order created succssfully";
@@ -130,6 +141,16 @@ namespace ArchitectureLibraryCreditCardBusinessLayer
                     break;
             }
             return returnValue;
+        }
+        public void UpdCreditCardData(long creditCardDataId, string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string razorpayJsonString = "";
+            razorpayJsonString += "{" + Environment.NewLine;
+            razorpayJsonString += "razorpay_payment_id: \"" + razorpay_payment_id + "\"" + Environment.NewLine;
+            razorpayJsonString += "razorpay_order_id: \"" + razorpay_order_id + "\"" + Environment.NewLine;
+            razorpayJsonString += "razorpay_signature: \"" + razorpay_signature + "\"" + Environment.NewLine;
+            razorpayJsonString += "}" + Environment.NewLine;
+            ArchLibCreditCardDataContext.UpdCreditCardData(creditCardDataId, razorpayJsonString, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
         }
     }
 }
