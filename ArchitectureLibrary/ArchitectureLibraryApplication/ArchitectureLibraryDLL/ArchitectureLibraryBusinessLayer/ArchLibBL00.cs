@@ -164,7 +164,7 @@ namespace ArchitectureLibraryBusinessLayer
             {
                 { "@@##AdminRepresentativeName##@@", ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "") },
                 { "@@##AdminRepresentativeTitle##@@", ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeTitle", "") },
-                { "@@##OrganizationName##@@", ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") },
+                { "@@##OrganizationName##@@", ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") },
                 { "@@##AddressLine1##@@", ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "") },
                 { "@@##AddressCityName##@@", ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "") },
                 { "@@##AddressStateAbbrev##@@", ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") },

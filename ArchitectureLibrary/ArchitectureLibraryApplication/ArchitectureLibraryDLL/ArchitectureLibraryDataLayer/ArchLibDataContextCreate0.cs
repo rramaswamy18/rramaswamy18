@@ -31,7 +31,7 @@ namespace ArchitectureLibraryDataLayer
                 AddAspNetUserRole(aspNetUserRoleModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
 
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Before DemogInfoAddress", "loginNameId1", loginNameId1);
-                DemogInfoAddressModel demogInfoAddressModel = BuildDemogInfoAddress("", "", AddressTypeEnum._, BuildingTypeEnum._, "", ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev"), long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")), aspNetUserId, clientId, ipAddress, execUniqueId, loggedInUserId);
+                DemogInfoAddressModel demogInfoAddressModel = BuildDemogInfoAddress("", "", "", "", AddressTypeEnum._, BuildingTypeEnum._, "", ArchLibCache.GetApplicationDefault(clientId, "Currency", "CountryAbbrev"), long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")), aspNetUserId, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddDemogInfoAddress(demogInfoAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
 
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: Before Person", "loginNameId1", loginNameId1);

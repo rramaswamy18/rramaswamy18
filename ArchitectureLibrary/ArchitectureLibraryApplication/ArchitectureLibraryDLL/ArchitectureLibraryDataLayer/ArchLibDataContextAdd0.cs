@@ -100,6 +100,8 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@AddressLine1"].Value = demogInfoAddressModel.AddressLine1;
                 sqlCommand.Parameters["@AddressLine2"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine2) ? (object)DBNull.Value : demogInfoAddressModel.AddressLine2;
+                sqlCommand.Parameters["@AddressLine3"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine3) ? (object)DBNull.Value : demogInfoAddressModel.AddressLine3;
+                sqlCommand.Parameters["@AddressLine4"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine4) ? (object)DBNull.Value : demogInfoAddressModel.AddressLine4;
                 sqlCommand.Parameters["@AddressTypeId"].Value = demogInfoAddressModel.AddressTypeId == null ? (long)AddressTypeEnum._ : (long)demogInfoAddressModel.AddressTypeId;
                 sqlCommand.Parameters["@BuildingTypeId"].Value = demogInfoAddressModel.BuildingTypeId == null ? (long)BuildingTypeEnum._ : (long)demogInfoAddressModel.BuildingTypeId;
                 sqlCommand.Parameters["@CityName"].Value = string.IsNullOrWhiteSpace(demogInfoAddressModel.CityName) ? (object)DBNull.Value : demogInfoAddressModel.CityName;

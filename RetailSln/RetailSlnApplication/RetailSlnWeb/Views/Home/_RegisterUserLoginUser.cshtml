@@ -29,11 +29,11 @@
     switch (Model.QueryString)
     {
         case "REGISTER":
-            scrollIntoViewDocumentElementId = "divRegisterUserProfScrollIntoView";
+            //scrollIntoViewDocumentElementId = "divRegisterUserProfScrollIntoView";
             focusDocumentElementId = "RegisterEmailAddress";
             break;
         case "LOGIN":
-            scrollIntoViewDocumentElementId = "divLoginUserProfScrollIntoView";
+            //scrollIntoViewDocumentElementId = "divLoginUserProfScrollIntoView";
             focusDocumentElementId = "LoginEmailAddress";
             break;
         case "":
@@ -62,9 +62,9 @@
     if ("@focusDocumentElementId" != "") {
         document.getElementById("@focusDocumentElementId").focus();
     }
-    if ("@scrollIntoViewDocumentElementId" != "") {
-        document.getElementById("@scrollIntoViewDocumentElementId").scrollIntoView();
-    }
+    @*if ("@scrollIntoViewDocumentElementId" != "") {
+        //document.getElementById("@scrollIntoViewDocumentElementId").scrollIntoView();
+    }*@
 </script>
 @*https://www.geeksforgeeks.org/how-to-place-two-div-side-by-side-of-the-same-height-using-css/*@
 <script src="~/Include/orderItemCode2.js" type="text/javascript"></script>

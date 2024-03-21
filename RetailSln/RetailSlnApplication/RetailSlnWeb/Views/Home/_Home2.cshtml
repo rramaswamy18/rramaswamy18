@@ -2,7 +2,7 @@
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
 @Html.Partial("_Carousel2")
 <table style="margin: auto; padding: 5px; text-align: center; width: 90%;">
@@ -14,7 +14,7 @@
         </td>
         <td style="padding: 5px; text-align: left;">
             <p style="color: #000000; font-family: Roboto, Arial, Tahoma, sans-serif; font-size: 14px; font-style: normal; font-weight: 400; text-align: center; width: 100%;">
-                <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle" style="font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")</a> has a several grant programs exist that you may qualify for, many state and local agencies such as the Workforce Investment Act (WIA), Department of Rehabilitation (DOR), Employment Development Department (EDD), NUMMI, TAA and One Career Stop Centers. @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") does not offer Federal financial aid at this time.
+                <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle" style="font-weight: bold; text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</a> has a several grant programs exist that you may qualify for, many state and local agencies such as the Workforce Investment Act (WIA), Department of Rehabilitation (DOR), Employment Development Department (EDD), NUMMI, TAA and One Career Stop Centers. @ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") does not offer Federal financial aid at this time.
             </p>
         </td>
     </tr>

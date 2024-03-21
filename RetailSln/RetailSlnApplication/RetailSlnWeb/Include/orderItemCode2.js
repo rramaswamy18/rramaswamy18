@@ -21,7 +21,7 @@ function deliveryInfoSave_onclick() {
             else {
                 document.getElementById("formDeliveryInfoData").innerHTML = responseData.htmlString;
             }
-            document.getElementById("formPaymentData").scrollIntoView();
+            //document.getElementById("formPaymentData").scrollIntoView();
             console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
         },
         error: function (xhr, exception) {
@@ -126,8 +126,8 @@ function paymentSave_onclick() {
                     document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
                     document.getElementById("shoppingCartItemsCount").innerHTML = "";
                     document.getElementById("shoppingCartTotalAmount").innerHTML = "";
-                    document.getElementById("shoppingCartItemsCount2").innerHTML = "";
-                    document.getElementById("shoppingCartTotalAmount2").innerHTML = "";
+                    //document.getElementById("shoppingCartItemsCount2").innerHTML = "";
+                    //document.getElementById("shoppingCartTotalAmount2").innerHTML = "";
                 }
                 //document.getElementById("divOrderProcess").scrollIntoView();
             }

@@ -22,6 +22,14 @@ namespace ArchitectureLibraryModels
         [StringLength(100, ErrorMessage = "Enter valid address line 2")]
         public string AddressLine2 { set; get; }
 
+        [Display(Name = "Address line# 3")]
+        [StringLength(100, ErrorMessage = "Enter valid address line 2")]
+        public string AddressLine3 { set; get; }
+
+        [Display(Name = "Address line# 4")]
+        [StringLength(100, ErrorMessage = "Enter valid address line 2")]
+        public string AddressLine4 { set; get; }
+
         public AddressTypeEnum? AddressTypeId { set; get; }
 
         [Display(Name = "Type")]

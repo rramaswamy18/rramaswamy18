@@ -1,4 +1,5 @@
 ﻿using ArchitectureLibraryCacheData;
+using ArchitectureLibraryDataLayer;
 using ArchitectureLibraryDLL.ArchitectureLibraryEnumerations;
 using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryModels;
@@ -16,6 +17,7 @@ namespace RetailSlnCacheData
 {
     public static class RetailSlnCache
     {
+        public static List<DemogInfoAddressModel> BusinessDemogInfoAddressModels { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
         public static CultureInfo CurrencyCultureInfo { set; get; }
         public static string CurrencyDecimalPlaces { set; get; }
@@ -23,7 +25,6 @@ namespace RetailSlnCacheData
         public static Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<DeliveryChargeModel> DeliveryChargeModels { set; get; }
-        public static List<DeliveryListChargeModel> DeliveryListChargeModels { set; get; }
         public static List<DeliveryListModel> DeliveryListModels { set; get; }
         public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
@@ -38,7 +39,7 @@ namespace RetailSlnCacheData
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
-            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryListChargeModel> deliveryListChargeModels, out List<DeliveryChargeModel> deliveryChargeModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryChargeModel> deliveryChargeModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
             ItemBundleItemModels = ItemBundleItemModels;
             ItemModels = itemModels;
@@ -46,7 +47,6 @@ namespace RetailSlnCacheData
             ItemAttribMasterModels = itemAttribMasterModels;
             CategoryItemHierModels = categoryItemHierModels;
             DeliveryListModels = deliveryListModels;
-            DeliveryListChargeModels = deliveryListChargeModels;
             DeliveryChargeModels = deliveryChargeModels;
             CorpAcctModels = corpAcctModels;
             DiscountDtlModels = discountDtlModels;
@@ -54,13 +54,13 @@ namespace RetailSlnCacheData
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, deliveryListModels, deliveryListChargeModels, deliveryChargeModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, deliveryListModels, deliveryChargeModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
             CategoryLayoutModels = categoryLayoutModels;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<DeliveryListModel> deliveryListModels, List<DeliveryListChargeModel> deliveryListChargeModels, List<DeliveryChargeModel> deliveryChargeModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<DeliveryListModel> deliveryListModels, List<DeliveryChargeModel> deliveryChargeModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -172,9 +172,7 @@ namespace RetailSlnCacheData
             //
             foreach (var deliveryListModel in deliveryListModels)
             {
-                deliveryListModel.DeliveryListChargeModels = new List<DeliveryListChargeModel>();
                 deliveryListModel.DeliveryChargeModels = new List<DeliveryChargeModel>();
-                deliveryListModel.DeliveryListChargeModels.AddRange(deliveryListChargeModels.FindAll(x => x.DeliveryListId == deliveryListModel.DeliveryListId));
                 deliveryListModel.DeliveryChargeModels.AddRange(deliveryChargeModels.FindAll(x => x.DeliveryListId == deliveryListModel.DeliveryListId));
             }
             foreach (var corpAcctModel in corpAcctModels)
@@ -198,6 +196,14 @@ namespace RetailSlnCacheData
                     }
                 );
             }
+            //Business Addresses
+            //ArchLibDataContext.OpenSqlConnection();
+            //DemogInfoAddressModel demogInfoAddressModel;
+            //BusinessDemogInfoAddressModels = new List<DemogInfoAddressModel>();
+            //demogInfoAddressModel = ArchLibDataContext.GetDemogInfoAddress(1, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //BusinessDemogInfoAddressModels.Add(demogInfoAddressModel);
+            //demogInfoAddressModel = ArchLibDataContext.GetDemogInfoAddress(2, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //BusinessDemogInfoAddressModels.Add(demogInfoAddressModel);
         }
     }
 }

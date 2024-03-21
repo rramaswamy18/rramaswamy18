@@ -1,70 +1,48 @@
-﻿@{
-    string selectedMenu = "", urlString;
-    int i = 0, j;
-    ArchitectureLibraryMenuModels.MenuLayoutModel menuLayoutModel;
-    var menuLayoutModels = ArchitectureLibraryMenuCacheData.ArchLibMenuCache.ParentMenuLayoutModels["HEADERMENU"];
-    while (i < menuLayoutModels.Count)
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    //DivineBija.in --> 97
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+}
+<div id="divErrorMessage2" style="background-color: #ffffff; color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold;">
+</div>
+@*<span id="shoppingCartItemsCount2" style="display: none;"></span>
+    <span id="shoppingCartTotalAmount2" style="display: none;"></span>*@
+<br style="clear: both;" />
+@{
+    int i;
+    for (i = 0; i < categoryItemHierModels.Count; i++)
     {
-        <div class="row menuLinkLight">
-            @for (j = 0; j < 4; j++)
-            {
-                menuLayoutModel = menuLayoutModels[i];
-                urlString = Url.Action(menuLayoutModel.MenuUrlAction.ActionName, menuLayoutModel.MenuUrlAction.ControllerName);
-                <div class="col-sm-3 col-xs-3 text-center link-container">
-                    <a class="@selectedMenu" href="@urlString" @menuLayoutModel.MenuUrlAction.HrefTarget style="color: #ffffff; font-weight: bold; padding-right: 6px; width: @menuLayoutModel.MenuUrlAction.HrefWidth;">
-                        @menuLayoutModel.MenuUrlAction.LinkText
-                    </a>
-                </div>
-                i++;
-                if (i == menuLayoutModels.Count)
-                {
-                    break;
-                }
-            }
+        <div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 153px;">
+            <span id="menuCategoryIdA@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
+            <a id="menuItemA@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-size: 13px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                @categoryItemHierModels[i].CategoryModel.CategoryDesc
+            </a>
         </div>
+        if (i % 2 != 0)
+        {
+            <br style="clear: both;" />
+        }
     }
 }
-@*
-    <div class="row menuLinkLight">
-        <div class="col-sm-4 col-xs-4 text-center link-container">
-            @Html.Partial("~/Views/Shared/NavbarPartialComponents/_HomeComponent.cshtml")
-        </div>
-        <div class="col-sm-4 col-xs-4 text-center link-container">
-            @Html.Partial("~/Views/Shared/NavbarPartialComponents/_AboutUsComponent.cshtml")
-        </div>
-        <div class="col-sm-4 col-xs-4 text-center link-container">
-            @Html.Partial("~/Views/Shared/NavbarPartialComponents/_ContactUsComponent.cshtml")
-        </div>
-    </div>
-    <div class="row menuLinkLight">
-        <div class="col-sm-4 col-xs-4 text-center link-container">
-            @Html.Partial("~/Views/Shared/NavbarPartialComponents/_FAQsComponent.cshtml")
-        </div>
-        <div class="col-sm-4 col-xs-4 text-center link-container">
-            @Html.Partial("~/Views/Shared/NavbarPartialComponents/_GiftCertComponent.cshtml")
-        </div>
-        <div class="col-sm-4 col-xs-4 text-center link-container">
-            @Html.Partial("~/Views/Shared/NavbarPartialComponents/_OrderReturnComponent.cshtml")
-        </div>
-    </div>
-    <div class="row menuLinkLight">
-        @if (true) // Check if user is logged in
-        {
-            <div class="col-sm-6 col-xs-6 text-center link-container">
-                @Html.Partial("~/Views/Shared/NavbarPartialComponents/_RegisterComponent.cshtml")
-            </div>
-            <div class="col-sm-6 col-xs-6 text-center link-container">
-                @Html.Partial("~/Views/Shared/NavbarPartialComponents/_LoginComponent.cshtml")
-            </div>
-        }
-        else
-        {
-            <div class="col-sm-6 col-xs-6 text-center link-container">
-                @Html.Partial("~/Views/Shared/NavbarPartialComponents/_GreetingComponent.cshtml")
-            </div>
-            <div class="col-sm-6 col-xs-6 text-center link-container">
-                @Html.Partial("~/Views/Shared/NavbarPartialComponents/_LogoutComponent.cshtml")
-            </div>
-        }
-    </div>
-*@
+<div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 153px;">
+    <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "REGISTER" })" style="color:#ffffff; font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold;" title="Register - @imageTitle">
+        Register
+    </a>
+</div>
+<div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 153px;">
+    <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "LOGIN" })" style="color: #ffffff; font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold;" title="Register - @imageTitle">
+        Login
+    </a>
+</div>
+<br style="clear: both;" />
+<div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 135px;">
+    <a href="@Url.Action("Logout", "Home")" style="color:#ffffff; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" title="Register - @imageTitle">
+        Logout
+    </a>
+</div>

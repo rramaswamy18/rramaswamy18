@@ -4,7 +4,7 @@
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     var searchText = Model.Trim().ToLower();
     var categoryModels = RetailSlnCache.CategoryModels.Where(x => x.CategoryDesc.ToLower().Contains(searchText)).ToList();
     int index = 0;

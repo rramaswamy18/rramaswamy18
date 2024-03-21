@@ -3,10 +3,10 @@
     //DivineBija.in --> 97
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
 <div style="float: left;">
-    <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: 90px; width: 96px;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" />
+    <img alt="@imageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" style="height: 90px; width: 96px;" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")" />
 </div>
 <div style="padding-left: 27px; text-align: left;">
     <span style="color: #9401d9; font-family: 'Times New Roman', sans-serif; font-size: 20px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span>

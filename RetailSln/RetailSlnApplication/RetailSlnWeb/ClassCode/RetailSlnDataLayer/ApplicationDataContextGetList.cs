@@ -140,44 +140,6 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static List<DeliveryListChargeModel> GetDeliveryListCharges(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                string sqlStmt = "";
-                sqlStmt += "SELECT * FROM RetailSlnSch.DeliveryListCharge ORDER BY DeliveryListChargeId" + Environment.NewLine;
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                List<DeliveryListChargeModel> deliveryListChargeModels = new List<DeliveryListChargeModel>();
-                while (sqlDataReader.Read())
-                {
-                    deliveryListChargeModels.Add
-                    (
-                        new DeliveryListChargeModel
-                        {
-                            DeliveryListChargeId = long.Parse(sqlDataReader["DeliveryListChargeId"].ToString()),
-                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            ChargeTypeDesc = sqlDataReader["ChargeTypeDesc"].ToString(),
-                            ChargeTypeNameDesc = sqlDataReader["ChargeTypeNameDesc"].ToString(),
-                            ChargeValueType = sqlDataReader["ChargeValueType"].ToString(),
-                            DeliveryListId = long.Parse(sqlDataReader["DeliveryListId"].ToString()),
-                            ChargeValue = float.Parse(sqlDataReader["ChargeValue"].ToString()),
-                        }
-                     );
-                }
-                sqlDataReader.Close();
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return deliveryListChargeModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
         public static List<DeliveryListModel> GetDeliveryLists(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

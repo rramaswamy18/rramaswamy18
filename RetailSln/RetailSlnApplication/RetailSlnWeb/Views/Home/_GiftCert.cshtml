@@ -101,7 +101,7 @@
         $("#SelectedTemplateName").val(fileName);
         document.getElementById("giftCertTemplateSelected").src = "/ClientSpecific/@(clientId)_@(clientName)/Documents/GiftCertificate/Templates/" + fileName;
         $('span[data-valmsg-for="SelectedTemplateName"]').text("");
-        document.getElementById("giftCertTemplatesList").scrollIntoView();
+        //document.getElementById("giftCertTemplatesList").scrollIntoView();
         document.getElementById("giftCertTemplatesList").selectedIndex = 0;
         console.log("giftCertTemplateSelect 9", giftCertTemplateImageId);
         return false;

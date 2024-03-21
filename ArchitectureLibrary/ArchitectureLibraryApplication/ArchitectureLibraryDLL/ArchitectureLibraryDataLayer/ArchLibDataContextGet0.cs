@@ -316,6 +316,52 @@ namespace ArchitectureLibraryDataLayer
                 throw;
             }
         }
+        public static DemogInfoAddressModel GetDemogInfoAddress(long demogInfoAddressId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SqlDataReader sqlDataReader = null;
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "        SELECT *" + Environment.NewLine;
+                sqlStmt += "          FROM ArchLib.AspNetUser" + Environment.NewLine;
+                sqlStmt += "     LEFT JOIN ArchLib.Person" + Environment.NewLine;
+                sqlStmt += "            ON AspNetUser.AspNetUserId = Person.AspNetUserId" + Environment.NewLine;
+                sqlStmt += "         WHERE ISNULL(UserName, '') != ''" + Environment.NewLine;
+                sqlStmt += "           AND DemogInfoAddressId = " + demogInfoAddressId + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                DemogInfoAddressModel demogInfoAddressModel;
+                if (sqlDataReader.Read())
+                {
+                    demogInfoAddressModel = AssignDemogInfoAddress(sqlDataReader, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    demogInfoAddressModel = null;
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return demogInfoAddressModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                try
+                {
+                    sqlDataReader.Close();
+                }
+                catch
+                {
+
+                }
+            }
+        }
         private static AspNetUserModel GetAspNetUserFromUserName(string userName, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

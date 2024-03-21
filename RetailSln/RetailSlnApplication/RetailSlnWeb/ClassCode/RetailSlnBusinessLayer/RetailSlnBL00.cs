@@ -1031,7 +1031,11 @@ namespace RetailSlnBusinessLayer
             }
             totalOrderAmount -= discountAmount;
             var salesTaxListModels = GetSalesTaxListModels(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-            var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId));
+            var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId) && (x.DestDemogInfoCityId == null || x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId));
+            if (deliveryChargeModel == null)
+            {
+                deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId));
+            }
             float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0;
             if (deliveryChargeModel.UnitMeasure == "WEIGHT")
             {

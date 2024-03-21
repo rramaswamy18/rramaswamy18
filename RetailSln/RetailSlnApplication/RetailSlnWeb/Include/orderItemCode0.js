@@ -10,8 +10,8 @@ $.ajax({
         var jsonData = JSON.parse(responseData);
         document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
         document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
-        document.getElementById("shoppingCartItemsCount2").innerHTML = jsonData.shoppingCartItemsCount;
-        document.getElementById("shoppingCartTotalAmount2").innerHTML = jsonData.shoppingCartTotalAmount;
+        //document.getElementById("shoppingCartItemsCount2").innerHTML = jsonData.shoppingCartItemsCount;
+        //document.getElementById("shoppingCartTotalAmount2").innerHTML = jsonData.shoppingCartTotalAmount;
     },
     error: function (xhr, exception) {
         console.log(43, "ERROR???", exception, xhr);

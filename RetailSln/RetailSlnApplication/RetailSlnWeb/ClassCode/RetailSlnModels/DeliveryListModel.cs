@@ -14,11 +14,8 @@ namespace RetailSlnModels
 
         public string DeliveryListName { set; get; }
 
-        public List<DeliveryListChargeModel> DeliveryListChargeModels { set; get; }
-
         public List<DeliveryChargeModel> DeliveryChargeModels { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
-
     }
 }

@@ -2,7 +2,7 @@
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
 <style>
     .outercontainer {
@@ -112,7 +112,7 @@
             <div class="centered" style="width: 81%;">
                 <h1 style="color: #ffffff; font-family: 'Patua One'; font-size: 35px; font-weight: 900;">We Are Hiring Now!</h1>
                 <span class="themecolor" style="color: #e8b740;text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; text-align: center; line-height: 29px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 28px;">
-                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") is now hiring CDL trainer
+                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") is now hiring CDL trainer
                 </span>
                 <br /><br />
                 <a href="@Url.Action("ContactUs", "Home")" class="btn btn-lg btn-primary" style="background-color: #efb740; font-weight: 900;">Learn More</a>
@@ -195,7 +195,7 @@
             <div class="centered" style="width: 81%;">
                 <h1 style="color: #ffffff; font-family: 'Patua One'; font-size: 35px; font-weight: 900;">Need a new career?</h1>
                 <span class="themecolor" style="color: #e8b740; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; text-align: center; line-height: 29px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 28px;">
-                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")  in Business since 1975. Get on your career path
+                    @ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")  in Business since 1975. Get on your career path
                 </span>
                 <br /><br />
                 <a href="@Url.Action("Admission", "Home")" class="btn btn-lg btn-primary" style="background-color: #e8b740; font-weight: 900;">Learn More</a>
@@ -225,7 +225,7 @@
         <div id="carouselText0" style="color: #000000; display: none; font-weight: bold; text-align: center;">
             <h1 style="color: #000000; font-family: 'Patua One'; font-size: 27px; font-weight: 900;">We Are Hiring Now!</h1>
             <span class="themecolor" style="color: #0000ff; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; line-height: 29px; border-width: 0px; font-size: 18px; font-weight: 900; letter-spacing: 0px; margin: 0px; padding: 0px;">
-                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") is now hiring CDL trainer
+                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") is now hiring CDL trainer
             </span>
             <br style="clear: both;" />
             <a href="@Url.Action("Enrollment", "Home")" style="color: #000000; font-size: 18px; font-weight: 900; text-decoration: underline;">Click to enroll now</a>
@@ -245,7 +245,7 @@
         <div id="carouselText3" style="color: #000000; display: none; font-weight: bold; text-align: center;">
             <h1 style="color: #000000; font-family: 'Patua One'; font-size: 27px; font-weight: 900;">Need a new career?</h1>
             <span style="color: #000000; text-shadow: rgb(0, 0, 0) 1px 1px 1px; transition: none 0s ease 0s; text-align: center; line-height: 29px; border-width: 0px; margin: 0px; padding: 0px; letter-spacing: 0px; font-weight: 900; font-size: 16px;">
-                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")  in Business since 1975. Get on your career path
+                @ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")  in Business since 1975. Get on your career path
             </span>
             <br />
             <a href="@Url.Action("Enrollment", "Home")" style="color: #000000; font-size: 18px; font-weight: 900; text-decoration: underline;">Click to enroll now</a>

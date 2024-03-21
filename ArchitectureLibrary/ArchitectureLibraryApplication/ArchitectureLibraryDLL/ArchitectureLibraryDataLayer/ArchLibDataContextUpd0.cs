@@ -139,6 +139,8 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters["@DemogInfoAddressId"].Value = demogInfoAddressModel.DemogInfoAddressId;
                 sqlCommand.Parameters["@AddressLine1"].Value = demogInfoAddressModel.AddressLine1;
                 sqlCommand.Parameters["@AddressLine2"].Value = demogInfoAddressModel.AddressLine2 == null ? (object)DBNull.Value : demogInfoAddressModel.AddressLine2;
+                sqlCommand.Parameters["@AddressLine3"].Value = demogInfoAddressModel.AddressLine3 == null ? (object)DBNull.Value : demogInfoAddressModel.AddressLine3;
+                sqlCommand.Parameters["@AddressLine4"].Value = demogInfoAddressModel.AddressLine4 == null ? (object)DBNull.Value : demogInfoAddressModel.AddressLine4;
                 sqlCommand.Parameters["@AddressTypeId"].Value = AddressTypeEnum.Home;
                 sqlCommand.Parameters["@BuildingTypeId"].Value = demogInfoAddressModel.BuildingTypeId == null ? 0 : demogInfoAddressModel.BuildingTypeId;
                 sqlCommand.Parameters["@CityName"].Value = demogInfoAddressModel.CityName == null ? (object)DBNull.Value : demogInfoAddressModel.CityName;

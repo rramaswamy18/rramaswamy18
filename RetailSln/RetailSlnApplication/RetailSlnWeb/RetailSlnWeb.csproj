@@ -159,6 +159,7 @@
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL00.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL10.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL20.cs" />
+    <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL30.cs" />
     <Compile Include="ClassCode\RetailSlnCacheBusinessLayer\RetailSlnCacheBL.cs" />
     <Compile Include="ClassCode\RetailSlnCacheData\RetailSlnCache.cs" />
     <Compile Include="ClassCode\RetailSlnDataLayer\ApplicationDataContext.cs" />
@@ -181,6 +182,10 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderDetailTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiCategorysModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiIndexModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiItemsModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\BusinessInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryHierListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemListModel.cs" />
@@ -194,7 +199,6 @@
     <Compile Include="ClassCode\RetailSlnModels\DeliveryChargeModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryInfoDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryInfoModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\DeliveryListChargeModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DiscountDtlModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertListModel.cs" />

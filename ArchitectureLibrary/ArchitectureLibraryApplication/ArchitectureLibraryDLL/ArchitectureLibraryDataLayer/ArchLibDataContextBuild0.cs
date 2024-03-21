@@ -382,6 +382,8 @@ namespace ArchitectureLibraryDataLayer
                 sqlStmt += "               ClientId" + Environment.NewLine;
                 sqlStmt += "              ,AddressLine1" + Environment.NewLine;
                 sqlStmt += "              ,AddressLine2" + Environment.NewLine;
+                sqlStmt += "              ,AddressLine3" + Environment.NewLine;
+                sqlStmt += "              ,AddressLine4" + Environment.NewLine;
                 sqlStmt += "              ,AddressTypeId" + Environment.NewLine;
                 sqlStmt += "              ,BuildingTypeId" + Environment.NewLine;
                 sqlStmt += "              ,CityName" + Environment.NewLine;
@@ -409,6 +411,8 @@ namespace ArchitectureLibraryDataLayer
                 sqlStmt += "               @ClientId" + Environment.NewLine;
                 sqlStmt += "              ,@AddressLine1" + Environment.NewLine;
                 sqlStmt += "              ,@AddressLine2" + Environment.NewLine;
+                sqlStmt += "              ,@AddressLine3" + Environment.NewLine;
+                sqlStmt += "              ,@AddressLine4" + Environment.NewLine;
                 sqlStmt += "              ,@AddressTypeId" + Environment.NewLine;
                 sqlStmt += "              ,@BuildingTypeId" + Environment.NewLine;
                 sqlStmt += "              ,@CityName" + Environment.NewLine;
@@ -434,6 +438,8 @@ namespace ArchitectureLibraryDataLayer
                 sqlCommand.Parameters.AddWithValue("@ClientId", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@AddressLine1", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@AddressLine2", DBNull.Value);
+                sqlCommand.Parameters.AddWithValue("@AddressLine3", DBNull.Value);
+                sqlCommand.Parameters.AddWithValue("@AddressLine4", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@AddressTypeId", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@BuildingTypeId", DBNull.Value);
                 sqlCommand.Parameters.AddWithValue("@CityName", DBNull.Value);
@@ -563,13 +569,15 @@ namespace ArchitectureLibraryDataLayer
             };
             return aspNetUserModel;
         }
-        private static DemogInfoAddressModel BuildDemogInfoAddress(string addressLine1, string addressLine2, AddressTypeEnum addressTypeId, BuildingTypeEnum buildingTypeId, string cityName, string countryAbbrev, long? demogInfoCountryId, string aspNetUserId, long clientId, string execUniqueId, string ipAddress, string loggedInUserId)
+        private static DemogInfoAddressModel BuildDemogInfoAddress(string addressLine1, string addressLine2, string addressLine3, string addressLine4, AddressTypeEnum addressTypeId, BuildingTypeEnum buildingTypeId, string cityName, string countryAbbrev, long? demogInfoCountryId, string aspNetUserId, long clientId, string execUniqueId, string ipAddress, string loggedInUserId)
         {
             DemogInfoAddressModel demogInfoAddressModel = new DemogInfoAddressModel
             {
                 AddUserId = aspNetUserId,
                 AddressLine1 = addressLine1,
                 AddressLine2 = addressLine2,
+                AddressLine3 = addressLine3,
+                AddressLine4 = addressLine4,
                 AddressTypeId = addressTypeId,
                 BuildingTypeId = buildingTypeId,
                 CityName = cityName,

@@ -17,7 +17,7 @@
         <h3 style="font-weight: bold;">L O G I N <span style="color: #ff0000;">(Returning users)</span></h3>
         @if (!ViewData.ModelState.IsValid)
         {
-            <div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>
+            @*<div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>*@
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
         }
         else

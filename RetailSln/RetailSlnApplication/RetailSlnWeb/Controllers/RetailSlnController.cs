@@ -522,6 +522,35 @@ namespace RetailSlnWeb.Controllers
                 }
                 if (ModelState.IsValid)
                 {
+                    //Get the Address Info based on Zip and fill in the rest
+                    SearchDataModel searchDataModel = new SearchDataModel
+                    {
+                        SearchType = "ZipCode",
+                        SearchKeyValuePairs = new Dictionary<string, string>
+                        {
+                            { "DemogInfoCountryId", deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString() },
+                            { "ZipCode", deliveryInfoDataModel.DeliveryAddressModel.ZipCode },
+                        },
+                    };
+                    List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    foreach (var sqlQueryResult in sqlQueryResults)
+                    {
+                        if (
+                            sqlQueryResult["DemogInfoCountryId"] == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString()
+                            && sqlQueryResult["ZipCode"] == deliveryInfoDataModel.DeliveryAddressModel.ZipCode
+                           )
+                        {
+                            deliveryInfoDataModel.DeliveryAddressModel.CityName = sqlQueryResult["CityName"];
+                            deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
+                            deliveryInfoDataModel.DeliveryAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
+                            deliveryInfoDataModel.DeliveryAddressModel.CountyName = sqlQueryResult["CountyName"];
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
+                        }
+                    }
                     retailSlnBL.DeliveryInfo(deliveryInfoDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
@@ -888,7 +917,7 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 success = false;
                 processMessage = "ERROR???";
-                htmlString = "Error while adding item to cart";
+                htmlString = "Error while builiding items for category id=" + id + " page#=" + pageNum;
             }
             actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             return actionResult;

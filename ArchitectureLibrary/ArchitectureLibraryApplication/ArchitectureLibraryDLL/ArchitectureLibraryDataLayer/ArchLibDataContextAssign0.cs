@@ -105,6 +105,8 @@ namespace ArchitectureLibraryDataLayer
                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                 AddressLine1 = sqlDataReader["AddressLine1"].ToString(),
                 AddressLine2 = sqlDataReader["AddressLine2"].ToString(),
+                AddressLine3 = sqlDataReader["AddressLine3"].ToString(),
+                AddressLine4 = sqlDataReader["AddressLine4"].ToString(),
                 AddressTypeId = (AddressTypeEnum)long.Parse(sqlDataReader["AddressTypeId"].ToString()),
                 BuildingTypeId = (BuildingTypeEnum)long.Parse(sqlDataReader["BuildingTypeId"].ToString()),
                 CityName = sqlDataReader["CityName"].ToString(),
