@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Code\Publish\RetailSln\Web</_PublishTargetUrl>
-    <History>True|2024-03-21T23:09:29.5727178Z;True|2024-03-02T14:04:43.3737467-08:00;True|2024-02-27T12:48:15.7511694-08:00;True|2024-02-13T20:02:27.7607663-08:00;True|2024-02-12T18:59:57.6176080-08:00;True|2024-02-08T01:01:06.9496744-08:00;True|2024-01-17T19:40:12.7165730-08:00;True|2023-11-27T16:16:36.2366300-08:00;True|2023-11-22T11:22:03.3150286-08:00;True|2023-11-22T07:55:58.4478811-08:00;True|2023-11-21T20:10:38.2648175-08:00;True|2023-11-21T20:10:13.2242525-08:00;True|2023-11-15T21:18:27.8545770-08:00;True|2023-10-16T20:31:54.3152964-07:00;True|2023-09-27T22:11:24.7525807-07:00;True|2023-09-27T21:28:51.1324426-07:00;True|2023-09-27T10:19:49.5680486-07:00;True|2023-09-24T20:06:43.5860371-07:00;True|2023-09-24T20:05:10.1864480-07:00;True|2023-09-23T08:24:54.8490716-07:00;True|2023-09-20T21:05:01.7492112-07:00;True|2023-09-17T19:28:48.1909362-07:00;</History>
+    <History>True|2024-03-22T18:35:03.5606410Z;True|2024-03-21T16:09:29.5727178-07:00;True|2024-03-02T14:04:43.3737467-08:00;True|2024-02-27T12:48:15.7511694-08:00;True|2024-02-13T20:02:27.7607663-08:00;True|2024-02-12T18:59:57.6176080-08:00;True|2024-02-08T01:01:06.9496744-08:00;True|2024-01-17T19:40:12.7165730-08:00;True|2023-11-27T16:16:36.2366300-08:00;True|2023-11-22T11:22:03.3150286-08:00;True|2023-11-22T07:55:58.4478811-08:00;True|2023-11-21T20:10:38.2648175-08:00;True|2023-11-21T20:10:13.2242525-08:00;True|2023-11-15T21:18:27.8545770-08:00;True|2023-10-16T20:31:54.3152964-07:00;True|2023-09-27T22:11:24.7525807-07:00;True|2023-09-27T21:28:51.1324426-07:00;True|2023-09-27T10:19:49.5680486-07:00;True|2023-09-24T20:06:43.5860371-07:00;True|2023-09-24T20:05:10.1864480-07:00;True|2023-09-23T08:24:54.8490716-07:00;True|2023-09-20T21:05:01.7492112-07:00;True|2023-09-17T19:28:48.1909362-07:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -127,10 +127,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/09/2023 10:40:52</publishTime>
     </File>
     <File Include="bin/RetailSlnWeb.dll">
-      <publishTime>03/21/2024 16:09:24</publishTime>
+      <publishTime>03/22/2024 11:35:00</publishTime>
     </File>
     <File Include="bin/RetailSlnWeb.pdb">
-      <publishTime>03/21/2024 16:09:24</publishTime>
+      <publishTime>03/22/2024 11:35:00</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>02/15/2022 05:38:32</publishTime>
@@ -4957,10 +4957,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>03/20/2024 15:13:49</publishTime>
     </File>
     <File Include="Include/StyleSheet1.css">
-      <publishTime>03/14/2024 04:54:42</publishTime>
+      <publishTime>03/21/2024 16:24:16</publishTime>
     </File>
     <File Include="Include/StyleSheet1.min.css">
-      <publishTime>03/03/2024 05:44:14</publishTime>
+      <publishTime>03/21/2024 16:24:23</publishTime>
     </File>
     <File Include="Include/StyleSheet1_zzz.css">
       <publishTime>02/17/2024 17:36:38</publishTime>

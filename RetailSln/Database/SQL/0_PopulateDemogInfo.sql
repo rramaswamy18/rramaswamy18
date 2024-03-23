@@ -1,6 +1,7 @@
 --0_PopulateDemogInfo
 USE [DivineBija.in]
 GO
+SELECT * FROM GSTStateCodeUpload INNER JOIN ArchLib.DemogInfoSubDivision ON StateName = SubDivisionDesc
 SELECT * FROM RetailSlnSch.CorpAcct WHERE CorpAcctId > 0 ORDER BY CorpAcctName
 SELECT * FROM ArchLib.DemogInfoAddressUpload
 SELECT * FROM ArchLib.DemogInfoData ORDER BY CountryAbbrev, StateAbbrev, CountyName, CityName, ZipCode
@@ -145,7 +146,13 @@ PRINT 'ArchLib.DemogInfoZip'
       ORDER BY DemogInfoZipId
 --ArchLib.DemogInfoData
         TRUNCATE TABLE [ArchLib].[DemogInfoData]
-        INSERT [ArchLib].[DemogInfoData](ClientId, DemogInfoCountryId, CountryAbbrev, CountryDesc, Alpha2Code, Alpha3Code, NumericCode, SubDivisionCodeHyperLink, TelephoneCode, PostalCodeLabel, PostalCodeRegEx, DemogInfoSubDivisionId, StateAbbrev, SubDivisionCode, SubDivisionDesc, SubDivisionCategoryNameDesc, ParentSubDivisionCode, DemogInfoCountyId, CountyNameDesc, CountyName, DemogInfoCityId, CityNameDesc, CityName, DemogInfoZipId, ZipCode, DemogInfoZipPlusId, ZipPlus4)
+        INSERT [ArchLib].[DemogInfoData]
+		      (
+			   ClientId, DemogInfoCountryId, CountryAbbrev, CountryDesc, Alpha2Code, Alpha3Code, NumericCode, SubDivisionCodeHyperLink
+			  ,TelephoneCode, PostalCodeLabel, PostalCodeRegEx, DemogInfoSubDivisionId, StateAbbrev, SubDivisionCode, SubDivisionDesc
+			  ,SubDivisionCategoryNameDesc, ParentSubDivisionCode, DemogInfoCountyId, CountyNameDesc, CountyName, DemogInfoCityId, CityNameDesc
+			  ,CityName, DemogInfoZipId, ZipCode, DemogInfoZipPlusId, ZipPlus4
+			  )
         SELECT --DISTINCT
                DemogInfoCountry.ClientId, DemogInfoCountry.DemogInfoCountryId, DemogInfoCountry.CountryAbbrev, DemogInfoCountry.CountryDesc
               ,DemogInfoCountry.Alpha2Code, DemogInfoCountry.Alpha3Code, DemogInfoCountry.NumericCode, DemogInfoCountry.SubDivisionCodeHyperLink

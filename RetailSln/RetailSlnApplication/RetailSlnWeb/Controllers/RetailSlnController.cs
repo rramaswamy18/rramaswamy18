@@ -134,67 +134,6 @@ namespace RetailSlnWeb.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        public ActionResult AddToCartBackup([System.Web.Http.FromUri] string id, [System.Web.Http.FromBody] List<ShoppingCartItemModel> shoppingCartItemModels)
-        {
-            ViewData["ActionName"] = "AddToCart";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                success = false;
-                if (shoppingCartItemModels != null)
-                {
-                    foreach (var shoppingCartItemModel in shoppingCartItemModels)
-                    {
-                        if (shoppingCartItemModel.OrderQty != null)
-                        {
-                            success = true;
-                            break;
-                        }
-                    }
-                }
-                if (!success)
-                {
-                    processMessage = "ERROR???";
-                    htmlString = "Please enter order quantity for a min of 1 item";
-                    actionResult = Json(new { success, processMessage, htmlString });
-                }
-                else
-                {
-                    ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(shoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    if (long.TryParse(id, out long tempId))
-                    {
-                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", tempId);
-                    }
-                    else
-                    {
-                        htmlString = archLibBL.ViewToHtmlString(this, "_OrderListView", null);
-                    }
-                    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while adding item to cart";
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            }
-            return actionResult;
-        }
-
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult CategoryListView()
         {

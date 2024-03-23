@@ -74,7 +74,11 @@ namespace RetailSlnBusinessLayer
             try
             {
                 long.TryParse(categoryIdParm, out long categoryId);
-                List<CategoryItemHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemHierModels.FindAll(x => x.ParentCategoryId == categoryId).OrderBy(x => x.SeqNum).ToList();
+                int.TryParse(pageNumParm, out int pageNum);
+                pageNum = pageNum > 0 ? (pageNum = pageNum -1) : pageNum;
+                int.TryParse(rowCountParm, out int rowCount);
+                rowCount = rowCount == 0 || rowCount > 50  ? 50 : rowCount;
+                List<CategoryItemHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
                 List<ItemModel> itemModels = new List<ItemModel>();
                 foreach (var categoryItemHierModel in categoryItemHierModels)
                 {

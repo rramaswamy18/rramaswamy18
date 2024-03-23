@@ -110,7 +110,7 @@ namespace ArchitectureLibraryBusinessLayer
             sqlStmt += "              ,DemogInfoData.DemogInfoZipPlusId" + Environment.NewLine;
             sqlStmt += "              ,DemogInfoData.ZipCode" + Environment.NewLine;
             sqlStmt += "          FROM ArchLib.DemogInfoData" + Environment.NewLine;
-            sqlStmt += "         WHERE DemogInfoData.CityName LIKE '" + cityName + "%'" + Environment.NewLine;
+            sqlStmt += "         WHERE DemogInfoData.CityName LIKE '%" + cityName + "%'" + Environment.NewLine;
             sqlStmt += "           AND DemogInfoData.DemogInfoCountryId = " + demogInfoCountryId + Environment.NewLine;
             sqlStmt += "      ORDER BY DemogInfoData.CityName" + Environment.NewLine;
             sqlStmt += "              ,DemogInfoData.ZipCode" + Environment.NewLine;

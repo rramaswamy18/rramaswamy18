@@ -1031,11 +1031,7 @@ namespace RetailSlnBusinessLayer
             }
             totalOrderAmount -= discountAmount;
             var salesTaxListModels = GetSalesTaxListModels(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-            var deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId) && (x.DestDemogInfoCityId == null || x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId));
-            if (deliveryChargeModel == null)
-            {
-                deliveryChargeModel = RetailSlnCache.DeliveryChargeModels.FirstOrDefault(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId && (x.DestDemogInfoSubDivisionId == null || x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId));
-            }
+            DeliveryChargeModel deliveryChargeModel = GetDeliveryChargeModel(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0;
             if (deliveryChargeModel.UnitMeasure == "WEIGHT")
             {
@@ -1102,27 +1098,41 @@ namespace RetailSlnBusinessLayer
                     ItemDesc = null,
                     ItemId = null,
                     ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "Shipping & Handling Charges " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
-                    OrderAmount = shippingAndHandlingChargesAmount,
+                    ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                    OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
                     OrderComments = null,
                     OrderQty = shoppingCartModel.TotalWeightValueRounded,
                     OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
                 }
             );
-            shoppingCartSummaryItems.Add
-            (
-                new ShoppingCartItemModel
-                {
-                    ItemDesc = null,
-                    ItemId = null,
-                    ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%)",
-                    OrderAmount = fuelCharges,
-                    OrderComments = null,
-                    OrderQty = shoppingCartModel.TotalWeightValueRounded,
-                    OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
-                }
-            );
+            //shoppingCartSummaryItems.Add
+            //(
+            //    new ShoppingCartItemModel
+            //    {
+            //        ItemDesc = null,
+            //        ItemId = null,
+            //        ItemRate = shippingAndHandlingChargesByWeight,
+            //        ItemShortDesc = "Shipping & Handling Charges " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+            //        OrderAmount = shippingAndHandlingChargesAmount,
+            //        OrderComments = null,
+            //        OrderQty = shoppingCartModel.TotalWeightValueRounded,
+            //        OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+            //    }
+            //);
+            //shoppingCartSummaryItems.Add
+            //(
+            //    new ShoppingCartItemModel
+            //    {
+            //        ItemDesc = null,
+            //        ItemId = null,
+            //        ItemRate = shippingAndHandlingChargesByWeight,
+            //        ItemShortDesc = "Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%)",
+            //        OrderAmount = fuelCharges,
+            //        OrderComments = null,
+            //        OrderQty = shoppingCartModel.TotalWeightValueRounded,
+            //        OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+            //    }
+            //);
             foreach (var salesTaxListModel in salesTaxListModels)
             {
                 shoppingCartSummaryItems.Add
@@ -1140,6 +1150,42 @@ namespace RetailSlnBusinessLayer
                     }
                 );
             }
+        }
+        private DeliveryChargeModel GetDeliveryChargeModel(DemogInfoAddressModel demogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            DeliveryChargeModel deliveryChargeModel = null;
+            List<DeliveryChargeModel> deliveryChargeModelsSearch = null, deliveryChargeModelsTemp;
+            deliveryChargeModelsSearch = RetailSlnCache.DeliveryChargeModels.FindAll(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId);
+            if (deliveryChargeModelsSearch.Count > 0)
+            {
+                deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
+                if (deliveryChargeModelsSearch.Count > 0)
+                {
+                    deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == demogInfoAddressModel.DemogInfoCountyId);
+                    if (deliveryChargeModelsTemp.Count == 0)
+                    {
+                        deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == null);
+                    }
+                }
+                if (deliveryChargeModelsSearch.Count > 0)
+                {
+                    deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId);
+                    if (deliveryChargeModelsTemp.Count == 0)
+                    {
+                        deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == null);
+                    }
+                    if (deliveryChargeModelsTemp.Count > 1)
+                    {
+                        deliveryChargeModelsSearch = deliveryChargeModelsTemp.FindAll(x => demogInfoAddressModel.DemogInfoZipId >= x.DestDemogInfoZipIdFrom && demogInfoAddressModel.DemogInfoZipId <= x.DestDemogInfoZipIdTo);
+                    }
+                    else
+                    {
+                        deliveryChargeModelsSearch = deliveryChargeModelsTemp;
+                    }
+                }
+            }
+            deliveryChargeModel = deliveryChargeModelsSearch[0];
+            return deliveryChargeModel;
         }
         private List<SalesTaxListModel> GetSalesTaxListModels(DemogInfoAddressModel demogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
