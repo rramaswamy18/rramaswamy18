@@ -8,7 +8,7 @@
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="row">
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style= "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2;  font-size: 12px;" }).ToHtmlString()))
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2;  font-size: 12px;" }).ToHtmlString()))
     </div>
 }
 @if (Model != null && Model.ResponseObjectModel != null)
@@ -17,6 +17,8 @@
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
     </div>
 }
+<h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment&nbsp;&nbsp;Mode...</h3>
+@Html.Partial("_PaymentModeData", Model)
 <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery&nbsp;&nbsp;Method...</h3>
 @Html.Partial("_DeliveryMethodData", Model)
 <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;">

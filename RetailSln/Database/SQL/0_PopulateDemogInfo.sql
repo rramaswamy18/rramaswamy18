@@ -1,8 +1,18 @@
 --0_PopulateDemogInfo
 USE [DivineBija.in]
 GO
+--TRUNCATE TABLE CorpAcctUpload
+TRUNCATE TABLE RetailSlnSch.CorpAcct
+INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, MinOrderAmount, CreditLimit, TaxIdentNum)
+SELECT 97 AS ClientId, '@Individual (Regular or Retail)' AS CorpAcctName, 100 AS CorpAcctTypeId, 0 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, NULL TaxIdentNum
+UNION
+SELECT 97 AS ClientId, MIN(Name) AS CorpAcctName, 200 AS CorpAcctTypeId, 30 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, Tax_No AS TaxIdentNum FROM CorpAcctUpload WHERE Tax_No IS NOT NULL GROUP BY Tax_No
+UNION
+SELECT 97 AS ClientId, Name AS CorpAcctName, 200 AS CorpAcctTypeId, 30 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, Tax_No AS TaxIdentNum FROM CorpAcctUpload WHERE Tax_No IS NULL
+ORDER BY CorpAcctName
+SELECT * FROM RetailSlnSch.CorpAcct ORDER BY CorpAcctId
+
 SELECT * FROM GSTStateCodeUpload INNER JOIN ArchLib.DemogInfoSubDivision ON StateName = SubDivisionDesc
-SELECT * FROM RetailSlnSch.CorpAcct WHERE CorpAcctId > 0 ORDER BY CorpAcctName
 SELECT * FROM ArchLib.DemogInfoAddressUpload
 SELECT * FROM ArchLib.DemogInfoData ORDER BY CountryAbbrev, StateAbbrev, CountyName, CityName, ZipCode
 TRUNCATE TABLE CorpAcctEmailUpload

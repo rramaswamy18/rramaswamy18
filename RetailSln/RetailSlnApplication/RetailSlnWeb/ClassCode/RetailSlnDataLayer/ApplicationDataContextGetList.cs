@@ -1,5 +1,6 @@
 ﻿using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
+using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using RetailSlnEnumerations;
 using RetailSlnModels;
@@ -73,8 +74,11 @@ namespace RetailSlnDataLayer
                         {
                             CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
                             CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                            CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
+                            CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
+                            MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
                             TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
-                            DemogInfoAddressId = long.Parse(sqlDataReader["DemogInfoAddressId"].ToString()),
+                            DemogInfoAddressModels = new List<DemogInfoAddressModel>(),
                         }
                      );
                 }

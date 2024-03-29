@@ -1,5 +1,6 @@
 ﻿using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryModels;
+using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -68,6 +69,8 @@ namespace RetailSlnModels
         [MaxLength(8, ErrorMessage = "Enter 8 digit Gift Cert key")]
         public string GiftCertKey { set; get; }
 
+        public PaymentModeEnum? PaymentModeId { set; get; }
+
         [Display(Name = "Order Amount")]
         public float? OrderAmount { set; get; }
 
@@ -76,6 +79,8 @@ namespace RetailSlnModels
         public string CreditCardProcessMessage { set; get; }
 
         public string CreditCardNumberLast4 { set; get; }
+
+        public long CorpAcctId { set; get; }
 
         [Display(Name = "Email Address")]
         public string EmailAddress { set; get; }

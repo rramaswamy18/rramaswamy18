@@ -86,8 +86,8 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -181,6 +181,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderDetailTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderStatusEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\PaymentModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiCategorysModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiIndexModel.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="ClassCode\RetailSlnModels\DiscountDtlModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\GiftCertPaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertValidateModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemAttribListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemAttribMasterModel.cs" />
@@ -227,7 +229,9 @@
     <Compile Include="ClassCode\RetailSlnModels\OrderModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderReceiptModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\PaymentInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\PaymentSummaryDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
@@ -1389,6 +1393,7 @@
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Images\Checkout1.jpg" />
     <Content Include="Images\Checkout2.png" />
+    <Content Include="Images\COD.png" />
     <Content Include="Images\Comments.png" />
     <Content Include="Images\Delete.jpg" />
     <Content Include="Images\Loading1.gif" />
@@ -1396,6 +1401,7 @@
     <Content Include="Images\Logout2.png" />
     <Content Include="Images\NoImage_0.png" />
     <Content Include="Images\OutofStock.png" />
+    <Content Include="Images\PaymentGateway.png" />
     <Content Include="Images\PickupMyOrder.png" />
     <Content Include="Images\PostalMail1.png" />
     <Content Include="Images\PostalMail2.jpg" />
@@ -1616,6 +1622,9 @@
     <Content Include="Views\GeneralUtility\_SqlResult.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuTop.cshtml" />
     <Content Include="Views\Home\RazorPayReturn.cshtml" />
+    <Content Include="Views\Home\_PaymentModeData.cshtml" />
+    <Content Include="Views\Home\_PaymentInfo.cshtml" />
+    <Content Include="Views\Home\_GiftCertPaymentData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

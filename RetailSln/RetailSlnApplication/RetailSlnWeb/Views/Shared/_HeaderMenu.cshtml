@@ -109,14 +109,14 @@
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                    document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                    //document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
                 }
             },
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
                 console.log("categoryId_onclick", "00099000", "ERROR???");
                 document.getElementById("divErrorMessage").innerHTML = "Error occurred";
-                document.getElementById("divErrorMessage2").innerHTML = "Error occurred";
+                //document.getElementById("divErrorMessage2").innerHTML = "Error occurred";
                 console.log(xhr, exception);
             }
         });

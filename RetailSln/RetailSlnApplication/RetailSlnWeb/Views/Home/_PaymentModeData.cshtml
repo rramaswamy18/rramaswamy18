@@ -1,0 +1,57 @@
+﻿@model RetailSlnModels.DeliveryInfoDataModel
+<style>
+    #PaymentModeId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+    }
+</style>
+@{
+    ArchitectureLibraryModels.SessionObjectModel sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
+    var corpAccountId = sessionObjectModel.CorpAcctId;
+    List<ArchitectureLibraryModels.CodeDataModel> codeDataModels = ArchitectureLibraryCacheData.LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+    <table>
+        <tr>
+            <th colspan="3">
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PaymentModeId, "", new { id = "PaymentModeId-error" }).ToHtmlString()))
+            </th>
+        </tr>
+        @{
+            int fromIndex, toIndex;
+            if (corpAccountId > 0)
+            {
+                fromIndex = 0;
+                toIndex = 0;
+            }
+            else
+            {
+                fromIndex = 1;
+                toIndex = codeDataModels.Count;
+            }
+            string foreColor = "#0000ff";
+            for (int i = fromIndex; i < toIndex; i++)
+            {
+                <tr>
+                    <td style="padding-right: 9px; vertical-align: top;">
+                        <input class="form-control" id="radPaymentModeId@(i)" name="PaymentModeId" style="color: #000000; font-weight: 900;" type="radio" value="@codeDataModels[i].CodeDataNameId" />
+                    </td>
+                    <td style="padding-right: 9px; vertical-align: middle;">
+                        <img src="~/Images/@codeDataModels[i].CodeDataDesc2" style="height: 27px; width: 36px;" />
+                    </td>
+                    <th>
+                        <span class="col-form-label" style="color: @foreColor; font-family: Arial;">@codeDataModels[i].CodeDataDesc0</span>
+                    </th>
+                </tr>
+                if (foreColor == "#0000ff")
+                {
+                    foreColor = "#a54000";
+                }
+                else
+                {
+                    foreColor = "#0000ff";
+                }
+            }
+        }
+    </table>
+}

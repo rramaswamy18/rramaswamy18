@@ -21,7 +21,7 @@ function checkoutValidate_onclick() {
     console.log("00000000", "checkoutValidate_onclick", "Enter");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
-    document.getElementById("divErrorMessage2").innerHTML = "";
+    //document.getElementById("divErrorMessage2").innerHTML = "";
     var url = "/Home/CheckoutValidate";
     $.ajax({
         url: url,
@@ -39,12 +39,13 @@ function checkoutValidate_onclick() {
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                    document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                    //document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
                 }
             }
             else {
                 document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
+                alert(responseData.htmlString);
+                //document.getElementById("divErrorMessage2").innerHTML = responseData.htmlString;
             }
             console.log("00090000", "checkoutValidate_onclick success", "Exit");
         },
@@ -52,7 +53,8 @@ function checkoutValidate_onclick() {
             $('#loadingModal').modal('hide');
             console.log("checkoutValidate_onclick", "00099000", "ERROR???");
             document.getElementById("divErrorMessage").innerHTML = "Error during checkout";
-            document.getElementById("divErrorMessage2").innerHTML = "Error during checkout";
+            alert("Error during checkout");
+            //document.getElementById("divErrorMessage2").innerHTML = "Error during checkout";
         }
     });
     return false;

@@ -31,6 +31,10 @@ namespace RetailSlnModels
 
         public DeliveryTypeEnum? DeliveryTypeId { set; get; }
 
+        [Display(Name = "Payment Method")]
+        [Required(ErrorMessage = "Please select payment method")]
+        public PaymentModeEnum? PaymentModeId { set; get; }
+
         [Required(ErrorMessage = "Country")]
         public long? PrimaryTelephoneDemogInfoCountryId { set; get; }
 

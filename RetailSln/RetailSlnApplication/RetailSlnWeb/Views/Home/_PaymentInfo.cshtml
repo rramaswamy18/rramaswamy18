@@ -1,0 +1,51 @@
+﻿@model RetailSlnModels.PaymentInfoModel
+@using ArchitectureLibraryModels
+@using RetailSlnEnumerations
+@{ 
+    Model.ShoppingCartModel.Checkout = false;
+    Model.ShoppingCartModel.ShowDiscountsAdditionalCharges = true;
+    List<CodeDataModel> codeDataModels = ArchitectureLibraryCacheData.LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+    var paymentModeId = (int)Model.DeliveryInfoDataModel.PaymentModeId;
+    CodeDataModel codeDataModel = codeDataModels.First(x => x.CodeDataNameId == paymentModeId);
+}
+<h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+    Payment Info
+</h2>
+<div class="center">
+    <div style="float: left; padding-left: 18px; text-align: left; width: 50%;">
+        <span style="color: #0000ff; font-size: 12px; font-weight: bold;">
+            Should you have gift certificate, please enter below info and the amount will be reduced from the total invoice amount
+        </span>
+        <br />
+        <span style="color: #ff0000; font-size: 12px; font-weight: bold;">
+            @codeDataModel.CodeDataDesc0&nbsp;-&nbsp;
+        </span>
+        <span style="color: #0000ff; font-size: 12px; font-weight: bold;">
+            @codeDataModel.CodeDataDesc1
+        </span>
+        <br />
+        <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Gift&nbsp;Cert&nbsp;Payment</h3>
+        <form id="formPaymentInfoData">
+            @Html.Partial("_GiftCertPaymentData", Model.GiftCertPaymentModel)
+        </form>
+        @switch (Model.DeliveryInfoDataModel.PaymentModeId)
+        {
+            case PaymentModeEnum.COD:
+            case PaymentModeEnum.CreditSale:
+                <center><button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Continue Process</button></center>
+                break;
+            case PaymentModeEnum.PaymentGateway:
+                <center><button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button></center>
+                break;
+        }
+    </div>
+    <div style="float: left; padding-left: 18px; text-align: left; width: 50%;">
+        <h3 style="font-weight: bold; letter-spacing: 5px; padding-top: 0px; text-transform: uppercase;">Delivery&nbsp;&nbsp;Info</h3>
+        @Html.Partial("_PaymentSummaryData", Model.PaymentSummaryDataModel)
+        @Html.Partial("_DeliveryInfoAddressData", Model.DeliveryInfoDataModel)
+    </div>
+    <br style="clear: both;" />
+    <div style="text-align: left; width: 100%;">
+        @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+    </div>
+</div>

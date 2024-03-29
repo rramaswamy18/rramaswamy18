@@ -1,6 +1,31 @@
 ﻿@model RetailSlnModels.PaymentDataModel
+@using ArchitectureLibraryCacheData
 @using RetailSlnCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
 <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" />
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: center; white-space: nowrap; vertical-align: top;">
+            MATHANGI DIVINE MALL PVT LTD
+            <br />
+            NO.178/4, Selvambigai Nagar, Attipattu,
+            <br />
+            Chennai - 600 120,
+            <br />
+            Land Mark: Railway Station
+            <br />
+            Mobile: +91 9840570834
+            <br />
+            GSTIN No: 33AAOCM8315R1ZQ
+        </td>
+    </tr>
     <tr>
         <td colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
             <span style="font-weight: bold;">Dear Valued Customer,</span>

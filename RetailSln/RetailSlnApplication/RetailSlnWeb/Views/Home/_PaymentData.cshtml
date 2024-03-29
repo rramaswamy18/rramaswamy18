@@ -1,5 +1,5 @@
 ﻿@model RetailSlnModels.PaymentDataModel
-@using RetailSlnCacheData
+@using RetailSlnEnumerations
 <style>
     #GiftCertNumber-error, #GiftCertKey-error, #CreditCardNumber-error, #CardExpiryMM-error, #CardExpiryYYYY-error, #CVV-error, #CardHolderName-error {
         color: #ff0000;
@@ -63,72 +63,92 @@
 </div>
 @{
     @Html.HiddenFor(m => m.OrderAmount)
-    if (creditCardProcessor == "TESTMODE" || creditCardProcessor == "NUVEITEST" || creditCardProcessor == "NUVEIPROD")
+    switch (Model.PaymentModeId)
     {
-        <div class="row" style="padding-left: 18px; padding-right: 18px;">
-            @Html.LabelFor(m => m.CreditCardNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            <div>
-                @Html.TextBoxFor(m => m.CreditCardNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CreditCardNumber), style = "float: left; width: 76%;", type = "password" })
-                <span style="width: 18px;">&nbsp;</span>
-                <button class="btn btn-primary" id="creditCardNumber" onmouseout="javascript: return showHideForHide('CreditCardNumber', 'password');" onmouseover="javascript: return showHideForShow('CreditCardNumber', 'text');" type="button" style="width: 50px;">
-                    <span class="fa fa-eye-slash icon"></span>
-                </button>
-            </div>
-            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CreditCardNumber, "", new { id = "CreditCardNumber-error" }).ToHtmlString()))
-        </div>
-        <div class="row" style="padding-left: 15px;">
-            <table style="border-collapse: separate; border-spacing: 3px; padding: 0px;">
-                <tr>
-                    <td style="padding: 0px;">
-                        @Html.LabelFor(m => m.CVV, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
-                    </td>
-                    <td style="padding: 0px;"></td>
-                    <td style="padding: 0px;">
-                        @Html.LabelFor(m => m.CardExpiryMM, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
-                    </td>
-                    <td>
-                        @Html.LabelFor(m => m.CardExpiryYYYY, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding: 0px;">
-                        @Html.TextBoxFor(m => m.CVV, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CVV), style = "float: left; width: 81px;", type = "password" })
-                    </td>
-                    <td style="padding-left: 5px; padding-right: 5px;">
-                        <button class="btn btn-primary" id="creditCardCVV" onmouseout="javascript: return showHideForHide('CVV', 'password');" onmouseover="javascript: return showHideForShow('CVV', 'text');" type="button" style="float: left; width: 50px;">
+        case PaymentModeEnum.CreditSale:
+            <span style="color: #000000; font-size: 12px; font-weight: bold;">
+                By clicking the below button you will be redirected to a <span style="color: #0000ff; font-size: 16px;">URL</span> outside of our domain
+            </span>
+            break;
+        case PaymentModeEnum.PaymentGateway:
+            <span style="color: #000000; font-size: 12px; font-weight: bold;">
+                By clicking the below button you will be redirected to a <span style="color: #0000ff; font-size: 16px;">URL</span> outside of our domain
+            </span>
+            break;
+        case PaymentModeEnum.COD:
+            <span style="color: #000000; font-size: 12px; font-weight: bold;">
+                By clicking the below button you will be redirected to a <span style="color: #0000ff; font-size: 16px;">URL</span> outside of our domain
+            </span>
+            break;
+        default:
+            break;
+    }
+    @*if (creditCardProcessor == "TESTMODE" || creditCardProcessor == "NUVEITEST" || creditCardProcessor == "NUVEIPROD")
+                    {
+                <div class="row" style="padding-left: 18px; padding-right: 18px;">
+                    @Html.LabelFor(m => m.CreditCardNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+                    <div>
+                        @Html.TextBoxFor(m => m.CreditCardNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CreditCardNumber), style = "float: left; width: 76%;", type = "password" })
+                        <span style="width: 18px;">&nbsp;</span>
+                        <button class="btn btn-primary" id="creditCardNumber" onmouseout="javascript: return showHideForHide('CreditCardNumber', 'password');" onmouseover="javascript: return showHideForShow('CreditCardNumber', 'text');" type="button" style="width: 50px;">
                             <span class="fa fa-eye-slash icon"></span>
                         </button>
-                    </td>
-                    <td style="padding: 0px;">
-                        @Html.DropDownListFor(m => m.CardExpiryMM, new SelectList(ArchitectureLibraryCacheData.LookupCache.CodeTypeSelectListItems["GregorianMonths"]["Type1"], "Value", "Text", Model.CardExpiryMM), "---", new { @class = "form-control", style = "float: left; font-size: 14px; width: 81px;" })
-                    </td>
-                    <td style="padding: 0px;">
-                        @Html.DropDownListFor(m => m.CardExpiryYYYY, years, "---", new { @class = "form-control", style = "font-size: 14px; width: 81px;" })
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CVV, "", new { id = "CVV-error" }).ToHtmlString()))
-                    </td>
-                    <td style="padding: 0px;">
-                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardExpiryMM, "", new { id = "CardExpiryMM-error" }).ToHtmlString()))
-                    </td>
-                    <td style="padding: 0px;">
-                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardExpiryYYYY, "", new { id = "CardExpiryYYYY-error" }).ToHtmlString()))
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="row" style="padding-left: 18px; padding-right: 18px;">
-            @Html.LabelFor(m => m.CardHolderName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>)
-            @Html.TextBoxFor(m => m.CardHolderName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CardHolderName), style = "width: 90%;", type = "text" })
-            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardHolderName, "", new { id = "CardHolderName-error" }).ToHtmlString()))
-        </div>
-    }
-    else
-    {
-        <span style="color: #000000; font-size: 12px; font-weight: bold;">
-            By clicking the below button you will be redirected to a <span style="color: #0000ff; font-size: 16px;">URL</span> outside of our domain
-        </span>
-    }
+                    </div>
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CreditCardNumber, "", new { id = "CreditCardNumber-error" }).ToHtmlString()))
+                </div>
+                <div class="row" style="padding-left: 15px;">
+                    <table style="border-collapse: separate; border-spacing: 3px; padding: 0px;">
+                        <tr>
+                            <td style="padding: 0px;">
+                                @Html.LabelFor(m => m.CVV, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
+                            </td>
+                            <td style="padding: 0px;"></td>
+                            <td style="padding: 0px;">
+                                @Html.LabelFor(m => m.CardExpiryMM, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
+                            </td>
+                            <td>
+                                @Html.LabelFor(m => m.CardExpiryYYYY, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Req)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0px;">
+                                @Html.TextBoxFor(m => m.CVV, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CVV), style = "float: left; width: 81px;", type = "password" })
+                            </td>
+                            <td style="padding-left: 5px; padding-right: 5px;">
+                                <button class="btn btn-primary" id="creditCardCVV" onmouseout="javascript: return showHideForHide('CVV', 'password');" onmouseover="javascript: return showHideForShow('CVV', 'text');" type="button" style="float: left; width: 50px;">
+                                    <span class="fa fa-eye-slash icon"></span>
+                                </button>
+                            </td>
+                            <td style="padding: 0px;">
+                                @Html.DropDownListFor(m => m.CardExpiryMM, new SelectList(ArchitectureLibraryCacheData.LookupCache.CodeTypeSelectListItems["GregorianMonths"]["Type1"], "Value", "Text", Model.CardExpiryMM), "---", new { @class = "form-control", style = "float: left; font-size: 14px; width: 81px;" })
+                            </td>
+                            <td style="padding: 0px;">
+                                @Html.DropDownListFor(m => m.CardExpiryYYYY, years, "---", new { @class = "form-control", style = "font-size: 14px; width: 81px;" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CVV, "", new { id = "CVV-error" }).ToHtmlString()))
+                            </td>
+                            <td style="padding: 0px;">
+                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardExpiryMM, "", new { id = "CardExpiryMM-error" }).ToHtmlString()))
+                            </td>
+                            <td style="padding: 0px;">
+                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardExpiryYYYY, "", new { id = "CardExpiryYYYY-error" }).ToHtmlString()))
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row" style="padding-left: 18px; padding-right: 18px;">
+                    @Html.LabelFor(m => m.CardHolderName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>)
+                    @Html.TextBoxFor(m => m.CardHolderName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CardHolderName), style = "width: 90%;", type = "text" })
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CardHolderName, "", new { id = "CardHolderName-error" }).ToHtmlString()))
+                </div>
+            }
+            else
+        {
+                <span style="color: #000000; font-size: 12px; font-weight: bold;">
+                    By clicking the below button you will be redirected to a <span style="color: #0000ff; font-size: 16px;">URL</span> outside of our domain
+                </span>
+            }*@
 }

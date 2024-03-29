@@ -17,6 +17,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -419,7 +420,67 @@ namespace RetailSlnBusinessLayer
             }
         }
         //POST Delivery Info
-        public void DeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public PaymentInfoModel DeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                //DemogInfoCountryModel demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId);
+                //deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = demogInfoCountryModel.CountryAbbrev;
+                //deliveryInfoDataModel.DeliveryAddressModel.CountryDesc = demogInfoCountryModel.CountryDesc;
+                //deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = DemogInfoCache.DemogInfoSubDivisionModels.First(x => x.DemogInfoSubDivisionId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId).StateAbbrev;
+                //deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = 0;
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
+                ShoppingCartModel shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
+                shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>
+                {
+                    new ShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = null,
+                        ItemRateBeforeDiscount = null,
+                        ItemShortDesc = null,
+                        OrderAmount = null,
+                        OrderAmountBeforeDiscount = null,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.TotalOrderAmount,
+                    }
+                };
+                ApplyDiscounts(shoppingCartModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                long personId = sessionObjectModel.PersonId;
+                AddAdditionalCharges(shoppingCartModel, deliveryInfoDataModel.DeliveryAddressModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AddTotals(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+                httpSessionStateBase["DeliveryInfoDataModel"] = deliveryInfoDataModel;
+                PaymentInfoModel paymentInfoModel = new PaymentInfoModel
+                {
+                    DeliveryInfoDataModel = deliveryInfoDataModel,
+                    GiftCertPaymentModel = new GiftCertPaymentModel(),
+                    PaymentSummaryDataModel = new PaymentSummaryDataModel
+                    {
+                        EmailAddress = sessionObjectModel.EmailAddress,
+                        UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
+                    },
+                    ShoppingCartModel = shoppingCartModel,
+                };
+                return paymentInfoModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        public void DeliveryInfoBackup(DeliveryInfoDataModel deliveryInfoDataModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -748,7 +809,9 @@ namespace RetailSlnBusinessLayer
                             DeliveryInfoDataModel = deliveryInfoDataModel,
                             PaymentDataModel = new PaymentDataModel
                             {
+                                CorpAcctId = sessionObjectModel.CorpAcctId,
                                 EmailAddress = sessionObjectModel.EmailAddress,
+                                PaymentModeId = deliveryInfoDataModel.PaymentModeId,
                                 UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
                                 OrderAmount = shoppingCartModel.ShoppingCartSummaryItems[shoppingCartModel.ShoppingCartSummaryItems.Count - 1].OrderAmount.Value,
                             },
@@ -802,6 +865,7 @@ namespace RetailSlnBusinessLayer
                     paymentDataModel.CreditCardPaymentAmount = creditCardPaymentAmount;
                     if (modelStateDictionary.IsValid)
                     {
+                        paymentDataModel.CorpAcctId = sessionObjectModel.CorpAcctId;
                         paymentDataModel.EmailAddress = sessionObjectModel.EmailAddress;
                         paymentDataModel.UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
                         if (creditCardPaymentAmount > 0)
@@ -915,6 +979,41 @@ namespace RetailSlnBusinessLayer
             finally
             {
                 ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        //POST PaymentInfo1
+        public PaymentModel PaymentInfo1(HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ShoppingCartModel shoppingCartModel;
+                shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
+                DeliveryInfoDataModel deliveryInfoDataModel = (DeliveryInfoDataModel)httpSessionStateBase["DeliveryInfoDataModel"];
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
+                if (shoppingCartModel == null)
+                {
+                    throw new Exception("Shopping Cart is Empty");
+                }
+                else
+                {
+                    if (shoppingCartModel.ShoppingCartItems.Count > 0 && shoppingCartModel.ShoppingCartTotalAmount > 0)
+                    {
+                        CreateOrder(deliveryInfoDataModel, shoppingCartModel, sessionObjectModel, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        return null;
+                    }
+                    else
+                    {
+                        throw new Exception("Shopping Cart is Empty");
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
             }
         }
         public ShoppingCartModel RemoveFromCart(int index, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -1381,6 +1480,29 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
+        private void CreateOrder(DeliveryInfoDataModel deliveryInfoDataModel, ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                OrderModel orderModel = CreateOrderModel(deliveryInfoDataModel, shoppingCartModel, sessionObjectModel, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.CreateOrder(orderModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                deliveryInfoDataModel.OrderHeaderId = orderModel.OrderHeaderModel.OrderHeaderId;
+                httpSessionStateBase["DeliveryInfoDataModel"] = deliveryInfoDataModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
         private bool CreateOrder(ref PaymentDataModel paymentDataModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1453,6 +1575,81 @@ namespace RetailSlnBusinessLayer
             ApplicationDataContext.CreateOrder(orderModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             paymentDataModel.OrderHeaderId = orderModel.OrderHeaderModel.OrderHeaderId;
             return true;
+        }
+        private OrderModel CreateOrderModel(DeliveryInfoDataModel deliveryInfoDataModel, ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                OrderModel orderModel = new OrderModel
+                {
+                    DeliveryInfoModel = new DeliveryInfoModel
+                    {
+                        DeliveryInfoDataModel = deliveryInfoDataModel,
+                    },
+                    OrderHeaderModel = new OrderHeaderModel
+                    {
+                        DimensionUnitId = DimensionUnitEnum.Centimeter,
+                        OrderDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        OrderNumber = 1,
+                        OrderStatusId = OrderStatusEnum.Open,
+                        PersonId = sessionObjectModel.PersonId,
+                        VolumeValue = 0,
+                        WeightUnitId = WeightUnitEnum.Grams,
+                        WeightValue = 0,
+                        OrderDetailModels = new List<OrderDetailModel>(),
+                        OrderSummaryModels = new List<OrderDetailModel>(),
+                    },
+                };
+                ItemModel itemModel;
+                float itemRate;
+                foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
+                {
+                    itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItem.ItemId);
+                    itemRate = itemModel.ItemRate.Value;
+                    orderModel.OrderHeaderModel.OrderDetailModels.Add
+                    (
+                        new OrderDetailModel
+                        {
+                            ItemDesc = itemModel.ItemDesc,
+                            ItemRate = itemRate,
+                            ItemShortDesc = itemModel.ItemShortDesc,
+                            ItemId = itemModel.ItemId,
+                            OrderAmount = itemRate * shoppingCartItem.OrderQty.Value,
+                            OrderComments = shoppingCartItem.OrderComments,
+                            OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                            OrderQty = (long)shoppingCartItem.OrderQty,
+                            VolumeValue = shoppingCartItem.VolumeValue.Value,
+                            WeightValue = shoppingCartItem.WeightValue.Value,
+                        }
+                    );
+                }
+                foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartSummaryItems)
+                {
+                    orderModel.OrderHeaderModel.OrderDetailModels.Add
+                    (
+                        new OrderDetailModel
+                        {
+                            ItemDesc = null,
+                            ItemRate = shoppingCartItem.OrderAmount.Value,
+                            ItemShortDesc = shoppingCartItem.ItemShortDesc,
+                            ItemId = shoppingCartItem.ItemId,
+                            OrderAmount = shoppingCartItem.OrderAmount.Value,
+                            OrderComments = shoppingCartItem.OrderComments,
+                            OrderDetailTypeId = shoppingCartItem.OrderDetailTypeId,
+                            OrderQty = 1,
+                        }
+                    );
+                }
+                return orderModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
         }
         private void CreateGiftCertImage(string inputFullFileName, GiftCertModel giftCertModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

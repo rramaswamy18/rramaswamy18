@@ -13,3 +13,8 @@ SELECT * FROM ArchLib.PersonRelation
 --SELECT * FROM ArchLib.Telephone
 SELECT * FROM ArchLib.EmailData
 SELECT * FROM ArchLib.EmailRecipient
+
+SELECT * FROM RetailSlnSch.OrderHeader
+SELECT * FROM RetailSlnSch.OrderDetail
+SELECT * FROM RetailSlnSch.OrderDelivery
+SELECT * FROM RetailSlnSch.OrderPayment
