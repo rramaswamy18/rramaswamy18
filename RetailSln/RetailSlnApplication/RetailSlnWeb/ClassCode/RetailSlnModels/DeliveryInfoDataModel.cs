@@ -18,6 +18,8 @@ namespace RetailSlnModels
         [StringLength(10, MinimumLength = 10, ErrorMessage = "10 digit phone#")]
         public string AlternateTelephoneNum { set; get; }
 
+        public long? AlternateTelephoneTelephoneCode { set; get; }
+
         [Display(Name = "Delivery Instructions")]
         public string DeliveryInstructions { set; get; }
 
@@ -42,6 +44,8 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Primary phone#")]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "10 digit phone#")]
         public string PrimaryTelephoneNum { set; get; }
+
+        public long? PrimaryTelephoneTelephoneCode { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

@@ -35,6 +35,8 @@ namespace RetailSlnModels
 
         public float? VolumeValue { set; get; }
 
+        public float? WeightCalcValue { set; get; }
+
         public WeightUnitEnum? WeightUnitId { set; get; }
 
         public float? WeightValue { set; get; }

@@ -107,7 +107,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void AddOrderPayment(PaymentDataModel paymentDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AddOrderPayment(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -116,7 +116,7 @@ namespace RetailSlnDataLayer
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
                 SqlCommand sqlCommand = BuildSqlCommandOrderPaymentAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AssignOrderPayment(paymentDataModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignOrderPayment(paymentInfoModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 sqlCommand.ExecuteNonQuery();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;

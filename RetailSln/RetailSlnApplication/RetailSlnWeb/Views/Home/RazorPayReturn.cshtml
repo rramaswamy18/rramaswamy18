@@ -1,8 +1,10 @@
-﻿@model RetailSlnModels.OrderReceiptModel
+﻿@model string
 @{
     ViewBag.Title = "RazorPayReturn";
 }
-@Html.Partial("_OrderReceipt", Model)
+<div style="padding-left: 18px;">
+    @Html.Raw(Model)
+</div>
 <script type="text/javascript">
     function window_onload() {
     }

@@ -35,7 +35,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void CreatePayment(PaymentDataModel paymentDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void CreatePayment(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -43,7 +43,7 @@ namespace RetailSlnDataLayer
             try
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
-                AddOrderPayment(paymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AddOrderPayment(paymentInfoModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
             }
             catch (Exception exception)

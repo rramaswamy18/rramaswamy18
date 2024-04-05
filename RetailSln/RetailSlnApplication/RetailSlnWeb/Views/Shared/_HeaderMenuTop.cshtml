@@ -41,21 +41,7 @@
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
-            <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "REGISTER" })" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Register - @imageTitle">
-                <img alt="Register - @imageTitle" src="~/Images/Register1.png" style="height: 27px; width: 27px;" title="Register - @imageTitle" />
-                <br />
-                Register
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
-            <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "LOGIN" })" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Sign in - @imageTitle">
-                <img alt="Sign in - @imageTitle" src="~/Images/SignIn2.png" style="height: 27px; width: 27px;" title="Sign in - @imageTitle" />
-                <br />
-                Sign In
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
-            <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divShoppingCart').scrollIntoView();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
+            <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divShoppingCartBackToTop').scrollIntoView(); document.getElementById('divShoppingCartBackToTop').focus();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
                 <img alt="View Cart - @imageTitle" src="~/Images/ShoppingCart1.png" style="height: 27px; width: 27px;" title="View Cart -@imageTitle" />
                 <span id="shoppingCartItemsCount" style="display: none;"></span>
                 <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount" style="background-color: #9a031e;">
@@ -70,6 +56,20 @@
                 <img alt="Checkout - @imageTitle" src="~/Images/Checkout2.png" style="height: 27px; width: 27px;" title="Checkout - @imageTitle" />
                 <br />
                 Checkout
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+            <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "REGISTER" })" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Register - @imageTitle">
+                <img alt="Register - @imageTitle" src="~/Images/Register1.png" style="height: 27px; width: 27px;" title="Register - @imageTitle" />
+                <br />
+                Register
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+            <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "LOGIN" })" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Sign in - @imageTitle">
+                <img alt="Sign in - @imageTitle" src="~/Images/SignIn2.png" style="height: 27px; width: 27px;" title="Sign in - @imageTitle" />
+                <br />
+                Sign In
             </a>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">

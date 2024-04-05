@@ -4,24 +4,40 @@
 int index = 0;
 <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
     <tr>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">#</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Id</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">Item Desc</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Qty</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Rate</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Amount</th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">Other</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+            #
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+            Id
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
+            Item Desc
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+            Qty
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+            Rate
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+            Amount
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+            Other
+        </th>
     </tr>
     @{
         foreach (var shoppingCartItem in Model.ShoppingCartItems)
         {
             index++;
         <tr>
-            <th scope="row" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@(index + ".")</th>
-            <td style="border-collapse: collapse; border-color: #000000; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+                @(index + ".")
+            </th>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                 @shoppingCartItem.ItemId
             </td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
                 @shoppingCartItem.ItemShortDesc
                 <br />
                 HSN : @shoppingCartItem.HSNCode
@@ -29,42 +45,47 @@ int index = 0;
                 SKN : @shoppingCartItem.ProductCode
                 <br />
                 Weight : @(shoppingCartItem.WeightValue + " " + shoppingCartItem.WeightUnitId)
-                @*<br />
-                Volume : @(shoppingCartItem.VolumeValue + " Cubic " + shoppingCartItem.DimensionUnitId)*@
             </td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderQty</td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">@shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
-                <table class="table table-condensed table-responsive table-striped">
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+                @shoppingCartItem.OrderQty
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+                @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+                @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
+                <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                     <tr>
-                        <th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                             Desc
                         </th>
-                        <th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+                            Rate
                         </th>
-                        <th class="text-right">
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                             %
                         </th>
-                        <th class="text-right">
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                             Amt
                         </th>
                     </tr>
                     @if (shoppingCartItem.ItemRateBeforeDiscount != shoppingCartItem.ItemRate)
                     {
                         <tr>
-                            <th scope="row">
+                            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 Rate
                             </th>
-                            <td class="text-right">
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 <span style="color: #000000; font-weight: bold;">MSRP</span><br />
                                 @shoppingCartItem.ItemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                             </td>
-                            <td class="text-right">
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 <span style="color: #000000; font-weight: bold;">Disc.</span><br />
                                 @(shoppingCartItem.ItemDiscountPercent.Value.ToString("#0.00") + "%")
                             </td>
-                            <td class="text-right">
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 <span style="color: #000000; font-weight: bold;">After Disc.</span><br />
                                 @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                             </td>
@@ -73,15 +94,15 @@ int index = 0;
                     @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
                     {
                         <tr>
-                            <th scope="row">
+                            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 @shoppingCartItemSummary.ItemShortDesc
                             </th>
-                            <td>
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                             </td>
-                            <td class="text-right">
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 @(shoppingCartItemSummary.ItemRate.Value.ToString("#0.00") + "%")
                             </td>
-                            <td class="text-right">
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
                                 @shoppingCartItemSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                             </td>
                         </tr>
@@ -89,27 +110,13 @@ int index = 0;
                 </table>
             </td>
         </tr>
-            @*<tr style="display: none;">
-                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;"></td>
-                <td colspan="6" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
-                    Weight :&nbsp;
-                    @shoppingCartItem.WeightValue
-                    &nbsp;
-                    @shoppingCartItem.WeightUnitId
-                    &nbsp;/&nbsp;
-                    Volume :&nbsp;
-                    @shoppingCartItem.VolumeValue
-                    &nbsp;
-                    Cubic&nbsp;@shoppingCartItem.DimensionUnitId
-                    <br />
-                    @(shoppingCartItem.HSNCode + " / " + shoppingCartItem.ProductCode)
-                </td>
-            </tr>*@
             if (!string.IsNullOrWhiteSpace(shoppingCartItem.OrderComments))
             {
         <tr>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;"></td>
-            <td colspan="6" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
+
+            </td>
+            <td colspan="6" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
                 @Html.DisplayFor(m => shoppingCartItem.OrderComments)
             </td>
         </tr>
@@ -122,13 +129,13 @@ index = 0;
 bool totalWeightFlag = true;
 <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
     <tr>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
             #.
         </th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
             Description
         </th>
-        <th scope="col" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
             Amount
         </th>
     </tr>
@@ -136,19 +143,19 @@ bool totalWeightFlag = true;
     {
         index++;
         <tr>
-            <th scope="row" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                 @(index + ".")
             </th>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: left; text-wrap: avoid; vertical-align: top;">
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
                 @shoppingCartSummary.ItemShortDesc
                 @if (totalWeightFlag)
                 {
                     totalWeightFlag = false;
                     <br />
-                    <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.TotalWeightValue&nbsp;Grams</span>
+                    <span style="color: #000000;">Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.TotalWeightValue&nbsp;Grams</span>
                 }
             </td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; text-align: right; text-wrap: avoid; vertical-align: top;">
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                 @shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
             </td>
         </tr>

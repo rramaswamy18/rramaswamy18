@@ -3,22 +3,22 @@
 {
     <div style="display: table; width: 100%;">
         <div style="display: table-row;">
-            @*if (Model.Checkout)
+            @if (Model.Checkout)
             {
-                <div style="display: table-cell; float: left; vertical-align: top;">
-                    <a href="javascript: void(0);" onclick="javascript: return document.getElementById('tableOrderItemListData').scrollIntoView();" style="text-decoration: underline;">
+                <div id="divShoppingCartBackToTop" style="display: table-cell; float: left; vertical-align: top;">
+                    <a href="javascript: void(0);" onclick="javascript: return document.getElementById('spnScrollIntoView').scrollIntoView();" style="text-decoration: underline;">
                         <h3 style="font-size: 24px; font-weight: bold;">
                             Back to top
                         </h3>
                     </a>
                 </div>
-            }*@
+            }
             <div style="display: table-cell; text-align: center; vertical-align: top;">
                 <h3 style="color: #ff9900; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; ">
                     Shopping&nbsp;&nbsp;Cart
                 </h3>
             </div>
-            @*if (Model.Checkout)
+            @if (Model.Checkout)
             {
                 <div style="display: table-cell; float: right; vertical-align: top;">
                     <h3>
@@ -29,7 +29,7 @@
                         </a>
                     </h3>
                 </div>
-            }*@
+            }
         </div>
     </div>
 }

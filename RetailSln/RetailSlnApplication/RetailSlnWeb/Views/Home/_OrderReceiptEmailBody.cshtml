@@ -1,5 +1,5 @@
-﻿@model RetailSlnModels.OrderReceiptModel
-@Html.Partial("_OrderReceiptDataEmailBody", Model.PaymentDataModel)
+﻿@model RetailSlnModels.PaymentInfoModel
+@Html.Partial("_OrderReceiptDataEmailBody", Model.PaymentSummaryDataModel)
 <br /><br />
 @Html.Partial("_DeliveryInfoEmailBody", Model.DeliveryInfoDataModel)
 <br /><br />

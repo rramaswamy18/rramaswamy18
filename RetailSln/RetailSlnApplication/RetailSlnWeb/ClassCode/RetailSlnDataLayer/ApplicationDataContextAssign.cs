@@ -54,12 +54,12 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@PrimaryTelephoneNum"].Value = deliveryInfoDataModel.PrimaryTelephoneNum;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static void AssignOrderPayment(PaymentDataModel paymentDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignOrderPayment(PaymentInfoModel paymentInfoModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@CreditCardDataId"].Value = paymentDataModel.CreditCardDataId;
-            sqlCommand.Parameters["@GiftCertId"].Value = paymentDataModel.GiftCertId;
-            sqlCommand.Parameters["@OrderHeaderId"].Value = paymentDataModel.OrderHeaderId;
+            sqlCommand.Parameters["@CreditCardDataId"].Value = paymentInfoModel.PaymentSummaryDataModel.CreditCardDataId;
+            sqlCommand.Parameters["@GiftCertId"].Value = paymentInfoModel.PaymentSummaryDataModel.GiftCertId?? 0;
+            sqlCommand.Parameters["@OrderHeaderId"].Value = paymentInfoModel.PaymentSummaryDataModel.OrderHeaderId;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignGiftCert(GiftCertModel giftCertModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

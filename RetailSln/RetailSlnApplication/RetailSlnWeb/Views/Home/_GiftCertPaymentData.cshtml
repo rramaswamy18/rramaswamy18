@@ -1,25 +1,43 @@
 ﻿@model RetailSlnModels.GiftCertPaymentModel
+<style>
+    #GiftCertNumber-error, #GiftCertKey-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+{
+    <div class="row validationSummaryMessage">
+        @Model.ResponseObjectModel.ValidationSummaryMessage
+    </div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "column-count: 1; font-size: 12px;" }).ToHtmlString()))
+}
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.GiftCertNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <div>
         @Html.TextBoxFor(m => m.GiftCertNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertNumber), style = "float: left; padding-right: 18px; width: 76%;", type = "password" })
         <span style="width: 18px;">&nbsp;</span>
-        <button class="btn btn-primary" id="giftCertNumber" onmouseout="javascript: return showHideForHide('GiftCertNumber', 'password');" onmouseover="javascript: return showHideForShow('GiftCertNumber', 'text');" type="button" style="width: 50px;">
+        <button class="btn btn-primary" id="giftCertNumber" onmouseout="javascript: return showHideForHide('GiftCertNumber', 'password');" onmouseover="javascript: return showHideForShow('GiftCertNumber', 'text');" type="button" style="float: left; width: 50px;">
             <span class="fa fa-eye-slash icon"></span>
         </button>
     </div>
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertNumber, "", new { id = "GiftCertNumber-error" }).ToHtmlString()))
+    @Html.Raw(HttpUtility.HtmlDecode("<br />" + Html.ValidationMessageFor(m => m.GiftCertNumber, "", new { id = "GiftCertNumber-error" }).ToHtmlString()))
 </div>
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.GiftCertKey, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <div>
         @Html.TextBoxFor(m => m.GiftCertKey, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertKey), style = "float: left; padding-right: 18px; width: 76%;", type = "password" })
         <span style="width: 18px;">&nbsp;</span>
-        <button class="btn btn-primary" id="giftCertKey" onmouseout="javascript: return showHideForHide('GiftCertKey', 'password');" onmouseover="javascript: return showHideForShow('GiftCertKey', 'text');" type="button" style="width: 50px;">
+        <button class="btn btn-primary" id="giftCertKey" onmouseout="javascript: return showHideForHide('GiftCertKey', 'password');" onmouseover="javascript: return showHideForShow('GiftCertKey', 'text');" type="button" style="float: left; width: 50px;">
             <span class="fa fa-eye-slash icon"></span>
         </button>
     </div>
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertKey, "", new { id = "GiftCertKey-error" }).ToHtmlString()))
+    @Html.Raw(HttpUtility.HtmlDecode("<br />" + Html.ValidationMessageFor(m => m.GiftCertKey, "", new { id = "GiftCertKey-error" }).ToHtmlString()))
 </div>
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     <button class="btn btn-primary" id="giftCertBalance" onclick="javascript: return giftCertBalance_onclick();" style="font-weight: bold;">Get Gift Cert Balance</button>

@@ -313,6 +313,7 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item103.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item104.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item105.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item106.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item107.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item108.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item109.png" />
@@ -925,7 +926,16 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item656.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item657.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item658.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item659.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item66.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item660.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item661.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item662.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item663.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item664.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item665.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item666.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item667.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item67.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item68.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item69.png" />
@@ -999,6 +1009,7 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Category\Category7.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Favicon.ico" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\GlobeFlag.png" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Image_000_Small.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Items\Item1.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Items\Item10.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\Items\Item100.png" />
@@ -1347,6 +1358,7 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_001.webp" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_002.webp" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_003.webp" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_000_180_180.webp" />
     <None Include="ClientSpecific\98_DivineBija.com\Documents\Images\CountryFlag.webp" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -1395,6 +1407,7 @@
     <Content Include="Images\Checkout2.png" />
     <Content Include="Images\COD.png" />
     <Content Include="Images\Comments.png" />
+    <Content Include="Images\CreditSale.png" />
     <Content Include="Images\Delete.jpg" />
     <Content Include="Images\Loading1.gif" />
     <Content Include="Images\Logout1.png" />
@@ -1402,6 +1415,8 @@
     <Content Include="Images\NoImage_0.png" />
     <Content Include="Images\OutofStock.png" />
     <Content Include="Images\PaymentGateway.png" />
+    <Content Include="Images\Phone1.png" />
+    <Content Include="Images\Phone1_Small.png" />
     <Content Include="Images\PickupMyOrder.png" />
     <Content Include="Images\PostalMail1.png" />
     <Content Include="Images\PostalMail2.jpg" />
@@ -1413,9 +1428,12 @@
     <Content Include="Images\SignIn1.png" />
     <Content Include="Images\SignIn2.png" />
     <Content Include="Images\SMSIcon1.png" />
+    <Content Include="Images\SMSIcon1_Small.png" />
     <Content Include="Images\SMSIcon2.png" />
     <Content Include="Images\SMSIcon3.png" />
+    <Content Include="Images\SMSIcon3_Small.png" />
     <Content Include="Images\WhatsApp1.png" />
+    <Content Include="Images\WhatsApp1_Small.png" />
     <Content Include="Images_Original\Addtocart.png" />
     <Content Include="Images_Original\Checkout.jpg" />
     <Content Include="Images_Original\Comments.png" />
@@ -1625,6 +1643,7 @@
     <Content Include="Views\Home\_PaymentModeData.cshtml" />
     <Content Include="Views\Home\_PaymentInfo.cshtml" />
     <Content Include="Views\Home\_GiftCertPaymentData.cshtml" />
+    <Content Include="Views\Shared\_SignatureTemplateEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

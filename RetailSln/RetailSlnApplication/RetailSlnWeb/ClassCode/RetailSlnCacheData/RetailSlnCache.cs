@@ -106,9 +106,11 @@ namespace RetailSlnCacheData
 
                 itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterModel.AttribName == "HSNCode");
                 itemModel.ItemAttributesForDisplay["HSNCode"] = itemAttribModel1.ItemAttribValue;
+                itemModel.ImageTitle += " HSN Code " + itemAttribModel1.ItemAttribValue;
 
                 itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterModel.AttribName == "ProductCode");
                 itemModel.ItemAttributesForDisplay["ProductCode"] = itemAttribModel1.ItemAttribValue;
+                itemModel.ImageTitle += " Prod Code " + itemAttribModel1.ItemAttribValue;
 
                 itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 16); //Show Weight
                 if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")

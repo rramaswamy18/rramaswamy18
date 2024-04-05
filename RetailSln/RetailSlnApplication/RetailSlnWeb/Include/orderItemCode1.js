@@ -53,8 +53,6 @@ function addToCart_onclick(categoryId, pageNum, pageSize, totalRowCount) {
                     document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    //document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
-                    //document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
@@ -188,8 +186,6 @@ function removeFromCart_onclick(index) {
                     document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    //document.getElementById("shoppingCartItemsCount2").innerHTML = responseData.shoppingCartItemsCount;
-                    //document.getElementById("shoppingCartTotalAmount2").innerHTML = responseData.shoppingCartTotalAmount;
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
