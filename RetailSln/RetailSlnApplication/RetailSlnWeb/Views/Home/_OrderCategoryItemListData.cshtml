@@ -1,0 +1,108 @@
+﻿@model OrderCategoryItemModel
+@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@{
+    var clientId = ArchLibCache.ClientId;
+    var shoppingCartModel = ((ShoppingCartModel)Session["ShoppingCartModel"])?? new ShoppingCartModel();
+    var shoppingCartItems = shoppingCartModel?.ShoppingCartItems;
+    ShoppingCartItemModel shoppingCartItemModel;
+    int shoppingCartItemIndex;
+    var defaultOrderQty = @ArchLibCache.GetApplicationDefault(@ArchLibCache.ClientId, "OrderProcess", "DefaultOrderQty");
+    if (shoppingCartModel != null)
+        shoppingCartModel.Checkout = true;
+}
+<div class="center" style="width: 100%;">
+    <table id="tableOrderItemListData" class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
+        <colgroup>
+            <col style="width: 3%" />
+            <col style="width: 32%" />
+            <col style="width: 8%" />
+            <col style="width: 9%" />
+            <col style="width: 27%" />
+            <col />
+            <col />
+        </colgroup>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Description
+            </th>
+            <th class="text-right">
+                Rate
+            </th>
+            <th class="text-center">
+                Order<br />Qty
+            </th>
+            <th>
+                Comments<br />Optional
+            </th>
+            <th>
+                Add
+            </th>
+            <th>
+                Remove
+            </th>
+        </tr>
+        @{
+            int index = -1;
+            foreach (var itemModel in RetailSlnCache.ItemModels)
+            {
+                index++;
+                shoppingCartItemModel = null;
+                shoppingCartItemIndex = -1;
+                if (shoppingCartItems != null)
+                {
+                    shoppingCartItemModel = shoppingCartItems.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
+                    shoppingCartItemIndex = shoppingCartItems.FindIndex(x => x.ItemId == itemModel.ItemId);
+                }
+                <tr>
+                    <td class="text-right">
+                        @(index + 1).
+                    </td>
+                    <td class="text-left">
+                        @itemModel.ItemShortDesc
+                        @if (shoppingCartItemModel == null)
+                        {
+                        }
+                        else
+                        {
+                            <br />
+                            <i class='fa fa-check' style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                            <span style="color: #a54000; font-weight: bold;">Order Qty :</span><span style="color: #0000ff; font-weight: bold;">&nbsp;@shoppingCartItemModel.OrderQty</span>
+                        }
+                        <span id="itemId@(index)" style="display: none;">@itemModel.ItemId</span>
+                    </td>
+                    <td class="text-right">
+                        @itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                    </td>
+                    <td class="text-left">
+                        <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@index);" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-weight: 900; padding-right: 9px; width: 81px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" type="number" value="@shoppingCartItemModel?.OrderQty" />
+                    </td>
+                    <td class="text-left">
+                        <input class="form-control" id="orderComments@(index)" maxlength="1024" , onchange="javascript: return orderComments_onchange(@index);" ); placeholder="Comments" style="width: 90%;" type="text" value="@(shoppingCartItemModel?.OrderComments)" />
+                    </td>
+                    <td class="text-left">
+                        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@index);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 40px; width: 40px;" title="Enter quantity and click add to cart @itemModel.ItemShortDesc" /></a>
+                    </td>
+                    <td class="text-center">
+                        @if (shoppingCartItemIndex > -1)
+                        {
+                            <a href="javascript: void(0);" onclick="javascript: return removeFromCart_onclick(@shoppingCartItemIndex);"><img alt="" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart at index #@(shoppingCartItemIndex)" /></a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+    <div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
+        @{
+            shoppingCartModel.Checkout = true;
+            shoppingCartModel.ShowDiscountsAdditionalCharges = false;
+        }
+        @Html.Partial("_ShoppingCart", shoppingCartModel)
+    </div>
+</div>

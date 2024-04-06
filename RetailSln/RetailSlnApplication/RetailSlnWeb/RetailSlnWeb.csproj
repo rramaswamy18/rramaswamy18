@@ -178,6 +178,7 @@
     <Compile Include="ClassCode\RetailSlnDataLayer\ApplicationDataContextUpd.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\CategoryStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\CategoryTypeEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\CorpAcctTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryMethodEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryTypeEnum.cs" />
@@ -1606,9 +1607,8 @@
     <Content Include="Views\Shared\_HeaderMenu2.cshtml" />
     <Content Include="Views\Home\_LoginUserProfGuest.cshtml" />
     <Content Include="Views\Home\_LoginUserProfGuestData.cshtml" />
-    <Content Include="Views\Home\OrderListView.cshtml" />
-    <Content Include="Views\Home\_OrderListView.cshtml" />
-    <Content Include="Views\Home\_OrderListViewData.cshtml" />
+    <Content Include="Views\Home\_OrderCategoryItemList.cshtml" />
+    <Content Include="Views\Home\_OrderCategoryItemListData.cshtml" />
     <Content Include="Views\Home\_ShoppingCart.cshtml" />
     <Content Include="Views\Home\_ShoppingCartData.cshtml" />
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
@@ -1648,6 +1648,10 @@
     <Content Include="Views\Home\_PaymentInfo.cshtml" />
     <Content Include="Views\Home\_GiftCertPaymentData.cshtml" />
     <Content Include="Views\Shared\_SignatureTemplateEmail.cshtml" />
+    <Content Include="Views\Home\OrderCategoryItemList.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuHamburger2.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuTop2.cshtml" />
+    <Content Include="Views\Home\_OrderCategoryItemListData - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

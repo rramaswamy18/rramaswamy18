@@ -73,12 +73,17 @@ namespace RetailSlnDataLayer
                         new CorpAcctModel
                         {
                             CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                             CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                            CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
                             CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
                             CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
+                            CreditSale = bool.Parse(sqlDataReader["CreditSale"].ToString()),
                             MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
+                            ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
                             TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
                             DemogInfoAddressModels = new List<DemogInfoAddressModel>(),
+                            DiscountDtlModels = new List<DiscountDtlModel>(),
                         }
                      );
                 }

@@ -1335,7 +1335,7 @@ namespace RetailSlnBusinessLayer
                     }
                 );
             }
-            if (corpAcctModel != null && corpAcctModel.CorpAcctId > 0)
+            if (corpAcctModel != null && !corpAcctModel.ShippingAndHandlingCharges)
             {
                 shoppingCartSummaryItems.Add
                 (

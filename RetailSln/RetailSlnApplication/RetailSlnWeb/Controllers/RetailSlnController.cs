@@ -536,141 +536,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        //public ActionResult DeliveryInfoBackup(DeliveryInfoDataModel deliveryInfoDataModel)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    ActionResult actionResult;
-        //    try
-        //    {
-        //        ModelState.Clear();
-        //        TryValidateModel(deliveryInfoDataModel);
-        //        TryValidateModel(deliveryInfoDataModel.DeliveryAddressModel, "DeliveryAddressModel");
-        //        if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
-        //        {
-        //            ModelState["AlternateTelephoneNum"].Errors.Clear();
-        //            ModelState["PrimaryTelephoneNum"].Errors.Clear();
-        //        }
-        //        else
-        //        {
-        //            if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.AddressLine1))
-        //            {
-        //                ModelState.AddModelError("DeliveryAddressModel.AddressLine1", "Address line 1");
-        //            }
-        //            if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.CityName))
-        //            {
-        //                ModelState.AddModelError("DeliveryAddressModel.CityName", "City name");
-        //            }
-        //            if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
-        //            {
-        //                ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
-        //            }
-        //            if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
-        //            {
-        //                ModelState.AddModelError("DeliveryAddressModel.DemogInfoSubDivisionId", "State");
-        //            }
-        //            if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId == null)
-        //            {
-        //                ModelState.AddModelError("DeliveryAddressModel.DemogInfoCountryId", "Country");
-        //            }
-        //            if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId != null && !string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
-        //            {
-        //                Regex regex = new Regex(DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.Value).PostalCodeRegEx);
-        //                if (!regex.IsMatch(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
-        //                {
-        //                    ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
-        //                }
-        //            }
-        //        }
-        //        if (ModelState.IsValid)
-        //        {
-        //            //Get the Address Info based on Zip and fill in the rest
-        //            SearchDataModel searchDataModel = new SearchDataModel
-        //            {
-        //                SearchType = "ZipCode",
-        //                SearchKeyValuePairs = new Dictionary<string, string>
-        //                {
-        //                    { "DemogInfoCountryId", deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString() },
-        //                    { "ZipCode", deliveryInfoDataModel.DeliveryAddressModel.ZipCode },
-        //                },
-        //            };
-        //            List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            foreach (var sqlQueryResult in sqlQueryResults)
-        //            {
-        //                if (
-        //                    sqlQueryResult["DemogInfoCountryId"] == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString()
-        //                    && sqlQueryResult["ZipCode"] == deliveryInfoDataModel.DeliveryAddressModel.ZipCode
-        //                   )
-        //                {
-        //                    deliveryInfoDataModel.DeliveryAddressModel.CityName = sqlQueryResult["CityName"];
-        //                    deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
-        //                    deliveryInfoDataModel.DeliveryAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
-        //                    deliveryInfoDataModel.DeliveryAddressModel.CountyName = sqlQueryResult["CountyName"];
-        //                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
-        //                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
-        //                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
-        //                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
-        //                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
-        //                }
-        //            }
-        //            retailSlnBL.DeliveryInfo(deliveryInfoDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            if (ModelState.IsValid)
-        //            {
-        //                PaymentModel paymentModel = retailSlnBL.Payment(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                if (ModelState.IsValid)
-        //                {
-        //                    success = true;
-        //                    processMessage = "SUCCESS!!!";
-        //                    htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo", paymentModel);
-        //                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-        //                }
-        //                else
-        //                {
-        //                    success = false;
-        //                    processMessage = "ERROR???";
-        //                    htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
-        //                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Payment BL Error");
-        //                }
-        //            }
-        //            else
-        //            {
-        //                success = false;
-        //                processMessage = "ERROR???";
-        //                htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: DeliveryInfo BL Error");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Validation Error");
-        //        }
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        deliveryInfoDataModel.ResponseObjectModel = new ResponseObjectModel
-        //        {
-        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //        };
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", deliveryInfoDataModel);
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString });
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-
         [AllowAnonymous]
         [HttpGet]
         public ActionResult GiftCert()
@@ -786,46 +651,6 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
-
-        //[Authorize]
-        //[AjaxAuthorize]
-        //[HttpGet]
-        //public ActionResult GiftCertBalance(string giftCertNumber, string giftCertKey)
-        //{
-        //    ViewData["ActionName"] = "GiftCertBalance";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    try
-        //    {
-        //        retailSlnBL.GiftCertBalance(giftCertNumber, giftCertKey, out string errorMessage, out float? giftCertBalAmount, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        bool success;
-        //        string giftCertBalanceAmount;
-        //        if (errorMessage == "")
-        //        {
-        //            success = true;
-        //            giftCertBalanceAmount = giftCertBalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            giftCertBalanceAmount = "";
-        //        }
-        //        actionResult = Json(new { success, errorMessage, giftCertBalanceAmount }, JsonRequestBehavior.AllowGet);
-        //        //int x = 1, y = 0, z = x / y;
-        //        //actionResult = Json(new { success = false, errorMessage = "Invalid Gift Cert Number/Key", giftCertBalanceAmount = "" }, JsonRequestBehavior.AllowGet);
-        //        //actionResult = Json(new { success = true, errorMessage = "", giftCertBalanceAmount = "$180.27" }, JsonRequestBehavior.AllowGet);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        actionResult = Json(new { success = false, errorMessage = "System error occurred" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    return actionResult;
-        //}
 
         [AllowAnonymous]
         [HttpGet]
@@ -957,6 +782,7 @@ namespace RetailSlnWeb.Controllers
         [Route("OrderCategoryItem")]
         public ActionResult OrderCategoryItem(string id, string pageNum)
         {
+            //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "OrderCategoryItem";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -968,6 +794,7 @@ namespace RetailSlnWeb.Controllers
             string processMessage, htmlString;
             try
             {
+                //int x = 1, y = 0, z = x / y;
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
                     ParentCategoryId = long.Parse(id),
@@ -1018,12 +845,42 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        [AllowAnonymous]
+        [AjaxAuthorize]
+        [Authorize]
         [HttpGet]
-        [Route("OrderItemListView")]
-        public ActionResult OrderItemListView()
+        //[Route("OrderCategoryItemList")]
+        public ActionResult OrderCategoryItemList(string id, string pageNum)
         {
-            return View();
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "OrderCategoryItemList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            ActionResult actionResult;
+            //bool success;
+            //string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                {
+                    ParentCategoryId = 0,
+                    PageNum = 1,
+                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                };
+                actionResult = View("OrderCategoryItemList", orderCategoryItemModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "Index / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
         }
 
         [AllowAnonymous]
@@ -1033,179 +890,6 @@ namespace RetailSlnWeb.Controllers
         {
             return View();
         }
-
-        //[AjaxAuthorize]
-        //[Authorize]
-        //[HttpPost]
-        //public ActionResult Payment(PaymentDataModel paymentDataModel)
-        //{
-        //    //int x = 1, y = 0, z = x / y;
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        //paymentDataModel.ResponseObjectModel = new ResponseObjectModel();
-        //        ModelState.Clear();
-        //        bool giftCertPresent, creditCardPresent;
-        //        var giftCertValidateModel = new GiftCertValidateModel
-        //        {
-        //            GiftCertKey = paymentDataModel.GiftCertKey,
-        //            GiftCertNumber = paymentDataModel.GiftCertNumber,
-        //        };
-        //        //var giftCertModelIsValid = TryValidateModel(giftCertValidateModel);
-        //        if (string.IsNullOrWhiteSpace(giftCertValidateModel.GiftCertNumber) && string.IsNullOrWhiteSpace(giftCertValidateModel.GiftCertKey))
-        //        {
-        //            ModelState.Remove("GiftCertNumber");
-        //            ModelState.Remove("GiftCertKey");
-        //            giftCertPresent = false;
-        //        }
-        //        else
-        //        {
-        //            giftCertPresent = true;
-        //        }
-        //        var creditCardValidateModel = new CreditCardValidateModel
-        //        {
-        //            CardExpiryMM = paymentDataModel.CardExpiryMM,
-        //            CardExpiryYYYY = paymentDataModel.CardExpiryYYYY,
-        //            CardHolderName = paymentDataModel.CardHolderName,
-        //            CreditCardNumber = paymentDataModel.CreditCardNumber,
-        //            CVV = paymentDataModel.CVV,
-        //        };
-        //        //var creditCardModelIsValid = TryValidateModel(creditCardValidateModel);
-        //        var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
-        //        if (creditCardProcessor == "TESTMODE" || creditCardProcessor == "NUVEITEST" || creditCardProcessor == "NUVEIPROD")
-        //        {
-        //            if (
-        //                string.IsNullOrWhiteSpace(creditCardValidateModel.CardExpiryMM) &&
-        //                string.IsNullOrWhiteSpace(creditCardValidateModel.CardExpiryYYYY) &&
-        //                string.IsNullOrWhiteSpace(creditCardValidateModel.CardHolderName) &&
-        //                string.IsNullOrWhiteSpace(creditCardValidateModel.CreditCardNumber) &&
-        //                string.IsNullOrWhiteSpace(creditCardValidateModel.CVV)
-        //               )
-        //            {
-        //                ModelState.Remove("CardExpiryMM");
-        //                ModelState.Remove("CardExpiryYYYY");
-        //                ModelState.Remove("CardHolderName");
-        //                ModelState.Remove("CreditCardNumber");
-        //                ModelState.Remove("CVV");
-        //                creditCardPresent = false;
-        //            }
-        //            else
-        //            {
-        //                creditCardPresent = true;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            creditCardPresent = true;
-        //        }
-        //        if (!giftCertPresent && !creditCardPresent)
-        //        {
-        //            ModelState.AddModelError("GiftCertNumber", "Enter Gift Cert#");
-        //            ModelState.AddModelError("GiftCertKey", "Enter Gift Cert Key");
-        //            ModelState.AddModelError("CreditCardNumber", "Enter Credit Card#");
-        //            ModelState.AddModelError("CardHolderName", "Enter Card Holder Name");
-        //            ModelState.AddModelError("CVV", "CVV");
-        //            ModelState.AddModelError("CardExpiryMM", "***");
-        //            ModelState.AddModelError("CardExpiryYYYY", "***");
-        //        }
-        //        else
-        //        {
-
-        //        }
-        //        if (ModelState.IsValid)
-        //        {
-        //            retailSlnBL.Payment(ref paymentDataModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId, out object creditCardResponseObject);
-        //            if (ModelState.IsValid)
-        //            {
-        //                if (creditCardResponseObject == null)
-        //                {
-        //                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success");
-        //                    OrderReceiptModel orderReceiptModel = retailSlnBL.OrderReceipt(paymentDataModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                    Session["ShoppingCartModel"] = null;
-        //                    Session["DeliveryInfoModel"] = null;
-        //                    Session["PaymentDataModel"] = null;
-        //                    success = true;
-        //                    processMessage = "SUCCESS";
-        //                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderReceipt", orderReceiptModel);
-        //                    var sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //                    string loggedInUserFullName, loggedInUserEmailAddress;
-        //                    if (sessionObjectModel.AspNetRoleName == "GUESTROLE")
-        //                    {
-        //                        FormsAuthentication.SignOut();
-        //                        Session.Abandon();
-        //                        Request.GetOwinContext().Authentication.SignOut();
-        //                        Session["SessionObject"] = null;
-        //                        Session.Abandon();
-        //                        loggedInUserFullName = "";
-        //                        loggedInUserEmailAddress = "";
-        //                    }
-        //                    else
-        //                    {
-        //                        loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
-        //                        loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
-        //                    }
-        //                    actionResult = Json(new { success, processMessage, htmlString, loggedInUserFullName, loggedInUserEmailAddress }, JsonRequestBehavior.AllowGet);
-        //                }
-        //                else
-        //                {
-        //                    success = true;
-        //                    processMessage = "SUCCESS";
-        //                    htmlString = JsonConvert.SerializeObject((RazorPayResponse)creditCardResponseObject);
-        //                    actionResult = Json(new { success, processMessage, htmlString, creditCardProcessor }, JsonRequestBehavior.AllowGet);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: BL Process Error");
-        //                success = false;
-        //                processMessage = "ERROR???";
-        //                paymentDataModel.ResponseObjectModel = new ResponseObjectModel
-        //                {
-        //                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //                };
-        //                htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
-        //                actionResult = Json(new { success, processMessage, htmlString });
-        //            }
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            paymentDataModel.ResponseObjectModel = new ResponseObjectModel
-        //            {
-        //                ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //            };
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
-        //            actionResult = Json(new { success, processMessage, htmlString });
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //        }
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        paymentDataModel.ResponseObjectModel = new ResponseObjectModel
-        //        {
-        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //        };
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_PaymentData", paymentDataModel);
-        //        actionResult = Json(new { success, processMessage, htmlString });
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-        //    }
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
 
         [AjaxAuthorize]
         [Authorize]
@@ -1418,37 +1102,12 @@ namespace RetailSlnWeb.Controllers
             //string loggedInUserFullName, loggedInUserEmailAddress;
             return View("RazorPayReturn", null, htmlString);
         }
-        //public ActionResult PaymentInfo3Backup(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    //ArchLibBL archLibBL = new ArchLibBL();
-        //    CreditCardRazorPayBL razorPayIntegration = new CreditCardRazorPayBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    if (razorPayIntegration.CheckPaymentSuccess(razorpay_payment_id, razorpay_order_id, razorpay_signature))
-        //    {
-        //        OrderReceiptModel orderReceiptModel = retailSlnBL.Payment(razorpay_payment_id, razorpay_order_id, razorpay_signature, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View(orderReceiptModel);
-        //        Session["ShoppingCartModel"] = null;
-        //        Session["DeliveryInfoModel"] = null;
-        //        Session["PaymentDataModel"] = null;
-        //    }
-        //    else
-        //    {
-        //        DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("DeliveryInfo", deliveryInfoModel);
-        //    }
-        //    return actionResult;
-        //}
 
         [AjaxAuthorize]
         [Authorize]
         [HttpPost]
         public ActionResult PaymentInfo4(PaymentInfoModel paymentInfoModel)
-        {
-            //Nuvei
+        {//Credit Card Synchronous
             return null;
         }
 

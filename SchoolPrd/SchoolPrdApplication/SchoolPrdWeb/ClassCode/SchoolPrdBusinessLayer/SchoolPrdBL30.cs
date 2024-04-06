@@ -371,7 +371,7 @@ namespace SchoolPrdBusinessLayer
                     }
                     enrollmentModel.EnrollmentTypeIds = enrollmentModel.EnrollmentTypeIds.Substring(0, enrollmentModel.EnrollmentTypeIds.Length - 1);
                     enrollmentModel.LoginPassword = archLibBL.GenerateRandomKey(9);
-                    enrollmentModel.UserProfRegistered = !archLibBL.RegisterUserProf(enrollmentModel.EmailAddress, enrollmentModel.LoginPassword, enrollmentModel.TelephoneNumber, enrollmentModel.FirstName, enrollmentModel.LastName, ApplicationDataContext.SqlConnectionObject, out PersonModel personModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    enrollmentModel.UserProfRegistered = !archLibBL.RegisterUserProf(enrollmentModel.EmailAddress, enrollmentModel.LoginPassword, 236, enrollmentModel.TelephoneNumber, enrollmentModel.FirstName, enrollmentModel.LastName, ApplicationDataContext.SqlConnectionObject, out PersonModel personModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                     ApplicationDataContext.AddEnrollment(enrollmentModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     string enrollmentEmailBodyHtml = archLibBL.ViewToHtmlString(controller, "_EnrollmentEmailBody", enrollmentModel);
                     string enrollmentEmailSubjectHtml = archLibBL.ViewToHtmlString(controller, "_EnrollmentEmailSubject", enrollmentModel);

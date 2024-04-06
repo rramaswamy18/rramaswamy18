@@ -1,4 +1,5 @@
 ﻿using ArchitectureLibraryModels;
+using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,17 @@ namespace RetailSlnModels
 
         public string CorpAcctName { set; get; }
 
+        public CorpAcctTypeEnum? CorpAcctTypeId { set; get; }
+
         public short CreditDays { set; get; }
 
         public float CreditLimit { set; get; }
 
+        public bool CreditSale { set; get; }
+
         public float MinOrderAmount { set; get; }
+
+        public bool ShippingAndHandlingCharges { set; get; }
 
         public string TaxIdentNum { set; get; }
 
