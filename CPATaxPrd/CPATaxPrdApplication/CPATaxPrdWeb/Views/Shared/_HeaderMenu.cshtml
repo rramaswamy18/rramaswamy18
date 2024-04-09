@@ -1,0 +1,111 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryMenuCacheData
+@{
+    //DivineBija.in --> 97
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    string viewDataActionName;//, selectedMenu, loggedInUserFullName, urlString, redirectUrlString;
+    try
+    {
+        if (ViewData["ActionName"] == null)
+        {
+            viewDataActionName = "";
+        }
+        else
+        {
+            viewDataActionName = ViewData["ActionName"].ToString();
+        }
+    }
+    catch
+    {
+        viewDataActionName = "";
+    }
+    var menuLayoutModels = ArchLibMenuCache.ParentMenuLayoutModels["HEADERMENU"];
+    int i;
+}
+<style>
+    ul ul {
+        position: absolute;
+        display: none;
+        padding: 0;
+    }
+
+        ul ul li {
+            background-color: #9a031e;
+            display: block;
+            margin-left: 0;
+            padding-bottom: 5px;
+            padding-left: 9px;
+            text-align: left;
+            /*width: 15em;*/
+        }
+
+    li:hover ul {
+        display: block;
+    }
+</style>
+<ul class="nav navbar-nav">
+    @{
+        for (i = 0; i < menuLayoutModels.Count; i++)
+        {
+            <li>
+                @*<span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>*@
+                @*<a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">*@
+                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@menuLayoutModels[i].MenuUrlAction.LinkText, 1);" style="color: #ffffff; font-weight: bold;" title="@(menuLayoutModels[i].MenuUrlAction.LinkText + " " + imageTitle)">
+                    @menuLayoutModels[i].MenuUrlAction.LinkText
+                </a>
+            </li>
+        }
+    }
+</ul>
+<script type="text/javascript">
+    var categoryCount = parseInt("10");
+    function categoryId_onclick(categoryId, pageNum) {
+        console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId);
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        var url = "@Url.Action("OrderCategoryItem", "Home")" + "?id=" + categoryId + "&pageNum=" + pageNum;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "categoryId_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("selectedCategoryDesc").innerHTML = "";
+                    var menuItemObject, menuItemObjectA, menuCategoryIdObject, menuCategoryIdObjectA;
+                    for (var i = 1; i < categoryCount; i++) {
+                        menuItemObject = document.getElementById("menuItem" + i);
+                        menuItemObjectA = document.getElementById("menuItemA" + i);
+                        menuCategoryIdObject = document.getElementById("menuCategoryId" + i);
+                        menuCategoryIdObjectA = document.getElementById("menuCategoryIdA" + i);
+                        if (menuCategoryIdObject.innerHTML == categoryId || menuCategoryIdObjectA.innerHTML == categoryId) {
+                            menuItemObject.className = "active";
+                            menuItemObjectA.className = "active";
+                            document.getElementById("selectedCategoryDesc").innerHTML = menuItemObject.innerHTML;
+                        }
+                        else {
+                            menuItemObject.className = "";
+                            menuItemObjectA.className = "";
+                        }
+                    }
+                    document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                    document.getElementById("spnScrollIntoView").scrollIntoView();
+                }
+                else {
+                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                }
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("categoryId_onclick", "00099000", "ERROR???");
+                document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+                console.log(xhr, exception);
+            }
+        });
+    }
+</script>

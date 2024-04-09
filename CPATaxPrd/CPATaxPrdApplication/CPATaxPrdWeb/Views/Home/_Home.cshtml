@@ -1,0 +1,61 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<div class="center" id="divCarouselImageText0" style="display: none;">
+    <div style="float: left;">
+        <img class="img-responsive" alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_001.webp" title="@imageTitle" style="height: auto; max-height: 459px; max-width: 549px;" />
+    </div>
+    <div style="float: left; padding-left: 18px;">
+        <span style="color: #000000; font-family: sans-serif; font-size: 18px; font-weight: 900;">
+            Setup corporations
+        </span>
+    </div>
+</div>
+<div class="center" id="divCarouselImageText1" style="display: none;">
+    <div style="float: left;">
+        <img class="img-responsive" alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_002.webp" title="@imageTitle" style="height: auto; max-height: 459px; max-width: 549px;" />
+    </div>
+    <div style="float: left; padding-left: 18px;">
+        <span style="color: #000000; font-family: sans-serif; font-size: 18px; font-weight: 900;">
+            File taxes<br />Individual, Family, Corporations
+        </span>
+    </div>
+</div>
+<div class="center" id="divCarouselImageText2" style="display: none;">
+    <div style="float: left;">
+        <img class="img-responsive" alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_001.webp" title="@imageTitle" style="height: auto; max-height: 459px; max-width: 549px;" />
+    </div>
+    <div style="float: left; padding-left: 18px;">
+        <span style="color: #000000; font-family: sans-serif; font-size: 18px; font-weight: 900;">
+            Sales Tax Audit
+        </span>
+    </div>
+</div>
+<div class="center" id="divCarouselImageText3" style="display: none;">
+    <div style="float: left;">
+        <img class="img-responsive" alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_001.webp" title="@imageTitle" style="height: auto; max-height: 459px; max-width: 549px;" />
+    </div>
+    <div style="float: left; padding-left: 18px;">
+        <span style="color: #000000; font-family: sans-serif; font-size: 18px; font-weight: 900;">
+            Resolve court cases
+        </span>
+    </div>
+</div>
+<script type="text/javascript">
+    var carouselIndex = 0;
+    displayCarousel();
+    setInterval(displayCarousel, 4599);
+    function displayCarousel() {
+        for (var i = 0; i < 4; i++) {
+            document.getElementById("divCarouselImageText" + i).style.display = "none";
+        }
+        document.getElementById("divCarouselImageText" + carouselIndex).style.display = "block";
+        carouselIndex++;
+        if (carouselIndex == 4) {
+            carouselIndex = 0;
+        }
+    }
+</script>

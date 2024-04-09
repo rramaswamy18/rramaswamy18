@@ -1,0 +1,31 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryMenuCacheData
+@{
+    //DivineBija.in --> 97
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    string viewDataActionName;//, selectedMenu, loggedInUserFullName, urlString, redirectUrlString;
+    try
+    {
+        if (ViewData["ActionName"] == null)
+        {
+            viewDataActionName = "";
+        }
+        else
+        {
+            viewDataActionName = ViewData["ActionName"].ToString();
+        }
+    }
+    catch
+    {
+        viewDataActionName = "";
+    }
+    var menuLayoutModels = ArchLibMenuCache.ParentMenuLayoutModels["HEADERMENU"];
+}
+<br style="clear: both;" />
+@{
+    foreach (var menuLayoutModel in menuLayoutModels)
+    {
+    }
+}
