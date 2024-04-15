@@ -1,5 +1,6 @@
 ﻿//Sriramajayam
 //orderItemCode1.js
+/*
 function addToCart_onclick(categoryId, pageNum, pageSize, totalRowCount) {
     console.log("addToCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -21,6 +22,7 @@ function addToCart_onclick(categoryId, pageNum, pageSize, totalRowCount) {
                 shoppingCartItemModel.ItemId = itemId;
                 shoppingCartItemModel.OrderQty = orderQty;
                 shoppingCartItemModel.OrderComments = orderComments;
+                shoppingCartItemModel.ViewName = "_OrderCategoryItem";
                 shoppingCartItemModels.push(shoppingCartItemModel);
             }
         }
@@ -205,3 +207,4 @@ function removeFromCart_onclick(index) {
     }
     return false;
 }
+*/

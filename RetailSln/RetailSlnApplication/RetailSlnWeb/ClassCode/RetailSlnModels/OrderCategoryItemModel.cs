@@ -7,6 +7,8 @@ namespace RetailSlnModels
 {
     public class OrderCategoryItemModel
     {
+        public string ActionName { set; get; }
+        public string ControllerName { set; get; }
         public long ParentCategoryId { set; get; }
         public int PageNum { set; get; }
         public int PageSize { set; get; }

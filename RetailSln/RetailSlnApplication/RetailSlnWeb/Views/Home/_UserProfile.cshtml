@@ -31,10 +31,13 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                //document.getElementById("divModalErrorMessage").innerHTML = responseData.successMessage;
-                //document.getElementById("divModalErrorMessage").style.color = "#0000ff";
-                document.getElementById("formUserProfileData").innerHTML = responseData;
-                console.log("00090000", "userProfileSave_onclick", "SUCCESS!!!");
+                console.log("00001000", "loginUserSave_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    window.location = responseData.htmlString;
+                }
+                else {
+                    document.getElementById("formUserProfileData").innerHTML = responseData.htmlString;
+                }
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');

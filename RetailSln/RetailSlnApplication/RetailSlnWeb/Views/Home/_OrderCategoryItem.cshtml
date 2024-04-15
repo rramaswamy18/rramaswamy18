@@ -64,6 +64,7 @@
 }@*helper BuildOrderCategoryItemHier(long parentCategoryId)*@
 @helper BuildPaginationLinks(int pageCount)
 {
+    string baseUrl = Url.Action(Model.ActionName, Model.ControllerName);
     <ul class="pagination">
         @if (Model.PageNum == 1)
         {
@@ -74,7 +75,7 @@
         else
         {
             <li class="page-item">
-                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum - 1));" , title="Jump to page# @(Model.PageNum - 1)">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum - 1), '@baseUrl');" , title="Jump to page# @(Model.PageNum - 1)">
                     Prev
                 </a>
             </li>
@@ -84,7 +85,7 @@
             if (i == Model.PageNum)
             {
                 <li class="page-item active">
-                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i);" , title="Jump to page# @i">
+                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i, '@baseUrl');" , title="Jump to page# @i">
                         @i
                     </a>
                 </li>
@@ -92,7 +93,7 @@
             else
             {
                 <li class="page-item">
-                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i);" , title="Jump to page# @i">
+                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i, '@baseUrl');" , title="Jump to page# @i">
                         @i
                     </a>
                 </li>
@@ -110,13 +111,10 @@
         else
         {
             <li class="page-item">
-                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum + 1));" , title="Jump to page# @(Model.PageNum + 1)">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum + 1)), '@baseUrl');" , title="Jump to page# @(Model.PageNum + 1)">
                     Next
                 </a>
             </li>
-            @*<li class="page-item">
-                    <a alt="Page# @pageCount" class="page-link" href="@Url.Action("OrderCategoryItem", "Home", new { id = Model.ParentCategoryId, pageNum = pageCount })" , title="Jump to page# @pageCount">Last</a>
-                </li>*@
         }
     </ul>
 }
@@ -190,7 +188,7 @@
 }@*helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)*@
 @helper BuildCategory(CategoryModel categoryModel, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
-    <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModel.CategoryId, 1)" style="color: #000000; text-decoration: underline;">
+    <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModel.CategoryId, 1, '')" style="color: #000000; text-decoration: underline;">
         <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" />
         <div style="color: #000000; font-size: 16px; font-weight: 900; text-align: center; width: 100%;">
             @categoryModel.CategoryDesc

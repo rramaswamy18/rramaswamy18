@@ -7,7 +7,7 @@ namespace RetailSlnModels
 {
     public class AddToCartModel
     {
-        public long? CategoryId { set; get; }
+        public long? ParentCategoryId { set; get; }
         public int? PageNum { set; get; }
         public int? PageSize { set; get; }
         public int? TotalRowCount { set; get; }

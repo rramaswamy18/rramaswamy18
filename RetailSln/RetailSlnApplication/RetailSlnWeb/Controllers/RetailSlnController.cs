@@ -84,6 +84,7 @@ namespace RetailSlnWeb.Controllers
             string processMessage, htmlString;
             int shoppingCartItemsCount = 0;
             string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+            string actionName, aspNetRoleName, controllerName, viewName;
             try
             {
                 //int x = 1, y = 0, z = x / y;
@@ -109,14 +110,29 @@ namespace RetailSlnWeb.Controllers
                     ShoppingCartModel shoppingCartModel = retailSlnBL.AddToCart(addToCartModel.ShoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
+                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                    if (sessionObjectModel == null)
+                    {
+                        aspNetRoleName = "DEFAULTROLE";
+                    }
+                    else
+                    {
+                        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                    }
+                    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                    actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+                    controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                    viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
                     OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                     {
-                        ParentCategoryId = addToCartModel.CategoryId.Value,
+                        ActionName = actionName,
+                        ControllerName = controllerName,
+                        ParentCategoryId = addToCartModel.ParentCategoryId.Value,
                         PageNum = addToCartModel.PageNum.Value,
                         PageSize = addToCartModel.PageSize.Value,
                         TotalRowCount = addToCartModel.TotalRowCount.Value,
                     };
-                    htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
+                    htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
                     shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count;
                     shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 }
@@ -233,6 +249,8 @@ namespace RetailSlnWeb.Controllers
                 SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
+                    ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
                     Session["SessionObject"] = sessionObjectModel;
                     Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
                     var identity = new ClaimsIdentity
@@ -392,7 +410,7 @@ namespace RetailSlnWeb.Controllers
                 {
                     success = false;
                     processMessage = "ERROR???";
-                    htmlString = "Error during checkout 1";
+                    htmlString = "Error during checkout";
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
             }
@@ -401,7 +419,7 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 success = false;
                 processMessage = "ERROR???";
-                htmlString = "Error during checkout 2";
+                htmlString = "Error during checkout";
             }
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -779,46 +797,6 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("OrderCategoryItem")]
-        public ActionResult OrderCategoryItem(string id, string pageNum)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "OrderCategoryItem";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-                {
-                    ParentCategoryId = long.Parse(id),
-                    PageNum = int.TryParse(pageNum, out int tempLong) ? int.Parse(pageNum) : 1,
-                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
-                };
-                success = true;
-                processMessage = "SUCCESS!!!";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while builiding items for category id=" + id + " page#=" + pageNum;
-            }
-            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            return actionResult;
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
         [Route("OrderCategoryItemAll")]
         public ActionResult OrderCategoryItemAll(string id)
         {
@@ -832,7 +810,7 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                actionResult = View("OrderCategoryItem", long.Parse(id));
+                actionResult = View("OrderCategoryItemAll", long.Parse(id));
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -845,6 +823,62 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        [HttpGet]
+        public ActionResult OrderCategoryItem(string id, string pageNum)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "OrderCategoryItemData";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                string actionName, aspNetRoleName, controllerName;
+                if (sessionObjectModel == null)
+                {
+                    aspNetRoleName = "DEFAULTROLE";
+                }
+                else
+                {
+                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                }
+                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+                controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                var parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
+                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                {
+                    ActionName = actionName,
+                    ControllerName = controllerName,
+                    ParentCategoryId = long.TryParse(id, out long tempParentCategoryId) ? tempParentCategoryId : parentCategoryId,
+                    PageNum = int.TryParse(pageNum, out int tempPageNum) ? tempPageNum : 50,
+                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                };
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderCategoryItemData / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+            }
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
         [AjaxAuthorize]
         [Authorize]
         [HttpGet]
@@ -852,34 +886,55 @@ namespace RetailSlnWeb.Controllers
         public ActionResult OrderCategoryItemList(string id, string pageNum)
         {
             //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "OrderCategoryItemList";
+            ViewData["ActionName"] = "OrderCategoryItemListData";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
             ActionResult actionResult;
-            //bool success;
-            //string processMessage, htmlString;
+            bool success;
+            string processMessage, htmlString;
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            string actionName, aspNetRoleName, controllerName;
+            if (sessionObjectModel == null)
+            {
+                aspNetRoleName = "DEFAULTROLE";
+            }
+            else
+            {
+                aspNetRoleName = sessionObjectModel.AspNetRoleName;
+            }
             try
             {
                 //int x = 1, y = 0, z = x / y;
+                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+                controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                var parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
-                    ParentCategoryId = 0,
-                    PageNum = 1,
+                    ActionName = actionName,
+                    ControllerName = controllerName,
+                    ParentCategoryId = long.TryParse(id, out long tempParentCategoryId) ? tempParentCategoryId : parentCategoryId,
+                    PageNum = int.TryParse(pageNum, out int tempPageNum) ? tempPageNum : 50,
                     PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
                 };
-                actionResult = View("OrderCategoryItemList", orderCategoryItemModel);
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItemList", orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "Index / GET");
+                ModelState.AddModelError("", "OrderCategoryItemListData / GET");
                 archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                actionResult = View("Error", responseObjectModel);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
             }
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
 
@@ -1132,50 +1187,32 @@ namespace RetailSlnWeb.Controllers
                 ShoppingCartModel shoppingCartModel = retailSlnBL.RemoveFromCart(removeFromCartModel.RemoveFromCartIndex.Value, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 success = true;
                 processMessage = "SUCCESS!!!";
+                string aspNetRoleName, actionName, controllerName, viewName;
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                if (sessionObjectModel == null)
+                {
+                    aspNetRoleName = "DEFAULTROLE";
+                }
+                else
+                {
+                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                }
+                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+                controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
+                    ActionName = actionName,
+                    ControllerName = controllerName,
                     ParentCategoryId = removeFromCartModel.ParentCategoryId.Value,
                     PageNum = removeFromCartModel.PageNum.Value,
                     PageSize = removeFromCartModel.PageSize.Value,
                     TotalRowCount = removeFromCartModel.TotalRowCount.Value,
                 };
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
-                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while adding item to cart";
-            }
-            actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-            return actionResult;
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult RemoveFromCart2(string id)
-        {
-            ViewData["ActionName"] = "RemoveFromCart";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            int shoppingCartItemsCount = 0;
-            string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ShoppingCartModel shoppingCartModel = retailSlnBL.RemoveFromCart(int.Parse(id), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                success = true;
-                processMessage = "SUCCESS!!!";
-                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", shoppingCartModel);
+                htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
+                shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count;
+                shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartTotalAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }

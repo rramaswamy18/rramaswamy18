@@ -1,7 +1,8 @@
---USE [RetailSln]
+  --USE [RetailSln]
 --GO
 TRUNCATE TABLE ArchLib.ExceptionLog
 
+TRUNCATE TABLE RetaiLSlnSch.PersonExtn1
 TRUNCATE TABLE ArchLib.Telephone
 DELETE ArchLib.PersonRelation --WHERE PersonId > 0
 DELETE ArchLib.Person WHERE PersonId > 0

@@ -273,5 +273,18 @@ namespace RetailSlnDataLayer
             //SqlCommand sqlCommandItemImage = BuildSqlCommandItemImageInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
             //SqlCommand sqlCommandItemImageSrcSet = BuildSqlCommandItemImageSrcSetInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
         }
+        public static void AddPersonExtn1(long personId, long corpAcctId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            SqlCommand sqlCommand = new SqlCommand("INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, AddUserId, UpdUserId) SELECT @ClientId, @PersonId, @CorpAcctId, @LoggedInUserId, @LoggedInUserId", sqlConnection);
+            sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@PersonId", System.Data.SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CorpAcctId", System.Data.SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@LoggedInUserId", System.Data.SqlDbType.NVarChar, 512);
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@PersonId"].Value = personId;
+            sqlCommand.Parameters["@CorpAcctId"].Value = corpAcctId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+            sqlCommand.ExecuteNonQuery();
+        }
     }
 }

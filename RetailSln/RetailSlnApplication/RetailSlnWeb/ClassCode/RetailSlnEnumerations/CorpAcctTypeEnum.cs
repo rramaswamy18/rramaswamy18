@@ -12,8 +12,8 @@ namespace RetailSlnEnumerations
         Individual = 100,
         [Description("Wholesale")]
         Wholesale = 200,
-        [Description("Bulk Order")]
-        BulkOrdere = 300,
+        [Description("Bulk Orders")]
+        BulkOrders = 300,
         [Description("Priest")]
         Priest = 400,
     }

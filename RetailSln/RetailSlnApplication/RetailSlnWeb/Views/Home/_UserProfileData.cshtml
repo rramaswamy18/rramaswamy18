@@ -15,10 +15,8 @@
 </style>
 @using ArchitectureLibraryCacheData
 @Html.HiddenFor(m => m.AspNetUserId)
-@Html.HiddenFor(m => m.CertificateDocumentModel.DocumentId)
 @Html.HiddenFor(m => m.HomeDemogInfoAddressModel.DemogInfoAddressId)
 @Html.HiddenFor(m => m.HomeDemogInfoAddressModel.DemogInfoCountryId)
-@Html.HiddenFor(m => m.CertificateDocumentModel.ServerFileName)
 @Html.HiddenFor(m => m.AspNetUserModel.Email)
 @{
     List<ArchitectureLibraryModels.CodeDataModel> codeDataModels;
@@ -397,36 +395,6 @@
                                 }
                             }
                             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.SignatureTextId, null, new { id = "fieldValidationError" }).ToHtmlString()))
-                        </td>
-                    </tr>
-                }
-                @if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "CertificateDocument").IsMapped)
-                {
-                    <tr>
-                        <th style="vertical-align: top;">
-                            @Html.LabelFor(m => m.CertificateDocumentHttpPostedFileBase, new { @class = "col-form-label" })<br /><span style="color: #0000ff; font-weight: bold;">(Required)</span>
-                        </th>
-                        <td style="vertical-align: top;">
-                            @Html.TextBoxFor(m => m.CertificateDocumentHttpPostedFileBase, new { @class = "form-control validate", oninput = "javascript: return httpPostedFileBase_oninput(this.files, 'imgCertificateDocumentUploadNew');", placeholder = "Enter " + @Html.DisplayNameFor(m => m.CertificateDocumentHttpPostedFileBase), type = "file" })
-                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CertificateDocumentHttpPostedFileBase, "", new { @class = "fieldValidationError" }).ToHtmlString()))
-                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CertificateDocumentModel.ServerFileName, "", new { @class = "fieldValidationError" }).ToHtmlString()))
-                            <button onclick="javascript: return httpPostedFileBase_reset('CertificateDocumentHttpPostedFileBase', 'imgCertificateDocumentUploadNew');">Remove Image</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th style="vertical-align: top;">
-                            Existing
-                        </th>
-                        <th style="vertical-align: top;">
-                            New
-                        </th>
-                    </tr>
-                    <tr>
-                        <td style="vertical-align: top;">
-                            <img alt="@Model.CertificateDocumentHttpPostedFileBase Exisitng Image" class="img-responsive" id="imgCertificateDocumentUploadExisting" src="~/Documents/Images/@Model.CertificateDocumentModel.ServerFileName" style="height: 180px; width: 180px;" title="@Model.CertificateDocumentHttpPostedFileBase - Existing Image" />
-                        </td>
-                        <td style="vertical-align: top;">
-                            <img alt="@Model.CertificateDocumentHttpPostedFileBase Preview of new image" class="img-responsive" id="imgCertificateDocumentUploadNew" src="" style="height: 180px; width: 180px;" title="@Model.CertificateDocumentHttpPostedFileBase Preview of your image" />
                         </td>
                     </tr>
                 }

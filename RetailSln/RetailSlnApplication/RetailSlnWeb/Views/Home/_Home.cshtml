@@ -1,7 +1,16 @@
-﻿@model RetailSlnModels.OrderCategoryItemModel
-<div id="divOrderItem" class="center" style="padding: 0px; vertical-align: bottom; width: 100%;">
+﻿@model OrderCategoryItemModel
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+}
+<div id="divOrderItem">
 </div>
 @Html.Partial("_Carousel")
 <script type="text/javascript">
-    categoryId_onclick(9, 1);
+    var categoryCount = parseInt("@categoryItemHierModels.Count");
+    categoryId_onclick(@Model.ParentCategoryId, 1, "@Url.Action(Model.ActionName, Model.ControllerName)");
+    function window_onload() {
+    }
 </script>

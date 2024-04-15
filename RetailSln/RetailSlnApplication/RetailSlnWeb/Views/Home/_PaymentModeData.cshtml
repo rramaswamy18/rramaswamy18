@@ -1,4 +1,7 @@
 ﻿@model RetailSlnModels.DeliveryInfoDataModel
+@using ArchitectureLibraryModels
+@using ArchitectureLibraryCacheData
+@using RetailSlnModels
 <style>
     #PaymentModeId-error {
         color: #ff0000;
@@ -8,9 +11,10 @@
     }
 </style>
 @{
-    ArchitectureLibraryModels.SessionObjectModel sessionObjectModel = (ArchitectureLibraryModels.SessionObjectModel)Session["SessionObject"];
-    var corpAccountId = sessionObjectModel.CorpAcctId;
-    List<ArchitectureLibraryModels.CodeDataModel> codeDataModels = ArchitectureLibraryCacheData.LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel;
+    var corpAccountId = applSessionObjectModel.CorpAcctModel.CorpAcctId;
+    List<ArchitectureLibraryModels.CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
     <table>
         <tr>
             <th colspan="3">

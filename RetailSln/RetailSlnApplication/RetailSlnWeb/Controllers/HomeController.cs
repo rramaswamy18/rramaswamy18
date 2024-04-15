@@ -4,6 +4,7 @@ using ArchitectureLibraryClassCode;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using RetailSlnBusinessLayer;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
@@ -38,26 +39,40 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             try
             {
-                //int x = 1, y = 0, z = x / y;
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 string absoluteUri = Request.Url.AbsoluteUri;
-                if (absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1)
+                long parentCategoryId;
+                string actionName, aspNetRoleName, controllerName;
+                if (sessionObjectModel == null)
                 {
-                    RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
-                    actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                    if (absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1)
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                        return RedirectToAction("RegisterUserLoginUser");
+                    }
+                    else
+                    {
+                        aspNetRoleName = "DEFAULTROLE";
+                    }
                 }
                 else
                 {
-                    OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-                    {
-                        ParentCategoryId = 0,
-                        PageNum = 1,
-                        PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
-                    };
-                    actionResult = View("Index", orderCategoryItemModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
                 }
+                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+                controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
+                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                {
+                    ActionName = actionName,
+                    ControllerName = controllerName,
+                    ParentCategoryId = parentCategoryId,
+                    PageNum = 1,
+                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                };
+                actionResult = View("Index", orderCategoryItemModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
@@ -66,6 +81,7 @@ namespace RetailSlnWeb.Controllers
                 ModelState.AddModelError("", "Index / GET");
                 archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
                 actionResult = View("Error", responseObjectModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             return actionResult;
         }
@@ -338,6 +354,7 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
             bool success;
             string processMessage, htmlString;
             try
@@ -348,6 +365,8 @@ namespace RetailSlnWeb.Controllers
                 SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
+                    ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
                     success = true;
                     processMessage = "SUCCESS!!!";
                     Session["SessionObject"] = sessionObjectModel;
@@ -368,7 +387,21 @@ namespace RetailSlnWeb.Controllers
                     authManager.SignIn(identity);
                     success = true;
                     processMessage = "ERROR???";
-                    string redirectUrl = Url.Action(sessionObjectModel.ActionName, sessionObjectModel.ControllerName);
+                    string redirectUrl;
+                    string actionName, aspNetRoleName, controllerName;
+                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                    if (string.IsNullOrWhiteSpace(sessionObjectModel.FirstName) || string.IsNullOrEmpty(sessionObjectModel.LastName))
+                    {
+                        actionName = aspNetRoleKVPs["ActionName00"].KVPValueData;
+                        controllerName = aspNetRoleKVPs["ControllerName00"].KVPValueData;
+                    }
+                    else
+                    {
+                        actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
+                        controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
+                    }
+                    redirectUrl = Url.Action(actionName, controllerName);
                     actionResult = Json(new { success, processMessage, redirectUrl });
                     //return Content(@"/Home/UserProfile");
                     //return new HttpStatusCodeResult(System.Net.HttpStatusCode.Redirect,url)
@@ -671,6 +704,7 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
             bool success;
             string processMessage, htmlString;
             try
@@ -681,6 +715,7 @@ namespace RetailSlnWeb.Controllers
                 archLibBL.RegisterUserProf(ref registerUserProfModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
+                    retailSlnBL.RegisterUserProfPersonExtn1(registerUserProfModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
@@ -1119,6 +1154,8 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
             ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
             try
             {
                 //int x = 1, y = 0, z = x / y;
@@ -1126,10 +1163,6 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(personModel);
                 TryValidateModel(personModel.HomeDemogInfoAddressModel, "HomeDemogInfoAddressModel");
                 TryValidateModel(personModel.AspNetUserModel, "AspNetUserModel");
-                if (personModel.CertificateDocumentHttpPostedFileBase == null && personModel.CertificateDocumentModel.ServerFileName == null)
-                {
-                    ModelState.AddModelError("CertificateDocumentModel.ServerFileName", "Select certificate document");
-                }
                 if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Nickname").IsMapped)
                 {
                     ModelState.Remove("NicknameFirst");
@@ -1192,36 +1225,39 @@ namespace RetailSlnWeb.Controllers
                     ModelState.Remove("DriverLicenseDemogInfoSubDivisionId");
                     ModelState.Remove("DriverLicenseExpiryDate");
                 }
-                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "CertificateDocument").IsMapped)
-                {
-                    ModelState.Remove("CertificateDocumentModel.ServerFileName");
-                }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before BL");
                 archLibBL.UserProfile(ref personModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    var aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                    var actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+                    var controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                    htmlString = Url.Action(actionName, controllerName);
                 }
                 else
                 {
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                    success = false;
+                    processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_UserProfileData", personModel);
+                    ModelState.AddModelError("", "Error UserProfile / POST");
                 }
-                actionResult = PartialView("_UserProfileData", personModel);
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ModelState.AddModelError("", "UserProfile / POST");
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = PartialView("_Error");
-            }
-            if (ModelState.IsValid)
-            {
-            }
-            else
-            {
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "_UserProfileData", personModel);
+                ModelState.AddModelError("", "Error UserProfile / POST");
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
 

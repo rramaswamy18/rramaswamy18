@@ -237,7 +237,9 @@
     <Compile Include="ClassCode\RetailSlnModels\PaymentInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentSummaryDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\PersonExtn1Model.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApplSessionObjectModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
@@ -1628,7 +1630,7 @@
     <Content Include="Views\Home\OrdersReturns.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoAddressData.cshtml" />
     <Content Include="Views\Home\_PaymentSummaryData.cshtml" />
-    <Content Include="Views\Home\OrderCategoryItem.cshtml" />
+    <Content Include="Views\Home\zzz_OrderCategoryItem.cshtml" />
     <Content Include="Views\Home\_OrderCategoryItem.cshtml" />
     <Content Include="Views\Home\SearchResult.cshtml" />
     <Content Include="Views\Home\_SearchResultCategory.cshtml" />
@@ -1648,10 +1650,10 @@
     <Content Include="Views\Home\_PaymentInfo.cshtml" />
     <Content Include="Views\Home\_GiftCertPaymentData.cshtml" />
     <Content Include="Views\Shared\_SignatureTemplateEmail.cshtml" />
-    <Content Include="Views\Home\OrderCategoryItemList.cshtml" />
+    <Content Include="Views\Home\zzz_OrderCategoryItemList.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuHamburger2.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuTop2.cshtml" />
-    <Content Include="Views\Home\_OrderCategoryItemListData - Copy.cshtml" />
+    <Content Include="Views\Home\zzz_OrderCategoryItemListData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

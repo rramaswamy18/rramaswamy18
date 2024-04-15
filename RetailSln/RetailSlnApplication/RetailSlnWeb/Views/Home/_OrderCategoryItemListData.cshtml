@@ -91,7 +91,11 @@
                     <td class="text-center">
                         @if (shoppingCartItemIndex > -1)
                         {
-                            <a href="javascript: void(0);" onclick="javascript: return removeFromCart_onclick(@shoppingCartItemIndex);"><img alt="" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart at index #@(shoppingCartItemIndex)" /></a>
+                            <a href="javascript: void(0);" onclick="javascript: return removeFromCart_onclick(@shoppingCartItemIndex);"><img alt="Click to remove the item from shopping cart at index #@(shoppingCartItemIndex)" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart at index #@(shoppingCartItemIndex)" /></a>
+                        }
+                        else
+                        {
+                            <a href="javascript: void(0);" onclick="javascript: return void(0);"><img alt="Click to remove the item from shopping cart at index #@(shoppingCartItemIndex)" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart at index #@(shoppingCartItemIndex)" /></a>
                         }
                     </td>
                 </tr>
