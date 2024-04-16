@@ -1456,9 +1456,8 @@
     <Content Include="Images_Original\SMSIcon3.png" />
     <Content Include="Include\javaScriptCode-1.1.1.js" />
     <Content Include="Include\javaScriptCode-1.1.1.min.js" />
-    <Content Include="Include\orderItemCode1.js" />
     <Content Include="Include\orderItemCode0.js" />
-    <Content Include="Include\orderItemCode2.js" />
+    <Content Include="Include\orderItemCode1.js" />
     <Content Include="Include\searchDataCode.js" />
     <Content Include="Include\StyleSheet1.css" />
     <Content Include="Include\StyleSheet1.min.css" />
@@ -1610,7 +1609,6 @@
     <Content Include="Views\Home\_LoginUserProfGuest.cshtml" />
     <Content Include="Views\Home\_LoginUserProfGuestData.cshtml" />
     <Content Include="Views\Home\_OrderCategoryItemList.cshtml" />
-    <Content Include="Views\Home\_OrderCategoryItemListData.cshtml" />
     <Content Include="Views\Home\_ShoppingCart.cshtml" />
     <Content Include="Views\Home\_ShoppingCartData.cshtml" />
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
@@ -1630,7 +1628,6 @@
     <Content Include="Views\Home\OrdersReturns.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoAddressData.cshtml" />
     <Content Include="Views\Home\_PaymentSummaryData.cshtml" />
-    <Content Include="Views\Home\zzz_OrderCategoryItem.cshtml" />
     <Content Include="Views\Home\_OrderCategoryItem.cshtml" />
     <Content Include="Views\Home\SearchResult.cshtml" />
     <Content Include="Views\Home\_SearchResultCategory.cshtml" />
@@ -1650,10 +1647,8 @@
     <Content Include="Views\Home\_PaymentInfo.cshtml" />
     <Content Include="Views\Home\_GiftCertPaymentData.cshtml" />
     <Content Include="Views\Shared\_SignatureTemplateEmail.cshtml" />
-    <Content Include="Views\Home\zzz_OrderCategoryItemList.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuHamburger2.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuTop2.cshtml" />
-    <Content Include="Views\Home\zzz_OrderCategoryItemListData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

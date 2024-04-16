@@ -1235,8 +1235,8 @@ namespace RetailSlnWeb.Controllers
                     processMessage = "SUCCESS!!!";
                     var aspNetRoleName = sessionObjectModel.AspNetRoleName;
                     var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                    var actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-                    var controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+                    var actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
+                    var controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
                     htmlString = Url.Action(actionName, controllerName);
                 }
                 else

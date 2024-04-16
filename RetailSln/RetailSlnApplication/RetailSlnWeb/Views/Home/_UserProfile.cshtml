@@ -33,7 +33,7 @@
                 $("#loadingModal").modal('hide');
                 console.log("00001000", "loginUserSave_onclick success", responseData.processMessage);
                 if (responseData.success) {
-                    window.location = responseData.htmlString;
+                    window.location.href = responseData.htmlString;
                 }
                 else {
                     document.getElementById("formUserProfileData").innerHTML = responseData.htmlString;
