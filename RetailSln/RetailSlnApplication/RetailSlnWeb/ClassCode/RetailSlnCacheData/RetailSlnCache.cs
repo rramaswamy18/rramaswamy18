@@ -1,6 +1,5 @@
 ﻿using ArchitectureLibraryCacheData;
 using ArchitectureLibraryDataLayer;
-using ArchitectureLibraryDLL.ArchitectureLibraryEnumerations;
 using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryModels;
 using RetailSlnCacheBusinessLayer;
@@ -129,6 +128,12 @@ namespace RetailSlnCacheData
                 {
                     itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 12); //Count
                     itemModel.ItemAttributesForDisplay["Count"] = "Count " + itemAttribModel1.ItemAttribValue + " " + (CountEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
+                }
+                itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 28); //Show Packet
+                if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
+                {
+                    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 27); //Packet
+                    itemModel.ItemAttributesForDisplay["Packet"] = "Packet " + itemAttribModel1.ItemAttribValue + " " + (PacketEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
                 }
                 itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 22); //Show Color
                 if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")

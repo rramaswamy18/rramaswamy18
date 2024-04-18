@@ -20,6 +20,8 @@ namespace RetailSlnModels
 
         public long? AlternateTelephoneTelephoneCode { set; get; }
 
+        public bool CreateDeliveryAddress { set; get; }
+
         [Display(Name = "Delivery Instructions")]
         public string DeliveryInstructions { set; get; }
 

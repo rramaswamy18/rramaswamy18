@@ -24,7 +24,7 @@
             Primary Telpehone#
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap;">
-            @long.Parse(Model.PrimaryTelephoneNum).ToString("(###) ###-####")
+            <a href="tel: @("+" + Model.PrimaryTelephoneTelephoneCode + " " + Model.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.PrimaryTelephoneTelephoneCode + " " + Model.PrimaryTelephoneNum)</a>
         </td>
     </tr>
     <tr>
@@ -32,7 +32,7 @@
             Alternate Telpehone#
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: none; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap;">
-            @long.Parse(Model.AlternateTelephoneNum).ToString("(###) ###-####")
+            <a href="tel: @("+" + Model.AlternateTelephoneTelephoneCode + " " + Model.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.AlternateTelephoneTelephoneCode + " " + Model.AlternateTelephoneNum)</a>
         </td>
     </tr>
     <tr>

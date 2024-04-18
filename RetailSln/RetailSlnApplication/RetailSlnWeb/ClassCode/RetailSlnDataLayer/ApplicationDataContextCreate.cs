@@ -24,7 +24,14 @@ namespace RetailSlnDataLayer
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
                 AddOrderHeader(orderModel.OrderHeaderModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddOrderDetails(orderModel.OrderHeaderModel.OrderHeaderId, orderModel.OrderHeaderModel.OrderDetailModels, orderModel.OrderHeaderModel.OrderSummaryModels, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ArchLibDataContext.CreateDemogInfoAddress(orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (orderModel.DeliveryInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress)
+                {
+                    ArchLibDataContext.CreateDemogInfoAddress(orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId = 0;
+                }
                 orderModel.DeliveryInfoModel.DeliveryInfoDataModel.OrderHeaderId = orderModel.OrderHeaderModel.OrderHeaderId;
                 AddDeliveryInfo(orderModel.DeliveryInfoModel.DeliveryInfoDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");

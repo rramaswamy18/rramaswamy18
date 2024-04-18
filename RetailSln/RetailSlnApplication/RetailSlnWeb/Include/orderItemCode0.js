@@ -178,11 +178,13 @@ function checkoutValidate_onclick() {
             console.log("00001000", "checkoutValidate_onclick success", responseData.processMessage);
             if (responseData.success) {
                 window.location.href = "/Checkout/";
+                document.getElementById("divScrollIntoView").scrollIntoView();
             }
             else {
                 document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
                 document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                 document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                document.getElementById("divScrollIntoView").scrollIntoView();
                 alert(responseData.htmlString);
             }
             console.log("00090000", "checkoutValidate_onclick success", "Exit");
@@ -193,6 +195,7 @@ function checkoutValidate_onclick() {
             document.getElementById("divErrorMessage").innerHTML = "Error during checkout";
             document.getElementById("shoppingCartItemsCount").innerHTML = "";
             document.getElementById("shoppingCartTotalAmount").innerHTML = "0.00";
+            document.getElementById("divScrollIntoView").scrollIntoView();
             alert("Error during checkout");
         }
     });

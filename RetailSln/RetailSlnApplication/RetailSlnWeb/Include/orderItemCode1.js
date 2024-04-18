@@ -1,5 +1,70 @@
 ﻿//Sriramajayam
 //orderItemCode1.js
+function checkoutGuestUser_onclick() {
+    console.log("00000000", "loginUserProfGuestSave_onclick", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Home/CheckoutGuest";
+    var postData = $("#formLoginUserProfGuestData").serialize();
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "html",
+        data: postData,
+        //async: false,
+        success: function (responseData, textStatus, request) {
+            $("#loadingModal").modal('hide');
+            if (responseData.success) {
+                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
+                document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
+            }
+            else {
+                document.getElementById("formLoginUserProfGuestData").innerHTML = responseData.htmlString;
+            }
+            console.log("00001000", "loginUserProfGuestSave_onclick success", responseData.processMessage);
+        },
+        error: function (xhr, exception) {
+            $("#loadingModal").modal('hide');
+            document.getElementById("formLoginUserProfGuestData").innerHTML = xhr.responseText;
+            console.log("00099000", "loginUserProfGuestSave_onclick", "ERROR???", exception, xhr);
+        }
+    });
+}
+function checkoutLoginUser_onclick() {
+    console.log("00000000", "checkoutLoginUser_onclick", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Home/Checkout";
+    var postData = $("#formLoginUserProfData").serialize();
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "html",
+        data: postData,
+        //async: false,
+        success: function (responseData, textStatus, request) {
+            $("#loadingModal").modal('hide');
+            if (responseData.success) {
+                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                document.getElementById("divScrollIntoView").scrollIntoView();
+            }
+            else {
+                document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
+                document.getElementById("divScrollIntoView").scrollIntoView();
+                alert("Please fix error(s) and continue!!!");
+            }
+            console.log("00001000", "checkoutLoginUser_onclick success", responseData.processMessage);
+        },
+        error: function (xhr, exception) {
+            $("#loadingModal").modal('hide');
+            document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
+            document.getElementById("divScrollIntoView").scrollIntoView();
+            alert("Please fix error(s) and continue!!!");
+            console.log("00099000", "checkoutLoginUser_onclick", "ERROR???", exception, xhr);
+        }
+    });
+}
 function deliveryInfoSave_onclick() {
     console.log("00000000", "deliveryInfoSave_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -17,9 +82,12 @@ function deliveryInfoSave_onclick() {
             $("#loadingModal").modal('hide');
             if (responseData.success) {
                 document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                document.getElementById("divScrollIntoView").scrollIntoView();
             }
             else {
                 document.getElementById("formDeliveryInfoData").innerHTML = responseData.htmlString;
+                document.getElementById("divScrollIntoView").scrollIntoView();
+                document.getElementById("radDeliveryMethodId0").focus();
             }
             //document.getElementById("formPaymentData").scrollIntoView();
             console.log("00001000", "deliveryInfoSave_onclick success", responseData.processMessage);
@@ -27,6 +95,8 @@ function deliveryInfoSave_onclick() {
         error: function (xhr, exception) {
             $("#loadingModal").modal('hide');
             document.getElementById("formDeliveryInfoData").innerHTML = xhr.responseText;
+            document.getElementById("divScrollIntoView").scrollIntoView();
+            document.getElementById("radDeliveryMethodId0").focus();
             console.log("00099000", "deliveryInfoSave_onclick error", exception, xhr);
         }
     });

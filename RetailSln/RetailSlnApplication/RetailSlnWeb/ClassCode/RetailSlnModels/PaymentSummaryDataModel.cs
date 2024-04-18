@@ -16,6 +16,7 @@ namespace RetailSlnModels
         public float? CreditCardPaymentAmount { set; get; }
         public string CreditCardProcessMessage { set; get; }
         public string CreditCardProcessStatus { set; get; }
+        public string DeliveryMethodName { set; get; }
         public string EmailAddress { set; get; }
         public string GiftCertNumberLast4 { set; get; }
         public long? GiftCertId { set; get; }

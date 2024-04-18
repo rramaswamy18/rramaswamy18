@@ -407,7 +407,7 @@ namespace RetailSlnBusinessLayer
                                     DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,//long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
                                 },
                                 PrimaryTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                            },                           
+                            },
                             ShoppingCartModel = shoppingCartModel,
                         };
                     }
@@ -456,7 +456,7 @@ namespace RetailSlnBusinessLayer
                 ApplyDiscounts(shoppingCartModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 long personId = sessionObjectModel.PersonId;
-                AddAdditionalCharges(shoppingCartModel, deliveryInfoDataModel.DeliveryAddressModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AddAdditionalCharges(shoppingCartModel, deliveryInfoDataModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddTotals(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
                 httpSessionStateBase["DeliveryInfoDataModel"] = deliveryInfoDataModel;
                 PaymentInfoModel paymentInfoModel = new PaymentInfoModel
@@ -786,7 +786,7 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
-        public string PaymentInfo1(PaymentInfoModel paymentInfoModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)                                                                                                                                              
+        public string PaymentInfo1(PaymentInfoModel paymentInfoModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -794,6 +794,14 @@ namespace RetailSlnBusinessLayer
             ArchLibBL archLibBL = new ArchLibBL();
             try
             {
+                if (paymentInfoModel.DeliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
+                {
+                    paymentInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress = false;
+                }
+                else
+                {
+                    paymentInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress = true;
+                }
                 ApplicationDataContext.OpenSqlConnection();
                 ShoppingCartModel shoppingCartModel = paymentInfoModel.ShoppingCartModel;
                 DeliveryInfoDataModel deliveryInfoDataModel = paymentInfoModel.DeliveryInfoDataModel;
@@ -810,6 +818,12 @@ namespace RetailSlnBusinessLayer
                         List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
                         var paymentModeId = (int)deliveryInfoDataModel.PaymentModeId;
                         CodeDataModel codeDataModel = codeDataModels.First(x => x.CodeDataNameId == paymentModeId);
+                        var paymentModeName = codeDataModel.CodeDataDesc0;
+                        var paymentModeDesc = deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.ShipToDeliveryAddress ? codeDataModel.CodeDataDesc2 : codeDataModel.CodeDataDesc3;
+                        codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
+                        var deliveryMethodId = (int)deliveryInfoDataModel.DeliveryMethodId;
+                        codeDataModel = codeDataModels.First(x => x.CodeDataNameId == deliveryMethodId);
+                        var deliveryMethodName = codeDataModel.CodeDataDesc0;
                         paymentInfoModel.PaymentSummaryDataModel = new PaymentSummaryDataModel
                         {
                             BalanceDue = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount,
@@ -818,12 +832,13 @@ namespace RetailSlnBusinessLayer
                             CreditCardPaymentAmount = 0,
                             CreditCardProcessMessage = "Not Applicable",
                             CreditCardProcessStatus = "",
+                            DeliveryMethodName = deliveryMethodName,
                             EmailAddress = sessionObjectModel.EmailAddress,
                             GiftCertNumberLast4 = paymentInfoModel.GiftCertPaymentModel.GiftCertNumberLast4,
-                            GiftCertPaymentAmount = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AmountPaidByGiftCert).OrderAmount?? 0,
+                            GiftCertPaymentAmount = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AmountPaidByGiftCert).OrderAmount ?? 0,
                             OrderHeaderId = deliveryInfoDataModel.OrderHeaderId,
-                            PaymentModeDesc = codeDataModel.CodeDataDesc1,
-                            PaymentModeName = codeDataModel.CodeDataDesc0,
+                            PaymentModeDesc = paymentModeDesc,
+                            PaymentModeName = paymentModeName,
                             UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
                         };
                         string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailSubject", paymentInfoModel);
@@ -1043,7 +1058,7 @@ namespace RetailSlnBusinessLayer
             }
 
         }
-        private void AddAdditionalCharges(ShoppingCartModel shoppingCartModel, DemogInfoAddressModel demogInfoAddressModel, SessionObjectModel sessionObjectModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void AddAdditionalCharges(ShoppingCartModel shoppingCartModel, DeliveryInfoDataModel deliveryInfoDataModel, SessionObjectModel sessionObjectModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             List<ShoppingCartItemModel> shoppingCartSummaryItems = shoppingCartModel.ShoppingCartSummaryItems;
             ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel;
@@ -1088,19 +1103,29 @@ namespace RetailSlnBusinessLayer
                 );
             }
             totalOrderAmount -= discountAmount;
+            DemogInfoAddressModel demogInfoAddressModel = deliveryInfoDataModel.DeliveryAddressModel;
             var salesTaxListModels = GetSalesTaxListModels(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-            DeliveryChargeModel deliveryChargeModel = GetDeliveryChargeModel(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-            float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0;
-            if (deliveryChargeModel.UnitMeasure == "WEIGHT")
+            float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0, shippingAndHandlingChargesAmount, fuelCharges;
+            DeliveryChargeModel deliveryChargeModel = null;
+            if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
             {
-                shippingAndHandlingChargesByWeight = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+                shippingAndHandlingChargesAmount = 0;
+                fuelCharges = 0;
             }
-            if (deliveryChargeModel.UnitMeasure == "VOLUME")
+            else
             {
-                shippingAndHandlingChargesByVolume = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+                deliveryChargeModel = GetDeliveryChargeModel(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (deliveryChargeModel.UnitMeasure == "WEIGHT")
+                {
+                    shippingAndHandlingChargesByWeight = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+                }
+                if (deliveryChargeModel.UnitMeasure == "VOLUME")
+                {
+                    shippingAndHandlingChargesByVolume = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+                }
+                shippingAndHandlingChargesAmount = shippingAndHandlingChargesByWeight * shoppingCartModel.TotalWeightValueRounded;
+                fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
             }
-            float shippingAndHandlingChargesAmount = shippingAndHandlingChargesByWeight * shoppingCartModel.TotalWeightValueRounded;
-            float fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
             foreach (var salesTaxListModel in salesTaxListModels)
             {
                 if (salesTaxListModel.LineItemLevelName == "SUMMARY")
@@ -1149,20 +1174,23 @@ namespace RetailSlnBusinessLayer
                     }
                 }
             }
-            shoppingCartSummaryItems.Add
-            (
-                new ShoppingCartItemModel
-                {
-                    ItemDesc = null,
-                    ItemId = null,
-                    ItemRate = shippingAndHandlingChargesByWeight,
-                    ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
-                    OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
-                    OrderComments = null,
-                    OrderQty = shoppingCartModel.TotalWeightValueRounded,
-                    OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
-                }
-            );
+            if (deliveryChargeModel != null)
+            {
+                shoppingCartSummaryItems.Add
+                (
+                    new ShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = shippingAndHandlingChargesByWeight,
+                        ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                        OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
+                        OrderComments = null,
+                        OrderQty = shoppingCartModel.TotalWeightValueRounded,
+                        OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+                    }
+                );
+            }
             foreach (var salesTaxListModel in salesTaxListModels)
             {
                 shoppingCartSummaryItems.Add
@@ -1486,31 +1514,37 @@ namespace RetailSlnBusinessLayer
             DeliveryChargeModel deliveryChargeModel = null;
             List<DeliveryChargeModel> deliveryChargeModelsSearch = null, deliveryChargeModelsTemp;
             deliveryChargeModelsSearch = RetailSlnCache.DeliveryChargeModels.FindAll(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId);
-            if (deliveryChargeModelsSearch.Count > 0)
+            if (deliveryChargeModelsSearch.Count == 1)
             {
-                deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
+            }
+            else
+            {
                 if (deliveryChargeModelsSearch.Count > 0)
                 {
-                    deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == demogInfoAddressModel.DemogInfoCountyId);
-                    if (deliveryChargeModelsTemp.Count == 0)
+                    deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
+                    if (deliveryChargeModelsSearch.Count > 0)
                     {
-                        deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == null);
+                        deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == demogInfoAddressModel.DemogInfoCountyId);
+                        if (deliveryChargeModelsTemp.Count == 0)
+                        {
+                            deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == null);
+                        }
                     }
-                }
-                if (deliveryChargeModelsSearch.Count > 0)
-                {
-                    deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId);
-                    if (deliveryChargeModelsTemp.Count == 0)
+                    if (deliveryChargeModelsSearch.Count > 0)
                     {
-                        deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == null);
-                    }
-                    if (deliveryChargeModelsTemp.Count > 1)
-                    {
-                        deliveryChargeModelsSearch = deliveryChargeModelsTemp.FindAll(x => demogInfoAddressModel.DemogInfoZipId >= x.DestDemogInfoZipIdFrom && demogInfoAddressModel.DemogInfoZipId <= x.DestDemogInfoZipIdTo);
-                    }
-                    else
-                    {
-                        deliveryChargeModelsSearch = deliveryChargeModelsTemp;
+                        deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId);
+                        if (deliveryChargeModelsTemp.Count == 0)
+                        {
+                            deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == null);
+                        }
+                        if (deliveryChargeModelsTemp.Count > 1)
+                        {
+                            deliveryChargeModelsSearch = deliveryChargeModelsTemp.FindAll(x => demogInfoAddressModel.DemogInfoZipId >= x.DestDemogInfoZipIdFrom && demogInfoAddressModel.DemogInfoZipId <= x.DestDemogInfoZipIdTo);
+                        }
+                        else
+                        {
+                            deliveryChargeModelsSearch = deliveryChargeModelsTemp;
+                        }
                     }
                 }
             }

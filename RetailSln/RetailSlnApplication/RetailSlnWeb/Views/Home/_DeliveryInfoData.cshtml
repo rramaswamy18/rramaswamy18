@@ -17,10 +17,18 @@
         @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
     </div>
 }
-<h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment&nbsp;&nbsp;Mode...</h3>
-@Html.Partial("_PaymentModeData", Model)
-<h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery&nbsp;&nbsp;Method...</h3>
-@Html.Partial("_DeliveryMethodData", Model)
+<table>
+    <tr>
+        <td style="padding: 0px; width: 50%;">
+            <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment...</h3>
+            @Html.Partial("_PaymentModeData", Model)
+        </td>
+        <td style="padding: 0px; width: 50%;">
+            <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery...</h3>
+            @Html.Partial("_DeliveryMethodData", Model)
+        </td>
+    </tr>
+</table>
 <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;">
 <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery&nbsp;&nbsp;Address...</h3>
 @Html.Partial("_DeliveryAddressData", Model)

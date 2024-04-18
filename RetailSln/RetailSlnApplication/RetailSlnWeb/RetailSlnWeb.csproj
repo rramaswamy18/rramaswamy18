@@ -191,6 +191,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ApiCategorysModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiIndexModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiItemsModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiSearchResultModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\BusinessInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryHierListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierModel.cs" />
@@ -943,7 +944,14 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item665.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item666.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item667.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item668.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item669.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item67.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item670.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item671.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item672.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item673.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item674.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item68.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item69.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item7.png" />
@@ -1649,6 +1657,7 @@
     <Content Include="Views\Shared\_SignatureTemplateEmail.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuHamburger2.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuTop2.cshtml" />
+    <Content Include="Views\Home\_SearchResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

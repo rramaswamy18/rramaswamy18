@@ -139,7 +139,7 @@
         @Html.Partial("_ShoppingCart", shoppingCartModel)
     </div>
 }
-@helper BuildPaginationLinks(int pageCount)
+@helper BuildPaginationLinksBackup(int pageCount)
 {
     string baseUrl = Url.Action(Model.ActionName, Model.ControllerName);
     <ul class="pagination">
@@ -181,6 +181,62 @@
             <li class="page-item">
                 <span class="page-link">Next</span>
             </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum + 1)), '@baseUrl');" , title="Jump to page# @(Model.PageNum + 1)">
+                    Next
+                </a>
+            </li>
+        }
+    </ul>
+}
+@helper BuildPaginationLinks(int pageCount)
+{
+    string baseUrl = Url.Action(Model.ActionName, Model.ControllerName);
+    <ul class="pagination">
+        @if (Model.PageNum == 1)
+        {
+            <li class="page-item">
+                <span class="page-link">Prev</span>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum - 1), '@baseUrl');" , title="Jump to page# @(Model.PageNum - 1)">
+                    Prev
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= pageCount; i++)
+        {
+            if (i == Model.PageNum)
+            {
+                <li class="page-item active">
+                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i, '@baseUrl');" , title="Jump to page# @i">
+                        @i
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i, '@baseUrl');" , title="Jump to page# @i">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+        @if (Model.PageNum == pageCount)
+        {
+            <li class="page-item">
+                <span class="page-link">Next</span>
+            </li>
+            @*<li class="page-item">
+                    <span class="page-link">Last</span>
+                </li>*@
         }
         else
         {

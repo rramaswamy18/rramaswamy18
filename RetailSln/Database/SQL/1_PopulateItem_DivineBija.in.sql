@@ -14,10 +14,10 @@ TRUNCATE TABLE RetailSlnSch.ItemMaster
 --Begin Item Master
 INSERT RetailSlnSch.ItemMaster(ClientId, ItemMasterDesc)
 SELECT DISTINCT 97 AS ClientId, RTRIM(LTRIM(Description1)) AS ItemMasterDesc
-FROM dbo.DivineBija_Products WHERE Active = 1
+FROM dbo.DivineBija_Products --WHERE Active = 1
 UNION
 SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemSItemMasterDeschortDesc
-FROM dbo.DivineBija_Books WHERE Active = 1
+FROM dbo.DivineBija_Books --WHERE Active = 1
 ORDER BY ItemMasterDesc
 --End Item Master
 
@@ -33,28 +33,28 @@ INSERT RetailSlnSch.Item(ItemId, ClientId, ItemDesc, ItemMasterId, ItemRate, Ite
 SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate
       ,[MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0, RTRIM(LTRIM(Description1)) AS ItemShortDesc1
 	  ,RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3, RTRIM(LTRIM(Description)) AS ItemShortDesc
-	  ,5 AS ItemStarCount, 100 AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, ImageFileName + '.jpg' AS UploadImageFileName
+	  ,5 AS ItemStarCount, CASE WHEN Active = 1 THEN 100 ELSE 200 END AS ItemStatusId, 100 AS ItemTypeId, ItemId AS ProductItemId, ImageFileName + '.jpg' AS UploadImageFileName
 FROM dbo.DivineBija_Products
 INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterDesc = RTRIM(LTRIM(DivineBija_Products.Description1))
-WHERE [Item Type] = 'ITEMS' AND Active = 1
+WHERE [Item Type] = 'ITEMS' --AND Active = 1
 UNION
 --Type --> Item Bundle
 SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate
       ,[MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0, RTRIM(LTRIM(Description1)) AS ItemShortDesc1
 	  ,RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3, RTRIM(LTRIM(Description)) AS ItemShortDesc
-	  ,5 AS ItemStarCount, 100 AS ItemStatusId, 300 AS ItemTypeId, ItemId AS ProductItemId, ImageFileName + '.jpg' AS UploadImageFileName
+	  ,5 AS ItemStarCount, CASE WHEN Active = 1 THEN 100 ELSE 200 END AS ItemStatusId, 300 AS ItemTypeId, ItemId AS ProductItemId, ImageFileName + '.jpg' AS UploadImageFileName
 FROM dbo.DivineBija_Products
 INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterDesc = RTRIM(LTRIM(DivineBija_Products.Description1))
-WHERE [Item Type] = 'BUNDLE' AND Active = 1
+WHERE [Item Type] = 'BUNDLE' --AND Active = 1
 UNION
 --Type --> Books
 SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate
       ,[MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(ProductDesc0)) AS ItemShortDesc0, RTRIM(LTRIM(ProductDesc1)) AS ItemShortDesc1
-	  ,NULL AS ItemShortDesc2, NULL AS ItemShortDesc3, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount, 100 AS ItemStatusId
+	  ,NULL AS ItemShortDesc2, NULL AS ItemShortDesc3, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount, CASE WHEN Active = 1 THEN 100 ELSE 200 END AS ItemStatusId
 	  ,200 AS ItemTypeId, ItemId AS ProductItemId, Image1 AS UploadImageFileName
 FROM dbo.DivineBija_Books
 INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterDesc = RTRIM(LTRIM(DivineBija_Books.ProductDesc))
-WHERE Active = 1
+--WHERE Active = 1
 ORDER BY Id
 
 SET IDENTITY_INSERT RetailSlnSch.Item OFF
@@ -175,6 +175,12 @@ FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineB
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Count], ItemAttribUnitValue = 600
 FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 12 AND [Count Unit] = 'Stick(s)'
 
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Packet], ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE [Packet] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 27 AND [Packet Unit] = 'Packet(s)'
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Packet], ItemAttribUnitValue = 200
+FROM dbo.DivineBija_Products WHERE [Packet] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 27 AND [Packet Unit] = 'Bag(s)'
+
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Books.Publisher
 FROM dbo.DivineBija_Books WHERE Publisher <> '' AND ItemAttrib.ItemId = DivineBija_Books.Id AND ItemAttribMasterId = 13
 
@@ -195,6 +201,9 @@ FROM dbo.DivineBija_Products WHERE [Show Volume] <> '' AND ItemAttrib.ItemId = D
 
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Count]
 FROM dbo.DivineBija_Products WHERE [Show Count] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 18
+
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Packet]
+FROM dbo.DivineBija_Products WHERE [Show Packet] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 28
 
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Show Color]
 FROM dbo.DivineBija_Products WHERE [Show Color] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 22

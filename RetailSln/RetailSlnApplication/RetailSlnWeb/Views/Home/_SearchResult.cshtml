@@ -1,0 +1,6 @@
+﻿@model string
+Search results for : <span style="color: #000000;">@Model</span>
+<br />
+@Html.Partial("_SearchResultCategory", Model)
+<br />
+@Html.Partial("_SearchResultItem", Model)
