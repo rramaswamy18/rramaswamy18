@@ -4,12 +4,6 @@
 @{ 
     Model.ShoppingCartModel.Checkout = false;
     Model.ShoppingCartModel.ShowDiscountsAdditionalCharges = true;
-    List<CodeDataModel> codeDataModels = ArchitectureLibraryCacheData.LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
-    var paymentModeId = (int)Model.DeliveryInfoDataModel.PaymentModeId;
-    CodeDataModel codeDataModel = codeDataModels.First(x => x.CodeDataNameId == paymentModeId);
-    List<CodeDataModel> codeDataModels1 = ArchitectureLibraryCacheData.LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
-    var deliveryMethodId = (int)Model.DeliveryInfoDataModel.DeliveryMethodId;
-    CodeDataModel codeDataModel1 = codeDataModels1.First(x => x.CodeDataNameId == deliveryMethodId);
 }
 <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
     Payment Info
@@ -21,14 +15,14 @@
         </span>
         <br />
         <span style="color: #ff0000; font-size: 12px; font-weight: bold;">
-            @codeDataModel1.CodeDataDesc0
+            @Model.DeliveryInfoDataModel.DeliveryMethodName
         </span>
         <br />
         <span style="color: #ff0000; font-size: 12px; font-weight: bold;">
-            @codeDataModel.CodeDataDesc1&nbsp;-&nbsp;
+            @Model.DeliveryInfoDataModel.PaymentModeName&nbsp;-&nbsp;
         </span>
         <span style="color: #0000ff; font-size: 12px; font-weight: bold;">
-            @codeDataModel.CodeDataDesc2
+            @Model.DeliveryInfoDataModel.PaymentModeDesc
         </span>
         <br />
         <h3 style="display: none; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Gift&nbsp;Cert&nbsp;Payment</h3>
@@ -43,6 +37,9 @@
                 break;
             case PaymentModeEnum.PaymentGateway:
                 <center><button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button></center>
+                break;
+            case PaymentModeEnum.ProcessCreditCard:
+                <center><button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Credit Card - Processing</button></center>
                 break;
         }
     </div>

@@ -451,9 +451,7 @@ namespace RetailSlnWeb.Controllers
                     ModelState.Remove("DeliveryAddressModel.CityName");
                     ModelState.Remove("DeliveryAddressModel.ZipCode");
                     ModelState.Remove("DeliveryAddressModel.DemogInfoSubDivisionId");
-                    ModelState.Remove("DeliveryAddressModel.DemogInfoCountryId");
                     ModelState.Remove("DeliveryAddressModel.BuildingTypeId");
-                    //ModelState.Remove("");
                     deliveryInfoDataModel.DeliveryAddressModel.AddressLine1 = null;
                     deliveryInfoDataModel.DeliveryAddressModel.AddressLine2 = null;
                     deliveryInfoDataModel.DeliveryAddressModel.AddressLine3 = null;
@@ -462,7 +460,6 @@ namespace RetailSlnWeb.Controllers
                     deliveryInfoDataModel.DeliveryAddressModel.ZipCode = null;
                     deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = null;
                     deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId = null;
                 }
                 else
                 {
@@ -501,10 +498,10 @@ namespace RetailSlnWeb.Controllers
                         {
                             SearchType = "ZipCode",
                             SearchKeyValuePairs = new Dictionary<string, string>
-                        {
-                            { "DemogInfoCountryId", deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString() },
-                            { "ZipCode", deliveryInfoDataModel.DeliveryAddressModel.ZipCode },
-                        },
+                            {
+                                { "DemogInfoCountryId", deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString() },
+                                { "ZipCode", deliveryInfoDataModel.DeliveryAddressModel.ZipCode },
+                            },
                         };
                         List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                         foreach (var sqlQueryResult in sqlQueryResults)
@@ -964,41 +961,41 @@ namespace RetailSlnWeb.Controllers
             return View();
         }
 
-        [AjaxAuthorize]
-        [Authorize]
-        [HttpPost]
-        public ActionResult PaymentInfo(PaymentInfoModel paymentInfoModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                success = true;
-                processMessage = "SUCCESS!!!";
-                PaymentModel paymentModel = retailSlnBL.PaymentInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, "_Payment", paymentModel);
-                actionResult = Json(new { success, processMessage, htmlString });
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo", paymentInfoModel);
-                actionResult = Json(new { success, processMessage, htmlString });
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-            }
-            return actionResult;
-        }
+        //[AjaxAuthorize]
+        //[Authorize]
+        //[HttpPost]
+        //public ActionResult PaymentInfo(PaymentInfoModel paymentInfoModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //        PaymentModel paymentModel = retailSlnBL.PaymentInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_Payment", paymentModel);
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo", paymentInfoModel);
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //    }
+        //    return actionResult;
+        //}
 
         [AjaxAuthorize]
         [Authorize]
@@ -1179,9 +1176,92 @@ namespace RetailSlnWeb.Controllers
         [AjaxAuthorize]
         [Authorize]
         [HttpPost]
-        public ActionResult PaymentInfo4(PaymentInfoModel paymentInfoModel)
-        {//Credit Card Synchronous
-            return null;
+        public ActionResult PaymentInfo4(GiftCertPaymentModel giftCertPaymentModel)
+        {//Credit Card Synchronous - Before processing
+            bool success;
+            string processMessage, htmlString;
+            ArchLibBL archLibBL = new ArchLibBL();
+            ActionResult actionResult;
+            ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            ProcessCreditCardModel processCreditCardModel = new ProcessCreditCardModel
+            {
+                CreditCardProcessModel = new CreditCardProcessModel
+                {
+                    CreditCardPaymentAmount = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount,
+                    EmailAddress = sessionObjectModel.EmailAddress,
+                    UserFullName = (sessionObjectModel.FirstName + " " + sessionObjectModel.LastName).Trim(),
+                },
+                GiftCertPaymentModel = giftCertPaymentModel,
+                PaymentSummaryDataModel = new PaymentSummaryDataModel
+                {
+                    BalanceDue = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount,
+                    EmailAddress = sessionObjectModel.EmailAddress,
+                    UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
+                },
+            };
+            success = true;
+            processMessage = "SUCCESS!!!";
+            htmlString = archLibBL.ViewToHtmlString(this, "_ProcessCreditCard", processCreditCardModel);
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
+        [AjaxAuthorize]
+        [Authorize]
+        [HttpPost]
+        public ActionResult PaymentInfo5(CreditCardProcessModel creditCardProcessModel)
+        {//Credit Card Synchronous - After processing
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            bool success;
+            string processMessage, htmlString;
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            success = false;
+            processMessage = "SUCCESS!!!";
+            htmlString = retailSlnBL.PaymentInfo5(creditCardProcessModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            if (htmlString != "")
+            {
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                FormsAuthentication.SignOut();
+                Session.Abandon();
+                Request.GetOwinContext().Authentication.SignOut();
+                Session["SessionObject"] = null;
+                Session.Abandon();
+                Session["ShoppingCartModel"] = null;
+                Session["DeliveryInfoModel"] = null;
+                Session["PaymentInfoModel"] = null;
+                Session["SessionObject"] = null;
+            }
+            else
+            {
+                success = false;
+                processMessage = "ERROR???";
+                //ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
+                //SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                //ProcessCreditCardModel processCreditCardModel = new ProcessCreditCardModel
+                //{
+                //    CreditCardProcessModel = new CreditCardProcessModel
+                //    {
+                //        CreditCardPaymentAmount = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount,
+                //        EmailAddress = sessionObjectModel.EmailAddress,
+                //        UserFullName = (sessionObjectModel.FirstName + " " + sessionObjectModel.LastName).Trim(),
+                //    },
+                //    GiftCertPaymentModel = new GiftCertPaymentModel(),
+                //    PaymentSummaryDataModel = new PaymentSummaryDataModel
+                //    {
+                //        BalanceDue = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount,
+                //        EmailAddress = sessionObjectModel.EmailAddress,
+                //        UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
+                //    },
+                //};
+                htmlString = archLibBL.ViewToHtmlString(this, "_CreditCardProcess", creditCardProcessModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
         }
 
         [AllowAnonymous]

@@ -1,6 +1,7 @@
 ﻿using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,6 +10,7 @@ namespace RetailSlnModels
     public class PaymentSummaryDataModel
     {
         public string AspNetRoleName { set; get; }
+        [Display(Name = "Balance Due")]
         public float? BalanceDue { set; get; }
         public string CardHolderName { set; get; }
         public long CreditCardDataId { set; get; }
@@ -16,14 +18,13 @@ namespace RetailSlnModels
         public float? CreditCardPaymentAmount { set; get; }
         public string CreditCardProcessMessage { set; get; }
         public string CreditCardProcessStatus { set; get; }
-        public string DeliveryMethodName { set; get; }
+        [Display(Name = "Email Address")]
         public string EmailAddress { set; get; }
         public string GiftCertNumberLast4 { set; get; }
         public long? GiftCertId { set; get; }
         public float? GiftCertPaymentAmount { set; get; }
         public long? OrderHeaderId { set; get; }
-        public string PaymentModeDesc { set; get; }
-        public string PaymentModeName { set; get; }
+        [Display(Name = "User Full Name")]
         public string UserFullName { set; get; }
     }
 }

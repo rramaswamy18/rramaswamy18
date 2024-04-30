@@ -10,18 +10,21 @@
             Delivery Address
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
-            @Model.DeliveryAddressModel.AddressLine1&nbsp;@(Model.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryAddressModel.BuildingTypeId)&nbsp;@Model.DeliveryAddressModel.HouseNumber
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+            @if (Model.CreateDeliveryAddress)
             {
+                @(Model.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryAddressModel.HouseNumber)
+                if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+                {
+                    <br />
+                    @Model.DeliveryAddressModel.AddressLine2
+                }
                 <br />
-                @Model.DeliveryAddressModel.AddressLine2
+                @Model.DeliveryAddressModel.CityName
+                <br />
+                @(Model.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryAddressModel.ZipCode)
+                <br />
+                @(Model.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryAddressModel.CountryAbbrev)
             }
-            <br />
-            @Model.DeliveryAddressModel.CityName
-            <br />
-            @Model.DeliveryAddressModel.StateAbbrev&nbsp;@Model.DeliveryAddressModel.ZipCode
-            <br />
-            @Model.DeliveryAddressModel.CountryDesc&nbsp;-&nbsp;@Model.DeliveryAddressModel.CountryAbbrev
         </td>
     </tr>
     <tr>

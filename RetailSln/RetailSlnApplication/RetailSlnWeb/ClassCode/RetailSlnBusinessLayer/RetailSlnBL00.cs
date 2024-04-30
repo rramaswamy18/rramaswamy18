@@ -188,7 +188,7 @@ namespace RetailSlnBusinessLayer
                             {
                                 DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue),
                                 HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue),
-                                HSNCode = itemModel.ItemAttributesForDisplay["HSNCode"],
+                                HSNCode = itemModel.ItemAttribModelsForDisplay["HSNCode"].ItemAttribValueForDisplay,
                                 ItemDesc = itemModel.ItemDesc,
                                 ItemDiscountPercent = null,
                                 ItemId = itemModel.ItemId,
@@ -200,7 +200,7 @@ namespace RetailSlnBusinessLayer
                                 OrderAmountBeforeDiscount = orderQty * itemModel.ItemRate,
                                 OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                 OrderQty = orderQty,
-                                ProductCode = itemModel.ItemAttributesForDisplay["ProductCode"],
+                                ProductCode = itemModel.ItemAttribModelsForDisplay["ProductCode"].ItemAttribValueForDisplay,
                                 WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "WeightCalc").ItemAttribValue),
                                 WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue),
                                 WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue),
@@ -458,6 +458,43 @@ namespace RetailSlnBusinessLayer
                 long personId = sessionObjectModel.PersonId;
                 AddAdditionalCharges(shoppingCartModel, deliveryInfoDataModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AddTotals(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+                List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
+                var deliveryMethodId = (int)deliveryInfoDataModel.DeliveryMethodId;
+                CodeDataModel codeDataModel = codeDataModels.First(x => x.CodeDataNameId == deliveryMethodId);
+                var deliveryMethodName = codeDataModel.CodeDataDesc0;
+                codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+                var paymentModeId = (int)deliveryInfoDataModel.PaymentModeId;
+                codeDataModel = codeDataModels.First(x => x.CodeDataNameId == paymentModeId);
+                var paymentModeName = codeDataModel.CodeDataDesc0;
+                deliveryInfoDataModel.DeliveryMethodName = deliveryMethodName;
+                deliveryInfoDataModel.PaymentModeName = paymentModeName;
+                if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
+                {
+                    deliveryInfoDataModel.CreateDeliveryAddress = false;
+                    if (deliveryInfoDataModel.PaymentModeId == PaymentModeEnum.COD)
+                    {
+                        deliveryInfoDataModel.PaymentModeDesc = "Pay at the store at time of pickup";
+                        deliveryInfoDataModel.PaymentModeDesc = codeDataModel.CodeDataDesc3;
+                    }
+                    else
+                    {
+                        deliveryInfoDataModel.PaymentModeDesc = "You will be redirected to a page outside of our domain";
+                        deliveryInfoDataModel.PaymentModeDesc = codeDataModel.CodeDataDesc2;
+                    }
+                }
+                else
+                {
+                    deliveryInfoDataModel.CreateDeliveryAddress = true;
+                    if (deliveryInfoDataModel.PaymentModeId == PaymentModeEnum.COD)
+                    {
+                        deliveryInfoDataModel.PaymentModeDesc = "Our staff will call you and cofirm prior to shipping";
+                    }
+                    else
+                    {
+                        deliveryInfoDataModel.PaymentModeDesc = "You will be redirected to a page outside of our domain";
+                    }
+                    deliveryInfoDataModel.PaymentModeDesc = codeDataModel.CodeDataDesc2;
+                }
                 httpSessionStateBase["DeliveryInfoDataModel"] = deliveryInfoDataModel;
                 PaymentInfoModel paymentInfoModel = new PaymentInfoModel
                 {
@@ -546,8 +583,8 @@ namespace RetailSlnBusinessLayer
                             CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
                             NameAsOnCard = giftCertModel.CardHolderName,
                         };
-                        CreditCardServiceBL creditCardService = new CreditCardServiceBL();
-                        giftCertModel.CreditCardProcessStatus = creditCardService.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+                        giftCertModel.CreditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         giftCertModel.CreditCardLast4 = creditCardDataModel.CreditCardNumberLast4;
                         giftCertModel.CreditCardProcessMessage = processMessage;
                         RegisterUserProfModel registerUserProfModel = new RegisterUserProfModel
@@ -794,14 +831,6 @@ namespace RetailSlnBusinessLayer
             ArchLibBL archLibBL = new ArchLibBL();
             try
             {
-                if (paymentInfoModel.DeliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
-                {
-                    paymentInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress = false;
-                }
-                else
-                {
-                    paymentInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress = true;
-                }
                 ApplicationDataContext.OpenSqlConnection();
                 ShoppingCartModel shoppingCartModel = paymentInfoModel.ShoppingCartModel;
                 DeliveryInfoDataModel deliveryInfoDataModel = paymentInfoModel.DeliveryInfoDataModel;
@@ -815,15 +844,6 @@ namespace RetailSlnBusinessLayer
                     if (shoppingCartModel.ShoppingCartItems.Count > 0 && shoppingCartModel.ShoppingCartTotalAmount > 0)
                     {
                         CreateOrder(deliveryInfoDataModel, shoppingCartModel, sessionObjectModel, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
-                        var paymentModeId = (int)deliveryInfoDataModel.PaymentModeId;
-                        CodeDataModel codeDataModel = codeDataModels.First(x => x.CodeDataNameId == paymentModeId);
-                        var paymentModeName = codeDataModel.CodeDataDesc0;
-                        var paymentModeDesc = deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.ShipToDeliveryAddress ? codeDataModel.CodeDataDesc2 : codeDataModel.CodeDataDesc3;
-                        codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
-                        var deliveryMethodId = (int)deliveryInfoDataModel.DeliveryMethodId;
-                        codeDataModel = codeDataModels.First(x => x.CodeDataNameId == deliveryMethodId);
-                        var deliveryMethodName = codeDataModel.CodeDataDesc0;
                         paymentInfoModel.PaymentSummaryDataModel = new PaymentSummaryDataModel
                         {
                             BalanceDue = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount,
@@ -832,13 +852,10 @@ namespace RetailSlnBusinessLayer
                             CreditCardPaymentAmount = 0,
                             CreditCardProcessMessage = "Not Applicable",
                             CreditCardProcessStatus = "",
-                            DeliveryMethodName = deliveryMethodName,
                             EmailAddress = sessionObjectModel.EmailAddress,
                             GiftCertNumberLast4 = paymentInfoModel.GiftCertPaymentModel.GiftCertNumberLast4,
                             GiftCertPaymentAmount = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AmountPaidByGiftCert).OrderAmount ?? 0,
                             OrderHeaderId = deliveryInfoDataModel.OrderHeaderId,
-                            PaymentModeDesc = paymentModeDesc,
-                            PaymentModeName = paymentModeName,
                             UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
                         };
                         string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailSubject", paymentInfoModel);
@@ -978,6 +995,95 @@ namespace RetailSlnBusinessLayer
                 {
                     throw new Exception("Error while validating Payment Success");
                 }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        public string PaymentInfo5(CreditCardProcessModel creditCardProcessModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            string emailBodyHtml;
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                CreditCardDataModel creditCardDataModel = new CreditCardDataModel
+                {
+                    CreditCardAmount = creditCardProcessModel.CreditCardPaymentAmount.ToString(),
+                    CreditCardExpMM = creditCardProcessModel.CardExpiryMM,
+                    CreditCardExpYear = creditCardProcessModel.CardExpiryYYYY,
+                    CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId),
+                    CreditCardNumber = creditCardProcessModel.CreditCardNumber,
+                    CreditCardProcessor = creditCardProcessor,
+                    CreditCardSecCode = creditCardProcessModel.CVV,
+                    CreditCardTranType = "PAYMENT",
+                    CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                    NameAsOnCard = creditCardProcessModel.CardHolderName,
+                };
+                CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+                var creditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var creditCardLast4 = creditCardDataModel.CreditCardNumberLast4;
+                var creditCardProcessMessage = processMessage;
+                if (creditCardProcessStatus)
+                {
+                    PaymentInfoModel paymentInfoModel = new PaymentInfoModel
+                    {
+                        DeliveryInfoDataModel = (DeliveryInfoDataModel)httpSessionStateBase["DeliveryInfoDataModel"],
+                        GiftCertPaymentModel = new GiftCertPaymentModel(),
+                        PaymentSummaryDataModel = new PaymentSummaryDataModel
+                        {
+                            BalanceDue = 0,
+                            CardHolderName = creditCardProcessModel.CardHolderName,
+                            CreditCardDataId = 999,
+                            CreditCardNumberLast4 = creditCardProcessModel.CreditCardNumberLast4,
+                            CreditCardProcessMessage = creditCardDataModel.ProcessMessage,
+                            CreditCardPaymentAmount = creditCardProcessModel.CreditCardPaymentAmount,
+                            CreditCardProcessStatus = creditCardDataModel.StatusNameDesc,
+                            EmailAddress = creditCardProcessModel.EmailAddress,
+                            GiftCertPaymentAmount = 0,
+                        },
+                        ShoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"],
+                    };
+                    DeliveryInfoDataModel deliveryInfoDataModel = paymentInfoModel.DeliveryInfoDataModel;
+                    ShoppingCartModel shoppingCartModel = paymentInfoModel.ShoppingCartModel;
+                    SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
+                    //creditCardServiceBL.UpdCreditCardData(paymentInfoModel.PaymentSummaryDataModel.CreditCardDataId, razorpay_payment_id, razorpay_order_id, razorpay_signature, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CreateOrder(deliveryInfoDataModel, shoppingCartModel, sessionObjectModel, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    paymentInfoModel.PaymentSummaryDataModel.OrderHeaderId = deliveryInfoDataModel.OrderHeaderId;
+                    paymentInfoModel.PaymentSummaryDataModel.CreditCardProcessStatus = "Success";
+                    //paymentInfoModel.PaymentSummaryDataModel.CreditCardProcessMessage = razorpay_order_id + "<br />" + razorpay_payment_id;
+                    //ApplicationDataContext.CreatePayment(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //paymentInfoModel.PaymentSummaryDataModel.GiftCertPaymentAmount = 0;
+                    string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailSubject", paymentInfoModel);
+                    emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailBody", paymentInfoModel);
+                    string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
+                    emailBodyHtml += signatureHtml;
+                    PDFUtility pDFUtility = new PDFUtility();
+                    string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
+                    pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, emailDirectoryName + paymentInfoModel.PaymentSummaryDataModel.OrderHeaderId + ".pdf");
+                    List<string> emailAttachmentFileNames = new List<string>
+                    {
+                        emailDirectoryName + paymentInfoModel.PaymentSummaryDataModel.OrderHeaderId + ".pdf",
+                    };
+                    archLibBL.SendEmail(paymentInfoModel.PaymentSummaryDataModel.EmailAddress, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    modelStateDictionary.AddModelError("", "Error while processing credit card");
+                    modelStateDictionary.AddModelError("", creditCardProcessMessage);
+                    emailBodyHtml = "";
+                }
+                return emailBodyHtml;
             }
             catch (Exception exception)
             {
@@ -1712,17 +1818,19 @@ namespace RetailSlnBusinessLayer
         }
         private Dictionary<string, string> GetCreditCardKVPs(string creditCardProcessor, long clientId)
         {
+            creditCardProcessor = creditCardProcessor.ToUpper();
             Dictionary<string, string> creditCardKVPs;
-            switch (creditCardProcessor.ToUpper())
+            switch (creditCardProcessor)
             {
-                case "NUVEI":
+                case "NUVEIPROD":
+                case "NUVEITEST":
                     creditCardKVPs = new Dictionary<string, string>
                     {
                         { "PrivateKey", ArchLibCache.GetPrivateKey(clientId) },
-                        { "NuveiRestAPIRootUri", ArchLibCache.GetApplicationDefault(clientId, "NuveiRestAPIRootUri", "") },
-                        { "NuveiRequestUri", ArchLibCache.GetApplicationDefault(clientId, "NuveiRequestUri", "") },
-                        { "NuveiTerminalId", ArchLibCache.GetApplicationDefault(clientId, "NuveiTerminalId", "") },
-                        { "NuveiSharedSecret", ArchLibCache.GetApplicationDefault(clientId, "NuveiSharedSecret", "") },
+                        { "NuveiRestAPIRootUri", ArchLibCache.GetApplicationDefault(clientId, creditCardProcessor, "RestAPIRootUri") },
+                        { "NuveiRequestUri", ArchLibCache.GetApplicationDefault(clientId,creditCardProcessor, "RequestUri") },
+                        { "NuveiTerminalId", ArchLibCache.GetApplicationDefault(clientId,creditCardProcessor, "TerminalId") },
+                        { "NuveiSharedSecret", ArchLibCache.GetApplicationDefault(clientId, creditCardProcessor, "SharedSecret") },
                     };
                     break;
                 case "RAZORPAYTEST":

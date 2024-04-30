@@ -14,5 +14,7 @@ namespace RetailSlnEnumerations
         PaymentGateway = 200,
         [Display(Name = "Cash on Delivery (COD)")]
         COD = 300,
+        [Display(Name = "Process by credit card")]
+        ProcessCreditCard = 400,
     }
 }

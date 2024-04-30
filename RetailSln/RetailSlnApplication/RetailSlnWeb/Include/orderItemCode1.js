@@ -136,40 +136,40 @@ function giftCertBalance_onclick() {
     });
     return false;
 }
-function paymentInfoSave_onclick() {
-    console.log("00000000", "paymentSave_onclick");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    var url = "/Home/PaymentInfo";
-    var postData = $("#formPaymentInfoData").serialize();
-    $.ajax({
-        url: url,
-        type: "POST",
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-        //dataType: "html",
-        data: postData,
-        //async: false,
-        success: function (responseData, textStatus, request) {
-            console.log("00000100", "paymentInfoSave_onclick");
-            console.log(9, responseData);
-            $("#loadingModal").modal('hide');
-            if (responseData.success) {
-                console.log("00000200", "paymentInfoSave_onclick");
-                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-            }
-            else {
-                document.getElementById("formPaymentInfoData").innerHTML = responseData.htmlString;
-            }
-            console.log("00001000", "paymentInfoSave_onclick success", responseData.processMessage);
-            $("#loadingModal").modal('hide');
-        },
-        error: function (xhr, exception) {
-            $("#loadingModal").modal('hide');
-            document.getElementById("formPaymentInfoData").innerHTML = xhr.responseText;
-            console.log("00099000", "paymentInfoSave_onclick error", exception, xhr);
-            $("#loadingModal").modal('hide');
-        }
-    });
-}
+//function paymentInfoSave_onclick() {
+//    console.log("00000000", "paymentSave_onclick");
+//    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+//    var url = "/Home/PaymentInfo";
+//    var postData = $("#formPaymentInfoData").serialize();
+//    $.ajax({
+//        url: url,
+//        type: "POST",
+//        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+//        //dataType: "html",
+//        data: postData,
+//        //async: false,
+//        success: function (responseData, textStatus, request) {
+//            console.log("00000100", "paymentInfoSave_onclick");
+//            console.log(9, responseData);
+//            $("#loadingModal").modal('hide');
+//            if (responseData.success) {
+//                console.log("00000200", "paymentInfoSave_onclick");
+//                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+//            }
+//            else {
+//                document.getElementById("formPaymentInfoData").innerHTML = responseData.htmlString;
+//            }
+//            console.log("00001000", "paymentInfoSave_onclick success", responseData.processMessage);
+//            $("#loadingModal").modal('hide');
+//        },
+//        error: function (xhr, exception) {
+//            $("#loadingModal").modal('hide');
+//            document.getElementById("formPaymentInfoData").innerHTML = xhr.responseText;
+//            console.log("00099000", "paymentInfoSave_onclick error", exception, xhr);
+//            $("#loadingModal").modal('hide');
+//        }
+//    });
+//}
 function paymentSave_onclick() {
     console.log("00000000", "paymentSave_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -353,6 +353,89 @@ function paymentInfo2Save_onclick() {
             $("#loadingModal").modal('hide');
             document.getElementById("formPaymentInfoData").innerHTML = xhr.responseText;
             console.log("00099000", "paymentInfo2Save_onclick error", exception, xhr);
+            $("#loadingModal").modal('hide');
+        }
+    });
+}
+function paymentInfo4Save_onclick() {
+    console.log("00000000", "paymentInfo4Save_onclick");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Home/PaymentInfo4";
+    var postData = $("#formPaymentInfoData").serialize();
+    console.log(postData);
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "html",
+        data: postData,
+        //async: false,
+        success: function (responseData, textStatus, request) {
+            console.log("00000100", "paymentInfo4Save_onclick");
+            console.log(9, responseData);
+            $("#loadingModal").modal('hide');
+            if (responseData.success) {
+                console.log("00000200", "paymentInfo4Save_onclick");
+                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                document.getElementById("CreditCardNumber").value = "4111111111111111";
+                document.getElementById("CVV").value = "123";
+                document.getElementById("CardHolderName").value = "John Miller";
+                document.getElementById("CardExpiryMM").value = "09";
+                document.getElementById("CardExpiryYYYY").value = "2025";
+                //document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
+                //document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
+                //document.getElementById("shoppingCartItemsCount").innerHTML = "";
+                //document.getElementById("shoppingCartTotalAmount").innerHTML = "";
+            }
+            else {
+                document.getElementById("formPaymentInfoData").innerHTML = responseData.htmlString;
+            }
+            console.log("00001000", "paymentInfo4Save_onclick success", responseData.processMessage);
+            $("#loadingModal").modal('hide');
+        },
+        error: function (xhr, exception) {
+            $("#loadingModal").modal('hide');
+            document.getElementById("formPaymentInfoData").innerHTML = xhr.responseText;
+            console.log("00099000", "paymentInfo4Save_onclick error", exception, xhr);
+            $("#loadingModal").modal('hide');
+        }
+    });
+}
+function paymentInfo5Save_onclick() {
+    console.log("00000000", "paymentInfo5Save_onclick");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Home/PaymentInfo5";
+    var postData = $("#formCreditCardProcessData").serialize();
+    console.log(postData);
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "html",
+        data: postData,
+        //async: false,
+        success: function (responseData, textStatus, request) {
+            console.log("00000100", "paymentInfo5Save_onclick");
+            console.log(9, responseData);
+            $("#loadingModal").modal('hide');
+            if (responseData.success) {
+                console.log("00000200", "paymentInfo5Save_onclick");
+                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                //    document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
+                //    document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
+                //    document.getElementById("shoppingCartItemsCount").innerHTML = "";
+                //    document.getElementById("shoppingCartTotalAmount").innerHTML = "";
+            }
+            else {
+                document.getElementById("formCreditCardProcessData").innerHTML = responseData.htmlString;
+            }
+            console.log("00001000", "paymentInfo5Save_onclick success", responseData.processMessage);
+            $("#loadingModal").modal('hide');
+        },
+        error: function (xhr, exception) {
+            $("#loadingModal").modal('hide');
+            document.getElementById("formCreditCardProcessData").innerHTML = xhr.responseText;
+            console.log("00099000", "paymentInfo5Save_onclick error", exception, xhr);
             $("#loadingModal").modal('hide');
         }
     });

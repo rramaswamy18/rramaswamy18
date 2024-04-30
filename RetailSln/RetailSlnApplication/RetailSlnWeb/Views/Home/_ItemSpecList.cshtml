@@ -1,1 +1,102 @@
-﻿
+﻿@model RetailSlnModels.ItemSpecListModel
+@using RetailSlnCacheData
+<table class="table table-condensed table-responsive" style="padding: 0px;">
+    <tr>
+        <th class="text-center" style="color: #0000ff; background-color: #c5c4c2;">
+            Spec(s)
+        </th>
+        <th class="text-center" style="color: #0000ff; background-color: #c5c4c2;">
+            Item...
+        </th>
+    </tr>
+    <tr>
+        <td style="padding: 0px; width: 65%;">
+            @{
+                int i = 0;
+                <div style="background: #e5e4e2; border-top-left-radius: 25px; border-top-right-radius: 25px; float: left; height: 45px; margin-left: auto; margin-right: auto; padding: 9px; text-align: center;">
+                    <a id="divTab@(i)" href="javascript: void(0);" onclick="javascript: return divTab_onclick(@i, @Model.ItemSpecModels.Count)" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@((i + 1) + "." + Model.ItemSpecModels[i].ItemSpecLabelText)</a>
+                </div>
+                <div style="float: left; width: 9px;">&nbsp;</div>
+                for (i = 1; i < Model.ItemSpecModels.Count; i++)
+                {
+                    <div style="background: #e5e4e2; border-top-left-radius: 25px; border-top-right-radius: 25px; float: left; height: 45px; margin-left: auto; margin-right: auto; padding: 9px; text-align: center;">
+                        <a id="divTab@(i)" href="javascript: void(0);" onclick="javascript: return divTab_onclick(@i, @Model.ItemSpecModels.Count)" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@((i + 1) + "." + Model.ItemSpecModels[i].ItemSpecLabelText)</a>
+                    </div>
+                    if (i < Model.ItemSpecModels.Count - 1)
+                    {
+                        <div style="float: left; width: 9px;">&nbsp;</div>
+                    }
+                }
+                <br style="clear: both;" />
+                i = 0;
+                <div id="divTabData@(i)" style="display: none; text-align: left; padding-left: 9px; text-align: left;">
+                    <table class="table table-bordered" style="width: 81%;">
+                        <colgroup>
+                            <col style="width: 27%;" />
+                            <col style="width: 45%;" />
+                        </colgroup>
+                        <tr>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Value
+                            </th>
+                        </tr>
+                        @foreach (var x in Model.ItemModel.ItemAttribModels)
+                        {
+                            <tr>
+                                <td>
+                                    @x.ItemAttribMasterModel.AttribDesc
+                                </td>
+                                <td>
+                                    @x.ItemAttribValue
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                for (i = 1; i < Model.ItemSpecModels.Count; i++)
+                {
+                    <div id="divTabData@(i)" style="display: none; padding-left: 9px; text-align: left;">
+                        @Html.Raw(Model.ItemSpecModels[i].ItemSpecText)
+                    </div>
+                }
+            }
+        </td>
+        <td style="padding: 0px; width: 35%;">
+            <table class="table table-condensed table-responsive">
+                <tr>
+                    <th class="text-left">
+                        <span style="color: #ff0000; font-weight: bold;">Description</span><br />
+                        @Model.ItemModel.ItemShortDesc
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-left">
+                        <span style="color: #ff0000; font-weight: bold;">Price...</span><br />
+                        @Model.ItemModel.ItemRateFormatted
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-left">
+                        <img class="img-responsive" src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/@Model.ItemModel.ImageName" />
+                    </th>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    divTab_onclick(0, @Model.ItemSpecModels.Count);
+    function divTab_onclick(index, count) {
+        for (var i = 0; i < count; i++) {
+            document.getElementById("divTabData" + i).style.display = "none";
+            document.getElementById("divTab" + i).style.textDecoration = "underline";
+            document.getElementById("divTab" + i).style.color = "#0000ff";
+        }
+        document.getElementById("divTabData" + index).style.display = "block";
+        document.getElementById("divTab" + index).style.textDecoration = "none";
+        document.getElementById("divTab" + index).style.color = "#000000";
+    }
+</script>

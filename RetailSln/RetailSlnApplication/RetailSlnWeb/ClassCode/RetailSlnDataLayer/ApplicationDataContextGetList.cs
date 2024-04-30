@@ -453,10 +453,11 @@ namespace RetailSlnDataLayer
                         new ItemAttribMasterModel
                         {
                             ItemAttribMasterId = long.Parse(sqlDataReader["ItemAttribMasterId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            CodeTypeId = sqlDataReader["CodeTypeId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["CodeTypeId"].ToString()),
                             AttribDesc = sqlDataReader["AttribDesc"].ToString(),
                             AttribName = sqlDataReader["AttribName"].ToString(),
                             AttribUnitType = sqlDataReader["AttribUnitType"].ToString(),
-                            AttribUnitCategory = sqlDataReader["AttribUnitCategory"].ToString(),
                             AttribValueType = sqlDataReader["AttribValueType"].ToString(),
                             IsMandatory = bool.Parse(sqlDataReader["IsMandatory"].ToString()),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
@@ -490,11 +491,13 @@ namespace RetailSlnDataLayer
                         new ItemAttribModel
                         {
                             ItemAttribId = long.Parse(sqlDataReader["ItemAttribId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                             ItemAttribMasterId = long.Parse(sqlDataReader["ItemAttribMasterId"].ToString()),
                             ItemAttribUnitValue = sqlDataReader["ItemAttribUnitValue"].ToString(),
                             ItemAttribValue = sqlDataReader["ItemAttribValue"].ToString(),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            ShowValue = bool.Parse(sqlDataReader["ShowValue"].ToString()),
                         }
                     );
 
@@ -570,12 +573,14 @@ namespace RetailSlnDataLayer
                             ItemAttribValue = sqlDataReader["ItemAttribValue"].ToString(),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            ShowValue = bool.Parse(sqlDataReader["ShowValue"].ToString()),
                             ItemAttribMasterModel = new ItemAttribMasterModel
                             {
                                 ItemAttribMasterId = long.Parse(sqlDataReader["ItemAttribMasterId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                CodeTypeId = sqlDataReader["CodeTypeId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["CodeTypeId"].ToString()),
                                 AttribDesc = sqlDataReader["AttribDesc"].ToString(),
                                 AttribName = sqlDataReader["AttribName"].ToString(),
-                                AttribUnitCategory = sqlDataReader["AttribUnitCategory"].ToString(),
                                 AttribUnitType = sqlDataReader["AttribUnitType"].ToString(),
                                 AttribValueType = sqlDataReader["AttribValueType"].ToString(),
                                 IsMandatory = bool.Parse(sqlDataReader["IsMandatory"].ToString()),

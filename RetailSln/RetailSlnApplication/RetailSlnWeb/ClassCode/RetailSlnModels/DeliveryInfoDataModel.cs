@@ -27,17 +27,23 @@ namespace RetailSlnModels
 
         public DemogInfoAddressModel DeliveryAddressModel { set; get; }
 
-        public long OrderHeaderId { set; get; }
-
         [Display(Name = "Delivery Method")]
         [Required(ErrorMessage = "Please select a delivery method")]
         public DeliveryMethodEnum? DeliveryMethodId { set; get; }
 
+        public string DeliveryMethodName { set; get; }
+
         public DeliveryTypeEnum? DeliveryTypeId { set; get; }
+
+        public long OrderHeaderId { set; get; }
 
         [Display(Name = "Payment Method")]
         [Required(ErrorMessage = "Please select payment method")]
         public PaymentModeEnum? PaymentModeId { set; get; }
+
+        public string PaymentModeDesc { set; get; }
+
+        public string PaymentModeName { set; get; }
 
         [Required(ErrorMessage = "Country")]
         public long? PrimaryTelephoneDemogInfoCountryId { set; get; }

@@ -11,6 +11,8 @@ namespace RetailSlnModels
     {
         public long? ItemAttribId { set; get; }
 
+        public long ClientId { set; get; }
+
         public long ItemAttribMasterId { set; get; }
 
         [Required(ErrorMessage = "Select attribute unit")]
@@ -19,9 +21,13 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Enter attribute value")]
         public string ItemAttribValue { set; get; }
 
+        public string ItemAttribValueForDisplay { set; get; }
+
         public long ItemId { set; get; }
 
         public float SeqNum { set; get; }
+
+        public bool ShowValue { set; get; }
 
         public ItemAttribMasterModel ItemAttribMasterModel { set; get; }
 

@@ -109,8 +109,9 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ItemAttribMasterId"].Value = itemAttribModel.ItemAttribMasterId;
             sqlCommand.Parameters["@ItemAttribUnitValue"].Value = itemAttribModel.ItemAttribUnitValue;
             sqlCommand.Parameters["@ItemAttribValue"].Value = itemAttribModel.ItemAttribValue;
-            sqlCommand.Parameters["@ItemId"].Value = (int)itemAttribModel.ItemId;
+            sqlCommand.Parameters["@ItemId"].Value = (long)itemAttribModel.ItemId;
             sqlCommand.Parameters["@SeqNum"].Value = (int)itemAttribModel.SeqNum;
+            sqlCommand.Parameters["@ShowValue"].Value = (bool)itemAttribModel.ShowValue;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignItemSpecInsert(ItemSpecModel itemSpecModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

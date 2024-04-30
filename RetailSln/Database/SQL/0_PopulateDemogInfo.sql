@@ -1,6 +1,35 @@
 --0_PopulateDemogInfo
 USE [DivineBija.in]
 GO
+
+UPDATE SalesTaxRate_USAByZip
+   SET DemogInfoZipId = DemogInfoData.DemogInfoZipId
+      ,DemogInfoCityId = DemogInfoData.DemogInfoCityId
+      ,DemogInfoCountyId = DemogInfoData.DemogInfoCountyId
+      ,DemogInfoSubDivisionId = DemogInfoData.DemogInfoSubDivisionId
+      ,DemogInfoCountryId = DemogInfoData.DemogInfoCountryId
+      ,ZipCodeValue = DemogInfoData.ZipCode
+      ,CityName = DemogInfoData.CityName
+      ,CountyName = DemogInfoData.CountyName
+      ,StateAbbrev = DemogInfoData.StateAbbrev
+      ,CountryAbbrev = DemogInfoData.CountryAbbrev
+  FROM ArchLib.DemogInfoData
+ WHERE SalesTaxRate_USAByZip.ZipCode = DemogInfoData.ZipCode
+   AND DemogInfoData.CountryAbbrev = 'USA'
+--SELECT *
+--  FROM SalesTaxRate_USAByZip
+--LEFT JOIN ArchLib.DemogInfoData
+--ON SalesTaxRate_USAByZip.ZipCode = DemogInfoData.ZipCode
+--AND DemogInfoData.CountryAbbrev = 'USA'
+--WHERE DemogInfoDataId IS NULL
+--ORDER BY SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode
+--SELECT DISTINCT SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode, COUNT(*)--, DemogInfoZip.DemogInfoZipId
+--FROM SalesTaxRate_USAByZip
+--INNER JOIN ArchLib.DemogInfoZip ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+--GROUP BY SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode
+--HAVING COUNT(*) > 1
+--ORDER BY SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode
+
 --TRUNCATE TABLE CorpAcctUpload
 TRUNCATE TABLE RetailSlnSch.CorpAcct
 INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, MinOrderAmount, CreditLimit, TaxIdentNum)

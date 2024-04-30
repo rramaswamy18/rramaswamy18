@@ -228,16 +228,15 @@
         }*@
     <br style="clear: both;" />
     <div style="text-align: left; width: 100%;">
-        @*<span style="color: #000000; font-family: Arial; font-size: 12px; font-weight: normal;">@(itemModel.ItemShortDesc + " - " + itemModel.ItemAttributesForDisplay["ProductCode"] + " - " + itemModel.ItemAttributesForDisplay["HSNCode"])</span>*@
         <span style="color: #1d1d1d; font-family: Arial; font-size: 16px; font-style: normal; font-weight: 400; line-height: 21px;">@(itemModel.ItemRateFormatted + " - " + itemModel.ItemShortDesc)</span>
-        @if (itemModel.ItemAttributesForDisplay.Count > 0)
+        @if (itemModel.ItemAttribModelsForDisplay.Count > 0)
         {
             <br />
-            foreach (var itemAttributeForDisplay in itemModel.ItemAttributesForDisplay)
+            foreach (var ItemAttribModelForDisplay in itemModel.ItemAttribModelsForDisplay)
             {
-                if (itemAttributeForDisplay.Key != "ProductCode" && itemAttributeForDisplay.Key != "HSNCode")
+                if (ItemAttribModelForDisplay.Key != "ProductCode" && ItemAttribModelForDisplay.Key != "HSNCode")
                 {
-                    <span style="color: #000000; font-size: 11px; font-weight: 600;">@itemAttributeForDisplay.Value</span>
+                    <span style="color: #000000; font-size: 11px; font-weight: 600;">@ItemAttribModelForDisplay.Value.ItemAttribValueForDisplay</span>
                 }
             }
             <br style="clear: both;" />
@@ -249,7 +248,7 @@
         <br style="clear: both;" />
     }
     <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-    <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+    @*<a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 9px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>*@
     if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     {
     }//if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)

@@ -27,14 +27,12 @@ namespace RetailSlnModels
 
         public string ImageTitle { set; get; }
 
-        public Dictionary<string, string> ItemAttributesForDisplay { set; get; }
+        //public Dictionary<string, string> ItemAttributesForDisplay { set; get; }
 
         [Display(Name = "Description")]
         [MaxLength(1024, ErrorMessage = "Desc not to exceed 1024 characters")]
         [Required(ErrorMessage = "Please enter description")]
         public string ItemDesc { set; get; }
-
-        public string ItemDescAttrib { set; get; }
 
         public string ItemName { set; get; }
 
@@ -90,6 +88,8 @@ namespace RetailSlnModels
         public List<CategoryModel> CategoryModels { set; get; }
 
         public List<ItemAttribModel> ItemAttribModels { set; get; }
+
+        public Dictionary<string, ItemAttribModel> ItemAttribModelsForDisplay { set; get; }
 
         public List<ItemModel> ItemModels { set; get; }
 

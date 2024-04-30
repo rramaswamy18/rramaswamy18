@@ -812,6 +812,7 @@ namespace RetailSlnBusinessLayer
                     ItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId),
                     ItemSpecModels = ItemSpecs(itemId, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
                 };
+                itemSpecListModel.ItemSpecModels.Insert(0, new ItemSpecModel { ItemSpecLabelText = "Attribute(s)" });
                 return itemSpecListModel;
             }
             catch (Exception exception)

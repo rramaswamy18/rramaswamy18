@@ -1,0 +1,21 @@
+﻿@model RetailSlnModels.ProcessCreditCardModel
+<div class="col-md-6">
+    <form id="formCreditCardProcessData">
+        @Html.Partial("_CreditCardProcess", Model.CreditCardProcessModel)
+    </form>
+    <center><button class="loginRegisterbtn" id="paymentInfo5Save" onclick="javascript: return paymentInfo5Save_onclick();" style="font-size: 21px; letter-spacing: 4px; text-transform: uppercase; width: 95%;" type="button">Process Credit Card</button></center>
+</div>
+<div class="col-md-6">
+    <div class="row" style="padding-left: 15px; text-align: left;">
+        @Html.LabelFor(m => m.PaymentSummaryDataModel.BalanceDue, new { @class = "col-form-label", style = "color: #000000;" })
+        @Model.PaymentSummaryDataModel.BalanceDue
+    </div>
+    <div class="row" style="padding-left: 15px; text-align: left;">
+        @Html.LabelFor(m => m.PaymentSummaryDataModel.UserFullName, new { @class = "col-form-label", style = "color: #000000;" })
+        @Model.PaymentSummaryDataModel.UserFullName
+    </div>
+    <div class="row" style="padding-left: 15px; text-align: left;">
+        @Html.LabelFor(m => m.PaymentSummaryDataModel.EmailAddress, new { @class = "col-form-label", style = "color: #000000;" })
+        @Model.PaymentSummaryDataModel.EmailAddress
+    </div>
+</div>
