@@ -1,17 +1,36 @@
-﻿<table style="padding: 9px; width: 100%;">
+﻿@model ArchitectureLibraryModels.SqlQueryInput
+<table style="padding: 9px; width: 100%;">
     <tr>
         <td style="padding: 9px; text-align: left; width: 100%;">
-            <h4>Query Database</h4>
+            @Html.Partial("_SqlQueryInput", Model)
         </td>
     </tr>
     <tr>
         <td style="padding: 9px; text-align: left; width: 100%;">
-            <textarea placeholder="Query..." rows="9" style="width: 99%;"></textarea>
+            <textarea id="sqlQuery" placeholder="Query..." rows="9" style="width: 99%;"></textarea>
         </td>
     </tr>
     <tr>
         <td style="padding: 9px; text-align: left; width: 100%;">
-            <button>Run Query</button>
+            <button id="runQuery" onclick="javascript: return runQuery_onclick();">Run Query</button>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 9px; text-align: left; width: 100%;">
+            <div id="sqlQueryResults"></div>
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+    function ddlSchemaLoad_onclick() {
+        alert("ddlSchemaLoad_onclick");
+        return false;
+    }
+    function ddlTable_onclick() {
+        return false;
+    }
+    function runQuery_onclick() {
+        console.log(document.getElementById("sqlQuery").value);
+        return false;
+    }
+</script>

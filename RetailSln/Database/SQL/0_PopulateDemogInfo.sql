@@ -2,34 +2,93 @@
 USE [DivineBija.in]
 GO
 
-UPDATE SalesTaxRate_USAByZip
-   SET DemogInfoZipId = DemogInfoData.DemogInfoZipId
-      ,DemogInfoCityId = DemogInfoData.DemogInfoCityId
-      ,DemogInfoCountyId = DemogInfoData.DemogInfoCountyId
-      ,DemogInfoSubDivisionId = DemogInfoData.DemogInfoSubDivisionId
-      ,DemogInfoCountryId = DemogInfoData.DemogInfoCountryId
-      ,ZipCodeValue = DemogInfoData.ZipCode
-      ,CityName = DemogInfoData.CityName
-      ,CountyName = DemogInfoData.CountyName
-      ,StateAbbrev = DemogInfoData.StateAbbrev
-      ,CountryAbbrev = DemogInfoData.CountryAbbrev
-  FROM ArchLib.DemogInfoData
- WHERE SalesTaxRate_USAByZip.ZipCode = DemogInfoData.ZipCode
-   AND DemogInfoData.CountryAbbrev = 'USA'
---SELECT *
---  FROM SalesTaxRate_USAByZip
---LEFT JOIN ArchLib.DemogInfoData
---ON SalesTaxRate_USAByZip.ZipCode = DemogInfoData.ZipCode
---AND DemogInfoData.CountryAbbrev = 'USA'
---WHERE DemogInfoDataId IS NULL
---ORDER BY SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode
---SELECT DISTINCT SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode, COUNT(*)--, DemogInfoZip.DemogInfoZipId
---FROM SalesTaxRate_USAByZip
---INNER JOIN ArchLib.DemogInfoZip ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
---GROUP BY SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode
---HAVING COUNT(*) > 1
---ORDER BY SalesTaxRate_USAByZip.StateName, SalesTaxRate_USAByZip.ZipCode
-
+     UPDATE SalesTaxRate_USAByZip
+        SET DemogInfoZipId = NULL
+           ,DemogInfoCityId = NULL
+           ,DemogInfoCountyId = NULL
+           ,DemogInfoSubDivisionId = NULL
+           ,DemogInfoCountryId = NULL
+           ,CityName = NULL
+           ,CountyName = NULL
+----
+      DROP TABLE IF EXISTS #TEMP1
+    SELECT DISTINCT
+           DemogInfoZip.DemogInfoZipId, DemogInfoZip.ZipCode
+          ,DemogInfoCity.DemogInfoCityId, DemogInfoCity.CityName
+          ,DemogInfoCounty.DemogInfoCountyId, DemogInfoCounty.CountyName
+          ,DemogInfoSubDivision.DemogInfoSubDivisionId, DemogInfoSubDivision.StateAbbrev
+          ,DemogInfoCountry.DemogInfoCountryId, DemogInfoCountry.CountryAbbrev
+      INTO #TEMP1
+      FROM SalesTaxRate_USAByZip
+INNER JOIN ArchLib.DemogInfoZip
+        ON SalesTaxRate_USAByZip.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN ArchLib.DemogInfoCity
+        ON DemogInfoZip.DemogInfoCityId = DemogInfoCity.DemogInfoCityId
+INNER JOIN ArchLib.DemogInfoCounty
+        ON DemogInfoCity.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId
+INNER JOIN ArchLib.DemogInfoSubDivision
+        ON DemogInfoCounty.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+       AND SalesTaxRate_USAByZip.StateName = DemogInfoSubDivision.StateAbbrev
+INNER JOIN ArchLib.DemogInfoCountry
+        ON DemogInfoSubDivision.DemogInfoCountryId = DemogInfoCountry.DemogInfoCountryId
+----
+    UPDATE SalesTaxRate_USAByZip
+       SET DemogInfoZipId = #TEMP1.DemogInfoZipId
+          ,DemogInfoCityId = #TEMP1.DemogInfoCityId
+          ,DemogInfoCountyId = #TEMP1.DemogInfoCountyId
+          ,DemogInfoSubDivisionId = #TEMP1.DemogInfoSubDivisionId
+          ,DemogInfoCountryId = #TEMP1.DemogInfoCountryId
+      FROM #TEMP1
+INNER JOIN SalesTaxRate_USAByZip
+        ON SalesTaxRate_USAByZip.ZipCode = #TEMP1.ZipCode
+       AND SalesTaxRate_USAByZip.StateName = #TEMP1.StateAbbrev
+----
+DECLARE @ClientId INT = 3
+TRUNCATE TABLE ArchLib.SalesTaxList
+INSERT ArchLib.SalesTaxList
+      (
+       ClientId, BegEffDate, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipId,
+       EndEffDate, LineItemLevelName, SalesTaxCaptionId, SalesTaxRate, ShowOnInvoice,
+       SrceDemogInfoCountryId, SrceDemogInfoSubDivisionId, SrceDemogInfoCountyId, SrceDemogInfoCityId, SrceDemogInfoZipId, TaxRegionName
+      )
+SELECT 
+       @ClientId AS ClientId, BegEffDate, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId,
+       NULL DestDemogInfoZipId, EndEffDate, LineItemLevelName, SalesTaxCaptionId, SalesTaxRate, ShowOnInvoice, SrceDemogInfoCountryId,
+	   SrceDemogInfoSubDivisionId, SrceDemogInfoCountyId, SrceDemogInfoCityId, SrceDemogInfoZipId, TaxRegionName
+  FROM SalesTaxList_20240504
+ WHERE SrceDemogInfoCountryId = 106
+   AND DestDemogInfoCountryId = 106
+----
+INSERT ArchLib.SalesTaxList
+      (
+       ClientId, BegEffDate, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipId,
+       EndEffDate, LineItemLevelName, SalesTaxCaptionId, SalesTaxRate, ShowOnInvoice, SrceDemogInfoCountryId, SrceDemogInfoSubDivisionId,
+	   SrceDemogInfoCountyId, SrceDemogInfoCityId, SrceDemogInfoZipId, TaxRegionName
+      )
+SELECT 
+       @ClientId AS ClientId, '1900-01-01' AS BegEffDate, DemogInfoCountryId AS DestDemogInfoCountryId, DemogInfoSubDivisionId AS DestDemogInfoSubDivisionId
+      ,NULL AS DestDemogInfoCountyId, NULL AS DestDemogInfoCityId, DemogInfoZipId AS DestDemogInfoZipId
+      ,'9999-12-31' AS EndEffDate, 'SUMMARY' AS LineItemLevelName, 500 AS SalesTaxCaptionId, CAST(EstimatedCombinedRate AS FLOAT) * 100 AS SalesTaxRate
+      ,1 AS ShowOnInvoice, 236 AS SrceDemogInfoCountryId, NULL AS SrceDemogInfoSubDivisionId, NULL AS SrceDemogInfoCountyId
+      ,NULL AS SrceDemogInfoCityId, NULL AS SrceDemogInfoZipId, NULL AS TaxRegionName
+ FROM SalesTaxRate_USAByZip
+WHERE DemogInfoZipId IS NOT NULL
+  AND DemogInfoCountryId = 236
+ORDER BY SrceDemogInfoCountryId, DestDemogInfoCountryId, DestDemogInfoSubDivisionId
+----
+--TRUNCATE TABLE [DivineBija.com].ArchLib.SalesTaxList
+--INSERT [DivineBija.com].ArchLib.SalesTaxList
+--      (
+--       ClientId, BegEffDate, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId, DestDemogInfoZipId,
+--       DestDemogInfoZipIdFrom, DestDemogInfoZipIdTo, EndEffDate, LineItemLevelName, SalesTaxCaptionId, SalesTaxRate, ShowOnInvoice,
+--       SrceDemogInfoCountryId, SrceDemogInfoSubDivisionId, SrceDemogInfoCountyId, SrceDemogInfoCityId, SrceDemogInfoZipId, TaxRegionName
+--      )
+--SELECT 
+--       98 AS ClientId, BegEffDate, DestDemogInfoCountryId, DestDemogInfoSubDivisionId, DestDemogInfoCountyId, DestDemogInfoCityId,
+--       DestDemogInfoZipId, NULL DestDemogInfoZipIdFrom, NULL DestDemogInfoZipIdTo, EndEffDate, LineItemLevelName, SalesTaxCaptionId,
+--       SalesTaxRate, ShowOnInvoice, SrceDemogInfoCountryId, SrceDemogInfoSubDivisionId, SrceDemogInfoCountyId, SrceDemogInfoCityId,
+--       SrceDemogInfoZipId, TaxRegionName
+--  FROM ArchLib.SalesTaxList
 --TRUNCATE TABLE CorpAcctUpload
 TRUNCATE TABLE RetailSlnSch.CorpAcct
 INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, MinOrderAmount, CreditLimit, TaxIdentNum)
@@ -63,7 +122,7 @@ SELECT CorpAcctName, 1 SeqNum FROM RetailSlnSch.CorpAcct
         TRUNCATE TABLE [ArchLib].[DemogInfoDeNormalized]
         INSERT [ArchLib].[DemogInfoDeNormalized]
               (
-			   [ClientId], [CountryAbbrev], [CountryDesc], [Alpha2Code], [Alpha3Code], [NumericCode], [SubDivisionCodeHyperLink]
+               [ClientId], [CountryAbbrev], [CountryDesc], [Alpha2Code], [Alpha3Code], [NumericCode], [SubDivisionCodeHyperLink]
               ,[StateAbbrev], [SubDivisionCode], [SubDivisionDesc], [SubDivisionCategoryNameDesc], [ParentSubDivisionCode]
               ,[CountyName], [CityName], [ZipCode], [TelephoneCode], [PostalCodeLabel], [PostalCodeRegEx]
               )
@@ -79,7 +138,7 @@ SELECT CorpAcctName, 1 SeqNum FROM RetailSlnSch.CorpAcct
          FROM [ArchLib].[DemogInfoDeNormalizedWithNoDups]
         WHERE CountryAbbrev = 'IND' AND StateAbbrev = ''
         UNION
-		SELECT DISTINCT
+        SELECT DISTINCT
                0 AS ClientId, CountryAbbrev, CountryDesc, 'IN' Alpha2Code, 'IND' Alpha3Code, '356' NumericCode, 'ISO 3166-2:IN' SubDivisionCodeHyperLink
               ,StateAbbrev, 'IN-' + StateAbbrev [SubDivisionCode], StateName [SubDivisionDesc], '' [SubDivisionCategoryNameDesc]
               ,'' [ParentSubDivisionCode], CountyName, CityName, ZipCode, '91' TelephoneCode, 'Postal Code' PostalCodeLabel
@@ -186,12 +245,12 @@ PRINT 'ArchLib.DemogInfoZip'
 --ArchLib.DemogInfoData
         TRUNCATE TABLE [ArchLib].[DemogInfoData]
         INSERT [ArchLib].[DemogInfoData]
-		      (
-			   ClientId, DemogInfoCountryId, CountryAbbrev, CountryDesc, Alpha2Code, Alpha3Code, NumericCode, SubDivisionCodeHyperLink
-			  ,TelephoneCode, PostalCodeLabel, PostalCodeRegEx, DemogInfoSubDivisionId, StateAbbrev, SubDivisionCode, SubDivisionDesc
-			  ,SubDivisionCategoryNameDesc, ParentSubDivisionCode, DemogInfoCountyId, CountyNameDesc, CountyName, DemogInfoCityId, CityNameDesc
-			  ,CityName, DemogInfoZipId, ZipCode, DemogInfoZipPlusId, ZipPlus4
-			  )
+              (
+               ClientId, DemogInfoCountryId, CountryAbbrev, CountryDesc, Alpha2Code, Alpha3Code, NumericCode, SubDivisionCodeHyperLink
+              ,TelephoneCode, PostalCodeLabel, PostalCodeRegEx, DemogInfoSubDivisionId, StateAbbrev, SubDivisionCode, SubDivisionDesc
+              ,SubDivisionCategoryNameDesc, ParentSubDivisionCode, DemogInfoCountyId, CountyNameDesc, CountyName, DemogInfoCityId, CityNameDesc
+              ,CityName, DemogInfoZipId, ZipCode, DemogInfoZipPlusId, ZipPlus4
+              )
         SELECT --DISTINCT
                DemogInfoCountry.ClientId, DemogInfoCountry.DemogInfoCountryId, DemogInfoCountry.CountryAbbrev, DemogInfoCountry.CountryDesc
               ,DemogInfoCountry.Alpha2Code, DemogInfoCountry.Alpha3Code, DemogInfoCountry.NumericCode, DemogInfoCountry.SubDivisionCodeHyperLink

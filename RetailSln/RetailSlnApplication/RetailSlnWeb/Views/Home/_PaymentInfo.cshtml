@@ -26,7 +26,7 @@
         </span>
         <br />
         <h3 style="display: none; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Gift&nbsp;Cert&nbsp;Payment</h3>
-        <form id="formPaymentInfoData" style="display: none;">
+        <form id="formPaymentInfoData">
             @Html.Partial("_GiftCertPaymentData", Model.GiftCertPaymentModel)
         </form>
         @switch (Model.DeliveryInfoDataModel.PaymentModeId)

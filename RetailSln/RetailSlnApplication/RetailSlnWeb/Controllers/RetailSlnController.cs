@@ -444,24 +444,24 @@ namespace RetailSlnWeb.Controllers
                 ModelState.Clear();
                 TryValidateModel(deliveryInfoDataModel);
                 TryValidateModel(deliveryInfoDataModel.DeliveryAddressModel, "DeliveryAddressModel");
-                if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
-                {
-                    ModelState.Remove("DeliveryAddressModel.AddressLine1");
-                    ModelState.Remove("DeliveryAddressModel.AddressLine2");
-                    ModelState.Remove("DeliveryAddressModel.CityName");
-                    ModelState.Remove("DeliveryAddressModel.ZipCode");
-                    ModelState.Remove("DeliveryAddressModel.DemogInfoSubDivisionId");
-                    ModelState.Remove("DeliveryAddressModel.BuildingTypeId");
-                    deliveryInfoDataModel.DeliveryAddressModel.AddressLine1 = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.AddressLine2 = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.AddressLine3 = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.CityName = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.ZipCode = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = null;
-                    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = null;
-                }
-                else
+                //if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
+                //{
+                //    ModelState.Remove("DeliveryAddressModel.AddressLine1");
+                //    ModelState.Remove("DeliveryAddressModel.AddressLine2");
+                //    ModelState.Remove("DeliveryAddressModel.CityName");
+                //    ModelState.Remove("DeliveryAddressModel.ZipCode");
+                //    ModelState.Remove("DeliveryAddressModel.DemogInfoSubDivisionId");
+                //    ModelState.Remove("DeliveryAddressModel.BuildingTypeId");
+                //    deliveryInfoDataModel.DeliveryAddressModel.AddressLine1 = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.AddressLine2 = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.AddressLine3 = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.CityName = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.ZipCode = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = null;
+                //    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = null;
+                //}
+                //else
                 {
                     if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.AddressLine1))
                     {
@@ -1114,11 +1114,26 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     RazorPayResponse creditCardResponseObject = retailSlnBL.PaymentInfo2(paymentInfoModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    htmlString = JsonConvert.SerializeObject(creditCardResponseObject);
-                    actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    if (ModelState.IsValid)
+                    {
+                        success = true;
+                        processMessage = "SUCCESS!!!";
+                        htmlString = JsonConvert.SerializeObject(creditCardResponseObject);
+                        actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    }
+                    else
+                    {
+                        success = false;
+                        processMessage = "ERROR???";
+                        giftCertPaymentModel.ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                        };
+                        htmlString = archLibBL.ViewToHtmlString(this, "_GiftCertPaymentData", giftCertPaymentModel);
+                        actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Failure");
+                    }
                 }
                 else
                 {
@@ -1200,6 +1215,7 @@ namespace RetailSlnWeb.Controllers
                     UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
                 },
             };
+            ModelState.Clear();
             success = true;
             processMessage = "SUCCESS!!!";
             htmlString = archLibBL.ViewToHtmlString(this, "_ProcessCreditCard", processCreditCardModel);
@@ -1220,11 +1236,11 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
-            success = false;
-            processMessage = "SUCCESS!!!";
             htmlString = retailSlnBL.PaymentInfo5(creditCardProcessModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             if (htmlString != "")
             {
+                success = true;
+                processMessage = "SUCCESS!!!";
                 actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
                 FormsAuthentication.SignOut();
                 Session.Abandon();

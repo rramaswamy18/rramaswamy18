@@ -1,0 +1,31 @@
+﻿@model ArchitectureLibraryModels.SqlQueryInput
+<span style="color: #000000; padding-right: 5px;">
+    Schema
+</span>
+<select style="padding-right: 5px;">
+    @foreach (var schemaModel in Model.SchemaModels)
+    {
+        <option value="">@schemaModel.SchemaName</option>
+    }
+</select>
+<a href="javascript: void(0);" id="ddlSchemaLoad" onclick="javascript: return ddlSchemaLoad_onclick();" style="padding-right: 5px; text-decoration: underline;">
+    Load Table
+</a>
+<span style="color: #000000; padding-right: 5px;">
+    Table
+</span>
+<select id="ddlTable" style="padding-right: 5px;">
+    @foreach (var tableModel in Model.TableModels)
+    {
+        <option value="">@tableModel.TableName</option>
+    }
+</select>
+<a href="" style="padding-right: 5px; text-decoration: underline;">
+    Load Column
+</a>
+<select id="ddlColumn" style="padding-right: 5px;">
+    @foreach (var columnModel in Model.ColumnModels)
+    {
+        <option value="">@columnModel.ColumnName</option>
+    }
+</select>

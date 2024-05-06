@@ -28,7 +28,11 @@
 	</appSettings>
 	<connectionStrings>
 		<add name="DatabaseConnectionString" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.in"></add>
+		<add name="DatabaseConnectionString2" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.com"></add>
 		<add name="DatabaseConnectionStringLog" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.in"></add>
+		<add name="DatabaseConnectionStringSelect" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.in"></add>
+		<add name="DatabaseConnectionStringPrjctMgmt" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=PrjctMgmt"></add>
+		<add name="DatabaseConnectionStringLogPrjctMgmt" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=PrjctMgmt"></add>
 	</connectionStrings>
 	<system.diagnostics>
 		<trace autoflush="true">

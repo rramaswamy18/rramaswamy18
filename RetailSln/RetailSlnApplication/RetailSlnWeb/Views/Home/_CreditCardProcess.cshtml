@@ -7,9 +7,9 @@
         years.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
     }
 }
-@Html.TextBoxFor(m => m.CreditCardPaymentAmount)
-@Html.TextBoxFor(m => m.EmailAddress)
-@Html.TextBoxFor(m => m.UserFullName)
+@Html.HiddenFor(m => m.CreditCardPaymentAmount)
+@Html.HiddenFor(m => m.EmailAddress)
+@Html.HiddenFor(m => m.UserFullName)
 @if (!ViewData.ModelState.IsValid)
 {
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "color: #ff0000; column-count: 1; font-size: 15px; text-align: left;" }).ToHtmlString()))

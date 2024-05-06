@@ -1,4 +1,10 @@
 ﻿@model RetailSlnModels.ProcessCreditCardModel
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
+    DeliveryInfoDataModel deliveryInfoDataModel = (DeliveryInfoDataModel)Session["DeliveryInfoDataModel"];
+}
 <div class="col-md-6">
     <form id="formCreditCardProcessData">
         @Html.Partial("_CreditCardProcess", Model.CreditCardProcessModel)
@@ -8,7 +14,7 @@
 <div class="col-md-6">
     <div class="row" style="padding-left: 15px; text-align: left;">
         @Html.LabelFor(m => m.PaymentSummaryDataModel.BalanceDue, new { @class = "col-form-label", style = "color: #000000;" })
-        @Model.PaymentSummaryDataModel.BalanceDue
+        @Model.PaymentSummaryDataModel.BalanceDue.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
     </div>
     <div class="row" style="padding-left: 15px; text-align: left;">
         @Html.LabelFor(m => m.PaymentSummaryDataModel.UserFullName, new { @class = "col-form-label", style = "color: #000000;" })
@@ -18,4 +24,8 @@
         @Html.LabelFor(m => m.PaymentSummaryDataModel.EmailAddress, new { @class = "col-form-label", style = "color: #000000;" })
         @Model.PaymentSummaryDataModel.EmailAddress
     </div>
+    @Html.Partial("_DeliveryInfoAddressData", deliveryInfoDataModel)
+</div>
+<div class="col-md-12">
+    @Html.Partial("_ShoppingCart", shoppingCartModel)
 </div>

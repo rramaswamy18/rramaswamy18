@@ -68,9 +68,26 @@ namespace RetailSlnWeb.Controllers
 
         //[Authorize]
         [HttpGet]
-        [Route("SqlResult")]
-        public ActionResult SqlResult()
+        //[Route("SqlResult")]
+        public ActionResult SqlResult(string schemaName, string tableName)
         {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            SqlQueryInput sqlQueryInput = archLibBL.GetDataDictionary(schemaName, tableName, clientId, ipAddress, execUniqueId, loggedInUserId);
+            return View(sqlQueryInput);
+        }
+
+        //[Authorize]
+        [HttpPost]
+        //[Route("SqlResult")]
+        public ActionResult SqlResult(SqlQueryOutput sqlQueryOutput)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
             return View();
         }
     }
