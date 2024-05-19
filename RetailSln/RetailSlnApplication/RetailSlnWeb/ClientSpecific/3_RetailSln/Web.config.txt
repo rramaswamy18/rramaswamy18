@@ -19,7 +19,7 @@
 		<add key="ClientName" value="RetailSln"></add>
 		<!--TESTMODE RAZORPAYTEST RAZORPAYPROD NUVEITEST NUVEIPROD-->
 		<add key="CreditCardProcessor" value="NUVEITEST"></add>
-		<add key="CompanyName" value="GajaAshwa Inc."></add>
+		<add key="CompanyName" value="Gajaashwa Inc."></add>
 		<add key="EmailDirectoryName" value="C:\Code\rramaswamy18\RetailSln\Email\"></add>
 		<add key="EmailServiceType" value="SMTP"></add>
 		<add key="IpInfoMode" value="TEST"></add>
@@ -28,8 +28,8 @@
 	</appSettings>
 	<connectionStrings>
 		<add name="DatabaseConnectionString" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln"></add>
-		<add name="DatabaseConnectionString2" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln2"></add>
 		<add name="DatabaseConnectionStringLog" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln"></add>
+		<add name="DatabaseConnectionString2" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln2"></add>
 		<add name="DatabaseConnectionStringSelect" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln"></add>
 		<add name="DatabaseConnectionStringPrjctMgmt" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=PrjctMgmt"></add>
 		<add name="DatabaseConnectionStringLogPrjctMgmt" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=PrjctMgmt"></add>

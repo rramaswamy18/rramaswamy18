@@ -204,10 +204,8 @@
     <Compile Include="ClassCode\RetailSlnModels\CorpAcctModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CreditCardProcessModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CreditCardValidateModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\DeliveryChargeModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryInfoDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryInfoModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\DeliveryListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DiscountDtlModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertModel.cs" />

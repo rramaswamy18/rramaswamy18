@@ -6,7 +6,9 @@ using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryPDFLibrary;
+using ArchitectureLibraryShippingLibrary;
 using ArchitectureLibraryUtility;
+using Newtonsoft.Json.Linq;
 using RetailSlnCacheData;
 using RetailSlnDataLayer;
 using RetailSlnEnumerations;
@@ -23,6 +25,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using static System.Collections.Specialized.BitVector32;
 
 namespace RetailSlnBusinessLayer
@@ -186,8 +189,8 @@ namespace RetailSlnBusinessLayer
                         (
                             shoppingCartItemModel = new ShoppingCartItemModel
                             {
-                                DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue),
-                                HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue),
+                                DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribUnitValue),
+                                HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribValue),
                                 HSNCode = itemModel.ItemAttribModelsForDisplay["HSNCode"].ItemAttribValueForDisplay,
                                 ItemDesc = itemModel.ItemDesc,
                                 ItemDiscountPercent = null,
@@ -195,16 +198,16 @@ namespace RetailSlnBusinessLayer
                                 ItemRate = itemModel.ItemRate,
                                 ItemRateBeforeDiscount = itemModel.ItemRate,
                                 ItemShortDesc = itemModel.ItemShortDesc,
-                                LengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue),
+                                LengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductLength").ItemAttribValue),
                                 OrderAmount = orderQty * itemModel.ItemRate,
                                 OrderAmountBeforeDiscount = orderQty * itemModel.ItemRate,
                                 OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                 OrderQty = orderQty,
                                 ProductCode = itemModel.ItemAttribModelsForDisplay["ProductCode"].ItemAttribValueForDisplay,
                                 WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "WeightCalc").ItemAttribValue),
-                                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue),
-                                WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue),
-                                WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue),
+                                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribUnitValue),
+                                WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribValue),
+                                WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWidth").ItemAttribValue),
                             }
                         );
                     }
@@ -278,7 +281,7 @@ namespace RetailSlnBusinessLayer
                 CheckoutModel checkoutModel = new CheckoutModel
                 {
                     ContactUsModel = new ContactUsModel(),
-                    CheckoutGuestModel = new CheckoutGuestModel
+                    LoginUserProfGuestModel = new LoginUserProfGuestModel
                     {
                         ResponseObjectModel = new ResponseObjectModel
                         {
@@ -319,9 +322,9 @@ namespace RetailSlnBusinessLayer
                     checkoutModel.ContactUsModel.CaptchaAnswerContactUs = null;
                     checkoutModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
                     checkoutModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
-                    checkoutModel.CheckoutGuestModel.CaptchaAnswerCheckoutGuest = null;
-                    checkoutModel.CheckoutGuestModel.CaptchaNumberCheckoutGuest0 = httpSessionStateBase["CaptchaNumberCheckoutGuest0"].ToString();
-                    checkoutModel.CheckoutGuestModel.CaptchaNumberCheckoutGuest1 = httpSessionStateBase["CaptchaNumberCheckoutGuest1"].ToString();
+                    checkoutModel.LoginUserProfGuestModel.CaptchaAnswerLoginUserProfGuest = null;
+                    checkoutModel.LoginUserProfGuestModel.CaptchaNumberLoginUserProfGuest0 = httpSessionStateBase["CaptchaNumberCheckoutGuest0"].ToString();
+                    checkoutModel.LoginUserProfGuestModel.CaptchaNumberLoginUserProfGuest1 = httpSessionStateBase["CaptchaNumberCheckoutGuest1"].ToString();
                     checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = null;
                     checkoutModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
                     checkoutModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
@@ -1084,7 +1087,7 @@ namespace RetailSlnBusinessLayer
                     paymentInfoModel.PaymentSummaryDataModel.CreditCardProcessStatus = "Success";
                     string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailSubject", paymentInfoModel);
                     emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderReceiptEmailBody", paymentInfoModel);
-                    string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
+                    string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateOrderEmail", paymentInfoModel);
                     emailBodyHtml += signatureHtml;
                     PDFUtility pDFUtility = new PDFUtility();
                     string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
@@ -1229,7 +1232,8 @@ namespace RetailSlnBusinessLayer
             totalOrderAmount -= discountAmount;
             DemogInfoAddressModel demogInfoAddressModel = deliveryInfoDataModel.DeliveryAddressModel;
             var salesTaxListModels = GetSalesTaxListModels(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-            float shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0, shippingAndHandlingChargesAmount, fuelCharges;
+            float shippingAndHandlingChargesRate = 0, shippingAndHandlingChargesAmount, fuelCharges;
+            //float /*shippingAndHandlingChargesByWeight = 0, shippingAndHandlingChargesByVolume = 0, */shippingAndHandlingChargesAmount, fuelCharges;
             DeliveryChargeModel deliveryChargeModel = null;
             if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
             {
@@ -1238,20 +1242,25 @@ namespace RetailSlnBusinessLayer
             }
             else
             {
-                deliveryChargeModel = GetDeliveryChargeModel(demogInfoAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (deliveryChargeModel.UnitMeasure == "WEIGHT")
+                ShippingService shippingService = new ShippingService();
+                ShippingInputModel shippingInputModel = new ShippingInputModel
                 {
-                    shippingAndHandlingChargesByWeight = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
-                }
-                if (deliveryChargeModel.UnitMeasure == "VOLUME")
-                {
-                    shippingAndHandlingChargesByVolume = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
-                }
-                shippingAndHandlingChargesAmount = shippingAndHandlingChargesByWeight * shoppingCartModel.TotalWeightValueRounded;
+                    DestDemogInfoAddressModel = demogInfoAddressModel,
+                    SrceDemogInfoAddressModel = new DemogInfoAddressModel
+                    {
+                        DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+                    },
+                    ShippingInputData = null,
+                };
+                deliveryChargeModel = (DeliveryChargeModel)shippingService.GetRate(shippingInputModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                shippingAndHandlingChargesRate = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+                shippingAndHandlingChargesAmount = shippingAndHandlingChargesRate * shoppingCartModel.TotalWeightValueRounded;
                 fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
             }
+            var salesTaxCaptionIds = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SalesTaxType", "");
             foreach (var salesTaxListModel in salesTaxListModels)
             {
+                var salesTaxCaptionId = salesTaxCaptionIds.First(x => x.CodeDataNameId == (int)salesTaxListModel.SalesTaxCaptionId);
                 if (salesTaxListModel.LineItemLevelName == "SUMMARY")
                 {
                     shoppingCartSummaryItems.Add
@@ -1261,7 +1270,7 @@ namespace RetailSlnBusinessLayer
                             ItemDesc = null,
                             ItemId = null,
                             ItemRate = totalOrderAmount,
-                            ItemShortDesc = salesTaxListModel.SalesTaxCaptionId + " (" + salesTaxListModel.SalesTaxRate + "%)",
+                            ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
                             OrderAmount = totalOrderAmount * salesTaxListModel.SalesTaxRate / 100f,
                             OrderComments = null,
                             OrderQty = 1,
@@ -1277,7 +1286,7 @@ namespace RetailSlnBusinessLayer
                         {
                             ItemDesc = null,
                             ItemId = null,
-                            ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
+                            ItemShortDesc = salesTaxCaptionId.CodeDataDesc0,
                             OrderAmount = 0,
                             OrderComments = null,
                         }
@@ -1306,7 +1315,7 @@ namespace RetailSlnBusinessLayer
                     {
                         ItemDesc = null,
                         ItemId = null,
-                        ItemRate = shippingAndHandlingChargesByWeight,
+                        ItemRate = shippingAndHandlingChargesRate,
                         ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                         OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
                         OrderComments = null,
@@ -1317,14 +1326,15 @@ namespace RetailSlnBusinessLayer
             }
             foreach (var salesTaxListModel in salesTaxListModels)
             {
+                var salesTaxCaptionId = salesTaxCaptionIds.First(x => x.CodeDataNameId == (int)salesTaxListModel.SalesTaxCaptionId);
                 shoppingCartSummaryItems.Add
                 (
                     new ShoppingCartItemModel
                     {
                         ItemDesc = null,
                         ItemId = null,
-                        ItemRate = shippingAndHandlingChargesByWeight,
-                        ItemShortDesc = salesTaxListModel.SalesTaxCaptionId + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
+                        ItemRate = shippingAndHandlingChargesRate,
+                        ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
                         OrderAmount = (shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f,
                         OrderComments = null,
                         OrderQty = shoppingCartModel.TotalWeightValueRounded,
@@ -1340,7 +1350,7 @@ namespace RetailSlnBusinessLayer
                     {
                         ItemDesc = null,
                         ItemId = null,
-                        ItemRate = shippingAndHandlingChargesByWeight,
+                        ItemRate = shippingAndHandlingChargesRate,
                         ItemShortDesc = "Discount - Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                         OrderAmount = -1 * (shippingAndHandlingChargesAmount + fuelCharges),
                         OrderComments = null,
@@ -1356,7 +1366,7 @@ namespace RetailSlnBusinessLayer
                         {
                             ItemDesc = null,
                             ItemId = null,
-                            ItemRate = shippingAndHandlingChargesByWeight,
+                            ItemRate = shippingAndHandlingChargesRate,
                             ItemShortDesc = "Discount - " + salesTaxListModel.SalesTaxCaptionId + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
                             OrderAmount = -1 * ((shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f),
                             OrderComments = null,
@@ -1367,6 +1377,48 @@ namespace RetailSlnBusinessLayer
                 }
             }
         }
+        //private DeliveryChargeModel GetDeliveryChargeModel(DemogInfoAddressModel demogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    DeliveryChargeModel deliveryChargeModel = null;
+        //    List<DeliveryChargeModel> deliveryChargeModelsSearch = null, deliveryChargeModelsTemp;
+        //    deliveryChargeModelsSearch = ArchLibCache.DeliveryChargeModels.FindAll(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId);
+        //    if (deliveryChargeModelsSearch.Count == 1)
+        //    {
+        //    }
+        //    else
+        //    {
+        //        if (deliveryChargeModelsSearch.Count > 0)
+        //        {
+        //            deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
+        //            if (deliveryChargeModelsSearch.Count > 0)
+        //            {
+        //                deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == demogInfoAddressModel.DemogInfoCountyId);
+        //                if (deliveryChargeModelsTemp.Count == 0)
+        //                {
+        //                    deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == null);
+        //                }
+        //            }
+        //            if (deliveryChargeModelsSearch.Count > 0)
+        //            {
+        //                deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId);
+        //                if (deliveryChargeModelsTemp.Count == 0)
+        //                {
+        //                    deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == null);
+        //                }
+        //                if (deliveryChargeModelsTemp.Count > 1)
+        //                {
+        //                    deliveryChargeModelsSearch = deliveryChargeModelsTemp.FindAll(x => demogInfoAddressModel.DemogInfoZipId >= x.DestDemogInfoZipIdFrom && demogInfoAddressModel.DemogInfoZipId <= x.DestDemogInfoZipIdTo);
+        //                }
+        //                else
+        //                {
+        //                    deliveryChargeModelsSearch = deliveryChargeModelsTemp;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    deliveryChargeModel = deliveryChargeModelsSearch[0];
+        //    return deliveryChargeModel;
+        //}
         private void AddTotals(List<ShoppingCartItemModel> shoppingCartSummaryItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             float totalInvoiceAmount = 0;
@@ -1632,48 +1684,6 @@ namespace RetailSlnBusinessLayer
                 }
             }
             return giftCertModel;
-        }
-        private DeliveryChargeModel GetDeliveryChargeModel(DemogInfoAddressModel demogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            DeliveryChargeModel deliveryChargeModel = null;
-            List<DeliveryChargeModel> deliveryChargeModelsSearch = null, deliveryChargeModelsTemp;
-            deliveryChargeModelsSearch = RetailSlnCache.DeliveryChargeModels.FindAll(x => x.DestDemogInfoCountryId == demogInfoAddressModel.DemogInfoCountryId);
-            if (deliveryChargeModelsSearch.Count == 1)
-            {
-            }
-            else
-            {
-                if (deliveryChargeModelsSearch.Count > 0)
-                {
-                    deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoSubDivisionId == demogInfoAddressModel.DemogInfoSubDivisionId);
-                    if (deliveryChargeModelsSearch.Count > 0)
-                    {
-                        deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == demogInfoAddressModel.DemogInfoCountyId);
-                        if (deliveryChargeModelsTemp.Count == 0)
-                        {
-                            deliveryChargeModelsSearch = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCountyId == null);
-                        }
-                    }
-                    if (deliveryChargeModelsSearch.Count > 0)
-                    {
-                        deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == demogInfoAddressModel.DemogInfoCityId);
-                        if (deliveryChargeModelsTemp.Count == 0)
-                        {
-                            deliveryChargeModelsTemp = deliveryChargeModelsSearch.FindAll(x => x.DestDemogInfoCityId == null);
-                        }
-                        if (deliveryChargeModelsTemp.Count > 1)
-                        {
-                            deliveryChargeModelsSearch = deliveryChargeModelsTemp.FindAll(x => demogInfoAddressModel.DemogInfoZipId >= x.DestDemogInfoZipIdFrom && demogInfoAddressModel.DemogInfoZipId <= x.DestDemogInfoZipIdTo);
-                        }
-                        else
-                        {
-                            deliveryChargeModelsSearch = deliveryChargeModelsTemp;
-                        }
-                    }
-                }
-            }
-            deliveryChargeModel = deliveryChargeModelsSearch[0];
-            return deliveryChargeModel;
         }
         private List<SalesTaxListModel> GetSalesTaxListModels(DemogInfoAddressModel demogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

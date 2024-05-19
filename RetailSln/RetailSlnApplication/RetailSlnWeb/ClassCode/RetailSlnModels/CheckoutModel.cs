@@ -9,7 +9,7 @@ namespace RetailSlnModels
     public class CheckoutModel
     {
         public ContactUsModel ContactUsModel { set; get; }
-        public CheckoutGuestModel CheckoutGuestModel { set; get; }
+        public LoginUserProfGuestModel LoginUserProfGuestModel { set; get; }
         public LoginUserProfModel LoginUserProfModel { set; get; }
         public RegisterUserProfModel RegisterUserProfModel { set; get; }
         public ResetPasswordModel ResetPasswordModel { set; get; }

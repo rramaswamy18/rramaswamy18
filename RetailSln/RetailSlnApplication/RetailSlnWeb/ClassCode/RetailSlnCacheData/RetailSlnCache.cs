@@ -23,8 +23,6 @@ namespace RetailSlnCacheData
         public static string CurrencySymbol { set; get; }
         public static Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
-        public static List<DeliveryChargeModel> DeliveryChargeModels { set; get; }
-        public static List<DeliveryListModel> DeliveryListModels { set; get; }
         public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemAttribMasterModel> ItemAttribMasterModels { set; get; }
@@ -38,28 +36,28 @@ namespace RetailSlnCacheData
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
-            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<DeliveryListModel> deliveryListModels, out List<DeliveryChargeModel> deliveryChargeModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
             ItemBundleItemModels = ItemBundleItemModels;
             ItemModels = itemModels;
             ItemAttribModels = itemAttribModels;
             ItemAttribMasterModels = itemAttribMasterModels;
             CategoryItemHierModels = categoryItemHierModels;
-            DeliveryListModels = deliveryListModels;
-            DeliveryChargeModels = deliveryChargeModels;
+            //DeliveryListModels = deliveryListModels;
+            //DeliveryChargeModels = deliveryChargeModels;
             CorpAcctModels = corpAcctModels;
             DiscountDtlModels = discountDtlModels;
             CurrencyCultureInfo = new CultureInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, deliveryListModels, deliveryChargeModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
             CategoryLayoutModels = categoryLayoutModels;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<DeliveryListModel> deliveryListModels, List<DeliveryChargeModel> deliveryChargeModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -124,88 +122,8 @@ namespace RetailSlnCacheData
                         itemModel.ItemAttribModelsForDisplay[itemAttribModel.ItemAttribMasterModel.AttribName] = itemAttribModel;
                     }
                 }
-
-                //itemModel.ItemAttributesForDisplay = new Dictionary<string, string>();
-
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterModel.AttribName == "HSNCode");
-                //itemModel.ItemAttributesForDisplay["HSNCode"] = itemAttribModel1.ItemAttribValue;
-                //itemModel.ImageTitle += " HSN Code " + itemAttribModel1.ItemAttribValue;
-
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterModel.AttribName == "ProductCode");
-                //itemModel.ItemAttributesForDisplay["ProductCode"] = itemAttribModel1.ItemAttribValue;
-                //itemModel.ImageTitle += " Prod Code " + itemAttribModel1.ItemAttribValue;
-
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 16); //Show Weight
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 4); //Weight
-                //    itemModel.ItemAttributesForDisplay["Weight"] = "Weight " + itemAttribModel1.ItemAttribValue + " " + LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("WeightUnit", execUniqueId).First(a => a.CodeDataNameId == int.Parse(itemAttribModel1.ItemAttribUnitValue)).CodeDataDesc3;//(WeightUnitEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
-                //}
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 17); //Show Volume
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 7); //Fluid Volume
-                //    itemModel.ItemAttributesForDisplay["Volume"] = "Volume " + itemAttribModel1.ItemAttribValue + " " + LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("FluidVolumeUnit", execUniqueId).First(a => a.CodeDataNameId == int.Parse(itemAttribModel1.ItemAttribUnitValue)).CodeDataDesc3;//(WeightUnitEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
-                //}
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 18); //Show Count
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 12); //Count
-                //    itemModel.ItemAttributesForDisplay["Count"] = "Count " + itemAttribModel1.ItemAttribValue + " " + (CountEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
-                //}
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 28); //Show Packet
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 27); //Packet
-                //    itemModel.ItemAttributesForDisplay["Packet"] = "Packet " + itemAttribModel1.ItemAttribValue + " " + (PacketEnum)int.Parse(itemAttribModel1.ItemAttribUnitValue);
-                //}
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 22); //Show Color
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 8); //Color
-                //    itemModel.ItemAttributesForDisplay["Color"] = "Color " + itemAttribModel1.ItemAttribValue;
-                //}
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 23); //Show Size
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 10); //Size
-                //    itemModel.ItemAttributesForDisplay["Size"] = "Size " + itemAttribModel1.ItemAttribValue;
-                //}
-                //itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 25); //Show Weight Attribute
-                //if (itemAttribModel1 != null && itemAttribModel1.ItemAttribValue == "Yes")
-                //{
-                //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 24); //Weight Attribute
-                //    itemModel.ItemAttributesForDisplay["WeightAttribute"] = "Weight " + itemAttribModel1.ItemAttribValue;
-                //}
             }
             //
-            //ItemAttribModel itemAttribModel1;
-            //foreach (var itemModel in itemModels)
-            //{
-            //    itemModel.ItemAttribModels = itemAttribModels.FindAll(x => x.ItemId == itemModel.ItemId);
-            //    itemModel.ItemDescAttrib = "";
-            //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 16); //Show Weight
-            //    if (itemAttribModel1 != null)
-            //    {
-            //        itemModel.ItemDescAttrib = itemAttribModel1.ItemAttribValue + " " + itemAttribModel1.ItemAttribUnitValue;
-            //    }
-            //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 17); //Show Volume
-            //    if (itemAttribModel1 != null)
-            //    {
-            //        itemModel.ItemDescAttrib = itemAttribModel1.ItemAttribValue + " " + itemAttribModel1.ItemAttribUnitValue;
-            //    }
-            //    itemAttribModel1 = itemAttribModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId && x.ItemAttribMasterId == 18); //Show Count
-            //    if (itemAttribModel1 != null)
-            //    {
-            //        itemModel.ItemDescAttrib = itemAttribModel1.ItemAttribValue + " " + itemAttribModel1.ItemAttribUnitValue;
-            //    }
-            //}
-            //
-            foreach (var deliveryListModel in deliveryListModels)
-            {
-                deliveryListModel.DeliveryChargeModels = new List<DeliveryChargeModel>();
-                deliveryListModel.DeliveryChargeModels.AddRange(deliveryChargeModels.FindAll(x => x.DeliveryListId == deliveryListModel.DeliveryListId));
-            }
             foreach (var corpAcctModel in corpAcctModels)
             {
                 corpAcctModel.DiscountDtlModels = new List<DiscountDtlModel>();

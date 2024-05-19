@@ -308,7 +308,7 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult CheckoutGuest(CheckoutGuestModel checkoutGuestModel)
+        public ActionResult CheckoutGuest(LoginUserProfGuestModel loginUserProfGuestModel)
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -322,8 +322,8 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
-                TryValidateModel(checkoutGuestModel);
-                SessionObjectModel sessionObjectModel = archLibBL.CheckoutGuest(ref checkoutGuestModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                TryValidateModel(loginUserProfGuestModel);
+                SessionObjectModel sessionObjectModel = archLibBL.CheckoutGuest(ref loginUserProfGuestModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     Session["SessionObject"] = sessionObjectModel;
@@ -355,7 +355,7 @@ namespace RetailSlnWeb.Controllers
                 {
                     success = false;
                     processMessage = "ERROR???";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", checkoutGuestModel);
+                    htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", loginUserProfGuestModel);
                     actionResult = Json(new { success, processMessage, htmlString });
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
@@ -363,12 +363,12 @@ namespace RetailSlnWeb.Controllers
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberCheckoutGuest0", "CaptchaNumberCheckoutGuest1");
-                checkoutGuestModel.CaptchaAnswerCheckoutGuest = null;
-                checkoutGuestModel.CaptchaNumberCheckoutGuest0 = Session["CaptchaNumberCheckoutGuest0"].ToString();
-                checkoutGuestModel.CaptchaNumberCheckoutGuest1 = Session["CaptchaNumberCheckoutGuest1"].ToString();
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLoginUserProfGuest0", "CaptchaNumberLoginUserProfGuest1");
+                loginUserProfGuestModel.CaptchaAnswerLoginUserProfGuest = null;
+                loginUserProfGuestModel.CaptchaNumberLoginUserProfGuest0 = Session["CaptchaNumberLoginUserProfGuest0"].ToString();
+                loginUserProfGuestModel.CaptchaNumberLoginUserProfGuest1 = Session["CaptchaNumberLoginUserProfGuest1"].ToString();
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", checkoutGuestModel);
+                htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", loginUserProfGuestModel);
                 success = false;
                 processMessage = "ERROR???";
                 actionResult = Json(new { success, processMessage, htmlString });
@@ -444,25 +444,6 @@ namespace RetailSlnWeb.Controllers
                 ModelState.Clear();
                 TryValidateModel(deliveryInfoDataModel);
                 TryValidateModel(deliveryInfoDataModel.DeliveryAddressModel, "DeliveryAddressModel");
-                //if (deliveryInfoDataModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
-                //{
-                //    ModelState.Remove("DeliveryAddressModel.AddressLine1");
-                //    ModelState.Remove("DeliveryAddressModel.AddressLine2");
-                //    ModelState.Remove("DeliveryAddressModel.CityName");
-                //    ModelState.Remove("DeliveryAddressModel.ZipCode");
-                //    ModelState.Remove("DeliveryAddressModel.DemogInfoSubDivisionId");
-                //    ModelState.Remove("DeliveryAddressModel.BuildingTypeId");
-                //    deliveryInfoDataModel.DeliveryAddressModel.AddressLine1 = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.AddressLine2 = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.AddressLine3 = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.CityName = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.ZipCode = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = null;
-                //    deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = null;
-                //}
-                //else
-                {
                     if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.AddressLine1))
                     {
                         ModelState.AddModelError("DeliveryAddressModel.AddressLine1", "Address line 1");
@@ -491,37 +472,36 @@ namespace RetailSlnWeb.Controllers
                             ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
                         }
                     }
-                    if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    //Get the Address Info based on Zip and fill in the rest
+                    SearchDataModel searchDataModel = new SearchDataModel
                     {
-                        //Get the Address Info based on Zip and fill in the rest
-                        SearchDataModel searchDataModel = new SearchDataModel
-                        {
-                            SearchType = "ZipCode",
-                            SearchKeyValuePairs = new Dictionary<string, string>
+                        SearchType = "ZipCode",
+                        SearchKeyValuePairs = new Dictionary<string, string>
                             {
                                 { "DemogInfoCountryId", deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString() },
                                 { "ZipCode", deliveryInfoDataModel.DeliveryAddressModel.ZipCode },
                             },
-                        };
-                        List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        foreach (var sqlQueryResult in sqlQueryResults)
+                    };
+                    List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    foreach (var sqlQueryResult in sqlQueryResults)
+                    {
+                        if (
+                            sqlQueryResult["DemogInfoCountryId"] == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString()
+                            && sqlQueryResult["ZipCode"] == deliveryInfoDataModel.DeliveryAddressModel.ZipCode
+                           )
                         {
-                            if (
-                                sqlQueryResult["DemogInfoCountryId"] == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.ToString()
-                                && sqlQueryResult["ZipCode"] == deliveryInfoDataModel.DeliveryAddressModel.ZipCode
-                               )
-                            {
-                                deliveryInfoDataModel.DeliveryAddressModel.CityName = sqlQueryResult["CityName"];
-                                deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
-                                deliveryInfoDataModel.DeliveryAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
-                                deliveryInfoDataModel.DeliveryAddressModel.CountyName = sqlQueryResult["CountyName"];
-                                deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
-                                deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
-                                deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
-                                deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
-                                deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
-                                deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = sqlQueryResult["StateAbbrev"];
-                            }
+                            deliveryInfoDataModel.DeliveryAddressModel.CityName = sqlQueryResult["CityName"];
+                            deliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
+                            deliveryInfoDataModel.DeliveryAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
+                            deliveryInfoDataModel.DeliveryAddressModel.CountyName = sqlQueryResult["CountyName"];
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
+                            deliveryInfoDataModel.DeliveryAddressModel.StateAbbrev = sqlQueryResult["StateAbbrev"];
                         }
                     }
                 }
