@@ -5149,6 +5149,45 @@
             instance.
             </returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:iText.Layout.Font.FontProvider.SetFontSelectorStrategyFactory(iText.Layout.Font.Selectorstrategy.IFontSelectorStrategyFactory)" -->
+        <member name="M:iText.Layout.Font.FontProvider.CreateFontSelectorStrategy(System.Collections.Generic.IList{System.String},iText.Layout.Font.FontCharacteristics,iText.Layout.Font.FontSet)">
+            <summary>
+            Creates the
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+            to split text into sequences of glyphs, already tied
+            to the fonts which contain them.
+            </summary>
+            <remarks>
+            Creates the
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+            to split text into sequences of glyphs, already tied
+            to the fonts which contain them. The fonts can be taken from the added fonts to the font provider and
+            are chosen based on font-families list and desired font characteristics.
+            </remarks>
+            <param name="fontFamilies">
+            target font families to create
+            <see cref="T:iText.Layout.Font.FontSelector"/>
+            for sequences of glyphs.
+            </param>
+            <param name="fc">
+            instance of
+            <see cref="T:iText.Layout.Font.FontCharacteristics"/>
+            to create
+            <see cref="T:iText.Layout.Font.FontSelector"/>
+            for sequences of glyphs.
+            </param>
+            <param name="additionalFonts">
+            set which provides fonts additionally to the fonts added to font provider.
+            Combined set of font provider fonts and additional fonts is used when choosing
+            a single font for a sequence of glyphs. Additional fonts will only be used for the given
+            font selector strategy instance and will not be otherwise preserved in font provider.
+            </param>
+            <returns>
+            
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+            instance
+            </returns>
+        </member>
         <member name="M:iText.Layout.Font.FontProvider.GetFontSelector(System.Collections.Generic.IList{System.String},iText.Layout.Font.FontCharacteristics)">
             <summary>
             Create
@@ -5875,6 +5914,148 @@
             the
             <see cref="T:iText.Layout.Font.Range"/>
             instance based on added ranges
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy">
+            <summary>
+            The class defines complex implementation of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+            which based on the following algorithm:
+            1.
+            </summary>
+            <remarks>
+            The class defines complex implementation of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+            which based on the following algorithm:
+            1. Find first significant symbol (not whitespace or special).
+            2. Find font which matches symbol according to passed
+            <see cref="T:iText.Layout.Font.FontSelector"/>.
+            3. Try to append as many symbols as possible using the current font.
+            4. If symbol is not matched to the current font, go to step 1.
+            <para />
+            Algorithm takes care of the case when there is no matched font for symbol or when diacritic
+            from another font is used (previous symbol will be processed by diacritic's font).
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy.#ctor(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy"/>.
+            </summary>
+            <param name="fontProvider">the font provider</param>
+            <param name="fontSelector">the font selector</param>
+            <param name="additionalFonts">the set of fonts to be used additionally to the fonts added to font provider.
+                </param>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy.IsCurrentFontCheckRequired">
+            <summary>If it is necessary to provide a check that the best font for passed symbol equals to the current font.
+                </summary>
+            <remarks>
+            If it is necessary to provide a check that the best font for passed symbol equals to the current font.
+            Result of checking is used to split text into parts in case if inequality.
+            </remarks>
+            <returns>
+            
+            <see langword="true"/>
+            if check is needed, otherwise
+            <see langword="false"/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy.GetGlyphLines(System.String)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy.MatchFont(System.Int32,iText.Layout.Font.FontSelector,iText.Layout.Font.FontProvider,iText.Layout.Font.FontSet)">
+            <summary>Finds the best font which matches passed symbol.</summary>
+            <param name="codePoint">the symbol to match</param>
+            <param name="fontSelector">the font selector</param>
+            <param name="fontProvider">the font provider</param>
+            <param name="additionalFonts">the addition fonts</param>
+            <returns>font which matches the symbol</returns>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.AbstractFontSelectorStrategy.GetPdfFont(iText.Layout.Font.FontInfo,iText.Layout.Font.FontProvider,iText.Layout.Font.FontSet)">
+            <summary>Utility method to create PdfFont.</summary>
+            <param name="fontInfo">instance of FontInfo</param>
+            <returns>cached or just created PdfFont on success, otherwise null</returns>
+            <seealso cref="M:iText.Layout.Font.FontProvider.GetPdfFont(iText.Layout.Font.FontInfo,iText.Layout.Font.FontSet)"/>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy">
+            <summary>The class implements strategy where the best font for each symbol is used if possible.</summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy.#ctor(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy"/>.
+            </summary>
+            <param name="fontProvider">the font provider</param>
+            <param name="fontSelector">the font selector</param>
+            <param name="additionalFonts">the set of fonts to be used additionally to the fonts added to font provider.
+                </param>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy.IsCurrentFontCheckRequired">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory">
+            <summary>
+            The factory for
+            <see cref="T:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory.CreateFontSelectorStrategy(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy">
+            <summary>The class implements strategy where the first matched font is used to render as many glyphs as possible.
+                </summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.#ctor(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy"/>.
+            </summary>
+            <param name="fontProvider">the font provider</param>
+            <param name="fontSelector">the font selector</param>
+            <param name="additionalFonts">the set of fonts to be used additionally to the fonts added to font provider.
+                </param>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.IsCurrentFontCheckRequired">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory">
+            <summary>
+            The factory for
+            <see cref="T:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory.CreateFontSelectorStrategy(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy">
+            <summary>The font selector strategy is responsible for splitting text into parts with one particular font.
+                </summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy.GetGlyphLines(System.String)">
+            <summary>Converts text into glyphs with the best matching font.</summary>
+            <param name="text">the text to split</param>
+            <returns>the glyphs with the matching font attached</returns>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategyFactory">
+            <summary>
+            The factory for
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategyFactory.CreateFontSelectorStrategy(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>.
+            </summary>
+            <param name="fontProvider">the font provider</param>
+            <param name="fontSelector">the font selector</param>
+            <param name="additionalFonts">the set of fonts to be used additionally to the fonts added to font provider.
+                </param>
+            <returns>
+            new instance of
+            <see cref="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
             </returns>
         </member>
         <member name="T:iText.Layout.Hyphenation.ByteVector">
@@ -10514,7 +10695,7 @@
             </returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.ApplyPaddings(iText.Kernel.Geom.Rectangle,iText.Layout.Properties.UnitValue[],System.Boolean)">
-            <summary>Applies given paddings on the given rectangle</summary>
+            <summary>Applies given paddings to the given rectangle.</summary>
             <param name="rect">a rectangle paddings will be applied on.</param>
             <param name="paddings">the paddings to be applied on the given rectangle</param>
             <param name="reverse">
@@ -13793,6 +13974,25 @@
             tree for layout element (with keeping right order for tags).
             </summary>
         </member>
+        <member name="M:iText.Layout.Tagging.TableTaggingRule.GetTbodyTag(iText.Layout.Tagging.TaggingHintKey)">
+            <summary>
+            Creates a dummy element with
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>
+            role if needed.
+            </summary>
+            <remarks>
+            Creates a dummy element with
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>
+            role if needed.
+            Otherwise, returns a dummy element with a null role.
+            </remarks>
+            <param name="tableHintKey">the hint key of the table.</param>
+            <returns>
+            a dummy element with
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>
+            role if needed.
+            </returns>
+        </member>
         <member name="T:iText.Layout.Tagging.TaggingDummyElement">
             <summary>
             Instances of the class are used for
@@ -13866,6 +14066,18 @@
             <summary>Get accessible element.</summary>
             <returns>the accessible element.</returns>
         </member>
+        <member name="M:iText.Layout.Tagging.TaggingHintKey.GetTagPointer">
+            <summary>Gets the TagTreePointer.</summary>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Pdf.Tagutils.TagTreePointer"/>
+            or null if there is no associated one yet.
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Tagging.TaggingHintKey.SetTagPointer(iText.Kernel.Pdf.Tagutils.TagTreePointer)">
+            <summary>Sets the TagTreePointer.</summary>
+            <param name="tag">the TagTreePointer to set.</param>
+        </member>
         <member name="M:iText.Layout.Tagging.TaggingHintKey.IsFinished">
             <summary>Retrieve hint key finished flag.</summary>
             <returns>
@@ -13911,6 +14123,29 @@
             true if element implements
             <see cref="T:iText.Layout.Element.IElement"/>.
             </returns>
+        </member>
+        <member name="T:iText.Layout.Tagging.THTaggingRule">
+            <summary>Used to automatically add scope attribute to TH cells.</summary>
+            <remarks>
+            Used to automatically add scope attribute to TH cells.
+            <para />
+            This behavior is enabled by default. In the future, we maybe want to expand this with a heuristic
+            which determines the scope based on the position of all the TH cells in the table.
+            <para />
+            If the scope attribute is already present, it will not be modified.
+            If the scope attribute is not present, it will be added with the value "Column".
+            If the scope attribute is present with the value "None", it will be removed.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Tagging.THTaggingRule.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Layout.Tagging.THTaggingRule"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Tagging.THTaggingRule.OnTagFinish(iText.Layout.Tagging.LayoutTaggingHelper,iText.Layout.Tagging.TaggingHintKey)">
+            <summary><inheritDoc/></summary>
         </member>
     </members>
 </doc>

@@ -1,80 +1,45 @@
 ﻿@using ArchitectureLibraryCacheData
 @{
+    //_Header.cshtml
+    //A-1Truck --> 92
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
-<style>
-    /*.starchecked {
-            color: #ff9900;
-        }
-
-        .badge {
-            padding-left: 9px;
-            padding-right: 9px;
-            -webkit-border-radius: 9px;
-            -moz-border-radius: 9px;
-            border-radius: 9px;
-        }
-
-        .label-warning[href],
-        .badge-warning[href] {
-            background-color: #c67605;
-        }*/
-
-    .headfirst {
-        background-color: black;
-        color: white;
-    }
-
-    .hphone {
-        color: #e8ac1f;
-    }
-
-    .footer {
-        color: white;
-        background-color: #464646;
-    }
-
-    .footerbelow {
-        text-align: center;
-        background-color: black;
-        color: white;
-    }
-</style>
-<section id="header" class="headfirst">
-    <div class="container" style="margin-left: auto; margin-right: auto;">
-        <div class="row">
-            <div style="padding-top: 5px; padding-left: 18px;" class="col-md-4">
-                <h5 style="font-size: 12px; font-weight: bold;">
-                    <span style="font-size: 11px;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessTiming", "")</span>
-                </h5>
-            </div>
-            <div style="padding-top: 5px;" class="col-md-2">
-                <h5 style="font-size: 12px; font-weight: bold;">
-                    <span style="color: #ffffff;">Call </span>
-                    <a href="tel:@long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "")).ToString("1-###-###-####")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")">
-                        @long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactPhone", "")).ToString("(###) ###-####")
-                    </a>
-                    <i style="color: #ffffff; font-weight: bold;" class="fa fa-phone"></i>
-                </h5>
-            </div>
-            <div style="padding-top: 5px;" class="col-md-2">
-                <h5 style="font-size: 12px; font-weight: bold;"><span style="color: #ffffff;">Text </span><a href="sms:@long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhone", "")).ToString("1-###-###-####")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")">@long.Parse(ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhone", "")).ToString("(###) ###-####")</a><img src="~/Images/Comments.png" style="padding-left: 3px; width: 18px; height: 18px;" /></h5>
-            </div>
-            <div style="padding-top: 5px; vertical-align: top;" class="col-md-4">
-                <h5 style="font-size: 12px; font-weight: bold;">
-                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")">
-                        @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")
-                    </a>
-                    <i style="color: darkgray; font-size: 12px;" class="fa fa-envelope"></i>
-                    <i style="color: darkgray; font-size: 14px; padding-left: 27px; padding-right: 5px;" class="fa fa-facebook"></i>
-                    <i style="color:darkgray; font-size: 14px; padding-right: 5px;" class="fa fa-google-plus"></i>
-                    <i style="color: darkgray; font-size: 14px;" class="fa fa-twitter"></i>
-                </h5>
-            </div>
-        </div>
-    </div>
-</section>
-<div style="margin-left: auto; margin-right: auto;">
-    <a href="@Url.Action("Index", "Home")" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "")"><img class="img-responsive" src="~/ClientSpecific/@(clientId)_@clientName/Documents/Images/Image_000.webp" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") | @ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName", "") | @ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "")" style="display: block; margin: auto; height: auto; max-width: 855px; width: 100%;" /></a>
+<nav id="menu" style="z-index: 10000">
+    <i class="glyphicon glyphicon-remove" id="close-icon" style="z-index: 20000"></i>
+    @Html.Partial("_HeaderMenuHamburger")
+</nav>
+@*<div class="container-fluid sticky-top">*@
+<div class="container-fluid">
+    @Html.Partial("_HeaderStrip")
+    <i class="glyphicon glyphicon-th-list" id="toggle-icon"></i>
+    <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
+        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
+    </a>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#toggle-icon').click(function () {
+            $('#menu').css('top', '0');
+            $('#close-icon').css('top', '20px');
+            $('#close-icon').show(); // Show close icon when menu is open
+        });
+
+        $('#close-icon').click(function () {
+            $('#menu').css('top', '-2500px');
+            $('#close-icon').hide(); // Hide close icon when menu is closed
+        });
+
+        $(window).resize(function () {
+            if ($(window).width() > 975) {
+                closeCollapsableMenu();
+            }
+        });
+
+        let closeCollapsableMenu = function () {
+            $('#menu').css('top', '-2500px');
+            $('#close-icon').hide(); // Hide close icon when menu is closed
+        }
+    });
+</script>

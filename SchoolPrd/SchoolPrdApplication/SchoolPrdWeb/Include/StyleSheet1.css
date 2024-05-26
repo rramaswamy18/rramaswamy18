@@ -1,7 +1,9 @@
-﻿* {
+﻿/*StyleSheet1.css*/
+* {
     box-sizing: border-box;
 }
 
+/* Custom CSS for sticky top navbar */
 .center {
     border: 0px none;
     margin-left: auto;
@@ -29,34 +31,6 @@
     font-weight: bold;
 }
 
-/* Add padding to containers */
-/*.container {
-    padding: 16px;
-    background-color: white;
-}*/
-
-/* Full-width input fields */
-/*input[type=text], input[type=password] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    display: inline-block;
-    border: none;
-    background: #f1f1f1;
-}
-
-    input[type=text]:focus, input[type=password]:focus {
-        background-color: #ddd;
-        outline: none;
-    }*/
-
-/* Overwrite default styles of hr */
-hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-}
-
-/* Set a style for the submit button */
 .loginRegisterbtn {
     background-color: #04aa6d;
     color: #ffffff;
@@ -74,13 +48,40 @@ hr {
         opacity: 1;
     }
 
-/* Add a blue text color to links */
-a {
-    color: dodgerblue;
+#menu {
+    position: fixed;
+    top: -2500px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 20px);
+    background: #9a031e;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Set a grey background color and center the text of the "sign in" section */
-.signin {
-    background-color: #f1f1f1;
-    text-align: center;
+    #menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        #menu ul li {
+            padding: 10px;
+            border-bottom: 1px solid #fff; /* Changed border color */
+        }
+
+            #menu ul li a {
+                color: #fff;
+                text-decoration: none;
+            }
+
+#close-icon {
+    position: fixed;
+    top: -250px;
+    right: 20px; /* Positioned close icon on the top right */
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
 }

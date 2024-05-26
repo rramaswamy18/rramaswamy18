@@ -130,6 +130,13 @@
             <param name="root">the root node of the HTML that needs to be parsed</param>
             <returns>the resulting list</returns>
         </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.ClassOutlineMarkExtractor">
+            <summary>
+            <see cref="T:iText.Html2pdf.Attach.Impl.ClassOutlineMarkExtractor"/>
+            class is used to get class of element as a mark for
+            <see cref="T:iText.Html2pdf.Attach.Impl.OutlineHandler"/>
+            </summary>
+        </member>
         <member name="T:iText.Html2pdf.Attach.Impl.DefaultHtmlProcessor">
             <summary>The default implementation to process HTML.</summary>
         </member>
@@ -1155,12 +1162,14 @@
             <summary>
             A
             <see cref="T:iText.Html2pdf.Attach.Impl.OutlineHandler"/>
-            handles creating outlines for tags.
+            handles creating outlines for marks.
             </summary>
             <remarks>
             A
             <see cref="T:iText.Html2pdf.Attach.Impl.OutlineHandler"/>
-            handles creating outlines for tags.
+            handles creating outlines for marks.
+            Marks are extracted via interface
+            <see cref="T:iText.Html2pdf.Attach.IOutlineMarkExtractor"/>.
             <para />
             This class is not reusable and a new instance shall be created for every new conversion process.
             </remarks>
@@ -1185,35 +1194,86 @@
         <member name="F:iText.Html2pdf.Attach.Impl.OutlineHandler.levelsInProcess">
             <summary>The levels in process.</summary>
         </member>
-        <member name="F:iText.Html2pdf.Attach.Impl.OutlineHandler.tagPrioritiesMapping">
-            <summary>The tag priorities mapping.</summary>
+        <member name="F:iText.Html2pdf.Attach.Impl.OutlineHandler.markPrioritiesMapping">
+            <summary>The mark priorities mapping.</summary>
         </member>
         <member name="F:iText.Html2pdf.Attach.Impl.OutlineHandler.destinationNamePrefix">
             <summary>The destination prefix.</summary>
         </member>
+        <member name="F:iText.Html2pdf.Attach.Impl.OutlineHandler.markExtractor">
+            <summary>The mark extractor defines what part of element will be used to create outline</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.#ctor">
+            <summary>
+            Creates an OutlineHandler with standard
+            <see cref="T:iText.Html2pdf.Attach.Impl.TagOutlineMarkExtractor"/>.
+            </summary>
+        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.CreateStandardHandler">
-            <summary>Creates an OutlineHandler with standard predefined mappings.</summary>
+            <summary>
+            Creates an OutlineHandler with standard
+            <see cref="T:iText.Html2pdf.Attach.Impl.TagOutlineMarkExtractor"/>
+            and predefined mappings.
+            </summary>
+            <returns>the outline handler</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.CreateHandler(iText.Html2pdf.Attach.IOutlineMarkExtractor)">
+            <summary>
+            Creates an OutlineHandler with custom
+            <see cref="T:iText.Html2pdf.Attach.IOutlineMarkExtractor"/>
+            </summary>
+            <param name="extractor">the mark extractor</param>
+            <returns>the outline handler</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.GetMarkExtractor">
+            <summary>Get mark extractor.</summary>
+            <returns>the mark extractor</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.SetMarkExtractor(iText.Html2pdf.Attach.IOutlineMarkExtractor)">
+            <summary>Set mark extractor.</summary>
+            <param name="extractor">the mark extractor</param>
             <returns>the outline handler</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutTagPriorityMapping(System.String,System.Nullable{System.Int32})">
-            <summary>Put tag priority mapping.</summary>
+            <summary>Put tag into priority mapping.</summary>
             <param name="tagName">the tag name</param>
             <param name="priority">the priority</param>
             <returns>the outline handler</returns>
         </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutMarkPriorityMapping(System.String,System.Nullable{System.Int32})">
+            <summary>Put mark into priority mapping.</summary>
+            <param name="markName">the mark name</param>
+            <param name="priority">the priority</param>
+            <returns>the outline handler</returns>
+        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutAllTagPriorityMappings(System.Collections.Generic.IDictionary{System.String,System.Nullable{System.Int32}})">
-            <summary>Put all tag priority mappings.</summary>
+            <summary>Put all tags into priority mappings.</summary>
+            <param name="mappings">the mappings</param>
+            <returns>the outline handler</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutAllMarksPriorityMappings(System.Collections.Generic.IDictionary{System.String,System.Nullable{System.Int32}})">
+            <summary>Put all marks into priority mappings.</summary>
             <param name="mappings">the mappings</param>
             <returns>the outline handler</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.GetTagPriorityMapping(System.String)">
-            <summary>Gets the tag priority mapping.</summary>
+            <summary>Gets the marks from priority mapping.</summary>
             <param name="tagName">the tag name</param>
             <returns>the tag priority mapping</returns>
         </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.GetMarkPriorityMapping(System.String)">
+            <summary>Gets the mark from priority mapping.</summary>
+            <param name="markName">the mark name</param>
+            <returns>the tag priority mapping</returns>
+        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.HasTagPriorityMapping(System.String)">
-            <summary>Checks for tag priority mapping.</summary>
+            <summary>Checks for tag in priority mapping.</summary>
             <param name="tagName">the tag name</param>
+            <returns>true, if the tag name is listed in the tag priorities mapping</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.HasMarkPriorityMapping(System.String)">
+            <summary>Checks for tag in priority mapping.</summary>
+            <param name="markName">the mark name</param>
             <returns>true, if the tag name is listed in the tag priorities mapping</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.Reset">
@@ -1310,6 +1370,13 @@
             </remarks>
             <param name="key">the key</param>
             <returns>the unique ID</returns>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.TagOutlineMarkExtractor">
+            <summary>
+            <see cref="T:iText.Html2pdf.Attach.Impl.TagOutlineMarkExtractor"/>
+            class is used to get tag of element as a mark for
+            <see cref="T:iText.Html2pdf.Attach.Impl.OutlineHandler"/>
+            </summary>
         </member>
         <member name="T:iText.Html2pdf.Attach.Impl.Tags.AbbrTagWorker">
             <summary>
@@ -2312,6 +2379,19 @@
             <summary>Adds a child.</summary>
             <param name="child">the child</param>
             <returns>true, if successful</returns>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.IOutlineMarkExtractor">
+            <summary>
+            <see cref="T:iText.Html2pdf.Attach.IOutlineMarkExtractor"/>
+            interface is used to control what part of element will be a mark
+            witch will be used to create outline in
+            <see cref="T:iText.Html2pdf.Attach.Impl.OutlineHandler"/>
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.IOutlineMarkExtractor.GetMark(iText.StyledXmlParser.Node.IElementNode)">
+            <summary>Get element mark.</summary>
+            <param name="element">the element</param>
+            <returns>returns string mark of the element</returns>
         </member>
         <member name="T:iText.Html2pdf.Attach.ITagWorker">
             <summary>Interface for all the tag worker implementations.</summary>

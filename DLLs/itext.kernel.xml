@@ -98,6 +98,73 @@
             <see cref="T:iText.Commons.Actions.Sequence.SequenceId"/>.
             </summary>
         </member>
+        <member name="T:iText.Kernel.Colors.CalGray">
+            <summary>Representation of a CalGray color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalGray.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.CalGray)">
+            <summary>
+            Creates a new CalGray color space using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space.
+            </summary>
+            <param name="cs">Color space</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalGray.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.CalGray,System.Single)">
+            <summary>
+            Creates a new CalGray color space using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space and color value.
+            </summary>
+            <param name="cs">Color space</param>
+            <param name="value">Gray color value</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalGray.#ctor(System.Single[],System.Single)">
+            <summary>Creates a new CalGray color space using the given white point and color value.</summary>
+            <param name="whitePoint">Color values for defining the white point</param>
+            <param name="value">Gray color value</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalGray.#ctor(System.Single[],System.Single[],System.Single,System.Single)">
+            <summary>Creates a new CalGray color space using the given white point, black point, gamma and color value.
+                </summary>
+            <param name="whitePoint">Color values for defining the white point</param>
+            <param name="blackPoint">Color values for defining the black point</param>
+            <param name="gamma">Gamma correction</param>
+            <param name="value">Gray color value</param>
+        </member>
+        <member name="T:iText.Kernel.Colors.CalRgb">
+            <summary>Representation of a CalRgb color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalRgb.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.CalRgb)">
+            <summary>
+            Creates a new CalRgb color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space.
+            </summary>
+            <param name="cs">Color space</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalRgb.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.CalRgb,System.Single[])">
+            <summary>
+            Creates a new CalRgb color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space and RGB color values.
+            </summary>
+            <param name="cs">Color space</param>
+            <param name="value">RGB color values</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalRgb.#ctor(System.Single[],System.Single[])">
+            <summary>Creates a new CalRgb color using the given white point and RGB color values.</summary>
+            <param name="whitePoint">Color values for defining the white point</param>
+            <param name="value">RGB color values</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.CalRgb.#ctor(System.Single[],System.Single[],System.Single[],System.Single[],System.Single[])">
+            <summary>Creates a new CalRgb color using the given white point, black point, gamma, matrix and RGB color values.
+                </summary>
+            <param name="whitePoint">Color values for defining the white point</param>
+            <param name="blackPoint">Color values for defining the black point</param>
+            <param name="gamma">Gamma correction</param>
+            <param name="matrix">Matrix correction</param>
+            <param name="value">RGB color value</param>
+        </member>
         <member name="T:iText.Kernel.Colors.Color">
             <summary>Represents a color</summary>
         </member>
@@ -371,6 +438,26 @@
             </summary>
             <param name="grayColor">the DeviceGray color to be made darker</param>
             <returns>darker color</returns>
+        </member>
+        <member name="T:iText.Kernel.Colors.DeviceN">
+            <summary>Representation of a DeviceN color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.DeviceN.#ctor(iText.Kernel.Pdf.Colorspace.PdfSpecialCs.DeviceN)">
+            <summary>
+            Creates a DeviceN color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfSpecialCs"/>
+            color space.
+            </summary>
+            <param name="cs">Color space</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.DeviceN.#ctor(iText.Kernel.Pdf.Colorspace.PdfSpecialCs.DeviceN,System.Single[])">
+            <summary>
+            Creates a DeviceN color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfSpecialCs"/>
+            color space and color values.
+            </summary>
+            <param name="cs">Color space</param>
+            <param name="value">Color component values</param>
         </member>
         <member name="M:iText.Kernel.Colors.DeviceN.#ctor(System.Collections.Generic.IList{System.String},iText.Kernel.Pdf.Colorspace.PdfColorSpace,iText.Kernel.Pdf.Function.IPdfFunction,System.Single[])">
             <summary>Creates a color in a new DeviceN color space.</summary>
@@ -897,6 +984,26 @@
             line would pass through left corners
             </summary>
         </member>
+        <member name="T:iText.Kernel.Colors.IccBased">
+            <summary>Representation on an ICC Based color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.IccBased.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.IccBased)">
+            <summary>
+            Creates an ICC Based color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space.
+            </summary>
+            <param name="cs">Color space</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.IccBased.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.IccBased,System.Single[])">
+            <summary>
+            Creates an ICC Based color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space and color values.
+            </summary>
+            <param name="cs">Color space</param>
+            <param name="value">Color values</param>
+        </member>
         <member name="M:iText.Kernel.Colors.IccBased.#ctor(System.IO.Stream)">
             <summary>Creates IccBased color.</summary>
             <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
@@ -906,11 +1013,118 @@
             <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
             <param name="value">color value.</param>
         </member>
+        <member name="M:iText.Kernel.Colors.IccBased.#ctor(System.IO.Stream,System.Single[],System.Single[])">
+            <summary>Creates an ICC Based color using the given ICC profile stream, range and color values.</summary>
+            <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
+            <param name="range">Range for color</param>
+            <param name="value">Color values</param>
+        </member>
+        <member name="T:iText.Kernel.Colors.Indexed">
+            <summary>Representation of an indexed color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.Indexed.#ctor(iText.Kernel.Pdf.Colorspace.PdfColorSpace)">
+            <summary>
+            Creates an indexed color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>.
+            </summary>
+            <param name="colorSpace">Object containing the most common properties of color spaces</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.Indexed.#ctor(iText.Kernel.Pdf.Colorspace.PdfColorSpace,System.Int32)">
+            <summary>
+            Creates an indexed color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
+            and color values.
+            </summary>
+            <param name="colorSpace">Object containing the most common properties of color spaces</param>
+            <param name="colorValue">Color values</param>
+        </member>
+        <member name="T:iText.Kernel.Colors.Lab">
+            <summary>Representation of a lab color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.Lab.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.Lab)">
+            <summary>
+            Creates a lab color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space.
+            </summary>
+            <param name="cs">Color space</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.Lab.#ctor(iText.Kernel.Pdf.Colorspace.PdfCieBasedCs.Lab,System.Single[])">
+            <summary>
+            Creates a lab color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+            color space and color values.
+            </summary>
+            <param name="cs">Color space</param>
+            <param name="value">Color values</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.Lab.#ctor(System.Single[],System.Single[])">
+            <summary>Creates a lab color using the given white point and color values.</summary>
+            <param name="whitePoint">Color values for defining the white point</param>
+            <param name="value">Color values</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.Lab.#ctor(System.Single[],System.Single[],System.Single[],System.Single[])">
+            <summary>Creates a lab color using the given white point, black point and color values.</summary>
+            <param name="whitePoint">Color values for defining the white point</param>
+            <param name="blackPoint">Color values for defining the black point</param>
+            <param name="range">Range for color</param>
+            <param name="value">Color values</param>
+        </member>
+        <member name="T:iText.Kernel.Colors.PatternColor">
+            <summary>Representation of a Pattern Color.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.PatternColor.#ctor(iText.Kernel.Pdf.Colorspace.PdfPattern)">
+            <summary>Creates a pattern color using the given color pattern object.</summary>
+            <param name="coloredPattern">Color space that uses pattern objects</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.PatternColor.#ctor(iText.Kernel.Pdf.Colorspace.PdfPattern.Tiling,iText.Kernel.Colors.Color)">
+            <summary>Creates a pattern color using the given uncolored pattern object and color.</summary>
+            <param name="uncoloredPattern">Tiling pattern object of the color space</param>
+            <param name="color">Color object</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.PatternColor.#ctor(iText.Kernel.Pdf.Colorspace.PdfPattern.Tiling,iText.Kernel.Pdf.Colorspace.PdfColorSpace,System.Single[])">
+            <summary>Creates a pattern color using the given uncolored pattern object, an underlying color space and color values.
+                </summary>
+            <param name="uncoloredPattern">Tiling pattern object of the color space</param>
+            <param name="underlyingCS">Underlying color space object</param>
+            <param name="colorValue">Color values</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.PatternColor.#ctor(iText.Kernel.Pdf.Colorspace.PdfPattern.Tiling,iText.Kernel.Pdf.Colorspace.PdfSpecialCs.UncoloredTilingPattern,System.Single[])">
+            <summary>Creates a pattern color using the given uncolored pattern object, uncolored tiling pattern and color values.
+                </summary>
+            <param name="uncoloredPattern">Tiling pattern object of the color space</param>
+            <param name="uncoloredTilingCS">Tiling pattern color space</param>
+            <param name="colorValue">Color values</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.PatternColor.GetPattern">
+            <summary>Returns the pattern of the color space.</summary>
+            <returns>PdfPattern object</returns>
+        </member>
+        <member name="T:iText.Kernel.Colors.Separation">
+            <summary>Representation of a separation color space.</summary>
+        </member>
+        <member name="M:iText.Kernel.Colors.Separation.#ctor(iText.Kernel.Pdf.Colorspace.PdfSpecialCs.Separation)">
+            <summary>
+            Creates a separation color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfSpecialCs"/>
+            color space.
+            </summary>
+            <param name="cs">Color space</param>
+        </member>
+        <member name="M:iText.Kernel.Colors.Separation.#ctor(iText.Kernel.Pdf.Colorspace.PdfSpecialCs.Separation,System.Single)">
+            <summary>
+            Creates a separation color using the given
+            <see cref="T:iText.Kernel.Pdf.Colorspace.PdfSpecialCs"/>
+            color space and color value.
+            </summary>
+            <param name="cs">Color space</param>
+            <param name="value">Color value</param>
+        </member>
         <member name="M:iText.Kernel.Colors.Separation.#ctor(System.String,iText.Kernel.Pdf.Colorspace.PdfColorSpace,iText.Kernel.Pdf.Function.IPdfFunction,System.Single)">
             <summary>Creates a color in a new separation color space.</summary>
             <param name="name">the name for the separation color</param>
             <param name="alternateCs">the alternative color space</param>
-            <param name="tintTransform">the function to transform color to the alternate colorspace</param>
+            <param name="tintTransform">the function to transform color to the alternate color space</param>
             <param name="value">the color value</param>
         </member>
         <member name="T:iText.Kernel.Colors.WebColors">
@@ -14461,6 +14675,16 @@
             </param>
             <returns>current canvas.</returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.Canvas.PdfCanvas.SetDrawingOnPage(System.Boolean)">
+            <summary>Sets whether we are currently drawing on a page.</summary>
+            <param name="drawingOnPage">
+            
+            <see langword="true"/>
+            if we are currently drawing on page
+            <see langword="false"/>
+            if not
+            </param>
+        </member>
         <member name="M:iText.Kernel.Pdf.Canvas.PdfCanvas.GetSubrangeWidth(iText.IO.Font.Otf.GlyphLine,System.Int32,System.Int32)">
             <summary>Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.</summary>
             <remarks>
@@ -18226,6 +18450,43 @@
             instance
             </returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.DocumentProperties.IsEventCountingMetaInfoSet">
+            <summary>Checks if the document event counting meta info was already set.</summary>
+            <returns>true if the document event counting meta info is set, false otherwise.</returns>
+        </member>
+        <member name="T:iText.Kernel.Pdf.DocumentRevision">
+            <summary>Class which stores information about single PDF document revision.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.DocumentRevision.#ctor(System.Int64,System.Collections.Generic.ICollection{iText.Kernel.Pdf.PdfIndirectReference})">
+            <summary>
+            Creates
+            <see cref="T:iText.Kernel.Pdf.DocumentRevision"/>
+            from end-of-file byte position and a set of indirect references which were
+            modified in this document revision.
+            </summary>
+            <param name="eofOffset">end-of-file byte position</param>
+            <param name="modifiedObjects">
+            
+            <see cref="!:Java.Util.Set&lt;E&gt;"/>
+            of
+            <see cref="T:iText.Kernel.Pdf.PdfIndirectReference"/>
+            objects which were modified
+            </param>
+        </member>
+        <member name="M:iText.Kernel.Pdf.DocumentRevision.GetEofOffset">
+            <summary>Gets end-of-file byte position.</summary>
+            <returns>end-of-file byte position</returns>
+        </member>
+        <member name="M:iText.Kernel.Pdf.DocumentRevision.GetModifiedObjects">
+            <summary>Gets objects which were modified in this document revision.</summary>
+            <returns>
+            
+            <see cref="!:Java.Util.Set&lt;E&gt;"/>
+            of
+            <see cref="T:iText.Kernel.Pdf.PdfIndirectReference"/>
+            objects which were modified
+            </returns>
+        </member>
         <member name="M:iText.Kernel.Pdf.EncryptedEmbeddedStreamsHandler.#ctor(iText.Kernel.Pdf.PdfDocument)">
             <summary>
             Creates
@@ -20674,6 +20935,12 @@
             containing the name tree
             </returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.GenericNameTree.AddEntry(iText.Kernel.Pdf.PdfString,iText.Kernel.Pdf.PdfObject,System.Action{iText.Kernel.Pdf.PdfDocument})">
+            <summary>Add an entry to the name tree.</summary>
+            <param name="key">key of the entry</param>
+            <param name="value">object to add</param>
+            <param name="onErrorAction">action to perform if such entry exists</param>
+        </member>
         <member name="M:iText.Kernel.Pdf.GenericNameTree.ReadTree(iText.Kernel.Pdf.PdfDictionary)">
             <summary>
             Read the entries in a name tree structure from a dictionary object into a linked hash map
@@ -21221,6 +21488,15 @@
             to delete OCGs not from the current document
             </param>
             <returns>the resultant dictionary</returns>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Layer.PdfOCProperties.CheckDDictonaryFieldValue(iText.Kernel.Pdf.PdfName,iText.Kernel.Pdf.PdfObject)">
+            <summary>
+            Checks if optional content group default configuration dictionary field value matches
+            the required value for this field, if one exists.
+            </summary>
+            <param name="field">default configuration dictionary field.</param>
+            <param name="value">value of that field.</param>
+            <returns>boolean indicating if field meets requirement.</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.Layer.PdfOCProperties.GetLayers">
             <summary>Gets the list of all the layers currently registered in the OCProperties.</summary>
@@ -22119,6 +22395,15 @@
         </member>
         <member name="T:iText.Kernel.Pdf.PdfAConformanceLevel">
             <summary>Enumeration of all the PDF/A conformance levels.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfAConformanceLevel.GetPDFAConformance(iText.Kernel.Pdf.IConformanceLevel,iText.Kernel.Pdf.PdfDocument)">
+            <summary>Gets the PdfA conformance level.</summary>
+            <param name="possibleConformance">
+            the possible candidate for
+            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            </param>
+            <param name="document">the document</param>
+            <returns>the conformance level or null if it's not PDFA</returns>
         </member>
         <member name="T:iText.Kernel.Pdf.PdfAnnotationBorder">
             <summary>Specifying the characteristics of the annotation’s border.</summary>
@@ -27176,6 +27461,11 @@
             <summary>Reads and parses a PDF document.</summary>
             <param name="filename">the file name of the document</param>
         </member>
+        <member name="M:iText.Kernel.Pdf.PdfReader.#ctor(System.IO.FileInfo,iText.Kernel.Pdf.ReaderProperties)">
+            <summary>Reads and parses a PDF document.</summary>
+            <param name="file">the file of the document</param>
+            <param name="properties">properties of the created reader</param>
+        </member>
         <member name="M:iText.Kernel.Pdf.PdfReader.Close">
             <summary>
             Close
@@ -27544,6 +27834,22 @@
             <see langword="true"/>
             if the current level is stricter than the provided one
             </returns>
+        </member>
+        <member name="T:iText.Kernel.Pdf.PdfReader.XrefProcessor">
+            <summary>Class containing a callback which is called on every xref table reading.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfReader.XrefProcessor.ProcessXref(iText.Kernel.Pdf.PdfXrefTable,iText.IO.Source.PdfTokenizer)">
+            <summary>Process xref table.</summary>
+            <param name="xrefTable">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfXrefTable"/>
+            to be processed
+            </param>
+            <param name="tokenizer">
+            
+            <see cref="T:iText.IO.Source.PdfTokenizer"/>
+            to be processed
+            </param>
         </member>
         <member name="T:iText.Kernel.Pdf.PdfResources">
             <summary>
@@ -28006,6 +28312,31 @@
             object for which name will be generated.
             </param>
             <returns>new (unique) resource name.</returns>
+        </member>
+        <member name="T:iText.Kernel.Pdf.PdfRevisionsReader">
+            <summary>Class to retrieve important information about PDF document revisions.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfRevisionsReader.#ctor(iText.Kernel.Pdf.PdfReader)">
+            <summary>
+            Creates
+            <see cref="T:iText.Kernel.Pdf.PdfRevisionsReader"/>
+            class.
+            </summary>
+            <param name="reader">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfReader"/>
+            instance from which revisions to be collected
+            </param>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfRevisionsReader.GetAllRevisions">
+            <summary>Gets information about PDF document revisions.</summary>
+            <returns>
+            
+            <see cref="!:System.Collections.IList&lt;E&gt;"/>
+            of
+            <see cref="T:iText.Kernel.Pdf.DocumentRevision"/>
+            objects
+            </returns>
         </member>
         <member name="T:iText.Kernel.Pdf.PdfStream">
             <summary>Representation of a stream as described in the PDF Specification.</summary>
@@ -28821,6 +29152,14 @@
             instance
             </returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.PdfWriter.GetProperties">
+            <summary>Gets the writer properties.</summary>
+            <returns>
+            The
+            <see cref="T:iText.Kernel.Pdf.WriterProperties"/>
+            of the current PdfWriter.
+            </returns>
+        </member>
         <member name="M:iText.Kernel.Pdf.PdfWriter.SetSmartMode(System.Boolean)">
             <summary>Sets the smart mode.</summary>
             <remarks>
@@ -29043,6 +29382,12 @@
             was completed.
             </summary>
         </member>
+        <member name="M:iText.Kernel.Pdf.PdfXrefTable.UnmarkReadingCompleted">
+            <summary>
+            Change the state of the cross-reference table to unmark that reading of the document
+            was completed.
+            </summary>
+        </member>
         <member name="M:iText.Kernel.Pdf.PdfXrefTable.IsReadingCompleted">
             <summary>Check if reading of the document was completed.</summary>
             <returns>true if reading was completed and false otherwise</returns>
@@ -29063,7 +29408,10 @@
             <returns>created indirect reference to the object stream</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfXrefTable.Clear">
-            <summary>Clear the state of the cross-reference table.</summary>
+            <summary>Clear the state of the cross-reference table without free references removal.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfXrefTable.ClearAllReferences">
+            <summary>Clear the state of the cross-reference table including free references.</summary>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfXrefTable.GetOffsetSize(System.Int64)">
             <summary>Gets size of the offset.</summary>
@@ -29273,6 +29621,37 @@
         <member name="M:iText.Kernel.Pdf.Statistics.SizeOfPdfStatisticsEvent.GetAmountOfBytes">
             <summary>Gets number of bytes in the PDF document during the processing of which the event was sent.</summary>
             <returns>the number of pages</returns>
+        </member>
+        <member name="T:iText.Kernel.Pdf.Tagging.McrCheckUtil">
+            <summary>Class that provides methods for searching mcr in tag tree.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Tagging.McrCheckUtil.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Kernel.Pdf.Tagging.McrCheckUtil"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Tagging.McrCheckUtil.IsTrContainsMcr(iText.Kernel.Pdf.PdfDictionary)">
+            <summary>Checks if tag structure of TR element contains any mcr.</summary>
+            <param name="elementTR">PdfDictionary of TR element.</param>
+            <returns>true if mcr found.</returns>
+        </member>
+        <member name="T:iText.Kernel.Pdf.Tagging.McrCheckUtil.McrTagHandler">
+            <summary>Search for mcr elements in the TagTree.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Tagging.McrCheckUtil.McrTagHandler.TagTreeHaveMcr">
+            <summary>Method returns if tag tree has mcr in it.</summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Tagging.McrCheckUtil.McrTagHandler.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Kernel.Pdf.Tagging.McrCheckUtil.McrTagHandler"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Tagging.McrCheckUtil.McrTagHandler.NextElement(iText.Kernel.Pdf.Tagging.IStructureNode)">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Kernel.Pdf.Tagging.ParentTreeHandler">
             <summary>
@@ -31846,6 +32225,14 @@
             instances point at the same tag, false otherwise.
             </returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.Tagutils.TagTreePointer.ApplyProperties(iText.Kernel.Pdf.Tagutils.AccessibilityProperties)">
+            <summary>Applies properties to the current tag.</summary>
+            <remarks>
+            Applies properties to the current tag.
+            <para />
+            </remarks>
+            <param name="properties">the properties to be applied to the current tag.</param>
+        </member>
         <member name="T:iText.Kernel.Pdf.Tagutils.WaitingTagsManager">
             <summary>This class is used to manage waiting tags state.</summary>
             <remarks>
@@ -33036,6 +33423,34 @@
         </member>
         <member name="M:iText.Kernel.Utils.Annotationsflattening.WarnFormfieldFlattener.Flatten(iText.Kernel.Pdf.Annot.PdfAnnotation,iText.Kernel.Pdf.PdfPage)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Kernel.Utils.Checkers.FontCheckUtil">
+            <summary>Utility class that contains common checks used in both the  PDFA and PDFUA module for fonts.</summary>
+        </member>
+        <member name="M:iText.Kernel.Utils.Checkers.FontCheckUtil.CheckGlyphsOfText(System.String,iText.Kernel.Font.PdfFont,iText.Kernel.Utils.Checkers.FontCheckUtil.CharacterChecker)">
+            <summary>Checks the text by the passed checker and the font.</summary>
+            <param name="text">the text to check</param>
+            <param name="font">the font to check</param>
+            <param name="checker">the checker which checks the text according to the font</param>
+            <returns>
+            
+            <c>-1</c>
+            if no character passes the check, or index of the first symbol which passes the check
+            </returns>
+        </member>
+        <member name="T:iText.Kernel.Utils.Checkers.FontCheckUtil.CharacterChecker">
+            <summary>Character checker which performs check of passed symbol against the font.</summary>
+        </member>
+        <member name="M:iText.Kernel.Utils.Checkers.FontCheckUtil.CharacterChecker.Check(System.Int32,iText.Kernel.Font.PdfFont)">
+            <summary>Checks passed symbol against the font</summary>
+            <param name="ch">character to check</param>
+            <param name="font">font to check</param>
+            <returns>
+            
+            <see langword="true"/>
+            if check passes, otherwise
+            <see langword="false"/>
+            </returns>
         </member>
         <member name="T:iText.Kernel.Utils.CompareTool">
             <summary>
@@ -39215,6 +39630,9 @@
         </member>
         <member name="F:iText.Kernel.XMP.XMPConst.PART">
             <summary>Part, 1, 2, or 3</summary>
+        </member>
+        <member name="F:iText.Kernel.XMP.XMPConst.TITLE">
+            <summary>XMP meta title</summary>
         </member>
         <member name="F:iText.Kernel.XMP.XMPConst.REV">
             <summary>ISO 19005 revision</summary>

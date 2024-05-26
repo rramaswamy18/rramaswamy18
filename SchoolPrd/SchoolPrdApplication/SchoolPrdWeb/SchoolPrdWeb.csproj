@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BF48324C-E31F-4D69-A5CE-58F44FFD9432}</ProjectGuid>
+    <ProjectGuid>{14A9B157-3E93-4187-A538-43C0961AD40D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -17,7 +17,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44353</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -44,8 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArchitectureLibraryDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ArchitectureLibraryDLL">
       <HintPath>..\..\..\DLLs\ArchitectureLibraryDLL.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -63,9 +62,6 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
@@ -132,9 +128,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.1\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
@@ -142,6 +138,9 @@
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -157,56 +156,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="ClassCode\AjaxAuthorizeAttribute.cs" />
     <Compile Include="ClassCode\Bootstrap.cs" />
-    <Compile Include="ClassCode\SchoolPrdBusinessLayer\SchoolPrdBL00.cs" />
-    <Compile Include="ClassCode\SchoolPrdBusinessLayer\SchoolPrdBL30.cs" />
-    <Compile Include="ClassCode\SchoolPrdBusinessLayer\SchoolPrdBL35.cs" />
-    <Compile Include="ClassCode\SchoolPrdBusinessLayer\SchoolPrdBL40.cs" />
-    <Compile Include="ClassCode\SchoolPrdCacheBusinessLayer\SchoolPrdCacheBL.cs" />
-    <Compile Include="ClassCode\SchoolPrdCacheData\SchoolPrdCache.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContext.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextAdd0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextAssign0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextBuild0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextCreate0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextGet0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextGetList0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextModify0.cs" />
-    <Compile Include="ClassCode\SchoolPrdDataLayer\ApplicationDataContextUpd0.cs" />
-    <Compile Include="ClassCode\SchoolPrdEnumerations\ClassEnrollStatusEnum.cs" />
-    <Compile Include="ClassCode\SchoolPrdEnumerations\ClassFeesTypeEnum.cs" />
-    <Compile Include="ClassCode\SchoolPrdEnumerations\PaymentMethodEnum.cs" />
-    <Compile Include="ClassCode\SchoolPrdEnumerations\PaymentStatusEnum.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\AdmissionModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\AgreementModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassDetailModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassEnrollFeesModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassEnrollListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassEnrollModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassFeesListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassFeesModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassListListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassScheduleListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassScheduleModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassSessionListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ClassSessionModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\EnrollmentModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\HolidayListModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\HolidayModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\InitialSignatureDetailModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\InitialSignatureLookupModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\InitialSignatureModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\PaymentCheckModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\PaymentCreditCardModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\PaymentModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\ProgramsModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\SignatureDataModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\SignatureModel.cs" />
-    <Compile Include="ClassCode\SchoolPrdModels\TuitionModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SchoolPrdController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -214,6 +167,23 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClientSpecific\92_A1Truck\Documents\HtmlFiles\AdmissionNotLoggedIn.html" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\HtmlFiles\AgreementNotLoggedIn.html" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\HtmlFiles\PaymentNotLoggedIn.html" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\HtmlFiles\SignatureNotLoggedIn.html" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\HtmlFiles\UserProfileNotLoggedIn.html" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\FavIcon.ico" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_000.png" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_001.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_002.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_003.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_004.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_005.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_006.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_007.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_008.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_009.jpg" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images_Original\Image_010.jpg" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\HtmlFiles\AdmissionNotLoggedIn.html" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\HtmlFiles\AgreementNotLoggedIn.html" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\HtmlFiles\PaymentNotLoggedIn.html" />
@@ -243,23 +213,64 @@
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\jquery-ui.theme.css" />
-    <Content Include="Content\meanmenu.css" />
-    <Content Include="Content\meanmenu.min.css" />
     <Content Include="Content\Site0.css" />
     <Content Include="Content\Site0.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Images\Checkout1.jpg" />
+    <Content Include="Images\Checkout2.png" />
+    <Content Include="Images\Comments.png" />
+    <Content Include="Images\CreditCard1.jpg" />
+    <Content Include="Images\CreditCard1_Big.jpg" />
+    <Content Include="Images\Delete.jpg" />
+    <Content Include="Images\Loading1.gif" />
+    <Content Include="Images\Logout1.png" />
+    <Content Include="Images\Logout2.png" />
+    <Content Include="Images\NoImage_0.png" />
+    <Content Include="Images\PaymentGateway.png" />
+    <Content Include="Images\Phone1.png" />
+    <Content Include="Images\Phone1_Small.png" />
+    <Content Include="Images\PickupMyOrder.png" />
+    <Content Include="Images\PostalMail1.png" />
+    <Content Include="Images\PostalMail2.jpg" />
+    <Content Include="Images\PostalMail3.jpg" />
+    <Content Include="Images\PreLoader.gif" />
+    <Content Include="Images\Register1.png" />
+    <Content Include="Images\ShipMyOrder.png" />
+    <Content Include="Images\ShoppingCart1.png" />
+    <Content Include="Images\SignIn1.png" />
+    <Content Include="Images\SignIn2.png" />
+    <Content Include="Images\SMSIcon1.png" />
+    <Content Include="Images\SMSIcon1_Small.png" />
+    <Content Include="Images\SMSIcon2.png" />
+    <Content Include="Images\SMSIcon3.png" />
+    <Content Include="Images\SMSIcon3_Small.png" />
+    <Content Include="Images\WhatsApp1.png" />
+    <Content Include="Images\WhatsApp1_Small.png" />
+    <Content Include="Images_Original\Addtocart.png" />
+    <Content Include="Images_Original\Checkout.jpg" />
+    <Content Include="Images_Original\Comments.png" />
+    <Content Include="Images_Original\Delete.jpg" />
+    <Content Include="Images_Original\Loading1.gif" />
+    <Content Include="Images_Original\OutofStock.png" />
+    <Content Include="Images_Original\PickupMyOrder.png" />
+    <Content Include="Images_Original\PreLoader.gif" />
+    <Content Include="Images_Original\ShipMyOrder.png" />
+    <Content Include="Images_Original\SignIn.png" />
+    <Content Include="Images_Original\SMSIcon1.png" />
+    <Content Include="Images_Original\SMSIcon2.png" />
+    <Content Include="Images_Original\SMSIcon3.png" />
+    <Content Include="Include\javaScriptCode-1.1.1.js" />
+    <Content Include="Include\javaScriptCode-1.1.1.min.js" />
+    <Content Include="Include\searchDataCode.js" />
+    <Content Include="Include\StyleSheet1.css" />
+    <Content Include="Include\StyleSheet1.min.css" />
+    <Content Include="Include\StyleSheet2.css" />
+    <Content Include="Include\StyleSheet2.min.css" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Catalog\Catalog_2022.pdf" />
+    <Content Include="ClientSpecific\4_SchoolPrd\Documents\Catalog\PerformanceFactSheet_2019_2020.pdf" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Image_000.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Image_001.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Image_002.webp" />
@@ -271,28 +282,37 @@
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Image_008.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Image_009.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Image_010.webp" />
-    <Content Include="ClientSpecific\4_SchoolPrd\Documents\Catalog\PerformanceFactSheet_2019_2020.pdf" />
-    <Content Include="Images\CA_BPPE.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Testimonials\GoogleReview_1.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Testimonials\GoogleReview_2.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Testimonials\GoogleReview_3.webp" />
     <Content Include="ClientSpecific\4_SchoolPrd\Documents\Images\Testimonials\GoogleReview_4.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Catalog\Catalog_2022.pdf" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Catalog\PerformanceFactSheet_2019_2020.pdf" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_000.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_001.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_002.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_003.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_004.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_005.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_006.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_007.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_008.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_009.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Image_010.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Testimonials\GoogleReview_1.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Testimonials\GoogleReview_2.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Testimonials\GoogleReview_3.webp" />
+    <Content Include="ClientSpecific\92_A1Truck\Documents\Images\Testimonials\GoogleReview_4.webp" />
+    <Content Include="Images\CA_BPPE.webp" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
-    <Content Include="Images\Comments.png" />
-    <Content Include="Images\FavIcon.ico" />
-    <Content Include="Images\Loading1.gif" />
-    <Content Include="Images\PreLoader.gif" />
-    <Content Include="Images_Original\CA_BPPE.png" />
-    <Content Include="Images_Original\Comments.png" />
-    <Content Include="Images_Original\FavIcon.ico" />
-    <Content Include="Images_Original\Loading1.gif" />
-    <Content Include="Images_Original\PreLoader.gif" />
-    <Content Include="Include\javaScriptCode-1.1.1.js" />
-    <Content Include="Include\javaScriptCode-1.1.1.min.js" />
-    <Content Include="Include\StyleSheet1.css" />
-    <Content Include="Include\StyleSheet1.min.css" />
-    <Content Include="Include\StyleSheet2.css" />
-    <Content Include="Include\StyleSheet2.min.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\inputmask\bindings\inputmask.binding.js" />
@@ -305,12 +325,10 @@
     <Content Include="Scripts\jquery-3.7.1.min.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui.js" />
-    <Content Include="Scripts\jquery.meanmenu.js" />
-    <Content Include="Scripts\jquery.meanmenu.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -325,108 +343,37 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\AboutUs.cshtml" />
-    <Content Include="Views\Home\Checkout.cshtml" />
-    <Content Include="Views\Home\ContactUs.cshtml" />
-    <Content Include="Views\Home\DeliveryInfo.cshtml" />
-    <Content Include="Views\Home\Error404.cshtml" />
-    <Content Include="Views\Home\FAQs.cshtml" />
-    <Content Include="Views\Home\Home.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\LoginUserProf.cshtml" />
-    <Content Include="Views\Home\Payment.cshtml" />
-    <Content Include="Views\Home\PicGallery.cshtml" />
-    <Content Include="Views\Home\PrivacyPolicy.cshtml" />
-    <Content Include="Views\Home\Products.cshtml" />
-    <Content Include="Views\Home\ProductsAndServices.cshtml" />
-    <Content Include="Views\Home\RegisterLoginContactResetPassword.cshtml" />
-    <Content Include="Views\Home\RegisterUserLoginUser.cshtml" />
-    <Content Include="Views\Home\RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\ResetPassword.cshtml" />
-    <Content Include="Views\Home\ReturnPolicy.cshtml" />
-    <Content Include="Views\Home\SEOPage1.cshtml" />
-    <Content Include="Views\Home\Services.cshtml" />
-    <Content Include="Views\Home\Testimonials.cshtml" />
-    <Content Include="Views\Home\UpdatePassword.cshtml" />
-    <Content Include="Views\Home\UserProfile.cshtml" />
-    <Content Include="Views\Home\_AboutUs.cshtml" />
-    <Content Include="Views\Home\_Carousel.cshtml" />
-    <Content Include="Views\Home\_Carousel1.cshtml" />
-    <Content Include="Views\Home\_Carousel2.cshtml" />
-    <Content Include="Views\Home\_ContactUs.cshtml" />
-    <Content Include="Views\Home\_ContactUsData.cshtml" />
-    <Content Include="Views\Home\_ContactUsDetail.cshtml" />
-    <Content Include="Views\Home\_ContactUsEmailBody.cshtml" />
-    <Content Include="Views\Home\_ContactUsEmailSubject.cshtml" />
-    <Content Include="Views\Home\_ContactUsInfo.cshtml" />
-    <Content Include="Views\Home\_Error404.cshtml" />
-    <Content Include="Views\Home\_FAQs.cshtml" />
-    <Content Include="Views\Home\_Home.cshtml" />
-    <Content Include="Views\Home\_Home1.cshtml" />
-    <Content Include="Views\Home\_Home2.cshtml" />
-    <Content Include="Views\Home\_HomePopupModal.cshtml" />
-    <Content Include="Views\Home\_LoginUserProf.cshtml" />
-    <Content Include="Views\Home\_LoginUserProf1.cshtml" />
-    <Content Include="Views\Home\_LoginUserProfData.cshtml" />
-    <Content Include="Views\Home\_Payment.cshtml" />
-    <Content Include="Views\Home\_PaymentData.cshtml" />
-    <Content Include="Views\Home\_PicGallery.cshtml" />
-    <Content Include="Views\Home\_PrivacyPolicy.cshtml" />
-    <Content Include="Views\Home\_Products.cshtml" />
-    <Content Include="Views\Home\_ProductsAndServices.cshtml" />
-    <Content Include="Views\Home\_RegisterLoginContactResetPassword.cshtml" />
-    <Content Include="Views\Home\_RegisterUserLoginUser.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfData.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
-    <Content Include="Views\Home\_ResetPassword.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordData.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordEmailBody.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordEmailSubject.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordProfData.cshtml" />
-    <Content Include="Views\Home\_ReturnPolicy.cshtml" />
-    <Content Include="Views\Home\_SEOPage1.cshtml" />
-    <Content Include="Views\Home\_Services.cshtml" />
-    <Content Include="Views\Home\_ShoppingCart.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartData.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartEmailBody.cshtml" />
-    <Content Include="Views\Home\_Testimonials.cshtml" />
-    <Content Include="Views\Home\_UpdatePassword.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordData.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordEmailBody.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordEmailSubject.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordSuccess.cshtml" />
-    <Content Include="Views\Home\_UserProfile.cshtml" />
-    <Content Include="Views\Home\_UserProfileData.cshtml" />
-    <Content Include="Views\Home\_UserProfileEmailBody.cshtml" />
-    <Content Include="Views\Home\_UserProfileEmailSubject.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\AboutUs.cshtml" />
+    <Content Include="Views\Home\ContactUs.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\Forbidden.cshtml" />
     <Content Include="Views\Shared\Unauthorized.cshtml" />
     <Content Include="Views\Shared\_Error.cshtml" />
-    <Content Include="Views\Shared\_Footer.cshtml" />
-    <Content Include="Views\Shared\_FooterMenu.cshtml" />
-    <Content Include="Views\Shared\_Header.cshtml" />
-    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LoadingModal.cshtml" />
-    <Content Include="Views\Shared\_Modal.cshtml" />
     <Content Include="Views\Shared\_ResponseObject.cshtml" />
+    <Content Include="Views\Shared\_FooterMenu.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuHamburger.cshtml" />
+    <Content Include="Views\Shared\_HeaderStrip.cshtml" />
+    <Content Include="Views\Home\_Carousel.cshtml" />
+    <Content Include="Views\Home\_Home.cshtml" />
+    <Content Include="Views\Home\_AboutUs.cshtml" />
+    <Content Include="Views\Home\_ContactUs.cshtml" />
+    <Content Include="Views\Home\_ContactUsData.cshtml" />
+    <Content Include="Views\Home\_ContactUsDetail.cshtml" />
+    <Content Include="Views\Home\CookiePolicy.cshtml" />
+    <Content Include="Views\Home\Error404.cshtml" />
+    <Content Include="Views\Home\FAQs.cshtml" />
+    <Content Include="Views\Home\SEOPage1.cshtml" />
+    <Content Include="Views\Home\_ContactUsInfo.cshtml" />
+    <Content Include="Views\Home\_ContactUsEmailBody.cshtml" />
+    <Content Include="Views\Home\_ContactUsEmailSubject.cshtml" />
     <Content Include="Views\Shared\_SignatureTemplate.cshtml" />
-    <Content Include="Views\Home\_Programs.cshtml" />
-    <Content Include="Views\Home\Programs.cshtml" />
-    <Content Include="Views\Home\Tuition.cshtml" />
-    <Content Include="Views\Home\_Tuition.cshtml" />
-    <Content Include="Views\Home\Catalog.cshtml" />
-    <Content Include="Views\Home\_Catalog.cshtml" />
-    <Content Include="Views\Home\_Enrollment.cshtml" />
-    <Content Include="Views\Home\Enrollment.cshtml" />
-    <Content Include="Views\Home\_EnrollmentData.cshtml" />
-    <Content Include="Views\Home\_EnrollmentEmailBody.cshtml" />
-    <Content Include="Views\Home\_EnrollmentEmailSubject.cshtml" />
-    <Content Include="Views\Home\ResetPasswordContactUs.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordContactUs.cshtml" />
+    <Content Include="Views\Shared\_SignatureTemplateEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -453,9 +400,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>65133</DevelopmentServerPort>
+          <DevelopmentServerPort>61757</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:65133/</IISUrl>
+          <IISUrl>https://localhost:44353/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

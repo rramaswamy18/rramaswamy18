@@ -4,6 +4,12 @@
         <name>itext.forms</name>
     </assembly>
     <members>
+        <member name="T:iText.Forms.Exceptions.AttributeNotFoundException">
+            <summary>
+            This class represents iText exception that should be thrown when the attribute with given name
+            is not found in the object attributes list.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Exceptions.AttributeNotFoundException.#ctor(System.String)">
             <summary>The exception thrown when the attribute with given name is not found in the object attributes list.
                 </summary>
@@ -12,11 +18,21 @@
         <member name="T:iText.Forms.Exceptions.FormsExceptionMessageConstant">
             <summary>Class that bundles all the error message templates as constants.</summary>
         </member>
+        <member name="T:iText.Forms.Exceptions.XfdfException">
+            <summary>
+            This class represents iText exception that should be thrown when some errors occur while working with
+            XFDF objects (XFDF file is XML-based Acrobat Forms Data Format).
+            </summary>
+        </member>
+        <member name="M:iText.Forms.Exceptions.XfdfException.#ctor(System.String)">
+            <summary>The exception thrown when some errors occur while working with XFDF objects.</summary>
+            <param name="message">exception message.</param>
+        </member>
         <member name="F:iText.Forms.Exceptions.XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING">
-            <summary>Message in case one tries to add attribute with null name or value</summary>
+            <summary>Message in case one tries to add attribute with null name or value.</summary>
         </member>
         <member name="F:iText.Forms.Exceptions.XfdfException.PAGE_IS_MISSING">
-            <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
+            <summary>Message in case one tries to add annotation without indicating the page it belongs to.</summary>
         </member>
         <member name="T:iText.Forms.Fields.AbstractPdfFormField">
             <summary>
@@ -125,10 +141,23 @@
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.AbstractPdfFormField.GetPdfAConformanceLevel">
-            <summary>Gets the declared PDF/A conformance level.</summary>
+            <summary>Gets the declared conformance level.</summary>
+            <remarks>
+            Gets the declared conformance level.
+            Deprecated  use
+            <see cref="T:iText.Forms.Fields.AbstractPdfFormField"/>
+            getPdfConformanceLevel
+            </remarks>
             <returns>
             the
             <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            </returns>
+        </member>
+        <member name="M:iText.Forms.Fields.AbstractPdfFormField.GetPdfConformanceLevel">
+            <summary>Gets the declared conformance level.</summary>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Pdf.IConformanceLevel"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.AbstractPdfFormField.RegenerateField">
@@ -551,6 +580,14 @@
             to be used for form field creation
             </returns>
         </member>
+        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.GetGenericConformanceLevel">
+            <summary>Gets conformance level for form field creation.</summary>
+            <returns>
+            instance of
+            <see cref="T:iText.Kernel.Pdf.IConformanceLevel"/>
+            to be used for form field creation
+            </returns>
+        </member>
         <member name="M:iText.Forms.Fields.FormFieldBuilder`1.SetConformanceLevel(iText.Kernel.Pdf.PdfAConformanceLevel)">
             <summary>Sets conformance level for form field creation.</summary>
             <param name="conformanceLevel">
@@ -559,6 +596,15 @@
             to be used for form field creation
             </param>
             <returns>this builder</returns>
+        </member>
+        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.SetGenericConformanceLevel(iText.Kernel.Pdf.IConformanceLevel)">
+            <summary>Sets conformance level for form field creation.</summary>
+            <param name="conformanceLevel">
+            Instance of
+            <see cref="T:iText.Kernel.Pdf.IConformanceLevel"/>
+            to be used for form field creation.
+            </param>
+            <returns>This builder.</returns>
         </member>
         <member name="M:iText.Forms.Fields.FormFieldBuilder`1.GetThis">
             <summary>Returns this builder object.</summary>
@@ -3767,34 +3813,93 @@
         <member name="M:iText.Forms.Fields.TextFormFieldBuilder.GetThis">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.Forms.FormDefaultAccessibilityProperties">
+            <summary>
+            The
+            <see cref="T:iText.Forms.FormDefaultAccessibilityProperties"/>
+            class is used to create a specific forms related instance of the
+            <see cref="T:iText.Kernel.Pdf.Tagutils.DefaultAccessibilityProperties"/>
+            class.
+            </summary>
+        </member>
+        <member name="F:iText.Forms.FormDefaultAccessibilityProperties.FORM_FIELD_RADIO">
+            <summary>Represents the role: radio.</summary>
+        </member>
+        <member name="F:iText.Forms.FormDefaultAccessibilityProperties.FORM_FIELD_CHECK">
+            <summary>Represents the role: Checkbox.</summary>
+        </member>
+        <member name="F:iText.Forms.FormDefaultAccessibilityProperties.FORM_FIELD_PUSH_BUTTON">
+            <summary>Represents the role: PushButton.</summary>
+        </member>
+        <member name="F:iText.Forms.FormDefaultAccessibilityProperties.FORM_FIELD_LIST_BOX">
+            <summary>Represents the role: ListBox.</summary>
+        </member>
+        <member name="F:iText.Forms.FormDefaultAccessibilityProperties.FORM_FIELD_TEXT">
+            <summary>Represents the role: Text.</summary>
+            <remarks>Represents the role: Text. This can be passwords, text areas, etc.</remarks>
+        </member>
+        <member name="M:iText.Forms.FormDefaultAccessibilityProperties.#ctor(System.String)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Forms.FormDefaultAccessibilityProperties"></see>
+            instance based on structure element role.
+            </summary>
+            <param name="formFieldType">the type of the formField</param>
+        </member>
+        <member name="M:iText.Forms.FormDefaultAccessibilityProperties.UpdateCheckedValue(iText.Layout.IPropertyContainer)">
+            <summary>
+            Updates the checked value of the form field based on the
+            <see cref="F:iText.Forms.Form.FormProperty.FORM_FIELD_CHECKED"/>
+            property.
+            </summary>
+            <remarks>
+            Updates the checked value of the form field based on the
+            <see cref="F:iText.Forms.Form.FormProperty.FORM_FIELD_CHECKED"/>
+            property.
+            If no such property is found, the checked value is set to "off".
+            </remarks>
+            <param name="element">
+            The element which contains a
+            <see cref="F:iText.Forms.Form.FormProperty.FORM_FIELD_CHECKED"/>
+            property.
+            </param>
+        </member>
         <member name="T:iText.Forms.Form.Element.AbstractSelectField">
             <summary>An abstract class for fields that represents a control for selecting one or several of the provided options.
                 </summary>
         </member>
+        <member name="M:iText.Forms.Form.Element.AbstractSelectField.#ctor(System.String)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Forms.Form.Element.AbstractSelectField"/>
+            instance.
+            </summary>
+            <param name="id">the id of the field</param>
+        </member>
         <member name="M:iText.Forms.Form.Element.AbstractSelectField.AddOption(iText.Layout.Element.IBlockElement)">
             <summary>Add a container with options.</summary>
             <remarks>Add a container with options. This might be a container for options group.</remarks>
-            <param name="optionElement">a container with options.</param>
+            <param name="optionElement">a container with options</param>
         </member>
         <member name="M:iText.Forms.Form.Element.AbstractSelectField.AddOption(iText.Forms.Form.Element.SelectFieldItem)">
             <summary>Add an option to the element.</summary>
             <param name="option">
             a
-            <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>.
+            <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>
             </param>
         </member>
         <member name="M:iText.Forms.Form.Element.AbstractSelectField.AddOption(iText.Forms.Form.Element.SelectFieldItem,System.Boolean)">
             <summary>Add an option to the element.</summary>
             <param name="option">
             a
-            <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>.
+            <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>
             </param>
             <param name="selected">
             
             <see langword="true"/>
             is the option if selected,
             <see langword="false"/>
-            otherwise.
+            otherwise
             </param>
         </member>
         <member name="M:iText.Forms.Form.Element.AbstractSelectField.GetItems">
@@ -3818,7 +3923,7 @@
             <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>
             by its string value.
             </summary>
-            <param name="value">string value to find an option by.</param>
+            <param name="value">string value to find an option by</param>
             <returns>
             a
             <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>.
@@ -3917,6 +4022,9 @@
             <inheritDoc/>
             </returns>
         </member>
+        <member name="M:iText.Forms.Form.Element.Button.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Forms.Form.Element.Button.MakeNewRenderer">
             <summary><inheritDoc/></summary>
             <returns>
@@ -3949,8 +4057,17 @@
         </member>
         <member name="M:iText.Forms.Form.Element.CheckBox.SetPdfAConformanceLevel(iText.Kernel.Pdf.PdfAConformanceLevel)">
             <summary>Sets the PDF/A conformance level for the checkbox.</summary>
-            <param name="conformanceLevel">the PDF/A conformance level to set</param>
-            <returns>this checkbox instance</returns>
+            <remarks>
+            Sets the PDF/A conformance level for the checkbox.
+            This method is deprecated use setPdfConformanceLevel.
+            </remarks>
+            <param name="conformanceLevel">The PDF/A conformance level to set.</param>
+            <returns>This checkbox instance.</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Element.CheckBox.SetPdfConformanceLevel(iText.Kernel.Pdf.IConformanceLevel)">
+            <summary>Sets the conformance level for the checkbox.</summary>
+            <param name="conformanceLevel">The PDF/A conformance level to set.</param>
+            <returns>tThis checkbox instance.</returns>
         </member>
         <member name="M:iText.Forms.Form.Element.CheckBox.SetCheckBoxType(iText.Forms.Fields.Properties.CheckBoxType)">
             <summary>Sets the icon of the checkbox.</summary>
@@ -3961,6 +4078,9 @@
             <summary>Sets the size of the checkbox.</summary>
             <param name="size">the size of the checkbox to set, in points</param>
             <returns>this checkbox instance</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Element.CheckBox.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Forms.Form.Element.ComboBoxField">
             <summary>A field that represents a control for selecting one of the provided options.</summary>
@@ -4016,6 +4136,9 @@
             <summary>Gets the selected option.</summary>
             <returns>the selected option. This may be null if no option has been selected.</returns>
         </member>
+        <member name="M:iText.Forms.Form.Element.ComboBoxField.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Forms.Form.Element.FormField`1">
             <summary>
             Implementation of the
@@ -4026,6 +4149,9 @@
         </member>
         <member name="F:iText.Forms.Form.Element.FormField`1.id">
             <summary>The id.</summary>
+        </member>
+        <member name="F:iText.Forms.Form.Element.FormField`1.tagProperties">
+            <summary>The tag properties.</summary>
         </member>
         <member name="M:iText.Forms.Form.Element.FormField`1.#ctor(System.String)">
             <summary>
@@ -4208,6 +4334,10 @@
         <member name="M:iText.Forms.Form.Element.InputField.SetPlaceholder(iText.Layout.Element.Paragraph)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Forms.Form.Element.InputField.GetRotation">
+            <summary>Get rotation.</summary>
+            <returns>rotation value.</returns>
+        </member>
         <member name="M:iText.Forms.Form.Element.InputField.SetRotation(System.Int32)">
             <summary>Set rotation of the input field.</summary>
             <param name="rotation">
@@ -4220,9 +4350,8 @@
             <see cref="T:iText.Forms.Form.Element.InputField"/>.
             </returns>
         </member>
-        <member name="M:iText.Forms.Form.Element.InputField.GetRotation">
-            <summary>Get rotation.</summary>
-            <returns>rotation value.</returns>
+        <member name="M:iText.Forms.Form.Element.InputField.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Forms.Form.Element.IPlaceholderable">
             <summary>A marker interface that specifies that the layout object has placeholder.</summary>
@@ -4288,6 +4417,9 @@
             <summary>Get a list of selected options.</summary>
             <returns>a list of display values of selected options.</returns>
         </member>
+        <member name="M:iText.Forms.Form.Element.ListBoxField.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Forms.Form.Element.Radio">
             <summary>
             Extension of the
@@ -4335,6 +4467,9 @@
             </returns>
         </member>
         <member name="M:iText.Forms.Form.Element.Radio.GetProperty``1(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Forms.Form.Element.Radio.GetAccessibilityProperties">
             <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Forms.Form.Element.SelectFieldItem">
@@ -4583,6 +4718,9 @@
             <inheritDoc/>
             </returns>
         </member>
+        <member name="M:iText.Forms.Form.Element.SignatureFieldAppearance.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Forms.Form.Element.SignatureFieldAppearance.MakeNewRenderer">
             <summary><inheritDoc/></summary>
             <returns>
@@ -4636,6 +4774,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Forms.Form.Element.TextArea.SetPlaceholder(iText.Layout.Element.Paragraph)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Forms.Form.Element.TextArea.GetAccessibilityProperties">
             <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Forms.Form.FormProperty">
@@ -4709,11 +4850,11 @@
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.IsFlatten">
             <summary>Checks if form fields need to be flattened.</summary>
-            <returns>true, if fields need to be flattened</returns>
+            <returns>true, if fields need to be flattened.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetDefaultValue">
             <summary>Gets the default value of the form field.</summary>
-            <returns>the default value of the form field</returns>
+            <returns>the default value of the form field.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.Layout(iText.Layout.Layout.LayoutContext)">
             <summary><inheritDoc/></summary>
@@ -4721,11 +4862,16 @@
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.Draw(iText.Layout.Renderer.DrawContext)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetMinMaxWidth">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.DrawChildren(iText.Layout.Renderer.DrawContext)">
             <summary><inheritDoc/></summary>
         </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetMinMaxWidth">
-            <summary><inheritDoc/></summary>
+        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField,iText.Kernel.Pdf.PdfDocument)">
+            <summary>Applies the accessibility properties to the form field.</summary>
+            <param name="formField">The form field to which the accessibility properties should be applied.</param>
+            <param name="pdfDocument">The document to which the form field belongs.</param>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.AdjustFieldLayout(iText.Layout.Layout.LayoutContext)">
             <summary>Adjusts the field layout.</summary>
@@ -4733,7 +4879,7 @@
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.CreateFlatRenderer">
             <summary>Creates the flat renderer instance.</summary>
-            <returns>the renderer instance</returns>
+            <returns>the renderer instance.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.ApplyAcroField(iText.Layout.Renderer.DrawContext)">
             <summary>Applies the AcroField widget.</summary>
@@ -4741,19 +4887,26 @@
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetModelId">
             <summary>Gets the model id.</summary>
-            <returns>the model id</returns>
+            <returns>the model id.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.IsRendererFit(System.Single,System.Single)">
             <summary>Checks if the renderer fits a certain width and height.</summary>
             <param name="availableWidth">the available width</param>
             <param name="availableHeight">the available height</param>
-            <returns>true, if the renderer fits</returns>
+            <returns>true, if the renderer fits.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetLang">
             <summary>Gets the accessibility language.</summary>
-            <returns>the accessibility language</returns>
+            <returns>the accessibility language.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
+            <summary>Gets the conformance level.</summary>
+            <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+                </remarks>
+            <param name="document">the document</param>
+            <returns>the conformance level or null if the conformance level is not set.</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetGenericConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
             <summary>Gets the conformance level.</summary>
             <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
                 </remarks>
@@ -4765,23 +4918,13 @@
             <returns>
             
             <see langword="true"/>
-            if layout is based on flat renderer, false otherwise
+            if layout is based on flat renderer, false otherwise.
             </returns>
         </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.DeleteMargins">
-            <summary>Deletes all margin properties.</summary>
-            <remarks>
-            Deletes all margin properties. Used in
-            <c>applyAcroField</c>
-            to not apply margins twice as we already use area
-            with margins applied (margins shouldn't be an interactive part of the field, i.e. included into its occupied
-            area).
-            </remarks>
-            <returns>the map of deleted margins</returns>
-        </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.ApplyProperties(System.Collections.Generic.IDictionary{System.Int32,System.Object})">
-            <summary>Applies the properties to the model element.</summary>
-            <param name="properties">the properties to apply</param>
+        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.WriteAcroFormFieldLangAttribute(iText.Kernel.Pdf.PdfDocument)">
+            <summary>Sets the form accessibility language identifier of the form element in case the document is tagged.
+                </summary>
+            <param name="pdfDoc">the document which contains form field</param>
         </member>
         <member name="T:iText.Forms.Form.Renderer.AbstractOneLineTextFieldRenderer">
             <summary>
@@ -4826,20 +4969,48 @@
             </summary>
             <param name="modelElement">the model element</param>
         </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.Layout(iText.Layout.Layout.LayoutContext)">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.Draw(iText.Layout.Renderer.DrawContext)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.DrawChildren(iText.Layout.Renderer.DrawContext)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetLang">
             <summary>Gets the accessibility language.</summary>
-            <returns>the accessibility language</returns>
+            <returns>the accessibility language.</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.WriteAcroFormFieldLangAttribute(iText.Kernel.Pdf.PdfDocument)">
+            <summary>Sets the form accessibility language identifier of the form element in case the document is tagged.
+                </summary>
+            <param name="pdfDoc">the document which contains form field.</param>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField,iText.Kernel.Pdf.PdfDocument)">
+            <summary>Applies the accessibility properties to the form field.</summary>
+            <param name="formField">The form field to which the accessibility properties should be applied.</param>
+            <param name="pdfDocument">The document to which the form field belongs.</param>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.CreateFlatRenderer">
+            <summary>Creates the flat renderer instance.</summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Renderer.IRenderer"/>
+            instance.
+            </returns>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.ApplyAcroField(iText.Layout.Renderer.DrawContext)">
+            <summary>Applies the AcroField widget.</summary>
+            <param name="drawContext">the draw context</param>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.IsFlatten">
             <summary>Checks if form fields need to be flattened.</summary>
-            <returns>true, if fields need to be flattened</returns>
+            <returns>true, if fields need to be flattened.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetModelId">
             <summary>Gets the model id.</summary>
-            <returns>the model id</returns>
+            <returns>the model id.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.SetupBuilderValues(iText.Forms.Fields.ChoiceFormFieldBuilder,iText.Forms.Form.Element.AbstractSelectField)">
             <summary>
@@ -4849,13 +5020,20 @@
             <param name="builder">
             
             <see cref="T:iText.Forms.Fields.ChoiceFormFieldBuilder"/>
-            to set options to.
+            to set options to
             </param>
             <param name="field">
             
             <see cref="T:iText.Forms.Form.Element.AbstractSelectField"/>
-            to retrieve the options from.
+            to retrieve the options from
             </param>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetFinalSelectFieldHeight(System.Single,System.Single,System.Boolean)">
+            <summary>Returns final height of the select field.</summary>
+            <param name="availableHeight">available height of the layout area</param>
+            <param name="actualHeight">actual occupied height of the select field</param>
+            <param name="isClippedHeight">indicates whether the layout area's height is clipped or not</param>
+            <returns>final height of the select field.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
             <summary>Gets the conformance level.</summary>
@@ -4863,6 +5041,18 @@
                 </remarks>
             <param name="document">the document</param>
             <returns>the conformance level or null if the conformance level is not set.</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetGenericConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
+            <summary>Gets the conformance level.</summary>
+            <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+                </remarks>
+            <param name="document">the document</param>
+            <returns>the conformance level or null if the conformance level is not set.</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetOptionsMarkedSelected(iText.Layout.Renderer.IRenderer)">
+            <summary>Gets options that are marked as selected from the select field options subtree.</summary>
+            <param name="optionsSubTree">options subtree to get selected options</param>
+            <returns>selected options list.</returns>
         </member>
         <member name="T:iText.Forms.Form.Renderer.AbstractTextFieldRenderer">
             <summary>
@@ -5013,6 +5203,13 @@
         <member name="T:iText.Forms.Form.Renderer.Checkboximpl.HtmlCheckBoxRenderingStrategy">
             <summary>This class is used to draw a checkBox icon in HTML mode.</summary>
         </member>
+        <member name="M:iText.Forms.Form.Renderer.Checkboximpl.HtmlCheckBoxRenderingStrategy.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Forms.Form.Renderer.Checkboximpl.HtmlCheckBoxRenderingStrategy"/>
+            instance.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Form.Renderer.Checkboximpl.HtmlCheckBoxRenderingStrategy.DrawCheckBoxContent(iText.Layout.Renderer.DrawContext,iText.Forms.Form.Renderer.CheckBoxRenderer,iText.Kernel.Geom.Rectangle)">
             <summary><inheritDoc/></summary>
         </member>
@@ -5102,6 +5299,21 @@
         <member name="M:iText.Forms.Form.Renderer.CheckBoxRenderer.AdjustFieldLayout(iText.Layout.Layout.LayoutContext)">
             <summary>Adjusts the field layout.</summary>
             <param name="layoutContext">layout context</param>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.CheckBoxRenderer.ApplyPaddings(iText.Kernel.Geom.Rectangle,iText.Layout.Properties.UnitValue[],System.Boolean)">
+            <summary>Applies given paddings to the given rectangle.</summary>
+            <remarks>
+            Applies given paddings to the given rectangle.
+            Checkboxes don't support setting of paddings as they are always centered.
+            So that this method returns the rectangle as is.
+            </remarks>
+            <param name="rect">a rectangle paddings will be applied on.</param>
+            <param name="paddings">the paddings to be applied on the given rectangle</param>
+            <param name="reverse">
+            indicates whether paddings will be applied
+            inside (in case of false) or outside (in case of true) the rectangle.
+            </param>
+            <returns>The rectangle NOT modified by the paddings.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.CheckBoxRenderer.CreateFlatRenderer">
             <summary>Creates a flat renderer for the checkbox.</summary>
@@ -6192,8 +6404,8 @@
             <see cref="T:iText.Forms.PdfSigFieldLock"/>.
             </summary>
             <param name="dict">
-            The dictionary whose entries should be added to
-            the signature field lock dictionary.
+            the dictionary whose entries should be added to
+            the signature field lock dictionary
             </param>
         </member>
         <member name="M:iText.Forms.PdfSigFieldLock.SetDocumentPermissions(iText.Forms.PdfSigFieldLock.LockPermissions)">
@@ -6207,9 +6419,9 @@
             <see cref="T:iText.Forms.PdfSigFieldLock.LockPermissions"/>
             for getting more info.
             </remarks>
-            <param name="permissions">The permissions granted for the document.</param>
+            <param name="permissions">the permissions granted for the document</param>
             <returns>
-            This
+            this
             <see cref="T:iText.Forms.PdfSigFieldLock"/>
             object.
             </returns>
@@ -6217,14 +6429,44 @@
         <member name="M:iText.Forms.PdfSigFieldLock.SetFieldLock(iText.Forms.PdfSigFieldLock.LockAction,System.String[])">
             <summary>Sets signature lock for specific fields in the document.</summary>
             <param name="action">
-            Indicates the set of fields that should be locked after the actual
-            signing of the corresponding signature takes place.
+            indicates the set of fields that should be locked after the actual
+            signing of the corresponding signature takes place
             </param>
-            <param name="fields">Names indicating the fields.</param>
+            <param name="fields">names indicating the fields</param>
             <returns>
-            This
+            this
             <see cref="T:iText.Forms.PdfSigFieldLock"/>
             object.
+            </returns>
+        </member>
+        <member name="M:iText.Forms.PdfSigFieldLock.GetLockActionValue(iText.Forms.PdfSigFieldLock.LockAction)">
+            <summary>
+            Returns the specified action of a signature field lock as
+            <see cref="T:iText.Kernel.Pdf.PdfName"/>
+            value.
+            </summary>
+            <param name="action">
+            the action as
+            <see cref="T:iText.Forms.PdfSigFieldLock.LockAction"/>
+            </param>
+            <returns>
+            the specified action of a signature field lock as
+            <see cref="T:iText.Kernel.Pdf.PdfName"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Forms.PdfSigFieldLock.GetLockPermission(iText.Forms.PdfSigFieldLock.LockPermissions)">
+            <summary>
+            Returns the specified level of access permissions granted for the document as
+            <see cref="T:iText.Kernel.Pdf.PdfNumber"/>
+            value.
+            </summary>
+            <param name="permissions">
+            the level of access permissions as
+            <see cref="T:iText.Forms.PdfSigFieldLock.LockPermissions"/>
+            </param>
+            <returns>
+            the specified level of access permissions as
+            <see cref="T:iText.Kernel.Pdf.PdfNumber"/>.
             </returns>
         </member>
         <member name="T:iText.Forms.PdfSigFieldLock.LockAction">
@@ -6371,6 +6613,37 @@
             <param name="minValue">the minimum font size</param>
             <param name="borderWidth">the border width of the field</param>
             <returns>the font size that will fit the text in the given rectangle</returns>
+        </member>
+        <member name="T:iText.Forms.Util.FormFieldRendererUtil">
+            <summary>Utility class for centralized logic related to form field rendering.</summary>
+        </member>
+        <member name="M:iText.Forms.Util.FormFieldRendererUtil.#ctor">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Forms.Util.FormFieldRendererUtil"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Forms.Util.FormFieldRendererUtil.RemoveProperties(iText.Layout.IPropertyContainer)">
+            <summary>Removes properties that impact the lay outing of interactive form fields.</summary>
+            <param name="modelElement">The model element to remove the properties from.</param>
+            <returns>A map containing the removed properties.</returns>
+        </member>
+        <member name="M:iText.Forms.Util.FormFieldRendererUtil.ReapplyProperties(iText.Layout.IPropertyContainer,System.Collections.Generic.IDictionary{System.Int32,System.Object})">
+            <summary>
+            Reapplies the properties
+            <see cref="T:iText.Layout.IPropertyContainer"/>.
+            </summary>
+            <param name="modelElement">The model element to reapply the properties to.</param>
+            <param name="properties">The properties to reapply.</param>
+        </member>
+        <member name="T:iText.Forms.Util.RegisterDefaultDiContainer">
+            <summary>Registers a default instance for a dependency injection container.</summary>
+        </member>
+        <member name="M:iText.Forms.Util.RegisterDefaultDiContainer.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Util.RegisterDefaultDiContainer"/>.
+            </summary>
         </member>
         <member name="T:iText.Forms.Xfa.AcroFieldsSearch">
             <summary>A class to process "classic" fields.</summary>
@@ -6540,6 +6813,13 @@
             <summary>Gets all the text contained in the child nodes of this node.</summary>
             <param name="n">the <CODE>Node</CODE></param>
             <returns>the text found or "" if no text was found</returns>
+        </member>
+        <member name="M:iText.Forms.Xfa.XfaForm.GetNodeTextByPath(System.String)">
+            <summary>
+            Gets all the text contained in the child nodes of the node under the provided path.
+            </summary>
+            <param name="path">path to the node to extract text in the format "some.path.to.node"</param>
+            <returns>text found under the provided path or <c>null</c> if node or text wasn't found</returns>
         </member>
         <member name="M:iText.Forms.Xfa.XfaForm.SetNodeText(System.Xml.Linq.XNode,System.String)">
             <summary>Sets the text of this node.</summary>
@@ -6855,6 +7135,24 @@
             For more details see paragraph 6.5.10 in Xfdf specification.
             </remarks>
         </member>
+        <member name="M:iText.Forms.Xfdf.ActionObject.#ctor(iText.Kernel.Pdf.PdfName)">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
+            </summary>
+            <param name="type">
+            type of inner action element. Possible values:
+            <see cref="F:iText.Kernel.Pdf.PdfName.URI"/>
+            ,
+            <see cref="F:iText.Kernel.Pdf.PdfName.Launch"/>
+            ,
+            <see cref="F:iText.Kernel.Pdf.PdfName.GoTo"/>
+            ,
+            <see cref="F:iText.Kernel.Pdf.PdfName.GoToR"/>
+            ,
+            <see cref="F:iText.Kernel.Pdf.PdfName.Named"/>
+            </param>
+        </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.GetType">
             <summary>Returns the type of inner action element.</summary>
             <remarks>
@@ -6872,7 +7170,7 @@
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.PdfName"/>
-            type of inner action element
+            type of inner action element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetType(iText.Kernel.Pdf.PdfName)">
@@ -6896,7 +7194,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.GetUri">
@@ -6908,7 +7206,7 @@
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.PdfString"/>
-            value of URI element
+            value of URI element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetUri(iText.Kernel.Pdf.PdfString)">
@@ -6924,14 +7222,14 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.IsMap">
             <summary>Gets IsMap, optional attribute of URI element.</summary>
             <remarks>Gets IsMap, optional attribute of URI element. For more details see paragraph 6.5.30 in Xfdf specification.
                 </remarks>
-            <returns>boolean indicating if URI element is a map</returns>
+            <returns>boolean indicating if URI element is a map.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetMap(System.Boolean)">
             <summary>Sets IsMap, optional attribute of URI element.</summary>
@@ -6940,23 +7238,27 @@
             <param name="map">boolean indicating if URI element is a map</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.GetNameAction">
             <summary>Gets the value of Name, required attribute of Named element.</summary>
-            <remarks>Gets the value of Name, required attribute of Named element. For more details see paragraph 6.5.24 in Xfdf specification.
-                </remarks>
+            <remarks>
+            Gets the value of Name, required attribute of Named element.
+            For more details see paragraph 6.5.24 in Xfdf specification.
+            </remarks>
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.PdfName"/>
-            value of Name attribute of a named action element
+            value of Name attribute of a named action element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetNameAction(iText.Kernel.Pdf.PdfName)">
             <summary>Sets the value of Name, required attribute of Named element.</summary>
-            <remarks>Sets the value of Name, required attribute of Named element. For more details see paragraph 6.5.24 in Xfdf specification.
-                </remarks>
+            <remarks>
+            Sets the value of Name, required attribute of Named element.
+            For more details see paragraph 6.5.24 in Xfdf specification.
+            </remarks>
             <param name="nameAction">
             
             <see cref="T:iText.Kernel.Pdf.PdfName"/>
@@ -6964,7 +7266,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.GetFileOriginalName">
@@ -6978,7 +7280,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of OriginalName attribute of current action object
+            value of OriginalName attribute of current action object.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetFileOriginalName(System.String)">
@@ -6996,24 +7298,28 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.IsNewWindow">
             <summary>Gets the boolean value of NewWindow, optional attribute of Launch element.</summary>
-            <remarks>Gets the boolean value of NewWindow, optional attribute of Launch element. For more details see paragraph 6.5.23 in Xfdf specification.
-                </remarks>
-            <returns>boolean indicating if current Launch action element should be opened in a new window</returns>
+            <remarks>
+            Gets the boolean value of NewWindow, optional attribute of Launch element.
+            For more details see paragraph 6.5.23 in Xfdf specification.
+            </remarks>
+            <returns>boolean indicating if current Launch action element should be opened in a new window.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetNewWindow(System.Boolean)">
             <summary>Sets the boolean value of NewWindow, optional attribute of Launch element.</summary>
-            <remarks>Sets the boolean value of NewWindow, optional attribute of Launch element. For more details see paragraph 6.5.23 in Xfdf specification.
-                </remarks>
+            <remarks>
+            Sets the boolean value of NewWindow, optional attribute of Launch element.
+            For more details see paragraph 6.5.23 in Xfdf specification.
+            </remarks>
             <param name="newWindow">boolean indicating if current Launch action element should be opened in a new window
                 </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.GetDestination">
@@ -7026,7 +7332,7 @@
             <returns>
             
             <see cref="T:iText.Forms.Xfdf.DestObject"/>
-            destination attribute of current action element
+            destination attribute of current action element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.ActionObject.SetDestination(iText.Forms.Xfdf.DestObject)">
@@ -7043,13 +7349,15 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.ActionObject"/>
+            <see cref="T:iText.Forms.Xfdf.ActionObject"/>.
             </returns>
         </member>
         <member name="T:iText.Forms.Xfdf.AnnotObject">
             <summary>Represents annotation, a child element of annots tag in Xfdf document structure.</summary>
-            <remarks>Represents annotation, a child element of annots tag in Xfdf document structure. For more details see part 6.4 in Xfdf specification.
-                </remarks>
+            <remarks>
+            Represents annotation, a child element of annots tag in Xfdf document structure.
+            For more details see part 6.4 in Xfdf specification.
+            </remarks>
         </member>
         <member name="F:iText.Forms.Xfdf.AnnotObject.name">
             <summary>Represents the type of annotation.</summary>
@@ -7188,6 +7496,12 @@
             . Used for attaching popups in case of reading data from pdf file.
             </remarks>
         </member>
+        <member name="M:iText.Forms.Xfdf.AnnotObject.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.AnnotObject"/>.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetName">
             <summary>Gets the string value of the type of annotation.</summary>
             <remarks>
@@ -7227,7 +7541,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of the type of annotation
+            value of the type of annotation.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetName(System.String)">
@@ -7274,7 +7588,7 @@
             <returns>
             
             <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
-            with set name
+            with set name.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetAttributes">
@@ -7284,12 +7598,12 @@
             <see cref="!:System.Collections.IList&lt;E&gt;">list</see>
             containing all
             <see cref="T:iText.Forms.Xfdf.AttributeObject">attribute objects</see>
-            of the annotation
+            of the annotation.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetAttribute(System.String)">
             <summary>Finds the attribute by name in attributes list.</summary>
-            <param name="name">The name of the attribute to look for.</param>
+            <param name="name">the name of the attribute to look for</param>
             <returns>
             
             <see cref="T:iText.Forms.Xfdf.AttributeObject"/>
@@ -7298,11 +7612,12 @@
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetAttributeValue(System.String)">
             <summary>Finds the attribute by name in attributes list and return its string value.</summary>
-            <param name="name">The name of the attribute to look for.</param>
+            <param name="name">the name of the attribute to look for</param>
             <returns>
             the value of the
             <see cref="T:iText.Forms.Xfdf.AttributeObject"/>
-            with the given name, or null, if no object with this name was found.
+            with the given name,
+            or null, if no object with this name was found.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetPopup">
@@ -7310,7 +7625,7 @@
             <returns>
             
             <see cref="T:iText.Forms.Xfdf.AnnotObject"/>
-            representing the inner popup annotation
+            representing the inner popup annotation.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetPopup(iText.Forms.Xfdf.AnnotObject)">
@@ -7322,19 +7637,19 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.IsHasPopup">
             <summary>Gets the boolean, indicating if annotation has an inner popup element.</summary>
-            <returns>true if annotation has an inner popup element, false otherwise</returns>
+            <returns>true if annotation has an inner popup element, false otherwise.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetHasPopup(System.Boolean)">
             <summary>Sets the boolean, indicating if annotation has inner popup element.</summary>
             <param name="hasPopup">a boolean indicating if annotation has inner popup element</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetContents">
@@ -7350,7 +7665,7 @@
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.PdfString"/>
-            value of inner contents element of current annotation object
+            value of inner contents element of current annotation object.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetContents(iText.Kernel.Pdf.PdfString)">
@@ -7362,7 +7677,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetContentsRichText">
@@ -7378,7 +7693,7 @@
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.PdfString"/>
-            value of inner contents-richtext element of current annotation object
+            value of inner contents-richtext element of current annotation object.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetContentsRichText(iText.Kernel.Pdf.PdfString)">
@@ -7390,7 +7705,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetAction">
@@ -7402,7 +7717,7 @@
             <returns>
             inner
             <see cref="T:iText.Forms.Xfdf.ActionObject">action object</see>
-            of annotation object
+            of annotation object.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetAction(iText.Forms.Xfdf.ActionObject)">
@@ -7418,7 +7733,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.AddAttribute(iText.Forms.Xfdf.AttributeObject)">
@@ -7476,7 +7791,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetAppearance">
@@ -7490,7 +7805,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of inner appearance element
+            value of inner appearance element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetAppearance(System.String)">
@@ -7507,7 +7822,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetDefaultAppearance">
@@ -7522,7 +7837,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of inner deafultappearance element
+            value of inner default appearance element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetDefaultAppearance(System.String)">
@@ -7540,7 +7855,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetDefaultStyle">
@@ -7554,7 +7869,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of inner defaultstyle element
+            value of inner defaultstyle element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetDefaultStyle(System.String)">
@@ -7571,7 +7886,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetBorderStyleAlt">
@@ -7583,7 +7898,7 @@
             </remarks>
             <returns>
             inner
-            <see cref="T:iText.Forms.Xfdf.BorderStyleAltObject">BorderStyleAlt object</see>
+            <see cref="T:iText.Forms.Xfdf.BorderStyleAltObject">BorderStyleAlt object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetBorderStyleAlt(iText.Forms.Xfdf.BorderStyleAltObject)">
@@ -7598,7 +7913,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetVertices">
@@ -7611,7 +7926,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of inner vertices element
+            value of inner vertices element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.SetVertices(System.String)">
@@ -7627,7 +7942,7 @@
             </param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>
+            <see cref="T:iText.Forms.Xfdf.AnnotObject">annotation object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.AnnotObject.GetRef">
@@ -7659,7 +7974,7 @@
             <param name="ref">
             
             <see cref="T:iText.Kernel.Pdf.PdfIndirectReference"/>
-            of the source annotation object.
+            of the source annotation object
             </param>
             <returns>
             this
@@ -7925,6 +8240,12 @@
             For more details see paragraph 6.5.16 in XFDF document specification.
             </remarks>
         </member>
+        <member name="M:iText.Forms.Xfdf.DestObject.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.DestObject"/>.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Xfdf.DestObject.GetName">
             <summary>Gets the Name attribute of Named element, a child of Dest element.</summary>
             <remarks>
@@ -7940,7 +8261,7 @@
             Sets the Name attribute of Named element, a child of Dest element.
             Allows a destination to be referred to indirectly by means of a name object or a byte string.
             </remarks>
-            <param name="name">string value of the Name attribute.</param>
+            <param name="name">string value of the Name attribute</param>
             <returns>
             this
             <see cref="T:iText.Forms.Xfdf.DestObject"/>
@@ -7971,7 +8292,7 @@
             <param name="xyz">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents XYZ of Dest element.
+            that represents XYZ of Dest element
             </param>
             <returns>
             this
@@ -8003,7 +8324,7 @@
             <param name="fit">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents Fit of Dest element.
+            that represents Fit of Dest element
             </param>
             <returns>
             this
@@ -8035,7 +8356,7 @@
             <param name="fitH">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents FitH of Dest element.
+            that represents FitH of Dest element
             </param>
             <returns>
             this
@@ -8067,7 +8388,7 @@
             <param name="fitV">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents FitV of Dest element.
+            that represents FitV of Dest element
             </param>
             <returns>
             this
@@ -8099,7 +8420,7 @@
             <param name="fitR">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents FitR of Dest element.
+            that represents FitR of Dest element
             </param>
             <returns>
             this
@@ -8132,7 +8453,7 @@
             <param name="fitB">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents FitB of Dest element.
+            that represents FitB of Dest element
             </param>
             <returns>
             this
@@ -8164,7 +8485,7 @@
             <param name="fitBH">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents FitBH of Dest element.
+            that represents FitBH of Dest element
             </param>
             <returns>
             this
@@ -8196,7 +8517,7 @@
             <param name="fitBV">
             a
             <see cref="T:iText.Forms.Xfdf.FitObject"/>
-            that represents FitBV of Dest element.
+            that represents FitBV of Dest element
             </param>
             <returns>
             this
@@ -8260,6 +8581,21 @@
         <member name="F:iText.Forms.Xfdf.FieldObject.parent">
             <summary>Parent field of current field.</summary>
         </member>
+        <member name="M:iText.Forms.Xfdf.FieldObject.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.FieldObject"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Forms.Xfdf.FieldObject.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.FieldObject"/>.
+            </summary>
+            <param name="name">the name attribute of the field element</param>
+            <param name="value">the field's value</param>
+            <param name="containsRichText">indicates if a value-richtext element is present inside the field</param>
+        </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.GetName">
             <summary>Gets the string value of the name attribute of the field element.</summary>
             <remarks>
@@ -8271,7 +8607,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            value of field name attribute
+            value of field name attribute.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.SetName(System.String)">
@@ -8301,7 +8637,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            representation of inner value element of the field
+            representation of inner value element of the field.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.SetValue(System.String)">
@@ -8335,7 +8671,7 @@
             <returns>
             
             <see cref="T:System.String"/>
-            representation of inner value-richtext element of the field
+            representation of inner value-richtext element of the field.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.SetRichTextValue(System.String)">
@@ -8357,7 +8693,7 @@
         </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.IsContainsRichText">
             <summary>Gets a boolean indicating if a value-richtext element is present inside the field.</summary>
-            <returns>true if a value-richtext element is present inside the field, false otherwise</returns>
+            <returns>true if a value-richtext element is present inside the field, false otherwise.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.SetContainsRichText(System.Boolean)">
             <summary>Sets a boolean indicating if a value-richtext element is present inside the field.</summary>
@@ -8369,7 +8705,7 @@
             <returns>
             parent
             <see cref="T:iText.Forms.Xfdf.FieldObject">field object</see>
-            of the current field
+            of the current field.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FieldObject.SetParent(iText.Forms.Xfdf.FieldObject)">
@@ -8393,6 +8729,12 @@
         <member name="F:iText.Forms.Xfdf.FieldsObject.fieldList">
             <summary>Represents a list of children fields</summary>
         </member>
+        <member name="M:iText.Forms.Xfdf.FieldsObject.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.FieldsObject"/>.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Xfdf.FieldsObject.GetFieldList">
             <summary>Gets a list of children fields</summary>
             <returns>
@@ -8404,7 +8746,7 @@
         </member>
         <member name="M:iText.Forms.Xfdf.FieldsObject.AddField(iText.Forms.Xfdf.FieldObject)">
             <summary>Adds a new field to the list.</summary>
-            <param name="field">FieldObject containing the info about the form field.</param>
+            <param name="field">FieldObject containing the info about the form field</param>
             <returns>
             current
             <see cref="T:iText.Forms.Xfdf.FieldsObject">fields object</see>
@@ -8445,6 +8787,13 @@
             Attribute of XYZ object.
             </remarks>
         </member>
+        <member name="M:iText.Forms.Xfdf.FitObject.#ctor(iText.Kernel.Pdf.PdfObject)">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.FitObject"/>.
+            </summary>
+            <param name="page">the page displayed by current Fit element</param>
+        </member>
         <member name="M:iText.Forms.Xfdf.FitObject.GetPage">
             <summary>Gets the PdfObject representing the page displayed by current Fit element.</summary>
             <remarks>
@@ -8454,55 +8803,55 @@
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.PdfObject">page</see>
-            of the current Fit element
+            of the current Fit element.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.GetTop">
             <summary>Gets a float vertical coordinate positioned at the top edge of the window.</summary>
-            <returns>top vertical coordinate</returns>
+            <returns>top vertical coordinate.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.SetTop(System.Single)">
             <summary>Sets a float vertical coordinate positioned at the top edge of the window.</summary>
             <param name="top">vertical coordinate value</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>
+            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.GetLeft">
             <summary>Gets a float horizontal coordinate positioned at the left edge of the window.</summary>
-            <returns>left horizontal coordinate</returns>
+            <returns>left horizontal coordinate.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.SetLeft(System.Single)">
             <summary>Sets a float horizontal coordinate positioned at the left edge of the window.</summary>
             <param name="left">horizontal coordinate value</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>
+            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.GetBottom">
             <summary>Gets a float vertical coordinate positioned at the bottom edge of the window.</summary>
-            <returns>bottom vertical coordinate</returns>
+            <returns>bottom vertical coordinate.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.SetBottom(System.Single)">
             <summary>Sets a float vertical coordinate positioned at the bottom edge of the window.</summary>
             <param name="bottom">vertical coordinate value</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>
+            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.GetRight">
             <summary>Gets a float horizontal coordinate positioned at the right edge of the window.</summary>
-            <returns>right horizontal coordinate</returns>
+            <returns>right horizontal coordinate.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.SetRight(System.Single)">
             <summary>Sets a float horizontal coordinate positioned at the right edge of the window.</summary>
             <param name="right">horizontal coordinate</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>
+            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.GetZoom">
@@ -8511,7 +8860,7 @@
             Gets a float representing the zoom ratio.
             Attribute of XYZ object.
             </remarks>
-            <returns>zoom ratio value</returns>
+            <returns>zoom ratio value.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FitObject.SetZoom(System.Single)">
             <summary>Sets a float representing the zoom ratio.</summary>
@@ -8522,7 +8871,7 @@
             <param name="zoom">ratio value</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>
+            <see cref="T:iText.Forms.Xfdf.FitObject">fit object</see>.
             </returns>
         </member>
         <member name="T:iText.Forms.Xfdf.FObject">
@@ -8539,16 +8888,23 @@
         <member name="F:iText.Forms.Xfdf.FObject.href">
             <summary>The name of the source or target file.</summary>
         </member>
+        <member name="M:iText.Forms.Xfdf.FObject.#ctor(System.String)">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.FObject"/>.
+            </summary>
+            <param name="href">the name of the source or target file</param>
+        </member>
         <member name="M:iText.Forms.Xfdf.FObject.GetHref">
             <summary>Gets the name of the source or target file.</summary>
-            <returns>the name of the source or target file</returns>
+            <returns>the name of the source or target file.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.FObject.SetHref(System.String)">
             <summary>Sets the name of the source or target file.</summary>
             <param name="href">the name of the source or target file</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.FObject">f object</see>
+            <see cref="T:iText.Forms.Xfdf.FObject">f object</see>.
             </returns>
         </member>
         <member name="T:iText.Forms.Xfdf.IdsObject">
@@ -8589,6 +8945,12 @@
             A common value for this is an MD5 checksum.
             </remarks>
         </member>
+        <member name="M:iText.Forms.Xfdf.IdsObject.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Forms.Xfdf.IdsObject"/>.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Xfdf.IdsObject.GetOriginal">
             <summary>
             Gets the string value of the permanent identifier which
@@ -8600,7 +8962,7 @@
             This value does not change when the file is incrementally updated.
             The value shall be a hexadecimal number.
             </remarks>
-            <returns>the permanent identifier value</returns>
+            <returns>the permanent identifier value.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.IdsObject.SetOriginal(System.String)">
             <summary>
@@ -8617,7 +8979,7 @@
             <param name="original">the permanent identifier value</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.IdsObject">ids object</see>
+            <see cref="T:iText.Forms.Xfdf.IdsObject">ids object</see>.
             </returns>
         </member>
         <member name="M:iText.Forms.Xfdf.IdsObject.GetModified">
@@ -8632,7 +8994,7 @@
             on the file's contents at the time it was last updated.
             The value shall be a hexadecimal number.
             </remarks>
-            <returns>the unique identifier value</returns>
+            <returns>the unique identifier value.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.IdsObject.SetModified(System.String)">
             <summary>
@@ -8650,7 +9012,7 @@
             <param name="modified">the unique identifier value</param>
             <returns>
             current
-            <see cref="T:iText.Forms.Xfdf.IdsObject">ids object</see>
+            <see cref="T:iText.Forms.Xfdf.IdsObject">ids object</see>.
             </returns>
         </member>
         <member name="T:iText.Forms.Xfdf.Mode">
@@ -8783,20 +9145,23 @@
             <summary>Writes info from XfdfObject to .xfdf file.</summary>
             <param name="os">target output stream.</param>
         </member>
+        <member name="T:iText.Forms.Xfdf.XfdfObjectFactory">
+            <summary>
+            A factory for creating
+            <see cref="T:iText.Forms.Xfdf.XfdfObject"/>
+            objects.
+            </summary>
+        </member>
         <member name="M:iText.Forms.Xfdf.XfdfObjectFactory.CreateXfdfObject(iText.Kernel.Pdf.PdfDocument,System.String)">
             <summary>Extracts data from pdf document acroform and annotations into XfdfObject.</summary>
-            <remarks>
-            Extracts data from pdf document acroform and annotations into XfdfObject.
-            *
-            </remarks>
-            <param name="document">Pdf document for data extraction.</param>
-            <param name="filename">The name od pdf document for data extraction.</param>
+            <param name="document">Pdf document for data extraction</param>
+            <param name="filename">The name od pdf document for data extraction</param>
             <returns>XfdfObject containing data from pdf forms and annotations.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.XfdfObjectFactory.CreateXfdfObject(System.IO.Stream)">
             <summary>Extracts data from input stream into XfdfObject.</summary>
-            <remarks>Extracts data from input stream into XfdfObject. Typically input stream is based on .xfdf file</remarks>
-            <param name="xfdfInputStream">The input stream containing xml-styled xfdf data.</param>
+            <remarks>Extracts data from input stream into XfdfObject. Typically input stream is based on .xfdf file.</remarks>
+            <param name="xfdfInputStream">the input stream containing xml-styled xfdf data</param>
             <returns>XfdfObject containing original xfdf data.</returns>
         </member>
         <member name="M:iText.Forms.Xfdf.XfdfObjectUtils.ConvertRectFromString(System.String)">

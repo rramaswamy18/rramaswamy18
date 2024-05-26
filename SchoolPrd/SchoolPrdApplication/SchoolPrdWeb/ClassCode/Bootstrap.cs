@@ -3,7 +3,7 @@ using ArchitectureLibraryDocumentCacheData;
 using ArchitectureLibraryException;
 using ArchitectureLibraryMenuCacheData;
 using ArchitectureLibraryUtility;
-using SchoolPrdCacheData;
+//using SchoolPrdCacheData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace SchoolPrdWeb.ClassCode
             ArchLibDocumentCache.Initialize(clientId, ipAddress, execUniqueId, loggedInUserId);
             LookupCache.Initialize(clientId, ipAddress, execUniqueId, loggedInUserId);
             DemogInfoCache.Initialize(clientId, ipAddress, execUniqueId, loggedInUserId);
-            SchoolPrdCache.Initialize(clientId, ipAddress, execUniqueId, loggedInUserId);
+            //SchoolPrdCache.Initialize(clientId, ipAddress, execUniqueId, loggedInUserId);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         }
     }

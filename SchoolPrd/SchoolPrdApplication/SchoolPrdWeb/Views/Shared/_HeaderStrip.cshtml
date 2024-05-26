@@ -1,0 +1,66 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<style>
+    .headfirst {
+        background-color: black;
+        color: white;
+    }
+
+    .hphone {
+        color: #e8ac1f;
+    }
+
+    .footer {
+        color: white;
+        background-color: #464646;
+    }
+
+    .footerbelow {
+        text-align: center;
+        background-color: black;
+        color: white;
+    }
+</style>
+<div class="row headfirst" style="padding-top: 7px;">
+    <div class="row">
+        <div style="padding-top: 5px; padding-left: 45px;" class="col-md-3">
+            <h5 style="font-size: 11px; font-weight: bold;">
+                <span style="font-size: 12px;">Mon-Thu</span>&nbsp;<span style="color: #ffffff;">8am-8pm</span>&nbsp;<span>Fri, Sat, Sun</span>&nbsp;<span style="color: #ffffff;">24 hours</span>
+            </h5>
+        </div>
+        <div style="padding-top: 5px; padding-left: 45px;" class="col-md-5">
+            <h5 style="float: left; font-size: 12px; font-weight: bold;">
+                <i style="color: #ffffff; font-size: 15px; font-weight: bold;" class="fa fa-phone"></i>
+                <a href="tel:@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")" target="_blank" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")">
+                    @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")
+                </a>
+            </h5>
+            <h5 style="float: left; font-size: 12px; font-weight: bold; padding-left: 9px;">
+                <img src="~/Images/Comments.png" style="padding-left: 3px; width: 18px; height: 18px;" />
+                <a href="sms:@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")" target="_blank" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")">
+                    @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")
+                </a>
+            </h5>
+            <h5 style="float: left; font-size: 12px; font-weight: bold; padding-left: 9px;">
+                <img src="~/Images/WhatsApp1.png" style="padding-left: 3px; width: 18px; height: 18px;" />
+                <a href="https://api.whatsapp.com/send?phone=@ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhone", "")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")" target="_blank" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")">
+                    @ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhoneFormatted", "")
+                </a>
+            </h5>
+        </div>
+        <div style="padding-top: 5px; padding-left: 45px;" class="col-md-4">
+            <h5 style="font-size: 12px; font-weight: bold;">
+                <i style="color: darkgray; font-size: 12px;" class="fa fa-envelope"></i>
+                <a href="@Url.Action("ContactUs", "Home")" style="color: #ffffff; text-decoration: underline;" alt="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")" title="@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")">
+                    @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")
+                </a>
+                <i style="color: darkgray; font-size: 14px; padding-left: 27px; padding-right: 5px;" class="fa fa-facebook"></i>
+                <i style="color:darkgray; font-size: 14px; padding-right: 5px;" class="fa fa-google-plus"></i>
+                <i style="color: darkgray; font-size: 14px;" class="fa fa-twitter"></i>
+            </h5>
+        </div>
+    </div>
+</div>

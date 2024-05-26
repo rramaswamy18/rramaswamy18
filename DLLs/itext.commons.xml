@@ -388,7 +388,7 @@
         </member>
         <member name="M:iText.Commons.Actions.Contexts.AbstractContextManagerConfigurationEvent.UnregisterContext(System.Collections.Generic.ICollection{System.String})">
             <summary>Unregisters certain namespaces.</summary>
-            <param name="namespaces">the namespaces to be unregisted</param>
+            <param name="namespaces">the namespaces to be unregistered</param>
         </member>
         <member name="T:iText.Commons.Actions.Contexts.ContextManager">
             <summary>The class that retrieves context of its invocation.</summary>
@@ -971,6 +971,9 @@
         <member name="F:iText.Commons.Actions.ProductNameConstant.ITEXT_CORE">
             <summary>itext-core constant.</summary>
         </member>
+        <member name="F:iText.Commons.Actions.ProductNameConstant.ITEXT_CORE_SIGN">
+            <summary>itext-core sign module constant.</summary>
+        </member>
         <member name="F:iText.Commons.Actions.ProductNameConstant.PDF_HTML">
             <summary>pdfhtml constant.</summary>
         </member>
@@ -1542,6 +1545,14 @@
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
             </summary>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.IDerBitString.IntValue">
+            <summary>
+            Calls actual
+            <c>intValue</c>
+            method for the wrapped ASN1BitString object.
+            </summary>
+            <returns>int value of the wrapped ASN1BitString.</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.IDerEnumerated">
             <summary>
             This interface represents the wrapper for ASN1Enumerated that provides the ability
@@ -1696,6 +1707,14 @@
             </summary>
             <returns>list of wrapped certificates.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse.GetOcspCerts">
+            <summary>
+            Gets actual
+            <c>Certs</c>
+            field for the wrapped BasicOCSPResponse object.
+            </summary>
+            <returns>list of wrapped certificates.</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse.GetEncoded">
             <summary>
             Calls actual
@@ -1711,6 +1730,14 @@
             method for the wrapped BasicOCSPResponse object.
             </summary>
             <returns>wrapped SingleResp list.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse.GetProducedAt">
+            <summary>
+            Calls actual
+            <c>GetProducedAt</c>
+            method for the wrapped BasicOCSPResponse object.
+            </summary>
+            <returns>date BasicOCSPResponse was produced at.</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.Ocsp.IOcspObjectIdentifiers">
             <summary>
@@ -2045,6 +2072,14 @@
             </summary>
             <returns>CRLReason.keyCompromise value.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.ICrlReason.GetRemoveFromCRL">
+            <summary>
+            Gets
+            <c>removeFromCRL</c>
+            constant for the wrapped CRLReason.
+            </summary>
+            <returns>CRLReason.removeFromCRL value.</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IDistributionPoint">
             <summary>
             This interface represents the wrapper for DistributionPoint that provides the ability
@@ -2061,6 +2096,30 @@
             
             <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IDistributionPointName"/>
             wrapped distribution point.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IDistributionPoint.GetCRLIssuer">
+            <summary>
+            Calls actual
+            <c>getCRLIssuer</c>
+            method for the wrapped DistributionPoint object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralNames"/>
+            wrapped CRL issuer.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IDistributionPoint.GetReasons">
+            <summary>
+            Calls actual
+            <c>getReasons</c>
+            method for the wrapped DistributionPoint object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IReasonFlags"/>
+            wrapped reason codes.
             </returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IDistributionPointName">
@@ -2142,6 +2201,68 @@
             <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralName"/>.
             </returns>
         </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint">
+            <summary>
+            This interface represents the wrapper for IssuingDistributionPoint that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint.GetDistributionPoint">
+            <summary>
+            Calls actual
+            <c>getDistributionPoint</c>
+            method for the wrapped IssuingDistributionPoint object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IDistributionPointName"/>
+            wrapped distribution point name.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint.OnlyContainsUserCerts">
+            <summary>
+            Calls actual
+            <c>onlyContainsUserCerts</c>
+            method for the wrapped IssuingDistributionPoint object.
+            </summary>
+            <returns>true if onlyContainsUserCerts was set, false otherwise.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint.OnlyContainsCACerts">
+            <summary>
+            Calls actual
+            <c>onlyContainsCACerts</c>
+            method for the wrapped IssuingDistributionPoint object.
+            </summary>
+            <returns>true if onlyContainsCACerts was set, false otherwise.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint.IsIndirectCRL">
+            <summary>
+            Calls actual
+            <c>isIndirectCRL</c>
+            method for the wrapped IssuingDistributionPoint object.
+            </summary>
+            <returns>boolean value identifying if CRL is indirect.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint.OnlyContainsAttributeCerts">
+            <summary>
+            Calls actual
+            <c>onlyContainsAttributeCerts</c>
+            method for the wrapped IssuingDistributionPoint object.
+            </summary>
+            <returns>true if onlyContainsAttributeCerts was set, false otherwise.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint.GetOnlySomeReasons">
+            <summary>
+            Calls actual
+            <c>getOnlySomeReasons</c>
+            method for the wrapped IssuingDistributionPoint object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IReasonFlags"/>
+            wrapped reason flags.
+            </returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IKeyPurposeID">
             <summary>
             This interface represents the wrapper for KeyPurposeId that provides the ability
@@ -2177,6 +2298,12 @@
             constant for the wrapped KeyUsage.
             </summary>
             <returns>KeyUsage.nonRepudiation value.</returns>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IReasonFlags">
+            <summary>
+            This interface represents the wrapper for ReasonFlags that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.ISubjectKeyIdentifier">
             <summary>
@@ -2270,6 +2397,14 @@
             </summary>
             <returns>Extension.cRLDistributionPoints wrapper.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IX509Extensions.GetIssuingDistributionPoint">
+            <summary>
+            Gets
+            <c>issuingDistributionPoint</c>
+            constant for the wrapped Extension.
+            </summary>
+            <returns>Extension.issuingDistributionPoint wrapper.</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IX509Extensions.GetAuthorityInfoAccess">
             <summary>
             Gets
@@ -2317,6 +2452,70 @@
             constant for the wrapped Extension.
             </summary>
             <returns>Extension.subjectKeyIdentifier wrapper.</returns>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Cert.CRLReason">
+            <summary>
+            The CRLReason enumeration specifies the reason that a certificate is revoked, as defined in RFC 5280: Internet X.509 Public Key Infrastructure Certificate and CRL Profile .
+            </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.UNSPECIFIED">
+            <summary>
+            This reason indicates that it is unspecified as to why the
+            certificate has been revoked.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:iText.Commons.Bouncycastle.Cert.CRLReason.KEY_COMPROMISE" -->
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.CA_COMPROMISE">
+             <summary>
+            This reason indicates that it is known or suspected that the
+            certificate subject's private key has been compromised. It applies
+            to certificate authority (CA) certificates only.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.AFFILIATION_CHANGED">
+             <summary>
+            This reason indicates that the subject's name or other information
+            has changed.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.SUPERSEDED">
+             <summary>
+            This reason indicates that the certificate has been superseded.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.CESSATION_OF_OPERATION">
+             <summary>
+            This reason indicates that the certificate is no longer needed.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.CERTIFICATE_HOLD">
+             <summary>
+            This reason indicates that the certificate has been put on hold.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.UNUSED">
+             <summary>
+            Unused reason.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.REMOVE_FROM_CRL">
+             <summary>
+            This reason indicates that the certificate was previously on hold
+            and should be removed from the CRL. It is for use with delta CRLs.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.PRIVILEGE_WITHDRAWN">
+             <summary>
+            This reason indicates that the privileges granted to the subject of
+            the certificate have been withdrawn.
+             </summary>
+        </member>
+        <member name="F:iText.Commons.Bouncycastle.Cert.CRLReason.AA_COMPROMISE">
+             <summary>
+            This reason indicates that it is known or suspected that the
+            certificate subject's private key has been compromised. It applies
+            to authority attribute (AA) certificates only.
+             </summary>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.IX509Certificate">
             <summary>
@@ -2434,6 +2633,14 @@
             </summary>
             <returns>DateTime value.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetNotAfter">
+            <summary>
+            Returns actual
+            <c>NotAfter</c>
+            property for the wrapped X509Certificate object.
+            </summary>
+            <returns>DateTime value.</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetExtendedKeyUsage">
             <summary>
             Calls actual
@@ -2441,6 +2648,22 @@
             method for the wrapped X509Certificate object.
             </summary>
             <returns>List of object identifiers represented as Strings.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetKeyUsage">
+            <summary>
+            Calls actual
+            <c>GetKeyUsage</c>
+            method for the wrapped X509Certificate object.
+            </summary>
+            <returns>bool array representing certificate key usage</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetBasicConstraints">
+            <summary>
+            Call actual
+            <c>GetBasicConstraints</c>
+            method for the wrapped X509Certificate object.
+            </summary>
+            <returns>int value representing basic constraints extension</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.IX509Crl">
             <summary>
@@ -2464,6 +2687,14 @@
             method for the wrapped X509Crl object.
             </summary>
             <returns>X500Name wrapper.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Crl.GetThisUpdate">
+            <summary>
+            Calls actual
+            <c>GetThisUpdate</c>
+            method for the wrapped X509Crl object.
+            </summary>
+            <returns>DateTime value of this update.</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.Cert.IX509Crl.GetNextUpdate">
             <summary>
@@ -2497,6 +2728,14 @@
             </summary>
             <returns>the DER-encoded octet string of the extension value.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Crl.GetRevokedCertificate(iText.Commons.Bouncycastle.Math.IBigInteger)">
+            <summary>
+            Calls actual
+            <c>GetRevokedCertificate</c>
+            method for the wrapped X509Crl object.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.IX509V2CrlGenerator">
             <summary>
             This interface represents the wrapper for X509v2CRLBuilder that provides the ability
@@ -2513,6 +2752,21 @@
             <param name="date">date of certificate revocation</param>
             <param name="i">the reason code, as indicated in CRLReason, i.e CRLReason.keyCompromise, or 0 if not to be used
                 </param>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Cert.IX509V2CrlGenerator"/>
+            the current wrapper object.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509V2CrlGenerator.AddExtension(iText.Commons.Bouncycastle.Asn1.IDerObjectIdentifier,System.Boolean,iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
+            <summary>
+            Calls actual
+            <c>addExtension</c>
+            method for the wrapped X509v2CRLBuilder object.
+            </summary>
+            <param name="objectIdentifier">extension object identifier</param>
+            <param name="isCritical">specifies if extension is critical or not</param>
+            <param name="extension">encoded extension value</param>
             <returns>
             
             <see cref="T:iText.Commons.Bouncycastle.Cert.IX509V2CrlGenerator"/>
@@ -2785,6 +3039,12 @@
             This interface represents the wrapper for RevokedStatus that provides the ability
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
             </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.Ocsp.IRevokedCertStatus.GetRevocationTime">
+            <summary>
+            Gets RevocationTime for the wrapped revoked CertStatus object.
+            </summary>
+            <returns>certificate revocation time.</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResponse">
             <summary>
@@ -3830,9 +4090,60 @@
             </param>
             <returns>created CRL Dist point wrapper</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateIssuingDistributionPoint(System.Object)">
+            <summary>
+            Create Issuing Distribution Point wrapper from the object.
+            </summary>
+            <param name="point">
+            <see cref="T:System.Object"/> to create Issuing Distribution Point wrapper from
+            </param>
+            <returns>created Issuing Distribution Point wrapper.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateIssuingDistributionPoint(iText.Commons.Bouncycastle.Asn1.X509.IDistributionPointName,System.Boolean,System.Boolean,iText.Commons.Bouncycastle.Asn1.X509.IReasonFlags,System.Boolean,System.Boolean)">
+            <summary>
+            Create Issuing Distribution Point wrapper with specified values.
+            </summary>
+            <param name="distributionPoint">
+            one of names from the corresponding distributionPoint from the cRLDistributionPoints
+            extension of every certificate that is within the scope of this CRL
+            </param>
+            <param name="onlyContainsUserCerts">
+            true if the scope of the CRL only includes end entity public key certificates
+            </param>
+            <param name="onlyContainsCACerts">
+            true if the scope of the CRL only includes CA certificates
+            </param>
+            <param name="onlySomeReasons">
+            reason codes associated with a distribution point
+            </param>
+            <param name="indirectCRL">
+            true if CRL includes certificates issued by authorities other than the CRL issuer,
+            false if the scope of the CRL only includes certificates issued by the CRL issuer
+            </param>
+            <param name="onlyContainsAttributeCerts">
+            true if the scope of the CRL only includes attribute certificates
+            </param>
+            <returns>created Issuing Distribution Point wrapper.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateReasonFlags(System.Int32)">
+            <summary>
+            Creates the wrapper for ReasonFlags.
+            </summary>
+            <param name="reasons">
+            the bitwise OR of the Key Reason flags giving the allowed uses for the key
+            </param>
+            <returns>created ReasonFlags wrapper.</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateDistributionPointName">
             <summary>Create distribution point name wrapper without parameters.</summary>
-            <returns>created distribution point name wrapper</returns>
+            <returns>created distribution point name wrapper.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateDistributionPointName(iText.Commons.Bouncycastle.Asn1.X509.IGeneralNames)">
+            <summary>Create distribution point name wrapper by passing general names.</summary>
+            <param name="generalNames">
+            general names to create distribution point name from
+            </param>
+            <returns>created distribution point name wrapper.</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateGeneralNames(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
             <summary>Cast ASN1 Encodable wrapper to general names wrapper.</summary>
@@ -4180,6 +4491,18 @@
             </param>
             <returns>created basic constraints wrapper</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateBasicConstraints(System.Int32)">
+             <summary>
+             Create basic constraints wrapper from
+             <c>int</c>
+             value.
+             </summary>
+             <param name="pathLength"></param>
+            
+             <c>int</c>
+             flag to create basic constraints wrapper from
+             <returns>created basic constraints wrapper</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateKeyUsage">
             <summary>Create key usage wrapper without parameters.</summary>
             <returns>created key usage wrapper</returns>
@@ -4204,6 +4527,13 @@
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateExtendedKeyUsage(iText.Commons.Bouncycastle.Asn1.X509.IKeyPurposeID)">
             <summary>Create extended key usage wrapper from key purpose id wrapper.</summary>
             <param name="purposeId">key purpose id wrapper to create extended key usage wrapper from</param>
+            <returns>created extended key usage wrapper</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateExtendedKeyUsage(iText.Commons.Bouncycastle.Asn1.IDerObjectIdentifier[])">
+            <summary>
+            Create extended key usage wrapper from an array of object identifier wrappers.
+            </summary>
+            <param name="purposeId">an array of object identifier wrappers</param>
             <returns>created extended key usage wrapper</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateSubjectPublicKeyInfo(iText.Commons.Bouncycastle.Crypto.IPublicKey)">
@@ -4644,6 +4974,13 @@
             </summary>
             <returns><see cref="T:iText.Commons.Bouncycastle.IBouncyCastleUtil"/> instance implementation</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateEndDate(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
+            <summary>
+            Create string from the end date of the certificate.
+            </summary>
+            <param name="certificate">certificate to get end date</param>
+            <returns>The end date of the certificate</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.IBouncyCastleTestConstantsFactory">
             <summary>
             <see cref="T:iText.Commons.Bouncycastle.IBouncyCastleTestConstantsFactory"/>
@@ -4740,6 +5077,24 @@
             </summary>
             <param name="message">Exception message</param>
         </member>
+        <member name="T:iText.Commons.Bouncycastle.Security.AbstractCertificateNotYetValidException">
+            <summary>
+            This class represents the wrapper for CertificateNotYetValidException that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Security.AbstractCertificateNotYetValidException.#ctor">
+            <summary>
+            Base constructor for <see cref="!:CertificateNotYetValidException"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Security.AbstractCertificateNotYetValidException.#ctor(System.String)">
+            <summary>
+            Creates new wrapper instance for <see cref="!:CertificateNotYetValidException"/>.
+            The abstract class constructor gets executed from a derived class.
+            </summary>
+            <param name="message">Exception message</param>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Security.AbstractCertificateParsingException">
             <summary>
             This class represents the wrapper for CertificateParsingException that provides the ability
@@ -4775,6 +5130,24 @@
             The abstract class constructor gets executed from a derived class.
             </summary>
             <param name="format">Exception message</param>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Security.AbstractSecurityUtilityException">
+            <summary>
+            This class represents the wrapper for SecurityUtilityException that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Security.AbstractSecurityUtilityException.#ctor">
+            <summary>
+            Base constructor for <see cref="!:SecurityUtilityException"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Security.AbstractSecurityUtilityException.#ctor(System.String)">
+            <summary>
+            Creates new wrapper instance for <see cref="!:SecurityUtilityException"/>.
+            The abstract class constructor gets executed from a derived class.
+            </summary>
+            <param name="message">Exception message</param>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Security.AbstractCrlException">
             <summary>
@@ -5231,6 +5604,55 @@
         </member>
         <member name="M:iText.Commons.Datastructures.Tuple2`2.ToString">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Commons.Digest.IMessageDigest">
+            <summary>
+            This interface should be implemented to provide applications the functionality of a message digest algorithm.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.Digest(System.Byte[])">
+            <summary>
+            Performs a final update on the digest using the specified array of bytes,
+            then completes the digest computation.
+            </summary>
+            <param name="enc">the input to be updated before the digest is completed</param>
+            <returns>The array of bytes for the resulting hash value</returns>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.Digest">
+            <summary>
+            Completes the hash computation by performing final operations such as padding.
+            Leaves the digest reset.
+            </summary>
+            <returns>The array of bytes for the resulting hash value</returns>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.GetDigestLength">
+            <summary>
+            Gets byte length of wrapped digest algorithm.
+            </summary>
+            <returns>The length of the digest in bytes.</returns>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.Update(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Updates the digest using the specified array of bytes, starting at the specified offset.
+            </summary>
+            <param name="buf">byte array buffer</param>
+            <param name="off">the offset to start from in the array of bytes</param>
+            <param name="len">the number of bytes to use, starting at offset</param>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.Update(System.Byte[])">
+            <summary>
+            Updates the digest using the specified array of bytes.
+            </summary>
+            <param name="buf">byte array buffer</param>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.Reset">
+            <summary>Resets the digest for further use.</summary>
+        </member>
+        <member name="M:iText.Commons.Digest.IMessageDigest.GetAlgorithmName">
+            <summary>
+            Returns a string that identifies the algorithm, independent of implementation details.
+            </summary>
+            <returns>The name of the algorithm.</returns>
         </member>
         <member name="T:iText.Commons.Exceptions.AggregatedException">
             <summary>Composite exception class.</summary>

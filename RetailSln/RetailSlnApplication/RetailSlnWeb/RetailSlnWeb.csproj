@@ -1731,7 +1731,12 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item704.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item705.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item706.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item707.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item708.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item709.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item71.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item710.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item711.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item72.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item73.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item74.png" />
@@ -2823,7 +2828,6 @@
     <Folder Include="ClientSpecific\98_DivineBija.com\Documents\Invoices\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Default\" />
-    <Folder Include="Views\RetailApi\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

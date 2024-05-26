@@ -4516,6 +4516,14 @@
             <remarks>Types of records in a PFB file. ASCII is 1 and BINARY is 2. They have to appear in the PFB file in this sequence.
                 </remarks>
         </member>
+        <member name="M:iText.IO.Font.Type1Font.InitializeGlyphs(iText.IO.Font.FontEncoding)">
+            <summary>
+            Fills missing character codes in
+            <c>codeToGlyph</c>
+            map.
+            </summary>
+            <param name="fontEncoding">to be used to map unicode values to character codes.</param>
+        </member>
         <member name="M:iText.IO.Font.Type1Font.HasKernPairs">
             <summary>Checks if the font has any kerning pairs.</summary>
             <returns>
@@ -5369,6 +5377,10 @@
             as necessary to account for any junk that occurs in the byte source before the header
             </remarks>
             <param name="file">the source</param>
+        </member>
+        <member name="M:iText.IO.Source.PdfTokenizer.GetNextEof">
+            <summary>Gets next %%EOF marker in current PDF file.</summary>
+            <returns>next %%EOF marker position</returns>
         </member>
         <member name="M:iText.IO.Source.PdfTokenizer.DecodeStringContent(System.Byte[],System.Int32,System.Int32,System.Boolean)">
             <summary>Resolve escape symbols or hexadecimal symbols.</summary>
@@ -6883,6 +6895,13 @@
             This file is a helper class for internal usage only.
             Be aware that its API and functionality may be changed in future.
             </remarks>
+        </member>
+        <member name="M:iText.IO.Util.TextUtil.IsDiacritic(System.Int32)">
+            <summary>
+            Checks if the passed code point corresponds to diacritic.
+            </summary>
+            <param name="codePoint">the code point to check</param>
+            <returns>true if passed code point is diacritic, false otherwise</returns>
         </member>
         <member name="M:iText.IO.Util.TextUtil.IsSurrogateHigh(System.Char)">
             <summary>
