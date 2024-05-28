@@ -6,17 +6,33 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
-<nav id="menu" style="z-index: 10000">
-    <i class="glyphicon glyphicon-remove" id="close-icon" style="z-index: 20000"></i>
-    @Html.Partial("_HeaderMenuHamburger")
-</nav>
 @*<div class="container-fluid sticky-top">*@
 <div class="container-fluid">
     @Html.Partial("_HeaderStrip")
-    <i class="glyphicon glyphicon-th-list" id="toggle-icon"></i>
-    <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
+    <a class="d-none d-lg-block" href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
         <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
     </a>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #9a031e;">
+        <div class="container-fluid">
+            <div class="row w-100 d-lg-none">
+                <div class="col-10">
+                    <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
+                        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
+                    </a>
+                </div>
+                <div class="col-2">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row w-100">
+                <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+                    @Html.Partial("_HeaderMenu")
+                </div>
+            </div>
+        </div>
+    </nav>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
