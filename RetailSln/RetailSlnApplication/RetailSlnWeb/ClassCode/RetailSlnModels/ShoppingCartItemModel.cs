@@ -53,6 +53,10 @@ namespace RetailSlnModels
 
         public OrderDetailTypeEnum OrderDetailTypeId { set; get; }
 
+        public float? ProductOrVolumetricWeight { set; get; }
+
+        public WeightUnitEnum? ProductOrVolumetricWeightUnitId { set; get; }
+
         public List<ShoppingCartItemModel> ShoppingCartItemSummarys { set; get; }
     }
 }

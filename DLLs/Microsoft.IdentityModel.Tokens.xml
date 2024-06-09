@@ -1089,6 +1089,176 @@
             <param name="algorithm">the name of the compression algorithm.</param>
             <returns>true if the compression algorithm is supported, false otherwise.</returns>
         </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.AlgorithmValidator">
+            <summary>
+            Definition for AlgorithmValidator
+            </summary>
+            <param name="algorithm">The algorithm to validate.</param>
+            <param name="securityKey">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that signed the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns><c>true</c> if the algorithm is considered valid</returns>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.AudienceValidator">
+            <summary>
+            Definition for AudienceValidator.
+            </summary>
+            <param name="audiences">The audiences found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>true if the audience is considered valid.</returns>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver">
+            <summary>
+            Definition for IssuerSigningKeyResolver.
+            </summary>
+            <param name="token">The <see cref="T:System.String"/> representation of the token that is being validated.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated. It may be null.</param>
+            <param name="kid">A key identifier. It may be null.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>A <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to use when validating a signature.</returns>
+            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
+            priority.</remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration">
+            <summary>
+            Definition for IssuerSigningKeyResolverUsingConfiguration.
+            </summary>
+            <param name="token">The <see cref="T:System.String"/> representation of the token that is being validated.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated. It may be null.</param>
+            <param name="kid">A key identifier. It may be null.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <param name="configuration"><see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> required for validation.</param>
+            <returns>A <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to use when validating a signature.</returns>
+            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
+            priority.</remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidator">
+            <summary>
+            Definition for IssuerSigningKeyValidator.
+            </summary>
+            <param name="securityKey">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that signed the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
+            priority.</remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidatorUsingConfiguration">
+            <summary>
+            Definition for IssuerSigningKeyValidatorUsingConfiguration.
+            </summary>
+            <param name="securityKey">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that signed the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <param name="configuration"><see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> required for validation.</param>
+            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
+            priority.</remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerValidator">
+            <summary>
+            Definition for IssuerValidator.
+            </summary>
+            <param name="issuer">The issuer to validate.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
+            <remarks>The delegate should return a non null string that represents the 'issuer'. If null a default value will be used.
+            If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidatorUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidator"/> are set, IssuerValidatorUsingConfiguration takes
+            priority.</remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerValidatorUsingConfiguration">
+            <summary>
+            Definition for IssuerValidatorUsingConfiguration.
+            </summary>
+            <param name="issuer">The issuer to validate.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <param name="configuration"><see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> required for validation.</param>
+            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
+            <remarks>The delegate should return a non null string that represents the 'issuer'. If null a default value will be used.
+            If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidatorUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidator"/> are set, IssuerValidatorUsingConfiguration takes
+            priority.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.IssuerValidatorAsync">
+            <summary>
+            Definition for IssuerValidatorAsync. Left internal for now while we work out the details of async validation for all delegates.
+            </summary>
+            <param name="issuer">The issuer to validate.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
+            <remarks>The delegate should return a non null string that represents the 'issuer'. If null a default value will be used.
+            <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidatorAsync"/> if set, will be called before <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidatorUsingConfiguration"/> or <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidator"/>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.LifetimeValidator">
+            <summary>
+            Definition for LifetimeValidator.
+            </summary>
+            <param name="notBefore">The 'notBefore' time found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="expires">The 'expiration' time found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.TokenReplayValidator">
+            <summary>
+            Definition for TokenReplayValidator.
+            </summary>
+            <param name="expirationTime">The 'expiration' time found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.SignatureValidator">
+            <summary>
+            Definition for SignatureValidator.
+            </summary>
+            <param name="token">A securityToken with a signature.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.SignatureValidatorUsingConfiguration">
+            <summary>
+            Definition for SignatureValidator.
+            </summary>
+            <param name="token">A securityToken with a signature.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <param name="configuration">The <see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> that is required for validation.</param>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.TokenReader">
+            <summary>
+            Definition for TokenReader.
+            </summary>
+            <param name="token">A securityToken with a signature.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.TokenDecryptionKeyResolver">
+            <summary>
+            Definition for TokenDecryptionKeyResolver.
+            </summary>
+            <param name="token">The <see cref="T:System.String"/> representation of the token to be decrypted.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> to be decrypted. The runtime by default passes null.</param>
+            <param name="kid">A key identifier. It may be null.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>A <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to use when decrypting the token.</returns>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.TypeValidator">
+            <summary>
+            Definition for TypeValidator.
+            </summary>
+            <param name="type">The token type to validate.</param>
+            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>The actual token type, that may be the same as <paramref name="type"/> or a different value if the token type was resolved from a different location.</returns>
+        </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.TransformBeforeSignatureValidation">
+            <summary>
+            Definition for TransformBeforeSignatureValidation.
+            </summary>
+            <param name="token">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
+            <returns>A transformed <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</returns>
+        </member>
         <member name="T:Microsoft.IdentityModel.Tokens.ECDsaAdapter">
             <summary>
             This adapter abstracts the <see cref="T:System.Security.Cryptography.ECDsa"/> differences between versions of .Net targets.
@@ -4498,176 +4668,6 @@
             <param name="lkgConfiguration">The LKG exception to check.</param>
             <param name="currentException">The exception to check.</param>
             <returns><c>true</c> if the configuration is recoverable otherwise, <c>false</c>.</returns>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.AlgorithmValidator">
-            <summary>
-            Definition for AlgorithmValidator
-            </summary>
-            <param name="algorithm">The algorithm to validate.</param>
-            <param name="securityKey">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that signed the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns><c>true</c> if the algorithm is considered valid</returns>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.AudienceValidator">
-            <summary>
-            Definition for AudienceValidator.
-            </summary>
-            <param name="audiences">The audiences found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>true if the audience is considered valid.</returns>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver">
-            <summary>
-            Definition for IssuerSigningKeyResolver.
-            </summary>
-            <param name="token">The <see cref="T:System.String"/> representation of the token that is being validated.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated. It may be null.</param>
-            <param name="kid">A key identifier. It may be null.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>A <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to use when validating a signature.</returns>
-            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
-            priority.</remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration">
-            <summary>
-            Definition for IssuerSigningKeyResolverUsingConfiguration.
-            </summary>
-            <param name="token">The <see cref="T:System.String"/> representation of the token that is being validated.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated. It may be null.</param>
-            <param name="kid">A key identifier. It may be null.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <param name="configuration"><see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> required for validation.</param>
-            <returns>A <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to use when validating a signature.</returns>
-            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
-            priority.</remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidator">
-            <summary>
-            Definition for IssuerSigningKeyValidator.
-            </summary>
-            <param name="securityKey">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that signed the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
-            priority.</remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidatorUsingConfiguration">
-            <summary>
-            Definition for IssuerSigningKeyValidatorUsingConfiguration.
-            </summary>
-            <param name="securityKey">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that signed the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <param name="configuration"><see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> required for validation.</param>
-            <remarks> If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolverUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyResolver"/> are set, IssuerSigningKeyResolverUsingConfiguration takes
-            priority.</remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerValidator">
-            <summary>
-            Definition for IssuerValidator.
-            </summary>
-            <param name="issuer">The issuer to validate.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
-            <remarks>The delegate should return a non null string that represents the 'issuer'. If null a default value will be used.
-            If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidatorUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidator"/> are set, IssuerValidatorUsingConfiguration takes
-            priority.</remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerValidatorUsingConfiguration">
-            <summary>
-            Definition for IssuerValidatorUsingConfiguration.
-            </summary>
-            <param name="issuer">The issuer to validate.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <param name="configuration"><see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> required for validation.</param>
-            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
-            <remarks>The delegate should return a non null string that represents the 'issuer'. If null a default value will be used.
-            If both <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidatorUsingConfiguration"/> and <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidator"/> are set, IssuerValidatorUsingConfiguration takes
-            priority.
-            </remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.IssuerValidatorAsync">
-            <summary>
-            Definition for IssuerValidatorAsync. Left internal for now while we work out the details of async validation for all delegates.
-            </summary>
-            <param name="issuer">The issuer to validate.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
-            <remarks>The delegate should return a non null string that represents the 'issuer'. If null a default value will be used.
-            <see cref="T:Microsoft.IdentityModel.Tokens.IssuerValidatorAsync"/> if set, will be called before <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidatorUsingConfiguration"/> or <see cref="T:Microsoft.IdentityModel.Tokens.IssuerSigningKeyValidator"/>
-            </remarks>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.LifetimeValidator">
-            <summary>
-            Definition for LifetimeValidator.
-            </summary>
-            <param name="notBefore">The 'notBefore' time found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="expires">The 'expiration' time found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.TokenReplayValidator">
-            <summary>
-            Definition for TokenReplayValidator.
-            </summary>
-            <param name="expirationTime">The 'expiration' time found in the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.SignatureValidator">
-            <summary>
-            Definition for SignatureValidator.
-            </summary>
-            <param name="token">A securityToken with a signature.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.SignatureValidatorUsingConfiguration">
-            <summary>
-            Definition for SignatureValidator.
-            </summary>
-            <param name="token">A securityToken with a signature.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <param name="configuration">The <see cref="T:Microsoft.IdentityModel.Tokens.BaseConfiguration"/> that is required for validation.</param>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.TokenReader">
-            <summary>
-            Definition for TokenReader.
-            </summary>
-            <param name="token">A securityToken with a signature.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.TokenDecryptionKeyResolver">
-            <summary>
-            Definition for TokenDecryptionKeyResolver.
-            </summary>
-            <param name="token">The <see cref="T:System.String"/> representation of the token to be decrypted.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> to be decrypted. The runtime by default passes null.</param>
-            <param name="kid">A key identifier. It may be null.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>A <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to use when decrypting the token.</returns>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.TypeValidator">
-            <summary>
-            Definition for TypeValidator.
-            </summary>
-            <param name="type">The token type to validate.</param>
-            <param name="securityToken">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>The actual token type, that may be the same as <paramref name="type"/> or a different value if the token type was resolved from a different location.</returns>
-        </member>
-        <member name="T:Microsoft.IdentityModel.Tokens.TransformBeforeSignatureValidation">
-            <summary>
-            Definition for TransformBeforeSignatureValidation.
-            </summary>
-            <param name="token">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/> that is being validated.</param>
-            <param name="validationParameters"><see cref="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters"/> required for validation.</param>
-            <returns>A transformed <see cref="T:Microsoft.IdentityModel.Tokens.SecurityToken"/>.</returns>
         </member>
         <member name="T:Microsoft.IdentityModel.Tokens.TokenValidationParameters">
             <summary>

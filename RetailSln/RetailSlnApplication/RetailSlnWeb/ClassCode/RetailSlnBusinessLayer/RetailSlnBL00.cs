@@ -208,6 +208,8 @@ namespace RetailSlnBusinessLayer
                                 WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribUnitValue),
                                 WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribValue),
                                 WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWidth").ItemAttribValue),
+                                ProductOrVolumetricWeight = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribValue),
+                                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribUnitValue),
                             }
                         );
                     }
@@ -221,6 +223,7 @@ namespace RetailSlnBusinessLayer
                     shoppingCartItemModel.VolumeValue = orderQty * shoppingCartItemModel.LengthValue * shoppingCartItemModel.WidthValue * shoppingCartItemModel.HeightValue;
                     shoppingCartItemModel.WeightCalcValue = orderQty * shoppingCartItemModel.WeightCalcValue;
                     shoppingCartItemModel.WeightValue = orderQty * shoppingCartItemModel.WeightValue;
+                    shoppingCartItemModel.ProductOrVolumetricWeight = orderQty * shoppingCartItemModel.ProductOrVolumetricWeight;
                 }
                 UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 httpSessionStateBase["ShoppingCartModel"] = shoppingCartModel;
@@ -1254,7 +1257,7 @@ namespace RetailSlnBusinessLayer
                 };
                 deliveryChargeModel = (DeliveryChargeModel)shippingService.GetRate(shippingInputModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 shippingAndHandlingChargesRate = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
-                shippingAndHandlingChargesAmount = shippingAndHandlingChargesRate * shoppingCartModel.TotalWeightValueRounded;
+                shippingAndHandlingChargesAmount = shippingAndHandlingChargesRate * shoppingCartModel.TotalProductOrVolumetricWeightRounded;
                 fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
             }
             var salesTaxCaptionIds = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SalesTaxType", "");
@@ -1316,7 +1319,7 @@ namespace RetailSlnBusinessLayer
                         ItemDesc = null,
                         ItemId = null,
                         ItemRate = shippingAndHandlingChargesRate,
-                        ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                        ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                         OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
                         OrderComments = null,
                         OrderQty = shoppingCartModel.TotalWeightValueRounded,
@@ -1351,7 +1354,7 @@ namespace RetailSlnBusinessLayer
                         ItemDesc = null,
                         ItemId = null,
                         ItemRate = shippingAndHandlingChargesRate,
-                        ItemShortDesc = "Discount - Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + shoppingCartModel.TotalWeightValueRounded + " " + shoppingCartModel.TotalWeightValueRoundedUnit + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                        ItemShortDesc = "Discount - Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                         OrderAmount = -1 * (shippingAndHandlingChargesAmount + fuelCharges),
                         OrderComments = null,
                         OrderQty = shoppingCartModel.TotalWeightValueRounded,
@@ -1752,15 +1755,19 @@ namespace RetailSlnBusinessLayer
                 shoppingCartModel.TotalVolumeValue = 0;
                 shoppingCartModel.TotalWeightValue = 0;
                 shoppingCartModel.TotalItemsCount = 0;
+                shoppingCartModel.TotalProductOrVolumetricWeight = 0;
                 foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
                 {
                     shoppingCartModel.ShoppingCartTotalAmount += shoppingCartItem.OrderAmount;
                     shoppingCartModel.TotalVolumeValue += shoppingCartItem.VolumeValue;
                     shoppingCartModel.TotalWeightValue += shoppingCartItem.WeightCalcValue;
                     shoppingCartModel.TotalItemsCount += shoppingCartItem.OrderQty.Value;
+                    shoppingCartModel.TotalProductOrVolumetricWeight += shoppingCartItem.ProductOrVolumetricWeight;
                 }
                 shoppingCartModel.TotalWeightValueRounded = (long)Math.Ceiling(shoppingCartModel.TotalWeightValue.Value / 1000f);
                 shoppingCartModel.TotalWeightValueRoundedUnit = WeightUnitEnum.Kilograms;
+                shoppingCartModel.TotalProductOrVolumetricWeightRounded = (long)Math.Ceiling(shoppingCartModel.TotalProductOrVolumetricWeight.Value / 1000f);
+                shoppingCartModel.TotalProductOrVolumetricWeightRoundedUnit = WeightUnitEnum.Kilograms;
                 shoppingCartModel.ShoppingCartSummaryItems[0].ItemShortDesc = "Total Order Amount (#" + shoppingCartModel.TotalItemsCount + ")";
                 shoppingCartModel.ShoppingCartSummaryItems[0].OrderAmount = shoppingCartModel.ShoppingCartTotalAmount;
             }

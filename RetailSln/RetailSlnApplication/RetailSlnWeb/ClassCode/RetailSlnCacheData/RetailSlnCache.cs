@@ -32,7 +32,12 @@ namespace RetailSlnCacheData
         public static List<CategoryItemHierModel> CategoryItemHierModels { set; get; }
         public static List<DemogInfoCountryModel> DeliveryDemogInfoCountryModels { set; get; }
         public static List<SelectListItem> DeliveryDemogInfoCountrySelectListItems { set; get; }
+        public static List<ApiCodeDataModel> DeliveryMethods { set; get; }
+        public static List<ApiCodeDataModel> PaymentMethodsCreditSale { set; get; }
+        public static List<ApiCodeDataModel> PaymentMethods { set; get; }
         public static long DefaultDeliveryDemogInfoCountryId { set; get; }
+        public static Dictionary<long, string> DeliveryCountrys { set; get; }
+        public static Dictionary<long, Dictionary<long, string>> DeliveryCountryStates { set; get; }
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
@@ -51,13 +56,17 @@ namespace RetailSlnCacheData
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out Dictionary<long, string> deliveryCountrys, out Dictionary<long, Dictionary<long, string>> deliveryCountryStates, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
             CategoryLayoutModels = categoryLayoutModels;
+            DeliveryMethods = deliveryMethods;
+            PaymentMethodsCreditSale = paymentMethodsCreditSale;
+            PaymentMethods = paymentMethods;
+            DeliveryCountrys = deliveryCountrys;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out Dictionary<long, string> deliveryCountrys, out Dictionary<long, Dictionary<long, string>> deliveryCountryStates, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -112,10 +121,19 @@ namespace RetailSlnCacheData
                 itemModel.ItemAttribModelsForDisplay = new Dictionary<string, ItemAttribModel>();
                 foreach (var itemAttribModel in itemModel.ItemAttribModels)
                 {
-                    if (itemAttribModel.ItemAttribMasterModel.AttribName == "HSNCode" || itemAttribModel.ItemAttribMasterModel.AttribName == "ProductCode")
+                    switch (itemAttribModel.ItemAttribMasterModel.AttribName)
                     {
-                        itemModel.ItemAttribModelsForDisplay[itemAttribModel.ItemAttribMasterModel.AttribName] = itemAttribModel;
-                        itemModel.ImageTitle += " " + itemAttribModel.ItemAttribMasterModel.AttribDesc + " " + itemAttribModel.ItemAttribValueForDisplay;
+                        case "HSNCode":
+                        case "ProductCode":
+                            itemModel.ItemAttribModelsForDisplay[itemAttribModel.ItemAttribMasterModel.AttribName] = itemAttribModel;
+                            itemModel.ImageTitle += " " + itemAttribModel.ItemAttribValueForDisplay;
+                            break;
+                        case "WeightCalc":
+                            itemModel.ImageTitle += " Wt: " + itemAttribModel.ItemAttribValue + " G";
+                            break;
+                        case "ProductOrVolumetricWeight":
+                            itemModel.ImageTitle += " Vol Wt: " + itemAttribModel.ItemAttribValue + " G";
+                            break;
                     }
                     if (itemAttribModel.ShowValue)
                     {
@@ -144,6 +162,86 @@ namespace RetailSlnCacheData
                         Value = demogInfoCountryModel.DemogInfoCountryId.ToString(),
                     }
                 );
+            }
+            deliveryMethods = new List<ApiCodeDataModel>();
+            var codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
+            foreach (var codeDataModel in codeDataModels)
+            {
+                deliveryMethods.Add
+                (
+                    new ApiCodeDataModel
+                    {
+                        CodeDataId = codeDataModel.CodeDataId,
+                        CodeTypeId = codeDataModel.CodeTypeId,
+                        CodeTypeNameId = codeDataModel.CodeTypeNameId,
+                        CodeDataNameId = codeDataModel.CodeDataNameId,
+                        CodeDataNameDesc = codeDataModel.CodeDataNameDesc,
+                        CodeDataDesc0 = codeDataModel.CodeDataDesc0,
+                        CodeDataDesc1 = codeDataModel.CodeDataDesc1,
+                        CodeDataDesc2 = codeDataModel.CodeDataDesc2,
+                        CodeDataDesc3 = codeDataModel.CodeDataDesc3,
+                        CodeDataDesc4 = codeDataModel.CodeDataDesc4,
+                        CodeTypeModel = null,
+                    }
+                );
+            }
+            codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+            paymentMethodsCreditSale = new List<ApiCodeDataModel>();
+            for (int i = 0; i < 1; i++)
+            {
+                paymentMethodsCreditSale.Add
+                (
+                    new ApiCodeDataModel
+                    {
+                        CodeDataId = codeDataModels[i].CodeDataId,
+                        CodeTypeId = codeDataModels[i].CodeTypeId,
+                        CodeTypeNameId = codeDataModels[i].CodeTypeNameId,
+                        CodeDataNameId = codeDataModels[i].CodeDataNameId,
+                        CodeDataNameDesc = codeDataModels[i].CodeDataNameDesc,
+                        CodeDataDesc0 = codeDataModels[i].CodeDataDesc0,
+                        CodeDataDesc1 = codeDataModels[i].CodeDataDesc1,
+                        CodeDataDesc2 = codeDataModels[i].CodeDataDesc2,
+                        CodeDataDesc3 = codeDataModels[i].CodeDataDesc3,
+                        CodeDataDesc4 = codeDataModels[i].CodeDataDesc4,
+                        CodeTypeModel = null,
+                    }
+                );
+            }
+            paymentMethods = new List<ApiCodeDataModel>();
+            for (int i = 1; i < codeDataModels.Count; i++)
+            {
+                paymentMethods.Add
+                (
+                    new ApiCodeDataModel
+                    {
+                        CodeDataId = codeDataModels[i].CodeDataId,
+                        CodeTypeId = codeDataModels[i].CodeTypeId,
+                        CodeTypeNameId = codeDataModels[i].CodeTypeNameId,
+                        CodeDataNameId = codeDataModels[i].CodeDataNameId,
+                        CodeDataNameDesc = codeDataModels[i].CodeDataNameDesc,
+                        CodeDataDesc0 = codeDataModels[i].CodeDataDesc0,
+                        CodeDataDesc1 = codeDataModels[i].CodeDataDesc1,
+                        CodeDataDesc2 = codeDataModels[i].CodeDataDesc2,
+                        CodeDataDesc3 = codeDataModels[i].CodeDataDesc3,
+                        CodeDataDesc4 = codeDataModels[i].CodeDataDesc4,
+                        CodeTypeModel = null,
+                    }
+                );
+            }
+            deliveryCountrys = new Dictionary<long, string>();
+            deliveryCountryStates = new Dictionary<long, Dictionary<long, string>>();
+            foreach (var deliveryDemogInfoCountryModel in deliveryDemogInfoCountryModels)
+            {
+                deliveryCountrys[deliveryDemogInfoCountryModel.DemogInfoCountryId] = deliveryDemogInfoCountryModel.CountryDesc + " " + deliveryDemogInfoCountryModel.CountryAbbrev;
+                deliveryCountryStates[deliveryDemogInfoCountryModel.DemogInfoCountryId] = new Dictionary<long, string>();
+                var demogInfoSubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == deliveryDemogInfoCountryModel.DemogInfoCountryId);
+                foreach (var demogInfoSubDivisionModel in demogInfoSubDivisionModels)
+                {
+                    deliveryCountryStates[deliveryDemogInfoCountryModel.DemogInfoCountryId].Add
+                    (
+                        demogInfoSubDivisionModel.DemogInfoSubDivisionId, demogInfoSubDivisionModel.SubDivisionDesc
+                    );
+                }
             }
             //Business Addresses
             //ArchLibDataContext.OpenSqlConnection();

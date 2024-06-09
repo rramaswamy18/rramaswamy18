@@ -52,7 +52,7 @@ else
                         <br />
                         <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
                         <br />
-                        @("HSN " + shoppingCartItem.HSNCode + ", SKN " + shoppingCartItem.ProductCode) 
+                        @(shoppingCartItem.HSNCode + ", " + shoppingCartItem.ProductCode) 
                     </td>
                     <td class="text-center">
                         @shoppingCartItem.OrderQty

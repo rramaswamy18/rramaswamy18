@@ -151,6 +151,9 @@ FROM dbo.DivineBija_Products WHERE [Package Height] <> '' AND ItemAttrib.ItemId 
 UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Volumetric Weight], ItemAttribUnitValue = 100
 FROM dbo.DivineBija_Products WHERE [Volumetric Weight] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 24
 
+UPDATE RetailSlnSch.ItemAttrib SET ItemAttribValue = DivineBija_Products.[Volumetric Weight], ItemAttribUnitValue = 100
+FROM dbo.DivineBija_Products WHERE [Volumetric Weight] <> '' AND ItemAttrib.ItemId = DivineBija_Products.Id AND ItemAttribMasterId = 25
+
 /*Update Products End---------------------------------------------------------------------------------------------------------------*/
 
 /*Update Book Begin-----------------------------------------------------------------------------------------------------------------*/

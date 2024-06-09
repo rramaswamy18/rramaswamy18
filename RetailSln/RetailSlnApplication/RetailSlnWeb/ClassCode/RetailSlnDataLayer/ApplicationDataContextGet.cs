@@ -284,5 +284,42 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static void GetPersonInfoFromEmailAddress(string emailAddress, out long personId, out CorpAcctModel corpAcctModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            personId = 0;
+            corpAcctModel = null;
+            #region
+            string sqlStmt = "";
+            sqlStmt += "        SELECT Person.PersonId" + Environment.NewLine;
+            sqlStmt += "              ,CorpAcct.*" + Environment.NewLine;
+            sqlStmt += "          FROM ArchLib.AspNetUser" + Environment.NewLine;
+            sqlStmt += "    INNER JOIN ArchLib.Person" + Environment.NewLine;
+            sqlStmt += "            ON AspNetUser.AspNetUserId = Person.AspNetUserId" + Environment.NewLine;
+            sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
+            sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
+            sqlStmt += "    INNER JOIN RetailSlnSch.CorpAcct" + Environment.NewLine;
+            sqlStmt += "            ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId" + Environment.NewLine;
+            #endregion
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            if (sqlDataReader.Read())
+            {
+                personId = long.Parse(sqlDataReader["PersonId"].ToString());
+                corpAcctModel = new CorpAcctModel
+                {
+                    CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                    ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                    CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                    CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
+                    CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
+                    CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
+                    CreditSale = bool.Parse(sqlDataReader["CreditSale"].ToString()),
+                    MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
+                    ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                    TaxIdentNum = sqlDataReader["CorpAcctName"].ToString(),
+                };
+            }
+            sqlDataReader.Close();
+        }
     }
 }

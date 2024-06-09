@@ -20,6 +20,9 @@ namespace RetailSlnModels
         public long TotalVolumeValueRounded { set; get; }
         public long TotalWeightValueRounded { set; get; }
         public WeightUnitEnum? TotalWeightValueRoundedUnit { set; get; }
+        public float? TotalProductOrVolumetricWeight { set; get; }
+        public long TotalProductOrVolumetricWeightRounded { set; get; }
+        public WeightUnitEnum? TotalProductOrVolumetricWeightRoundedUnit { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartItems { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartSummaryItems { set; get; }
         public ResponseObjectModel ResponseObjectModel { get; set; }

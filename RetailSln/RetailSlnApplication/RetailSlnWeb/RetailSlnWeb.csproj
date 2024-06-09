@@ -109,6 +109,9 @@
     <Reference Include="System.Web.Http, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.3.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -158,6 +161,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="ClassCode\AjaxAuthorizeAttribute.cs" />
     <Compile Include="ClassCode\Bootstrap.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL00.cs" />
@@ -189,9 +193,18 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\PaymentModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiCategorysModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiCodeDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiDeliveryInfoModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiDeliveryMethodModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiDemogInfoAddressModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiIndexModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiItemsModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiLoginUserProfModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiPaymentMethodModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiSearchResultModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartItemModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartSummaryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\BusinessInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryHierListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierModel.cs" />
@@ -201,6 +214,7 @@
     <Compile Include="ClassCode\RetailSlnModels\CategoryListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CheckoutModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiCodeTypeModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CorpAcctModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CreditCardProcessModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CreditCardValidateModel.cs" />
