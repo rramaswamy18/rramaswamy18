@@ -25,8 +25,8 @@ namespace RetailSlnModels
         public long TelephoneCountryId { set; get; }
         public CorpAcctModel CorpAcctModel { set; get; }
         public long DefaultDeliveryDemogInfoCountryId { set; get; }
-        public Dictionary<long, string> DeliveryCountrys { set; get; }
-        public Dictionary<long, Dictionary<long, string>> DeliveryCountryStates { set; get; }
+        public List<KeyValuePair<long, string>> DeliveryCountrys { set; get; }
+        public List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryCountryStates { set; get; }
         public List<ApiCodeDataModel> DeliveryMethods { set; get; }
         public List<ApiCodeDataModel> PaymentModes { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }

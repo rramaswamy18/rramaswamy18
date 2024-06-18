@@ -1,0 +1,32 @@
+﻿@model RetailSlnModels.ApiShoppingCartModel
+@using RetailSlnCacheData
+@{
+    int index = 0;
+}
+<table class="table table-striped">
+    <tr>
+        <th scope="col">
+            #.
+        </th>
+        <th scope="col">
+            Description
+        </th>
+        <th class="text-right" scope="col">
+            Amount
+        </th>
+    </tr>
+    @{
+        index = 0;
+        foreach (var shoppingCartSummary in Model.ShoppingCartItemSummaryModels)
+        {
+            index++;
+            <tr>
+                <th scope="row">@(index + ".")</th>
+                <td class="text-left">
+                    @shoppingCartSummary.ItemShortDesc
+                </td>
+                <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
+            </tr>
+        }
+    }
+</table>

@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "ShoppingCartView";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<div style="text-align: left;">
+    @Html.Partial("_ShoppingCartInput")
+    <button class="btn-primary" id="shoppingCartInput" onclick="javascript: return shoppingCartInput_onclick();">Process</button>
+</div>
+<div id="divShoppingCart" style="text-align: left;">
+    divShoppingCart
+</div>
+<script type="text/javascript">
+    function window_onload() {
+    }
+    function shoppingCartInput_onclick() {
+        console.log("00000000", "shoppingCartInput_onclick ENTER");
+        var url = "/RetailApi/ShoppingCart";
+        var postData = $("#formShoppingCartInput").serialize();
+        //var postData =
+        //{
+        //    jsonString: document.getElementById("ShoppingCartInput").value
+        //};
+        $.ajax({
+            url: url,
+            type: "POST",
+            //contentType: 'text/plain; charset=utf-8',
+            //contentType: 'application/json; charset=utf-8',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                console.log("00090000", "shoppingCartInput_onclick SUCCESS!!!");
+                document.getElementById("divShoppingCart").innerHTML = responseData;
+            },
+            error: function (xhr, exception) {
+                alert("shoppingCartInput_onclick ERROR???");
+                console.log("00098000", "shoppingCartInput_onclick ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+    shoppingCartInput_onclick();
+</script>

@@ -2898,6 +2898,13 @@
     <Content Include="Views\Home\_ProcessCreditCard.cshtml" />
     <Content Include="Views\Home\_CreditCardProcess.cshtml" />
     <Content Include="Views\GeneralUtility\_SqlQueryInput.cshtml" />
+    <Content Include="Views\RetailApi\ShoppingCart.cshtml" />
+    <Content Include="Views\RetailApi\_ShoppingCart.cshtml" />
+    <Content Include="Views\RetailApi\_ShoppingCartInput.cshtml" />
+    <Content Include="Views\RetailApi\_ShoppingCartHeader.cshtml" />
+    <Content Include="Views\RetailApi\_ShoppingCartItem.cshtml" />
+    <Content Include="Views\RetailApi\_ShoppingCartSummary.cshtml" />
+    <Content Include="Views\RetailApi\_ShoppingCartDelivery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,65 @@
+﻿@model RetailSlnModels.ApiShoppingCartModel
+@using RetailSlnCacheData
+@{
+    var imageTitle = Model.BusinessInfoModel.BusinessName1 + " " + Model.BusinessInfoModel.BusinessName2 + " " + Model.BusinessInfoModel.BusinessType;
+}
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            <img src="@Model.BusinessInfoModel.LogoImageFullUrl" alt="@imageTitle" title="@imageTitle" />
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            @Model.BusinessInfoModel.BusinessName1
+            <br />
+            @Model.BusinessInfoModel.BusinessName2
+            <br />
+            @Model.BusinessInfoModel.DemogInfoAddressModels[0].AddressLine1
+            <br />
+            @Model.BusinessInfoModel.DemogInfoAddressModels[0].AddressLine2
+            <br />
+            @Model.BusinessInfoModel.DemogInfoAddressModels[0].CityName
+            <br />
+            @(Model.BusinessInfoModel.DemogInfoAddressModels[0].StateAbbrev + " " + Model.BusinessInfoModel.DemogInfoAddressModels[0].ZipCode + " " + Model.BusinessInfoModel.DemogInfoAddressModels[0].CountryDesc)
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            <a href="tel: @Model.BusinessInfoModel.ContactPhoneHref" style="color: #0000ff; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">@Model.BusinessInfoModel.ContactPhoneFormatted</a>&nbsp;<img src="@Model.BusinessInfoModel.PhoneImageFullUrl" />
+            <br />
+            <a href="sms: @Model.BusinessInfoModel.ContactTextPhoneHref" style="color: #0000ff; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">@Model.BusinessInfoModel.ContactTextPhoneFormatted</a>&nbsp;<img src="@Model.BusinessInfoModel.SMSImageFullUrl" />
+            <br />
+            <a style="color: #0000ff; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank" href="@(Model.BusinessInfoModel.WhatsAppUrl + Model.BusinessInfoModel.ContactWhatsAppPhone)">@Model.BusinessInfoModel.ContactWhatsAppPhoneFormatted</a>&nbsp;<img src="@Model.BusinessInfoModel.WhatsAppImageFullUrl" />
+            <br /><br />
+            @Model.ShoppingCartSummaryModel.EmailAddress
+            <br />
+            @(Model.ShoppingCartSummaryModel.FirstName + " " + Model.ShoppingCartSummaryModel.LastName)
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            @Model.DeliveryInfoModel.DeliveryAddressModel.AddressLine1
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryAddressModel.AddressLine2))
+            {
+                <br />
+                @Model.DeliveryInfoModel.DeliveryAddressModel.AddressLine2
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryAddressModel.BuildingTypeHouseNumber))
+            {
+                <br />
+                @Model.DeliveryInfoModel.DeliveryAddressModel.BuildingTypeHouseNumber
+            }
+            <br />
+            @Model.DeliveryInfoModel.DeliveryAddressModel.CityName
+            <br />
+            @(Model.DeliveryInfoModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryInfoModel.DeliveryAddressModel.ZipCode + " " + Model.DeliveryInfoModel.DeliveryAddressModel.CountryDesc)
+            <br />
+            <a href="tel: @Model.DeliveryInfoModel.PrimaryTelephoneHref" style="color: #0000ff; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">@Model.DeliveryInfoModel.PrimaryTelephoneFormatted</a>
+            <br />
+            <a href="tel: @Model.DeliveryInfoModel.AlternateTelephoneHref" style="color: #0000ff; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">@Model.DeliveryInfoModel.AlternateTelephoneFormatted</a>
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            <b>Instructions : </b>
+        </td>
+        <td colspan="3" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: normal;">
+            @Model.DeliveryInfoModel.DeliveryInstructions
+        </td>
+    </tr>
+</table>

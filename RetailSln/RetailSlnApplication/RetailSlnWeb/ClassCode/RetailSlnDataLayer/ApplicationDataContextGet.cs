@@ -284,13 +284,13 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void GetPersonInfoFromEmailAddress(string emailAddress, out long personId, out CorpAcctModel corpAcctModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void GetPersonInfoFromEmailAddress(string emailAddress, out PersonModel personModel, out CorpAcctModel corpAcctModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            personId = 0;
+            personModel = null;
             corpAcctModel = null;
             #region
             string sqlStmt = "";
-            sqlStmt += "        SELECT Person.PersonId" + Environment.NewLine;
+            sqlStmt += "        SELECT Person.*" + Environment.NewLine;
             sqlStmt += "              ,CorpAcct.*" + Environment.NewLine;
             sqlStmt += "          FROM ArchLib.AspNetUser" + Environment.NewLine;
             sqlStmt += "    INNER JOIN ArchLib.Person" + Environment.NewLine;
@@ -299,12 +299,18 @@ namespace RetailSlnDataLayer
             sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
             sqlStmt += "    INNER JOIN RetailSlnSch.CorpAcct" + Environment.NewLine;
             sqlStmt += "            ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId" + Environment.NewLine;
+            sqlStmt += "         WHERE AspNetUser.UserName = '" + emailAddress + "'" + Environment.NewLine;
             #endregion
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             if (sqlDataReader.Read())
             {
-                personId = long.Parse(sqlDataReader["PersonId"].ToString());
+                personModel = new PersonModel
+                {
+                    PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                    FirstName = sqlDataReader["FirstName"].ToString(),
+                    LastName = sqlDataReader["LastName"].ToString(),
+                };
                 corpAcctModel = new CorpAcctModel
                 {
                     CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),

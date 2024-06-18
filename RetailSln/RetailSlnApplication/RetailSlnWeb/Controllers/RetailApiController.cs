@@ -155,10 +155,66 @@ namespace RetailSlnWeb.Controllers
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ActionResult actionResult;
-            //Validate & Authenticate credentials
             RetailSlnBL retailSlnBL = new RetailSlnBL();
-            var apiLoginUserProfModel = retailSlnBL.LoginUserProf(LoginEmailAddress, LoginPassword, clientId, ipAddress, execUniqueId, loggedInUserId);
-            //actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiLoginUserProfModel) }, JsonRequestBehavior.AllowGet);
+            ApiLoginUserProfModel apiLoginUserProfModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                apiLoginUserProfModel = retailSlnBL.LoginUserProf(LoginEmailAddress, LoginPassword, clientId, ipAddress, execUniqueId, loggedInUserId);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                apiLoginUserProfModel = new ApiLoginUserProfModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            actionResult = Json(new { jsonString = apiLoginUserProfModel }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
+        // GET: LoginUserProf
+        [HttpGet]
+        [JwtAuthentication]
+        public ActionResult SessionInfo()
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ApiLoginUserProfModel apiLoginUserProfModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                var jwtToken = Request.Headers["Authorization"].Substring(7);
+                apiLoginUserProfModel = retailSlnBL.SessionInfo(jwtToken, clientId, ipAddress, execUniqueId, loggedInUserId);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                apiLoginUserProfModel = new ApiLoginUserProfModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             actionResult = Json(new { jsonString = apiLoginUserProfModel }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
@@ -172,69 +228,7 @@ namespace RetailSlnWeb.Controllers
             ActionResult actionResult;
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             //string x = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImN1b25nIiwibmJmIjoxNzE3NTUxNDE0LCJleHAiOjE3MTc1NTI2MTQsImlhdCI6MTcxNzU1MTQxNH0.FpKGIix8FH9azm9aLT7oW8pl0hT-xRz3aq-mPpoJ1wk";
-            ApiShoppingCartModel apiShoppingCartModel = new ApiShoppingCartModel
-            {
-                DeliveryInfoModel = new ApiDeliveryInfoModel
-                {
-                    AlternateTelephoneDemogInfoCountryId = 106,
-                    AlternateTelephoneNum = "234567890",
-                    AlternateTelephoneTelephoneCode = 91,
-                    CreateDeliveryAddress = true,
-                    DeliveryAddressModel = new ApiDemogInfoAddressModel
-                    {
-                        ClientId = 97,
-                        AddressLine1 =  "4250 Canyon Crest Rd W",
-                        BuildingTypeId = BuildingTypeEnum._,
-                        CityName = "CHENNAI",
-                        CountryAbbrev = "IND",
-                        CountyName = "IND",
-                        CountryDesc = "India",
-                        DemogInfoAddressId = 0,
-                        DemogInfoCityId = 0,
-                        DemogInfoCountryId = 106,
-                        DemogInfoCountyId = 0,
-                        DemogInfoSubDivisionId = 0,
-                        DemogInfoZipId = 0,
-                        DemogInfoZipPlusId = 0,
-                        FromDate = null,
-                        HouseNumber = "",
-                        StateAbbrev = "TN",
-                        ToDate = null,
-                        ZipCode = "600001",
-                        ZipPlus4 = "",
-                    },
-                    DeliveryMethodModel = new ApiDeliveryMethodModel
-                    {
-                        DeliveryMethodId = DeliveryMethodEnum.ShipToDeliveryAddress,
-                    },
-                    PaymentMethodModel = new ApiPaymentMethodModel
-                    {
-                        PaymentModeId = PaymentModeEnum.PaymentGateway,
-                    },
-                },
-                ShoppingCartItemModels = new List<ApiShoppingCartItemModel>
-                {
-                    new ApiShoppingCartItemModel
-                    {
-                        ItemId = 9,
-                        OrderQty = 9,
-                        OrderComments = "Ummachi Kapathu 1",
-                    },
-                    new ApiShoppingCartItemModel
-                    {
-                        ItemId = 18,
-                        OrderQty = 18,
-                        OrderComments = "Ummachi Kapathu 2",
-                    },
-                    new ApiShoppingCartItemModel
-                    {
-                        ItemId = 27,
-                        OrderQty = 27,
-                        OrderComments = "Ummachi Kapathu 3",
-                    },
-                },
-            };
-            //retailSlnBL.ProcessShoppingCart(ref apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            ApiShoppingCartModel apiShoppingCartModel = retailSlnBL.CreateShoppingCartInput();
             actionResult = Json(new { apiShoppingCartModel }, JsonRequestBehavior.AllowGet);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
@@ -255,16 +249,70 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 apiShoppingCartModel.JwtToken = Request.Headers["Authorization"].Substring(7);
                 retailSlnBL.ProcessShoppingCart(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiShoppingCartModel) }, JsonRequestBehavior.AllowGet);
-                actionResult = Json(new { apiShoppingCartModel }, JsonRequestBehavior.AllowGet);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return actionResult;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
+                apiShoppingCartModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ResponseMessages = new List<string>
+                    {
+                        "Error while processing shopping cart"
+                    },
+                    ResponseTypeId = ResponseTypeEnum.Error,
+                };
             }
+            actionResult = Json(new { apiShoppingCartModel }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: ShoppingCart
+        [HttpGet]
+        public ActionResult ShoppingCart()
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            actionResult = View();
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // POST: ShoppingCart
+        [HttpPost]
+        public ActionResult ShoppingCart(string ShoppingCartInput)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            //ApiShoppingCartModel apiShoppingCartModel1 = retailSlnBL.CreateShoppingCartInput();
+            ApiShoppingCartModel apiShoppingCartModel = JsonConvert.DeserializeObject<ApiShoppingCartModel>(ShoppingCartInput);
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                retailSlnBL.ProcessShoppingCart(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = PartialView("_ShoppingCart", apiShoppingCartModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                apiShoppingCartModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ResponseMessages = new List<string>
+                    {
+                        exception.Message,
+                        "Error while processing shopping cart"
+                    },
+                    ResponseTypeId = ResponseTypeEnum.Error,
+                };
+                actionResult = PartialView("_ResponseObject", apiShoppingCartModel.ResponseObjectModel);
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
         }
 
         // GET: SearchResult

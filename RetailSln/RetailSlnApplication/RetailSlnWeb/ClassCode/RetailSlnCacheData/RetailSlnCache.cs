@@ -16,6 +16,7 @@ namespace RetailSlnCacheData
 {
     public static class RetailSlnCache
     {
+        public static BusinessInfoModel BusinessInfoModel { set; get; }
         public static List<DemogInfoAddressModel> BusinessDemogInfoAddressModels { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
         public static CultureInfo CurrencyCultureInfo { set; get; }
@@ -36,8 +37,8 @@ namespace RetailSlnCacheData
         public static List<ApiCodeDataModel> PaymentMethodsCreditSale { set; get; }
         public static List<ApiCodeDataModel> PaymentMethods { set; get; }
         public static long DefaultDeliveryDemogInfoCountryId { set; get; }
-        public static Dictionary<long, string> DeliveryCountrys { set; get; }
-        public static Dictionary<long, Dictionary<long, string>> DeliveryCountryStates { set; get; }
+        public static List<KeyValuePair<long, string>> DeliveryCountrys { set; get; }
+        public static List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryCountryStates { set; get; }
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
@@ -56,7 +57,7 @@ namespace RetailSlnCacheData
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out Dictionary<long, string> deliveryCountrys, out Dictionary<long, Dictionary<long, string>> deliveryCountryStates, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
@@ -65,8 +66,10 @@ namespace RetailSlnCacheData
             PaymentMethodsCreditSale = paymentMethodsCreditSale;
             PaymentMethods = paymentMethods;
             DeliveryCountrys = deliveryCountrys;
+            DeliveryCountryStates = deliveryCountryStates;
+            BusinessInfoModel = businessInfoModel;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out Dictionary<long, string> deliveryCountrys, out Dictionary<long, Dictionary<long, string>> deliveryCountryStates, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -228,21 +231,54 @@ namespace RetailSlnCacheData
                     }
                 );
             }
-            deliveryCountrys = new Dictionary<long, string>();
-            deliveryCountryStates = new Dictionary<long, Dictionary<long, string>>();
+            deliveryCountrys = new List<KeyValuePair<long, string>>();
+            deliveryCountryStates = new List<KeyValuePair<long, List<KeyValuePair<long, string>>>>();
+            List<KeyValuePair<long, string>> deliveryStates;
             foreach (var deliveryDemogInfoCountryModel in deliveryDemogInfoCountryModels)
             {
-                deliveryCountrys[deliveryDemogInfoCountryModel.DemogInfoCountryId] = deliveryDemogInfoCountryModel.CountryDesc + " " + deliveryDemogInfoCountryModel.CountryAbbrev;
-                deliveryCountryStates[deliveryDemogInfoCountryModel.DemogInfoCountryId] = new Dictionary<long, string>();
+                deliveryCountrys.Add(new KeyValuePair<long, string>(deliveryDemogInfoCountryModel.DemogInfoCountryId, deliveryDemogInfoCountryModel.CountryDesc));
+                deliveryStates = new List<KeyValuePair<long, string>>();
+                deliveryCountryStates.Add(new KeyValuePair<long, List<KeyValuePair<long, string>>>(deliveryDemogInfoCountryModel.DemogInfoCountryId, deliveryStates));
                 var demogInfoSubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == deliveryDemogInfoCountryModel.DemogInfoCountryId);
                 foreach (var demogInfoSubDivisionModel in demogInfoSubDivisionModels)
                 {
-                    deliveryCountryStates[deliveryDemogInfoCountryModel.DemogInfoCountryId].Add
-                    (
-                        demogInfoSubDivisionModel.DemogInfoSubDivisionId, demogInfoSubDivisionModel.SubDivisionDesc
-                    );
+                    deliveryStates.Add(new KeyValuePair<long, string>(deliveryDemogInfoCountryModel.DemogInfoCountryId, demogInfoSubDivisionModel.SubDivisionDesc));
                 }
             }
+            businessInfoModel = new BusinessInfoModel
+            {
+                ClientId = clientId,
+                BaseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", ""),
+                BusinessName1 = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", ""),
+                BusinessName2 = ArchLibCache.GetApplicationDefault(clientId, "BusinessName2", ""),
+                BusinessType = ArchLibCache.GetApplicationDefault(clientId, "BusinessType", ""),
+                ContactPhoneFormatted = ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", ""),
+                ContactPhoneHref = ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", ""),
+                ContactTextPhoneFormatted = ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", ""),
+                ContactTextPhoneHref = ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", ""),
+                ContactWhatsAppPhone = ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhone", ""),
+                ContactWhatsAppPhoneFormatted = ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhoneFormatted", ""),
+                DemogInfoAddressModels = new List<DemogInfoAddressModel>
+                {
+                    new DemogInfoAddressModel
+                    {
+                        AddressLine1 = ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", ""),
+                        AddressLine2 = ArchLibCache.GetApplicationDefault(clientId, "AddressLine1A", ""),
+                        AddressLine3 = ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", ""),
+                        CityName = ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", ""),
+                        ZipCode = ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", ""),
+                        StateAbbrev = ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", ""),
+                        CountryDesc = ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", ""),
+                    },
+                },
+                LogoImageName = "Image_000.webp",
+                LogoRelativeUrl = "/ClientSpecific/" + clientId + "_" + ArchLibCache.ClientName + "/Documents/Images/",
+                WhatsAppUrl = "https://api.whatsapp.com/send?phone=",
+            };
+            businessInfoModel.LogoImageFullUrl = businessInfoModel.BaseUrl + businessInfoModel.LogoRelativeUrl + businessInfoModel.LogoImageName;
+            businessInfoModel.PhoneImageFullUrl = businessInfoModel.BaseUrl + "Images/Phone1_Small.png";
+            businessInfoModel.SMSImageFullUrl = businessInfoModel.BaseUrl + "Images/SMSIcon3_Small.png";
+            businessInfoModel.WhatsAppImageFullUrl = businessInfoModel.BaseUrl + "Images/WhatsApp1_Small.png";
             //Business Addresses
             //ArchLibDataContext.OpenSqlConnection();
             //DemogInfoAddressModel demogInfoAddressModel;

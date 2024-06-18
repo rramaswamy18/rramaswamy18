@@ -13,6 +13,8 @@ namespace RetailSlnModels
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public BuildingTypeEnum? BuildingTypeId { get; set; }
+        public string BuildingTypeDesc { get; set; }
+        public string BuildingTypeHouseNumber { get; set; }
         public string CityName { get; set; }
         public string CountryAbbrev { get; set; }
         public string CountryDesc { get; set; }

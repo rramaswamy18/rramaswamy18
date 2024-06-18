@@ -1,0 +1,47 @@
+﻿@model RetailSlnModels.ApiShoppingCartModel
+@using RetailSlnCacheData
+@{
+    int index = 0;
+}
+<table class="table table-striped">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Item#</th>
+        <th scope="col">Item Desc</th>
+        <th class="text-center" scope="col">Qty</th>
+        <th class="text-right" scope="col">Rate</th>
+        <th class="text-right" scope="col">Amount</th>
+    </tr>
+    @foreach (var shoppingCartItem in Model.ShoppingCartItemModels)
+    {
+        index++;
+        <tr>
+            <th scope="row">@(index + ".")</th>
+            <td class="text-left">
+                @shoppingCartItem.ItemId
+            </td>
+            <td class="text-left">
+                @shoppingCartItem.ItemShortDesc
+                <br />
+                <span>Weight: </span>@shoppingCartItem.ProductWeight<span>&nbsp;</span>@shoppingCartItem.ProductWeightUnitId
+                <br />
+                @(shoppingCartItem.HSNCode + ", " + shoppingCartItem.ProductCode)
+            </td>
+            <td class="text-center">
+                @shoppingCartItem.OrderQty
+            </td>
+            <td class="text-right">
+                @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+            </td>
+            <td class="text-right">
+                @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="text-left" colspan="6">
+                @Html.DisplayFor(m => shoppingCartItem.OrderComments)
+            </td>
+        </tr>
+    }
+</table>

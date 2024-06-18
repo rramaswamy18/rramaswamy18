@@ -1,5 +1,6 @@
 ﻿using ArchitectureLibraryBusinessLayer;
 using ArchitectureLibraryCacheData;
+using ArchitectureLibraryCreditCardBusinessLayer;
 using ArchitectureLibraryCreditCardModels;
 using ArchitectureLibraryDataLayer;
 using ArchitectureLibraryEnumerations;
@@ -33,15 +34,7 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                BusinessInfoModel businessInfoModel = new BusinessInfoModel
-                {
-                    BaseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", ""),
-                    BusinessName1 = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", ""),
-                    BusinessName2 = ArchLibCache.GetApplicationDefault(clientId, "BusinessName2", ""),
-                    DemogInfoAddressModels = new List<DemogInfoAddressModel>(),
-                    LogoImageName = "Image_000.webp",
-                    LogoRelativeUrl = "/ClientSpecific/" + clientId + "/" + ArchLibCache.ClientName + "/Documents/Images/",
-                };
+                BusinessInfoModel businessInfoModel = RetailSlnCache.BusinessInfoModel;
                 return businessInfoModel;
             }
             catch (Exception exception)
@@ -111,7 +104,7 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                bool success = false;
+                //int a = 1, b = 0, c = a / b;
                 loginEmailAddress = loginEmailAddress.Trim().ToLower();
                 ArchLibDataContext.OpenSqlConnection();
                 string privateKey = ArchLibCache.GetPrivateKey(clientId);
@@ -148,45 +141,172 @@ namespace RetailSlnBusinessLayer
                             PaymentModes = personExtn1Model.CorpAcctModel.CreditSale ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
                             ResponseObjectModel = new ResponseObjectModel
                             {
+                                PropertyErrorsKVP = new List<KeyValuePair<string, List<string>>>(),
                                 ResponseMessages = new List<string>(),
                                 ResponseTypeId = ResponseTypeEnum.Success,
                                 ValidationSummaryMessage = "",
                             }
                         };
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Success");
-                        success = true;
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                        return apiLoginUserProfModel;
                     }
                     else
                     {
-                        personModel.ResponseObjectModel.ResponseMessages = new List<string>
-                        {
-                            "Unable to login using credentials passed",
-                        };
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Unable to login");
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Unable to login using credentials passed");
+                        throw new Exception("Unable to login using credentials passed");
                     }
-                }
-                ArchLibDataContext.CloseSqlConnection();
-                if (success)
-                {
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Success");
                 }
                 else
                 {
-                    personModel.ResponseObjectModel.ResponseTypeId = ResponseTypeEnum.Error;
-                    personModel.ResponseObjectModel.ResponseMessages = new List<string>
-                    {
-                        "Error occurred while validating username / password",
-                    };
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: Error ocurred");
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Unable to login using credentials passed");
+                    throw new Exception("Unable to login using credentials passed");
                 }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return apiLoginUserProfModel;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
             }
+            finally
+            {
+                ArchLibDataContext.CloseSqlConnection();
+            }
+        }
+
+        // GET: LoginUserProf
+        public ApiLoginUserProfModel SessionInfo(string jwtToken, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int a = 1, b = 0, c = a / b;
+                var username = GetUserInfoFromJwtToken(jwtToken, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ArchLibDataContext.OpenSqlConnection();
+                string privateKey = ArchLibCache.GetPrivateKey(clientId);
+                ApiLoginUserProfModel apiLoginUserProfModel = new ApiLoginUserProfModel();
+                PersonModel personModel = ArchLibDataContext.SelectLoginUserProf(username, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (personModel != null)
+                {
+                    long passwordExpiry = long.Parse(DateTime.Parse(personModel.AspNetUserModel.PasswordExpiry).ToString("yyyyMMddHHmmss"));
+                    PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personModel.PersonId.Value, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    apiLoginUserProfModel = new ApiLoginUserProfModel
+                    {
+                        ClientId = clientId,
+                        AspNetRoleId = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleId,
+                        AspNetRoleName = personModel.AspNetUserModel.AspNetUserRoleModel.AspNetRoleModel.AspNetRoleName,
+                        AspNetUserId = personModel.AspNetUserModel.AspNetUserId,
+                        EmailAddress = username,
+                        FirstName = personModel.FirstName,
+                        JwtToken = jwtToken,
+                        LastName = personModel.LastName,
+                        NicknameFirst = personModel.NicknameFirst,
+                        NicknameLast = personModel.NicknameLast,
+                        PersonId = personModel.PersonId.Value,
+                        PhoneNumber = personModel.AspNetUserModel.PhoneNumber,
+                        TelephoneCode = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == personModel.AspNetUserModel.TelephoneCountryId.Value).TelephoneCode.Value,
+                        TelephoneCountryId = personModel.AspNetUserModel.TelephoneCountryId.Value,
+                        CorpAcctModel = personExtn1Model.CorpAcctModel,
+                        DefaultDeliveryDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+                        DeliveryCountrys = RetailSlnCache.DeliveryCountrys,
+                        DeliveryCountryStates = RetailSlnCache.DeliveryCountryStates,
+                        DeliveryMethods = RetailSlnCache.DeliveryMethods,
+                        PaymentModes = personExtn1Model.CorpAcctModel.CreditSale ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            PropertyErrorsKVP = new List<KeyValuePair<string, List<string>>>(),
+                            ResponseMessages = new List<string>(),
+                            ResponseTypeId = ResponseTypeEnum.Success,
+                            ValidationSummaryMessage = "",
+                        }
+                    };
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                    return apiLoginUserProfModel;
+                }
+                else
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Unable to login using credentials passed");
+                    throw new Exception("Invalid username from token");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ArchLibDataContext.CloseSqlConnection();
+            }
+        }
+
+        // GET: CreateShoppingCartInput
+        public ApiShoppingCartModel CreateShoppingCartInput()
+        {
+            ApiShoppingCartModel apiShoppingCartModel = new ApiShoppingCartModel
+            {
+                DeliveryInfoModel = new ApiDeliveryInfoModel
+                {
+                    AlternateTelephoneDemogInfoCountryId = 106,
+                    AlternateTelephoneNum = "234567890",
+                    AlternateTelephoneTelephoneCode = 91,
+                    CreateDeliveryAddress = true,
+                    DeliveryAddressModel = new ApiDemogInfoAddressModel
+                    {
+                        ClientId = 97,
+                        AddressLine1 = "4250 Canyon Crest Rd W",
+                        BuildingTypeId = BuildingTypeEnum._,
+                        CityName = "CHENNAI",
+                        CountryAbbrev = "IND",
+                        CountyName = "IND",
+                        CountryDesc = "India",
+                        DemogInfoAddressId = 0,
+                        DemogInfoCityId = 0,
+                        DemogInfoCountryId = 106,
+                        DemogInfoCountyId = 0,
+                        DemogInfoSubDivisionId = 0,
+                        DemogInfoZipId = 0,
+                        DemogInfoZipPlusId = 0,
+                        FromDate = null,
+                        HouseNumber = "",
+                        StateAbbrev = "TN",
+                        ToDate = null,
+                        ZipCode = "600001",
+                        ZipPlus4 = "",
+                    },
+                    DeliveryMethodModel = new ApiDeliveryMethodModel
+                    {
+                        DeliveryMethodId = DeliveryMethodEnum.ShipToDeliveryAddress,
+                    },
+                    PaymentMethodModel = new ApiPaymentMethodModel
+                    {
+                        PaymentModeId = PaymentModeEnum.PaymentGateway,
+                    },
+                },
+                ShoppingCartItemModels = new List<ApiShoppingCartItemModel>
+                {
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemId = 9,
+                        OrderQty = 9,
+                        OrderComments = "Ummachi Kapathu 1",
+                    },
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemId = 18,
+                        OrderQty = 18,
+                        OrderComments = "Ummachi Kapathu 2",
+                    },
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemId = 27,
+                        OrderQty = 27,
+                        OrderComments = "Ummachi Kapathu 3",
+                    },
+                },
+            };
+            return apiShoppingCartModel;
         }
 
         // POST: ProcessShoppingCart
@@ -195,29 +315,35 @@ namespace RetailSlnBusinessLayer
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                var username = retailSlnBL.GetUserInfoFromJwtToken(apiShoppingCartModel.JwtToken, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var username = GetUserInfoFromJwtToken(apiShoppingCartModel.JwtToken, clientId, ipAddress, execUniqueId, loggedInUserId);
                 apiShoppingCartModel.JwtToken = null;
-                username = "test1@email.com";
+                if (username == null)
+                {
+                    username = "rramaswamy1@hotmail.com";
+                }
                 if (username == null)
                 {
                     throw new Exception("Invalid access");
                 }
                 ApplicationDataContext.OpenSqlConnection();
-                ApplicationDataContext.GetPersonInfoFromEmailAddress(username, out long personId, out CorpAcctModel corpAcctModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (personId == 0)
+                ApplicationDataContext.GetPersonInfoFromEmailAddress(username, out PersonModel personModel, out CorpAcctModel corpAcctModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (personModel == null)
                 {
                     throw new Exception("Invalid user");
                 }
                 apiShoppingCartModel.ShoppingCartSummaryModel = new ApiShoppingCartSummaryModel
                 {
-                    PersonId = personId,
                     CorpAcctModel = corpAcctModel,
+                    EmailAddress = username,
+                    PersonId = personModel.PersonId,
+                    FirstName = personModel.FirstName,
+                    LastName = personModel.LastName,
                 };
-                UpdateDeliveryAddressInfo(apiShoppingCartModel.DeliveryInfoModel.DeliveryAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                apiShoppingCartModel.BusinessInfoModel = BusinessInfo(null, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdateDeliveryAddressInfo(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateShoppingCartItems(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateDiscounts(apiShoppingCartModel, apiShoppingCartModel.ShoppingCartSummaryModel.PersonId.Value, apiShoppingCartModel.ShoppingCartSummaryModel.CorpAcctModel.CorpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateShoppingCartTotals(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -232,6 +358,13 @@ namespace RetailSlnBusinessLayer
                 {
                     CalculateDeliveryCharges(apiShoppingCartModel, salesTaxListModels, salesTaxCaptionIds, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
+                CalculateShoppingCartSummaryTotals(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var creditCardDataModel = BuildCreditCardDataModel(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+                var creditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                creditCardDataModel.CreditCardKVPs = null;
+                apiShoppingCartModel.CreditCardDataModel = creditCardDataModel;
+                apiShoppingCartModel.RazorPayResponse = (RazorPayResponse)creditCardResponseObject;
                 ApplicationDataContext.CloseSqlConnection();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
@@ -243,6 +376,7 @@ namespace RetailSlnBusinessLayer
             }
         }
 
+        // START : Private Methods
         private void CalculateDeliveryCharges(ApiShoppingCartModel apiShoppingCartModel, List<SalesTaxListModel> salesTaxListModels, List<CodeDataModel> salesTaxCaptionIds, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             DeliveryChargeModel deliveryChargeModel = GetDeliveryChargeModel(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId); ;
@@ -259,7 +393,7 @@ namespace RetailSlnBusinessLayer
                         ItemDesc = null,
                         ItemId = null,
                         ItemRate = shippingAndHandlingChargesRate,
-                        ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                        ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + apiShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " KG - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                         OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
                         OrderComments = null,
                         OrderQty = apiShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
@@ -314,8 +448,8 @@ namespace RetailSlnBusinessLayer
                     shoppingCartItemModel.HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribValue);
                     shoppingCartItemModel.HSNCode = itemModel.ItemAttribModelsForDisplay["HSNCode"].ItemAttribValueForDisplay;
                     shoppingCartItemModel.ItemDesc = itemModel.ItemDesc;
-                    shoppingCartItemModel.ItemDiscountAmount = null;
-                    shoppingCartItemModel.ItemDiscountPercent = null;
+                    shoppingCartItemModel.ItemDiscountAmount = 0;
+                    shoppingCartItemModel.ItemDiscountPercent = 0;
                     shoppingCartItemModel.ItemRate = itemModel.ItemRate;
                     shoppingCartItemModel.ItemRateBeforeDiscount = itemModel.ItemRate;
                     shoppingCartItemModel.ItemShortDesc = itemModel.ItemShortDesc;
@@ -394,14 +528,18 @@ namespace RetailSlnBusinessLayer
                 //int x = 1, y = 0, z = x / y;
                 apiShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount = 0;
                 apiShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeight = 0;
-                apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount = 0;
+                apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountBeforeDiscount = 0;
+                apiShoppingCartModel.ShoppingCartSummaryModel.TotalDiscountAmount = 0;
+                apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount = 0;
                 apiShoppingCartModel.ShoppingCartSummaryModel.TotalVolumeValue = 0;
                 apiShoppingCartModel.ShoppingCartSummaryModel.TotalWeightCalc = 0;
                 foreach (var shoppingCartItemModel in apiShoppingCartModel.ShoppingCartItemModels)
                 {
                     apiShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount += shoppingCartItemModel.OrderQty;
                     apiShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeight += shoppingCartItemModel.ProductOrVolumetricWeight;
-                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount += shoppingCartItemModel.OrderAmount;
+                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountBeforeDiscount += shoppingCartItemModel.OrderAmountBeforeDiscount;
+                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalDiscountAmount += shoppingCartItemModel.ItemDiscountAmount;
+                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount += shoppingCartItemModel.OrderAmount;
                     apiShoppingCartModel.ShoppingCartSummaryModel.TotalVolumeValue += shoppingCartItemModel.VolumeValue;
                     apiShoppingCartModel.ShoppingCartSummaryModel.TotalWeightCalc += shoppingCartItemModel.WeightCalc;
                 }
@@ -413,13 +551,13 @@ namespace RetailSlnBusinessLayer
                         ItemId = null,
                         ItemRate = null,
                         ItemRateBeforeDiscount = null,
-                        ItemShortDesc = "Total Order Amount",
-                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount,
+                        ItemShortDesc = "Total Order Amount (#" + apiShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount + ") Wt: " + apiShoppingCartModel.ShoppingCartSummaryModel.TotalWeightCalc + " Grams",
+                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
                         OrderAmountBeforeDiscount = null,
                         OrderComments = null,
                         OrderQty = 1,
-                        OrderDetailTypeId = OrderDetailTypeEnum.TotalOrderAmount,
-                    }
+                        OrderDetailTypeId = OrderDetailTypeEnum.TotalOrderAmountAfterDiscount,
+                    },
                 };
                 apiShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded = (long)Math.Ceiling(apiShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeight.Value / 1000f);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -445,9 +583,9 @@ namespace RetailSlnBusinessLayer
                         {
                             ItemDesc = null,
                             ItemId = null,
-                            ItemRate = apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount,
+                            ItemRate = apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
                             ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
-                            OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount * salesTaxListModel.SalesTaxRate / 100f,
+                            OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount * salesTaxListModel.SalesTaxRate / 100f,
                             OrderComments = null,
                             OrderQty = 1,
                             OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
@@ -456,47 +594,164 @@ namespace RetailSlnBusinessLayer
                 }
                 else
                 {
-                    apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
-                    (
-                        new ApiShoppingCartItemModel
-                        {
-                            ItemDesc = null,
-                            ItemId = null,
-                            ItemRate = apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount,
-                            ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
-                            OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalShoppingCartAmount * salesTaxListModel.SalesTaxRate / 100f,
-                            OrderComments = null,
-                            OrderQty = 1,
-                            OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
-                        }
-                    );
+                    float totalSalesTaxAmount = 0, salesTaxAmount;
                     foreach (var shoppingCartItem in apiShoppingCartModel.ShoppingCartItemModels)
                     {
                         var itemAttribValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItem.ItemId).ItemAttribModels.ToList().First(x => x.ItemAttribMasterModel.AttribName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemAttribValue;
+                        salesTaxAmount = float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount.Value / 100f;
+                        totalSalesTaxAmount += salesTaxAmount;
                         shoppingCartItem.ShoppingCartItemSummaryModels.Add
                         (
                             new ApiShoppingCartItemModel
                             {
                                 ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
                                 ItemRate = float.Parse(itemAttribValue),
-                                OrderAmount = float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount / 100f,
+                                OrderAmount = salesTaxAmount,
                             }
                         );
-                        apiShoppingCartModel.ShoppingCartItemSummaryModels[apiShoppingCartModel.ShoppingCartItemSummaryModels.Count - 1].OrderAmount += float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount / 100f;
+                        //apiShoppingCartModel.ShoppingCartItemSummaryModels[apiShoppingCartModel.ShoppingCartItemSummaryModels.Count - 1].OrderAmount += float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount / 100f;
                     }
+                    apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
+                    (
+                        new ApiShoppingCartItemModel
+                        {
+                            ItemDesc = null,
+                            ItemId = null,
+                            ItemRate = apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
+                            ItemShortDesc = salesTaxCaptionId.CodeDataDesc0,
+                            OrderAmount = totalSalesTaxAmount,
+                            OrderComments = null,
+                            OrderQty = 1,
+                            OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                        }
+                    );
                 }
             }
         }
 
-        public string GetUserInfoFromJwtToken(string jwtToken, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CalculateShoppingCartSummaryTotals(ApiShoppingCartModel apiShoppingCartModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                apiShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount = 0;
+                apiShoppingCartModel.ShoppingCartSummaryModel.AmountPaidByGiftCert = 0;
+                apiShoppingCartModel.ShoppingCartSummaryModel.AmountPaidByCreditCard = 0;
+                apiShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid =
+                    apiShoppingCartModel.ShoppingCartSummaryModel.AmountPaidByGiftCert +
+                    apiShoppingCartModel.ShoppingCartSummaryModel.AmountPaidByCreditCard
+                    ;
+                for (int i = 0; i < apiShoppingCartModel.ShoppingCartItemSummaryModels.Count; i++)
+                {
+                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount += apiShoppingCartModel.ShoppingCartItemSummaryModels[i].OrderAmount;
+                }
+                apiShoppingCartModel.ShoppingCartSummaryModel.BalanceDue =
+                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount -
+                    apiShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid
+                    ;
+                apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
+                (
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = null,
+                        ItemRateBeforeDiscount = null,
+                        ItemShortDesc = "Total Invoice Amount",
+                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount,
+                        OrderAmountBeforeDiscount = null,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.TotalInvoiceAmount,
+                    }
+                );
+                apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
+                (
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = null,
+                        ItemRateBeforeDiscount = null,
+                        ItemShortDesc = "Amount Paid - Gift Cert",
+                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.AmountPaidByGiftCert,
+                        OrderAmountBeforeDiscount = null,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.AmountPaidByGiftCert,
+                    }
+                );
+                apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
+                (
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = null,
+                        ItemRateBeforeDiscount = null,
+                        ItemShortDesc = "Amount Paid - Credit Card",
+                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.AmountPaidByCreditCard,
+                        OrderAmountBeforeDiscount = null,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.AmountPaidByCreditCard,
+                    }
+                );
+                apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
+                (
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = null,
+                        ItemRateBeforeDiscount = null,
+                        ItemShortDesc = "Total Amount Paid",
+                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid,
+                        OrderAmountBeforeDiscount = null,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.TotalAmountPaid,
+                    }
+                );
+                apiShoppingCartModel.ShoppingCartItemSummaryModels.Add
+                (
+                    new ApiShoppingCartItemModel
+                    {
+                        ItemDesc = null,
+                        ItemId = null,
+                        ItemRate = null,
+                        ItemRateBeforeDiscount = null,
+                        ItemShortDesc = "Balance Due",
+                        OrderAmount = apiShoppingCartModel.ShoppingCartSummaryModel.BalanceDue,
+                        OrderAmountBeforeDiscount = null,
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.BalanceDue,
+                    }
+                );
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+
+        private string GetUserInfoFromJwtToken(string jwtToken, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             var userName = JwtManager.GetUserNameFromToken(jwtToken);
             return userName;
         }
 
-        public void UpdateDeliveryAddressInfo(ApiDemogInfoAddressModel apiDemogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void UpdateDeliveryAddressInfo(ApiShoppingCartModel apiShoppingCartModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             ArchLibBL archLibBL = new ArchLibBL();
+            ApiDemogInfoAddressModel apiDemogInfoAddressModel = apiShoppingCartModel.DeliveryInfoModel.DeliveryAddressModel;
             SearchDataModel searchDataModel = new SearchDataModel
             {
                 SearchType = "ZipCode",
@@ -527,25 +782,42 @@ namespace RetailSlnBusinessLayer
                     break;
                 }
             }
+            var demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneDemogInfoCountryId);
+            apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
+            demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneDemogInfoCountryId);
+            apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
+
+            apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneFormatted = "+" + apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneTelephoneCode.Value.ToString() + " " + long.Parse(apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneNum).ToString("##### #####");
+            apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneHref = apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneTelephoneCode.Value.ToString() + "-" + long.Parse(apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneNum).ToString("###-###-####");
+
+            apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneFormatted = "+" + apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneTelephoneCode.Value.ToString() + " " + long.Parse(apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneNum).ToString("##### #####");
+            apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneHref = apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneTelephoneCode.Value.ToString() + "-" + long.Parse(apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneNum).ToString("###-###-####");
+
+            apiDemogInfoAddressModel.BuildingTypeDesc = apiDemogInfoAddressModel.BuildingTypeId == null ? "" : LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "BuildingType").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)apiDemogInfoAddressModel.BuildingTypeId).CodeDataNameDesc;
+            apiDemogInfoAddressModel.BuildingTypeHouseNumber = string.IsNullOrWhiteSpace(apiDemogInfoAddressModel.BuildingTypeDesc) ? "" : (apiDemogInfoAddressModel.BuildingTypeDesc + " ");
+            apiDemogInfoAddressModel.BuildingTypeHouseNumber += string.IsNullOrWhiteSpace(apiDemogInfoAddressModel.HouseNumber) ? "" : apiDemogInfoAddressModel.HouseNumber.Trim();
+
+            apiShoppingCartModel.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)apiShoppingCartModel.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodId).CodeDataDesc0;
+            apiShoppingCartModel.DeliveryInfoModel.PaymentMethodModel.PaymentModeDesc = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)apiShoppingCartModel.DeliveryInfoModel.PaymentMethodModel.PaymentModeId).CodeDataDesc0;
         }
 
-        // START : Private Methods
-        private CreditCardDataModel BuildCreditCardDataModel(ApiDemogInfoAddressModel apiDemogInfoAddressModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private CreditCardDataModel BuildCreditCardDataModel(ApiShoppingCartModel apiShoppingCartModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
+            var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
             CreditCardDataModel creditCardDataModel = new CreditCardDataModel
             {
-                //CreditCardAmount = shoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue).OrderAmount.Value.ToString("0.00"),
-                //CreditCardExpMM = null,
-                //CreditCardExpYear = null,
-                //CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId),
-                //CreditCardNumber = null,
-                //CreditCardProcessor = creditCardProcessor,
-                //CreditCardSecCode = null,
-                //CreditCardTranType = "PAYMENT",
-                //CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
-                //EmailAddress = sessionObjectModel.EmailAddress,
-                //NameAsOnCard = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
-                //TelephoneNumber = sessionObjectModel.PhoneNumber,
+                CreditCardAmount = apiShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString("0.00"),
+                CreditCardExpMM = null,
+                CreditCardExpYear = null,
+                CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId),
+                CreditCardNumber = null,
+                CreditCardProcessor = creditCardProcessor,
+                CreditCardSecCode = null,
+                CreditCardTranType = "PAYMENT",
+                CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                EmailAddress = apiShoppingCartModel.ShoppingCartSummaryModel.EmailAddress,
+                NameAsOnCard = "",//apiShoppingCartModel.ShoppingCartSummaryModel.,
+                TelephoneNumber = apiShoppingCartModel.ShoppingCartSummaryModel.TelephoneNumber,
             };
             return creditCardDataModel;
         }
