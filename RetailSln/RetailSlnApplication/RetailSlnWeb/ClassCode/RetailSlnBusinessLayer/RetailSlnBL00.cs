@@ -89,7 +89,7 @@ namespace RetailSlnBusinessLayer
                     weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue);
                     heightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue);
                     lengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue);
-                    weightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "WeightCalc").ItemAttribValue);
+                    weightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue);
                     weightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue);
                     widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
                     if (itemModel != null)
@@ -204,7 +204,7 @@ namespace RetailSlnBusinessLayer
                                 OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                 OrderQty = orderQty,
                                 ProductCode = itemModel.ItemAttribModelsForDisplay["ProductCode"].ItemAttribValueForDisplay,
-                                WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "WeightCalc").ItemAttribValue),
+                                WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue),
                                 WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribUnitValue),
                                 WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribValue),
                                 WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWidth").ItemAttribValue),
@@ -380,8 +380,8 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
-        //GET DeliveryInfo
-        public DeliveryInfoModel DeliveryInfo(HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //GET DeliveryInfoBackup
+        public DeliveryInfoModel DeliveryInfoBackup(HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -431,7 +431,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         //POST Delivery Info
-        public PaymentInfoModel DeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public PaymentInfoModel DeliveryInfoBackup(DeliveryInfoDataModel deliveryInfoDataModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -524,6 +524,238 @@ namespace RetailSlnBusinessLayer
             {
                 ApplicationDataContext.CloseSqlConnection();
             }
+        }
+        //GET DeliveryInfo
+        public PaymentInfo1Model DeliveryInfo(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                PaymentInfo1Model paymentInfo1Model;
+                if (shoppingCartModel == null)
+                {
+                    paymentInfo1Model = new PaymentInfo1Model
+                    {
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            PropertyErrorsKVP = new List<KeyValuePair<string, List<string>>>
+                            {
+                                new KeyValuePair<string, List<string>>
+                                (
+                                    "",
+                                    new List<string>
+                                    {
+                                        "Invalid shopping cart (Null)",
+                                    }
+                                ),
+                            },
+                            ResponseTypeId = ResponseTypeEnum.Error,
+                            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                        },
+                    };
+                }
+                else
+                {
+                    if (shoppingCartModel.ShoppingCartItems.Count > 0 && shoppingCartModel.ShoppingCartTotalAmount > 0)
+                    {
+                        shoppingCartModel.Checkout = false;
+                        paymentInfo1Model = new PaymentInfo1Model
+                        {
+                            CouponPaymentModel = new CouponPaymentModel
+                            {
+                                CouponNumber = "",
+                            },
+                            DeliveryAddressModel = new DeliveryAddressModel
+                            {
+                                DeliveryAddressDataModel = new DemogInfoAddressModel
+                                {
+                                    BuildingTypeId = BuildingTypeEnum._,
+                                    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,//long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
+                                },
+                            },
+                            DeliveryDataModel = new DeliveryDataModel
+                            {
+                                AlternateTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+                                PrimaryTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+                            },
+                            DeliveryMethodModel = new DeliveryMethodModel
+                            {
+                                DeliveryMethods = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId,
+                            },
+                            GiftCertPaymentModel = new GiftCertPaymentModel
+                            {
+
+                            },
+                            PaymentModeModel = new PaymentModeModel
+                            {
+                                PaymentModes = new List<CodeDataModel>(),
+                            },
+                            ShoppingCartModel = shoppingCartModel,
+                            ResponseObjectModel = new ResponseObjectModel
+                            {
+                                ResponseMessages = new List<string>(),
+                                ResponseTypeId = ResponseTypeEnum.Success,
+                            },
+                        };
+                        ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel;
+                        var corpAccountId = applSessionObjectModel.CorpAcctModel.CorpAcctId;
+                        List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+                        int i, fromIndex, toIndex;
+                        if (applSessionObjectModel.CorpAcctModel.CreditSale)
+                        {
+                            fromIndex = 0;
+                            toIndex = 1;
+                        }
+                        else
+                        {
+                            fromIndex = 1;
+                            toIndex = codeDataModels.Count;
+                        }
+                        for (i = fromIndex; i < toIndex; i++)
+                        {
+                            paymentInfo1Model.PaymentModeModel.PaymentModes.Add(codeDataModels[i]);
+                        }
+                    }
+                    else
+                    {
+                        paymentInfo1Model = new PaymentInfo1Model
+                        {
+                            ResponseObjectModel = new ResponseObjectModel
+                            {
+                                PropertyErrorsKVP = new List<KeyValuePair<string, List<string>>>
+                                {
+                                    new KeyValuePair<string, List<string>>
+                                    (
+                                        "",
+                                        new List<string>
+                                        {
+                                            "Invalid shopping cart - no items",
+                                        }
+                                    ),
+                                },
+                                ResponseTypeId = ResponseTypeEnum.Error,
+                                ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                            },
+                        };
+                    }
+                }
+                return paymentInfo1Model;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        //POST Delivery Info
+        public void DeliveryInfo(PaymentInfo1Model paymentInfoModel, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                BuildDeliveryInfoLookup(paymentInfoModel, apiFlag, webFlag, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //UpdateDeliveryAddressInfo(paymentInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            #region
+            //try
+            //{
+            //    ApplicationDataContext.OpenSqlConnection();
+            //    SessionObjectModel sessionObjectModel = (SessionObjectModel)httpSessionStateBase["SessionObject"];
+            //    ShoppingCartModel shoppingCartModel = (ShoppingCartModel)httpSessionStateBase["ShoppingCartModel"];
+            //    shoppingCartModel.ShoppingCartSummaryItems = new List<ShoppingCartItemModel>
+            //    {
+            //        new ShoppingCartItemModel
+            //        {
+            //            ItemDesc = null,
+            //            ItemId = null,
+            //            ItemRate = null,
+            //            ItemRateBeforeDiscount = null,
+            //            ItemShortDesc = null,
+            //            OrderAmount = null,
+            //            OrderAmountBeforeDiscount = null,
+            //            OrderComments = null,
+            //            OrderQty = 1,
+            //            OrderDetailTypeId = OrderDetailTypeEnum.TotalOrderAmount,
+            //        }
+            //    };
+            //    paymentInfoModel.AlternateTelephoneTelephoneCode = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == paymentInfoModel.AlternateTelephoneDemogInfoCountryId).TelephoneCode;
+            //    paymentInfoModel.PrimaryTelephoneTelephoneCode = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == paymentInfoModel.PrimaryTelephoneDemogInfoCountryId).TelephoneCode;
+            //    ApplyDiscounts(shoppingCartModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    long personId = sessionObjectModel.PersonId;
+            //    AddAdditionalCharges(shoppingCartModel, paymentInfoModel, sessionObjectModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    AddTotals(shoppingCartModel.ShoppingCartSummaryItems, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
+            //    var deliveryMethodId = (int)paymentInfoModel.DeliveryMethodId;
+            //    CodeDataModel codeDataModel = codeDataModels.First(x => x.CodeDataNameId == deliveryMethodId);
+            //    var deliveryMethodName = codeDataModel.CodeDataDesc0;
+            //    codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+            //    var paymentModeId = (int)paymentInfoModel.PaymentModeId;
+            //    codeDataModel = codeDataModels.First(x => x.CodeDataNameId == paymentModeId);
+            //    var paymentModeName = codeDataModel.CodeDataDesc0;
+            //    paymentInfoModel.DeliveryMethodName = deliveryMethodName;
+            //    paymentInfoModel.PaymentModeName = paymentModeName;
+            //    if (paymentInfoModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
+            //    {
+            //        paymentInfoModel.CreateDeliveryAddress = false;
+            //        if (paymentInfoModel.PaymentModeId == PaymentModeEnum.COD)
+            //        {
+            //            paymentInfoModel.PaymentModeDesc = "Pay at the store at time of pickup";
+            //            paymentInfoModel.PaymentModeDesc = codeDataModel.CodeDataDesc3;
+            //        }
+            //        else
+            //        {
+            //            paymentInfoModel.PaymentModeDesc = "You will be redirected to a page outside of our domain";
+            //            paymentInfoModel.PaymentModeDesc = codeDataModel.CodeDataDesc2;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        paymentInfoModel.CreateDeliveryAddress = true;
+            //        if (paymentInfoModel.PaymentModeId == PaymentModeEnum.COD)
+            //        {
+            //            paymentInfoModel.PaymentModeDesc = "Our staff will call you and cofirm prior to shipping";
+            //        }
+            //        else
+            //        {
+            //            paymentInfoModel.PaymentModeDesc = "You will be redirected to a page outside of our domain";
+            //        }
+            //        paymentInfoModel.PaymentModeDesc = codeDataModel.CodeDataDesc2;
+            //    }
+            //    httpSessionStateBase["DeliveryInfoDataModel"] = paymentInfoModel;
+            //    PaymentInfoModel paymentInfoModel = new PaymentInfoModel
+            //    {
+            //        DeliveryInfoDataModel = paymentInfoModel,
+            //        GiftCertPaymentModel = new GiftCertPaymentModel(),
+            //        PaymentSummaryDataModel = new PaymentSummaryDataModel
+            //        {
+            //            EmailAddress = sessionObjectModel.EmailAddress,
+            //            UserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName,
+            //        },
+            //        ShoppingCartModel = shoppingCartModel,
+            //    };
+            //    return paymentInfoModel;
+            //}
+            //catch (Exception exception)
+            //{
+            //    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+            //    throw;
+            //}
+            //finally
+            //{
+            //    ApplicationDataContext.CloseSqlConnection();
+            //}
+            #endregion
         }
         //GET GiftCert
         public GiftCertModel GiftCert(HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

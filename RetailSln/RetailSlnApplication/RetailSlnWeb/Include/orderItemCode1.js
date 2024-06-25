@@ -70,6 +70,7 @@ function deliveryInfoSave_onclick() {
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/DeliveryInfo";
     var postData = $("#formDeliveryInfoData").serialize();
+    console.log(postData);
     $.ajax({
         url: url,
         type: "POST",

@@ -72,12 +72,12 @@ namespace RetailSlnConsoleApp1
                     }
                     else
                     {
-                        Console.WriteLine("Error 1 {0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), sqlDataReader["UploadImageFileName"].ToString(), sqlDataReader["ItemShortDesc"].ToString());
+                        Console.WriteLine("Error 1 {0}\t{1}\t{2}", itemId, sqlDataReader["ItemUniqueDesc"].ToString(), sqlDataReader["UploadImageFileName"].ToString());
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Error 2 {0}\t{1}\t{2}\t{3}", itemId, sqlDataReader["ItemTypeId"].ToString(), "Empty", sqlDataReader["ItemShortDesc"].ToString());
+                    Console.WriteLine("Error 2 {0}\t{1}\t{2}", itemId, sqlDataReader["ItemUniqueDesc"].ToString(), sqlDataReader["UploadImageFileName"].ToString());
                 }
             }
             sqlDataReader.Close();

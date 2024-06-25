@@ -1,6 +1,7 @@
 ﻿@using ArchitectureLibraryCacheData
 @using ArchitectureLibraryModels
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @{
     //DivineBija.in --> 97
@@ -8,7 +9,7 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
     int mainCategoryCount = 5;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string actionName, aspNetRoleName, controllerName;

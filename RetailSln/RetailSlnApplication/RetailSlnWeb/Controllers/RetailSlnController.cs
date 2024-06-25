@@ -206,8 +206,8 @@ namespace RetailSlnWeb.Controllers
                     bool loggedIn = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
                     if (loggedIn && Session["SessionObject"] != null)
                     {
-                        DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        actionResult = View("DeliveryInfo", deliveryInfoModel);
+                        PaymentInfo1Model paymentInfoModel = retailSlnBL.DeliveryInfo(checkoutModel.ShoppingCartModel, (SessionObjectModel)Session["SessionObject"], clientId, ipAddress, execUniqueId, loggedInUserId);
+                        actionResult = View("DeliveryInfo", paymentInfoModel);
                     }
                     else
                     {
@@ -266,7 +266,85 @@ namespace RetailSlnWeb.Controllers
                     var ctx = Request.GetOwinContext();
                     var authManager = ctx.Authentication;
                     authManager.SignIn(identity);
-                    DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
+                    PaymentInfo1Model paymentInfoModel = retailSlnBL.DeliveryInfo(shoppingCartModel, (SessionObjectModel)Session["SessionObject"], clientId, ipAddress, execUniqueId, loggedInUserId);
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", paymentInfoModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                    htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
+                loginUserProfModel.CaptchaAnswerLogin = null;
+                loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
+                loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                success = false;
+                processMessage = "ERROR???";
+                loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+            }
+            actionResult = Json(new { success, processMessage, htmlString });
+            return actionResult;
+        }
+
+        public ActionResult CheckoutBackup(LoginUserProfModel loginUserProfModel)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "Checkout";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ModelState.Clear();
+                TryValidateModel(loginUserProfModel);
+                SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (ModelState.IsValid)
+                {
+                    ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
+                    Session["SessionObject"] = sessionObjectModel;
+                    Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
+                    var identity = new ClaimsIdentity
+                    (
+                        new[]
+                        {
+                            new Claim(ClaimTypes.Name, sessionObjectModel.FirstName + " " + sessionObjectModel.LastName),
+                            new Claim(ClaimTypes.Email, sessionObjectModel.EmailAddress),
+                            //new Claim(ClaimTypes.Country, "India"),
+                        },
+                        "ApplicationCookie"
+                    );
+                    var ctx = Request.GetOwinContext();
+                    var authManager = ctx.Authentication;
+                    authManager.SignIn(identity);
+                    DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfoBackup(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", deliveryInfoModel);
@@ -342,7 +420,7 @@ namespace RetailSlnWeb.Controllers
                     var ctx = Request.GetOwinContext();
                     var authManager = ctx.Authentication;
                     authManager.SignIn(identity);
-                    DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfo(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    DeliveryInfoModel deliveryInfoModel = retailSlnBL.DeliveryInfoBackup(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", deliveryInfoModel);
@@ -429,7 +507,133 @@ namespace RetailSlnWeb.Controllers
         [Authorize]
         [AjaxAuthorize]
         [HttpPost]
-        public ActionResult DeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel)
+        public ActionResult DeliveryInfo(PaymentInfo1Model paymentInfoModel)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            bool success;
+            string processMessage, htmlString;
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            #region
+            //try
+            //{
+            //    ModelState.Clear();
+            //    TryValidateModel(paymentInfoModel);
+            //    TryValidateModel(paymentInfoModel.DeliveryAddressModel, "DeliveryAddressModel");
+            //        if (string.IsNullOrWhiteSpace(paymentInfoModel.DeliveryAddressModel.AddressLine1))
+            //        {
+            //            ModelState.AddModelError("DeliveryAddressModel.AddressLine1", "Address line 1");
+            //        }
+            //        if (string.IsNullOrWhiteSpace(paymentInfoModel.DeliveryAddressModel.CityName))
+            //        {
+            //            ModelState.AddModelError("DeliveryAddressModel.CityName", "City name");
+            //        }
+            //        if (string.IsNullOrWhiteSpace(paymentInfoModel.DeliveryAddressModel.ZipCode))
+            //        {
+            //            ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
+            //        }
+            //        if (paymentInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
+            //        {
+            //            ModelState.AddModelError("DeliveryAddressModel.DemogInfoSubDivisionId", "State");
+            //        }
+            //        if (paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId == null)
+            //        {
+            //            ModelState.AddModelError("DeliveryAddressModel.DemogInfoCountryId", "Country");
+            //        }
+            //        if (paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId != null && !string.IsNullOrWhiteSpace(paymentInfoModel.DeliveryAddressModel.ZipCode))
+            //        {
+            //            Regex regex = new Regex(DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId.Value).PostalCodeRegEx);
+            //            if (!regex.IsMatch(paymentInfoModel.DeliveryAddressModel.ZipCode))
+            //            {
+            //                ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
+            //            }
+            //        }
+            //    if (ModelState.IsValid)
+            //    {
+            //        //Get the Address Info based on Zip and fill in the rest
+            //        SearchDataModel searchDataModel = new SearchDataModel
+            //        {
+            //            SearchType = "ZipCode",
+            //            SearchKeyValuePairs = new Dictionary<string, string>
+            //                {
+            //                    { "DemogInfoCountryId", paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId.ToString() },
+            //                    { "ZipCode", paymentInfoModel.DeliveryAddressModel.ZipCode },
+            //                },
+            //        };
+            //        List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //        foreach (var sqlQueryResult in sqlQueryResults)
+            //        {
+            //            if (
+            //                sqlQueryResult["DemogInfoCountryId"] == paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId.ToString()
+            //                && sqlQueryResult["ZipCode"] == paymentInfoModel.DeliveryAddressModel.ZipCode
+            //               )
+            //            {
+            //                paymentInfoModel.DeliveryAddressModel.CityName = sqlQueryResult["CityName"];
+            //                paymentInfoModel.DeliveryAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
+            //                paymentInfoModel.DeliveryAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
+            //                paymentInfoModel.DeliveryAddressModel.CountyName = sqlQueryResult["CountyName"];
+            //                paymentInfoModel.DeliveryAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
+            //                paymentInfoModel.DeliveryAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
+            //                paymentInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
+            //                paymentInfoModel.DeliveryAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
+            //                paymentInfoModel.DeliveryAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
+            //                paymentInfoModel.DeliveryAddressModel.StateAbbrev = sqlQueryResult["StateAbbrev"];
+            //            }
+            //        }
+            //    }
+            //    if (ModelState.IsValid)
+            //    {
+            //        PaymentInfoModel paymentInfoModel = retailSlnBL.DeliveryInfo(null, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //        if (ModelState.IsValid)
+            //        {
+            //            success = true;
+            //            processMessage = "SUCCESS!!!";
+            //            htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo", paymentInfoModel);
+            //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+            //        }
+            //        else
+            //        {
+            //            success = false;
+            //            processMessage = "ERROR???";
+            //            htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", paymentInfoModel);
+            //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Payment BL Error");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        success = false;
+            //        processMessage = "ERROR???";
+            //        htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", paymentInfoModel);
+            //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Validation Error");
+            //    }
+            //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            //}
+            //catch (Exception exception)
+            //{
+            //    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+            //    success = false;
+            //    processMessage = "ERROR???";
+            //    archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    paymentInfoModel.ResponseObjectModel = new ResponseObjectModel
+            //    {
+            //        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+            //    };
+            //    htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", paymentInfoModel);
+            //}
+            #endregion
+            retailSlnBL.DeliveryInfo(paymentInfoModel, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
+            success = false;
+            processMessage = "ERROR???";
+            htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", paymentInfoModel);
+            actionResult = Json(new { success, processMessage, htmlString });
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        public ActionResult DeliveryInfoBackup(DeliveryInfoDataModel deliveryInfoDataModel)
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -444,34 +648,34 @@ namespace RetailSlnWeb.Controllers
                 ModelState.Clear();
                 TryValidateModel(deliveryInfoDataModel);
                 TryValidateModel(deliveryInfoDataModel.DeliveryAddressModel, "DeliveryAddressModel");
-                    if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.AddressLine1))
-                    {
-                        ModelState.AddModelError("DeliveryAddressModel.AddressLine1", "Address line 1");
-                    }
-                    if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.CityName))
-                    {
-                        ModelState.AddModelError("DeliveryAddressModel.CityName", "City name");
-                    }
-                    if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
+                if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.AddressLine1))
+                {
+                    ModelState.AddModelError("DeliveryAddressModel.AddressLine1", "Address line 1");
+                }
+                if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.CityName))
+                {
+                    ModelState.AddModelError("DeliveryAddressModel.CityName", "City name");
+                }
+                if (string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
+                {
+                    ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
+                }
+                if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
+                {
+                    ModelState.AddModelError("DeliveryAddressModel.DemogInfoSubDivisionId", "State");
+                }
+                if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId == null)
+                {
+                    ModelState.AddModelError("DeliveryAddressModel.DemogInfoCountryId", "Country");
+                }
+                if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId != null && !string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
+                {
+                    Regex regex = new Regex(DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.Value).PostalCodeRegEx);
+                    if (!regex.IsMatch(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
                     {
                         ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
                     }
-                    if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
-                    {
-                        ModelState.AddModelError("DeliveryAddressModel.DemogInfoSubDivisionId", "State");
-                    }
-                    if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId == null)
-                    {
-                        ModelState.AddModelError("DeliveryAddressModel.DemogInfoCountryId", "Country");
-                    }
-                    if (deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId != null && !string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
-                    {
-                        Regex regex = new Regex(DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == deliveryInfoDataModel.DeliveryAddressModel.DemogInfoCountryId.Value).PostalCodeRegEx);
-                        if (!regex.IsMatch(deliveryInfoDataModel.DeliveryAddressModel.ZipCode))
-                        {
-                            ModelState.AddModelError("DeliveryAddressModel.ZipCode", "Postal Code");
-                        }
-                    }
+                }
                 if (ModelState.IsValid)
                 {
                     //Get the Address Info based on Zip and fill in the rest
@@ -507,7 +711,7 @@ namespace RetailSlnWeb.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    PaymentInfoModel paymentInfoModel = retailSlnBL.DeliveryInfo(deliveryInfoDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    PaymentInfoModel paymentInfoModel = retailSlnBL.DeliveryInfoBackup(deliveryInfoDataModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
                         success = true;

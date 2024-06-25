@@ -135,8 +135,8 @@ namespace RetailSlnBusinessLayer
                             TelephoneCountryId = personModel.AspNetUserModel.TelephoneCountryId.Value,
                             CorpAcctModel = personExtn1Model.CorpAcctModel,
                             DefaultDeliveryDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                            DeliveryCountrys = RetailSlnCache.DeliveryCountrys,
-                            DeliveryCountryStates = RetailSlnCache.DeliveryCountryStates,
+                            DeliveryCountrys = RetailSlnCache.DeliveryDemogInfoCountrys,
+                            DeliveryCountryStates = RetailSlnCache.DeliveryDemogInfoCountryStates,
                             DeliveryMethods = RetailSlnCache.DeliveryMethods,
                             PaymentModes = personExtn1Model.CorpAcctModel.CreditSale ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
                             ResponseObjectModel = new ResponseObjectModel
@@ -209,8 +209,8 @@ namespace RetailSlnBusinessLayer
                         TelephoneCountryId = personModel.AspNetUserModel.TelephoneCountryId.Value,
                         CorpAcctModel = personExtn1Model.CorpAcctModel,
                         DefaultDeliveryDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                        DeliveryCountrys = RetailSlnCache.DeliveryCountrys,
-                        DeliveryCountryStates = RetailSlnCache.DeliveryCountryStates,
+                        DeliveryCountrys = RetailSlnCache.DeliveryDemogInfoCountrys,
+                        DeliveryCountryStates = RetailSlnCache.DeliveryDemogInfoCountryStates,
                         DeliveryMethods = RetailSlnCache.DeliveryMethods,
                         PaymentModes = personExtn1Model.CorpAcctModel.CreditSale ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
                         ResponseObjectModel = new ResponseObjectModel

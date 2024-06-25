@@ -33,12 +33,13 @@ namespace RetailSlnCacheData
         public static List<CategoryItemHierModel> CategoryItemHierModels { set; get; }
         public static List<DemogInfoCountryModel> DeliveryDemogInfoCountryModels { set; get; }
         public static List<SelectListItem> DeliveryDemogInfoCountrySelectListItems { set; get; }
+        public static Dictionary<long, List<SelectListItem>> DeliveryDemogInfoCountrySubDivisionSelectListItems { set; get; }
         public static List<ApiCodeDataModel> DeliveryMethods { set; get; }
         public static List<ApiCodeDataModel> PaymentMethodsCreditSale { set; get; }
         public static List<ApiCodeDataModel> PaymentMethods { set; get; }
         public static long DefaultDeliveryDemogInfoCountryId { set; get; }
-        public static List<KeyValuePair<long, string>> DeliveryCountrys { set; get; }
-        public static List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryCountryStates { set; get; }
+        public static List<KeyValuePair<long, string>> DeliveryDemogInfoCountrys { set; get; }
+        public static List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryDemogInfoCountryStates { set; get; }
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
@@ -57,19 +58,20 @@ namespace RetailSlnCacheData
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoSubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
+            DeliveryDemogInfoCountrySubDivisionSelectListItems = deliveryDemogInfoSubDivisionSelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
             CategoryLayoutModels = categoryLayoutModels;
             DeliveryMethods = deliveryMethods;
             PaymentMethodsCreditSale = paymentMethodsCreditSale;
             PaymentMethods = paymentMethods;
-            DeliveryCountrys = deliveryCountrys;
-            DeliveryCountryStates = deliveryCountryStates;
+            DeliveryDemogInfoCountrys = deliveryCountrys;
+            DeliveryDemogInfoCountryStates = deliveryCountryStates;
             BusinessInfoModel = businessInfoModel;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoCountrySubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -153,10 +155,13 @@ namespace RetailSlnCacheData
             DemogInfoCountryModel demogInfoCountryModel;
             deliveryDemogInfoCountryModels = new List<DemogInfoCountryModel>();
             deliveryDemogInfoCountrySelectListItems = new List<SelectListItem>();
+            deliveryDemogInfoCountrySubDivisionSelectListItems = new Dictionary<long, List<SelectListItem>>();
             string deliveryInfoDemogInfoCountryIds = ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DemogInfoCountryIds");
+            List<SelectListItem> deliveryDemogInfoSubDivisionSelectListItems;
             foreach (var deliveryInfoDemogInfoCountryId in deliveryInfoDemogInfoCountryIds.Split(';'))
             {
                 deliveryDemogInfoCountryModels.Add(demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == long.Parse(deliveryInfoDemogInfoCountryId)));
+                deliveryDemogInfoCountrySubDivisionSelectListItems[demogInfoCountryModel.DemogInfoCountryId] = (deliveryDemogInfoSubDivisionSelectListItems = new List<SelectListItem>());
                 deliveryDemogInfoCountrySelectListItems.Add
                 (
                     new SelectListItem

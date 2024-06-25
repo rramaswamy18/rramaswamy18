@@ -1,0 +1,24 @@
+﻿@model RetailSlnModels.CouponPaymentModel
+@{
+    var htmlFieldPrefix = ((System.Web.Mvc.ViewDataDictionary)(ViewData)).TemplateInfo.HtmlFieldPrefix;
+    htmlFieldPrefix += htmlFieldPrefix == "" ? "" : "_";
+}
+<style>
+    #@(htmlFieldPrefix)CouponNumber-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<table style="padding-left: 0px;">
+    <tr>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            @Html.LabelFor(m => m.CouponNumber, new { @class = "col-form-label", style = "padding-left: 0px; text-align: left;" })@*&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>*@
+        </td>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            @Html.TextBoxFor(m => m.CouponNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.CouponNumber), style = "float: left; padding-right: 9px;", type = "password" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CouponNumber, "", new { id = htmlFieldPrefix + "CouponNumber-error" }).ToHtmlString()))
+        </td>
+    </tr>
+</table>

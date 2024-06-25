@@ -289,7 +289,7 @@ namespace RetailSlnDataLayer
                         {
                             ItemBundleItemId = long.Parse(sqlDataReader["ItemBundleItemId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            BundledItemId = long.Parse(sqlDataReader["BundledItemId"].ToString()),
+                            BundleItemId = long.Parse(sqlDataReader["BundleItemId"].ToString()),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                         }
@@ -528,7 +528,7 @@ namespace RetailSlnDataLayer
                     (
                         new ItemBundleItemModel
                         {
-                            BundledItemId = long.Parse(sqlDataReader["BundledItemId"].ToString()),
+                            BundleItemId = long.Parse(sqlDataReader["BundleItemId"].ToString()),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
                         }

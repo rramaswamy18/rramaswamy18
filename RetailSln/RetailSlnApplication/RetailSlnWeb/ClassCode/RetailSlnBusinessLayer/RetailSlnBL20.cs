@@ -517,7 +517,7 @@ namespace RetailSlnBusinessLayer
                 };
                 foreach (var itemBundleItemModel in itemBundleItemListModel.ItemBundleItemModels)
                 {
-                    itemBundleItemModel.BundledItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemBundleItemModel.BundledItemId);
+                    itemBundleItemModel.BundledItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemBundleItemModel.BundleItemId);
                 }
                 return itemBundleItemListModel;
             }

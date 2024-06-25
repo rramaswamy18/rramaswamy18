@@ -1,9 +1,10 @@
 ﻿@model OrderCategoryItemModel
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @{
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
 }
 <div id="divOrderItem">
 </div>

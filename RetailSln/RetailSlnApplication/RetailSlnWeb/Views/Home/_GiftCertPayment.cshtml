@@ -1,0 +1,58 @@
+﻿@model RetailSlnModels.GiftCertPaymentModel
+@{
+    var htmlFieldPrefix = ((System.Web.Mvc.ViewDataDictionary)(ViewData)).TemplateInfo.HtmlFieldPrefix;
+    htmlFieldPrefix += htmlFieldPrefix == "" ? "" : "_";
+}
+<style>
+    #@(htmlFieldPrefix)GiftCertNumber-error {
+        color: #ff0000;
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+    }
+</style>
+<table style="padding-left: 0px;">
+    @*<tr>
+            <td colspan="4" style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+                <h2 class="text-left mb-4" style="color: #a54000; font-size: 15px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+                    Gift&nbsp;&nbsp;Cert...
+                </h2>
+            </td>
+        </tr>*@
+    <tr>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            @Html.LabelFor(m => m.GiftCertNumber, new { @class = "col-form-label", style = "padding-left: 0px; text-align: left;" })@*&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>*@
+        </td>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            @Html.TextBoxFor(m => m.GiftCertNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertNumber), style = "float: left; padding-right: 9px;", type = "password" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertNumber, "", new { id = htmlFieldPrefix + "GiftCertNumber-error" }).ToHtmlString()))
+        </td>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            <button class="btn btn-primary" id="giftCertNumber" onmouseout="javascript: return showHideForHide('@(htmlFieldPrefix)GiftCertNumber', 'password');" onmouseover="javascript: return showHideForShow('@(htmlFieldPrefix)GiftCertNumber', 'text');" type="button" style="float: left; width: 50px;">
+                <span class="fa fa-eye-slash icon"></span>
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            @Html.LabelFor(m => m.GiftCertKey, new { @class = "col-form-label", style = "padding-left: 0px; text-align: left;" })@*&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>*@
+        </td>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            @Html.TextBoxFor(m => m.GiftCertKey, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertKey), style = "float: left; padding-right: 9px;", type = "password" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.GiftCertKey, "", new { id = htmlFieldPrefix + "GiftCertKey-error" }).ToHtmlString()))
+        </td>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+            <button class="btn btn-primary" id="giftCertKey" onmouseout="javascript: return showHideForHide('@(htmlFieldPrefix)GiftCertKey', 'password');" onmouseover="javascript: return showHideForShow('@(htmlFieldPrefix)GiftCertKey', 'text');" type="button" style="float: left; width: 50px;">
+                <span class="fa fa-eye-slash icon"></span>
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-bottom: 9px; padding-left: 0px; padding-right: 12px;">
+        </td>
+        <td colspan="2" style="padding-left: 0px; padding-right: 12px;">
+            <button class="btn btn-primary" id="giftCertBalance" onclick="javascript: return giftCertBalance_onclick();" style="font-weight: bold;">Get Gift Cert Balance</button>
+            <span id="giftCertBalanceAmount" style="color: #a54000; font-family: Arial; font-size: 14px; font-weight: bold;">$999.99</span>
+        </td>
+    </tr>
+</table>

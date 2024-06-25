@@ -12,7 +12,7 @@ namespace RetailSlnModels
 
         public long ClientId { set; get; }
 
-        public long BundledItemId { set; get; }
+        public long BundleItemId { set; get; }
 
         public ItemModel BundledItemModel { set; get; }
 

@@ -1,4 +1,4 @@
-  --USE [RetailSln]
+--USE [RetailSln]
 --GO
 TRUNCATE TABLE ArchLib.ExceptionLog
 

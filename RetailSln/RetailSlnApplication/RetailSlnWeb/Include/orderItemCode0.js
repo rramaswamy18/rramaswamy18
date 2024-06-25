@@ -131,7 +131,7 @@ function categoryId_onclick(categoryId, pageNum, baseUrl) {
             if (responseData.success) {
                 document.getElementById("selectedCategoryDesc").innerHTML = "";
                 var menuItemObject, menuItemObjectA, menuCategoryIdObject, menuCategoryIdObjectA;
-                for (var i = 1; i < categoryCount; i++) {
+                for (var i = 1; i <= categoryCount; i++) {
                     menuItemObject = document.getElementById("menuItem" + i);
                     menuItemObjectA = document.getElementById("menuItemA" + i);
                     menuCategoryIdObject = document.getElementById("menuCategoryId" + i);

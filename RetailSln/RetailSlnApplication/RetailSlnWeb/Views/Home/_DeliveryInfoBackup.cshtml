@@ -1,0 +1,28 @@
+﻿@model RetailSlnModels.DeliveryInfoModel
+@{
+    Model.ShoppingCartModel.Checkout = false;
+    Model.ShoppingCartModel.ShowDiscountsAdditionalCharges = false;
+}
+<form id="formPaymentInfo3" action="/Home/PaymentInfo3" method="post" asp-antiforgery="true">
+    <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" />
+    <input type="hidden" id="razorpay_order_id" name="razorpay_order_id" />
+    <input type="hidden" id="razorpay_signature" name="razorpay_signature" />
+    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" style="display: none;">Submit</button>
+</form>
+<div class="container" id="divOrderProcess">
+    <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+        Delivery&nbsp;&nbsp;Info
+    </h2>
+    <div style="float: left; padding-right: 18px; text-align: left; width: 50%;">
+        @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+    </div>
+    <div style="float: left; padding-left: 18px; text-align: left; width: 50%; ">
+        <form id="formDeliveryInfoData">
+            @Html.Partial("_DeliveryInfoData", Model.DeliveryInfoDataModel)
+        </form>
+        <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process</button>
+    </div>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="~/Include/orderItemCode1.js" type="text/javascript"></script>
+<script src="~/Include/searchDataCode.js" type="text/javascript"></script>

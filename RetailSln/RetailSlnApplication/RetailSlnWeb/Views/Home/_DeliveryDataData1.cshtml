@@ -1,0 +1,45 @@
+﻿@model RetailSlnModels.DeliveryDataModel
+@using ArchitectureLibraryCacheData
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    <table style="padding: 0px;">
+        <tr>
+            <th colspan="2" style="padding-right: 5px; vertical-align: top;">
+                @Html.LabelFor(m => m.PrimaryTelephoneNum, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+            </th>
+        </tr>
+        <tr>
+            <td style="padding-right: 5px; vertical-align: top;">
+                @Html.DropDownListFor(m => m.PrimaryTelephoneDemogInfoCountryId, new SelectList(DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.PrimaryTelephoneDemogInfoCountryId), "---", new { @class = "form-control", style = "font-size: 13px; width: 171px;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PrimaryTelephoneDemogInfoCountryId, "", new { id = "PrimaryTelephoneDemogInfoCountryId-error" }).ToHtmlString()))
+            </td>
+            <td style="padding-right: 5px; vertical-align: top;">
+                @Html.TextBoxFor(m => m.PrimaryTelephoneNum, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.PrimaryTelephoneNum), style = "width: 153px;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PrimaryTelephoneNum, "", new { id = "PrimaryTelephoneNum-error" }).ToHtmlString()))
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    <table style="padding: 0px;">
+        <tr>
+            <th colspan="2" style="padding-right: 5px;">
+                @Html.LabelFor(m => m.AlternateTelephoneNum, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+            </th>
+        </tr>
+        <tr>
+            <td style="padding-right: 5px; vertical-align: top;">
+                @Html.DropDownListFor(m => m.AlternateTelephoneDemogInfoCountryId, new SelectList(DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.AlternateTelephoneDemogInfoCountryId), "---", new { @class = "form-control", style = "font-size: 13px; width: 171px;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AlternateTelephoneDemogInfoCountryId, "", new { id = "AlternateTelephoneDemogInfoCountryId-error" }).ToHtmlString()))
+            </td>
+            <td style="vertical-align: top;">
+                @Html.TextBoxFor(m => m.AlternateTelephoneNum, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.AlternateTelephoneNum), style = "width: 153px;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AlternateTelephoneNum, "", new { id = "AlternateTelephoneNum-error" }).ToHtmlString()))
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    @Html.LabelFor(m => m.DeliveryInstructions, new { @class = "col-form-label" })
+    @Html.TextAreaFor(m => m.DeliveryInstructions, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(m => m.DeliveryInstructions) + " (if any...)", rows = "5", style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryInstructions, "", new { id = "DeliveryInstructions-error" }).ToHtmlString()))
+</div>
