@@ -1,0 +1,100 @@
+﻿@model RetailSlnModels.PaymentInfo1Model
+@using RetailSlnEnumerations
+<table style="padding: 0px;">
+    <tr>
+        <td style="padding: 0px; padding-right: 15px; vertical-align: top;">
+            <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Order#
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.OrderSummaryModel.OrderHeaderId
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Delivery Address
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.DeliveryAddressModel.AddressLine1
+                        <br />
+                        @Model.DeliveryAddressModel.CityName
+                        <br />
+                        @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
+                        <br />
+                        @Model.DeliveryAddressModel.CountryDesc
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Instructions
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.DeliveryDataModel.DeliveryInstructions
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="padding: 0px; vertical-align: top;">
+            <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Email Address
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.OrderSummaryModel.EmailAddress
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Name
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top; ">
+                        Delivery Method
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.DeliveryMethodModel.DeliveryMethodDesc
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Payment Mode
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.PaymentModeModel.PaymentModeDesc
+                        <br />
+                        <span style="color: #ff0000;">@Model.PaymentModeModel.PaymentModeDesc1</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        @switch (Model.PaymentModeModel.PaymentModeId)
+                        {
+                            case PaymentModeEnum.COD:
+                            case PaymentModeEnum.CreditSale:
+                                <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Continue Process</button>
+                                break;
+                            case PaymentModeEnum.PaymentGateway:
+                                <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button>
+                                break;
+                            case PaymentModeEnum.ProcessCreditCard:
+                                <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Credit Card - Processing</button>
+                                break;
+                        }
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+@{
+    Model.ShoppingCartModel.BackToTop = false;
+    Model.ShoppingCartModel.Checkout = false;
+}
+@Html.Partial("_ShoppingCart", Model.ShoppingCartModel)

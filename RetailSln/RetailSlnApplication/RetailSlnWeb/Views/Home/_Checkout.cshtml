@@ -1,15 +1,6 @@
 ﻿@model RetailSlnModels.CheckoutModel
-@{
-    Model.ShoppingCartModel.Checkout = false;
-    Model.ShoppingCartModel.ShowDiscountsAdditionalCharges = false;
-}
-<form id="formPaymentInfo3" action="/Home/PaymentInfo3" method="post" asp-antiforgery="true">
-    <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" />
-    <input type="hidden" id="razorpay_order_id" name="razorpay_order_id" />
-    <input type="hidden" id="razorpay_signature" name="razorpay_signature" />
-    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" style="display: none;">Submit</button>
-</form>
-<div class="center" id="divOrderProcess">
+<div class="container center" id="divOrderProcess">
+    @Html.Partial("_PaymentInfo3")
     <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
         Checkout
     </h2>
@@ -17,7 +8,6 @@
         <h3 style="font-weight: bold;">L O G I N <span style="color: #ff0000;">(Returning users)</span></h3>
         @if (!ViewData.ModelState.IsValid)
         {
-            @*<div id="divLoginUserProfScrollIntoView" style="font-weight: bold;"></div>*@
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
         }
         else
@@ -58,7 +48,11 @@
         }
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
         <div id="divShoppingCart">
-            @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+            @{
+                Model.PaymentInfoModel.ShoppingCartModel.BackToTop = false;
+                Model.PaymentInfoModel.ShoppingCartModel.Checkout = false;
+            }
+            @Html.Partial("_ShoppingCart", Model.PaymentInfoModel.ShoppingCartModel)
         </div>
     </div>
     <div class="col-md-6" style="float: left; padding-left: 18px; text-align: left;">

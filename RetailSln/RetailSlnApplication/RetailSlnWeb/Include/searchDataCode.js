@@ -1,6 +1,8 @@
-﻿function searchDataCityName() {
-    var cityNameData = document.getElementById("DeliveryAddressModel_CityName").value;
-    var searchData = '{ "SearchType":"CityName", "SearchKeyValuePairs": { "DemogInfoCountryId":"' + document.getElementById("DeliveryAddressModel_DemogInfoCountryId").value + '", "CityName":"' + cityNameData + '"} }';
+﻿//Sriramajayam
+//searchDataCode.js
+function searchDataCityName(htmlFieldPrefix) {
+    var cityNameData = document.getElementById(htmlFieldPrefix + "CityName").value;
+    var searchData = '{ "SearchType":"CityName", "SearchKeyValuePairs": { "DemogInfoCountryId":"' + document.getElementById(htmlFieldPrefix + "DemogInfoCountryId").value + '", "CityName":"' + cityNameData + '"} }';
     $.ajax({
         url: "/" + "GeneralUtility" + "/" + "SearchData",
         type: "POST",
@@ -24,9 +26,9 @@
         }
     });
 }
-function searchDataZipCode() {
-    var zipCodeData = document.getElementById("DeliveryAddressModel_ZipCode").value;
-    var searchData = '{ "SearchType":"ZipCode", "SearchKeyValuePairs": { "DemogInfoCountryId":' + document.getElementById("DeliveryAddressModel_DemogInfoCountryId").value + ', "ZipCode":"' + zipCodeData + '"} }';
+function searchDataZipCode(htmlFieldPrefix) {
+    var zipCodeData = document.getElementById(htmlFieldPrefix + "ZipCode").value;
+    var searchData = '{ "SearchType":"ZipCode", "SearchKeyValuePairs": { "DemogInfoCountryId":' + document.getElementById(htmlFieldPrefix + "DemogInfoCountryId").value + ', "ZipCode":"' + zipCodeData + '"} }';
     $.ajax({
         url: "/" + "GeneralUtility" + "/" + "SearchData",
         type: "POST",
@@ -68,7 +70,7 @@ function demogInfoCountry_onchage(demogInfoCountryElement) {
             if (responseData.success) {
                 document.getElementById("PrimaryTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
                 document.getElementById("AlternateTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
-                document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId").innerHTML = responseData.htmlString;
+                document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId").innerHTML = responseData.htmlString;
             }
             else {
                 alert("Error while loading states");
@@ -81,13 +83,13 @@ function demogInfoCountry_onchage(demogInfoCountryElement) {
     });
     return false;
 }
-function cityName_oninput() {
+function cityName_oninput(htmlFieldPrefix) {
     var i, cityNameZipCodeDataListIdsArray, cityNameZipCodeDataListIdArray;
     document.getElementById("zipCodeSuccess").style.display = "none";
     document.getElementById("zipCodeFailure").style.display = "block";
     document.getElementById("cityNameSuccess").style.display = "none";
     document.getElementById("cityNameFailure").style.display = "block";
-    var cityNameData = document.getElementById("DeliveryAddressModel_CityName").value;
+    var cityNameData = document.getElementById(htmlFieldPrefix + "CityName").value;
     if (cityNameData.length >= 3) {
         if (cityNameData.indexOf(" ; ") > -1) {
             var indexOf = cityNameData.indexOf(" ; ");
@@ -96,9 +98,9 @@ function cityName_oninput() {
             indexOf = cityNameData.indexOf(" ; ");
             var zipCodeValue = cityNameData.substr(0, indexOf);
             var subDivisionDesc = cityNameData.substr(indexOf + 3);
-            document.getElementById("DeliveryAddressModel_ZipCode").value = zipCodeValue;
-            document.getElementById("DeliveryAddressModel_CityName").value = cityNameValue;
-            var selectObject = document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId");
+            document.getElementById(htmlFieldPrefix + "ZipCode").value = zipCodeValue;
+            document.getElementById(htmlFieldPrefix + "CityName").value = cityNameValue;
+            var selectObject = document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId");
             for (i = 0; i < selectObject.options.length; i++) {
                 if (selectObject.options[i].text == subDivisionDesc) {
                     selectObject.selectedIndex = i;
@@ -114,14 +116,14 @@ function cityName_oninput() {
             for (i = 0; i < cityNameZipCodeDataListIdsArray.length; i++) {
                 cityNameZipCodeDataListIdArray = cityNameZipCodeDataListIdsArray[i].split("$");
                 if (cityNameZipCodeDataListIdArray[0] == cityNameValue && cityNameZipCodeDataListIdArray[1] == zipCodeValue) {
-                    document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = cityNameZipCodeDataListIdArray[2];
-                    document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = cityNameZipCodeDataListIdArray[2];
-                    document.getElementById("DeliveryAddressModel_DemogInfoCityId").value = cityNameZipCodeDataListIdArray[3];
+                    document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = cityNameZipCodeDataListIdArray[2];
+                    document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = cityNameZipCodeDataListIdArray[2];
+                    document.getElementById(htmlFieldPrefix + "DemogInfoCityId").value = cityNameZipCodeDataListIdArray[3];
                 }
             }
         }
         else {
-            searchDataCityName();
+            searchDataCityName(htmlFieldPrefix);
         }
     }
     else {
@@ -130,13 +132,13 @@ function cityName_oninput() {
         //}
     }
 }
-function zipCode_oninput() {
+function zipCode_oninput(htmlFieldPrefix) {
     var i, cityNameZipCodeDataListIdsArray, cityNameZipCodeDataListIdArray;
     document.getElementById("zipCodeSuccess").style.display = "none";
     document.getElementById("zipCodeFailure").style.display = "block";
     document.getElementById("cityNameSuccess").style.display = "none";
     document.getElementById("cityNameFailure").style.display = "block";
-    var zipCodeData = document.getElementById("DeliveryAddressModel_ZipCode").value;
+    var zipCodeData = document.getElementById(htmlFieldPrefix + "ZipCode").value;
     if (zipCodeData.length >= 3) {
         if (zipCodeData.indexOf(" ; ") > -1) {
             var indexOf = zipCodeData.indexOf(" ; ");
@@ -145,9 +147,9 @@ function zipCode_oninput() {
             indexOf = zipCodeData.indexOf(" ; ");
             var cityNameValue = zipCodeData.substr(0, indexOf);
             var subDivisionDesc = zipCodeData.substr(indexOf + 3);
-            document.getElementById("DeliveryAddressModel_ZipCode").value = zipCodeValue;
-            document.getElementById("DeliveryAddressModel_CityName").value = cityNameValue;
-            var selectObject = document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId");
+            document.getElementById(htmlFieldPrefix + "ZipCode").value = zipCodeValue;
+            document.getElementById(htmlFieldPrefix + "CityName").value = cityNameValue;
+            var selectObject = document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId");
             for (i = 0; i < selectObject.options.length; i++) {
                 if (selectObject.options[i].text == subDivisionDesc) {
                     selectObject.selectedIndex = i;
@@ -163,14 +165,14 @@ function zipCode_oninput() {
             for (i = 0; i < cityNameZipCodeDataListIdsArray.length; i++) {
                 cityNameZipCodeDataListIdArray = cityNameZipCodeDataListIdsArray[i].split("$");
                 if (cityNameZipCodeDataListIdArray[0] == zipCodeValue) {
-                    document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = cityNameZipCodeDataListIdArray[2];
-                    document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = cityNameZipCodeDataListIdArray[2];
-                    document.getElementById("DeliveryAddressModel_DemogInfoCityId").value = cityNameZipCodeDataListIdArray[3];
+                    document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = cityNameZipCodeDataListIdArray[2];
+                    document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = cityNameZipCodeDataListIdArray[2];
+                    document.getElementById(htmlFieldPrefix + "DemogInfoCityId").value = cityNameZipCodeDataListIdArray[3];
                 }
             }
         }
         else {
-            searchDataZipCode();
+            searchDataZipCode(htmlFieldPrefix);
         }
     }
     else {
@@ -179,23 +181,23 @@ function zipCode_oninput() {
         //}
     }
 }
-function zipCode_onblur() {
+function zipCode_onblur(htmlFieldPrefix) {
     document.getElementById("zipCodeSuccess").style.display = "none";
     document.getElementById("zipCodeFailure").style.display = "block";
     document.getElementById("cityNameSuccess").style.display = "none";
     document.getElementById("cityNameFailure").style.display = "block";
-    var zipCodeData = document.getElementById("DeliveryAddressModel_ZipCode").value;
+    var zipCodeData = document.getElementById(htmlFieldPrefix + "ZipCode").value;
     if (zipCodeData == "") {
-        document.getElementById("DeliveryAddressModel_ZipCode").value = "";
-        document.getElementById("DeliveryAddressModel_CityName").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoCityId").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId").value = "";
+        document.getElementById(htmlFieldPrefix + "ZipCode").value = "";
+        document.getElementById(htmlFieldPrefix + "CityName").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoCityId").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId").value = "";
     }
     else {
         var i, j;
-        var searchData = '{ "SearchType":"ZipCode", "SearchKeyValuePairs": { "DemogInfoCountryId":' + document.getElementById("DeliveryAddressModel_DemogInfoCountryId").value + ', "ZipCode":"' + zipCodeData + '"} }';
+        var searchData = '{ "SearchType":"ZipCode", "SearchKeyValuePairs": { "DemogInfoCountryId":' + document.getElementById(htmlFieldPrefix + "DemogInfoCountryId").value + ', "ZipCode":"' + zipCodeData + '"} }';
         $.ajax({
             url: "/" + "GeneralUtility" + "/" + "SearchData",
             type: "POST",
@@ -205,7 +207,7 @@ function zipCode_onblur() {
             success: function (responseData, textStatus, request) {
                 for (i = 0; i < responseData.length; i++) {
                     if (responseData[i].ZipCode == zipCodeData) {
-                        var selectObject = document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId");
+                        var selectObject = document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId");
                         for (j = 0; i < selectObject.options.length; j++) {
                             if (selectObject.options[j].text == responseData[i].SubDivisionDesc) {
                                 selectObject.selectedIndex = j;
@@ -216,11 +218,11 @@ function zipCode_onblur() {
                                 break;
                             }
                         }
-                        document.getElementById("DeliveryAddressModel_ZipCode").value = responseData[i].ZipCode;
-                        document.getElementById("DeliveryAddressModel_CityName").value = responseData[i].CityName;
-                        document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = responseData[i].DemogInfoZipId;
-                        document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = responseData[i].DemogInfoZipPlusId;
-                        document.getElementById("DeliveryAddressModel_DemogInfoCityId").value = responseData[i].DemogInfoCityId;
+                        document.getElementById(htmlFieldPrefix + "ZipCode").value = responseData[i].ZipCode;
+                        document.getElementById(htmlFieldPrefix + "CityName").value = responseData[i].CityName;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = responseData[i].DemogInfoZipId;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = responseData[i].DemogInfoZipPlusId;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoCityId").value = responseData[i].DemogInfoCityId;
                     }
                 }
             },
@@ -230,23 +232,23 @@ function zipCode_onblur() {
         });
     }
 }
-function cityName_onblur() {
+function cityName_onblur(htmlFieldPrefix) {
     document.getElementById("zipCodeSuccess").style.display = "none";
     document.getElementById("zipCodeFailure").style.display = "block";
     document.getElementById("cityNameSuccess").style.display = "none";
     document.getElementById("cityNameFailure").style.display = "block";
-    var cityNameData = document.getElementById("DeliveryAddressModel_CityName").value;
+    var cityNameData = document.getElementById(htmlFieldPrefix + "CityName").value;
     if (cityNameData == "") {
-        document.getElementById("DeliveryAddressModel_ZipCode").value = "";
-        document.getElementById("DeliveryAddressModel_CityName").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoCityId").value = "";
-        document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId").value = "";
+        document.getElementById(htmlFieldPrefix + "ZipCode").value = "";
+        document.getElementById(htmlFieldPrefix + "CityName").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoCityId").value = "";
+        document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId").value = "";
     }
     else {
         var i, j;
-        var searchData = '{ "SearchType":"CityName", "SearchKeyValuePairs": { "DemogInfoCountryId":"' + document.getElementById("DeliveryAddressModel_DemogInfoCountryId").value + '", "CityName":"' + cityNameData + '"} }';
+        var searchData = '{ "SearchType":"CityName", "SearchKeyValuePairs": { "DemogInfoCountryId":"' + document.getElementById(htmlFieldPrefix + "DemogInfoCountryId").value + '", "CityName":"' + cityNameData + '"} }';
         $.ajax({
             url: "/" + "GeneralUtility" + "/" + "SearchData",
             type: "POST",
@@ -254,16 +256,16 @@ function cityName_onblur() {
             data: searchData,
             dataType: "json",
             success: function (responseData, textStatus, request) {
-                var zipCodeData = document.getElementById("DeliveryAddressModel_ZipCode").value;
+                var zipCodeData = document.getElementById(htmlFieldPrefix + "ZipCode").value;
                 for (i = 0; i < responseData.length; i++) {
                     if (zipCodeData == "" && responseData[i].ZipCode != "") {
-                        document.getElementById("DeliveryAddressModel_ZipCode").value = responseData[i].ZipCode;
-                        document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = responseData[i].DemogInfoZipId;
-                        document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = responseData[i].DemogInfoZipPlusId;
-                        zipCodeData = document.getElementById("DeliveryAddressModel_ZipCode").value;
+                        document.getElementById(htmlFieldPrefix + "ZipCode").value = responseData[i].ZipCode;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = responseData[i].DemogInfoZipId;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = responseData[i].DemogInfoZipPlusId;
+                        zipCodeData = document.getElementById(htmlFieldPrefix + "ZipCode").value;
                     }
                     if (responseData[i].CityName == cityNameData && responseData[i].ZipCode == zipCodeData) {
-                        var selectObject = document.getElementById("DeliveryAddressModel_DemogInfoSubDivisionId");
+                        var selectObject = document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId");
                         for (j = 0; i < selectObject.options.length; j++) {
                             if (selectObject.options[j].text == responseData[i].SubDivisionDesc) {
                                 selectObject.selectedIndex = j;
@@ -274,11 +276,11 @@ function cityName_onblur() {
                                 break;
                             }
                         }
-                        document.getElementById("DeliveryAddressModel_ZipCode").value = responseData[i].ZipCode;
-                        document.getElementById("DeliveryAddressModel_CityName").value = responseData[i].CityName;
-                        document.getElementById("DeliveryAddressModel_DemogInfoZipId").value = responseData[i].DemogInfoZipId;
-                        document.getElementById("DeliveryAddressModel_DemogInfoZipPlusId").value = responseData[i].DemogInfoZipPlusId;
-                        document.getElementById("DeliveryAddressModel_DemogInfoCityId").value = responseData[i].DemogInfoCityId;
+                        document.getElementById(htmlFieldPrefix + "ZipCode").value = responseData[i].ZipCode;
+                        document.getElementById(htmlFieldPrefix + "CityName").value = responseData[i].CityName;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoZipId").value = responseData[i].DemogInfoZipId;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoZipPlusId").value = responseData[i].DemogInfoZipPlusId;
+                        document.getElementById(htmlFieldPrefix + "DemogInfoCityId").value = responseData[i].DemogInfoCityId;
                     }
                 }
             },

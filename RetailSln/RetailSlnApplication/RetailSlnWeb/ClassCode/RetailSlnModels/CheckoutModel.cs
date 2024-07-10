@@ -13,7 +13,7 @@ namespace RetailSlnModels
         public LoginUserProfModel LoginUserProfModel { set; get; }
         public RegisterUserProfModel RegisterUserProfModel { set; get; }
         public ResetPasswordModel ResetPasswordModel { set; get; }
-        public ShoppingCartModel ShoppingCartModel { set; get; }
+        public PaymentInfo1Model PaymentInfoModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

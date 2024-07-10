@@ -9,37 +9,37 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
-        public static void AssignOrderHeader(OrderHeaderModel orderHeaderModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignOrderHeader(OrderHeader orderHeader, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@DimensionUnitId"].Value = orderHeaderModel.DimensionUnitId;
-            sqlCommand.Parameters["@OrderStatusId"].Value = (int)orderHeaderModel.OrderStatusId;
-            sqlCommand.Parameters["@OrderDate"].Value = orderHeaderModel.OrderDate;
-            sqlCommand.Parameters["@PersonId"].Value = orderHeaderModel.PersonId;
-            sqlCommand.Parameters["@VolumeValue"].Value = orderHeaderModel.VolumeValue;
-            sqlCommand.Parameters["@WeightUnitId"].Value = orderHeaderModel.WeightUnitId;
-            sqlCommand.Parameters["@WeightValue"].Value = orderHeaderModel.WeightValue;
+            sqlCommand.Parameters["@EmailAddress"].Value = orderHeader.EmailAddress;
+            sqlCommand.Parameters["@OrderCreatedByPersonId"].Value = (int)orderHeader.OrderCreatedByPersonId;
+            sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
+            sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
+            sqlCommand.Parameters["@PersonId].Value"].Value = orderHeader.PersonId;
+            sqlCommand.Parameters["@TelephoneCountryId"].Value = orderHeader.TelephoneCountryId;
+            sqlCommand.Parameters["@TelephoneNumber"].Value = orderHeader.TelephoneNumber;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static void AssignOrderDetail(OrderDetailModel orderDetailModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignOrderDetail(OrderDetail orderDetail, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@DimensionUnitId"].Value = orderDetailModel.DimensionUnitId;
-            sqlCommand.Parameters["@ItemDesc"].Value = string.IsNullOrEmpty(orderDetailModel.ItemDesc) ? (object)DBNull.Value : orderDetailModel.ItemDesc;
-            sqlCommand.Parameters["@ItemId"].Value = orderDetailModel.ItemId == null ? (object)DBNull.Value : orderDetailModel.ItemId;
-            sqlCommand.Parameters["@ItemRate"].Value = orderDetailModel.ItemRate;
-            sqlCommand.Parameters["@ItemShortDesc"].Value = orderDetailModel.ItemShortDesc;
-            sqlCommand.Parameters["@LengthValue"].Value = orderDetailModel.LengthValue;
-            sqlCommand.Parameters["@OrderAmount"].Value = orderDetailModel.OrderAmount;
-            sqlCommand.Parameters["@OrderComments"].Value = string.IsNullOrEmpty(orderDetailModel.OrderComments) ? (object)DBNull.Value : orderDetailModel.OrderComments;
-            sqlCommand.Parameters["@OrderDetailTypeId"].Value = (int)orderDetailModel.OrderDetailTypeId;
-            sqlCommand.Parameters["@OrderHeaderId"].Value = orderDetailModel.OrderHeaderId;
-            sqlCommand.Parameters["@OrderQty"].Value = orderDetailModel.OrderQty;
-            sqlCommand.Parameters["@SeqNum"].Value = orderDetailModel.SeqNum;
-            sqlCommand.Parameters["@VolumeValue"].Value = orderDetailModel.VolumeValue;
-            sqlCommand.Parameters["@WeightUnitId"].Value = orderDetailModel.WeightUnitId;
-            sqlCommand.Parameters["@WeightValue"].Value = orderDetailModel.WeightValue;
-            sqlCommand.Parameters["@WidthValue"].Value = orderDetailModel.WidthValue;
+            sqlCommand.Parameters["@DimensionUnitId"].Value = orderDetail.DimensionUnitId;
+            sqlCommand.Parameters["@ItemDesc"].Value = string.IsNullOrEmpty(orderDetail.ItemDesc) ? (object)DBNull.Value : orderDetail.ItemDesc;
+            sqlCommand.Parameters["@ItemId"].Value = orderDetail.ItemId == null ? (object)DBNull.Value : orderDetail.ItemId;
+            sqlCommand.Parameters["@ItemRate"].Value = orderDetail.ItemRate;
+            sqlCommand.Parameters["@ItemShortDesc"].Value = orderDetail.ItemShortDesc;
+            sqlCommand.Parameters["@LengthValue"].Value = orderDetail.LengthValue;
+            sqlCommand.Parameters["@OrderAmount"].Value = orderDetail.OrderAmount;
+            sqlCommand.Parameters["@OrderComments"].Value = string.IsNullOrEmpty(orderDetail.OrderComments) ? (object)DBNull.Value : orderDetail.OrderComments;
+            sqlCommand.Parameters["@OrderDetailTypeId"].Value = (int)orderDetail.OrderDetailTypeId;
+            sqlCommand.Parameters["@OrderHeaderId"].Value = orderDetail.OrderHeaderId;
+            sqlCommand.Parameters["@OrderQty"].Value = orderDetail.OrderQty;
+            sqlCommand.Parameters["@SeqNum"].Value = orderDetail.SeqNum;
+            sqlCommand.Parameters["@VolumeValue"].Value = orderDetail.VolumeValue;
+            sqlCommand.Parameters["@WeightUnitId"].Value = orderDetail.WeightUnitId;
+            sqlCommand.Parameters["@WeightValue"].Value = orderDetail.WeightValue;
+            sqlCommand.Parameters["@WidthValue"].Value = orderDetail.WidthValue;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

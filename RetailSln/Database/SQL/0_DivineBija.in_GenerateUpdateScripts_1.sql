@@ -4,6 +4,8 @@ GO
 --Apr 21 2024
 SET NOCOUNT ON
 
+DECLARE @TestOrProdMode VARCHAR(50) = 'DEVMODE'
+
 DECLARE @SqlStmt VARCHAR(MAX), @SchemaName VARCHAR(250), @TableName VARCHAR(250)
 DECLARE @ClientId VARCHAR(5) = '97'
 
@@ -61,6 +63,19 @@ UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testinfo
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Divine Bija Support' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddressDisplayName'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '' WHERE ClientId = @ClientId AND KVPKey = 'OrderProcess' AND KVPSubKey = 'DefaultOrderQty'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testinfo@divinebija.in' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
+
+IF @TestOrProdMode = 'TESTMODE'
+BEGIN
+    UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'http://localhost:44374/' WHERE ClientId = @ClientId AND KVPKey = 'BaseUrl'
+END
+
+IF @TestOrProdMode = 'PRODMODE'
+BEGIN
+    UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'https://www.divinebija.in/' WHERE ClientId = @ClientId AND KVPKey = 'BaseUrl'
+    UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'info@divinebija.in' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
+    UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'info@divinebija.in' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
+END
+
 
 SET NOCOUNT OFF
 

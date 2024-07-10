@@ -1,0 +1,54 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gajaashwa Inc." />
+    <meta name="title" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")" />
+    <meta name="description" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Description")" />
+    <meta name="keywords" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Keywords")" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")</title>
+    <link rel="shortcut icon" href="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Favicon.ico" />
+    @Styles.Render("~/Content/css0")
+    @Scripts.Render("~/bundles/scripts0")
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Patua+One|Open+Sans|Lato|Roboto" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    @RenderSection("scripts", required: false)
+</head>
+<body style="margin-left: auto; margin-right: auto; max-width: 100%; padding: 0px;">
+    <!-- Google Tag Manager (noscript) -->
+    @*<noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDPL9DB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>*@
+    <!-- End Google Tag Manager (noscript) -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window_onload();
+        });
+        function window_onload() {
+            //$(".se-pre-con").fadeOut("slow");
+            alert("Implement window on load in your page");
+        }
+    </script>
+    @Html.Partial("_HeaderDashboard")
+    <div id="divScrollIntoView"></div>
+    <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">
+        @RenderBody()
+        @Html.Partial("_FooterDashboard")
+    </div>
+    @Html.Partial("_LoadingModal")
+</body>
+</html>

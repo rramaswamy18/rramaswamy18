@@ -14,92 +14,92 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
-        public static void CreateOrder(OrderModel orderModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
-                AddOrderHeader(orderModel.OrderHeaderModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AddOrderDetails(orderModel.OrderHeaderModel.OrderHeaderId, orderModel.OrderHeaderModel.OrderDetailModels, orderModel.OrderHeaderModel.OrderSummaryModels, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (orderModel.DeliveryInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress)
-                {
-                    ArchLibDataContext.CreateDemogInfoAddress(orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                else
-                {
-                    orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId = 0;
-                }
-                orderModel.DeliveryInfoModel.DeliveryInfoDataModel.OrderHeaderId = orderModel.OrderHeaderModel.OrderHeaderId;
-                AddDeliveryInfo(orderModel.DeliveryInfoModel.DeliveryInfoDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
-        public static void CreatePayment(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
-                AddOrderPayment(paymentInfoModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
-        public static void CreateGiftCert(GiftCertModel giftCertModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
-                AddGiftCert(giftCertModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
-        public static void CreateItem(ItemModel itemModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");
-                AddItem(itemModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                float seqNum = 0;
-                foreach (var itemAttribModel in itemModel.ItemAttribModels)
-                {
-                    itemAttribModel.ItemId = itemModel.ItemId.Value;
-                    itemAttribModel.SeqNum = ++seqNum;
-                    AddItemAttrib(itemAttribModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static void CreateOrder(OrderModel orderModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
+        //        AddOrderHeader(orderModel.OrderHeaderModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        AddOrderDetails(orderModel.OrderHeaderModel.OrderHeaderId, orderModel.OrderHeaderModel.OrderDetailModels, orderModel.OrderHeaderModel.OrderSummaryModels, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (orderModel.DeliveryInfoModel.DeliveryInfoDataModel.CreateDeliveryAddress)
+        //        {
+        //            ArchLibDataContext.CreateDemogInfoAddress(orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        }
+        //        else
+        //        {
+        //            orderModel.DeliveryInfoModel.DeliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId = 0;
+        //        }
+        //        orderModel.DeliveryInfoModel.DeliveryInfoDataModel.OrderHeaderId = orderModel.OrderHeaderModel.OrderHeaderId;
+        //        AddDeliveryInfo(orderModel.DeliveryInfoModel.DeliveryInfoDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        //public static void CreatePayment(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
+        //        AddOrderPayment(paymentInfoModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        //public static void CreateGiftCert(GiftCertModel giftCertModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");//, "PersonId", orderHeaderModel.PersonId);
+        //        AddGiftCert(giftCertModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        //public static void CreateItem(ItemModel itemModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");
+        //        AddItem(itemModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        float seqNum = 0;
+        //        foreach (var itemAttribModel in itemModel.ItemAttribModels)
+        //        {
+        //            itemAttribModel.ItemId = itemModel.ItemId.Value;
+        //            itemAttribModel.SeqNum = ++seqNum;
+        //            AddItemAttrib(itemAttribModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         public static void CreateCategory(CategoryModel categoryModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

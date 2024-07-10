@@ -11,6 +11,7 @@ namespace RetailSlnModels
 	{
         [Display(Name = "Coupon#")]
         public string CouponNumber { set; get; }
+        public float? CouponPaymentAmount { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

@@ -2,16 +2,17 @@
 @using RetailSlnCacheData
 @{
     int index = 0;
+    Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
 }
 @if (Model == null || Model.ShoppingCartItems == null || Model.ShoppingCartItems.Count == 0)
 {
-    <div style="display: table; width: 100%;">
+    @*<div style="display: table; width: 100%;">
         <div style="display: table-row;">
             <div style="color: #ff9900; display: table-cell; font-size: 27px; font-weight: bold; text-align: center; vertical-align: top; ">
                 Your shopping cart is empty
             </div>
         </div>
-    </div>
+    </div>*@
 }
 else
 {
@@ -27,7 +28,7 @@ else
             <th class="text-center" scope="col">Qty</th>
             <th class="text-right" scope="col">Rate</th>
             <th class="text-right" scope="col">Amount</th>
-            @if (Model.ShowDiscountsAdditionalCharges)
+            @if (Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges)
             {
                 <th class="text-center" scope="col">
                     Other
@@ -63,7 +64,7 @@ else
                     <td class="text-right">
                         @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                     </td>
-                    @if (Model.ShowDiscountsAdditionalCharges)
+                    @if (Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges)
                     {
                         <td>
                             <table class="table table-condensed table-responsive table-striped">
@@ -166,12 +167,12 @@ else
                         {
                             totalWeightFlag = false;
                             <br />
-                            <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.TotalWeightValue&nbsp;Grams</span>
+                            <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.ShoppingCartSummaryModel.TotalWeightCalc&nbsp;Grams</span>
                         }
                     </td>
                     <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>
                 </tr>
-                if (!Model.ShowDiscountsAdditionalCharges)
+                if (!Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges)
                 {
                     break;
                 }

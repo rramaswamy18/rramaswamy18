@@ -38,7 +38,6 @@ function addToCart_onclick(parentCategoryId, pageNum, pageSize, totalRowCount) {
         jsonPostData.TotalRowCount = totalRowCount;
         jsonPostData.ShoppingCartItemModels = shoppingCartItemModels;
         jsonPostDataString = JSON.stringify(jsonPostData);
-        console.log(-999, jsonPostDataString);
         var url = "/Home/AddToCart/";
         $.ajax({
             url: url,

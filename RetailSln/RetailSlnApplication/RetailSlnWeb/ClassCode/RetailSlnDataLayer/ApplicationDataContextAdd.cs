@@ -32,7 +32,27 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void AddOrderHeader(OrderHeaderModel orderHeaderModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AddOrderDetail(OrderDetail orderDetail, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+                SqlCommand sqlCommand = BuildSqlCommandOrderDetailAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignOrderDetail(orderDetail, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                sqlCommand.ExecuteNonQuery();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static void AddOrderHeader(OrderHeader orderHeader, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -41,8 +61,8 @@ namespace RetailSlnDataLayer
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
                 SqlCommand sqlCommand = BuildSqlCommandOrderHeaderAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AssignOrderHeader(orderHeaderModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-                orderHeaderModel.OrderHeaderId = (long)sqlCommand.ExecuteScalar();
+                AssignOrderHeader(orderHeader, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                orderHeader.OrderHeaderId = (long)sqlCommand.ExecuteScalar();
                 //orderHeaderModel.OrderNum = "2500000000000000" + orderHeaderModel.OrderHeaderId;
                 //UpdOrderHeader(orderHeaderModel, execUniqueId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
@@ -54,39 +74,39 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void AddOrderDetails(long orderHeaderId, List<OrderDetailModel> orderDetailModels, List<OrderDetailModel> orderSummaryModels, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-                SqlCommand sqlCommand = BuildSqlCommandOrderDetailAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                float seqNum = 0;
-                foreach (var orderDetailModel in orderDetailModels)
-                {
-                    orderDetailModel.OrderHeaderId = orderHeaderId;
-                    orderDetailModel.SeqNum = ++seqNum;
-                    AssignOrderDetail(orderDetailModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    sqlCommand.ExecuteNonQuery();
-                }
-                foreach (var orderDetailModel in orderSummaryModels)
-                {
-                    orderDetailModel.OrderHeaderId = orderHeaderId;
-                    orderDetailModel.SeqNum = ++seqNum;
-                    AssignOrderDetail(orderDetailModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    sqlCommand.ExecuteNonQuery();
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-                return;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static void AddOrderDetails(long orderHeaderId, List<OrderDetailModel> orderDetailModels, List<OrderDetailModel> orderSummaryModels, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+        //        SqlCommand sqlCommand = BuildSqlCommandOrderDetailAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        float seqNum = 0;
+        //        foreach (var orderDetailModel in orderDetailModels)
+        //        {
+        //            orderDetailModel.OrderHeaderId = orderHeaderId;
+        //            orderDetailModel.SeqNum = ++seqNum;
+        //            AssignOrderDetail(orderDetailModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            sqlCommand.ExecuteNonQuery();
+        //        }
+        //        foreach (var orderDetailModel in orderSummaryModels)
+        //        {
+        //            orderDetailModel.OrderHeaderId = orderHeaderId;
+        //            orderDetailModel.SeqNum = ++seqNum;
+        //            AssignOrderDetail(orderDetailModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            sqlCommand.ExecuteNonQuery();
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         public static void AddDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

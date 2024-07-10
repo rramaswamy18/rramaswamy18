@@ -20,69 +20,140 @@ namespace RetailSlnBusinessLayer
 {
     public partial class RetailSlnBL
     {
-        public void BuildDeliveryInfoLookup(PaymentInfo1Model paymentInfoModel, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void BuildDeliveryInfoLookup(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             if (apiFlag)
             {
-                paymentInfoModel.DeliveryAddressModel.DeliveryDemogInfoCountrys = RetailSlnCache.DeliveryDemogInfoCountrys;
-                paymentInfoModel.DeliveryAddressModel.DeliveryDemogInfoCountrySubDivisions = RetailSlnCache.DeliveryDemogInfoCountryStates;
+                paymentInfoModel.DeliveryAddressModel.DemogInfoCountrys = RetailSlnCache.DeliveryDemogInfoCountrys;
+                paymentInfoModel.DeliveryAddressModel.DemogInfoCountrySubDivisions = RetailSlnCache.DeliveryDemogInfoCountryStates;
             }
             if (webFlag)
             {
-                paymentInfoModel.DeliveryAddressModel.DeliveryDemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
-                paymentInfoModel.DeliveryAddressModel.DeliveryDemogInfoSubDivisionSelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySubDivisionSelectListItems;
+                paymentInfoModel.DeliveryAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+                paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId = paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId;
+                paymentInfoModel.DeliveryAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
+                paymentInfoModel.DeliveryAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId.Value];
             }
+            paymentInfoModel.GiftCertPaymentModel.GiftCertNumber = paymentInfoModel.GiftCertPaymentModel.GiftCertNumber == null ? "" : paymentInfoModel.GiftCertPaymentModel.GiftCertNumber.Trim();
+            paymentInfoModel.GiftCertPaymentModel.GiftCertKey = paymentInfoModel.GiftCertPaymentModel.GiftCertKey == null ? "" : paymentInfoModel.GiftCertPaymentModel.GiftCertKey.Trim();
+            if (paymentInfoModel.DeliveryMethodModel == null)
+            {
+                paymentInfoModel.DeliveryMethodModel = new DeliveryMethodModel();
+            }
+            paymentInfoModel.DeliveryMethodModel.DeliveryMethods = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
+            var codeDataModel = paymentInfoModel.DeliveryMethodModel.DeliveryMethodId == null ? null : paymentInfoModel.DeliveryMethodModel.DeliveryMethods.First(x => x.CodeDataNameId == (long)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId.Value);
+            if (codeDataModel != null)
+            {
+                paymentInfoModel.DeliveryMethodModel.DeliveryMethodDesc = codeDataModel.CodeDataDesc0;
+            }
+            if (paymentInfoModel.PaymentModeModel == null)
+            {
+                paymentInfoModel.PaymentModeModel = new PaymentModeModel();
+            }
+            paymentInfoModel.PaymentModeModel.PaymentModes = new List<CodeDataModel>();
+            ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel;
+            var corpAccountId = applSessionObjectModel.CorpAcctModel.CorpAcctId;
+            List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+            int i, fromIndex, toIndex;
+            if (applSessionObjectModel.CorpAcctModel.CreditSale)
+            {
+                fromIndex = 0;
+                toIndex = 1;
+            }
+            else
+            {
+                fromIndex = 1;
+                toIndex = codeDataModels.Count;
+            }
+            for (i = fromIndex; i < toIndex; i++)
+            {
+                paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[i]);
+            }
+            codeDataModel = paymentInfoModel.PaymentModeModel.PaymentModeId == null ? null : paymentInfoModel.PaymentModeModel.PaymentModes.First(x => x.CodeDataNameId == (long)paymentInfoModel.PaymentModeModel.PaymentModeId.Value);
+            if (codeDataModel != null)
+            {
+                paymentInfoModel.PaymentModeModel.PaymentModeDesc = codeDataModel.CodeDataDesc0;
+                paymentInfoModel.PaymentModeModel.PaymentModeDesc1 = codeDataModel.CodeDataDesc2;
+            }
+            paymentInfoModel.ResponseObjectModel = new ResponseObjectModel();
         }
-        //private void UpdateDeliveryAddressInfo(PaymentInfo1Model paymentInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    DemogInfoAddressModel demogInfoAddressModel = paymentInfoModel.DeliveryAddressModel.DeliveryAddressDataModel;
-        //    SearchDataModel searchDataModel = new SearchDataModel
-        //    {
-        //        SearchType = "ZipCode",
-        //        SearchKeyValuePairs = new Dictionary<string, string>
-        //        {
-        //            { "DemogInfoCountryId", demogInfoAddressModel.DemogInfoCountryId.ToString() },
-        //            { "ZipCode", demogInfoAddressModel.ZipCode },
-        //        },
-        //    };
-        //    List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //    foreach (var sqlQueryResult in sqlQueryResults)
-        //    {
-        //        if (
-        //            sqlQueryResult["DemogInfoCountryId"] == demogInfoAddressModel.DemogInfoCountryId.ToString()
-        //            && sqlQueryResult["ZipCode"] == demogInfoAddressModel.ZipCode
-        //           )
-        //        {
-        //            demogInfoAddressModel.CityName = sqlQueryResult["CityName"];
-        //            demogInfoAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
-        //            demogInfoAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
-        //            demogInfoAddressModel.CountyName = sqlQueryResult["CountyName"];
-        //            demogInfoAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
-        //            demogInfoAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
-        //            demogInfoAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
-        //            demogInfoAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
-        //            demogInfoAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
-        //            demogInfoAddressModel.StateAbbrev = sqlQueryResult["StateAbbrev"];
-        //            break;
-        //        }
-        //    }
-        //    var demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneDemogInfoCountryId);
-        //    apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
-        //    demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneDemogInfoCountryId);
-        //    apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
-        //    apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneFormatted = "+" + apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneTelephoneCode.Value.ToString() + " " + long.Parse(apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneNum).ToString("##### #####");
-        //    apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneHref = apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneTelephoneCode.Value.ToString() + "-" + long.Parse(apiShoppingCartModel.DeliveryInfoModel.AlternateTelephoneNum).ToString("###-###-####");
-        //    apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneFormatted = "+" + apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneTelephoneCode.Value.ToString() + " " + long.Parse(apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneNum).ToString("##### #####");
-        //    apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneHref = apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneTelephoneCode.Value.ToString() + "-" + long.Parse(apiShoppingCartModel.DeliveryInfoModel.PrimaryTelephoneNum).ToString("###-###-####");
 
-        //    demogInfoAddressModel.BuildingTypeDesc = demogInfoAddressModel.BuildingTypeId == null ? "" : LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "BuildingType").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)demogInfoAddressModel.BuildingTypeId).CodeDataNameDesc;
-        //    demogInfoAddressModel.BuildingTypeHouseNumber = string.IsNullOrWhiteSpace(demogInfoAddressModel.BuildingTypeDesc) ? "" : (demogInfoAddressModel.BuildingTypeDesc + " ");
-        //    demogInfoAddressModel.BuildingTypeHouseNumber += string.IsNullOrWhiteSpace(demogInfoAddressModel.HouseNumber) ? "" : demogInfoAddressModel.HouseNumber.Trim();
+        public void UpdateDeliveryAddressInfo(PaymentInfo1Model paymentInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            ArchLibBL archLibBL = new ArchLibBL();
+            DemogInfoAddressModel demogInfoAddressModel = paymentInfoModel.DeliveryAddressModel;
+            SearchDataModel searchDataModel = new SearchDataModel
+            {
+                SearchType = "ZipCode",
+                SearchKeyValuePairs = new Dictionary<string, string>
+                {
+                    { "DemogInfoCountryId", demogInfoAddressModel.DemogInfoCountryId.ToString() },
+                    { "ZipCode", demogInfoAddressModel.ZipCode },
+                },
+            };
+            List<Dictionary<string, string>> sqlQueryResults = archLibBL.SearchData(searchDataModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            foreach (var sqlQueryResult in sqlQueryResults)
+            {
+                if (
+                    sqlQueryResult["DemogInfoCountryId"] == demogInfoAddressModel.DemogInfoCountryId.ToString()
+                    && sqlQueryResult["ZipCode"] == demogInfoAddressModel.ZipCode
+                   )
+                {
+                    demogInfoAddressModel.CityName = sqlQueryResult["CityName"];
+                    demogInfoAddressModel.CountryAbbrev = sqlQueryResult["CountryAbbrev"];
+                    demogInfoAddressModel.CountryDesc = sqlQueryResult["CountryDesc"];
+                    demogInfoAddressModel.CountyName = sqlQueryResult["CountyName"];
+                    demogInfoAddressModel.DemogInfoCityId = long.Parse(sqlQueryResult["DemogInfoCityId"]);
+                    demogInfoAddressModel.DemogInfoCountyId = long.Parse(sqlQueryResult["DemogInfoCountyId"]);
+                    demogInfoAddressModel.DemogInfoSubDivisionId = long.Parse(sqlQueryResult["DemogInfoSubDivisionId"]);
+                    demogInfoAddressModel.DemogInfoZipId = long.Parse(sqlQueryResult["DemogInfoZipId"]);
+                    demogInfoAddressModel.DemogInfoZipPlusId = long.Parse(sqlQueryResult["DemogInfoZipPlusId"]);
+                    demogInfoAddressModel.StateAbbrev = sqlQueryResult["StateAbbrev"];
+                    break;
+                }
+            }
+            DemogInfoCountryModel demogInfoCountryModel;
+            try
+            {
+                demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == paymentInfoModel.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId);
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneFormatted = "+" + paymentInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode.Value.ToString() + " " + long.Parse(paymentInfoModel.DeliveryDataModel.AlternateTelephoneNum).ToString("##### #####");
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneHref = paymentInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode.Value.ToString() + "-" + long.Parse(paymentInfoModel.DeliveryDataModel.AlternateTelephoneNum).ToString("###-###-####");
+            }
+            catch
+            {
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode = null;
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneFormatted = null;
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode = null;
+                paymentInfoModel.DeliveryDataModel.AlternateTelephoneHref = null;
+            }
 
-        //    apiShoppingCartModel.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)apiShoppingCartModel.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodId).CodeDataDesc0;
-        //    apiShoppingCartModel.DeliveryInfoModel.PaymentMethodModel.PaymentModeDesc = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)apiShoppingCartModel.DeliveryInfoModel.PaymentMethodModel.PaymentModeId).CodeDataDesc0;
-        //}
+            demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == paymentInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId);
+            try
+            {
+                demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.First(x => x.DemogInfoCountryId == paymentInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId);
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted = "+" + paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode.Value.ToString() + " " + long.Parse(paymentInfoModel.DeliveryDataModel.PrimaryTelephoneNum).ToString("##### #####");
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode;
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneHref = paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode.Value.ToString() + "-" + long.Parse(paymentInfoModel.DeliveryDataModel.PrimaryTelephoneNum).ToString("###-###-####");
+            }
+            catch
+            {
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode = null;
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted = null;
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode = null;
+                paymentInfoModel.DeliveryDataModel.PrimaryTelephoneHref = null;
+            }
+
+            demogInfoAddressModel.BuildingTypeDesc = demogInfoAddressModel.BuildingTypeId == null ? "" : LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "BuildingType").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)demogInfoAddressModel.BuildingTypeId).CodeDataNameDesc;
+            demogInfoAddressModel.BuildingTypeHouseNumber = string.IsNullOrWhiteSpace(demogInfoAddressModel.BuildingTypeDesc) ? "" : (demogInfoAddressModel.BuildingTypeDesc + " ");
+            demogInfoAddressModel.BuildingTypeHouseNumber += string.IsNullOrWhiteSpace(demogInfoAddressModel.HouseNumber) ? "" : demogInfoAddressModel.HouseNumber.Trim();
+
+            paymentInfoModel.DeliveryMethodModel.DeliveryMethodDesc = paymentInfoModel.DeliveryMethodModel.DeliveryMethodId == null ? "" : LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId).CodeDataDesc0;
+            paymentInfoModel.PaymentModeModel.PaymentModeDesc = paymentInfoModel.PaymentModeModel.PaymentModeId == null ? "" : LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)paymentInfoModel.PaymentModeModel.PaymentModeId).CodeDataDesc0;
+        }
+        #region
         //private void CalculateDeliveryCharges(PaymentInfoModel paymentInfoModel, List<SalesTaxListModel> salesTaxListModels, List<CodeDataModel> salesTaxCaptionIds, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         //{
         //    DeliveryChargeModel deliveryChargeModel = GetDeliveryChargeModel(paymentInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId); ;
@@ -522,5 +593,6 @@ namespace RetailSlnBusinessLayer
         //    deliveryChargeModel = (DeliveryChargeModel)shippingService.GetRate(shippingInputModel, clientId, ipAddress, execUniqueId, loggedInUserId);
         //    return deliveryChargeModel;
         //}
+        #endregion
     }
 }

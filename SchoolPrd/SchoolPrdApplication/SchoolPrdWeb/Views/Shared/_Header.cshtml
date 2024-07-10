@@ -6,49 +6,30 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
-@*<div class="container-fluid sticky-top">*@
-<div class="container-fluid">
-    @Html.Partial("_HeaderStrip")
-    <a class="d-none d-lg-block" href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
-        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
-    </a>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <div class="row w-100 d-lg-none bg-light">
-                <div class="col-10">
-                    <a href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
-                        <img class="img-responsive" src="@Url.Content($"~/ClientSpecific/{clientId}_{clientName}/Documents/Images/Image_000.webp")"
-                             alt="@imageTitle"
-                             title="@imageTitle"
-                             style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
-                    </a>
-                </div>
-                <div class="col-2">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="black" class="bi bi-list toggler" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <div class="row w-100">
-                <div class="collapse navbar-collapse ms-auto" id="navbarNav">
-                    @Html.Partial("_HeaderMenu")
-                </div>
-            </div>
-        </div>
-    </nav>
+<nav id="menuHamburger" style="z-index: 10000">
+    <i class="glyphicon glyphicon-remove" id="close-icon" style="z-index: 20000"></i>
+    @Html.Partial("_HeaderMenuHamburger")
+</nav>
+@*<div class="center container-fluid sticky-top">*@
+@Html.Partial("_HeaderStrip")
+<div class="center">
+    <div class="row" style="background-color: whitesmoke; width: 100%;">
+        <a class="d-none d-lg-block" href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
+            <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
+        </a>
+    </div>
+    @Html.Partial("_HeaderMenu")
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#toggle-icon').click(function () {
-            $('#menu').css('top', '0');
+            $('#menuHamburger').css('top', '0');
             $('#close-icon').css('top', '20px');
             $('#close-icon').show(); // Show close icon when menu is open
         });
 
         $('#close-icon').click(function () {
-            $('#menu').css('top', '-2500px');
+            $('#menuHamburger').css('top', '-2500px');
             $('#close-icon').hide(); // Hide close icon when menu is closed
         });
 
@@ -59,7 +40,7 @@
         });
 
         let closeCollapsableMenu = function () {
-            $('#menu').css('top', '-2500px');
+            $('#menuHamburger').css('top', '-2500px');
             $('#close-icon').hide(); // Hide close icon when menu is closed
         }
     });

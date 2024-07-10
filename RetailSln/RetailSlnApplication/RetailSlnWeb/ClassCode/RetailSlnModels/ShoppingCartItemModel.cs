@@ -9,8 +9,6 @@ namespace RetailSlnModels
 {
     public class ShoppingCartItemModel
     {
-        public long? ItemId { set; get; }
-
         public DimensionUnitEnum? DimensionUnitId { set; get; }
 
         public float? HeightValue { set; get; }
@@ -23,6 +21,8 @@ namespace RetailSlnModels
 
         public float? ItemDiscountPercent { set; get; }
 
+        public long? ItemId { set; get; }
+
         public float? ItemRate { set; get; }
 
         public float? ItemRateBeforeDiscount { set; get; }
@@ -31,7 +31,21 @@ namespace RetailSlnModels
 
         public float? LengthValue { set; get; }
 
+        public float? OrderAmount { set; get; }
+
+        public float? OrderAmountBeforeDiscount { set; get; }
+
+        public string OrderComments { set; get; }
+
+        public OrderDetailTypeEnum OrderDetailTypeId { set; get; }
+
+        public long? OrderQty { set; get; }
+
         public string ProductCode { set; get; }
+
+        public float? ProductOrVolumetricWeight { set; get; }
+
+        public WeightUnitEnum? ProductOrVolumetricWeightUnitId { set; get; }
 
         public float? VolumeValue { set; get; }
 
@@ -42,20 +56,6 @@ namespace RetailSlnModels
         public float? WeightValue { set; get; }
 
         public float? WidthValue { set; get; }
-
-        public long? OrderQty { set; get; }
-
-        public float? OrderAmount { set; get; }
-
-        public float? OrderAmountBeforeDiscount { set; get; }
-
-        public string OrderComments { set; get; }
-
-        public OrderDetailTypeEnum OrderDetailTypeId { set; get; }
-
-        public float? ProductOrVolumetricWeight { set; get; }
-
-        public WeightUnitEnum? ProductOrVolumetricWeightUnitId { set; get; }
 
         public List<ShoppingCartItemModel> ShoppingCartItemSummarys { set; get; }
     }

@@ -26,7 +26,7 @@ namespace RetailSlnEnumerations
         Discount = 600,
         [Description("Total Invoice Amount")]
         TotalInvoiceAmount = 800,
-        [Description("Amount Paid by Gift Cert ")]
+        [Description("Amount Paid by Gift Cert")]
         AmountPaidByGiftCert = 900,
         [Description("Amount Paid by Credit Card")]
         AmountPaidByCreditCard = 1000,
@@ -34,6 +34,8 @@ namespace RetailSlnEnumerations
         TotalAmountPaid = 1100,
         [Description("Balance Due")]
         BalanceDue = 1200,
+        [Description("Amount Paid by Coupon")]
+        AmountPaidByCoupon = 1300,
         [Description("Other")]
         Other = 9900,
     }

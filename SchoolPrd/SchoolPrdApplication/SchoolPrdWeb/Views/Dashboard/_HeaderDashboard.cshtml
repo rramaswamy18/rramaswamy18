@@ -1,0 +1,16 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    //_Header.cshtml
+    //A-1Truck --> 92
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<div class="center">
+    <div class="row" style="background-color: whitesmoke; width: 100%;">
+        <a class="d-none d-lg-block" href="@Url.Action("Index", "Home")" alt="@imageTitle" title="@imageTitle">
+            <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" style="display: block; margin: auto; height: auto; max-height: 99px; max-width: 846px; width: 100%;" />
+        </a>
+    </div>
+    @Html.Partial("_HeaderMenuDashboard")
+</div>

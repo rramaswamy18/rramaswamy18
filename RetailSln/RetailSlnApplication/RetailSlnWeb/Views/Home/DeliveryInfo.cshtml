@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "DeliveryInfo";
 }
-@Html.Partial("_DeliveryInfo", Model)
+<div class="container center" id="divOrderProcess">
+    @Html.Partial("_DeliveryInfo", Model)
+</div>
 <script type="text/javascript">
     function window_onload() {
     }

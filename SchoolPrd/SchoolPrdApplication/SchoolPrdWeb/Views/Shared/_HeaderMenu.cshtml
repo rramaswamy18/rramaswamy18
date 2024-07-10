@@ -3,11 +3,17 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var menuActionNames = new List<string> { "Index", "Enrollment", "RegisterUserLoginUser", "AboutUs", "ContactUs", "FAQs", "Programs", "Tuition", "Catalog", "Login", "", "Admission", "Agreement", "Payment", "Profile", "Logout", "Index" };
+    var menuControllerNames = new List<string> { "Home", "Home", "Home", "Home", "Home", "Home", "Home", "Home", "Home", "Home", "", "Home", "Home", "Home", "Home", "Home", "Dashboard" };
+    var menuActionTexts = new List<string> { "Home", "Enroll Now", "Register", "About Us", "Contact Us", "FAQs", "Programs", "Tuition", "Catalog", "Login", "", "Admission", "Agreement", "Payment", "Profile", "Logout", "Dashboard" };
+    var menuActionAttribs = new List<string> { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "", "1", "1", "1", "1", "2", "0" };
+    int i = 0;
+    string hrefText, imageTitle1, foreColor;
 }
 <style>
     ul li {
         display: inline-block;
-        padding-right: 12px;
+        /*padding-right: 12px;*/
     }
 
     ul ul {
@@ -20,8 +26,8 @@
             background-color: #9a031e;
             display: block;
             margin-left: 0;
-            padding-bottom: 5px;
-            padding-left: 9px;
+            /*padding-bottom: 5px;*/
+            /*padding-left: 9px;*/
             text-align: left;
             /*width: 15em;*/
         }
@@ -30,65 +36,94 @@
         display: block;
     }
 </style>
-<ul class="center" style="background-color: #9a031e;">
+<ul class="nav navbar-nav" style="background-color: #9a031e; width: 100%;">
     <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Home
+        <a id="menuItem@(i)" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
+            @menuActionTexts[i]
         </a>
     </li>
+    @for (i = 1; i < menuActionNames.Count && menuActionNames[i] != ""; i++)
+    {
+        if (menuActionAttribs[i] == "0")
+        {
+            hrefText = Url.Action(menuActionNames[i], menuControllerNames[i]);
+            foreColor = "#ffffff";
+            imageTitle1 = imageTitle;
+        }
+        else
+        {
+            hrefText = "javascript: void(0);";
+            foreColor = "#a0a0a0";
+            if (menuActionAttribs[i] == "1")
+            {
+                imageTitle1 = "Please login to access this feature " + imageTitle;
+            }
+            else
+            {
+                imageTitle1 = imageTitle;
+            }
+        }
+        <li>
+            <a id="menuItem@(i)" href="@hrefText" style="color: @foreColor; font-weight: bold;" title="@imageTitle1">
+                @menuActionTexts[i]
+            </a>
+        </li>
+    }
     <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Enroll Now
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Register
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("AboutUs", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            About Us
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("ContactUs", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Contact Us
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            FAQs
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Programs
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Tuition
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Catalog
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
-            Login
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="javascript: void(0);" style="color: #a0a0a0; font-weight: bold;" title="@imageTitle">
-            Profile
-        </a>
-    </li>
-    <li>
-        <a id="menuItem0" href="javascript: void(0);" style="color: #a0a0a0; font-weight: bold;" title="@imageTitle">
-            Logout
-        </a>
+        <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+        <ul style="width: 117px; z-index:20000">
+            @for (i++; i < menuActionNames.Count - 1; i++)
+            {
+                if (menuActionAttribs[i] == "0")
+                {
+                    hrefText = Url.Action(menuActionNames[i], menuControllerNames[i]);
+                    foreColor = "#ffffff";
+                    imageTitle1 = imageTitle;
+                }
+                else
+                {
+                    hrefText = "javascript: void(0);";
+                    foreColor = "#a0a0a0";
+                    if (menuActionAttribs[i] == "1")
+                    {
+                        imageTitle1 = "Please login to access this feature " + imageTitle;
+                    }
+                    else
+                    {
+                        imageTitle1 = imageTitle;
+                    }
+                }
+                <li style="padding-bottom: 9px; padding-left: 9px; padding-right: 3px;">
+                    <a id="menuItem@(i)" href="@hrefText" style="color: @foreColor; font-weight: bold;" title="@imageTitle1">
+                        @menuActionTexts[i]
+                    </a>
+                </li>
+            }
+            @if (menuActionAttribs[i] == "0")
+            {
+                hrefText = Url.Action(menuActionNames[i], menuControllerNames[i]);
+                foreColor = "#ffffff";
+                imageTitle1 = imageTitle;
+            }
+            else
+            {
+                hrefText = "javascript: void(0);";
+                foreColor = "#a0a0a0";
+                if (menuActionAttribs[i] == "1")
+                {
+                    imageTitle1 = "Please login to access this feature " + imageTitle;
+                }
+                else
+                {
+                    imageTitle1 = imageTitle;
+                }
+            }
+            <li style="padding-bottom: 0px; padding-left: 9px; padding-right: 3px;">
+                <a id="menuItem@(i)" href="@hrefText" style="color: @foreColor; font-weight: bold;" title="@imageTitle1">
+                    @menuActionTexts[i]
+                </a>
+            </li>
+        </ul>
     </li>
 </ul>
+<br style="clear: both;" />

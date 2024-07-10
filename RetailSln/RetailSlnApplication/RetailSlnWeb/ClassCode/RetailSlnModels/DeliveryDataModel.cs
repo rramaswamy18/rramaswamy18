@@ -9,11 +9,15 @@ namespace RetailSlnModels
 {
     public class DeliveryDataModel
     {
-        [Required(ErrorMessage = "Country")]
+        //[Required(ErrorMessage = "Country")]
         public long? AlternateTelephoneDemogInfoCountryId { set; get; }
 
+        public string AlternateTelephoneFormatted {  set; get; }
+
+        public string AlternateTelephoneHref { set; get; }
+
         [Display(Name = "Alt. Phone#")]
-        [Required(ErrorMessage = "Alternate phone#")]
+        //[Required(ErrorMessage = "Alternate phone#")]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "10 digit phone#")]
         public string AlternateTelephoneNum { set; get; }
 
@@ -21,6 +25,10 @@ namespace RetailSlnModels
 
         [Display(Name = "Delivery Instructions")]
         public string DeliveryInstructions { set; get; }
+
+        public string PrimaryTelephoneFormatted { set; get; }
+
+        public string PrimaryTelephoneHref { set; get; }
 
         [Required(ErrorMessage = "Country")]
         public long? PrimaryTelephoneDemogInfoCountryId { set; get; }

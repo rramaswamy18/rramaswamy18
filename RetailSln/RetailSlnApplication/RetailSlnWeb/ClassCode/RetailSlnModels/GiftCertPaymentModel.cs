@@ -12,17 +12,17 @@ namespace RetailSlnModels
         public float? GiftCertPaymentAmount { set; get; }
 
         [Display(Name = "Gift Cert#")]
-        [MinLength(16, ErrorMessage = "Enter 16 digit Gift Cert number")]
-        [MaxLength(16, ErrorMessage = "Enter 16 digit Gift Cert number")]
-        [Required(ErrorMessage = "Please enter gift cert number")]
+        [MinLength(18, ErrorMessage = "Enter 18 digit Gift Cert number")]
+        [MaxLength(18, ErrorMessage = "Enter 18 digit Gift Cert number")]
+        //[Required(ErrorMessage = "Please enter gift cert number")]
         public string GiftCertNumber { set; get; }
 
         public string GiftCertNumberLast4 { set; get; }
 
         [Display(Name = "Gift Cert Key")]
-        [MinLength(8, ErrorMessage = "Enter 8 digit Gift Cert key")]
-        [MaxLength(8, ErrorMessage = "Enter 8 digit Gift Cert key")]
-        [Required(ErrorMessage = "Please enter gift cert key")]
+        [MinLength(9, ErrorMessage = "Enter 9 digit Gift Cert key")]
+        [MaxLength(9, ErrorMessage = "Enter 9 digit Gift Cert key")]
+        //[Required(ErrorMessage = "Please enter gift cert key")]
         public string GiftCertKey { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }

@@ -3,6 +3,8 @@ using ArchitectureLibraryCacheData;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using SchoolPrdBusinessLayer;
+using SchoolPrdModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -227,6 +229,104 @@ namespace SchoolPrdWeb.Controllers
             return View();
             //string url = "/Home/Forbidden";
             //return JavaScript(string.Format("window.open('{0}', '_blank', 'left=100,top=100,width=500,height=500,toolbar=no,resizable=no,scrollable=yes');", url));
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("RegisterUserLoginUser")]
+        public ActionResult RegisterUserLoginUser(string id)
+        {
+            //int x = 1, y = 0, z = x / y;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                ViewData["ActionName"] = "REGISTER";
+            }
+            else
+            {
+                ViewData["ActionName"] = id.ToUpper();
+            }
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
+                actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult RegisterUserProf(RegisterUserProfModel registerUserProfModel)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            SchoolPrdBL schoolPrdBL = new SchoolPrdBL();
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ModelState.Clear();
+                TryValidateModel(registerUserProfModel);
+                archLibBL.RegisterUserProf(ref registerUserProfModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (ModelState.IsValid)
+                {
+                    PersonExtn1Model personExtn1Model = new PersonExtn1Model
+                    {
+                        PersonId = registerUserProfModel.PersonId,
+                        CertificateDocumentId = 0,
+                    };
+                    schoolPrdBL.RegisterUserProfPersonExtn1(personExtn1Model, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
+                registerUserProfModel.CaptchaAnswerRegister = null;
+                registerUserProfModel.CaptchaNumberRegister0 = Session["CaptchaNumberRegister0"].ToString();
+                registerUserProfModel.CaptchaNumberRegister1 = Session["CaptchaNumberRegister1"].ToString();
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                registerUserProfModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                success = false;
+                processMessage = "ERROR???";
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+            }
+            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserProfModel);
+            actionResult = Json(new { success, processMessage, htmlString });
+            //actionResult = PartialView("_RegisterUserProfData", registerUserProfModel);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
         }
 
         [AllowAnonymous]
