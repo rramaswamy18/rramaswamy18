@@ -1194,7 +1194,7 @@ namespace RetailSlnBusinessLayer
                 OrderDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 OrderStatusId = (long)OrderStatusEnum.Open,
                 PersonId = sessionObjectModel.PersonId,
-                TelephoneCountryId = 91,
+                TelephoneCountryId = sessionObjectModel.TelephoneCountryId,
                 TelephoneNumber = long.Parse(sessionObjectModel.PhoneNumber),
             };
             return orderHeader;

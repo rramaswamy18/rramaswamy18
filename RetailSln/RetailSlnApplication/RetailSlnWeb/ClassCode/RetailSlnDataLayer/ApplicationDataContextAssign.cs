@@ -16,7 +16,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@OrderCreatedByPersonId"].Value = (int)orderHeader.OrderCreatedByPersonId;
             sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
             sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
-            sqlCommand.Parameters["@PersonId].Value"].Value = orderHeader.PersonId;
+            sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
             sqlCommand.Parameters["@TelephoneCountryId"].Value = orderHeader.TelephoneCountryId;
             sqlCommand.Parameters["@TelephoneNumber"].Value = orderHeader.TelephoneNumber;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;

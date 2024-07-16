@@ -321,7 +321,8 @@ function paymentInfo2Save_onclick() {
                     "image": "https://avatars.githubusercontent.com/u/65504583?v=4",
                     "order_id": jsonObject.OrderId,
                     "handler": function (response) {
-                        console.log(9.18, response);
+                        console.log(9.18, response, response.razorpay_payment_id);
+                        console.log(9.27, document.getElementById('razorpay_payment_id').value);
                         //document.getElementById(("formRazorPayReturn").action = "/Home/RazorPayReturn";
                         document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                         document.getElementById('razorpay_order_id').value = response.razorpay_order_id;

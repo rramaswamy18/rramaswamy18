@@ -43,7 +43,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@OrderCreatedByPersonId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.VarChar, 21);
             sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@PersonId", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@TelephoneCountryId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@TelephoneNumber", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
