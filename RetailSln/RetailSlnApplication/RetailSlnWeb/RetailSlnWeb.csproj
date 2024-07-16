@@ -234,7 +234,9 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemAttribListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemAttribMasterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemAttribModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemAttributesModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleDiscountModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
@@ -1801,8 +1803,30 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item742.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item743.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item744.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item745.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item746.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item747.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item748.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item749.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item75.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item750.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item751.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item752.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item753.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item754.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item755.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item756.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item757.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item758.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item759.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item76.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item760.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item761.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item762.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item763.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item764.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item765.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item766.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item77.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item78.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Items\Item79.png" />
@@ -2667,6 +2691,9 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt">
       <DependentUpon>Web.config.txt</DependentUpon>
     </Content>
+    <Content Include="Images\Home1.png" />
+    <Content Include="Images\Home2.png" />
+    <Content Include="Images\Home3.png" />
     <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Images\Checkout1.jpg" />
@@ -2936,8 +2963,14 @@
     <Content Include="Views\Home\_DeliveryInfoData1.cshtml" />
     <Content Include="Views\Home\_PaymentInfo3.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0.cshtml" />
-    <Content Include="Views\Home\ItemAttribsView.cshtml" />
-    <Content Include="Views\Home\_ItemAttribsView.cshtml" />
+    <Content Include="Views\Home\ItemAttributes.cshtml" />
+    <Content Include="Views\Home\_ItemAttributes.cshtml" />
+    <Content Include="Views\Home\_ItemAttributes0.cshtml" />
+    <Content Include="Views\Home\_ItemAttributes1.cshtml" />
+    <Content Include="Views\Home\_ItemAttributes2.cshtml" />
+    <Content Include="Views\Home\_ItemOrder.cshtml" />
+    <Content Include="Views\Home\_ItemAttributes3.cshtml" />
+    <Content Include="Views\Home\_ItemBundleItemData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

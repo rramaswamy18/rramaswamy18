@@ -51,16 +51,18 @@
     <!-- End Google Tag Manager (noscript) -->
     <script type="text/javascript">
         $(document).ready(function () {
-            //$('#toggle-icon').click(function () {
-            //    $('#myCollapsible').toggleClass('show');
-            //});
+            $('#toggle-icon').click(function () {
+                $('#myCollapsible').toggleClass('show');
+            });
             window_onload();
+            shoppingCartSummary_onclick();
         });
         function window_onload() {
             //$(".se-pre-con").fadeOut("slow");
             alert("Implement window on load in your page");
         }
     </script>
+    <script src="~/Include/orderItemCode0.js" type="text/javascript"></script>
     @Html.Partial("_Header2")
     <div id="divScrollIntoView"></div>
     <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">

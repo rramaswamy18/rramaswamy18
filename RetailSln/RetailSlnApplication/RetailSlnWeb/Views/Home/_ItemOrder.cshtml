@@ -1,0 +1,29 @@
+﻿@model RetailSlnModels.ItemModel
+<div class="center" style="width: 63%;">
+    <div style="display: table;">
+        <div style="display: table-row;">
+            <div style="display: table-cell; padding-right: 27px; text-align: left; vertical-align: middle;">
+                <span style="color: #ff0000; font-weight: bold;">Description</span>
+            </div>
+            <div style="display: table-cell; padding-right: 27px; text-align: right; vertical-align: middle; ">
+                <span style="color: #ff0000; font-weight: bold;">Price...</span>
+            </div>
+            <div style="display: table-cell; padding-right: 27px; text-align: left;">
+                <span style="color: #ff0000; font-weight: bold;">Order Qty...</span>
+            </div>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell; padding-right: 27px; text-align: left; vertical-align: middle; ">
+                <span style="color: #000000; font-weight: bold;">@Model.ItemShortDesc</span>
+            </div>
+            <div style="display: table-cell; padding-right: 27px; text-align: right; vertical-align: middle; ">
+                <span style="color: #000000; font-weight: bold;">@Model.ItemRateFormatted</span>
+            </div>
+            <div style="display: table-cell; text-align: left;">
+                <input class="form-control" id="orderQty" inputmode="numeric" max="9999" maxlength="4" min="1" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
+                &nbsp;
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet1_onclick(@Model.ItemId, '');" title="Enter quantity and click add to cart @Model.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
+            </div>
+        </div>
+    </div>
+</div>

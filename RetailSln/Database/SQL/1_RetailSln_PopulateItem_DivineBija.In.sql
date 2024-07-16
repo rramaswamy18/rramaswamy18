@@ -7,13 +7,13 @@ DECLARE @ClientId BIGINT = 3
 TRUNCATE TABLE RetailSlnSch.ItemMaster
 
 --Begin Item Master
-INSERT RetailSlnSch.ItemMaster(ClientId, ItemMasterDesc)
-SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(Description1)) AS ItemMasterDesc
+INSERT RetailSlnSch.ItemMaster(ClientId, ItemMasterUniqueDesc)
+SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(UniqueDescription)) AS ItemMasterUniqueDesc
 FROM dbo.DivineBija_Products --WHERE [India Active] = 1
 UNION
-SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemSItemMasterDeschortDesc
+SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(UniqueDescription)) AS ItemMasterUniqueDesc
 FROM dbo.DivineBija_Books --WHERE [India Active] = 1
-ORDER BY ItemMasterDesc
+ORDER BY ItemMasterUniqueDesc
 --End Item Master
 
 --Begin Item
@@ -24,36 +24,36 @@ DBCC CHECKIDENT ('RetailSlnSch.Item', RESEED, 0);
 SET IDENTITY_INSERT RetailSlnSch.Item ON
 
 INSERT RetailSlnSch.Item
-      (ItemId, ClientId, ItemDesc, ItemMasterId, ItemRate, ItemRateMSRP, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2, ItemShortDesc3
-	  ,ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName)
+      (ItemId, ClientId, ItemDesc, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
+	  ,ItemShortDesc3, ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName)
 --Type -> Items
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate
-      ,[MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0, RTRIM(LTRIM(Description1)) AS ItemShortDesc1
-	  ,RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3, RTRIM(LTRIM(Description)) AS ItemShortDesc
-	  ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 100 AS ItemTypeId
-	  ,RTRIM(LTRIM(UniqueDescription)) AS ItemUniqueDesc, ItemId AS ProductItemId, ImageFileName + '.jpg' AS UploadImageFileName
-FROM dbo.DivineBija_Products
-INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterDesc = RTRIM(LTRIM(DivineBija_Products.Description1))
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
+      ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0
+	  ,RTRIM(LTRIM(Description1)) AS ItemShortDesc1, RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3
+	  ,RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
+	  ,100 AS ItemTypeId, RTRIM(LTRIM(UniqueDescription)) AS ItemUniqueDesc, ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
+  FROM dbo.DivineBija_Products
+INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterUniqueDesc = RTRIM(LTRIM(DivineBija_Products.UniqueDescription))
 WHERE [Item Type] = 'ITEMS' AND [India Active] = 1
 UNION
 --Type --> Item Bundle
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate
-      ,[MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0, RTRIM(LTRIM(Description1)) AS ItemShortDesc1
-	  ,RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3, RTRIM(LTRIM(Description)) AS ItemShortDesc
-	  ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 300 AS ItemTypeId
-	  ,RTRIM(LTRIM(UniqueDescription)) AS ItemUniqueDesc, ItemId AS ProductItemId, ImageFileName + '.jpg' AS UploadImageFileName
-FROM dbo.DivineBija_Products
-INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterDesc = RTRIM(LTRIM(DivineBija_Products.Description1))
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
+      ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0
+	  ,RTRIM(LTRIM(Description1)) AS ItemShortDesc1, RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3
+	  ,RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
+	  ,300 AS ItemTypeId, RTRIM(LTRIM(UniqueDescription)) AS ItemUniqueDesc, ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
+  FROM dbo.DivineBija_Products
+INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterUniqueDesc = RTRIM(LTRIM(DivineBija_Products.UniqueDescription))
 WHERE [Item Type] = 'BUNDLE' AND [India Active] = 1
 UNION
 ----Type --> Books
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate
-      ,[MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(ProductDesc0)) AS ItemShortDesc0, RTRIM(LTRIM(ProductDesc1)) AS ItemShortDesc1
-	  ,NULL AS ItemShortDesc2, NULL AS ItemShortDesc3, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc, 5 AS ItemStarCount,
-	  CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId, NULL AS ItemUniqueDesc, ItemId AS ProductItemId
-	  ,Image1 AS UploadImageFileName
-FROM dbo.DivineBija_Books
-INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterDesc = RTRIM(LTRIM(DivineBija_Books.ProductDesc))
+SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
+      ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(ProductDesc0)) AS ItemShortDesc0
+	  ,RTRIM(LTRIM(ProductDesc1)) AS ItemShortDesc1, NULL AS ItemShortDesc2, NULL AS ItemShortDesc3, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc
+	  ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId
+	  ,RTRIM(LTRIM(ItemMaster.ItemMasterUniqueDesc)) AS ItemMasterUniqueDesc, ItemId AS ProductItemId, Image1 AS UploadImageFileName
+  FROM dbo.DivineBija_Books
+INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterUniqueDesc = RTRIM(LTRIM(DivineBija_Books.UniqueDescription))
 WHERE [India Active] = 1
 ORDER BY Id
 
@@ -70,32 +70,39 @@ TRUNCATE TABLE RetailSlnSch.CategoryItemHier
 --Categories
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 1 AS SeqNum, 99 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 2 AS SeqNum, 111 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 3 AS SeqNum, 107 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 4 AS SeqNum, 110 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 5 AS SeqNum, 101 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 6 AS SeqNum, 103 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 7 AS SeqNum, 104 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 8 AS SeqNum, 105 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 9 AS SeqNum, 106 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 10 AS SeqNum, 109 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 11 AS SeqNum, 112 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 12 AS SeqNum, 114 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 13 AS SeqNum, 115 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 14 AS SeqNum, 113 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 15 AS SeqNum, 108 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 16 AS SeqNum, 116 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 17 AS SeqNum, 117 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 18 AS SeqNum, 118 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 19 AS SeqNum, 102 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 20 AS SeqNum, 119 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 21 AS SeqNum, 100 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 2 AS SeqNum, 115 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 2.5 AS SeqNum, 119 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 3 AS SeqNum, 100 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 4 AS SeqNum, 111 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 5 AS SeqNum, 107 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 6 AS SeqNum, 101 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 7 AS SeqNum, 110 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 8 AS SeqNum, 103 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 9 AS SeqNum, 104 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 10 AS SeqNum, 105 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 11 AS SeqNum, 106 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 12 AS SeqNum, 109 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 13 AS SeqNum, 112 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 14 AS SeqNum, 114 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 15 AS SeqNum, 113 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 16 AS SeqNum, 108 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 17 AS SeqNum, 116 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 18 AS SeqNum, 117 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 19 AS SeqNum, 118 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem UNION
+SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 20 AS SeqNum, 102 AS CategoryId, NULL AS ItemId, '' AS ProcessType, 'Category' AS CategoryOrItem
 
 --INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 --SELECT @ClientId AS ClientId, 5 AS CategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
 --SELECT @ClientId AS ClientId, 5 AS CategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem
 
---Featured Items All
+----Test
+--INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
+----SELECT @ClientId AS ClientId, 2 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+--SELECT @ClientId AS ClientId, 121 AS ParentCategoryId, ItemId - 0 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
+--FROM RetailSlnSch.Item WHERE ItemId IN(45, 54, 63, 72, 81)--BETWEEN 1 AND 4
+--ORDER BY SeqNum
+
+--Featured Items
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 --SELECT @ClientId AS ClientId, 2 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
 SELECT @ClientId AS ClientId, 99 AS ParentCategoryId, ItemId - 0 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
@@ -125,7 +132,7 @@ ORDER BY UniqueDescription
 --Items in Remaining Categories
 INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
 SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON Category.CategoryDesc IN([Category 1], [Category 2], [Category 3], [Category 4], [Category 5], [Category 6])
+FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON Category.CategoryNameDesc IN([Category 1], [Category 2], [Category 3], [Category 4], [Category 5], [Category 6])
 WHERE [India Active] = 1 AND Category.CategoryId > 100
 ORDER BY ParentCategoryId, SeqNum
 --End CategoryHierItem
@@ -385,6 +392,24 @@ FROM dbo.DivineBija_Books WHERE DivineBija_Books.[Language] <> '' AND ItemAttrib
 END
 /*Update Books End------------------------------------------------------------------------------------------------------------------*/
 --End Item Attributes
+
+--Begin Item Bundle
+UPDATE dbo.DivineBija_ItemBundle SET BundleItemId = NULL, ItemId = NULL
+UPDATE dbo.DivineBija_ItemBundle SET BundleItemId = Item.ItemId FROM RetailSlnSch.Item WHERE BundleUniqueDescription = Item.ItemUniqueDesc AND BundleItemId IS NULL
+UPDATE dbo.DivineBija_ItemBundle SET ItemId = Item.ItemId FROM RetailSlnSch.Item WHERE ItemUniqueDescription = Item.ItemUniqueDesc AND DivineBija_ItemBundle.ItemId IS NULL
+
+SELECT DISTINCT BundleUniqueDescription FROM dbo.DivineBija_ItemBundle WHERE BundleItemId IS NULL
+SELECT DISTINCT ItemUniqueDescription FROM dbo.DivineBija_ItemBundle WHERE ItemId IS NULL
+
+TRUNCATE TABLE RetailSlnSch.ItemBundleItem
+
+INSERT RetailSlnSch.ItemBundleItem(ClientId, BundleItemId, SeqNum, ItemId, Quantity)
+SELECT @ClientId AS ClientId, ItemBundle.ItemId AS BundleItemId, CAST(DivineBija_ItemBundle.[Seq Num] AS FLOAT) AS SeqNum, Item.ItemId, DivineBija_ItemBundle.Quantity
+  FROM dbo.DivineBija_ItemBundle
+INNER JOIN RetailSlnSch.Item AS ItemBundle ON DivineBija_ItemBundle.BundleUniqueDescription = ItemBundle.ItemUniqueDesc
+INNER JOIN RetailSlnSch.Item ON DivineBija_ItemBundle.ItemUniqueDescription = Item.ItemUniqueDesc
+ORDER BY ItemBundle.ItemId, CAST(DivineBija_ItemBundle.[Seq Num] AS FLOAT)
+--End Item Bundle
 
 --Begin ItemSpec
 TRUNCATE TABLE RetailSlnSch.ItemSpec

@@ -1,44 +1,81 @@
 ﻿@model string
 @using ArchitectureLibraryCacheData
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     var searchText = Model.Trim().ToLower();
-    var itemModels = RetailSlnCache.ItemModels.Where(x => x.ItemShortDesc0.ToLower().Contains(searchText) || x.ItemShortDesc1.ToLower().Contains(searchText)).ToList();
+    var itemModels = RetailSlnCache.ItemModels.Where(x => x.ItemShortDesc0.ToLower().Contains(searchText) || x.ItemShortDesc1.ToLower().Contains(searchText) || x.ItemShortDesc2.ToLower().Contains(searchText) || x.ItemShortDesc3.ToLower().Contains(searchText)).ToList();
     int index = 0;
 }
-<table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 63%;">
+<table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 73%;">
     <tr>
-        <th class="text-center" style="width: 9%;">
+        <th class="text-center" style="vertical-align: top; width: 9%;">
             #
         </th>
-        <th class="text-center" style="width: 9%;">
+        <th class="text-center" style="vertical-align: top; width: 9%;">
             Id
         </th>
-        <th class="text-left">
+        <th class="text-left" style="vertical-align: top;">
             Item
         </th>
-        <th class="text-left" style="width: 99px;">
-            Image
+        <th class="text-center" style="vertical-align: top;">
+            Price
+        </th>
+        <th class="text-left" style="vertical-align: top; width: 144px;">
+        </th>
+        <th class="text-left" style="vertical-align: top; width: 99px;">
         </th>
     </tr>
     @foreach (var itemModel in itemModels)
     {
         index++;
         <tr>
-            <td>
+            <td style="vertical-align: top;">
                 @index
             </td>
-            <td>
-                @itemModel.ItemId
+            <td style="vertical-align: top;">
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemModel.ItemShortDesc">
+                    @itemModel.ItemId
+                </a>
             </td>
-            <td class="text-left">
-                @(itemModel.ItemShortDesc0 + " " + itemModel.ItemShortDesc1)
+            <td class="text-left" style="vertical-align: top;">
+                @itemModel.ItemShortDesc
+                @if (itemModel.ItemAttribModelsForDisplay.Count > 0)
+                {
+                    <br />
+                    foreach (var ItemAttribModelForDisplay in itemModel.ItemAttribModelsForDisplay)
+                    {
+                        if (ItemAttribModelForDisplay.Key != "ProductCode" && ItemAttribModelForDisplay.Key != "HSNCode")
+                        {
+                            <span style="color: #000000; font-size: 11px; font-weight: 600;">@ItemAttribModelForDisplay.Value.ItemAttribValueForDisplay</span>
+                        }
+                    }
+                    <br style="clear: both;" />
+                }
+                <br style="clear: both;" />
+                @if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                {
+                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">Bundle</a>
+                }
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+
             </td>
-            <td class="text-left">
-                <img alt="@(itemModel.ItemShortDesc0 + " " + itemModel.ItemShortDesc1 + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemModel.ImageName" style="height: 90px; width: 90px;" title="@(itemModel.ItemShortDesc0 + " " + itemModel.ItemShortDesc1 + " " + imageTitle)" />
+            <td class="text-right" style="vertical-align: top;">
+                @itemModel.ItemRateFormatted
+            </td>
+            <td class="text-left" style="vertical-align: top;">
+                <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" type="number" value="" />
+                &nbsp;
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet1_onclick(@itemModel.ItemId, @index);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            </td>
+            <td class="text-left" style="vertical-align: top;">
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemModel.ItemShortDesc">
+                    <img alt="@(itemModel.ItemShortDesc0 + " " + itemModel.ItemShortDesc1 + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemModel.ImageName" style="height: 90px; width: 90px;" title="@(itemModel.ItemShortDesc0 + " " + itemModel.ItemShortDesc1 + " " + imageTitle)" />
+                </a>
             </td>
         </tr>
     }

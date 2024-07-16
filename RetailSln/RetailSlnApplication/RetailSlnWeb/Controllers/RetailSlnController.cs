@@ -66,6 +66,55 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: AddToCart1
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult AddToCart1(string itemId, string orderQty)
+        {
+            ViewData["ActionName"] = "AddToCart1";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            int shoppingCartItemsCount = 0;
+            string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+                List<ShoppingCartItemModel> shoppingCartItemModels = new List<ShoppingCartItemModel>
+                {
+                    new ShoppingCartItemModel
+                    {
+                        ItemId = long.Parse(itemId),
+                        OrderQty = long.Parse(orderQty),
+                    }
+                };
+                retailSlnBL.AddToCart(ref paymentInfoModel, shoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //long.TryParse(id, out long tempId);
+                success = true;
+                processMessage = "SUCCESS!!!";
+                Session["PaymentInfo"] = paymentInfoModel;
+                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
+                shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
+                shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while adding item to cart";
+            }
+            actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
         // POST: AddToCart
         [AllowAnonymous]
         [HttpPost]
@@ -605,53 +654,13 @@ namespace RetailSlnWeb.Controllers
             #endregion
         }
 
-
         // GET : ItemBundleItemListView
         [AllowAnonymous]
         [HttpGet]
-        [Route("ItemAttribsView")]
-        public ActionResult ItemAttribsView(string id, string tabId)
+        [Route("ItemAttributes")]
+        public ActionResult ItemAttributes(string id, string tabId)
         {
-            return View();
-        }
-
-        // GET : ItemBundleItemListView
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("ItemBundleItemListView")]
-        public ActionResult ItemBundleItemListView(string id)
-        {
-            ViewData["ActionName"] = "ItemBundleItemListView";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "0000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            try
-            {
-                long itemId = long.Parse(id);
-                ItemBundleItemListModel itemBundleItemList = retailSlnBL.ItemBundleItemList(itemId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("ItemBundleItemListView", itemBundleItemList);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ModelState.AddModelError("", "Item Image List View / GET");
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error");
-            }
-            return actionResult;
-        }
-
-        // GET : ItemSpecList
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("ItemSpecList")]
-        public ActionResult ItemSpecList(string id)
-        {
-            ViewData["ActionName"] = "ItemSpecList";
+            ViewData["ActionName"] = "itemAttribsView";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -662,19 +671,124 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 long itemId = long.Parse(id);
-                ItemSpecListModel itemSpecListModel = retailSlnBL.ItemSpecList(itemId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("ItemSpecList", itemSpecListModel);
+                ItemAttributesModel itemAttributesModel = retailSlnBL.ItemAttributes(itemId, long.Parse(tabId), clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("ItemAttributes", itemAttributesModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ModelState.AddModelError("", "Item Spec List / GET");
+                ModelState.AddModelError("", "item Attribs View / GET");
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("Error");
             }
             return actionResult;
         }
+
+        // GET : ItemBundleItemData
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult ItemBundleItemData(string id, string prefixSeqNum, string paddingLeft)
+        {
+            ViewData["ActionName"] = "ItemBundleItemData";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                ItemBundleItemDataModel itemBundleItemDataModel = retailSlnBL.ItemBundleItemData(long.Parse(id), prefixSeqNum, int.Parse(paddingLeft), clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (itemBundleItemDataModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Success)
+                {
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_ItemBundleItemData", itemBundleItemDataModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_Error", itemBundleItemDataModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                }
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Item Bundle Item Data / GET");
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error");
+            }
+            return actionResult;
+        }
+        #region
+        //// GET : ItemBundleItemListView
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("ItemBundleItemListView")]
+        //public ActionResult ItemBundleItemListView(string id)
+        //{
+        //    ViewData["ActionName"] = "ItemBundleItemListView";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "0000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    try
+        //    {
+        //        long itemId = long.Parse(id);
+        //        ItemBundleItemListModel itemBundleItemList = retailSlnBL.ItemBundleItemList(itemId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("ItemBundleItemListView", itemBundleItemList);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ModelState.AddModelError("", "Item Image List View / GET");
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error");
+        //    }
+        //    return actionResult;
+        //}
+
+        //// GET : ItemSpecList
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("ItemSpecList")]
+        //public ActionResult ItemSpecList(string id)
+        //{
+        //    ViewData["ActionName"] = "ItemSpecList";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        long itemId = long.Parse(id);
+        //        ItemSpecListModel itemSpecListModel = retailSlnBL.ItemSpecList(itemId, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("ItemSpecList", itemSpecListModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ModelState.AddModelError("", "Item Spec List / GET");
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error");
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET: OrderCategoryItem
         [AllowAnonymous]

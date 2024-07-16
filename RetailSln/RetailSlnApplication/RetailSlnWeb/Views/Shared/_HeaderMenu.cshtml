@@ -10,7 +10,13 @@
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
     List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
-    int mainCategoryCount = 5;
+    int mainCategoryCount = 6;
+    //int mainCategoryCount1 = (categoryItemHierModels.Count - mainCategoryCount) / 2;
+    //int mainCategoryCount2 = mainCategoryCount1 + mainCategoryCount;
+    //if (categoryItemHierModels.Count > mainCategoryCount1 * 2 + mainCategoryCount)
+    //{
+    //    mainCategoryCount2++;
+    //}
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string actionName, aspNetRoleName, controllerName;
     if (sessionObjectModel == null)
@@ -47,8 +53,33 @@
         display: block;
     }
 </style>
+<style>
+    .scrollable-list {
+        width: 153px;
+        z-index: 20000;
+        max-height: 360px;
+        overflow-y: auto;
+    }
+
+        .scrollable-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .scrollable-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+            .scrollable-list::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+</style>
 <ul class="nav navbar-nav">
-    <li>
+    <li style="display: none;">
         <span id="menuCategoryId0" style="display: none;">-1</span>
         <a id="menuItem0" href="@Url.Action("Index", "Home")" style="color: #ffffff; font-weight: bold;" title="@imageTitle">
             Home
@@ -60,7 +91,7 @@
         {
             <li>
                 <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryNameDesc + " " + imageTitle)">
                     @categoryItemHierModels[i].CategoryModel.CategoryDesc
                 </a>
             </li>
@@ -68,17 +99,47 @@
     }
     <li>
         <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
-        <ul style="width: 153px; z-index:20000">
+        <ul class="scrollable-list">
             @for (; i < categoryItemHierModels.Count; i++)
             {
                 <li>
                     <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryNameDesc + " " + imageTitle)">
                         @categoryItemHierModels[i].CategoryModel.CategoryDesc
                     </a>
                 </li>
             }
         </ul>
+        @*<div class="container" style="width: 190px; z-index:20000;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul style="padding-left: 0; list-style-type: none;">
+                            @for (; i < mainCategoryCount2; i++)
+                            {
+                                <li style="padding-bottom: 10px; padding-right: 10px;">
+                                    <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
+                                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold; white-space: nowrap;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                                        @categoryItemHierModels[i].CategoryModel.CategoryDesc
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul style="padding-left: 0; list-style-type: none;">
+                            @for (; i < categoryItemHierModels.Count; i++)
+                            {
+                                <li style="padding-bottom: 10px;">
+                                    <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
+                                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold; white-space: nowrap;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                                        @categoryItemHierModels[i].CategoryModel.CategoryDesc
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
     </li>
     <li>
         <a href="javascript: void(0);" style="cursor: default;">

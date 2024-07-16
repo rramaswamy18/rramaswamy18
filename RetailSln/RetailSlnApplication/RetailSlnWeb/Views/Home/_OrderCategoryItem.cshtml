@@ -36,20 +36,20 @@
         {
             categoryItemHierModels.Insert(0, categoryLayoutModel.CategoryItemHierModels[0]);
         }
-        var paymentInfo1Model = (PaymentInfo1Model)Session["PaymentInfoModel"];
-        paymentInfo1Model = paymentInfo1Model ?? new PaymentInfo1Model();
-        paymentInfo1Model.ShoppingCartModel = paymentInfo1Model.ShoppingCartModel ?? new ShoppingCartModel();
-        paymentInfo1Model.ShoppingCartModel.BackToTop = true;
-        paymentInfo1Model.ShoppingCartModel.Checkout = true;
-        paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
-        //paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryModel = new ShoppingCartSummaryModel();
-        paymentInfo1Model.ShoppingCartModel.ShoppingCartItems = paymentInfo1Model.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
-        paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
-        for (int i = 1; i < paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryItems.Count; i++)
+        var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+        paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
+        paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
+        paymentInfoModel.ShoppingCartModel.BackToTop = true;
+        paymentInfoModel.ShoppingCartModel.Checkout = true;
+        paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
+        //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = new ShoppingCartSummaryModel();
+        paymentInfoModel.ShoppingCartModel.ShoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
+        paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
+        for (int i = 1; i < paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count; i++)
         {
-            paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryItems.RemoveAt(1);
+            paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.RemoveAt(1);
         }
-        foreach (var shoppingCartItem in paymentInfo1Model.ShoppingCartModel.ShoppingCartItems)
+        foreach (var shoppingCartItem in paymentInfoModel.ShoppingCartModel.ShoppingCartItems)
         {
             shoppingCartItem.ShoppingCartItemSummarys = new List<ShoppingCartItemModel>();
         }
@@ -62,14 +62,14 @@
             @BuildPaginationLinks(pageCount)
             <br style="clear: both;" />
         }
-        @BuildOrderCategoryItem(categoryItemHierModels)
+        @BuildOrderCategoryItem(paymentInfoModel, categoryItemHierModels)
         if (Model.ParentCategoryId != 0)
         {
             <br style="clear: both;" />
             @BuildPaginationLinks(pageCount)
         }
         <div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
-            @Html.Partial("_ShoppingCart", paymentInfo1Model.ShoppingCartModel)
+            @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
         </div>
     }
 }@*helper BuildOrderCategoryItemHier(long parentCategoryId)*@
@@ -129,7 +129,7 @@
         }
     </ul>
 }
-@helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)
+@helper BuildOrderCategoryItem(PaymentInfo1Model paymentInfoModel, List<CategoryItemHierModel> categoryItemHierModels)
 {
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
@@ -152,7 +152,7 @@
             categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[categoryItemHierModel.CategoryModel.CategoryId.Value];
             categoryItemHierModelsRecursive = categoryLayoutModel.CategoryItemHierModels;
             <br style="clear: both;" />
-            @BuildOrderCategoryItem(categoryItemHierModelsRecursive)
+            @BuildOrderCategoryItem(paymentInfoModel, categoryItemHierModelsRecursive)
         }//if (categoryItemHierModel.ProcessType == "Recursive")
         else
         {
@@ -178,7 +178,7 @@
                     imageIndex++;
                     imageCountIndex++;
                     <div style="display: inline-block; padding: 18px; vertical-align: top; width: @imageDivWidth;">
-                        @BuildItem(categoryItemHierModel.ItemModel, categoryItemHierModel.SeqNum, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                        @BuildItem(paymentInfoModel, categoryItemHierModel.ItemModel, categoryItemHierModel.SeqNum, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
                     </div>
                 }//else (categoryItemHierModel.CategoryId != null)
             }//else (categoryItemHierModel.ProcessType == "ParentCategoryName")
@@ -206,28 +206,28 @@
         </div>
     </a>
 }
-@helper BuildItem(ItemModel itemModel, float seqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+@helper BuildItem(PaymentInfo1Model paymentInfoModel, ItemModel itemModel, float seqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
     //int k;
     string defaultOrderQty = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty");
-    var shoppingCartItems = ((ShoppingCartModel)Session["ShoppingCartModel"])?.ShoppingCartItems;
+    var shoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems;
     ShoppingCartItemModel shoppingCartItemModel;
-    <a  href="@Url.Action("ItemAttribsView", "Home", new { id = itemModel.ItemId })" target="_blank" title="View specifications, images, bundle - @itemModel.ItemShortDesc">
+    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemModel.ItemShortDesc">
         <img alt="@itemModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@itemModel.ImageTitle" />
     </a>
     if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     {
-        <div style="position: relative;">
+        @*<div style="position: relative;">
             <div style="bottom: 1px; left: 2px; position: absolute;">
                 <span style="background-color: #000000; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" title="@itemModel.ImageTitle">Sold out&nbsp;</span>
             </div>
-        </div>
+        </div>*@
     }
     if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
         <div style="position: relative;">
             <div style="bottom: 1px; right: 2px; position: absolute;">
-                <span style="background-color: #000000; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" title="@itemModel.ImageTitle">Item Bundle&nbsp;</span>
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 3 })" style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" target="_blank" title="@itemModel.ImageTitle">Item Bundle&nbsp;</a>
             </div>
         </div>
     }
@@ -259,12 +259,15 @@
     </div>
     if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
-        <a href="@Url.Action("ItemBundleItemListView", "Home", new { id = itemModel.ItemId })" style="color: #000000; font-size: 11px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">Item(s)</a>
+        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemModel.ItemShortDesc">Bundle</a>
     }
-    <a href="@Url.Action("ItemSpecList", "Home", new { id = itemModel.ItemId })" style="color: #ff0000; font-size: 11px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
-    <a href="@Url.Action("ItemImageListView", "Home", new { id = itemModel.ItemId })" style="color: #0000ff; font-size: 11px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
+    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemModel.ItemShortDesc">Spec(s)</a>
+    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemModel.ItemId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemModel.ItemShortDesc">Image(s)</a>
     if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     {
+        <br style="clear: both;" />
+        <br style="clear: both;" />
+        <span style="color: #000000; font-size: 17px; font-weight: 900;">SOLD OUT</span>
     }//if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     else
     {

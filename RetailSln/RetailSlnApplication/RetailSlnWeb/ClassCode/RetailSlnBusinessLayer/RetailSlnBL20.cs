@@ -1,4 +1,5 @@
-﻿using ArchitectureLibraryDocumentService;
+﻿using ArchitectureLibraryCacheData;
+using ArchitectureLibraryDocumentService;
 using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
@@ -501,6 +502,92 @@ namespace RetailSlnBusinessLayer
                 }
             }
         }
+        // GET : ItemAttributes
+        public ItemAttributesModel ItemAttributes(long itemId, long tabId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ItemAttributesModel itemAttribsModel = new ItemAttributesModel
+                {
+                    ItemAttribsTabs = new List<string>
+                    {
+                        "Attribute(s)",
+                        "Specification(s)",
+                        "Image(s)",
+                        "Bundled Item(s)",
+                    },
+                    ItemId = itemId,
+                    TabId = tabId,
+                    ItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId),
+                    ItemSpecListModel = ItemSpecList(itemId, clientId, ipAddress, execUniqueId, loggedInUserId),
+                };
+                itemAttribsModel.ItemSpecListModel.ItemSpecModels.Insert(0, new ItemSpecModel { ItemSpecLabelText = "Attribute(s)" });
+                return itemAttribsModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        // GET : ItemBundleItemData
+        public ItemBundleItemDataModel ItemBundleItemData(long bundleItemId, string prefixSeqNum, int paddingLeft, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ItemBundleItemDataModel itemBundleItemDataModel;
+           
+            try
+            {
+                itemBundleItemDataModel = new ItemBundleItemDataModel
+                {
+                    //ItemBundleItemId = RetailSlnCache.ItemBundleItemModels.FindAll(x => x.BundleItemId == bundleItemId)[0].ItemBundleItemId,
+                    BundleItemId = bundleItemId,
+                    PrefixSeqNum = prefixSeqNum,
+                    BundleItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == bundleItemId),
+                    ItemBundleItemModels = RetailSlnCache.ItemBundleItemModels.FindAll(x => x.BundleItemId == bundleItemId),
+                    //ItemModels = new List<ItemModel>(),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>(),
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    }
+                };
+                //RetailSlnCache.ItemBundleItemModels.Where(x => x.BundleItemId == bundleItemId)
+                //foreach (var itemBundleItemModel in RetailSlnCache.ItemBundleItemModels.FindAll(x => x.BundleItemId == bundleItemId).OrderBy(y => y.SeqNum))
+                //{
+                //    itemBundleItemDataModel.ItemModels.Add(itemBundleItemModel.ItemModel);
+                //}
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                itemBundleItemDataModel = new ItemBundleItemDataModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            "Error occurred while populating for Bundle " + bundleItemId,
+                            exception.Message,
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    }
+                };
+            }
+            finally
+            {
+            }
+            return itemBundleItemDataModel;
+        }
         //GET ItemBundleItemList
         public ItemBundleItemListModel ItemBundleItemList(long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -517,7 +604,7 @@ namespace RetailSlnBusinessLayer
                 };
                 foreach (var itemBundleItemModel in itemBundleItemListModel.ItemBundleItemModels)
                 {
-                    itemBundleItemModel.BundledItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemBundleItemModel.BundleItemId);
+                    itemBundleItemModel.BundleItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemBundleItemModel.BundleItemId);
                 }
                 return itemBundleItemListModel;
             }
@@ -743,63 +830,63 @@ namespace RetailSlnBusinessLayer
                 }
             }
         }
-        //DELETE ItemSpec
-        public ItemSpecListAddEditModel ItemSpecDelete(long itemSpecId, long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ItemSpecListAddEditModel itemSpecListAddEditModel;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ApplicationDataContext.OpenSqlConnection();
-                ApplicationDataContext.ItemSpecDelete(itemSpecId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                itemSpecListAddEditModel = new ItemSpecListAddEditModel
-                {
-                    ItemSpecListModel = ItemSpecList(itemId, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
-                    ItemSpecModel = new ItemSpecModel
-                    {
-                        ItemId = itemId,
-                        ResponseObjectModel = new ResponseObjectModel
-                        {
-                            ValidationSummaryMessage = "Item spec deleted successfully!!!",
-                        },
-                    },
-                };
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-                itemSpecListAddEditModel = new ItemSpecListAddEditModel
-                {
-                    ItemSpecModel = new ItemSpecModel
-                    {
-                        ItemId = itemId,
-                        ResponseObjectModel = new ResponseObjectModel
-                        {
-                            ValidationSummaryMessage = "PLEASE FIX ERRORS TO CONTINUE???",
-                        },
-                    },
-                };
-                modelStateDictionary.AddModelError("", "Error while deleting Item Spec");
-                modelStateDictionary.AddModelError("", "Please try again");
-                modelStateDictionary.AddModelError("", "If problem persists, please contact support personnel");
-            }
-            finally
-            {
-                try
-                {
-                    ApplicationDataContext.CloseSqlConnection();
-                }
-                catch
-                {
-                }
-            }
-            return itemSpecListAddEditModel;
-        }
+        ////DELETE ItemSpec
+        //public ItemSpecListAddEditModel ItemSpecDelete(long itemSpecId, long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ItemSpecListAddEditModel itemSpecListAddEditModel;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        ApplicationDataContext.ItemSpecDelete(itemSpecId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        itemSpecListAddEditModel = new ItemSpecListAddEditModel
+        //        {
+        //            ItemSpecListModel = ItemSpecList(itemId, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
+        //            ItemSpecModel = new ItemSpecModel
+        //            {
+        //                ItemId = itemId,
+        //                ResponseObjectModel = new ResponseObjectModel
+        //                {
+        //                    ValidationSummaryMessage = "Item spec deleted successfully!!!",
+        //                },
+        //            },
+        //        };
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        itemSpecListAddEditModel = new ItemSpecListAddEditModel
+        //        {
+        //            ItemSpecModel = new ItemSpecModel
+        //            {
+        //                ItemId = itemId,
+        //                ResponseObjectModel = new ResponseObjectModel
+        //                {
+        //                    ValidationSummaryMessage = "PLEASE FIX ERRORS TO CONTINUE???",
+        //                },
+        //            },
+        //        };
+        //        modelStateDictionary.AddModelError("", "Error while deleting Item Spec");
+        //        modelStateDictionary.AddModelError("", "Please try again");
+        //        modelStateDictionary.AddModelError("", "If problem persists, please contact support personnel");
+        //    }
+        //    finally
+        //    {
+        //        try
+        //        {
+        //            ApplicationDataContext.CloseSqlConnection();
+        //        }
+        //        catch
+        //        {
+        //        }
+        //    }
+        //    return itemSpecListAddEditModel;
+        //}
         //GET ItemSpecList
-        public ItemSpecListModel ItemSpecList(long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ItemSpecListModel ItemSpecList(long itemId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -810,7 +897,7 @@ namespace RetailSlnBusinessLayer
                 {
                     ItemId = itemId,
                     ItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId),
-                    ItemSpecModels = ItemSpecs(itemId, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ItemSpecModels = ItemSpecs(itemId, clientId, ipAddress, execUniqueId, loggedInUserId),
                 };
                 itemSpecListModel.ItemSpecModels.Insert(0, new ItemSpecModel { ItemSpecLabelText = "Attribute(s)" });
                 return itemSpecListModel;
@@ -824,44 +911,44 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
-        //GET ItemSpecListAddEditModel
-        public ItemSpecListAddEditModel ItemSpecListAddEdit(long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ApplicationDataContext.OpenSqlConnection();
-                ItemSpecListAddEditModel itemDescListAddEditModel = new ItemSpecListAddEditModel
-                {
-                    ItemSpecListModel = ItemSpecList(itemId, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
-                    ItemSpecModel = new ItemSpecModel
-                    {
-                        ItemId = itemId,
-                    },
-                };
-                return itemDescListAddEditModel;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-                throw;
-            }
-            finally
-            {
-                try
-                {
-                    ApplicationDataContext.CloseSqlConnection();
-                }
-                catch
-                {
-                }
-            }
-        }
+        ////GET ItemSpecListAddEditModel
+        //public ItemSpecListAddEditModel ItemSpecListAddEdit(long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        ItemSpecListAddEditModel itemDescListAddEditModel = new ItemSpecListAddEditModel
+        //        {
+        //            ItemSpecListModel = ItemSpecList(itemId, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
+        //            ItemSpecModel = new ItemSpecModel
+        //            {
+        //                ItemId = itemId,
+        //            },
+        //        };
+        //        return itemDescListAddEditModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        try
+        //        {
+        //            ApplicationDataContext.CloseSqlConnection();
+        //        }
+        //        catch
+        //        {
+        //        }
+        //    }
+        //}
         //ItemSpecs
-        public List<ItemSpecModel> ItemSpecs(long itemId, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public List<ItemSpecModel> ItemSpecs(long itemId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());

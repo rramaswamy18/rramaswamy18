@@ -113,6 +113,54 @@ function addToCartGet_onclick(index, defaultOrderQty, categoryId) {
     }
     return false;
 }
+function addToCartGet1_onclick(itemId, index) {
+    var orderQty = document.getElementById("orderQty" + index).value;
+    console.log("addToCartGet1_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    try {
+        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
+        if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + index).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + index).getAttribute("min") && orderQty <= document.getElementById("orderQty" + index).getAttribute("max")) {
+        }
+        else {
+            $('#loadingModal').modal('hide');
+            document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
+            return false;
+        }
+        var url = "/Home/AddToCart1/";
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            data: { "itemId": itemId, "orderQty": orderQty },
+            async: true,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCartGet1_onclick", "00090000", "SUCCESS!!!");
+                //var jsonData = JSON.parse(responseData);
+                document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
+                document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                document.getElementById("orderQty" + index).value = "";
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCartGet1_onclick", "00099000", "ERROR???");
+                console.log(exception, xhr);
+                var jsonData = JSON.parse(xhr.responseText);
+                document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                //document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
+            }
+        });
+    }
+    catch (err) {
+        $('#loadingModal').modal('hide');
+        alert("Please fix errors to continue???");
+        console.log(err);
+    }
+    return false;
+}
 function categoryId_onclick(categoryId, pageNum, baseUrl) {
     console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

@@ -1,5 +1,7 @@
 ﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @{
     //DivineBija.in --> 97
@@ -7,8 +9,22 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
     int mainCategoryCount = 5;
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string actionName, aspNetRoleName, controllerName;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
+    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+    actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+    controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+    string baseUrl = Url.Action(actionName, controllerName);
 }
 <style>
     ul ul {
@@ -44,7 +60,7 @@
         {
             <li>
                 <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
                     @categoryItemHierModels[i].CategoryModel.CategoryDesc
                 </a>
             </li>
@@ -57,7 +73,7 @@
             {
                 <li>
                     <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
                         @categoryItemHierModels[i].CategoryModel.CategoryDesc
                     </a>
                 </li>

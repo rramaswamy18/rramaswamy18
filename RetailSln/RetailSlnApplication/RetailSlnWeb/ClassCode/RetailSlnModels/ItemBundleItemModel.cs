@@ -14,11 +14,13 @@ namespace RetailSlnModels
 
         public long BundleItemId { set; get; }
 
-        public ItemModel BundledItemModel { set; get; }
+        public ItemModel BundleItemModel { set; get; }
 
         public float SeqNum { set; get; }
 
         public long ItemId { set; get; }
+
+        public short Quantity { set; get; }
 
         public ItemModel ItemModel { set; get; }
     }

@@ -34,10 +34,13 @@ namespace RetailSlnDataLayer
                         CategoryId = long.Parse(sqlDataReader["CategoryId"].ToString()),
                         CategoryDesc = sqlDataReader["CategoryDesc"].ToString(),
                         CategoryName = sqlDataReader["CategoryName"].ToString(),
+                        CategoryNameDesc = sqlDataReader["CategoryNameDesc"].ToString(),
                         CategoryStatusId = (CategoryStatusEnum)int.Parse(sqlDataReader["CategoryStatusId"].ToString()),
                         CategoryTypeId = (CategoryTypeEnum)int.Parse(sqlDataReader["CategoryTypeId"].ToString()),
                         ImageName = sqlDataReader["ImageName"].ToString(),
+                        MaxPerPage = short.Parse(sqlDataReader["MaxPerPage"].ToString()),
                         UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                        ViewName = sqlDataReader["ViewName"].ToString(),
                     };
                 }
                 else
@@ -123,6 +126,7 @@ namespace RetailSlnDataLayer
                         ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
                         ItemName = sqlDataReader["ItemName"].ToString(),
                         ItemDesc = sqlDataReader["ItemDesc"].ToString(),
+                        ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
                         ImageName = sqlDataReader["ImageName"].ToString(),
                         ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
                         ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),

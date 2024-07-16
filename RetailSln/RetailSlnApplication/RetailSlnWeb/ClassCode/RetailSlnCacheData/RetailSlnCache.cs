@@ -45,7 +45,7 @@ namespace RetailSlnCacheData
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
             retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
-            ItemBundleItemModels = ItemBundleItemModels;
+            ItemBundleItemModels = itemBundleItemModels;
             ItemModels = itemModels;
             ItemAttribModels = itemAttribModels;
             ItemAttribMasterModels = itemAttribMasterModels;
@@ -58,7 +58,7 @@ namespace RetailSlnCacheData
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoSubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemBundleItemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoSubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DeliveryDemogInfoCountrySubDivisionSelectListItems = deliveryDemogInfoSubDivisionSelectListItems;
@@ -71,7 +71,7 @@ namespace RetailSlnCacheData
             DeliveryDemogInfoCountryStates = deliveryCountryStates;
             BusinessInfoModel = businessInfoModel;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoCountrySubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemBundleItemModel> itemBundleItemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoCountrySubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -112,6 +112,7 @@ namespace RetailSlnCacheData
                 itemModel.ImageTitle += string.IsNullOrWhiteSpace(itemModel.ItemShortDesc2) ? "" : " " + itemModel.ItemShortDesc2;
                 itemModel.ImageTitle += string.IsNullOrWhiteSpace(itemModel.ItemShortDesc3) ? "" : " " + itemModel.ItemShortDesc3;
                 itemModel.ItemShortDesc = itemModel.ImageTitle;
+                itemModel.ImageTitle += " #" + itemModel.ItemId;
                 if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
                 {
                     itemModel.ImageTitle += " Sold Out";
@@ -195,7 +196,8 @@ namespace RetailSlnCacheData
             }
             codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
             paymentMethodsCreditSale = new List<ApiCodeDataModel>();
-            for (int i = 0; i < 1; i++)
+            int i;
+            for (i = 0; i < 1; i++)
             {
                 paymentMethodsCreditSale.Add
                 (
@@ -216,7 +218,7 @@ namespace RetailSlnCacheData
                 );
             }
             paymentMethods = new List<ApiCodeDataModel>();
-            for (int i = 1; i < codeDataModels.Count; i++)
+            for (i = 1; i < codeDataModels.Count; i++)
             {
                 paymentMethods.Add
                 (
@@ -284,6 +286,11 @@ namespace RetailSlnCacheData
             businessInfoModel.PhoneImageFullUrl = businessInfoModel.BaseUrl + "Images/Phone1_Small.png";
             businessInfoModel.SMSImageFullUrl = businessInfoModel.BaseUrl + "Images/SMSIcon3_Small.png";
             businessInfoModel.WhatsAppImageFullUrl = businessInfoModel.BaseUrl + "Images/WhatsApp1_Small.png";
+            foreach (var itemBundleItemModel in itemBundleItemModels)
+            {
+                itemBundleItemModel.BundleItemModel = ItemModels.First(x => x.ItemId == itemBundleItemModel.BundleItemId);
+                itemBundleItemModel.ItemModel = ItemModels.First(x => x.ItemId == itemBundleItemModel.ItemId);
+            }
             //Business Addresses
             //ArchLibDataContext.OpenSqlConnection();
             //DemogInfoAddressModel demogInfoAddressModel;
@@ -293,5 +300,21 @@ namespace RetailSlnCacheData
             //demogInfoAddressModel = ArchLibDataContext.GetDemogInfoAddress(2, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             //BusinessDemogInfoAddressModels.Add(demogInfoAddressModel);
         }
+        //private static void BuildItemBundleRecursive(ref int i, List<ItemModel> itemModels, List<ItemBundleItemModel> itemBundleItemModels, ItemModel bundleItemModel)
+        //{
+        //    int iTemp;
+        //    ItemModel itemModel;
+        //    while (i < itemBundleItemModels.Count && itemBundleItemModels[i].BundleItemId == bundleItemModel.ItemId)
+        //    {
+        //        iTemp = i;
+        //        bundleItemModel.ItemModels.Add(itemModel = itemModels.First(x => x.ItemId == itemBundleItemModels[iTemp].ItemId));
+        //        i++;
+        //        if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        //        {
+        //            itemModel.ItemModels = new List<ItemModel>();
+        //            BuildItemBundleRecursive(ref i, itemModels, itemBundleItemModels, itemModel);
+        //        }
+        //    }
+        //}
     }
 }

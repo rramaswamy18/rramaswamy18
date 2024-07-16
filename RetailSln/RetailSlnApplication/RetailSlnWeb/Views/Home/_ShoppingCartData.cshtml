@@ -2,6 +2,7 @@
 @using RetailSlnCacheData
 @{
     int index = 0;
+    Model.ShoppingCartSummaryModel = Model.ShoppingCartSummaryModel ?? new RetailSlnModels.ShoppingCartSummaryModel();
     Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
 }
 @if (Model == null || Model.ShoppingCartItems == null || Model.ShoppingCartItems.Count == 0)

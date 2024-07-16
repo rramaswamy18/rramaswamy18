@@ -1,0 +1,49 @@
+﻿@model RetailSlnModels.ItemAttributesModel
+@using RetailSlnModels
+@Html.Partial("_ItemOrder", Model.ItemModel)
+@{
+    int i;
+    <div style="float: left; width: 27px;">
+        &nbsp;
+    </div>
+    for (i = 0; i < Model.ItemAttribsTabs.Count; i++)
+    {
+        <div style="background: #e5e4e2; border-top-left-radius: 25px; border-top-right-radius: 25px; float: left; height: 45px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center;">
+            <a id="divTab@(i)" href="javascript: void(0);" onclick="javascript: return divTab_onclick(@i, @Model.ItemAttribsTabs.Count)" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@(i + 1). @Model.ItemAttribsTabs[i]</a>
+        </div>
+        <div style="float: left; width: 27px;">
+            &nbsp;
+        </div>
+    }
+    <br style="clear: both;" />
+    for (i = 0; i < Model.ItemAttribsTabs.Count; i++)
+    {
+        <div id="divTabData@(i)" class="col-md-12" style="padding-left: 27px; text-align: left;">
+            @Html.Partial("_ItemAttributes" + i, Model)
+        </div>
+    }
+    var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+    paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
+    paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
+    paymentInfoModel.ShoppingCartModel.BackToTop = true;
+    paymentInfoModel.ShoppingCartModel.Checkout = true;
+    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
+    paymentInfoModel.ShoppingCartModel.ShoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
+    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
+}
+<div class="center" id="divShoppingCart" style="width: 81%;">
+    @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
+</div>
+<script type="text/javascript">
+    divTab_onclick(@Model.TabId, @Model.ItemAttribsTabs.Count);
+    function divTab_onclick(index, count) {
+        for (var i = 0; i < count; i++) {
+            document.getElementById("divTabData" + i).style.display = "none";
+            document.getElementById("divTab" + i).style.textDecoration = "underline";
+            document.getElementById("divTab" + i).style.color = "#0000ff";
+        }
+        document.getElementById("divTabData" + index).style.display = "block";
+        document.getElementById("divTab" + index).style.textDecoration = "none";
+        document.getElementById("divTab" + index).style.color = "#000000";
+    }
+</script>

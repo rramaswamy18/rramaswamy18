@@ -34,6 +34,8 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter description")]
         public string ItemDesc { set; get; }
 
+        public YesNoEnum? ItemForSaleId { set; get; }
+
         public string ItemName { set; get; }
 
         [Display(Name = "Item Rate")]

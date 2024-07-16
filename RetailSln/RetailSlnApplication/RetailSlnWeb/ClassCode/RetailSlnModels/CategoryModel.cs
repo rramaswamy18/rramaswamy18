@@ -16,12 +16,14 @@ namespace RetailSlnModels
 
         public string CategoryName { set; get; }
 
+        public string CategoryNameDesc { set; get; }
+
         [Display(Name = "Description")]
         [MaxLength(512)]
         [Required(ErrorMessage = "Please enter description for the category")]
         public string CategoryDesc { set; get; }
 
-        [Display(Name = "Category Status")]
+        [Display(Name = "Category Type")]
         public CategoryTypeEnum? CategoryTypeId { set; get; }
 
         [Display(Name = "Category Type")]
@@ -30,10 +32,14 @@ namespace RetailSlnModels
         [Display(Name = "Category Image")]
         public string ImageName { set; get; }
 
+        public short MaxPerPage { set; get; }
+
         [Display(Name = "Category Image")]
         public HttpPostedFileBase HttpPostedFileBase { get; set; }
 
         public string UploadImageFileName { set; get; }
+
+        public string ViewName { set; get; }
 
         public List<CategoryModel> CategoryModels { set; get; }
 

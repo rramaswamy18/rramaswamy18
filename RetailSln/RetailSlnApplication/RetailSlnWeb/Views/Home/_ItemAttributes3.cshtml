@@ -1,0 +1,279 @@
+﻿@model RetailSlnModels.ItemAttributesModel
+<div id="divItemBundleItem"></div>
+<script type="text/javascript">
+    btnViewBundle_onclick(@Model.ItemId, "", 0, "divItemBundleItem");
+    //function itemBundleItem_onclick(bundleItemId, prefixSeqNum, paddingLeft) {
+    //    console.log("00000000", "itemBundleItem_onclick", "ENTER!!!");
+    //    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    //    var url = "/Home/ItemBundleItemData/" + bundleItemId + "?prefixSeqNum=" + prefixSeqNum + "&paddingLeft=" + paddingLeft;
+    //    try {
+    //        $.ajax({
+    //            url: url,
+    //            type: "GET",
+    //            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+    //            //dataType: "html",
+    //            //data: postData,
+    //            //async: false,
+    //            success: function (responseData, textStatus, request) {
+    //                $("#loadingModal").modal('hide');
+    //                if (responseData.success) {
+    //                    document.getElementById("divItemBundleItem").innerHTML = responseData.htmlString;
+    //                }
+    //                else {
+    //                    document.getElementById("divItemBundleItem").innerHTML = responseData.htmlString;
+    //                }
+    //                console.log("00001000", "itemBundleItem_onclick success", responseData.processMessage);
+    //            },
+    //            error: function (xhr, exception) {
+    //                $("#loadingModal").modal('hide');
+    //                console.log("00099000", "itemBundleItem_onclick", "ERROR???", exception, xhr);
+    //                alert("Please fix errors to continue???....");
+    //            }
+    //        });
+    //    }
+    //    catch (err) {
+    //        $('#loadingModal').modal('hide');
+    //        alert("Please fix errors to continue???");
+    //        console.log(err);
+    //    }
+    //}
+    function btnViewBundle_onclick(bundleItemId, prefixSeqNum, paddingLeft, divItemBundleItemId) {
+        console.log("00000000", "btnViewBundle_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        if (document.getElementById(divItemBundleItemId).innerHTML === "") {
+            var url = "/Home/ItemBundleItemData/" + bundleItemId + "?prefixSeqNum=" + prefixSeqNum + "&paddingLeft=" + paddingLeft;
+            try {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                    //dataType: "html",
+                    //data: postData,
+                    //async: false,
+                    success: function (responseData, textStatus, request) {
+                        $("#loadingModal").modal('hide');
+                        document.getElementById(divItemBundleItemId).innerHTML = responseData.htmlString;
+                        if (responseData.success) {
+                        }
+                        else {
+                            alert("Error occurred");
+                        }
+                        console.log("00001000", "btnViewBundle_onclick success", responseData.processMessage);
+                    },
+                    error: function (xhr, exception) {
+                        $("#loadingModal").modal('hide');
+                        console.log("00099000", "btnViewBundle_onclick", "ERROR???", exception, xhr);
+                        alert("Please fix errors to continue???....");
+                    }
+                });
+            }
+            catch (err) {
+                $('#loadingModal').modal('hide');
+                alert("Please fix errors to continue???");
+                console.log("00099100", "btnViewBundle_onclick", "ERROR???", err);
+            }
+        }
+        else {
+            $('#loadingModal').modal('hide');
+        }
+        document.getElementById(divItemBundleItemId).style.display = "block";
+        return false;
+    }
+    function btnHideBundle_onclick(divItemBundleItemId) {
+        document.getElementById(divItemBundleItemId).style.display = "none";
+        return false;
+    }
+</script>
+@{
+    @*BuildItemBundle(Model.ItemId, ArchitectureLibraryUtility.Utilities.GetDatabaseConnectionString("DatabaseConnectionString"), 0);*@
+    <br />
+    @*BuildItemBundleNew(Model.ItemId, ArchitectureLibraryUtility.Utilities.GetDatabaseConnectionString("DatabaseConnectionString"), "", 0);*@
+}
+@*helper BuildItemBundle(long bundleItemId, string databaseConnectionString, int paddingLeft)
+    {
+        SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        sqlConnection.Open();
+        string sqlStmt = "", bundleItemDesc;
+        sqlStmt += "SELECT Item.ItemShortDesc0, Item.ItemShortDesc1, Item.ItemShortDesc2 FROM RetailSlnSch.Item WHERE Item.ItemId = " + bundleItemId + ";" + Environment.NewLine;
+        sqlStmt += "SELECT ItemBundleItem.BundleItemId, ItemBundleItem.SeqNum, ItemBundleItem.ItemId, Item.ItemTypeId, Item.ItemShortDesc0, Item.ItemShortDesc1, Item.ItemShortDesc2 FROM RetailSlnSch.ItemBundleItem INNER JOIN RetailSlnSch.Item ON ItemBundleItem.ItemId = Item.ItemId WHERE ItemBundleItem.BundleItemId = " + bundleItemId + " ORDER BY ItemBundleItem.SeqNum";
+        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        sqlDataReader.Read();
+        bundleItemDesc = sqlDataReader["ItemShortDesc1"].ToString() + " " + sqlDataReader["ItemShortDesc2"].ToString();
+        <p style="color: #000000; font-family: Arial; font-size: 14px; font-weight: 900; list-style: none; padding-left: @(paddingLeft + "px")">
+            @bundleItemDesc
+        </p>
+        sqlDataReader.NextResult();
+        int index = 0;
+        paddingLeft = paddingLeft + 4;
+        while (sqlDataReader.Read())
+        {
+            if (sqlDataReader["ItemTypeId"].ToString() == "300")
+            {
+                paddingLeft = paddingLeft + 4;
+                @BuildItemBundle(long.Parse(sqlDataReader["ItemId"].ToString()), databaseConnectionString, paddingLeft)
+            }
+            else
+            {
+                index++;
+                <p style="color: #000000; font-family: Arial; font-size: 13px; font-weight: 500; list-style: decimal; margin-left: 5px; padding-left: @(paddingLeft + "px")">
+                    @(index + ". " + sqlDataReader["ItemShortDesc0"].ToString() + " " + sqlDataReader["ItemShortDesc1"].ToString() + " " + sqlDataReader["ItemShortDesc2"].ToString())
+                </p>
+            }
+        }
+        sqlDataReader.Close();
+        sqlConnection.Close();
+        <p style="color: #000000; font-family: Arial; font-size: 12px; font-weight: 900; list-style: none; padding-left: @(paddingLeft + "px")">
+            @bundleItemDesc&nbsp;<span style="color: #ff0000;"> End...</span>
+        </p>
+    }
+    @helper BuildItemBundleBackup0(long bundleItemId, string databaseConnectionString, int ulSeqNum)
+    {
+        SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        sqlConnection.Open();
+        string sqlStmt = "SELECT ItemBundleItem.BundleItemId, ItemBundleItem.SeqNum, BundleItem.ItemUniqueDesc AS BundleItemUniqueDesc, ItemBundleItem.ItemId, Item.ItemTypeId, Item.ItemUniqueDesc FROM RetailSlnSch.ItemBundleItem INNER JOIN RetailSlnSch.Item AS BundleItem ON ItemBundleItem.BundleItemId = BundleItem.ItemId INNER JOIN RetailSlnSch.Item ON ItemBundleItem.ItemId = Item.ItemId WHERE ItemBundleItem.BundleItemId = " + bundleItemId + " ORDER BY ItemBundleItem.SeqNum";
+        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        bool bundleItemFlag = true;
+        int liSeqNum = 0;
+        < ul >
+        @while (sqlDataReader.Read())
+        {
+            if (bundleItemFlag)
+            {
+                ulSeqNum++;
+                bundleItemFlag = false;
+                < li style = "color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; list-style: none;" >
+                @(ulSeqNum + ". B " + sqlDataReader["BundleItemId"].ToString() + " " + sqlDataReader["BundleItemUniqueDesc"].ToString())
+                </ li >
+            }
+            if (sqlDataReader["ItemTypeId"].ToString() == "300")
+            {
+                @BuildItemBundleBackup0(long.Parse(sqlDataReader["ItemId"].ToString()), databaseConnectionString, ulSeqNum);
+            }
+            else
+            {
+                liSeqNum++;
+                < li style = "color: #000000; font-family: Arial; font-size: 13px; font-weight: bold; list-style: none; padding-left: 5px;" >
+                @(liSeqNum + ". I " + sqlDataReader["ItemId"].ToString() + " " + sqlDataReader["ItemUniqueDesc"].ToString())
+                </ li >
+            }
+        }
+        </ ul >
+        sqlDataReader.Close();
+        sqlConnection.Close();
+    }
+    @helper BuildItemBundleBackup1(long bundleItemId, string databaseConnectionString)
+    {
+        SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        sqlConnection.Open();
+        string sqlStmt = "";
+        sqlStmt += "SELECT Item.ItemUniqueDesc FROM RetailSlnSch.Item WHERE Item.ItemId = " + bundleItemId + ";" + Environment.NewLine;
+        sqlStmt += "SELECT ItemBundleItem.BundleItemId, ItemBundleItem.SeqNum, ItemBundleItem.ItemId, Item.ItemTypeId, Item.ItemUniqueDesc FROM RetailSlnSch.ItemBundleItem INNER JOIN RetailSlnSch.Item ON ItemBundleItem.ItemId = Item.ItemId WHERE ItemBundleItem.BundleItemId = " + bundleItemId + " ORDER BY ItemBundleItem.SeqNum";
+        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        sqlDataReader.Read();
+        < ul style = "padding-left: 5px;" >
+        < li style = "font-family: Arial; font-size: 14px; font-weight: 900; list-style: disc; margin-left: 0px; padding-left: 5px;" >
+        @sqlDataReader["ItemUniqueDesc"].ToString()
+        < ul style = "padding-left: 5px;" >
+        @{
+            sqlDataReader.NextResult();
+            while (sqlDataReader.Read())
+            {
+                if (sqlDataReader["ItemTypeId"].ToString() == "300")
+                {
+                    @BuildItemBundleBackup1(long.Parse(sqlDataReader["ItemId"].ToString()), databaseConnectionString);
+                }
+                else
+                {
+                    < li style = "color: #000000; font-family: Arial; font-size: 13px; font-weight: 450; list-style: decimal; margin-left: 0px; padding-left: 3px;" >
+                    @sqlDataReader["ItemUniqueDesc"].ToString()
+                    </ li >
+                }
+            }
+            sqlDataReader.Close();
+            sqlConnection.Close();
+        }
+        </ ul >
+        </ li >
+        </ ul >
+    }
+    @helper BuildItemBundleBackup2(long bundleItemId, string databaseConnectionString)
+    {
+        SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        sqlConnection.Open();
+        string sqlStmt = "";
+        sqlStmt += "SELECT Item.ItemUniqueDesc FROM RetailSlnSch.Item WHERE Item.ItemId = " + bundleItemId + ";" + Environment.NewLine;
+        sqlStmt += "SELECT ItemBundleItem.BundleItemId, ItemBundleItem.SeqNum, ItemBundleItem.ItemId, Item.ItemTypeId, Item.ItemUniqueDesc FROM RetailSlnSch.ItemBundleItem INNER JOIN RetailSlnSch.Item ON ItemBundleItem.ItemId = Item.ItemId WHERE ItemBundleItem.BundleItemId = " + bundleItemId + " ORDER BY ItemBundleItem.SeqNum";
+        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        sqlDataReader.Read();
+        < table >
+        < tr >
+        < th style = "color: #000000; font-family: Arial; font-size: 14px; font-weight: 900;" >
+        @sqlDataReader["ItemUniqueDesc"].ToString()
+        @{
+            sqlDataReader.NextResult();
+        }
+        </ th >
+        </ tr >
+        </ table >
+        < ul style = "padding-left: 9px;" >
+        @{
+            sqlDataReader.NextResult();
+            while (sqlDataReader.Read())
+            {
+                if (sqlDataReader["ItemTypeId"].ToString() == "300")
+                {
+                    @BuildItemBundleBackup2(long.Parse(sqlDataReader["ItemId"].ToString()), databaseConnectionString);
+                }
+                else
+                {
+                    < li style = "color: #000000; font-family: Arial; font-size: 13px; font-weight: 450; list-style: decimal; margin-left: 5px; padding-left: 5px;" >
+                    @sqlDataReader["ItemUniqueDesc"].ToString()
+                    </ li >
+                }
+            }
+            sqlDataReader.Close();
+            sqlConnection.Close();
+        }
+        </ ul >
+    }
+    @helper BuildItemBundleBackup3(long bundleItemId, string databaseConnectionString)
+    {
+        SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+        sqlConnection.Open();
+        string sqlStmt = "";
+        sqlStmt += "SELECT Item.ItemShortDesc0, Item.ItemShortDesc1, Item.ItemShortDesc2 FROM RetailSlnSch.Item WHERE Item.ItemId = " + bundleItemId + ";" + Environment.NewLine;
+        sqlStmt += "SELECT ItemBundleItem.BundleItemId, ItemBundleItem.SeqNum, ItemBundleItem.ItemId, Item.ItemTypeId, Item.ItemShortDesc0, Item.ItemShortDesc1, Item.ItemShortDesc2 FROM RetailSlnSch.ItemBundleItem INNER JOIN RetailSlnSch.Item ON ItemBundleItem.ItemId = Item.ItemId WHERE ItemBundleItem.BundleItemId = " + bundleItemId + " ORDER BY ItemBundleItem.SeqNum";
+        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        sqlDataReader.Read();
+        < ul >
+        < li style = "color: #000000; font-family: Arial; font-size: 14px; font-weight: 900; list-style: none;" >
+        @(sqlDataReader["ItemShortDesc0"].ToString() + " " + sqlDataReader["ItemShortDesc1"].ToString() + " " + sqlDataReader["ItemShortDesc2"].ToString() + " - Bundle")
+        </ li >
+        @{
+            sqlDataReader.NextResult();
+            while (sqlDataReader.Read())
+            {
+                if (sqlDataReader["ItemTypeId"].ToString() == "300")
+                {
+                    < li style = "color: #000000; font-family: Arial; font-size: 14px; font-weight: 900; list-style: none;" >
+                    @BuildItemBundleBackup3(long.Parse(sqlDataReader["ItemId"].ToString()), databaseConnectionString)
+                    </ li >
+                }
+                else
+                {
+                    < li style = "color: #000000; font-family: Arial; font-size: 13px; font-weight: 450; list-style: decimal; margin-left: 5px; padding-left: 5px;" >
+                    @(sqlDataReader["ItemShortDesc0"].ToString() + " " + sqlDataReader["ItemShortDesc1"].ToString() + " " + sqlDataReader["ItemShortDesc2"].ToString())
+                    </ li >
+                }
+            }
+            sqlDataReader.Close();
+            sqlConnection.Close();
+        }
+        </ ul >
+    }
+    @helper BuildItemBundle(long bundleItemId, string databaseConnectionString, string spaceText)*@

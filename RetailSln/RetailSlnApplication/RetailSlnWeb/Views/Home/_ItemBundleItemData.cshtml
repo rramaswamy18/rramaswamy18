@@ -1,0 +1,54 @@
+﻿@model RetailSlnModels.ItemBundleItemDataModel
+@{
+    int index = 0;
+    string prefixSeqNum = Model.PrefixSeqNum, prefixSeqNum1;
+    <table class="table table-responsive">
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Description
+            </th>
+            <th class="text-right">
+                Quantity
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        @{
+            foreach (var itemBundleItemModel in Model.ItemBundleItemModels)
+            {
+                index++;
+                <tr>
+                    <td>
+                        @(prefixSeqNum + index)
+                    </td>
+                    <td>
+                        @itemBundleItemModel.ItemModel.ItemShortDesc1
+                        @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
+                        {
+                            <div id="divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)" style="display: none;"></div>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @itemBundleItemModel.Quantity
+                    </td>
+                    <td>
+                        @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
+                        {
+                            prefixSeqNum1 = prefixSeqNum + index + ".";
+                            <button class="btn btn-success" onclick="javascript: return btnViewBundle_onclick(@itemBundleItemModel.ItemModel.ItemId, '@prefixSeqNum1', 0, 'divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)');">View Bundle</button>
+                        }
+                    </td>
+                    <td>
+                        @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
+                        {
+                            <button class="btn btn-primary" onclick="javascript: return btnHideBundle_onclick('divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)');">Hide Bundle</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
