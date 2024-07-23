@@ -278,45 +278,45 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);
             return sqlCommand;
         }
-        private static SqlCommand BuildSqlCommandItemAttribInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static SqlCommand BuildSqlCommandItemSpecInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            string sqlStmt = "INSERT RetailSlnSch.ItemAttrib(ClientId, ItemAttribMasterId, ItemAttribUnitValue, ItemAttribValue, ItemId, SeqNum, AddUserId, UpdUserId)";
-            sqlStmt += "OUTPUT INSERTED.ItemAttribId SELECT @ClientId, @ItemAttribMasterId, @ItemAttribUnitValue, @ItemAttribValue, @ItemId, @SeqNum, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
+            string sqlStmt = "INSERT RetailSlnSch.ItemSpec(ClientId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, ItemId, SeqNum, AddUserId, UpdUserId)";
+            sqlStmt += "OUTPUT INSERTED.ItemSpecId SELECT @ClientId, @ItemSpecMasterId, @ItemSpecUnitValue, @ItemSpecValue, @ItemId, @SeqNum, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@ItemAttribMasterId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@ItemAttribUnitValue", SqlDbType.NVarChar, 50);
-            sqlCommand.Parameters.Add("@ItemAttribValue", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ItemSpecMasterId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ItemSpecUnitValue", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ItemSpecValue", SqlDbType.NVarChar, 50);
             sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);
             return sqlCommand;
 
         }
-        private static SqlCommand BuildSqlCommandItemSpecInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static SqlCommand BuildSqlCommandItemInfoInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            string sqlStmt = "INSERT RetailSlnSch.ItemSpec(ClientId, ItemId, ItemSpecLabelText, ItemSpecText, SeqNum, AddUserId, UpdUserId)";
-            sqlStmt += "OUTPUT INSERTED.ItemSpecId SELECT @ClientId, @ItemId, @ItemSpecLabelText, @ItemSpecText, @SeqNum, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
+            string sqlStmt = "INSERT RetailSlnSch.ItemInfo(ClientId, ItemId, ItemInfoLabelText, ItemInfoText, SeqNum, AddUserId, UpdUserId)";
+            sqlStmt += "OUTPUT INSERTED.ItemInfoId SELECT @ClientId, @ItemId, @ItemInfoLabelText, @ItemInfoText, @SeqNum, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@ItemSpecLabelText", SqlDbType.NVarChar, 50);
-            sqlCommand.Parameters.Add("@ItemSpecText", SqlDbType.NVarChar);
+            sqlCommand.Parameters.Add("@ItemInfoLabelText", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ItemInfoText", SqlDbType.NVarChar);
             sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);
             return sqlCommand;
         }
-        private static SqlCommand BuildSqlCommandItemSpecUpdate(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static SqlCommand BuildSqlCommandItemInfoUpdate(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            string sqlStmt = "UPDATE RetailSlnSch.ItemSpec SET ItemId = @ItemId, ItemSpecLabelText = @ItemSpecLabelText, ItemSpecText = @ItemSpecText, SeqNum = @SeqNum, UpdUserId = @LoggedInUserId, UpdUserName = SUSER_NAME(), UpdDateTime = GETDATE() WHERE ItemSpecId = @ItemSpecId";
+            string sqlStmt = "UPDATE RetailSlnSch.ItemInfo SET ItemId = @ItemId, ItemInfoLabelText = @ItemInfoLabelText, ItemInfoText = @ItemInfoText, SeqNum = @SeqNum, UpdUserId = @LoggedInUserId, UpdUserName = SUSER_NAME(), UpdDateTime = GETDATE() WHERE ItemInfoId = @ItemInfoId";
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@ItemSpecLabelText", SqlDbType.NVarChar, 50);
-            sqlCommand.Parameters.Add("@ItemSpecText", SqlDbType.NVarChar);
+            sqlCommand.Parameters.Add("@ItemInfoLabelText", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ItemInfoText", SqlDbType.NVarChar);
             sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);
-            sqlCommand.Parameters.Add("@ItemSpecId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ItemInfoId", SqlDbType.BigInt);
             return sqlCommand;
         }
         private static SqlCommand BuildSqlCommandCategoryInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

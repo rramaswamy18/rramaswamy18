@@ -79,10 +79,10 @@
                         </td>
                         <td class="text-left" style="font-family: Arial; font-size: 12px; vertical-align: middle;">
                             @itemModel.ItemShortDesc
-                            @if (itemModel.ItemAttribModelsForDisplay.Count > 0)
+                            @if (itemModel.ItemSpecModelsForDisplay.Count > 0)
                             {
                                 <br />
-                                foreach (var ItemAttribModelForDisplay in itemModel.ItemAttribModelsForDisplay)
+                                foreach (var ItemAttribModelForDisplay in itemModel.ItemSpecModelsForDisplay)
                                 {
                                     if (ItemAttribModelForDisplay.Key != "ProductCode" && ItemAttribModelForDisplay.Key != "HSNCode")
                                     {

@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "_DashboardLayout.cshtml";
+}
+<div id="divDashboard">
+    @Html.Partial("_DashboardHeaderMenu")
+</div>
+<script type="text/javascript">
+    function window_onload() {
+        menuLink_onclick('@Url.Action("CategoryList", "Dashboard")', 1, 50);
+        //categoryHier_onclick(0);
+    }
+    function categoryHier_onclick(parentCategoryId) {
+        console.log("categoryHier_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        url = "@Url.Action("CategoryHierList", "Dashboard")";
+        url += "/" + parentCategoryId;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "categoryHier_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+                //    if (responseData.success) {
+                //        document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                //        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                //        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                //    }
+                //    else {
+                //        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                //    }
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("categoryHier_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+    function swapItem(fromIndex, toIndex) {
+        var tempValue;
+        console.log(fromIndex, toIndex, document.getElementById("categoryDesc" + fromIndex).innerHTML, document.getElementById("categoryDesc" + toIndex).innerHTML);
+
+        tempValue = document.getElementById("seqNum" + fromIndex).innerHTML;
+        document.getElementById("seqNum" + fromIndex).innerHTML = document.getElementById("seqNum" + toIndex).innerHTML;
+        document.getElementById("seqNum" + toIndex).innerHTML = tempValue;
+
+        tempValue = document.getElementById("categoryId" + fromIndex).innerHTML;
+        document.getElementById("categoryId" + fromIndex).innerHTML = document.getElementById("categoryId" + toIndex).innerHTML;
+        document.getElementById("categoryId" + toIndex).innerHTML = tempValue;
+
+        tempValue = document.getElementById("categoryNameDesc" + fromIndex).innerHTML;
+        document.getElementById("categoryNameDesc" + fromIndex).innerHTML = document.getElementById("categoryNameDesc" + toIndex).innerHTML;
+        document.getElementById("categoryNameDesc" + toIndex).innerHTML = tempValue;
+
+        tempValue = document.getElementById("categoryNameDesc" + fromIndex).innerHTML;
+        document.getElementById("categoryNameDesc" + fromIndex).innerHTML = document.getElementById("categoryNameDesc" + toIndex).innerHTML;
+        document.getElementById("categoryNameDesc" + toIndex).innerHTML = tempValue;
+
+        tempValue = document.getElementById("categoryDesc" + fromIndex).innerHTML;
+        document.getElementById("categoryDesc" + fromIndex).innerHTML = document.getElementById("categoryDesc" + toIndex).innerHTML;
+        document.getElementById("categoryDesc" + toIndex).innerHTML = tempValue;
+
+        tempValue = document.getElementById("CategoryItemHierModels_" + fromIndex + "__CategoryModel_CategoryId").value;
+        document.getElementById("CategoryItemHierModels_" + fromIndex + "__CategoryModel_CategoryId").value = document.getElementById("CategoryItemHierModels_" + toIndex + "__CategoryModel_CategoryId").value;
+        document.getElementById("CategoryItemHierModels_" + toIndex + "__CategoryModel_CategoryId").value = tempValue;
+    }
+</script>

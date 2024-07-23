@@ -1,0 +1,72 @@
+﻿@using ArchitectureLibraryMenuModels
+@{
+    List<MenuUrlAction> menuUrlActions = new List<MenuUrlAction>
+    {
+        new MenuUrlAction
+        {
+            ActionName = "CategoryList",
+            ControllerName = "Dashboard",
+            LinkText = "Category",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "ItemList",
+            ControllerName = "Dashboard",
+            LinkText = "Item",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "SearchKeywor",
+            ControllerName = "Dashboard",
+            LinkText = "Search Keywor(s)",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "OrderList",
+            ControllerName = "Dashboard",
+            LinkText = "Order List",
+        },
+    };
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    @foreach (var menuUrlAction in menuUrlActions)
+    {
+        <div style="float: left; padding-right: 9px;">
+            <a href="javascript: void(0);" onclick="javascript: return menuLink_onclick('@Url.Action(menuUrlAction.ActionName, menuUrlAction.ControllerName)', 1, 50);" style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;">@menuUrlAction.LinkText</a>
+        </div>
+    }
+    <br style="clear: both;" />
+</div>
+<script type="text/javascript">
+    function menuLink_onclick(url, pageNum, pageCount) {
+        console.log("menuLink_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        url += "/" + pageNum + "?pageCount=" + pageCount;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "menuLink_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            //    if (responseData.success) {
+            //        document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+            //        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+            //        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+            //    }
+            //    else {
+            //        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+            //    }
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("menuLink_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+</script>

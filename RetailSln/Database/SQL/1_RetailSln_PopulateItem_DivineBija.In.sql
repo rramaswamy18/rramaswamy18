@@ -411,6 +411,53 @@ INNER JOIN RetailSlnSch.Item ON DivineBija_ItemBundle.ItemUniqueDescription = It
 ORDER BY ItemBundle.ItemId, CAST(DivineBija_ItemBundle.[Seq Num] AS FLOAT)
 --End Item Bundle
 
+--Begin SearchList & SearchResult
+BEGIN
+TRUNCATE TABLE RetailSlnSch.SearchMetaData
+TRUNCATE TABLE RetailSlnSch.SearchKeyword
+
+DECLARE @EntityId BIGINT, @SearchCharIndex BIGINT, @SearchKeywords NVARCHAR(MAX), @SearchKeywordText NVARCHAR(512)
+DECLARE @SearchKeywordId BIGINT, @EntityTypeNameDesc NVARCHAR(50)
+
+DECLARE SearchKeywordMetaDataCursor CURSOR FOR
+SELECT Id AS EntityId, 'CATEGORY' AS EntityTypeNameDesc, [Search Keywords] FROM dbo.DivineBija_Categories WHERE Active = 1 AND [Search Keywords] <> ''
+UNION
+SELECT Id AS EntityId, 'ITEM' AS EntityTypeNameDesc, [Search Keywords] FROM dbo.DivineBija_Products WHERE [Search Keywords] <> ''
+UNION
+SELECT Id AS EntityId, 'ITEM' AS EntityTypeNameDesc, [Search Keywords] FROM dbo.DivineBija_Books WHERE [Search Keywords] <> ''
+ORDER BY EntityTypeNameDesc, Id
+
+OPEN SearchKeywordMetaDataCursor
+
+FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
+	WHILE @SearchCharIndex > 0
+	BEGIN
+	    SET @SearchKeywordText = SUBSTRING(@SearchKeywords, 1, @SearchCharIndex - 1)
+		SET @SearchKeywords = SUBSTRING(@SearchKeywords, @SearchCharIndex + 1, LEN(@SearchKeywords))
+		SET @SearchKeywordId = NULL
+		SELECT @SearchKeywordId = SearchKeyword.SearchKeywordId FROM RetailSlnSch.SearchKeyword WHERE SearchKeyword.SearchKeywordText = @SearchKeywordText
+		IF @SearchKeywordId IS NULL
+		BEGIN
+		    INSERT RetailSlnSch.SearchKeyword(SearchKeywordText)
+			SELECT LOWER(@SearchKeywordText)
+			SET @SearchKeywordId = @@IDENTITY
+		END
+		INSERT RetailSlnSch.SearchMetaData(SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
+		SELECT @SearchKeywordId AS SearchKeywordId, @EntityTypeNameDesc AS EntityTypeNameDesc, @EntityId AS EntityId, 1 AS SeqNum
+		SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
+	END
+    FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
+END
+
+CLOSE SearchKeywordMetaDataCursor
+DEALLOCATE SearchKeywordMetaDataCursor
+END
+--End SearchList & SearchResult
+
 --Begin ItemSpec
 TRUNCATE TABLE RetailSlnSch.ItemSpec
 INSERT RetailSlnSch.ItemSpec(ClientId, ItemId, ItemSpecLabelText, ItemSpecText, SeqNum)

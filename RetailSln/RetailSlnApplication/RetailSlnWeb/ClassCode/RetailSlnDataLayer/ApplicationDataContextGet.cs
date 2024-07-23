@@ -164,26 +164,26 @@ namespace RetailSlnDataLayer
             sqlDataReader.Close();
             return giftCertModel;
         }
-        public static ItemSpecModel GetItemSpec(long itemSpecId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static ItemInfoModel GetItemInfo(long itemInfoId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemSpec WHERE ItemSpecId = " + itemSpecId, sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemInfo WHERE ItemInfoId = " + itemInfoId, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                ItemSpecModel itemSpecModel;
+                ItemInfoModel itemInfoModel;
                 if (sqlDataReader.Read())
                 {
-                    itemSpecModel = AssignItemSpecSelect(sqlDataReader, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    itemInfoModel = AssignItemInfoSelect(sqlDataReader, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 else
                 {
-                    itemSpecModel = null;
+                    itemInfoModel = null;
                 }
                 sqlDataReader.Close();
-                return itemSpecModel;
+                return itemInfoModel;
             }
             catch (Exception exception)
             {
@@ -191,14 +191,14 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static float GetItemSpecMaxSeqNum(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static float GetItemInfoMaxSeqNum(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("SELECT MAX(SeqNum) FROM RetailSlnSch.ItemSpec WHERE ItemId = " + itemId, sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("SELECT MAX(SeqNum) FROM RetailSlnSch.ItemInfo WHERE ItemId = " + itemId, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 float seqNum;
                 if (sqlDataReader.Read())

@@ -12,19 +12,19 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
-        public static void UpdItemAttribs(List<ItemAttribModel> itemAttribModels, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void UpdItemSpecs(List<ItemSpecModel> itemAttribModels, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            SqlCommand sqlCommand = new SqlCommand("UPDATE RetailSlnSch.ItemAttrib SET ItemAttribUnitValue = @ItemAttribUnitValue, ItemAttribValue = @ItemAttribValue, UpdUserId = @LoggedInUserId, UpdDateTime = GETDATE() WHERE ItemAttribId = @ItemAttribId", sqlConnection);
-            sqlCommand.Parameters.Add("@ItemAttribUnitValue", System.Data.SqlDbType.NVarChar, 50);
-            sqlCommand.Parameters.Add("@ItemAttribValue", System.Data.SqlDbType.NVarChar, 50);
+            SqlCommand sqlCommand = new SqlCommand("UPDATE RetailSlnSch.ItemSpec SET ItemSpecUnitValue = @ItemSpecUnitValue, ItemSpecValue = @ItemSpecValue, UpdUserId = @LoggedInUserId, UpdDateTime = GETDATE() WHERE ItemSpecId = @ItemSpecId", sqlConnection);
+            sqlCommand.Parameters.Add("@ItemSpecUnitValue", System.Data.SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ItemSpecValue", System.Data.SqlDbType.NVarChar, 50);
             sqlCommand.Parameters.Add("@LoggedInUserId", System.Data.SqlDbType.NVarChar, 512);
-            sqlCommand.Parameters.Add("@ItemAttribId", System.Data.SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ItemSpecId", System.Data.SqlDbType.BigInt);
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
             foreach (var itemAttribModel in itemAttribModels)
             {
-                sqlCommand.Parameters["@ItemAttribUnitValue"].Value = string.IsNullOrWhiteSpace(itemAttribModel.ItemAttribUnitValue) ? "" : itemAttribModel.ItemAttribUnitValue;
-                sqlCommand.Parameters["@ItemAttribValue"].Value = string.IsNullOrWhiteSpace(itemAttribModel.ItemAttribValue) ? "" : itemAttribModel.ItemAttribValue;
-                sqlCommand.Parameters["@ItemAttribId"].Value = itemAttribModel.ItemAttribId;
+                sqlCommand.Parameters["@ItemSpecUnitValue"].Value = string.IsNullOrWhiteSpace(itemAttribModel.ItemSpecUnitValue) ? "" : itemAttribModel.ItemSpecUnitValue;
+                sqlCommand.Parameters["@ItemSpecValue"].Value = string.IsNullOrWhiteSpace(itemAttribModel.ItemSpecValue) ? "" : itemAttribModel.ItemSpecValue;
+                sqlCommand.Parameters["@ItemSpecId"].Value = itemAttribModel.ItemSpecId;
                 sqlCommand.ExecuteNonQuery();
             }
         }
@@ -47,7 +47,7 @@ namespace RetailSlnDataLayer
             }
 
         }
-        public static void UpdItemSpec(ItemSpecModel itemSpecModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void UpdItemInfo(ItemInfoModel itemInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -55,8 +55,8 @@ namespace RetailSlnDataLayer
             try
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-                SqlCommand sqlCommand = BuildSqlCommandItemSpecUpdate(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AssignItemSpecUpdate(itemSpecModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                SqlCommand sqlCommand = BuildSqlCommandItemInfoUpdate(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignItemInfoUpdate(itemInfoModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 sqlCommand.ExecuteNonQuery();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;

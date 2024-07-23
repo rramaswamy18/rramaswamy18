@@ -9,8 +9,8 @@
             <i style="color: #000000; font-size: 27px; font-weight: bold;" class="fa fa-phone"></i>
         </td>
         <td style="padding-right: 3px; vertical-align: top;">
-            <a href="tel: @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactPhoneHref", "")" style="color: #0000ff; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">
-                @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactPhoneFormatted", "")
+            <a href="tel: @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactPhoneHref", "")" style="color: #0000ff; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">
+                @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactPhoneFormatted", "")
             </a>
         </td>
         <td style="padding-right: 3px; text-align: left; vertical-align: top;">
@@ -21,26 +21,38 @@
         <td rowspan="5" style="padding-left: 18px; vertical-align: top;">
             <table style="padding: 0px; vertical-align: top;">
                 <tr>
-                    <td style="padding: 5px; vertical-align: top;">
+                    <td rowspan="5" style="padding: 5px; vertical-align: top;">
                         <img src="~/Images/PostalMail3.jpg" style="height: 45px; width: 45px;">
                     </td>
                     <td style="padding: 5px; vertical-align: top;">
                         <span style="color: #000000; font-family: 'Times New Roman', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; padding: 5px; text-align: left;">
                             @ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")
                         </span>
-                        <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0px; vertical-align: top;">
                         <span style="color: #000000; font-family: 'Times New Roman', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; padding: 5px; text-align: left;">
                             @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
                         </span>
-                        <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0px; vertical-align: top;">
                         <span style="color: #000000; font-family: 'Times New Roman', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; padding: 5px; text-align: left;">
                             @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1A", "")
                         </span>
-                        <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0px; vertical-align: top;">
                         <span style="color: #000000; font-family: 'Times New Roman', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; padding: 5px; text-align: left;">
                             @ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")
                         </span>
-                        <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0px; vertical-align: top;">
                         <span style="color: #000000; font-family: 'Times New Roman', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; padding: 5px; text-align: left;">
                             @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "") @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
                         </span>
@@ -54,8 +66,8 @@
             <img src="~/Images/SMSIcon1.png" style="height: 27px; width: 27px;">
         </td>
         <td style="padding-right: 3px; vertical-align: top;">
-            <a href="sms: @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">
-                @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactTextPhoneFormatted", "")
+            <a href="sms: @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">
+                @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactTextPhoneFormatted", "")
             </a>
         </td>
         <td style="padding-right: 3px; vertical-align: top;">
@@ -69,8 +81,8 @@
             <img src="~/Images/WhatsApp1.png" style="height: 27px; width: 27px;">
         </td>
         <td style="padding-right: 3px; vertical-align: top;">
-            <a target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))" style="color: #0000ff; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">
-                @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")
+            <a target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))" style="color: #0000ff; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">
+                @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")
             </a>
         </td>
         <td style="padding-right: 3px; vertical-align: top;">
@@ -91,21 +103,6 @@
         <td style="padding-right: 3px; vertical-align: top;">
             <span style="color: #000000; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; padding: 5px; text-align: left;">
                 Contact Us
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td style="padding-right: 3px; vertical-align: top;">
-            <span class="glyphicon glyphicon-envelope" style="color: #000000; font-size: 18px;"></span>
-        </td>
-        <td style="padding-right: 3px; vertical-align: top;">
-            <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">
-                @ArchLibCache.GetApplicationDefault(clientId, "BusinessEmail", "")
-            </a>
-        </td>
-        <td style="padding-right: 3px; vertical-align: top;">
-            <span style="color: #000000; font-family: Roboto Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; padding: 5px; text-align: left;">
-                Email
             </span>
         </td>
     </tr>

@@ -15,6 +15,8 @@ namespace RetailSlnModels
     {
         public long? ItemId { set; get; }
 
+        public long ClientId { set; get; }
+
         [Display(Name = "Expected Availability")]
         public string ExpectedAvailability { set; get; }
 
@@ -26,8 +28,6 @@ namespace RetailSlnModels
         public string ImageName { set; get; }
 
         public string ImageTitle { set; get; }
-
-        //public Dictionary<string, string> ItemAttributesForDisplay { set; get; }
 
         [Display(Name = "Description")]
         [MaxLength(1024, ErrorMessage = "Desc not to exceed 1024 characters")]
@@ -89,9 +89,13 @@ namespace RetailSlnModels
 
         public List<CategoryModel> CategoryModels { set; get; }
 
-        public List<ItemAttribModel> ItemAttribModels { set; get; }
+        public List<ItemSpecModel> ItemSpecModels { set; get; }
 
-        public Dictionary<string, ItemAttribModel> ItemAttribModelsForDisplay { set; get; }
+        public Dictionary<string, ItemSpecModel> ItemSpecModelsForDisplay { set; get; }
+
+        public List<ItemInfoModel> ItemInfoModels { set; get; }
+
+        public List<ItemImageModel> ItemImageModels { set; get; }
 
         public List<ItemModel> ItemModels { set; get; }
 

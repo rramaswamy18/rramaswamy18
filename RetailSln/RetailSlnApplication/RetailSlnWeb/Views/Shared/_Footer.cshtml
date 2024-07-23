@@ -1,4 +1,5 @@
-﻿<br style="clear: both;" />
+﻿@using ArchitectureLibraryCacheData
+<br style="clear: both;" />
 <div class="container" style="background-color: #f3f3f3; width: 100%;">
     <table align="center" class="table table-responsive">
         <tr>
@@ -6,7 +7,7 @@
                 <i class="fa fa-facebook-square" style="color: #4267b2; font-size: 36px"></i>
                 <i class="fa fa-twitter-square" style="color: #00acee; font-size: 36px"></i>
                 @*<i class="fa fa-youtube-square" style="color: #cd201f; font-size: 36px"></i>
-                <i class="fa fa-linkedin-square" style="color: #0e76a8; font-size: 36px"></i>*@
+                    <i class="fa fa-linkedin-square" style="color: #0e76a8; font-size: 36px"></i>*@
                 <br style="clear: both;" />
                 <span id="loggedInUserFullName" style="color: #000000;"></span>
                 <br style="clear: both;" />
@@ -19,18 +20,20 @@
                 @Html.Partial("_FooterMenu")
             </td>
             <td style="text-align: right; width: 25%;">
-                @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressLine1", "")
+                @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressLine1", "")
                 <br />
-                @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCountryName", "")
+                @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipPlus4", "")
+                <br />
+                @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCountryName", "")
                 <br />
                 <i style="color: #000000; font-weight: bold;" class="fa fa-phone"></i>
-                <a href="tel: @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactTextPhoneHref", "")">@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactTextPhoneFormatted", "")</a>
+                <a href="tel: @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactTextPhoneHref", "")">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactTextPhoneFormatted", "")</a>
                 <br />
                 <img src="~/Images/SMSIcon1.png" style="height: 27px; width: 27px;" />
-                <a href="sms: @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactTextPhoneHref", "")">@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactTextPhoneFormatted", "")</a>
+                <a href="sms: @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactTextPhoneHref", "")">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactTextPhoneFormatted", "")</a>
                 <br />
                 <img src="~/Images/WhatsApp1.png" style="height: 27px; width: 27px;" />
-                <a target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>
+                <a target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>
             </td>
         </tr>
     </table>

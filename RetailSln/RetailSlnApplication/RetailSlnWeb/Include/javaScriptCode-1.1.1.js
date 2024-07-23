@@ -38,22 +38,31 @@ function validateInteger(event) {
     }
 }
 function validateDecimal(event, inputData) {
+    var returnValue = true;
     if (event.shiftKey == true) {
-        event.preventDefault();
+        //event.preventDefault();
+        returnValue = false;
     }
 
-    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-        (event.keyCode >= 96 && event.keyCode <= 105) ||
-        event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
-        event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
-        ;
-    } else {
-        event.preventDefault();
+    if (inputData.indexOf('.') > -1 && event.keyCode == 190) {
+        //event.preventDefault();
+        returnValue = false;
     }
 
-    if (inputData.indexOf('.') !== -1 && event.keyCode == 190) {
-        event.preventDefault();
+    if (returnValue) {
+        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+            (event.keyCode >= 96 && event.keyCode <= 105) ||
+            event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+            event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+            ;
+        } else {
+            //event.preventDefault();
+            returnValue = false;
+        }
     }
+
+    alert(returnValue + " " + event.keyCode + " " + inputData + " " + inputData.indexOf('.'));
+    return returnValue;
 }
 function ajaxGet(url, queryString, ajaxUpdateTargetIdSuccess, ajaxUpdateTargetIdError, menuLinkNamePrefix, menuLinkIndex, menuLinkCount, className, selectedClassName) {
     console.log("url", url, "queryString", queryString, "ajaxUpdateTargetIdSuccess", ajaxUpdateTargetIdSuccess, "ajaxUpdateTargetIdError", ajaxUpdateTargetIdError, "menuLinkNamePrefix", menuLinkNamePrefix, "menuLinkIndex", menuLinkIndex, "menuLinkCount", menuLinkCount, "queryString", "className", className, "selectedClassName", selectedClassName);
@@ -123,6 +132,22 @@ function isInputNumber(evt) {
         return false;
     }
 }
+function isInputDecimal(evt, txt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode == 46) {
+        //Check if the text already contains the . character
+        if (txt.indexOf('.') === -1) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (charCode > 31 &&
+            (charCode < 48 || charCode > 57))
+            return false;
+    }
+    return true;
+}
 function replaceCharactersWithEmpty(inputText) {
     //When text data is pasted - replace with empty string
     //inputText = inputText.replace(/\D/g, '');
@@ -138,21 +163,21 @@ function replaceCharactersWithEmpty(inputText) {
         }
     }
     return outputText;
-/*
-$( "#textInput" ).bind( 'paste',function()
-   {
-       setTimeout(function()
+    /*
+    $( "#textInput" ).bind( 'paste',function()
        {
-          //get the value of the input text
-          var data= $( '#textInput' ).val() ;
-          //replace the special characters to ''
-          var dataFull = data.replace(/[^\w\s]/gi, '');
-          //set the new value of the input text without special characters
-          $( '#textInput' ).val(dataFull);
-       });
-
-    });
- */
+           setTimeout(function()
+           {
+              //get the value of the input text
+              var data= $( '#textInput' ).val() ;
+              //replace the special characters to ''
+              var dataFull = data.replace(/[^\w\s]/gi, '');
+              //set the new value of the input text without special characters
+              $( '#textInput' ).val(dataFull);
+           });
+    
+        });
+     */
 }
 function checkMaxLength(thisObject) {
     if (thisObject.value.length > thisObject.maxLength) {

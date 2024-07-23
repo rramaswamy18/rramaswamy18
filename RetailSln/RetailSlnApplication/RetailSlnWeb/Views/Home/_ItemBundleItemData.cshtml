@@ -1,12 +1,20 @@
 ﻿@model RetailSlnModels.ItemBundleItemDataModel
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
 @{
     int index = 0;
     string prefixSeqNum = Model.PrefixSeqNum, prefixSeqNum1;
-    <table class="table table-responsive">
+    <table class="table table-condensed table-responsive" style="width: 81%;">
         <tr>
-            <th>
+            <th class="text-right">
                 #
             </th>
+            <th class="text-center">Id</th>
+            <th></th>
             <th>
                 Description
             </th>
@@ -21,27 +29,37 @@
             {
                 index++;
                 <tr>
-                    <td>
-                        @(prefixSeqNum + index)
+                    <td class="text-right" style="vertical-align: top;">
+                        @(prefixSeqNum + index + ".")
                     </td>
-                    <td>
+                    <td class="text-center" style="vertical-align: top;">
+                        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemBundleItemModel.ItemModel.ItemId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemBundleItemModel.ItemModel.ItemShortDesc">
+                            @itemBundleItemModel.ItemModel.ItemId
+                        </a>
+                    </td>
+                    <td class="text-left" style="vertical-align: top;">
+                        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemBundleItemModel.ItemModel.ItemId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemBundleItemModel.ItemModel.ItemShortDesc">
+                            <img alt="@(itemBundleItemModel.ItemModel.ItemShortDesc0 + " " + itemBundleItemModel.ItemModel.ItemShortDesc1 + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemBundleItemModel.ItemModel.ImageName" style="height: 90px; width: 90px;" title="@(itemBundleItemModel.ItemModel.ItemShortDesc0 + " " + itemBundleItemModel.ItemModel.ItemShortDesc1 + " " + imageTitle)" />
+                        </a>
+                    </td>
+                    <td class="text-left" style="font-weight: bold; vertical-align: top;">
                         @itemBundleItemModel.ItemModel.ItemShortDesc1
                         @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
                         {
                             <div id="divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)" style="display: none;"></div>
                         }
                     </td>
-                    <td class="text-right">
+                    <td class="text-right" style="vertical-align: top;">
                         @itemBundleItemModel.Quantity
                     </td>
-                    <td>
+                    <td class="text-left" style="vertical-align: top;">
                         @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
                         {
                             prefixSeqNum1 = prefixSeqNum + index + ".";
                             <button class="btn btn-success" onclick="javascript: return btnViewBundle_onclick(@itemBundleItemModel.ItemModel.ItemId, '@prefixSeqNum1', 0, 'divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)');">View Bundle</button>
                         }
                     </td>
-                    <td>
+                    <td class="text-left" style="vertical-align: top;">
                         @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
                         {
                             <button class="btn btn-primary" onclick="javascript: return btnHideBundle_onclick('divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)');">Hide Bundle</button>

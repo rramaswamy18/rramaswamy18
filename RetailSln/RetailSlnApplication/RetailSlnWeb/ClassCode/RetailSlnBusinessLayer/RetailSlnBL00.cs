@@ -27,7 +27,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using static System.Collections.Specialized.BitVector32;
+//using static System.Collections.Specialized.BitVector32;
 
 namespace RetailSlnBusinessLayer
 {
@@ -88,14 +88,15 @@ namespace RetailSlnBusinessLayer
                     ItemModel itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == itemId);
                     float heightValue, lengthValue, weightCalcValue, weightValue, widthValue, itemRate;
                     DimensionUnitEnum dimensionUnitId;
-                    WeightUnitEnum weightUnitId;
-                    dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue);
-                    weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue);
-                    heightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue);
-                    lengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue);
-                    weightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue);
-                    weightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue);
-                    widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
+                    WeightUnitEnum weightUnitId, weightCalcUnitId;
+                    dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Height").ItemSpecUnitValue);
+                    weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Weight").ItemSpecUnitValue);
+                    heightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Height").ItemSpecValue);
+                    lengthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Length").ItemSpecValue);
+                    weightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Weight").ItemSpecUnitValue);
+                    weightCalcValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "CalcProductWeight").ItemSpecValue);
+                    weightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Weight").ItemSpecValue);
+                    widthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "Width").ItemSpecValue);
                     if (itemModel != null)
                     {
                         itemRate = itemModel.ItemRate.Value;
@@ -118,6 +119,7 @@ namespace RetailSlnBusinessLayer
                                 OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                 OrderQty = orderQty,
                                 VolumeValue = lengthValue * widthValue * heightValue * orderQty,
+                                WeightCalcUnitId = weightCalcUnitId,
                                 WeightCalcValue = weightCalcValue,
                                 WeightUnitId = weightUnitId,
                                 WeightValue = weightValue * orderQty,
@@ -186,27 +188,28 @@ namespace RetailSlnBusinessLayer
                         (
                             shoppingCartItemModel = new ShoppingCartItemModel
                             {
-                                DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribUnitValue),
-                                HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribValue),
-                                HSNCode = itemModel.ItemAttribModelsForDisplay["HSNCode"].ItemAttribValueForDisplay,
+                                DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductHeight").ItemSpecUnitValue),
+                                HeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductHeight").ItemSpecValue),
+                                HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
                                 ItemDesc = itemModel.ItemDesc,
                                 ItemDiscountPercent = null,
                                 ItemId = itemModel.ItemId,
                                 ItemRate = itemModel.ItemRate,
                                 ItemRateBeforeDiscount = itemModel.ItemRate,
                                 ItemShortDesc = itemModel.ItemShortDesc,
-                                LengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductLength").ItemAttribValue),
+                                LengthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductLength").ItemSpecValue),
                                 OrderAmount = orderQty * itemModel.ItemRate,
                                 OrderAmountBeforeDiscount = orderQty * itemModel.ItemRate,
                                 OrderDetailTypeId = OrderDetailTypeEnum.Item,
                                 OrderQty = orderQty,
-                                ProductCode = itemModel.ItemAttribModelsForDisplay["ProductCode"].ItemAttribValueForDisplay,
-                                WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue),
-                                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribUnitValue),
-                                WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribValue),
-                                WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWidth").ItemAttribValue),
-                                ProductOrVolumetricWeight = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribValue),
-                                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribUnitValue),
+                                ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+                                WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+                                WeightCalcValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "CalcProductWeight").ItemSpecValue),
+                                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+                                WeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue),
+                                WidthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWidth").ItemSpecValue),
+                                ProductOrVolumetricWeight = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue),
+                                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
                                 ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
                             }
                         );
@@ -636,6 +639,71 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
+        // GET : SearchResult
+        public SearchResultModel SearchResult(string searchKeywordText, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SearchResultModel searchResultModel;
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                searchResultModel = new SearchResultModel
+                {
+                    SearchKeywordText = searchKeywordText,
+                    SearchMetaDataModels = ApplicationDataContext.GetSearchMetaDatas(searchKeywordText, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    CategoryListModel = new CategoryListModel
+                    {
+                        CategoryModels = new List<CategoryModel>(),
+                    },
+                    ItemListModel = new ItemListModel
+                    {
+                        ItemModels = new List<ItemModel>(),
+                    },
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+                foreach (var searchMetaDataModel in searchResultModel.SearchMetaDataModels)
+                {
+                    if (searchMetaDataModel.EntityTypeNameDesc == "CATEGORY")
+                    {
+                        searchResultModel.CategoryListModel.CategoryModels.Add(RetailSlnCache.CategoryModels.First(x => x.CategoryId == searchMetaDataModel.EntityId));
+                    }
+                    else
+                    {
+                        searchResultModel.ItemListModel.ItemModels.Add(RetailSlnCache.ItemModels.First(x => x.ItemId == searchMetaDataModel.EntityId));
+                    }
+                }
+                //List<long> searchIds = new List<long> { 0, 9, 18 };
+                //List<ItemModel> searchItems = RetailSlnCache.ItemModels.Where(x => searchIds.Contains(x.ItemId.Value)).ToList();
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                searchResultModel = new SearchResultModel
+                {
+                    SearchKeywordText = searchKeywordText,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            "Error while searching " + searchKeywordText,
+                            exception.Message,
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    }
+                };
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+            return searchResultModel;
+        }
         //Private Methods
         private void UpdateShoppingCart(ShoppingCartModel shoppingCartModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -916,15 +984,15 @@ namespace RetailSlnBusinessLayer
                     float totalSalesTaxAmount = 0, salesTaxAmount;
                     foreach (var shoppingCartItem in paymentInfoModel.ShoppingCartModel.ShoppingCartItems)
                     {
-                        var itemAttribValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItem.ItemId).ItemAttribModels.ToList().First(x => x.ItemAttribMasterModel.AttribName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemAttribValue;
-                        salesTaxAmount = float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount.Value / 100f;
+                        var itemSpecValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItem.ItemId).ItemSpecModels.ToList().First(x => x.ItemSpecMasterModel.SpecName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemSpecValue;
+                        salesTaxAmount = float.Parse(itemSpecValue) * shoppingCartItem.OrderAmount.Value / 100f;
                         totalSalesTaxAmount += salesTaxAmount;
                         shoppingCartItem.ShoppingCartItemSummarys.Add
                         (
                             new ShoppingCartItemModel
                             {
                                 ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
-                                ItemRate = float.Parse(itemAttribValue),
+                                ItemRate = float.Parse(itemSpecValue),
                                 OrderAmount = salesTaxAmount,
                             }
                         );
@@ -1167,9 +1235,10 @@ namespace RetailSlnBusinessLayer
                 OrderHeader orderHeader = CreateOrderHeader(paymentInfoModel, sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplicationDataContext.AddOrderHeader(orderHeader, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 OrderDetail orderDetail;
+                int seqNum = 0;
                 foreach (var shoppingCartItem in paymentInfoModel.ShoppingCartModel.ShoppingCartItems)
                 {
-                    orderDetail = CreateOrderDetail(orderHeader.OrderHeaderId, shoppingCartItem, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    orderDetail = CreateOrderDetail(orderHeader.OrderHeaderId, ++seqNum, shoppingCartItem, clientId, ipAddress, execUniqueId, loggedInUserId);
                     ApplicationDataContext.AddOrderDetail(orderDetail, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 return;
@@ -1199,16 +1268,36 @@ namespace RetailSlnBusinessLayer
             };
             return orderHeader;
         }
-        private OrderDetail CreateOrderDetail(long orderHeaderId, ShoppingCartItemModel shoppingCartItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private OrderDetail CreateOrderDetail(long orderHeaderId, int seqNum, ShoppingCartItemModel shoppingCartItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             OrderDetail orderDetail = new OrderDetail
             {
                 ClientId= clientId,
-                DimensionUnitId = (long)DimensionUnitEnum.Centimeter,
+                DimensionUnitId = DimensionUnitEnum.Centimeter,
                 HeightValue = shoppingCartItemModel.HeightValue.Value,
                 HSNCode = shoppingCartItemModel.HSNCode,
                 ItemDesc = shoppingCartItemModel.ItemDesc,
-
+                ItemDiscountAmount = shoppingCartItemModel.ItemDiscountAmount.Value,
+                ItemId = shoppingCartItemModel.ItemId,
+                ItemRate = shoppingCartItemModel.ItemRate.Value,
+                ItemRateBeforeDiscount = shoppingCartItemModel.ItemRateBeforeDiscount.Value,
+                ItemShortDesc = shoppingCartItemModel.ItemShortDesc,
+                LengthValue = shoppingCartItemModel.LengthValue.Value,
+                OrderAmount = shoppingCartItemModel.OrderAmount.Value,
+                OrderAmountBeforeDiscount = shoppingCartItemModel.OrderAmountBeforeDiscount.Value,
+                OrderComments = shoppingCartItemModel.OrderComments,
+                OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                OrderHeaderId = orderHeaderId,
+                OrderQty = shoppingCartItemModel.OrderQty.Value,
+                ProductCode = shoppingCartItemModel.ProductCode,
+                ProductOrVolumetricWeight = shoppingCartItemModel.ProductOrVolumetricWeight.Value,
+                ProductOrVolumetricWeightUnitId = shoppingCartItemModel.ProductOrVolumetricWeightUnitId.Value,
+                SeqNum = seqNum,
+                VolumeValue = shoppingCartItemModel.VolumeValue.Value,
+                WeightCalcUnitId = shoppingCartItemModel.WeightCalcUnitId.Value,
+                WeightCalcValue = shoppingCartItemModel.WeightCalcValue.Value,
+                WeightUnitId = shoppingCartItemModel.WeightUnitId.Value,
+                WeightValue = shoppingCartItemModel.WeightValue.Value,
             };
             return orderDetail;
         }

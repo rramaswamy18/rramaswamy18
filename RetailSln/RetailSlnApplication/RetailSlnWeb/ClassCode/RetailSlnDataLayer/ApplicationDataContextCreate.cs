@@ -86,11 +86,11 @@ namespace RetailSlnDataLayer
         //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Before CreateOrderHeader");
         //        AddItem(itemModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
         //        float seqNum = 0;
-        //        foreach (var itemAttribModel in itemModel.ItemAttribModels)
+        //        foreach (var itemAttribModel in itemModel.ItemSpecModels)
         //        {
         //            itemAttribModel.ItemId = itemModel.ItemId.Value;
         //            itemAttribModel.SeqNum = ++seqNum;
-        //            AddItemAttrib(itemAttribModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            AddItemSpec(itemAttribModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
         //        }
         //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
         //    }

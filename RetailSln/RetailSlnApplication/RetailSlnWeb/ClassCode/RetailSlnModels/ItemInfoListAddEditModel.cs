@@ -6,10 +6,10 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class ItemSpecListAddEditModel
+    public class ItemInfoListAddEditModel
     {
-        public ItemSpecListModel ItemSpecListModel { set; get; }
-        public ItemSpecModel ItemSpecModel { set; get; }
+        public ItemInfoListModel ItemInfoListModel { set; get; }
+        public ItemInfoModel ItemInfoModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

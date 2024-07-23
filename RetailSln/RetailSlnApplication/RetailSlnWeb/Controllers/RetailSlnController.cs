@@ -758,13 +758,13 @@ namespace RetailSlnWeb.Controllers
         //    return actionResult;
         //}
 
-        //// GET : ItemSpecList
+        //// GET : ItemInfoList
         //[AllowAnonymous]
         //[HttpGet]
-        //[Route("ItemSpecList")]
-        //public ActionResult ItemSpecList(string id)
+        //[Route("ItemInfoList")]
+        //public ActionResult ItemInfoList(string id)
         //{
-        //    ViewData["ActionName"] = "ItemSpecList";
+        //    ViewData["ActionName"] = "ItemInfoList";
         //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
         //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
         //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -775,8 +775,8 @@ namespace RetailSlnWeb.Controllers
         //    {
         //        //int x = 1, y = 0, z = x / y;
         //        long itemId = long.Parse(id);
-        //        ItemSpecListModel itemSpecListModel = retailSlnBL.ItemSpecList(itemId, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("ItemSpecList", itemSpecListModel);
+        //        ItemInfoListModel itemInfoListModel = retailSlnBL.ItemInfoList(itemId, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("ItemInfoList", itemInfoListModel);
         //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    }
         //    catch (Exception exception)
@@ -1011,7 +1011,30 @@ namespace RetailSlnWeb.Controllers
         //[Route("SearchResult")]
         public ActionResult SearchResult(string id)
         {
-            return View("SearchResult", (object)id);
+            ViewData["ActionName"] = "RemoveFromCart";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            //ActionResult actionResult;
+            //bool success;
+            //string processMessage, htmlString;
+            //List<long> searchIds = new List<long> { 0, 9, 18 };
+            //List<ItemModel> searchItems = RetailSlnCache.ItemModels.Where(x => searchIds.Contains(x.ItemId.Value)).ToList();
+            try
+            {
+                var searchResultModel = retailSlnBL.SearchResult(id, clientId, ipAddress, execUniqueId, loggedInUserId);
+                return View("SearchResult", searchResultModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                //success = false;
+                //processMessage = "ERROR???";
+                //htmlString = "Error while searching " + id;
+                return null;
+            }
         }
 
         // GET: ShoppingCartComments
@@ -1077,25 +1100,25 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        private string BuildOrderCategoryItemViewHtmlString()
-        {
-            string actionName, aspNetRoleName = "DEFAULTROLE", controllerName, viewName;
-            var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-            actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-            controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-            viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
-            long parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
-            OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-            {
-                ActionName = actionName,
-                ControllerName = controllerName,
-                ParentCategoryId = parentCategoryId,
-                PageNum = 1,
-                PageSize = 50,
-            };
-            ArchLibBL archLibBL = new ArchLibBL();
-            var htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
-            return htmlString;
-        }
+        //private string BuildOrderCategoryItemViewHtmlString()
+        //{
+        //    string actionName, aspNetRoleName = "DEFAULTROLE", controllerName, viewName;
+        //    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //    actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+        //    controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+        //    viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
+        //    long parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
+        //    OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+        //    {
+        //        ActionName = actionName,
+        //        ControllerName = controllerName,
+        //        ParentCategoryId = parentCategoryId,
+        //        PageNum = 1,
+        //        PageSize = 50,
+        //    };
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    var htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
+        //    return htmlString;
+        //}
     }
 }

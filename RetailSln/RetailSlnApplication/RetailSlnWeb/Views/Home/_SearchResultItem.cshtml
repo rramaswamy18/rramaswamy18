@@ -1,13 +1,25 @@
-﻿@model string
+﻿@model ItemListModel
 @using ArchitectureLibraryCacheData
-@using RetailSlnCacheData
 @using RetailSlnEnumerations
+@using RetailSlnModels
+@*
+    @model string
+    @using ArchitectureLibraryCacheData
+    @using RetailSlnCacheData
+    @using RetailSlnEnumerations
+    @{
+        var clientId = ArchLibCache.ClientId;
+        var clientName = ArchLibCache.ClientName;
+        var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+        var searchText = Model.Trim().ToLower();
+        var itemModels = RetailSlnCache.ItemModels.Where(x => x.ItemShortDesc0.ToLower().Contains(searchText) || x.ItemShortDesc1.ToLower().Contains(searchText) || x.ItemShortDesc2.ToLower().Contains(searchText) || x.ItemShortDesc3.ToLower().Contains(searchText)).ToList();
+        int index = 0;
+    }
+*@
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
-    var searchText = Model.Trim().ToLower();
-    var itemModels = RetailSlnCache.ItemModels.Where(x => x.ItemShortDesc0.ToLower().Contains(searchText) || x.ItemShortDesc1.ToLower().Contains(searchText) || x.ItemShortDesc2.ToLower().Contains(searchText) || x.ItemShortDesc3.ToLower().Contains(searchText)).ToList();
     int index = 0;
 }
 <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 73%;">
@@ -29,7 +41,7 @@
         <th class="text-left" style="vertical-align: top; width: 99px;">
         </th>
     </tr>
-    @foreach (var itemModel in itemModels)
+    @foreach (var itemModel in Model.ItemModels)
     {
         index++;
         <tr>
@@ -43,14 +55,14 @@
             </td>
             <td class="text-left" style="vertical-align: top;">
                 @itemModel.ItemShortDesc
-                @if (itemModel.ItemAttribModelsForDisplay.Count > 0)
+                @if (itemModel.ItemSpecModelsForDisplay.Count > 0)
                 {
                     <br />
-                    foreach (var ItemAttribModelForDisplay in itemModel.ItemAttribModelsForDisplay)
+                    foreach (var ItemAttribModelForDisplay in itemModel.ItemSpecModelsForDisplay)
                     {
                         if (ItemAttribModelForDisplay.Key != "ProductCode" && ItemAttribModelForDisplay.Key != "HSNCode")
                         {
-                            <span style="color: #000000; font-size: 11px; font-weight: 600;">@ItemAttribModelForDisplay.Value.ItemAttribValueForDisplay</span>
+                            <span style="color: #000000; font-size: 11px; font-weight: 600;">@ItemAttribModelForDisplay.Value.ItemSpecValueForDisplay</span>
                         }
                     }
                     <br style="clear: both;" />

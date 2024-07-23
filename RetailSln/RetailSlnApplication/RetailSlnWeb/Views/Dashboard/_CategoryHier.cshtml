@@ -1,0 +1,89 @@
+﻿@using RetailSlnModels
+@model CategoryItemHierListModel
+@Html.Partial("_DashboardHeaderMenu")
+@{
+    int index = 0, hierarchyIndex = 0;
+}
+<br />
+<style>
+    .dataStyle {
+        font-family: Arial;
+        font-size: 12px;
+    }
+
+    .hrefStyle {
+        color: #0000ff;
+        font-family: Arial;
+        font-size: 10px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<table style="margin-left: auto; margin-right: auto; padding: 0px; width: 94%;">
+    <tr>
+        <td style="padding: 0px; padding-right: 5px; vertical-align: top; width: 40%;">
+            <table class="table table-bordered table-condensed table-hover table-responsive">
+                <tr>
+                    <th>#</th>
+                    <th>Id</th>
+                    <th>Name Desc</th>
+                    <th>Desc</th>
+                </tr>
+                @foreach (var categoryModel in Model.CategoryModels)
+                {
+                    <tr>
+                        <td class="dataStyle text-right">
+                            @(++index).
+                        </td>
+                        <td class="dataStyle text-right">
+                            @categoryModel.CategoryId
+                        </td>
+                        <td class="dataStyle text-left">
+                            @categoryModel.CategoryNameDesc
+                        </td>
+                        <td class="dataStyle text-left">
+                            @categoryModel.CategoryDesc
+                        </td>
+                    </tr>
+                }
+            </table>
+        </td>
+        <td style="padding: 0px; vertical-align: top; width: 60%;">
+            <table class="table table-bordered table-condensed table-hover table-responsive">
+                <tr>
+                    <th>#</th>
+                    <th>Seq</th>
+                    <th>Id</th>
+                    <th>Name Desc</th>
+                    <th>Desc</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var categoryItemHierModel in Model.CategoryItemHierModels)
+                {
+                    <tr>
+                        <td class="dataStyle text-right">@(hierarchyIndex + 1).</td>
+                        <td id="seqNum@(hierarchyIndex)" class="dataStyle text-right">@categoryItemHierModel.SeqNum</td>
+                        <td id="categoryId@(hierarchyIndex)" class="dataStyle text-right">@categoryItemHierModel.CategoryModel.CategoryId</td>
+                        <td id="categoryNameDesc@(hierarchyIndex)" class="dataStyle text-left">@categoryItemHierModel.CategoryModel.CategoryNameDesc</td>
+                        <td id="categoryDesc@(hierarchyIndex)" class="dataStyle text-left">@categoryItemHierModel.CategoryModel.CategoryDesc</td>
+                        <td>
+                            @Html.TextBoxFor(m => Model.CategoryItemHierModels[hierarchyIndex].CategoryModel.CategoryId)
+                            @if (hierarchyIndex > 0)
+                            {
+                                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: swapItem(@(hierarchyIndex - 1), @hierarchyIndex);">Up</a>
+                            }
+                        </td>
+                        <td>
+                            @if (hierarchyIndex < Model.CategoryItemHierModels.Count - 1)
+                            {
+                                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: swapItem(@hierarchyIndex, @(hierarchyIndex + 1));">Down</a>
+                            }
+                        </td>
+                    </tr>
+                    hierarchyIndex++;
+                }
+            </table>
+        </td>
+    </tr>
+</table>

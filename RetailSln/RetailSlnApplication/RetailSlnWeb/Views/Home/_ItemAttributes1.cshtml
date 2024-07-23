@@ -1,2 +1,36 @@
-﻿@model RetailSlnModels.ItemAttributesModel
-_ItemAttributesView1
+﻿@model RetailSlnModels.ItemInfoListModel
+@{
+    int i;
+    for (i = 0; i < Model.ItemInfoModels.Count; i++)
+    {
+        <div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 40px; margin-left: auto; margin-right: auto; padding: 9px; text-align: center;">
+            <a id="divTabItemInfo@(i)" href="javascript: void(0);" onclick="javascript: return divTabItemInfo_onclick(@i, @Model.ItemInfoModels.Count)" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">2.@((i + 1) + "." + Model.ItemInfoModels[i].ItemInfoLabelText)</a>
+        </div>
+        if (i < Model.ItemInfoModels.Count - 1)
+        {
+            <div style="float: left; width: 9px;">&nbsp;</div>
+        }
+    }
+    <br style="clear: both;" />
+    for (i = 0; i < Model.ItemInfoModels.Count; i++)
+    {
+        <div id="divTabItemInfoData@(i)" style="display: none;">
+            @Html.Raw(Model.ItemInfoModels[i].ItemInfoText)
+        </div>
+    }
+}
+<script type="text/javascript">
+    divTabItemInfo_onclick(0, @Model.ItemInfoModels.Count);
+    function divTabItemInfo_onclick(index, count) {
+        for (var i = 0; i < count; i++) {
+            document.getElementById("divTabItemInfoData" + i).style.display = "none";
+            document.getElementById("divTabItemInfo" + i).style.textDecoration = "underline";
+            document.getElementById("divTabItemInfo" + i).style.color = "#0000ff";
+        }
+        if (count > 0) {
+            document.getElementById("divTabItemInfoData" + index).style.display = "block";
+            document.getElementById("divTabItemInfo" + index).style.textDecoration = "none";
+            document.getElementById("divTabItemInfo" + index).style.color = "#000000";
+        }
+    }
+</script>

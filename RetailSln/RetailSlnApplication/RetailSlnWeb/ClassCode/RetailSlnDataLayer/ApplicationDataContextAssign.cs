@@ -103,48 +103,48 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ItemTypeId"].Value = (int)itemModel.ItemTypeId;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static void AssignItemAttribInsert(ItemAttribModel itemAttribModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignItemSpecInsert(ItemSpecModel itemAttribModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@ItemAttribMasterId"].Value = itemAttribModel.ItemAttribMasterId;
-            sqlCommand.Parameters["@ItemAttribUnitValue"].Value = itemAttribModel.ItemAttribUnitValue;
-            sqlCommand.Parameters["@ItemAttribValue"].Value = itemAttribModel.ItemAttribValue;
+            sqlCommand.Parameters["@ItemSpecMasterId"].Value = itemAttribModel.ItemSpecMasterId;
+            sqlCommand.Parameters["@ItemSpecUnitValue"].Value = itemAttribModel.ItemSpecUnitValue;
+            sqlCommand.Parameters["@ItemSpecValue"].Value = itemAttribModel.ItemSpecValue;
             sqlCommand.Parameters["@ItemId"].Value = (long)itemAttribModel.ItemId;
             sqlCommand.Parameters["@SeqNum"].Value = (int)itemAttribModel.SeqNum;
             sqlCommand.Parameters["@ShowValue"].Value = (bool)itemAttribModel.ShowValue;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static void AssignItemSpecInsert(ItemSpecModel itemSpecModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignItemInfoInsert(ItemInfoModel itemInfoModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@ItemId"].Value = itemSpecModel.ItemId;
-            sqlCommand.Parameters["@ItemSpecLabelText"].Value = itemSpecModel.ItemSpecLabelText;
-            sqlCommand.Parameters["@ItemSpecText"].Value = itemSpecModel.ItemSpecText;
-            sqlCommand.Parameters["@SeqNum"].Value = itemSpecModel.SeqNum;
+            sqlCommand.Parameters["@ItemId"].Value = itemInfoModel.ItemId;
+            sqlCommand.Parameters["@ItemInfoLabelText"].Value = itemInfoModel.ItemInfoLabelText;
+            sqlCommand.Parameters["@ItemInfoText"].Value = itemInfoModel.ItemInfoText;
+            sqlCommand.Parameters["@SeqNum"].Value = itemInfoModel.SeqNum;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static ItemSpecModel AssignItemSpecSelect(SqlDataReader sqlDataReader, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static ItemInfoModel AssignItemInfoSelect(SqlDataReader sqlDataReader, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            ItemSpecModel itemSpecModel = new ItemSpecModel
+            ItemInfoModel itemInfoModel = new ItemInfoModel
             {
-                ItemSpecId = long.Parse(sqlDataReader["ItemSpecId"].ToString()),
+                ItemInfoId = long.Parse(sqlDataReader["ItemInfoId"].ToString()),
                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                 ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                ItemSpecLabelText = sqlDataReader["ItemSpecLabelText"].ToString(),
-                ItemSpecText = sqlDataReader["ItemSpecText"].ToString(),
+                ItemInfoLabelText = sqlDataReader["ItemInfoLabelText"].ToString(),
+                ItemInfoText = sqlDataReader["ItemInfoText"].ToString(),
                 SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
             };
-            return itemSpecModel;
+            return itemInfoModel;
         }
-        public static void AssignItemSpecUpdate(ItemSpecModel itemSpecModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignItemInfoUpdate(ItemInfoModel itemInfoModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@ItemId"].Value = itemSpecModel.ItemId;
-            sqlCommand.Parameters["@ItemSpecLabelText"].Value = itemSpecModel.ItemSpecLabelText;
-            sqlCommand.Parameters["@ItemSpecText"].Value = itemSpecModel.ItemSpecText;
-            sqlCommand.Parameters["@SeqNum"].Value = itemSpecModel.SeqNum;
+            sqlCommand.Parameters["@ItemId"].Value = itemInfoModel.ItemId;
+            sqlCommand.Parameters["@ItemInfoLabelText"].Value = itemInfoModel.ItemInfoLabelText;
+            sqlCommand.Parameters["@ItemInfoText"].Value = itemInfoModel.ItemInfoText;
+            sqlCommand.Parameters["@SeqNum"].Value = itemInfoModel.SeqNum;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
-            sqlCommand.Parameters["@ItemSpecId"].Value = itemSpecModel.ItemSpecId;
+            sqlCommand.Parameters["@ItemInfoId"].Value = itemInfoModel.ItemInfoId;
         }
         public static void AssignCategoryInsert(CategoryModel categoryModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -193,6 +193,25 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ImageName"].Value = itemModel.ImageName;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
             sqlCommand.Parameters["@ItemId"].Value = itemModel.ItemId;
+        }
+        public static CategoryModel AssignCategory(SqlDataReader sqlDataReader, long clientId, string ipAddress, string exceUniqueId, string loggedInUserId)
+        {
+            CategoryModel categoryModel = new CategoryModel
+            {
+                CategoryId = long.Parse(sqlDataReader["CategoryId"].ToString()),
+                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+            };
+            return categoryModel;
+        }
+        public static ItemModel AssignItem(SqlDataReader sqlDataReader, long clientId, string ipAddress, string exceUniqueId, string loggedInUserId)
+        {
+            ItemModel itemModel = new ItemModel
+            {
+                ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                ImageName = sqlDataReader["ImageName"].ToString(),
+            };
+            return itemModel;
         }
     }
 }

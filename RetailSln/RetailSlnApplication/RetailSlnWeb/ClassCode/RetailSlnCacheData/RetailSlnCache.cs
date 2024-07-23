@@ -26,8 +26,10 @@ namespace RetailSlnCacheData
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
-        public static List<ItemAttribMasterModel> ItemAttribMasterModels { set; get; }
-        public static List<ItemAttribModel> ItemAttribModels { set; get; }
+        public static List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
+        public static List<ItemSpecModel> ItemSpecModels { set; get; }
+        public static List<ItemInfoModel> ItemInfoModels { set; get; }
+        public static List<ItemImageModel> ItemImageModels { set; get; }
         public static List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public static List<ItemBundleDiscountModel> ItemBundleDiscountModels { set; get; }
         public static List<CategoryItemHierModel> CategoryItemHierModels { set; get; }
@@ -43,12 +45,14 @@ namespace RetailSlnCacheData
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
-            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemAttribModel> itemAttribModels, out List<ItemAttribMasterModel> itemAttribMasterModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemSpecModel> itemSpecModels, out List<ItemSpecMasterModel> itemSpecMasterModels, out List<ItemInfoModel> itemInfoModels, out List<ItemImageModel> itemImageModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
             ItemBundleItemModels = itemBundleItemModels;
             ItemModels = itemModels;
-            ItemAttribModels = itemAttribModels;
-            ItemAttribMasterModels = itemAttribMasterModels;
+            ItemSpecModels = itemSpecModels;
+            ItemInfoModels = itemInfoModels;
+            ItemImageModels = itemImageModels;
+            ItemSpecMasterModels = itemSpecMasterModels;
             CategoryItemHierModels = categoryItemHierModels;
             //DeliveryListModels = deliveryListModels;
             //DeliveryChargeModels = deliveryChargeModels;
@@ -58,7 +62,7 @@ namespace RetailSlnCacheData
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencySymbol = regionInfo.CurrencySymbol;
-            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemBundleItemModels, itemAttribModels, itemAttribMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoSubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels(categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, itemModels, itemBundleItemModels, itemSpecModels, itemInfoModels, itemImageModels, itemSpecMasterModels, categoryItemHierModels, corpAcctModels, discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoSubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             DeliveryDemogInfoCountryModels = deliveryDemogInfoCountryModels;
             DeliveryDemogInfoCountrySelectListItems = deliveryDemogInfoCountrySelectListItems;
             DeliveryDemogInfoCountrySubDivisionSelectListItems = deliveryDemogInfoSubDivisionSelectListItems;
@@ -71,7 +75,7 @@ namespace RetailSlnCacheData
             DeliveryDemogInfoCountryStates = deliveryCountryStates;
             BusinessInfoModel = businessInfoModel;
         }
-        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemBundleItemModel> itemBundleItemModels, List<ItemAttribModel> itemAttribModels, List<ItemAttribMasterModel> itemAttribMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoCountrySubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static void BuildCacheModels(List<CategoryModel> categoryModels, out Dictionary<long, CategoryLayoutModel> categoryLayoutModels, List<ItemModel> itemModels, List<ItemBundleItemModel> itemBundleItemModels, List<ItemSpecModel> itemSpecModels, List<ItemInfoModel> itemInfoModels, List<ItemImageModel> itemImageModels, List<ItemSpecMasterModel> itemSpecMasterModels, List<CategoryItemHierModel> categoryItemHierModels, List<CorpAcctModel> corpAcctModels, List<DiscountDtlModel> discountDtlModels, out List<DemogInfoCountryModel> deliveryDemogInfoCountryModels, out List<SelectListItem> deliveryDemogInfoCountrySelectListItems, out Dictionary<long, List<SelectListItem>> deliveryDemogInfoCountrySubDivisionSelectListItems, out List<ApiCodeDataModel> deliveryMethods, out List<ApiCodeDataModel> paymentMethodsCreditSale, out List<ApiCodeDataModel> paymentMethods, out List<KeyValuePair<long, string>> deliveryCountrys, out List<KeyValuePair<long, List<KeyValuePair<long, string>>>> deliveryCountryStates, out BusinessInfoModel businessInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             foreach (var categoryItemHierModel in categoryItemHierModels)
             {
@@ -89,22 +93,20 @@ namespace RetailSlnCacheData
                 categoryLayoutModel.Value.CategoryItemHierModels = new List<CategoryItemHierModel>();
                 categoryLayoutModel.Value.CategoryItemHierModels.AddRange(categoryItemHierModels.FindAll(x => x.ParentCategoryId == categoryLayoutModel.Key).OrderBy(y => y.SeqNum).ToList());
             }
-            foreach (var itemAttribModel in itemAttribModels)
+            foreach (var itemSpecModel in itemSpecModels)
             {
-                itemAttribModel.ItemAttribMasterModel = itemAttribMasterModels.First(x => x.ItemAttribMasterId == itemAttribModel.ItemAttribMasterId);
-                itemAttribModel.ItemAttribValueForDisplay = itemAttribModel.ItemAttribMasterModel.AttribDesc + " " + itemAttribModel.ItemAttribValue;
-                if (itemAttribModel.ItemAttribValue != "")
+                itemSpecModel.ItemSpecMasterModel = itemSpecMasterModels.First(x => x.ItemSpecMasterId == itemSpecModel.ItemSpecMasterId);
+                itemSpecModel.ItemSpecValueForDisplay = itemSpecModel.ItemSpecMasterModel.SpecDesc + " " + itemSpecModel.ItemSpecValue;
+                if (itemSpecModel.ItemSpecValue != "")
                 {
-                    if (itemAttribModel.ItemAttribMasterModel.CodeTypeId != null)
+                    if (itemSpecModel.ItemSpecMasterModel.CodeTypeId != null)
                     {
-                        var abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemAttribModel.ItemAttribMasterModel.CodeTypeId.Value, execUniqueId);
-                        var abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemAttribModel.ItemAttribUnitValue));
-                        itemAttribModel.ItemAttribValueForDisplay += " " + abc2.CodeDataDesc0;
+                        var abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
+                        var abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemSpecModel.ItemSpecUnitValue));
+                        itemSpecModel.ItemSpecValueForDisplay += " " + abc2.CodeDataDesc0;
                     }
                 }
             }
-            //
-            //ItemAttribModel itemAttribModel1;
             foreach (var itemModel in itemModels)
             {
                 itemModel.ItemRateFormatted = itemModel.ItemRate.Value.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
@@ -123,27 +125,29 @@ namespace RetailSlnCacheData
                     itemModel.ExpectedAvailabilityFormatted = DateTime.Parse(itemModel.ExpectedAvailability).ToString("MMM-dd");
                     itemModel.ImageTitle += " Expected to be available on " + itemModel.ExpectedAvailabilityFormatted;
                 }
-                itemModel.ItemAttribModels = itemAttribModels.FindAll(x => x.ItemId == itemModel.ItemId);
-                itemModel.ItemAttribModelsForDisplay = new Dictionary<string, ItemAttribModel>();
-                foreach (var itemAttribModel in itemModel.ItemAttribModels)
+                itemModel.ItemSpecModels = itemSpecModels.FindAll(x => x.ItemId == itemModel.ItemId);
+                itemModel.ItemInfoModels = itemInfoModels.FindAll(x => x.ItemId == itemModel.ItemId);
+                itemModel.ItemImageModels = itemImageModels.FindAll(x => x.ItemId == itemModel.ItemId);
+                itemModel.ItemSpecModelsForDisplay = new Dictionary<string, ItemSpecModel>();
+                foreach (var itemSpecModel in itemModel.ItemSpecModels)
                 {
-                    switch (itemAttribModel.ItemAttribMasterModel.AttribName)
+                    switch (itemSpecModel.ItemSpecMasterModel.SpecName)
                     {
                         case "HSNCode":
                         case "ProductCode":
-                            itemModel.ItemAttribModelsForDisplay[itemAttribModel.ItemAttribMasterModel.AttribName] = itemAttribModel;
-                            itemModel.ImageTitle += " " + itemAttribModel.ItemAttribValueForDisplay;
+                            itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
+                            itemModel.ImageTitle += " " + itemSpecModel.ItemSpecValueForDisplay;
                             break;
                         case "WeightCalc":
-                            itemModel.ImageTitle += " Wt: " + itemAttribModel.ItemAttribValue + " G";
+                            itemModel.ImageTitle += " Wt: " + itemSpecModel.ItemSpecValue + " G";
                             break;
                         case "ProductOrVolumetricWeight":
-                            itemModel.ImageTitle += " Vol Wt: " + itemAttribModel.ItemAttribValue + " G";
+                            itemModel.ImageTitle += " Vol Wt: " + itemSpecModel.ItemSpecValue + " G";
                             break;
                     }
-                    if (itemAttribModel.ShowValue)
+                    if (itemSpecModel.ShowValue)
                     {
-                        itemModel.ItemAttribModelsForDisplay[itemAttribModel.ItemAttribMasterModel.AttribName] = itemAttribModel;
+                        itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
                     }
                 }
             }

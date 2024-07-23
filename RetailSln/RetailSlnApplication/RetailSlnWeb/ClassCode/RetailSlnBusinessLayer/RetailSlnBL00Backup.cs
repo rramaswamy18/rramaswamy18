@@ -90,13 +90,13 @@ namespace RetailSlnBusinessLayer
         //            float heightValue, lengthValue, weightCalcValue, weightValue, widthValue, itemRate;
         //            DimensionUnitEnum dimensionUnitId;
         //            WeightUnitEnum weightUnitId;
-        //            dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue);
-        //            weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue);
-        //            heightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue);
-        //            lengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue);
-        //            weightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue);
-        //            weightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue);
-        //            widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
+        //            dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Height").ItemSpecUnitValue);
+        //            weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Weight").ItemSpecUnitValue);
+        //            heightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Height").ItemSpecValue);
+        //            lengthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Length").ItemSpecValue);
+        //            weightCalcValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "CalcProductWeight").ItemSpecValue);
+        //            weightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Weight").ItemSpecValue);
+        //            widthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Width").ItemSpecValue);
         //            if (itemModel != null)
         //            {
         //                itemRate = itemModel.ItemRate.Value;
@@ -195,27 +195,27 @@ namespace RetailSlnBusinessLayer
         //                (
         //                    shoppingCartItemModel = new ShoppingCartItemModel
         //                    {
-        //                        DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribUnitValue),
-        //                        HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribValue),
-        //                        HSNCode = itemModel.ItemAttribModelsForDisplay["HSNCode"].ItemAttribValueForDisplay,
+        //                        DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecUnitValue),
+        //                        HeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecValue),
+        //                        HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
         //                        ItemDesc = itemModel.ItemDesc,
         //                        ItemDiscountPercent = null,
         //                        ItemId = itemModel.ItemId,
         //                        ItemRate = itemModel.ItemRate,
         //                        ItemRateBeforeDiscount = itemModel.ItemRate,
         //                        ItemShortDesc = itemModel.ItemShortDesc,
-        //                        LengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductLength").ItemAttribValue),
+        //                        LengthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductLength").ItemSpecValue),
         //                        OrderAmount = orderQty * itemModel.ItemRate,
         //                        OrderAmountBeforeDiscount = orderQty * itemModel.ItemRate,
         //                        OrderDetailTypeId = OrderDetailTypeEnum.Item,
         //                        OrderQty = orderQty,
-        //                        ProductCode = itemModel.ItemAttribModelsForDisplay["ProductCode"].ItemAttribValueForDisplay,
-        //                        WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue),
-        //                        WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribUnitValue),
-        //                        WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribValue),
-        //                        WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWidth").ItemAttribValue),
-        //                        ProductOrVolumetricWeight = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribValue),
-        //                        ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribUnitValue),
+        //                        ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+        //                        WeightCalcValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "CalcProductWeight").ItemSpecValue),
+        //                        WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductWeight").ItemSpecUnitValue),
+        //                        WeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductWeight").ItemSpecValue),
+        //                        WidthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductWidth").ItemSpecValue),
+        //                        ProductOrVolumetricWeight = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductOrVolumetricWeight").ItemSpecValue),
+        //                        ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
         //                    }
         //                );
         //            }
@@ -404,13 +404,13 @@ namespace RetailSlnBusinessLayer
         ////            float heightValue, lengthValue, weightCalcValue, weightValue, widthValue, itemRate;
         ////            DimensionUnitEnum dimensionUnitId;
         ////            WeightUnitEnum weightUnitId;
-        ////            dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribUnitValue);
-        ////            weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribUnitValue);
-        ////            heightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Height").ItemAttribValue);
-        ////            lengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Length").ItemAttribValue);
-        ////            weightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue);
-        ////            weightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Weight").ItemAttribValue);
-        ////            widthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "Width").ItemAttribValue);
+        ////            dimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Height").ItemSpecUnitValue);
+        ////            weightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Weight").ItemSpecUnitValue);
+        ////            heightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Height").ItemSpecValue);
+        ////            lengthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Length").ItemSpecValue);
+        ////            weightCalcValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "CalcProductWeight").ItemSpecValue);
+        ////            weightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Weight").ItemSpecValue);
+        ////            widthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "Width").ItemSpecValue);
         ////            if (itemModel != null)
         ////            {
         ////                itemRate = itemModel.ItemRate.Value;
@@ -508,27 +508,27 @@ namespace RetailSlnBusinessLayer
         ////                (
         ////                    shoppingCartItemModel = new ShoppingCartItemModel
         ////                    {
-        ////                        DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribUnitValue),
-        ////                        HeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductHeight").ItemAttribValue),
-        ////                        HSNCode = itemModel.ItemAttribModelsForDisplay["HSNCode"].ItemAttribValueForDisplay,
+        ////                        DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecUnitValue),
+        ////                        HeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecValue),
+        ////                        HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
         ////                        ItemDesc = itemModel.ItemDesc,
         ////                        ItemDiscountPercent = null,
         ////                        ItemId = itemModel.ItemId,
         ////                        ItemRate = itemModel.ItemRate,
         ////                        ItemRateBeforeDiscount = itemModel.ItemRate,
         ////                        ItemShortDesc = itemModel.ItemShortDesc,
-        ////                        LengthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductLength").ItemAttribValue),
+        ////                        LengthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductLength").ItemSpecValue),
         ////                        OrderAmount = orderQty * itemModel.ItemRate,
         ////                        OrderAmountBeforeDiscount = orderQty * itemModel.ItemRate,
         ////                        OrderDetailTypeId = OrderDetailTypeEnum.Item,
         ////                        OrderQty = orderQty,
-        ////                        ProductCode = itemModel.ItemAttribModelsForDisplay["ProductCode"].ItemAttribValueForDisplay,
-        ////                        WeightCalcValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "CalcProductWeight").ItemAttribValue),
-        ////                        WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribUnitValue),
-        ////                        WeightValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWeight").ItemAttribValue),
-        ////                        WidthValue = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductWidth").ItemAttribValue),
-        ////                        ProductOrVolumetricWeight = float.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribValue),
-        ////                        ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemAttribModels.First(x => x.ItemAttribMasterModel.AttribName == "ProductOrVolumetricWeight").ItemAttribUnitValue),
+        ////                        ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+        ////                        WeightCalcValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "CalcProductWeight").ItemSpecValue),
+        ////                        WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductWeight").ItemSpecUnitValue),
+        ////                        WeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductWeight").ItemSpecValue),
+        ////                        WidthValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductWidth").ItemSpecValue),
+        ////                        ProductOrVolumetricWeight = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductOrVolumetricWeight").ItemSpecValue),
+        ////                        ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
         ////                    }
         ////                );
         ////            }
@@ -1850,17 +1850,17 @@ namespace RetailSlnBusinessLayer
         //            );
         //            foreach (var shoppingCartItem in shoppingCartModel.ShoppingCartItems)
         //            {
-        //                var itemAttribValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItem.ItemId).ItemAttribModels.ToList().First(x => x.ItemAttribMasterModel.AttribName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemAttribValue;
+        //                var itemSpecValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItem.ItemId).ItemSpecModels.ToList().First(x => x.ItemSpecMasterModel.AttribName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemSpecValue;
         //                shoppingCartItem.ShoppingCartItemSummarys.Add
         //                (
         //                    new ShoppingCartItemModel
         //                    {
         //                        ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
-        //                        ItemRate = float.Parse(itemAttribValue),
-        //                        OrderAmount = float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount / 100f,
+        //                        ItemRate = float.Parse(itemSpecValue),
+        //                        OrderAmount = float.Parse(itemSpecValue) * shoppingCartItem.OrderAmount / 100f,
         //                    }
         //                );
-        //                shoppingCartModel.ShoppingCartSummaryItems[shoppingCartModel.ShoppingCartSummaryItems.Count - 1].OrderAmount += float.Parse(itemAttribValue) * shoppingCartItem.OrderAmount / 100f;
+        //                shoppingCartModel.ShoppingCartSummaryItems[shoppingCartModel.ShoppingCartSummaryItems.Count - 1].OrderAmount += float.Parse(itemSpecValue) * shoppingCartItem.OrderAmount / 100f;
         //            }
         //        }
         //    }

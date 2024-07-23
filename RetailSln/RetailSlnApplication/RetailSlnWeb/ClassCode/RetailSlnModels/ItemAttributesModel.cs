@@ -11,8 +11,10 @@ namespace RetailSlnModels
         public long ItemId { set; get; }
         public long TabId { set; get; }
         public ItemModel ItemModel { set; get; }
-        public List<string> ItemAttribsTabs { set; get; }
-        public ItemSpecListModel ItemSpecListModel { set; get; }
+        public List<string> ItemAttributesTabs { set; get; }
+        public List<string> ItemAttributesViews { set; get; }
+        public List<object> ItemAttributesDatas { set; get; }
+        //public ItemInfoListModel ItemInfoListModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

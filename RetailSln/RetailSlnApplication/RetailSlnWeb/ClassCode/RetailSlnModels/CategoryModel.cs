@@ -14,6 +14,10 @@ namespace RetailSlnModels
     {
         public long? CategoryId { set; get; }
 
+        public long? ClientId { set; get; }
+
+        public bool AllowSubCategory { set; get; }
+
         public string CategoryName { set; get; }
 
         public string CategoryNameDesc { set; get; }
@@ -23,19 +27,27 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter description for the category")]
         public string CategoryDesc { set; get; }
 
+        [Display(Name = "Category Status")]
+        public CategoryStatusEnum? CategoryStatusId { set; get; }
+
         [Display(Name = "Category Type")]
         public CategoryTypeEnum? CategoryTypeId { set; get; }
 
-        [Display(Name = "Category Type")]
-        public CategoryStatusEnum? CategoryStatusId { set; get; }
+        [Display(Name = "Category Image")]
+
+        public bool DefaultCategory { set; get; }
+
+        public HttpPostedFileBase HttpPostedFileBase { get; set; }
+
+        public string ImageExtension { set; get; }
 
         [Display(Name = "Category Image")]
         public string ImageName { set; get; }
 
-        public short MaxPerPage { set; get; }
+        [Display(Name = "Notes")]
+        public string NotesText { set; get; }
 
-        [Display(Name = "Category Image")]
-        public HttpPostedFileBase HttpPostedFileBase { get; set; }
+        public short MaxPerPage { set; get; }
 
         public string UploadImageFileName { set; get; }
 

@@ -8,9 +8,12 @@ namespace RetailSlnModels
 {
     public class ItemSpecListModel
     {
-        public long ItemId { set; get; }
+        public string Dummy { set; get; } = "Dummy Data";
+
         public ItemModel ItemModel { set; get; }
+
         public List<ItemSpecModel> ItemSpecModels { set; get; }
+
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

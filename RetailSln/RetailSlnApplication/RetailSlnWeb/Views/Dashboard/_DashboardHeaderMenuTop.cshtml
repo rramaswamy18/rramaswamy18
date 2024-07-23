@@ -1,0 +1,26 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    //_HeaderMenuTop.cshtml
+    //DivineBija.in --> 97
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<div style="padding-top: 15px; float: right;">
+    <div style="float: right; padding-right: 15px;">
+        <a href="@Url.Action("Logout", "Home")" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 900; text-decoration: underline;" title="Logout - @imageTitle">
+            Logout
+        </a>
+    </div>
+    <div style="float: right; padding-right: 15px;">
+        <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "LOGIN" })" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 900; text-decoration: underline;" title="Sign in - @imageTitle">
+            Sign In
+        </a>
+    </div>
+    <div style="float: right; padding-right: 15px;">
+        <a href="@Url.Action("Index", "Home")" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 900; text-decoration: underline;" title="Home - @imageTitle">
+            Home
+        </a>
+    </div>
+</div>
+<br style="clear: both;" />

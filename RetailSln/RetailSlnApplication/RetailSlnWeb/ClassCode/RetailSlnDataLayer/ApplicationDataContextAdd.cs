@@ -187,15 +187,15 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void AddItemAttrib(ItemAttribModel itemAttribModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AddItemSpec(ItemSpecModel itemAttribModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                SqlCommand sqlCommand = BuildSqlCommandItemAttribInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AssignItemAttribInsert(itemAttribModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                SqlCommand sqlCommand = BuildSqlCommandItemSpecInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignItemSpecInsert(itemAttribModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 sqlCommand.ExecuteNonQuery();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
@@ -206,7 +206,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void AddItemSpec(ItemSpecModel itemSpecModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AddItemInfo(ItemInfoModel itemInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -214,9 +214,9 @@ namespace RetailSlnDataLayer
             try
             {
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-                SqlCommand sqlCommand = BuildSqlCommandItemSpecInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                AssignItemSpecInsert(itemSpecModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-                itemSpecModel.ItemSpecId = (long)sqlCommand.ExecuteScalar();
+                SqlCommand sqlCommand = BuildSqlCommandItemInfoInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignItemInfoInsert(itemInfoModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                itemInfoModel.ItemInfoId = (long)sqlCommand.ExecuteScalar();
                 //sqlCommand.ExecuteNonQuery();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
@@ -227,9 +227,9 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void AddItemAttribs(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AddItemSpecs(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            SqlCommand sqlCommand = new SqlCommand("INSERT RetailSlnSch.ItemAttrib(ItemAttribMasterId, ItemAttribUnitValue, ItemAttribValue, ItemId, SeqNum, AddUserId, UpdUserId) SELECT ItemAttribMasterId, '' AS AttribUnitValue, '' AS AttribValue, @ItemId, SeqNum, @LoggedInUser, @LoggedInUser FROM RetailSlnSch.ItemAttribMaster ORDER BY SeqNum", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("INSERT RetailSlnSch.ItemSpec(ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, ItemId, SeqNum, AddUserId, UpdUserId) SELECT ItemSpecMasterId, '' AS AttribUnitValue, '' AS AttribValue, @ItemId, SeqNum, @LoggedInUser, @LoggedInUser FROM RetailSlnSch.ItemSpecMaster ORDER BY SeqNum", sqlConnection);
             sqlCommand.Parameters.Add("@ItemId", System.Data.SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@LoggedInUser", System.Data.SqlDbType.NVarChar, 512);
             sqlCommand.Parameters["@ItemId"].Value = itemId;

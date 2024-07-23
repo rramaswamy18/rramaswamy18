@@ -1,4 +1,4 @@
-﻿@model RetailSlnModels.ItemAttributesModel
+﻿@model RetailSlnModels.ItemSpecListModel
 @using ArchitectureLibraryCacheData
 @{
     var clientId = ArchLibCache.ClientId;
@@ -20,14 +20,14 @@
                         Value
                     </th>
                 </tr>
-                @foreach (var itemAttribModel in Model.ItemModel.ItemAttribModels)
+                @foreach (var itemSpecModel in Model.ItemSpecModels)
                 {
                     <tr>
                         <td>
-                            @itemAttribModel.ItemAttribMasterModel.AttribDesc
+                            @itemSpecModel.ItemSpecMasterModel.SpecDesc
                         </td>
                         <td>
-                            @itemAttribModel.ItemAttribValue
+                            @itemSpecModel.ItemSpecValue
                         </td>
                     </tr>
                 }

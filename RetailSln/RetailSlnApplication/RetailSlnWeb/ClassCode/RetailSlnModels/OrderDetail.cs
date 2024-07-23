@@ -12,13 +12,14 @@ namespace RetailSlnModels
     {
         public long OrderDetailId { set; get; }
         public long ClientId { set; get; }
-        public long DimensionUnitId { set; get; }
+        public DimensionUnitEnum DimensionUnitId { set; get; }
         public float HeightValue { set; get; }
         public string HSNCode { set; get; }
         public string ItemDesc { set; get; }
         public float ItemDiscountAmount { set; get; }
         public long? ItemId { set; get; }
         public float ItemRate { set; get; }
+        public float ItemRateBeforeDiscount { set; get; }
         public string ItemShortDesc { set; get; }
         public float LengthValue { set; get; }
         public float OrderAmount { set; get; }
@@ -33,6 +34,8 @@ namespace RetailSlnModels
         public WeightUnitEnum ProductOrVolumetricWeightUnitId { set; get; }
         public double SeqNum { set; get; }
         public float VolumeValue { set; get; }
+        public WeightUnitEnum WeightCalcUnitId { set; get; }
+        public float WeightCalcValue { set; get; }
         public WeightUnitEnum WeightUnitId { set; get; }
         public float WeightValue { set; get; }
         public float WidthValue { set; get; }

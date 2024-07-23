@@ -7,21 +7,21 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class ItemAttribMasterModel : AuditInfoModel
+    public class ItemSpecMasterModel : AuditInfoModel
     {
-        public long? ItemAttribMasterId { set; get; }
+        public long? ItemSpecMasterId { set; get; }
 
         public long ClientId { set; get; }
 
         public long? CodeTypeId { set; get; }
 
-        public string AttribDesc { set; get; }
+        public string SpecDesc { set; get; }
 
-        public string AttribName { set; get; }
+        public string SpecName { set; get; }
 
-        public string AttribUnitType { set; get; }
+        public string SpecUnitType { set; get; }
 
-        public string AttribValueType { set; get; }
+        public string SpecValueType { set; get; }
 
         public string FormatString { set; get; }
 
