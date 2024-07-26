@@ -16,6 +16,83 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
+        public static List<FestivalListModel> GetFestivalLists(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.FestivalList ORDER BY FestivalListId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<FestivalListModel> featuredItemsModels = new List<FestivalListModel>();
+                while (sqlDataReader.Read())
+                {
+                    featuredItemsModels.Add
+                    (
+                        new FestivalListModel
+                        {
+                            FestivalListId = long.Parse(sqlDataReader["FestivalListId"].ToString()),
+                            StartDate = sqlDataReader["StartDate"].ToString(),
+                            StartTime = sqlDataReader["StartTime"].ToString(),
+                            FinishDate = sqlDataReader["FinishDate"].ToString(),
+                            FinishTime = sqlDataReader["FinishTime"].ToString(),
+                            EventDate = sqlDataReader["EventDate"].ToString(),
+                            EventDesc = sqlDataReader["EventDesc"].ToString(),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return featuredItemsModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<FestivalListImageModel> GetFestivalListImages(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.FestivalListImage ORDER BY FestivalListId, SeqNum" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<FestivalListImageModel> featuredItemsModels = new List<FestivalListImageModel>();
+                while (sqlDataReader.Read())
+                {
+                    featuredItemsModels.Add
+                    (
+                        new FestivalListImageModel
+                        {
+                            FestivalListImageId = long.Parse(sqlDataReader["FestivalListImageId"].ToString()),
+                            FestivalListId = long.Parse(sqlDataReader["FestivalListId"].ToString()),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            ImageExtension = sqlDataReader["ImageExtension"].ToString(),
+                            ImageName = sqlDataReader["ImageName"].ToString(),
+                            ImageNotes = sqlDataReader["ImageNotes"].ToString(),
+                            UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return featuredItemsModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static List<CategoryModel> GetCategorys(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -46,7 +123,6 @@ namespace RetailSlnDataLayer
                             ImageExtension = sqlDataReader["ImageExtension"].ToString(),
                             ImageName = sqlDataReader["ImageName"].ToString(),
                             MaxPerPage = short.Parse(sqlDataReader["MaxPerPage"].ToString()),
-                            NotesText = sqlDataReader["NotesText"].ToString(),
                             UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
                             ViewName = sqlDataReader["ViewName"].ToString(),
                         }
@@ -317,7 +393,6 @@ namespace RetailSlnDataLayer
                                 ImageExtension = sqlDataReader["ImageExtension"].ToString(),
                                 ImageName = sqlDataReader["ImageName"].ToString(),
                                 MaxPerPage = short.Parse(sqlDataReader["MaxPerPage"].ToString()),
-                                NotesText = sqlDataReader["NotesText"].ToString(),
                                 UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
                                 ViewName = sqlDataReader["ViewName"].ToString(),
                             },
@@ -885,6 +960,110 @@ namespace RetailSlnDataLayer
                 }
                 sqlDataReader.Close();
                 return orderListModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<SearchKeywordModel> GetSearchKeywords(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "        SELECT SearchKeyword.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SearchMetaDataId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SeqNum" + Environment.NewLine;
+                sqlStmt += "              ,Category.CategoryNameDesc AS EntityDesc" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.Category" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = Category.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE SearchMetaData.EntityTypeNameDesc = 'CATEGORY'" + Environment.NewLine;
+                sqlStmt += "         UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT SearchKeyword.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SearchMetaDataId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SeqNum" + Environment.NewLine;
+                sqlStmt += "              ,Item.ItemUniqueDesc AS EntityDesc" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = Item.ItemId" + Environment.NewLine;
+                sqlStmt += "         WHERE SearchMetaData.EntityTypeNameDesc = 'ITEM'" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SeqNum" + Environment.NewLine;
+                #endregion
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<SearchKeywordModel> searchKeywordModels = new List<SearchKeywordModel>();
+                SearchKeywordModel searchKeywordModel;
+                SearchMetaDataModel searchMetaDataModel;
+                bool sqlDataReaderRead = sqlDataReader.Read();
+                while (sqlDataReaderRead)
+                {
+                    searchKeywordModels.Add
+                    (
+                        searchKeywordModel = new SearchKeywordModel
+                        {
+                            SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            SearchKeywordText = sqlDataReader["SearchKeywordText"].ToString(),
+                            SearchMetaDataModels = new List<SearchMetaDataModel>(),
+                        }
+                    );
+                    while (sqlDataReaderRead && searchKeywordModel.SearchKeywordId == long.Parse(sqlDataReader["SearchKeywordId"].ToString()))
+                    {
+                        searchKeywordModel.SearchMetaDataModels.Add
+                        (
+                            searchMetaDataModel = new SearchMetaDataModel
+                            {
+                                SearchMetaDataId = long.Parse(sqlDataReader["SearchMetaDataId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                                EntityTypeNameDesc = sqlDataReader["EntityTypeNameDesc"].ToString(),
+                                EntityId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                                SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            }
+                        );
+                        if (sqlDataReader["EntityTypeNameDesc"].ToString() == "CATEGORY")
+                        {
+                            searchMetaDataModel.CategoryModel = new CategoryModel
+                            {
+                                CategoryId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                CategoryDesc = sqlDataReader["EntityDesc"].ToString(),
+                            };
+                        }
+                        else
+                        {
+                            searchMetaDataModel.ItemModel = new ItemModel
+                            {
+                                ItemId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                ItemDesc = sqlDataReader["EntityDesc"].ToString(),
+                            };
+                        }
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                return searchKeywordModels;
             }
             catch (Exception exception)
             {

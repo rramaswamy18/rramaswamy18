@@ -34,7 +34,7 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult CategoryHierList(string id)
         {
-            ViewData["ActionName"] = "CategoryList";
+            ViewData["ActionName"] = "CategoryHierList";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -82,7 +82,7 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult ItemHierList(string id, string assignedPageNum, string assignedRowCount, string pageNum, string rowCount)
         {
-            ViewData["ActionName"] = "CategoryList";
+            ViewData["ActionName"] = "ItemHierList";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -95,6 +95,38 @@ namespace RetailSlnWeb.Controllers
             success = true;
             processMessage = "SUCCESS!!!";
             htmlString = archLibBL.ViewToHtmlString(this, "_ItemHier", itemHierListModel);
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: SearchKeywordList
+        //[AjaxAuthorize]
+        //[Authorize]
+        [HttpGet]
+        public ActionResult SearchKeywordList(string pageNum, string rowCount)
+        {
+            ViewData["ActionName"] = "SearchKeywordList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            if (!int.TryParse(pageNum, out int pageNumInt))
+            {
+                pageNumInt = 1;
+            }
+            if (!int.TryParse(rowCount, out int rowCountInt))
+            {
+                rowCountInt = 50;
+            }
+            SearchKeywordListModel searchKeywordListModel = retailSlnBL.SearchKeywordList(pageNumInt, rowCountInt, clientId, ipAddress, execUniqueId, loggedInUserId);
+            success = true;
+            processMessage = "SUCCESS!!!";
+            htmlString = archLibBL.ViewToHtmlString(this, "_SearchKeyword", searchKeywordListModel);
             actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;

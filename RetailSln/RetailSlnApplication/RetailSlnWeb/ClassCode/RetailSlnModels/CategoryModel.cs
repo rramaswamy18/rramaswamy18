@@ -44,9 +44,6 @@ namespace RetailSlnModels
         [Display(Name = "Category Image")]
         public string ImageName { set; get; }
 
-        [Display(Name = "Notes")]
-        public string NotesText { set; get; }
-
         public short MaxPerPage { set; get; }
 
         public string UploadImageFileName { set; get; }

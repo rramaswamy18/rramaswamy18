@@ -9,7 +9,7 @@ namespace RetailSlnCacheBusinessLayer
 {
     public class RetailSlnCacheBL
     {
-        public void Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemSpecModel> itemSpecModels, out List<ItemSpecMasterModel> itemSpecMasterModels, out List<ItemInfoModel> itemInfoModels, out List<ItemImageModel> itemImageModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemSpecModel> itemSpecModels, out List<ItemSpecMasterModel> itemSpecMasterModels, out List<ItemInfoModel> itemInfoModels, out List<ItemImageModel> itemImageModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, out List<FestivalListModel> festivalListModels, out List<FestivalListImageModel> festivalListImageModels, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             ApplicationDataContext.OpenSqlConnection();
             categoryModels = ApplicationDataContext.GetCategorys(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -23,6 +23,8 @@ namespace RetailSlnCacheBusinessLayer
             categoryItemHierModels = ApplicationDataContext.GetCategoryItemHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             corpAcctModels = ApplicationDataContext.GetCorpAccts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             discountDtlModels = ApplicationDataContext.GetDiscountDtls(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            festivalListModels = ApplicationDataContext.GetFestivalLists(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+            festivalListImageModels = ApplicationDataContext.GetFestivalListImages(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             ApplicationDataContext.CloseSqlConnection();
         }
     }

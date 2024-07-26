@@ -831,7 +831,8 @@ namespace RetailSlnWeb.Controllers
                 };
                 success = true;
                 processMessage = "SUCCESS!!!";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", orderCategoryItemModel);
+                var categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == long.Parse(id));
+                htmlString = archLibBL.ViewToHtmlString(this, categoryModel.ViewName, orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)

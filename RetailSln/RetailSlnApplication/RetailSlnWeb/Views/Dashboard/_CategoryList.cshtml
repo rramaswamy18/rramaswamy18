@@ -36,7 +36,7 @@
             Desc
         </th>
         <th class="text-right">
-            Count
+            Max#
         </th>
         <th class="text-left">
             Type
@@ -48,10 +48,13 @@
             Default
         </th>
         <th class="text-left">
-            Cat Hier
+            Catg
         </th>
         <th class="text-left">
             Item Hier
+        </th>
+        <th class="text-left">
+            Search
         </th>
         <th class="text-left">
             Image
@@ -109,14 +112,19 @@
             <td class="dataStyle text-left">
                 @if (@categoryModel.AllowSubCategory)
                 {
-                    <a class="hrefStyle" href="javascript: void(0);"onclick="javascript: return categoryHier_onclick(@categoryModel.CategoryId);">
-                        Category(s)
+                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return categoryHier_onclick(@categoryModel.CategoryId);">
+                        Catg(s)
                     </a>
                 }
             </td>
             <td class="text-left">
                 <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return categoryHier_onclick(@categoryModel.CategoryId);">
                     Item(s)
+                </a>
+            </td>
+            <td class="text-left">
+                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return categoryHier_onclick(@categoryModel.CategoryId);">
+                    Keyword(s)
                 </a>
             </td>
             <td class="text-left">

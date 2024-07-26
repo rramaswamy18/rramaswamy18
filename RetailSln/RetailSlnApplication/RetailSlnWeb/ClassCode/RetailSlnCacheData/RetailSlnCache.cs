@@ -25,6 +25,8 @@ namespace RetailSlnCacheData
         public static Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
+        public static List<FestivalListModel> FestivalListModels { set; get; }
+        public static List<FestivalListImageModel> FestivalListImageModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
         public static List<ItemSpecModel> ItemSpecModels { set; get; }
@@ -45,7 +47,7 @@ namespace RetailSlnCacheData
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
-            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemSpecModel> itemSpecModels, out List<ItemSpecMasterModel> itemSpecMasterModels, out List<ItemInfoModel> itemInfoModels, out List<ItemImageModel> itemImageModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, clientId, ipAddress, execUniqueId, loggedInUserId);
+            retailSlnCacheBL.Initialize(out List<CategoryModel> categoryModels, out List<ItemModel> itemModels, out List<ItemSpecModel> itemSpecModels, out List<ItemSpecMasterModel> itemSpecMasterModels, out List<ItemInfoModel> itemInfoModels, out List<ItemImageModel> itemImageModels, out List<ItemBundleItemModel> itemBundleItemModels, out List<ItemBundleDiscountModel> itemBundleDiscountModels, out List<CategoryItemHierModel> categoryItemHierModels, out List<CorpAcctModel> corpAcctModels, out List<DiscountDtlModel> discountDtlModels, out List<FestivalListModel> festivalListModels, out List<FestivalListImageModel> festivalListImageModels, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = categoryModels;
             ItemBundleItemModels = itemBundleItemModels;
             ItemModels = itemModels;
@@ -58,6 +60,8 @@ namespace RetailSlnCacheData
             //DeliveryChargeModels = deliveryChargeModels;
             CorpAcctModels = corpAcctModels;
             DiscountDtlModels = discountDtlModels;
+            FestivalListModels = festivalListModels;
+            FestivalListImageModels = festivalListImageModels;
             CurrencyCultureInfo = new CultureInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
             CurrencyDecimalPlaces = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyDecimalPlaces");
             var regionInfo = new RegionInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));

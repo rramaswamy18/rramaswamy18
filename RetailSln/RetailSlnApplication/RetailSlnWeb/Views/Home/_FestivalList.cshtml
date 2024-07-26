@@ -1,0 +1,131 @@
+﻿@using RetailSlnModels
+@{
+    int imageIndex = 0;
+    string defaultOrderQty = "";
+    ItemModel itemModel = new ItemModel
+    {
+        ImageTitle = "Varalakshmi Vratam",
+    };
+}
+<table class="table table-bordered table-hover table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <tr>
+        <td colspan="9" style="text-align: center;">
+            <h3 style="color: #a54000; font-family: 'Comic Sans MS'; font-size: 27px; font-weight: bold; letter-spacing: 7px; text-transform: uppercase;">Upcoming Festivals</h3>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Festival
+        </th>
+        <th>
+
+        </th>
+    </tr>
+    <tr>
+        <td class="text-center">
+            Aug 16 2024
+        </td>
+        <td class="text-left">
+            Varalakshmi Vratam
+        </td>
+        <td align="center" class="text-center">
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+        </td>
+        <td style="width: 135px;">
+            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 54%;" title="Enter quantity and click add to cart @itemModel.ImageTitle" type="number" value="@defaultOrderQty" />
+            @if (defaultOrderQty == "")
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+            else
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="text-center">
+            Aug 19 2024
+        </td>
+        <td class="text-left">
+            Upakarma (Avani Avittam)
+        </td>
+        <td align="center" class="text-center">
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+        </td>
+        <td style="width: 135px;">
+            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 54%;" title="Enter quantity and click add to cart @itemModel.ImageTitle" type="number" value="@defaultOrderQty" />
+            @if (defaultOrderQty == "")
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+            else
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="text-center">
+            Aug 20 2024
+        </td>
+        <td class="text-left">
+            Gayathri Japam
+        </td>
+        <td align="center" class="text-center">
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+        </td>
+        <td style="width: 135px;">
+            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 54%;" title="Enter quantity and click add to cart @itemModel.ImageTitle" type="number" value="@defaultOrderQty" />
+            @if (defaultOrderQty == "")
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+            else
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="text-center">
+            Aug 26 2024
+        </td>
+        <td class="text-left">
+            Gokulashtami
+        </td>
+        <td align="center" class="text-center">
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+            <img src="~/ClientSpecific/97_DivineBija.in/Documents/Images/Items/Item663.png" style="height: auto; max-height: 90px; max-width: 90px; padding-right: 3px; width: 100%;" />
+        </td>
+        <td style="width: 135px;">
+            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 54%;" title="Enter quantity and click add to cart @itemModel.ImageTitle" type="number" value="@defaultOrderQty" />
+            @if (defaultOrderQty == "")
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+            else
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" title="Enter quantity and click add to cart @itemModel.ItemShortDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ImageTitle" /></a>
+            }
+        </td>
+    </tr>
+</table>

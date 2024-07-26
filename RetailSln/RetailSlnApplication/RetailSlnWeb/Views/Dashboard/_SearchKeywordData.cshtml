@@ -1,1 +1,39 @@
-﻿
+﻿@model RetailSlnModels.SearchKeywordListModel
+@{ 
+    int index = 0;
+}
+<table class="table table-bordered table-condensed" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Keyword</th>
+        <th>Category(s)</th>
+        <th>Items(s)</th>
+    </tr>
+    @foreach (var searchKeywordModel in Model.SearchKeywordModels)
+    {
+        <tr>
+            <td class="text-right" style="vertical-align: top;">@(++index)</td>
+            <td class="text-right" style="vertical-align: top;">@searchKeywordModel.SearchKeywordId</td>
+            <td class="text-left" style="vertical-align: top;">@searchKeywordModel.SearchKeywordText</td>
+            <td class="text-left" style="vertical-align: top;">
+                @foreach (var searchMetaDataModel in searchKeywordModel.SearchMetaDataModels)
+                {
+                    if (searchMetaDataModel.EntityTypeNameDesc == "CATEGORY")
+                    {
+                        @searchMetaDataModel.CategoryModel.CategoryDesc<br />
+                    }
+                }
+            </td>
+            <td class="text-left" style="vertical-align: top;">
+                @foreach (var searchMetaDataModel in searchKeywordModel.SearchMetaDataModels)
+                {
+                    if (searchMetaDataModel.EntityTypeNameDesc == "ITEM")
+                    {
+                        @searchMetaDataModel.ItemModel.ItemDesc<br />
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>

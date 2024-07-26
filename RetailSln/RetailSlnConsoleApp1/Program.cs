@@ -51,7 +51,7 @@ namespace RetailSlnConsoleApp1
         {
             string inputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\";
             string outputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\Items\";
-            string databaseConnectionString = "DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.in;";
+            string databaseConnectionString = "DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln;";
             Class1 class1 = new Class1();
             class1.DivineBijaResizeImages(databaseConnectionString, inputDirectoryName, outputDirectoryName);
         }

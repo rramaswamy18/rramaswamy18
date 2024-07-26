@@ -170,10 +170,15 @@ namespace RetailSlnBusinessLayer
                     ItemModel = itemAttributesModel.ItemModel,
                     ItemInfoModels = itemAttributesModel.ItemModel.ItemInfoModels,
                 };
+                var itemImageListModel = new ItemImageListModel
+                {
+                    ItemModel = itemAttributesModel.ItemModel,
+                };
+                var itemBundleItemDataModel = ItemBundleItemData(itemId, "", 0, clientId, ipAddress, execUniqueId, loggedInUserId);
                 itemAttributesModel.ItemAttributesDatas.Add(itemSpecListModel);
                 itemAttributesModel.ItemAttributesDatas.Add(itemInfoListModel);
-                itemAttributesModel.ItemAttributesDatas.Add(itemInfoListModel);
-                itemAttributesModel.ItemAttributesDatas.Add(itemInfoListModel);
+                itemAttributesModel.ItemAttributesDatas.Add(itemImageListModel);
+                itemAttributesModel.ItemAttributesDatas.Add(itemBundleItemDataModel);
                 return itemAttributesModel;
             }
             catch (Exception exception)
@@ -283,6 +288,56 @@ namespace RetailSlnBusinessLayer
                 }
             }
             return categoryItemHierListModel;
+        }
+        // GET : SearchKeywordList
+        public SearchKeywordListModel SearchKeywordList(int pageNum, int rowCount, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SearchKeywordListModel searchKeywordListModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ApplicationDataContext.OpenSqlConnection();
+                searchKeywordListModel = new SearchKeywordListModel
+                {
+                    SearchKeywordModels = ApplicationDataContext.GetSearchKeywords(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                searchKeywordListModel = new SearchKeywordListModel
+                {
+                    SearchKeywordModels = null,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading search keyword list from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return searchKeywordListModel;
         }
         //#region
         ////GET Category

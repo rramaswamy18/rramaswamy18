@@ -7,7 +7,8 @@ namespace RetailSlnModels
 {
     public class SearchMetaDataModel
     {
-        public long SearchMetaDataModelId { set; get; }
+        public long SearchMetaDataId { set; get; }
+        public long ClientId { set; get; }
         public long SearchKeywordId { set; get; }
         public string EntityTypeNameDesc { set; get; }
         public long EntityId { set; get; }

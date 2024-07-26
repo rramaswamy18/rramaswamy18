@@ -7,7 +7,8 @@
 </div>
 <script type="text/javascript">
     function window_onload() {
-        menuLink_onclick('@Url.Action("CategoryList", "Dashboard")', 1, 50);
+        //menuLink_onclick('@Url.Action("CategoryList", "Dashboard")', 1, 50);
+        menuLink_onclick('@Url.Action("SearchKeywordList", "Dashboard")', 1, 50);
         //categoryHier_onclick(0);
     }
     function categoryHier_onclick(parentCategoryId) {

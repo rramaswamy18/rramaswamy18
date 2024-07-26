@@ -1,6 +1,54 @@
-﻿@model RetailSlnModels.ItemInfoListModel
- _ItemAttributesView3
+﻿@model RetailSlnModels.ItemBundleItemDataModel
 <div id="divItemBundleItem"></div>
+<script>
+    btnViewBundle_onclick(@Model.BundleItemId, "", 0, "divItemBundleItem");
+    function btnViewBundle_onclick(bundleItemId, prefixSeqNum, paddingLeft, divItemBundleItemId) {
+        console.log("00000000", "btnViewBundle_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        if (document.getElementById(divItemBundleItemId).innerHTML === "") {
+            var url = "/Home/ItemBundleItemData/" + bundleItemId + "?prefixSeqNum=" + prefixSeqNum + "&paddingLeft=" + paddingLeft;
+            try {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                    //dataType: "html",
+                    //data: postData,
+                    //async: false,
+                    success: function (responseData, textStatus, request) {
+                        $("#loadingModal").modal('hide');
+                        document.getElementById(divItemBundleItemId).innerHTML = responseData.htmlString;
+                        if (responseData.success) {
+                        }
+                        else {
+                            alert("Error occurred");
+                        }
+                        console.log("00001000", "btnViewBundle_onclick success", responseData.processMessage);
+                    },
+                    error: function (xhr, exception) {
+                        $("#loadingModal").modal('hide');
+                        console.log("00099000", "btnViewBundle_onclick", "ERROR???", exception, xhr);
+                        alert("Please fix errors to continue???....");
+                    }
+                });
+            }
+            catch (err) {
+                $('#loadingModal').modal('hide');
+                alert("Please fix errors to continue???");
+                console.log("00099100", "btnViewBundle_onclick", "ERROR???", err);
+            }
+        }
+        else {
+            $('#loadingModal').modal('hide');
+        }
+        document.getElementById(divItemBundleItemId).style.display = "block";
+        return false;
+    }
+    function btnHideBundle_onclick(divItemBundleItemId) {
+        document.getElementById(divItemBundleItemId).style.display = "none";
+        return false;
+    }
+</script>
 @*<script type="text/javascript">
         btnViewBundle_onclick(@Model.ItemId, "", 0, "divItemBundleItem");
         //function itemBundleItem_onclick(bundleItemId, prefixSeqNum, paddingLeft) {

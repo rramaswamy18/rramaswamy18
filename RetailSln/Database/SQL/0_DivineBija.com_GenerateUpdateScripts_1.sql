@@ -30,8 +30,6 @@ END
 CLOSE UpdateSqlCursor
 DEALLOCATE UpdateSqlCursor
 
-SET NOCOUNT OFF
-
 BEGIN
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Gold River' WHERE ClientId = @ClientId AND KVPKey = 'AddressCityName'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'USA' WHERE ClientId = @ClientId AND KVPKey = 'AddressCountryAbbrev'
@@ -72,6 +70,8 @@ END
 
 UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Final Rate USD], '$', '') AS FLOAT), ItemRateMSRP = 0/*[Final Rate USD]*/ FROM dbo.DivineBija_Products WHERE Item.ItemId = DivineBija_Products.Id
 UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Retail Rate USD], '$', '') AS FLOAT), ItemRateMSRP = 0/*[Selling Rate USD]*/ FROM dbo.DivineBija_Books WHERE Item.ItemId = DivineBija_Books.Id
+
+SET NOCOUNT OFF
 
 IF @TestOrProdMode = 'TESTMODE'
 BEGIN
