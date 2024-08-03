@@ -13,7 +13,7 @@ namespace RetailSlnConsoleApp1
             Console.WriteLine("Process Started");
             //TestResizeImage();
             //TestDivineBijaCreateImagesForItems();
-            TestDivineBijaResizeImages();
+            TestDivineBijaResizeItemMasterImages();
             //TestDivineBijaResizeProductsImages();
             Console.WriteLine("Process Completed");
             Console.ReadKey();
@@ -47,13 +47,13 @@ namespace RetailSlnConsoleApp1
             Class1 class1 = new Class1();
             class1.DivineBijaCreateImagesForItemImages(outputDirectoryName);
         }
-        private static void TestDivineBijaResizeImages()
+        private static void TestDivineBijaResizeItemMasterImages()
         {
             string inputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\";
-            string outputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\Items\";
+            string outputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\ItemMaster\";
             string databaseConnectionString = "DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln;";
             Class1 class1 = new Class1();
-            class1.DivineBijaResizeImages(databaseConnectionString, inputDirectoryName, outputDirectoryName);
+            class1.DivineBijaResizeItemMasterImages(databaseConnectionString, inputDirectoryName, outputDirectoryName);
         }
         //private static void TestDivineBijaResizeProductsImages()
         //{

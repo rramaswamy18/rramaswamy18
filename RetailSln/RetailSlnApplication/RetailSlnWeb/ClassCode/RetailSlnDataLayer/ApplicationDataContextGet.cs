@@ -127,10 +127,12 @@ namespace RetailSlnDataLayer
                         ItemName = sqlDataReader["ItemName"].ToString(),
                         ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                         ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
+                        ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
                         ImageName = sqlDataReader["ImageName"].ToString(),
                         ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
                         ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
                         ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                        ProductItemId = long.Parse(sqlDataReader["ProductItemId"].ToString()),
                         UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
                     };
                 }

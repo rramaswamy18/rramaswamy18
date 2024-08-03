@@ -4,13 +4,12 @@
 @using RetailSlnModels
 @{
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
+    List<CategoryItemMasterHierModel> categoryItemMasterHierModels = categoryLayoutModel.CategoryItemMasterHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
 }
 <div id="divOrderItem">
 </div>
-@Html.Partial("_Carousel")
 <script type="text/javascript">
-    var categoryCount = parseInt("@categoryItemHierModels.Count");
+    var categoryCount = parseInt("@categoryItemMasterHierModels.Count");
     categoryId_onclick(@Model.ParentCategoryId, 1, "@Url.Action(Model.ActionName, Model.ControllerName)");
     function window_onload() {
     }

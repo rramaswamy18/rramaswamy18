@@ -33,6 +33,10 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Enter seq#")]
         public float SeqNum { set; get; }
 
+        public float? SeqNumItem { set; get; }
+
+        public float? SeqNumItemMaster { set; get; }
+
         public ItemModel ItemModel { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }

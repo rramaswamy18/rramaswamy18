@@ -113,7 +113,8 @@ namespace RetailSlnDataLayer
                         {
                             CategoryId = long.Parse(sqlDataReader["CategoryId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            AllowSubCategory = bool.Parse(sqlDataReader["AllowSubCategory"].ToString()),
+                            AssignSubCategory = bool.Parse(sqlDataReader["AssignSubCategory"].ToString()),
+                            AssignItem = bool.Parse(sqlDataReader["AssignItem"].ToString()),
                             CategoryDesc = sqlDataReader["CategoryDesc"].ToString(),
                             CategoryName = sqlDataReader["CategoryName"].ToString(),
                             CategoryNameDesc = sqlDataReader["CategoryNameDesc"].ToString(),
@@ -314,7 +315,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static List<CategoryItemHierModel> GetCategoryItemHiers(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static List<CategoryItemMasterHierModel> GetCategoryItemMasterHiers(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -322,21 +323,21 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemHier ORDER BY ParentCategoryId, SeqNum" + Environment.NewLine;
+                sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemMasterHier ORDER BY ParentCategoryId, SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                List<CategoryItemHierModel> categoryItemHierModels = new List<CategoryItemHierModel>();
+                List<CategoryItemMasterHierModel> categoryItemHierModels = new List<CategoryItemMasterHierModel>();
                 while (sqlDataReader.Read())
                 {
                     categoryItemHierModels.Add
                     (
-                        new CategoryItemHierModel
+                        new CategoryItemMasterHierModel
                         {
-                            CategoryItemHierId = long.Parse(sqlDataReader["CategoryItemHierId"].ToString()),
+                            CategoryItemMasterHierId = long.Parse(sqlDataReader["CategoryItemMasterHierId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                             CategoryId = string.IsNullOrWhiteSpace(sqlDataReader["CategoryId"].ToString()) ? (long?)null : long.Parse(sqlDataReader["CategoryId"].ToString()),
                             CategoryOrItem = sqlDataReader["CategoryOrItem"].ToString(),
-                            ItemId = string.IsNullOrWhiteSpace(sqlDataReader["ItemId"].ToString()) ? (long?)null : long.Parse(sqlDataReader["ItemId"].ToString()),
+                            ItemMasterId = string.IsNullOrWhiteSpace(sqlDataReader["ItemMasterId"].ToString()) ? (long?)null : long.Parse(sqlDataReader["ItemMasterId"].ToString()),
                             ParentCategoryId = long.Parse(sqlDataReader["ParentCategoryId"].ToString()),
                             ProcessType = sqlDataReader["ProcessType"].ToString(),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
@@ -353,7 +354,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static List<CategoryItemHierModel> GetCategoryItemHiers(long parentCategoryId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static List<CategoryItemMasterHierModel> GetCategoryItemMasterHiers(long parentCategoryId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -361,21 +362,21 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += $"SELECT * FROM RetailSlnSch.CategoryItemHier INNER JOIN RetailSlnSch.Category ON CategoryItemHier.CategoryId = Category.CategoryId WHERE ParentCategoryId = ${parentCategoryId} ORDER BY SeqNum" + Environment.NewLine;
+                sqlStmt += $"SELECT * FROM RetailSlnSch.CategoryItemMasterHier INNER JOIN RetailSlnSch.Category ON CategoryItemMasterHier.CategoryId = Category.CategoryId WHERE CategoryItemMasterHier.ParentCategoryId = ${parentCategoryId} ORDER BY SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                List<CategoryItemHierModel> categoryModels = new List<CategoryItemHierModel>();
+                List<CategoryItemMasterHierModel> categoryModels = new List<CategoryItemMasterHierModel>();
                 while (sqlDataReader.Read())
                 {
                     categoryModels.Add
                     (
-                        new CategoryItemHierModel
+                        new CategoryItemMasterHierModel
                         {
-                            CategoryItemHierId = long.Parse(sqlDataReader["CategoryItemHierId"].ToString()),
+                            CategoryItemMasterHierId = long.Parse(sqlDataReader["CategoryItemMasterHierId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                             CategoryId = string.IsNullOrWhiteSpace(sqlDataReader["CategoryId"].ToString()) ? (long?)null : long.Parse(sqlDataReader["CategoryId"].ToString()),
                             CategoryOrItem = sqlDataReader["CategoryOrItem"].ToString(),
-                            ItemId = string.IsNullOrWhiteSpace(sqlDataReader["ItemId"].ToString()) ? (long?)null : long.Parse(sqlDataReader["ItemId"].ToString()),
+                            ItemMasterId = string.IsNullOrWhiteSpace(sqlDataReader["ItemMasterId"].ToString()) ? (long?)null : long.Parse(sqlDataReader["ItemId"].ToString()),
                             ParentCategoryId = long.Parse(sqlDataReader["ParentCategoryId"].ToString()),
                             ProcessType = sqlDataReader["ProcessType"].ToString(),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
@@ -383,7 +384,8 @@ namespace RetailSlnDataLayer
                             {
                                 CategoryId = long.Parse(sqlDataReader["CategoryId"].ToString()),
                                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                                AllowSubCategory = bool.Parse(sqlDataReader["AllowSubCategory"].ToString()),
+                                AssignSubCategory = bool.Parse(sqlDataReader["AssignSubCategory"].ToString()),
+                                AssignItem = bool.Parse(sqlDataReader["AssignItem"].ToString()),
                                 CategoryDesc = sqlDataReader["CategoryDesc"].ToString(),
                                 CategoryName = sqlDataReader["CategoryName"].ToString(),
                                 CategoryNameDesc = sqlDataReader["CategoryNameDesc"].ToString(),
@@ -467,6 +469,7 @@ namespace RetailSlnDataLayer
                             ItemName = sqlDataReader["ItemName"].ToString(),
                             ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                             ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
+                            ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
                             ImageName = sqlDataReader["ImageName"].ToString(),
                             ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
                             ItemRateMSRP = float.Parse(sqlDataReader["ItemRateMSRP"].ToString()),
@@ -478,6 +481,7 @@ namespace RetailSlnDataLayer
                             ItemStarCount = 4,
                             ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
                             ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                            ProductItemId = long.Parse(sqlDataReader["ProductItemId"].ToString()),
                             UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
                         }
                     );
@@ -485,6 +489,81 @@ namespace RetailSlnDataLayer
                 }
                 sqlDataReader.Close();
                 return itemModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<ItemMasterModel> GetItemMasters(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId", sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    itemMasterModels.Add
+                    (
+                        new ItemMasterModel
+                        {
+                            ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ImageExtension = sqlDataReader["ImageExtension"].ToString(),
+                            ImageName = sqlDataReader["ImageName"].ToString(),
+                            ItemMasterDesc0 = sqlDataReader["ItemMasterDesc0"].ToString(),
+                            ItemMasterDesc1 = sqlDataReader["ItemMasterDesc1"].ToString(),
+                            ItemMasterDesc2 = sqlDataReader["ItemMasterDesc2"].ToString(),
+                            ItemMasterDesc3 = sqlDataReader["ItemMasterDesc3"].ToString(),
+                            ItemMasterDesc = sqlDataReader["ItemMasterDesc"].ToString(),
+                            ItemMasterName = sqlDataReader["ItemMasterName"].ToString(),
+                            ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                            ProductItemId = sqlDataReader["ProductItemId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ProductItemId"].ToString()),
+                            UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                        }
+                    );
+
+                }
+                sqlDataReader.Close();
+                return itemMasterModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<ItemMasterItemSpecModel> GetItemMasterItemSpecs(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<ItemMasterItemSpecModel> itemMasterItemSpecModels = new List<ItemMasterItemSpecModel>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMasterItemSpec ORDER BY ItemMasterId, SeqNumItemMaster", sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    itemMasterItemSpecModels.Add
+                    (
+                        new ItemMasterItemSpecModel
+                        {
+                            ItemMasterItemSpecId = long.Parse(sqlDataReader["ItemMasterItemSpecId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                            ItemSpecId = long.Parse(sqlDataReader["ItemSpecId"].ToString()),
+                            SeqNumItemMaster = float.Parse(sqlDataReader["SeqNumItemMaster"].ToString()),
+                        }
+                    );
+                }
+                sqlDataReader.Close();
+                return itemMasterItemSpecModels;
             }
             catch (Exception exception)
             {
@@ -553,7 +632,8 @@ namespace RetailSlnDataLayer
                             ItemSpecValue = sqlDataReader["ItemSpecValue"].ToString(),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                             SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
-                            ShowValue = bool.Parse(sqlDataReader["ShowValue"].ToString()),
+                            SeqNumItem = sqlDataReader["SeqNumItem"].ToString() == "" ? (float?)null : float.Parse(sqlDataReader["SeqNumItem"].ToString()),
+                            SeqNumItemMaster = sqlDataReader["SeqNumItemMaster"].ToString() == "" ? (float?)null : float.Parse(sqlDataReader["SeqNumItemMaster"].ToString()),
                         }
                     );
 
@@ -567,94 +647,161 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static List<ItemModel> GetItemsAssigned(long categoryId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            List<ItemModel> itemModels = new List<ItemModel>();
-            try
-            {
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.CategoryItem INNER JOIN RetailSlnSch.Item ON CategoryItem.ItemId = Item.ItemId WHERE CategoryItem.CategoryId = " + categoryId + " ORDER BY CategoryItem.SeqNum", sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                while (sqlDataReader.Read())
-                {
-                    itemModels.Add
-                    (
-                        new ItemModel
-                        {
-                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                            ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
-                            ItemName = sqlDataReader["ItemName"].ToString(),
-                            ItemDesc = sqlDataReader["ItemDesc"].ToString(),
-                            ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
-                            ImageName = sqlDataReader["ImageName"].ToString(),
-                            ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
-                            ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
-                            ItemStarCount = int.Parse(sqlDataReader["ItemStarCount"].ToString()),
-                            ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
-                            ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
-                            UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
-                        }
-                    );
+        //public static List<ItemItemSpecModel> GetItemItemSpecs(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    List<ItemItemSpecModel> itemItemSpecModels = new List<ItemItemSpecModel>();
+        //    try
+        //    {
+        //        SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemItemSpec ORDER BY ItemId, SeqNum", sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        while (sqlDataReader.Read())
+        //        {
+        //            itemItemSpecModels.Add
+        //            (
+        //                new ItemItemSpecModel
+        //                {
+        //                    ItemItemSpecId = long.Parse(sqlDataReader["ItemItemSpecId"].ToString()),
+        //                    ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+        //                    ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+        //                    ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
+        //                    SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+        //                }
+        //            );
 
-                }
-                sqlDataReader.Close();
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            return itemModels;
-        }
-        public static List<ItemSpecModel> GetItemSpecs(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                List<ItemSpecModel> itemSpecModels = new List<ItemSpecModel>();
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemSpec INNER JOIN RetailSlnSch.ItemSpecMaster ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId WHERE ItemSpec.ItemId = " + itemId + " ORDER BY ItemSpec.SeqNum", sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                while (sqlDataReader.Read())
-                {
-                    itemSpecModels.Add
-                    (
-                        new ItemSpecModel
-                        {
-                            ItemSpecId = long.Parse(sqlDataReader["ItemSpecId"].ToString()),
-                            ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
-                            ItemSpecUnitValue = sqlDataReader["ItemSpecUnitValue"].ToString(),
-                            ItemSpecValue = sqlDataReader["ItemSpecValue"].ToString(),
-                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
-                            ShowValue = bool.Parse(sqlDataReader["ShowValue"].ToString()),
-                            ItemSpecMasterModel = new ItemSpecMasterModel
-                            {
-                                ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
-                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                                CodeTypeId = sqlDataReader["CodeTypeId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["CodeTypeId"].ToString()),
-                                SpecDesc = sqlDataReader["SpecDesc"].ToString(),
-                                SpecName = sqlDataReader["SpecName"].ToString(),
-                                SpecUnitType = sqlDataReader["SpecUnitType"].ToString(),
-                                SpecValueType = sqlDataReader["SpecValueType"].ToString(),
-                                IsMandatory = bool.Parse(sqlDataReader["IsMandatory"].ToString()),
-                                SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
-                            },
-                        }
-                    );
-                }
-                sqlDataReader.Close();
-                return itemSpecModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //        }
+        //        sqlDataReader.Close();
+        //        return itemItemSpecModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        //public static List<ItemMasterItemSpecModel> GetItemMasterItemSpecs(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    List<ItemMasterItemSpecModel> itemMasterItemSpecModels = new List<ItemMasterItemSpecModel>();
+        //    try
+        //    {
+        //        SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemItemSpec ORDER BY ItemId, SeqNum", sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        while (sqlDataReader.Read())
+        //        {
+        //            itemMasterItemSpecModels.Add
+        //            (
+        //                new ItemMasterItemSpecModel
+        //                {
+        //                    ItemMasterItemSpecId = long.Parse(sqlDataReader["ItemMasterItemSpecId"].ToString()),
+        //                    ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+        //                    ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+        //                    ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
+        //                    SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+        //                }
+        //            );
+
+        //        }
+        //        sqlDataReader.Close();
+        //        return itemMasterItemSpecModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        //public static List<ItemModel> GetItemsAssigned(long categoryId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    List<ItemModel> itemModels = new List<ItemModel>();
+        //    try
+        //    {
+        //        SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.CategoryItem INNER JOIN RetailSlnSch.Item ON CategoryItem.ItemId = Item.ItemId WHERE CategoryItem.CategoryId = " + categoryId + " ORDER BY CategoryItem.SeqNum", sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        while (sqlDataReader.Read())
+        //        {
+        //            itemModels.Add
+        //            (
+        //                new ItemModel
+        //                {
+        //                    ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+        //                    ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
+        //                    ItemName = sqlDataReader["ItemName"].ToString(),
+        //                    ItemDesc = sqlDataReader["ItemDesc"].ToString(),
+        //                    ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
+        //                    ImageName = sqlDataReader["ImageName"].ToString(),
+        //                    ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
+        //                    ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
+        //                    ItemStarCount = int.Parse(sqlDataReader["ItemStarCount"].ToString()),
+        //                    ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
+        //                    ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+        //                    UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+        //                }
+        //            );
+
+        //        }
+        //        sqlDataReader.Close();
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    return itemModels;
+        //}
+        //public static List<ItemSpecModel> GetItemSpecs(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        List<ItemSpecModel> itemSpecModels = new List<ItemSpecModel>();
+        //        SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemSpec INNER JOIN RetailSlnSch.ItemSpecMaster ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId WHERE ItemSpec.ItemId = " + itemId + " ORDER BY ItemSpec.SeqNum", sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        while (sqlDataReader.Read())
+        //        {
+        //            itemSpecModels.Add
+        //            (
+        //                new ItemSpecModel
+        //                {
+        //                    ItemSpecId = long.Parse(sqlDataReader["ItemSpecId"].ToString()),
+        //                    ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
+        //                    ItemSpecUnitValue = sqlDataReader["ItemSpecUnitValue"].ToString(),
+        //                    ItemSpecValue = sqlDataReader["ItemSpecValue"].ToString(),
+        //                    ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+        //                    SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+        //                    ItemSpecMasterModel = new ItemSpecMasterModel
+        //                    {
+        //                        ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
+        //                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+        //                        CodeTypeId = sqlDataReader["CodeTypeId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["CodeTypeId"].ToString()),
+        //                        SpecDesc = sqlDataReader["SpecDesc"].ToString(),
+        //                        SpecName = sqlDataReader["SpecName"].ToString(),
+        //                        SpecUnitType = sqlDataReader["SpecUnitType"].ToString(),
+        //                        SpecValueType = sqlDataReader["SpecValueType"].ToString(),
+        //                        IsMandatory = bool.Parse(sqlDataReader["IsMandatory"].ToString()),
+        //                        SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+        //                    },
+        //                }
+        //            );
+        //        }
+        //        sqlDataReader.Close();
+        //        return itemSpecModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         public static List<ItemBundleItemModel> GetItemBundleItems(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -886,6 +1033,7 @@ namespace RetailSlnDataLayer
                             ItemStarCount = int.Parse(sqlDataReader["ItemStarCount"].ToString()),
                             ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
                             ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                            ProductItemId = long.Parse(sqlDataReader["ProductItemId"].ToString()),
                             UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
                         }
                     );

@@ -51,7 +51,39 @@ namespace RetailSlnConsoleApp1
             };
             DrawTextMultipleLines(inputFullFileName, outputFullFileName, messages, 36f, 18f, 45f, 45);
         }
-        public void DivineBijaResizeImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
+        public void DivineBijaResizeItemMasterImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
+        {
+            int resizedWidth = 279, resizedHeight = 288, itemMasterId;
+            string inputFullFileName, outputFullFileName;
+            SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMaster ORDER BY ItemMaster.ItemMasterId", sqlConnection);
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            while (sqlDataReader.Read())
+            {
+                itemMasterId = int.Parse(sqlDataReader["ItemMasterId"].ToString());
+                if (sqlDataReader["UploadImageFileName"].ToString() != "")
+                {
+                    inputFullFileName = inputDirectoryName + sqlDataReader["UploadImageFileName"].ToString();
+                    if (File.Exists(inputFullFileName))
+                    {
+                        outputFullFileName = outputDirectoryName + "ItemMaster" + itemMasterId + ".png";
+                        ResizeImage(inputFullFileName, outputFullFileName, resizedWidth, resizedHeight);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error 1 {0}\t{1}\t{2}", itemMasterId, sqlDataReader["ItemMasterDesc"].ToString(), sqlDataReader["UploadImageFileName"].ToString());
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error 2 {0}\t{1}\t{2}", itemMasterId, sqlDataReader["ItemMasterDesc"].ToString(), sqlDataReader["UploadImageFileName"].ToString());
+                }
+            }
+            sqlDataReader.Close();
+            sqlConnection.Close();
+        }
+        public void DivineBijaResizeItemImages(string databaseConnectionString, string inputDirectoryName, string outputDirectoryName)
         {
             int resizedWidth = 279, resizedHeight = 288, itemId;
             string inputFullFileName, outputFullFileName;

@@ -53,7 +53,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                List<CategoryItemHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId).OrderBy(x => x.SeqNum).ToList();
+                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId).OrderBy(x => x.SeqNum).ToList();
                 List<CategoryModel> categoryModels = new List<CategoryModel>();
                 foreach (var categoryItemHierModel in categoryItemHierModels)
                 {
@@ -69,7 +69,7 @@ namespace RetailSlnBusinessLayer
         }
 
         // GET: Items
-        public List<ItemModel> Items(string categoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public List<ItemMasterModel> Items(string categoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -81,13 +81,13 @@ namespace RetailSlnBusinessLayer
                 pageNum = pageNum > 0 ? (pageNum = pageNum - 1) : pageNum;
                 int.TryParse(rowCountParm, out int rowCount);
                 rowCount = rowCount == 0 || rowCount > 50 ? 50 : rowCount;
-                List<CategoryItemHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
-                List<ItemModel> itemModels = new List<ItemModel>();
+                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
+                List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
                 foreach (var categoryItemHierModel in categoryItemHierModels)
                 {
-                    itemModels.Add(categoryItemHierModel.ItemModel);
+                    itemMasterModels.Add(categoryItemHierModel.ItemMasterModel);
                 }
-                return itemModels;
+                return itemMasterModels;
             }
             catch (Exception exception)
             {

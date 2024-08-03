@@ -123,7 +123,7 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ApiItemsModel apiItemsModel = new ApiItemsModel
                 {
-                    ItemModels = retailSlnBL.Items(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ItemModels = null,//retailSlnBL.Items(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseTypeId = ResponseTypeEnum.Success,

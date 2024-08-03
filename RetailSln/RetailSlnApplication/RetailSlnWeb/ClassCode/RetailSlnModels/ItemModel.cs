@@ -36,6 +36,8 @@ namespace RetailSlnModels
 
         public YesNoEnum? ItemForSaleId { set; get; }
 
+        public long ItemMasterId { set; get; }
+
         public string ItemName { set; get; }
 
         [Display(Name = "Item Rate")]
@@ -47,6 +49,8 @@ namespace RetailSlnModels
         [Display(Name = "MSRP")]
         [Required(ErrorMessage = "Please enter MSRP")]
         public float? ItemRateMSRP { set; get; }
+
+        public string ItemShortDesc { set; get; }
 
         [Display(Name = "Short Desc.")]
         [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
@@ -68,11 +72,6 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter short description")]
         public string ItemShortDesc3 { set; get; }
 
-        [Display(Name = "Short Desc.")]
-        [MaxLength(512, ErrorMessage = "Short desc not to exceed 512 characters")]
-        [Required(ErrorMessage = "Please enter short description")]
-        public string ItemShortDesc { set; get; }
-
         [Display(Name = "Item Star#")]
         [Required(ErrorMessage = "Please enter star#")]
         public int? ItemStarCount { set; get; }
@@ -85,19 +84,25 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please select a value")]
         public ItemTypeEnum? ItemTypeId { set; get; }
 
+        public long ProductItemId { set; get; }
+
         public string UploadImageFileName { set; get; }
 
         public List<CategoryModel> CategoryModels { set; get; }
-
-        public List<ItemSpecModel> ItemSpecModels { set; get; }
-
-        public Dictionary<string, ItemSpecModel> ItemSpecModelsForDisplay { set; get; }
 
         public List<ItemInfoModel> ItemInfoModels { set; get; }
 
         public List<ItemImageModel> ItemImageModels { set; get; }
 
         public List<ItemModel> ItemModels { set; get; }
+
+        public List<ItemSpecModel> ItemItemSpecModels { set; get; }
+
+        public List<ItemSpecModel> ItemSpecModels { set; get; }
+
+        public Dictionary<string, ItemSpecModel> ItemItemSpecModelsForDisplay { set; get; }
+
+        public Dictionary<string, ItemSpecModel> ItemSpecModelsForDisplay { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

@@ -111,7 +111,6 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@ItemSpecValue"].Value = itemAttribModel.ItemSpecValue;
             sqlCommand.Parameters["@ItemId"].Value = (long)itemAttribModel.ItemId;
             sqlCommand.Parameters["@SeqNum"].Value = (int)itemAttribModel.SeqNum;
-            sqlCommand.Parameters["@ShowValue"].Value = (bool)itemAttribModel.ShowValue;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignItemInfoInsert(ItemInfoModel itemInfoModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -133,6 +132,8 @@ namespace RetailSlnDataLayer
                 ItemInfoLabelText = sqlDataReader["ItemInfoLabelText"].ToString(),
                 ItemInfoText = sqlDataReader["ItemInfoText"].ToString(),
                 SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                SeqNumItem = sqlDataReader["SeqNumItem"].ToString() == "" ? (float?)null : float.Parse(sqlDataReader["SeqNumItem"].ToString()),
+                SeqNumItemMaster = sqlDataReader["SeqNumItemMaster"].ToString() == "" ? (float?)null : float.Parse(sqlDataReader["SeqNumItemMaster"].ToString()),
             };
             return itemInfoModel;
         }

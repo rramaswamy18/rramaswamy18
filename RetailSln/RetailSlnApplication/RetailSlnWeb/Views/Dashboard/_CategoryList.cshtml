@@ -110,7 +110,15 @@
                 @categoryModel.DefaultCategory
             </td>
             <td class="dataStyle text-left">
-                @if (@categoryModel.AllowSubCategory)
+                @if (@categoryModel.AssignSubCategory)
+                {
+                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return categoryHier_onclick(@categoryModel.CategoryId);">
+                        Catg(s)
+                    </a>
+                }
+            </td>
+            <td class="dataStyle text-left">
+                @if (@categoryModel.AssignItem)
                 {
                     <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return categoryHier_onclick(@categoryModel.CategoryId);">
                         Catg(s)

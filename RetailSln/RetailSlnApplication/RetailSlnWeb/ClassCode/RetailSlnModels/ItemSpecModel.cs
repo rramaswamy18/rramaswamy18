@@ -27,7 +27,9 @@ namespace RetailSlnModels
 
         public float SeqNum { set; get; }
 
-        public bool ShowValue { set; get; }
+        public float? SeqNumItem { set; get; }
+
+        public float? SeqNumItemMaster { set; get; }
 
         public ItemSpecMasterModel ItemSpecMasterModel { set; get; }
 

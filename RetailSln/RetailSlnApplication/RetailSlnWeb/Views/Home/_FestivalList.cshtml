@@ -1,4 +1,5 @@
 ﻿@using RetailSlnModels
+@using RetailSlnCacheData
 @{
     int imageIndex = 0;
     string defaultOrderQty = "";
@@ -7,6 +8,7 @@
         ImageTitle = "Varalakshmi Vratam",
     };
 }
+
 <table class="table table-bordered table-hover table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
     <tr>
         <td colspan="9" style="text-align: center;">
@@ -128,4 +130,9 @@
             }
         </td>
     </tr>
+    @foreach (var festivalListModel in RetailSlnCache.FestivalListModels)
+    {
+
+    }
 </table>
+@Html.Partial("_Carousel")

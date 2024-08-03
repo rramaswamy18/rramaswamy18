@@ -7,7 +7,7 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    List<CategoryItemMasterHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemMasterHierModels;
 }
 <br style="clear: both;" />
 @{

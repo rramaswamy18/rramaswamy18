@@ -37,7 +37,7 @@ namespace RetailSlnBusinessLayer
                 {
                     ParentCategoryId = parentCategoryId,
                     CategoryModels = ApplicationDataContext.GetCategorys(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
-                    CategoryItemHierModels = ApplicationDataContext.GetCategoryItemHiers(parentCategoryId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    CategoryItemHierModels = ApplicationDataContext.GetCategoryItemMasterHiers(parentCategoryId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                     ItemModels = null,
                     ResponseObjectModel = new ResponseObjectModel
                     {
@@ -249,7 +249,7 @@ namespace RetailSlnBusinessLayer
                 categoryItemHierListModel = new CategoryItemHierListModel
                 {
                     CategoryModels = null,
-                    CategoryItemHierModels = new List<CategoryItemHierModel>(),
+                    CategoryItemHierModels = new List<CategoryItemMasterHierModel>(),
                     ItemModels = ApplicationDataContext.GetItems(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                     ResponseObjectModel = new ResponseObjectModel
                     {

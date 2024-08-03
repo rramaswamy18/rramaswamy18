@@ -3,405 +3,339 @@ GO
 --1_RetailSln_PopulateItem_DivineBija.In.sql
 --Dec 20 2024, Apr 2 2024, Apr 21 2024
 DECLARE @ClientId BIGINT = 3
-
-TRUNCATE TABLE RetailSlnSch.ItemMaster
-
---Begin Item Master
-INSERT RetailSlnSch.ItemMaster(ClientId, ItemMasterUniqueDesc)
-SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(UniqueDescription)) AS ItemMasterUniqueDesc
-FROM dbo.DivineBija_Products --WHERE [India Active] = 1
-UNION
-SELECT DISTINCT @ClientId AS ClientId, RTRIM(LTRIM(UniqueDescription)) AS ItemMasterUniqueDesc
-FROM dbo.DivineBija_Books --WHERE [India Active] = 1
-ORDER BY ItemMasterUniqueDesc
---End Item Master
-
---Begin Item
-TRUNCATE TABLE RetailSlnSch.CategoryItemHier
-
-DELETE RetailSlnSch.Item
-DBCC CHECKIDENT ('RetailSlnSch.Item', RESEED, 0);
-
-DELETE RetailSlnSch.Category
-
-INSERT RetailSlnSch.Category
-      (
-	   CategoryId, ClientId, AllowSubCategory, CategoryDesc, CategoryLongDesc, CategoryNameDesc, CategoryStatusId, CategoryTypeId
-	  ,DefaultCategory, ImageExtension, MaxPerPage, ViewName
-	  )
-SELECT Id AS CategoryId, @ClientId AS ClientId, [Allow Sub] AS AllowSubCategory,[Category Desc] AS CategoryDesc, '' AS CategoryLongDesc
-      ,[Category Name Desc] AS CategoryNameDesc, CASE Active WHEN 1 THEN 100 ELSE 900 END AS CategoryStatusId
-	  ,CASE [Category Type] WHEN 'Regular Category' THEN 100 WHEN 'Item Bundle' THEN 400 ELSE 200 END AS CategoryTypeId
-	  ,[Def Cat] AS DefaultCategory, 'png' AS ImageExtension, MaxPerPage, '_OrderCategoryItem' AS ViewName
-  FROM dbo.DivineBija_Categories
 --
-UPDATE RetailSlnSch.Category SET ViewName = '_FestivalList' WHERE CategoryNameDesc = 'Festival List'
-
-SET IDENTITY_INSERT RetailSlnSch.Item ON
-
-INSERT RetailSlnSch.Item
-      (ItemId, ClientId, ItemDesc, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
-	  ,ItemShortDesc3, ItemShortDesc, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName)
---Type -> Items
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
-      ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0
-	  ,RTRIM(LTRIM(Description1)) AS ItemShortDesc1, RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3
-	  ,RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
-	  ,100 AS ItemTypeId, RTRIM(LTRIM(UniqueDescription)) AS ItemUniqueDesc, ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
-  FROM dbo.DivineBija_Products
-INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterUniqueDesc = RTRIM(LTRIM(DivineBija_Products.UniqueDescription))
-WHERE [Item Type] = 'ITEMS' AND [India Active] = 1
+        UPDATE dbo.DivineBija_Products
+           SET 
+		       [Central GST] = REPLACE([Central GST], '%', '')
+		      ,[State GST] = REPLACE([State GST], '%', '')
+		      ,[Interstate GST] = CAST([Central GST] AS FLOAT) + CAST([State GST] AS FLOAT)
+			  ,Description0 = RTRIM(LTRIM(Description0)), Description1 = RTRIM(LTRIM(Description1))
+              ,Description2 = RTRIM(LTRIM(Description2)), Description3 = RTRIM(LTRIM(Description3))    
+              ,UniqueDescription = RTRIM(LTRIM(UniqueDescription))
+--
+        UPDATE dbo.DivineBija_Books
+           SET 
+		       [Central GST] = REPLACE([Central GST], '%', '')
+		      ,[State GST] = REPLACE([State GST], '%', '')
+		      ,[Interstate GST] = CAST([Central GST] AS FLOAT) + CAST([State GST] AS FLOAT)
+			  ,ProductDesc0 = RTRIM(LTRIM(ProductDesc0)), ProductDesc1 = RTRIM(LTRIM(ProductDesc1))
+              ,UniqueDescription = RTRIM(LTRIM(UniqueDescription))
+--
+        TRUNCATE TABLE RetailSlnSch.ItemMaster
+--
+--Begin Item Master
+        INSERT RetailSlnSch.ItemMaster
+              (
+               ClientId, ImageExtension, ItemMasterDesc0, ItemMasterDesc1, ItemMasterDesc2, ItemMasterDesc3, ItemTypeId, ProductItemId
+              )
+        SELECT @ClientId AS ClientId, 'png' AS ImageExtension, Description0 AS ItemMasterDesc0, Description1 AS ItemMasterDesc1
+              ,Description2 AS ItemMasterDesc2, Description3 AS ItemMasterDesc3
+              ,CASE [Item Type] WHEN 'ITEMS' THEN 100 WHEN 'BUNDLE' THEN 300 END AS ItemTypeId
+              ,MIN(ItemId) AS ProductItemId
+          FROM dbo.DivineBija_Products
+         WHERE [India Active] = 1
+      GROUP BY Description0, Description1, Description2, Description3
+              ,CASE [Item Type] WHEN 'ITEMS' THEN 100 WHEN 'BUNDLE' THEN 300 END
 UNION
---Type --> Item Bundle
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(Description)) AS ItemDesc, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
-      ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(Description0)) AS ItemShortDesc0
-	  ,RTRIM(LTRIM(Description1)) AS ItemShortDesc1, RTRIM(LTRIM(Description2)) AS ItemShortDesc2, RTRIM(LTRIM(Description3)) AS ItemShortDesc3
-	  ,RTRIM(LTRIM(Description)) AS ItemShortDesc, 5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
-	  ,300 AS ItemTypeId, RTRIM(LTRIM(UniqueDescription)) AS ItemUniqueDesc, ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
-  FROM dbo.DivineBija_Products
-INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterUniqueDesc = RTRIM(LTRIM(DivineBija_Products.UniqueDescription))
-WHERE [Item Type] = 'BUNDLE' AND [India Active] = 1
-UNION
-----Type --> Books
-SELECT Id, @ClientId AS ClientId, RTRIM(LTRIM(ProductDesc)) AS ItemDesc, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
-      ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, RTRIM(LTRIM(ProductDesc0)) AS ItemShortDesc0
-	  ,RTRIM(LTRIM(ProductDesc1)) AS ItemShortDesc1, NULL AS ItemShortDesc2, NULL AS ItemShortDesc3, RTRIM(LTRIM(ProductDesc)) AS ItemShortDesc
-	  ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId
-	  ,RTRIM(LTRIM(ItemMaster.ItemMasterUniqueDesc)) AS ItemMasterUniqueDesc, ItemId AS ProductItemId, Image1 AS UploadImageFileName
-  FROM dbo.DivineBija_Books
-INNER JOIN RetailSlnSch.ItemMaster ON ItemMaster.ItemMasterUniqueDesc = RTRIM(LTRIM(DivineBija_Books.UniqueDescription))
-WHERE [India Active] = 1
-ORDER BY Id
+        SELECT @ClientId AS ClientId, 'png' AS ImageExtension, ProductDesc0 AS ItemMasterDesc0, ProductDesc1 AS ItemMasterDesc1
+              ,'' AS ItemMasterDesc2, '' AS ItemMasterDesc3, 200 AS ItemTypeId, MIN(ItemId) AS ProductItemId
+          FROM dbo.DivineBija_Books
+         WHERE [India Active] = 1
+      GROUP BY ProductDesc0, ProductDesc1
+      ORDER BY ItemMasterDesc0, ItemMasterDesc1, ItemMasterDesc2, ItemMasterDesc3
+--
+        UPDATE RetailSlnSch.ItemMaster
+           SET UploadImageFileName = RTRIM(LTRIM(ImageFileName))
+          FROM dbo.DivineBija_Products, RetailSlnSch.ItemSpecMaster
+         WHERE DivineBija_Products.ItemId = ItemMaster.ProductItemId
+           AND UploadImageFileName IS NULL
+--
+        UPDATE RetailSlnSch.ItemMaster
+           SET UploadImageFileName = RTRIM(LTRIM(Image1))
+          FROM dbo.DivineBija_Books, RetailSlnSch.ItemSpecMaster
+         WHERE DivineBija_Books.ItemId = ItemMaster.ProductItemId
+           AND UploadImageFileName IS NULL
+--End Item Master
+--Begin Item
+        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+        TRUNCATE TABLE RetailSlnSch.CategoryItemHier
 
-SET IDENTITY_INSERT RetailSlnSch.Item OFF
+        DELETE RetailSlnSch.Item
+        DBCC CHECKIDENT ('RetailSlnSch.Item', RESEED, 0);
+
+        DELETE RetailSlnSch.Category
+
+        INSERT RetailSlnSch.Category
+              (
+               CategoryId, ClientId, AssignSubCategory, AssignItem, CategoryDesc, CategoryLongDesc, CategoryNameDesc, CategoryStatusId
+              ,CategoryTypeId, DefaultCategory, ImageExtension, MaxPerPage, ViewName
+              )
+        SELECT Id AS CategoryId, @ClientId AS ClientId, [Allow Sub] AS AssignSubCategory, [Allow Item] AS AssignItem
+              ,[Category Desc] AS CategoryDesc, '' AS CategoryLongDesc, [Category Name Desc] AS CategoryNameDesc
+              ,CASE Active WHEN 1 THEN 100 ELSE 900 END AS CategoryStatusId
+              ,CASE [Category Type] WHEN 'Regular Category' THEN 100 WHEN 'Item Bundle' THEN 400 ELSE 200 END AS CategoryTypeId
+              ,[Def Cat] AS DefaultCategory, 'png' AS ImageExtension, MaxPerPage, '_OrderCategoryItem' AS ViewName
+          FROM dbo.DivineBija_Categories
+      ORDER BY CategoryId
+--
+        UPDATE RetailSlnSch.Category SET ViewName = '_FestivalList' WHERE CategoryNameDesc = 'Festival List'
+--
+        INSERT RetailSlnSch.Item
+              (ClientId, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
+              ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName
+              )
+--Item & Item Bundle
+        SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId, ItemMaster.ItemMasterId
+              ,[Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP
+              ,CASE ISNUMERIC([Spec Seq]) WHEN 1 THEN CAST([Spec Seq] AS INT) ELSE 0 END AS ItemSeqNum, Description0 AS ItemShortDesc0
+              ,Description1 AS ItemShortDesc1, Description2 AS ItemShortDesc2, Description3 AS ItemShortDesc3, 5 AS ItemStarCount
+              ,CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
+              ,CASE [Item Type] WHEN 'ITEMS' THEN 100 WHEN 'BUNDLE' THEN 300 END AS ItemTypeId, UniqueDescription AS ItemUniqueDesc
+              ,ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
+          FROM dbo.DivineBija_Products
+    INNER JOIN RetailSlnSch.ItemMaster
+            ON DivineBija_Products.Description0 = ItemMaster.ItemMasterDesc0
+           AND DivineBija_Products.Description1 = ItemMaster.ItemMasterDesc1
+           AND DivineBija_Products.Description2 = ItemMaster.ItemMasterDesc2
+           AND DivineBija_Products.Description3 = ItemMaster.ItemMasterDesc3
+         WHERE [India Active] = 1
+UNION
+--Books
+        SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
+              ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, 0 AS ItemSeqNum
+              ,ProductDesc0 AS ItemShortDesc0, ProductDesc1 AS ItemShortDesc1, NULL AS ItemShortDesc2, NULL AS ItemShortDesc3
+              ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId
+              ,UniqueDescription AS ItemUniqueDesc, ItemId AS ProductItemId, Image1 AS UploadImageFileName
+          FROM dbo.DivineBija_Books
+    INNER JOIN RetailSlnSch.ItemMaster
+            ON DivineBija_Books.ProductDesc0 = ItemMaster.ItemMasterDesc0
+           AND DivineBija_Books.ProductDesc1 = ItemMaster.ItemMasterDesc1
+         WHERE [India Active] = 1
+      ORDER BY ItemShortDesc0, ItemShortDesc1, ItemShortDesc2, ItemShortDesc3, ItemSeqNum
+--
 --End Item
 
---Begin CategoryHierItem
-TRUNCATE TABLE RetailSlnSch.CategoryItemHier
-
-DROP TABLE IF EXISTS #TEMP1
-CREATE TABLE #TEMP1(ClientId BIGINT NOT NULL, ParentCategoryId BIGINT NOT NULL, SeqNum FLOAT NOT NULL, CategoryId BIGINT NULL, ItemId BIGINT NULL, ProcessType NVARCHAR(50) NOT NULL, CategoryOrItem NVARCHAR(50) NOT NULL)
-
---Start
---INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
---SELECT @ClientId AS ClientId, 0 AS ParentCategoryId, 1 AS SeqNum, 8 AS CategoryId, NULL AS ItemId, 'Recursive' ProcessType, 'Category' AS CategoryOrItem
-
+--Begin CategoryItemMasterHier
+--SELECT @ClientId AS ClientId, 9 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
 --Categories
-INSERT #TEMP1 --RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, ParentId AS ParentCategoryId, [Seq Num] AS SeqNum, Id AS CategoryId, NULL AS ItemId, '' AS ProcessType
-      ,'Category' AS CategoryOrItem
-  FROM dbo.DivineBija_Categories
-WHERE ParentId IS NOT NULL
---ORDER BY ParentId, [Seq Num]
-
---INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
---SELECT @ClientId AS ClientId, 5 AS CategoryId, 1 AS SeqNum, 2 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem UNION
---SELECT @ClientId AS ClientId, 5 AS CategoryId, 2 AS SeqNum, 4 AS CategoryId, NULL AS ItemId, 'Recursive' AS ProcessType, 'Category' AS CategoryOrItem
-
-----Test
---INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-----SELECT @ClientId AS ClientId, 2 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
---SELECT @ClientId AS ClientId, 121 AS ParentCategoryId, ItemId - 0 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
---FROM RetailSlnSch.Item WHERE ItemId IN(45, 54, 63, 72, 81)--BETWEEN 1 AND 4
---ORDER BY SeqNum
-
-----Featured Items
---INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-----SELECT @ClientId AS ClientId, 2 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
---SELECT @ClientId AS ClientId, 99 AS ParentCategoryId, ItemId - 0 AS SeqNum, NULL AS CategoryId, ItemId AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
---FROM RetailSlnSch.Item WHERE ItemId IN(9, 18, 27, 36)--BETWEEN 1 AND 4
---ORDER BY SeqNum
-
---All Items
-INSERT #TEMP1 --RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
---SELECT @ClientId AS ClientId, 9 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT DISTINCT @ClientId AS ClientId, 100 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Products
-WHERE [India Active] = 1
+        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemMasterId, ProcessType, CategoryOrItem)
+        SELECT @ClientId AS ClientId, ParentId AS ParentCategoryId, [Seq Num] AS SeqNum, Id AS CategoryId, NULL AS ItemId, '' AS ProcessType
+              ,'Category' AS CategoryOrItem
+          FROM dbo.DivineBija_Categories
+         WHERE ParentId IS NOT NULL
 UNION
-SELECT DISTINCT @ClientId AS ClientId, 100 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Books
-WHERE [India Active] = 1
---ORDER BY SeqNum
-
---Item Bundle
-INSERT #TEMP1 --RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
---SELECT @ClientId AS ClientId, 9 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT @ClientId AS ClientId, 119 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Products
-WHERE [India Active] = 1 AND [Item Type] = 'BUNDLE'
-ORDER BY UniqueDescription
-
+--All Items
+        SELECT @ClientId AS ClientId, 100 AS ParentCategoryId, ItemMaster.ItemMasteriD AS SeqNum, NULL AS CategoryId, ItemMasterId AS ItemId
+              ,'' AS ProcessType, 'Item' AS CategoryOrItem
+          FROM RetailSlnSch.ItemMaster
+UNION
 --Items in Remaining Categories - Products
-INSERT #TEMP1 --RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON Category.CategoryNameDesc IN([Category 1], [Category 2], [Category 3], [Category 4], [Category 5], [Category 6])
-WHERE [India Active] = 1 AND Category.CategoryId <> 100
-ORDER BY ParentCategoryId, SeqNum
-
---Religious 
+        SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, SeqNum, NULL AS CategoryId, ItemMasterId AS ItemId
+              ,'' AS ProcessType, 'Item' AS CategoryOrItem
+          FROM DivineBija_Products
+    INNER JOIN RetailSlnSch.Category
+            ON Category.CategoryNameDesc IN([Category 1], [Category 2], [Category 3], [Category 4], [Category 5], [Category 6])
+    INNER JOIN RetailSlnSch.ItemMaster
+            ON DivineBija_Products.Id = ItemMaster.ProductItemId
+         WHERE [India Active] = 1 AND Category.CategoryId <> 100
+UNION
 --Items in Remaining Categories - Books
-INSERT #TEMP1 --RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
---SELECT @ClientId AS ClientId, 100 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
-SELECT 3 AS ClientId, Category.CategoryId AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
-FROM DivineBija_Books INNER JOIN RetailSlnSch.Category ON Category.CategoryNameDesc IN([Category0], [Category1], [Category2])
-WHERE [India Active] = 1
-ORDER BY ParentCategoryId, SeqNum
-
-----Kids Books
---INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-----SELECT @ClientId AS ClientId, 101 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
---SELECT @ClientId AS ClientId, 108 AS ParentCategoryId, SeqNum, NULL AS CategoryId, Id AS ItemId, '' AS ProcessType, 'Item' AS CategoryOrItem
---FROM DivineBija_Books WHERE Category = 'Kids Books' AND [India Active] = 1
---ORDER BY SeqNum
-
-INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem)
-SELECT DISTINCT ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ProcessType, CategoryOrItem
-FROM #TEMP1
-ORDER BY ClientId, ParentCategoryId, SeqNum
---End CategoryHierItem
+        SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, SeqNum, NULL AS CategoryId, ItemMasterId AS ItemId
+              ,'' AS ProcessType, 'Item' AS CategoryOrItem
+          FROM DivineBija_Books
+    INNER JOIN RetailSlnSch.Category
+            ON Category.CategoryNameDesc IN([Category0], [Category1], [Category2])
+    INNER JOIN RetailSlnSch.ItemMaster
+            ON DivineBija_Books.Id = ItemMaster.ProductItemId
+         WHERE [India Active] = 1 AND Category.CategoryId <> 100
+      ORDER BY CategoryOrItem, ParentCategoryId, SeqNum
+--End CategoryItemMasterHier
 
 --Begin Corp Acct Discount
-TRUNCATE TABLE RetailSlnSch.ItemDiscount
-INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
-SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, 35 AS DiscountPercent
-FROM RetailSlnSch.Item
-CROSS JOIN RetailSlnSch.CorpAcct WHERE CreditSale = 1
-ORDER BY CorpAcctId, ItemId
+        TRUNCATE TABLE RetailSlnSch.ItemDiscount
+        INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
+        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, 35 AS DiscountPercent
+          FROM RetailSlnSch.Item
+    CROSS JOIN RetailSlnSch.CorpAcct WHERE CreditSale = 1
+      ORDER BY CorpAcctId, ItemId
 --End Corp Acct Discount
 
---Begin Item Attributes
-TRUNCATE TABLE RetailSlnSch.ItemSpec
-INSERT RetailSlnSch.ItemSpec(ClientId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, ItemId, SeqNum, ShowValue)
-SELECT ItemSpecMaster.ClientId, ItemSpecMaster.ItemSpecMasterId, '' ItemAttribUnitValue, '' ItemAttribValue, Item.ItemId, SeqNum, 0 AS ShowValue
-  FROM RetailSlnSch.Item, RetailSlnSch.ItemSpecMaster
-ORDER BY ItemId, SeqNum
-
-/*Update Products Begin-------------------------------------------------------------------------------------------------------------*/
-BEGIN
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[HSN Code]
-FROM dbo.DivineBija_Products WHERE [HSN Code] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 5
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Prod Code]
-FROM dbo.DivineBija_Products WHERE [Prod Code] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 6
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = REPLACE(DivineBija_Products.[Central GST], '%', '')
-FROM dbo.DivineBija_Products WHERE [Central GST] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 16
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = REPLACE(DivineBija_Products.[State GST], '%', '')
-FROM dbo.DivineBija_Products WHERE [State GST] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 17
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = CAST(REPLACE(DivineBija_Products.[Central GST], '%', '') AS FLOAT) + CAST(REPLACE(DivineBija_Products.[State GST], '%', '') AS FLOAT)
-FROM dbo.DivineBija_Products WHERE [Central GST] <> '' AND DivineBija_Products.[State GST] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 18
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Product Weight], ItemSpecUnitValue = 100, ShowValue = CASE [Show Weight] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Product Weight] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 4 AND [Product Weight Unit] = 'G'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Product Weight], ItemSpecUnitValue = 200, ShowValue = CASE [Show Weight] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Product Weight] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 4 AND [Product Weight Unit] = 'KG'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Fluid Vol], ItemSpecUnitValue = 100, ShowValue = CASE [Show Volume] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Fluid Vol] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 7 AND [Fluid Vol Unit] = 'L'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Product Length], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Product Length] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 1
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Product Width], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Product Width] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 2
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Product Height], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Product Height] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 3
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.Size, ShowValue = CASE [Show Size] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE Size <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 10
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.Color, ShowValue = CASE [Show Color] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE Color <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 8
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Count], ItemSpecUnitValue = 100, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Cone(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Count], ItemSpecUnitValue = 200, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Cup(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Count], ItemSpecUnitValue = 300, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Piece(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Count], ItemSpecUnitValue = 400, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Set(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Count], ItemSpecUnitValue = 500, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Stem(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Count], ItemSpecUnitValue = 600, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Stick(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.Material, ShowValue = CASE [Show Material] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE Material <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 11
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Calc Product Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Calc Product Weight] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 15
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Weight Attribute], ShowValue = CASE [Show Weight Attribute] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Weight Attribute] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 19
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Packet], ItemSpecUnitValue = 100, ShowValue = CASE [Show Packet] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Packet] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 20 AND [Packet Unit] = 'Packet(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Packet], ItemSpecUnitValue = 200, ShowValue = CASE [Show Packet] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Packet] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 20 AND [Packet Unit] = 'Bag(s)'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.Package, ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE Package <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 9 AND [Package] = 'Box'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.Package, ItemSpecUnitValue = 200    
-FROM dbo.DivineBija_Products WHERE Package <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 9 AND [Package] = 'Container'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.Package, ItemSpecUnitValue = 300    
-FROM dbo.DivineBija_Products WHERE Package <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 9 AND [Package] = 'Packet'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Package Length], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Package Length] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 21
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Package Width], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Package Width] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 22
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Package Height], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Package Height] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 23
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Volumetric Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Volumetric Weight] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 24
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Volumetric Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Volumetric Weight] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 25
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Calc Product Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Products WHERE [Calc Product Weight] <> '' AND [Calc Product Weight] > [Volumetric Weight] AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 25
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Specs], ShowValue = CASE [Show Specs] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Products WHERE [Specs] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 26
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Products.[Keypoints]
-FROM dbo.DivineBija_Products WHERE [Keypoints] <> '' AND ItemSpec.ItemId = DivineBija_Products.Id AND ItemSpecMasterId = 27
-
-END
-/*Update Products End-------------------------------------------------------------------------------------------------------------*/
-
-/*Update Book Begin-----------------------------------------------------------------------------------------------------------------*/
-BEGIN
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[HSN Code]
-FROM dbo.DivineBija_Books WHERE [HSN Code] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 5
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Prod Code]
-FROM dbo.DivineBija_Books WHERE [Prod Code] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 6
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = REPLACE(DivineBija_Books.[Central GST], '%', '')
-FROM dbo.DivineBija_Books WHERE [Central GST] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 16
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = REPLACE(DivineBija_Books.[State GST], '%', '')
-FROM dbo.DivineBija_Books WHERE [State GST] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 17
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = CAST(REPLACE(DivineBija_Books.[Central GST], '%', '') AS FLOAT) + CAST(REPLACE(DivineBija_Books.[State GST], '%', '') AS FLOAT)
-FROM dbo.DivineBija_Books WHERE [Central GST] <> '' AND DivineBija_Books.[State GST] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 18
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Product Weight], ItemSpecUnitValue = 100--, ShowValue = CASE [Show Weight] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Books WHERE [Product Weight] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 4 AND [Product Weight Unit] = 'G'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Product Weight], ItemSpecUnitValue = 200--, ShowValue = CASE [Show Weight] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Books WHERE [Product Weight] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 4 AND [Product Weight Unit] = 'KG'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Fluid Vol], ItemSpecUnitValue = 100, ShowValue = CASE [Show Volume] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Fluid Vol] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 7 AND [Fluid Vol Unit] = 'L'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Product Length], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Product Length] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 1
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Product Width], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Product Width] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 2
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Product Height], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Product Height] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 3
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Size, ShowValue = CASE [Show Size] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE Size <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 10
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Color, ShowValue = CASE [Show Color] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE Color <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 8
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Count], ItemSpecUnitValue = 100, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Cone(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Count], ItemSpecUnitValue = 200, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Cup(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Count], ItemSpecUnitValue = 300, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Piece(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Count], ItemSpecUnitValue = 400, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Set(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Count], ItemSpecUnitValue = 500, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Stem(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Count], ItemSpecUnitValue = 600, ShowValue = CASE [Show Count] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Count] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 12 AND [Count Unit] = 'Stick(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Material, ShowValue = CASE [Show Material] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE Material <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 11
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Calc Product Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Calc Product Weight] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 15
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Weight Attribute], ShowValue = CASE [Show Weight Attribute] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Weight Attribute] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 19
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Packet], ItemSpecUnitValue = 100, ShowValue = CASE [Show Packet] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Packet] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 20 AND [Packet Unit] = 'Packet(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Packet], ItemSpecUnitValue = 200, ShowValue = CASE [Show Packet] WHEN 'Yes' THEN 1 ELSE 0 END
---FROM dbo.DivineBija_Books WHERE [Packet] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 20 AND [Packet Unit] = 'Bag(s)'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Package, ItemSpecUnitValue = 100
---FROM dbo.DivineBija_Books WHERE Package <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 9 AND [Package] = 'Box'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Package, ItemSpecUnitValue = 200    
---FROM dbo.DivineBija_Books WHERE Package <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 9 AND [Package] = 'Container'
-
---UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Package, ItemSpecUnitValue = 300    
---FROM dbo.DivineBija_Books WHERE Package <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 9 AND [Package] = 'Packet'
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Package Length], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Package Length] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 21
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Package Width], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Package Width] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 22
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Package Height], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Package Height] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 23
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Volumetric Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Volumetric Weight] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 24
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Volumetric Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Volumetric Weight] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 25
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Calc Product Weight], ItemSpecUnitValue = 100
-FROM dbo.DivineBija_Books WHERE [Calc Product Weight] <> '' AND [Calc Product Weight] > [Volumetric Weight] AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 25
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.Publisher, ShowValue = 0
-FROM dbo.DivineBija_Books WHERE Publisher <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 13
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.PageCount, ShowValue = 0
-FROM dbo.DivineBija_Books WHERE PageCount <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 14
-
-UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = DivineBija_Books.[Language], ShowValue = CASE [Show Language] WHEN 'Yes' THEN 1 ELSE 0 END
-FROM dbo.DivineBija_Books WHERE DivineBija_Books.[Language] <> '' AND ItemSpec.ItemId = DivineBija_Books.Id AND ItemSpecMasterId = 28
-
-END
-/*Update Books End------------------------------------------------------------------------------------------------------------------*/
---End Item Attributes
+--Begin Item Spec
+SET NOCOUNT ON
+        TRUNCATE TABLE RetailSlnSch.ItemSpec
+        INSERT RetailSlnSch.ItemSpec
+              (ClientId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, ItemId, SeqNum, SeqNumItem, SeqNumItemMaster)
+        SELECT ItemSpecMaster.ClientId, ItemSpecMaster.ItemSpecMasterId, '' ItemAttribUnitValue, '' ItemAttribValue, Item.ItemId
+              ,SeqNum, NULL AS SeqNumItem, NULL AS SeqNumItemMaster
+          FROM RetailSlnSch.Item, RetailSlnSch.ItemSpecMaster
+      ORDER BY ItemId, SeqNum
+--Begin Item Spec Update SeqNumItem
+		DROP TABLE IF EXISTS #TEMP1
+		CREATE TABLE #TEMP1
+			  (
+				Id BIGINT NOT NULL IDENTITY(1, 1), Num INT, ItemSpecMasterId BIGINT, ValueColumnName NVARCHAR(512)
+			   ,ShowValueColumnName NVARCHAR(512), UnitColumnName NVARCHAR(512), SqlStmt VARCHAR(MAX)
+			  )
+        DECLARE @SqlStmt VARCHAR(MAX), @SqlStmtTemp VARCHAR(MAX), @SqlStmtTemp2 VARCHAR(MAX)
+        DECLARE @ItemSpecMasterId VARCHAR(10), @BookFlag BIT, @ProductFlag BIT, @ValueColumnName NVARCHAR(256), @UnitColumnName NVARCHAR(256)
+		DECLARE @ShowValueColumnName NVARCHAR(256)
+		DECLARE @CodeTypeId BIGINT
+        DECLARE ItemSpecMasterCursor CURSOR FOR
+        SELECT ItemSpecMaster.ItemSpecMasterId, ItemSpecMaster.BookFlag, ItemSpecMaster.ProductFlag, ItemSpecMaster.ValueColumnName
+              ,ItemSpecMaster.UnitColumnName, ItemSpecMaster.ShowValueColumnName, ItemSpecMaster.CodeTypeId
+          FROM RetailSlnSch.ItemSpecMaster WHERE ValueColumnName IS NOT NULL
+--
+        OPEN ItemSpecMasterCursor
+--
+        FETCH ItemSpecMasterCursor INTO @ItemSpecMasterId, @BookFlag, @ProductFlag, @ValueColumnName, @UnitColumnName
+		     ,@ShowValueColumnName, @CodeTypeId
+--
+        SET @SqlStmtTemp = 'UPDATE RetailSlnSch.ItemSpec SET ItemSpecValue = '
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+		    PRINT CAST(@ItemSpecMasterId AS VARCHAR)
+            IF @ProductFlag = 1
+            BEGIN
+                SET @SqlStmt = @SqlStmtTemp + 'DivineBija_Products.' + @ValueColumnName + ' FROM RetailSlnSch.Item, dbo.DivineBija_Products'
+                SET @SqlStmt = @SqlStmt + ' WHERE Item.ProductItemId = DivineBija_Products.Id AND ItemSpec.ItemId = Item.ItemId AND '
+                SET @SqlStmt = @SqlStmt + ''''' <> ISNULL(' +  + @ValueColumnName + ', '''') AND ItemSpecMasterId = ' +  @ItemSpecMasterId
+				INSERT #TEMP1(Num, ItemSpecMasterId, ValueColumnName, ShowValueColumnName, UnitColumnName, SqlStmt)
+				SELECT 1, @ItemSpecMasterId, @ValueColumnName, @ShowValueColumnName, @UnitColumnName, @SqlStmt
+--PRINT CAST(@ItemSpecMasterId AS VARCHAR) + ' 1'
+                EXEC(@SqlStmt)
+                IF ISNULL(@ShowValueColumnName, '') <> ''
+                BEGIN
+                    SET @SqlStmt = ''
+                    SET @SqlStmt = @SqlStmt + 'UPDATE RetailSlnSch.ItemSpec SET SeqNumItem = ItemSpecMaster.SeqNum'
+                    SET @SqlStmt = @SqlStmt + '  FROM dbo.DivineBija_Products'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.Item'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpecMaster'
+                    SET @SqlStmt = @SqlStmt + ' WHERE ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId'
+                    SET @SqlStmt = @SqlStmt + ' AND ISNULL(DivineBija_Products.' + @ShowValueColumnName + ', '''') = ''YES'''
+                    SET @SqlStmt = @SqlStmt + ' AND DivineBija_Products.Id = Item.ProductItemId'
+                    SET @SqlStmt = @SqlStmt + ' AND ItemSpec.ItemId = Item.ItemId'
+                    SET @SqlStmt = @SqlStmt + ' AND ItemSpecMaster.ItemSpecMasterId = ''' + @ItemSpecMasterId + ''''
+					INSERT #TEMP1(Num, ItemSpecMasterId, ValueColumnName, ShowValueColumnName, UnitColumnName, SqlStmt)
+					SELECT 2, @ItemSpecMasterId, @ValueColumnName, @ShowValueColumnName, @UnitColumnName, @SqlStmt
+--PRINT CAST(@ItemSpecMasterId AS VARCHAR) + ' 2 ' + @SqlStmt
+                    EXEC(@SqlStmt)
+                END
+				IF @CodeTypeId IS NOT NULL
+                BEGIN
+                    SET @SqlStmt = ''
+                    SET @SqlStmt = @SqlStmt + ' UPDATE RetailSlnSch.ItemSpec SET ItemSpecUnitValue = CodeData.CodeDataNameId'
+                    SET @SqlStmt = @SqlStmt + '  FROM dbo.DivineBija_Products'
+                    SET @SqlStmt = @SqlStmt + '	     ,RetailSlnSch.Item'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpec'
+                    SET @SqlStmt = @SqlStmt + '	     ,RetailSlnSch.ItemSpecMaster'
+                    SET @SqlStmt = @SqlStmt + '	     ,Lookup.CodeData'
+                    SET @SqlStmt = @SqlStmt + ' WHERE '
+                    SET @SqlStmt = @SqlStmt + '       Item.ProductItemId = DivineBija_Products.Id'
+                    SET @SqlStmt = @SqlStmt + '   AND ItemSpec.ItemId = Item.ItemId'
+                    SET @SqlStmt = @SqlStmt + '   AND ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId'
+                    SET @SqlStmt = @SqlStmt + '   AND ItemSpecMaster.CodeTypeId = CodeData.CodeTypeId'
+                    SET @SqlStmt = @SqlStmt + '   AND CodeData.CodeDataDesc4 = DivineBija_Products.' + @UnitColumnName
+					SET @SqlStmt = @SqlStmt + '   AND CodeData.CodeTypeId = ' + CAST(@CodeTypeId AS VARCHAR(5))
+					INSERT #TEMP1(Num, ItemSpecMasterId, ValueColumnName, ShowValueColumnName, UnitColumnName, SqlStmt)
+					SELECT 3, @ItemSpecMasterId, @ValueColumnName, @ShowValueColumnName, @UnitColumnName, @SqlStmt
+--PRINT CAST(@ItemSpecMasterId AS VARCHAR) + ' 3 ' + @SqlStmt
+                    EXEC(@SqlStmt)
+                END
+            END
+            IF @BookFlag = 1
+            BEGIN
+                SET @SqlStmt = @SqlStmtTemp + 'DivineBija_Books.' + @ValueColumnName + ' FROM RetailSlnSch.Item, dbo.DivineBija_Books'
+                SET @SqlStmt = @SqlStmt + ' WHERE Item.ProductItemId = DivineBija_Books.Id AND ItemSpec.ItemId = Item.ItemId AND '
+                SET @SqlStmt = @SqlStmt + ''''' <> ISNULL(' +  + @ValueColumnName + ', '''') AND ItemSpecMasterId = ' +  @ItemSpecMasterId
+				INSERT #TEMP1(Num, ItemSpecMasterId, ValueColumnName, ShowValueColumnName, UnitColumnName, SqlStmt)
+				SELECT 4, @ItemSpecMasterId, @ValueColumnName, @ShowValueColumnName, @UnitColumnName, @SqlStmt
+--PRINT CAST(@ItemSpecMasterId AS VARCHAR) + ' 4'
+                EXEC(@SqlStmt)
+                IF ISNULL(@ShowValueColumnName, '') <> ''
+                BEGIN
+                    SET @SqlStmt = ''
+                    SET @SqlStmt = @SqlStmt + 'UPDATE RetailSlnSch.ItemSpec SET SeqNumItem = ItemSpecMaster.SeqNum'
+                    SET @SqlStmt = @SqlStmt + '  FROM dbo.DivineBija_Books'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.Item'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpecMaster'
+                    SET @SqlStmt = @SqlStmt + ' WHERE ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId'
+                    SET @SqlStmt = @SqlStmt + ' AND ISNULL(DivineBija_Books.' + @ShowValueColumnName + ', '''') = ''YES'''
+                    SET @SqlStmt = @SqlStmt + ' AND DivineBija_Books.Id = Item.ProductItemId'
+                    SET @SqlStmt = @SqlStmt + ' AND ItemSpec.ItemId = Item.ItemId'
+                    SET @SqlStmt = @SqlStmt + ' AND ItemSpecMaster.ItemSpecMasterId = ' + @ItemSpecMasterId
+                    --SET @SqlStmt = @SqlStmt + ' AND ItemSpecMaster.ItemSpecMasterId = ' + @ItemSpecMasterId
+					INSERT #TEMP1(Num, ItemSpecMasterId, ValueColumnName, ShowValueColumnName, UnitColumnName, SqlStmt)
+					SELECT 5, @ItemSpecMasterId, @ValueColumnName, @ShowValueColumnName, @UnitColumnName, @SqlStmt
+--PRINT CAST(@ItemSpecMasterId AS VARCHAR) + ' 5'
+                    EXEC(@SqlStmt)
+                END
+				IF @CodeTypeId IS NOT NULL
+                BEGIN
+                    SET @SqlStmt = ''
+                    SET @SqlStmt = @SqlStmt + ' UPDATE RetailSlnSch.ItemSpec SET ItemSpecUnitValue = CodeData.CodeDataNameId'
+                    SET @SqlStmt = @SqlStmt + '  FROM dbo.DivineBija_Books'
+                    SET @SqlStmt = @SqlStmt + '	     ,RetailSlnSch.Item'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpec'
+                    SET @SqlStmt = @SqlStmt + '	     ,RetailSlnSch.ItemSpecMaster'
+                    SET @SqlStmt = @SqlStmt + '	     ,Lookup.CodeData'
+                    SET @SqlStmt = @SqlStmt + ' WHERE '
+                    SET @SqlStmt = @SqlStmt + '       Item.ProductItemId = DivineBija_Books.Id'
+                    SET @SqlStmt = @SqlStmt + '   AND ItemSpec.ItemId = Item.ItemId'
+                    SET @SqlStmt = @SqlStmt + '   AND ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId'
+                    SET @SqlStmt = @SqlStmt + '   AND ItemSpecMaster.CodeTypeId = CodeData.CodeTypeId'
+                    SET @SqlStmt = @SqlStmt + '   AND CodeData.CodeDataDesc4 = DivineBija_Books.' + @UnitColumnName
+					SET @SqlStmt = @SqlStmt + '   AND CodeData.CodeTypeId = ' + CAST(@CodeTypeId AS VARCHAR(5))
+					INSERT #TEMP1(Num, ItemSpecMasterId, ValueColumnName, ShowValueColumnName, UnitColumnName, SqlStmt)
+					SELECT 6, @ItemSpecMasterId, @ValueColumnName, @ShowValueColumnName, @UnitColumnName, @SqlStmt
+--PRINT CAST(@ItemSpecMasterId AS VARCHAR) + ' 3 ' + @SqlStmt
+                    EXEC(@SqlStmt)
+                END
+            END
+            FETCH ItemSpecMasterCursor INTO @ItemSpecMasterId, @BookFlag, @ProductFlag, @ValueColumnName, @UnitColumnName
+			     ,@ShowValueColumnName, @CodeTypeId
+        END
+
+        CLOSE ItemSpecMasterCursor
+        DEALLOCATE ItemSpecMasterCursor
+SET NOCOUNT OFF
+SELECT * FROM #TEMP1
+--End Item Spec Update
+--End Item Spec
+
+--Begin Item Spec Update SeqNumItemMaster
+		UPDATE RetailSlnSch.ItemSpec
+		   SET SeqNumItemMaster = A.SeqNum
+		  FROM
+		      (
+		SELECT DISTINCT
+		       Item.ItemId, ItemSpec.ItemSpecId, ItemSpec.SeqNum
+		  FROM RetailSlnSch.ItemSpec
+    INNER JOIN RetailSlnSch.Item
+            ON Item.ItemId = ItemSpec.ItemId
+	INNER JOIN dbo.DivineBija_Products
+            ON DivineBija_Products.ItemId = Item.ProductItemId
+    INNER JOIN RetailSlnSch.ItemSpecMaster
+            ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
+           AND ItemSpecMaster.SpecName
+               IN (
+                   DivineBija_Products.[Spec Name 1], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 2]
+                  ,DivineBija_Products.[Spec Name 3], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 4]
+                  ,DivineBija_Products.[Spec Name 5]
+                  )
+		      ) A
+		WHERE ItemSpec.ItemSpecId = A.ItemSpecId
+--End Item Spec Update SeqNumItemMaster
+--Begin Item Master Item Spec
+        TRUNCATE TABLE RetailSlnSch.ItemMasterItemSpec
+--
+        INSERT RetailSlnSch.ItemMasterItemSpec(ClientId, ItemMasterId, ItemSpecId, SeqNumItemMaster)
+        SELECT @ClientId AS ClientId, Item.ItemMasterId, MIN(ItemSpec.ItemSpecId) AS ItemSpecId, ItemSpec.SeqNumItemMaster
+          FROM RetailSlnSch.Item INNER JOIN RetailSlnSch.ItemSpec ON Item.Itemid = ItemSpec.ItemId
+         WHERE ItemSpec.SeqNumItemMaster IS NOT NULL --AND Item.ItemMasterId <= 207
+      GROUP BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
+      ORDER BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
+--End Item Master Item Spec
 
 --Begin Item Bundle
 UPDATE dbo.DivineBija_ItemBundle SET BundleItemId = NULL, ItemId = NULL
@@ -444,22 +378,22 @@ FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKe
 WHILE @@FETCH_STATUS = 0
 BEGIN
     SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
-	WHILE @SearchCharIndex > 0
-	BEGIN
-	    SET @SearchKeywordText = SUBSTRING(@SearchKeywords, 1, @SearchCharIndex - 1)
-		SET @SearchKeywords = SUBSTRING(@SearchKeywords, @SearchCharIndex + 1, LEN(@SearchKeywords))
-		SET @SearchKeywordId = NULL
-		SELECT @SearchKeywordId = SearchKeyword.SearchKeywordId FROM RetailSlnSch.SearchKeyword WHERE SearchKeyword.SearchKeywordText = @SearchKeywordText
-		IF @SearchKeywordId IS NULL
-		BEGIN
-		    INSERT RetailSlnSch.SearchKeyword(ClientId, SearchKeywordText)
-			SELECT @ClientId AS ClientId, LOWER(@SearchKeywordText)
-			SET @SearchKeywordId = @@IDENTITY
-		END
-		INSERT RetailSlnSch.SearchMetaData(ClientId, SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
-		SELECT @ClientId AS ClientId, @SearchKeywordId AS SearchKeywordId, @EntityTypeNameDesc AS EntityTypeNameDesc, @EntityId AS EntityId, 1 AS SeqNum
-		SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
-	END
+    WHILE @SearchCharIndex > 0
+    BEGIN
+        SET @SearchKeywordText = SUBSTRING(@SearchKeywords, 1, @SearchCharIndex - 1)
+        SET @SearchKeywords = SUBSTRING(@SearchKeywords, @SearchCharIndex + 1, LEN(@SearchKeywords))
+        SET @SearchKeywordId = NULL
+        SELECT @SearchKeywordId = SearchKeyword.SearchKeywordId FROM RetailSlnSch.SearchKeyword WHERE SearchKeyword.SearchKeywordText = @SearchKeywordText
+        IF @SearchKeywordId IS NULL
+        BEGIN
+            INSERT RetailSlnSch.SearchKeyword(ClientId, SearchKeywordText)
+            SELECT @ClientId AS ClientId, LOWER(@SearchKeywordText)
+            SET @SearchKeywordId = @@IDENTITY
+        END
+        INSERT RetailSlnSch.SearchMetaData(ClientId, SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
+        SELECT @ClientId AS ClientId, @SearchKeywordId AS SearchKeywordId, @EntityTypeNameDesc AS EntityTypeNameDesc, @EntityId AS EntityId, 1 AS SeqNum
+        SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
+    END
     FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
 END
 
@@ -474,11 +408,3 @@ INSERT RetailSlnSch.ItemInfo(ClientId, ItemId, ItemInfoLabelText, ItemInfoText, 
 SELECT Item.ClientId, Item.ItemId, 'Specification(s)' AS ItemSpecLabelText, '<h2>Specifications<h2><p1>Sample Specifications</p1>' AS ItemSpecText, 1 AS SeqNum
   FROM RetailSlnSch.Item
 ORDER BY ItemId, SeqNum
---SELECT Item.ClientId, Item.ItemId, 'Attribute(s)' AS ItemSpecLabelText, '' AS ItemSpecText, 1 AS SeqNum
---  FROM RetailSlnSch.Item
---UNION
---SELECT Item.ClientId, Item.ItemId, '' AS ItemSpecLabelText, '' AS ItemSpecText, 3 AS SeqNum
---  FROM RetailSlnSch.Item
---SELECT Item.ClientId, Item.ItemId, '' AS ItemSpecLabelText, '' AS ItemSpecText, 4 AS SeqNum
---  FROM RetailSlnSch.Item
---End ItemInfo

@@ -16,7 +16,9 @@ namespace RetailSlnModels
 
         public long? ClientId { set; get; }
 
-        public bool AllowSubCategory { set; get; }
+        public bool AssignSubCategory { set; get; }
+
+        public bool AssignItem { set; get; }
 
         public string CategoryName { set; get; }
 
