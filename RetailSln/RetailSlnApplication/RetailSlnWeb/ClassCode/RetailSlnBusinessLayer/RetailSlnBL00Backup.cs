@@ -57,7 +57,6 @@ namespace RetailSlnBusinessLayer
         //                {
         //                    new ShoppingCartItemModel
         //                    {
-        //                        ItemDesc = null,
         //                        ItemId = null,
         //                        ItemRate = null,
         //                        ItemRateBeforeDiscount = null,
@@ -106,7 +105,6 @@ namespace RetailSlnBusinessLayer
         //                    {
         //                        DimensionUnitId = dimensionUnitId,
         //                        HeightValue = heightValue,
-        //                        ItemDesc = itemModel.ItemDesc,
         //                        ItemDiscountPercent = null,
         //                        ItemId = itemModel.ItemId,
         //                        ItemRate = itemRate,
@@ -167,7 +165,6 @@ namespace RetailSlnBusinessLayer
         //                {
         //                    new ShoppingCartItemModel
         //                    {
-        //                        ItemDesc = null,
         //                        ItemId = null,
         //                        ItemRate = null,
         //                        ItemRateBeforeDiscount = null,
@@ -198,7 +195,6 @@ namespace RetailSlnBusinessLayer
         //                        DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecUnitValue),
         //                        HeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecValue),
         //                        HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
-        //                        ItemDesc = itemModel.ItemDesc,
         //                        ItemDiscountPercent = null,
         //                        ItemId = itemModel.ItemId,
         //                        ItemRate = itemModel.ItemRate,
@@ -371,7 +367,6 @@ namespace RetailSlnBusinessLayer
         ////                {
         ////                    new ShoppingCartItemModel
         ////                    {
-        ////                        ItemDesc = null,
         ////                        ItemId = null,
         ////                        ItemRate = null,
         ////                        ItemRateBeforeDiscount = null,
@@ -420,7 +415,6 @@ namespace RetailSlnBusinessLayer
         ////                    {
         ////                        DimensionUnitId = dimensionUnitId,
         ////                        HeightValue = heightValue,
-        ////                        ItemDesc = itemModel.ItemDesc,
         ////                        ItemDiscountPercent = null,
         ////                        ItemId = itemModel.ItemId,
         ////                        ItemRate = itemRate,
@@ -480,7 +474,6 @@ namespace RetailSlnBusinessLayer
         ////                {
         ////                    new ShoppingCartItemModel
         ////                    {
-        ////                        ItemDesc = null,
         ////                        ItemId = null,
         ////                        ItemRate = null,
         ////                        ItemRateBeforeDiscount = null,
@@ -511,7 +504,6 @@ namespace RetailSlnBusinessLayer
         ////                        DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecUnitValue),
         ////                        HeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecValue),
         ////                        HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
-        ////                        ItemDesc = itemModel.ItemDesc,
         ////                        ItemDiscountPercent = null,
         ////                        ItemId = itemModel.ItemId,
         ////                        ItemRate = itemModel.ItemRate,
@@ -764,7 +756,6 @@ namespace RetailSlnBusinessLayer
         ////        {
         ////            new ShoppingCartItemModel
         ////            {
-        ////                ItemDesc = null,
         ////                ItemId = null,
         ////                ItemRate = null,
         ////                ItemRateBeforeDiscount = null,
@@ -999,7 +990,6 @@ namespace RetailSlnBusinessLayer
         //    //    {
         //    //        new ShoppingCartItemModel
         //    //        {
-        //    //            ItemDesc = null,
         //    //            ItemId = null,
         //    //            ItemRate = null,
         //    //            ItemRateBeforeDiscount = null,
@@ -1757,7 +1747,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemRate = discountDtlModel.CorpAcctDiscountPercent,
         //                    ItemShortDesc = "Discount (" + discountDtlModel.CorpAcctDiscountPercent + "%)",
@@ -1775,7 +1764,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemShortDesc = "Total Order Amount after Discount",
@@ -1824,7 +1812,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemRate = totalOrderAmount,
         //                    ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
@@ -1841,7 +1828,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemShortDesc = salesTaxCaptionId.CodeDataDesc0,
         //                    OrderAmount = 0,
@@ -1870,7 +1856,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = shippingAndHandlingChargesRate,
         //                ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
@@ -1888,7 +1873,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = shippingAndHandlingChargesRate,
         //                ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
@@ -1905,7 +1889,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = shippingAndHandlingChargesRate,
         //                ItemShortDesc = "Discount - Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + " - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
@@ -1921,7 +1904,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemRate = shippingAndHandlingChargesRate,
         //                    ItemShortDesc = "Discount - " + salesTaxListModel.SalesTaxCaptionId + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
@@ -1990,7 +1972,6 @@ namespace RetailSlnBusinessLayer
         //    (
         //        new ShoppingCartItemModel
         //        {
-        //            ItemDesc = null,
         //            ItemId = null,
         //            ItemRate = totalInvoiceAmount,
         //            ItemShortDesc = "Total Invoice Amount",
@@ -2004,7 +1985,6 @@ namespace RetailSlnBusinessLayer
         //    (
         //        new ShoppingCartItemModel
         //        {
-        //            ItemDesc = null,
         //            ItemId = null,
         //            ItemRate = 0,
         //            ItemShortDesc = "Amount Paid - Gift Cert",
@@ -2018,7 +1998,6 @@ namespace RetailSlnBusinessLayer
         //    (
         //        new ShoppingCartItemModel
         //        {
-        //            ItemDesc = null,
         //            ItemId = null,
         //            ItemRate = 0,
         //            ItemShortDesc = "Amount Paid - Credit Card",
@@ -2032,7 +2011,6 @@ namespace RetailSlnBusinessLayer
         //    (
         //        new ShoppingCartItemModel
         //        {
-        //            ItemDesc = null,
         //            ItemId = null,
         //            ItemRate = 0,
         //            ItemShortDesc = "Total Amount Paid",
@@ -2046,7 +2024,6 @@ namespace RetailSlnBusinessLayer
         //    (
         //        new ShoppingCartItemModel
         //        {
-        //            ItemDesc = null,
         //            ItemId = null,
         //            ItemRate = totalInvoiceAmount,
         //            ItemShortDesc = "Balance Due",
@@ -2141,7 +2118,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new OrderDetailModel
         //                {
-        //                    ItemDesc = itemModel.ItemDesc,
         //                    ItemRate = itemRate,
         //                    ItemShortDesc = itemModel.ItemShortDesc,
         //                    ItemId = itemModel.ItemId,
@@ -2160,7 +2136,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new OrderDetailModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemRate = shoppingCartItem.OrderAmount.Value,
         //                    ItemShortDesc = shoppingCartItem.ItemShortDesc,
         //                    ItemId = shoppingCartItem.ItemId,

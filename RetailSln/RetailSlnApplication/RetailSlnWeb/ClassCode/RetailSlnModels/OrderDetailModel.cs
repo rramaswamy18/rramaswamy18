@@ -15,8 +15,6 @@ namespace RetailSlnModels
 
         public float HeightValue { set; get; }
 
-        public string ItemDesc { set; get; }
-
         public long? ItemId { set; get; }
 
         public float ItemRate { set; get; }

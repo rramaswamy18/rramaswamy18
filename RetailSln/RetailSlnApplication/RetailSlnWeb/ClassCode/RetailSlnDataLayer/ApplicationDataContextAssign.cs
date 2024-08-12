@@ -17,15 +17,12 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
             sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
             sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
-            sqlCommand.Parameters["@TelephoneCountryId"].Value = orderHeader.TelephoneCountryId;
-            sqlCommand.Parameters["@TelephoneNumber"].Value = orderHeader.TelephoneNumber;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignOrderDetail(OrderDetail orderDetail, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@DimensionUnitId"].Value = orderDetail.DimensionUnitId;
-            sqlCommand.Parameters["@ItemDesc"].Value = string.IsNullOrEmpty(orderDetail.ItemDesc) ? (object)DBNull.Value : orderDetail.ItemDesc;
             sqlCommand.Parameters["@ItemId"].Value = orderDetail.ItemId == null ? (object)DBNull.Value : orderDetail.ItemId;
             sqlCommand.Parameters["@ItemRate"].Value = orderDetail.ItemRate;
             sqlCommand.Parameters["@ItemShortDesc"].Value = orderDetail.ItemShortDesc;
@@ -42,24 +39,37 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@WidthValue"].Value = orderDetail.WidthValue;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static void AssignDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //public static void AssignDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    sqlCommand.Parameters["@ClientId"].Value = clientId;
+        //    sqlCommand.Parameters["@AlternateTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.AlternateTelephoneDemogInfoCountryId;
+        //    sqlCommand.Parameters["@AlternateTelephoneNum"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.AlternateTelephoneNum) ? (object)DBNull.Value : deliveryInfoDataModel.AlternateTelephoneNum;
+        //    sqlCommand.Parameters["@DeliveryAddressId"].Value = deliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId;
+        //    sqlCommand.Parameters["@DeliveryInstructions"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryInstructions) ? (object)DBNull.Value : deliveryInfoDataModel.DeliveryInstructions;
+        //    sqlCommand.Parameters["@OrderHeaderId"].Value = (int)deliveryInfoDataModel.OrderHeaderId;
+        //    sqlCommand.Parameters["@PrimaryTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.PrimaryTelephoneDemogInfoCountryId;
+        //    sqlCommand.Parameters["@PrimaryTelephoneNum"].Value = deliveryInfoDataModel.PrimaryTelephoneNum;
+        //    sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        //}
+        public static void AssignDeliveryInfo(DeliveryDataModel deliveryDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@AlternateTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.AlternateTelephoneDemogInfoCountryId;
-            sqlCommand.Parameters["@AlternateTelephoneNum"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.AlternateTelephoneNum) ? (object)DBNull.Value : deliveryInfoDataModel.AlternateTelephoneNum;
-            sqlCommand.Parameters["@DeliveryAddressId"].Value = deliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId;
-            sqlCommand.Parameters["@DeliveryInstructions"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryInstructions) ? (object)DBNull.Value : deliveryInfoDataModel.DeliveryInstructions;
-            sqlCommand.Parameters["@OrderHeaderId"].Value = (int)deliveryInfoDataModel.OrderHeaderId;
-            sqlCommand.Parameters["@PrimaryTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.PrimaryTelephoneDemogInfoCountryId;
-            sqlCommand.Parameters["@PrimaryTelephoneNum"].Value = deliveryInfoDataModel.PrimaryTelephoneNum;
+            sqlCommand.Parameters["@AlternateTelephoneDemogInfoCountryId"].Value = deliveryDataModel.AlternateTelephoneDemogInfoCountryId;
+            sqlCommand.Parameters["@AlternateTelephoneNum"].Value = string.IsNullOrWhiteSpace(deliveryDataModel.AlternateTelephoneNum) ? (object)DBNull.Value : deliveryDataModel.AlternateTelephoneNum;
+            sqlCommand.Parameters["@DeliveryAddressId"].Value = deliveryDataModel.DeliveryAddressModel.DemogInfoAddressId;
+            sqlCommand.Parameters["@DeliveryInstructions"].Value = string.IsNullOrWhiteSpace(deliveryDataModel.DeliveryInstructions) ? (object)DBNull.Value : deliveryDataModel.DeliveryInstructions;
+            sqlCommand.Parameters["@OrderHeaderId"].Value = (long)deliveryDataModel.OrderHeaderId;
+            sqlCommand.Parameters["@PrimaryTelephoneDemogInfoCountryId"].Value = deliveryDataModel.PrimaryTelephoneDemogInfoCountryId;
+            sqlCommand.Parameters["@PrimaryTelephoneNum"].Value = deliveryDataModel.PrimaryTelephoneNum;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        public static void AssignOrderPayment(PaymentInfoModel paymentInfoModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void AssignOrderPayment(PaymentData1Model paymentDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@CreditCardDataId"].Value = paymentInfoModel.PaymentSummaryDataModel.CreditCardDataId;
-            sqlCommand.Parameters["@GiftCertId"].Value = paymentInfoModel.PaymentSummaryDataModel.GiftCertId?? 0;
-            sqlCommand.Parameters["@OrderHeaderId"].Value = paymentInfoModel.PaymentSummaryDataModel.OrderHeaderId;
+            sqlCommand.Parameters["@CouponId"].Value = paymentDataModel.CouponId;
+            sqlCommand.Parameters["@CreditCardDataId"].Value = paymentDataModel.CreditCardDataId;
+            sqlCommand.Parameters["@GiftCertId"].Value = paymentDataModel.GiftCertId;
+            sqlCommand.Parameters["@OrderHeaderId"].Value = paymentDataModel.OrderHeaderId;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignGiftCert(GiftCertModel giftCertModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -81,7 +91,6 @@ namespace RetailSlnDataLayer
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@ExpectedAvailability"].Value = string.IsNullOrEmpty(itemModel.ExpectedAvailability) ? (object)DBNull.Value : itemModel.ExpectedAvailability;
-            sqlCommand.Parameters["@ItemDesc"].Value = itemModel.ItemDesc;
             sqlCommand.Parameters["@ItemShortDesc0"].Value = itemModel.ItemShortDesc0;
             sqlCommand.Parameters["@ItemShortDesc1"].Value = itemModel.ItemShortDesc1;
             sqlCommand.Parameters["@ItemShortDesc2"].Value = itemModel.ItemShortDesc2 ?? (object)DBNull.Value;
@@ -96,7 +105,6 @@ namespace RetailSlnDataLayer
         {
             sqlCommand.Parameters["@ItemId"].Value = itemModel.ItemId;
             sqlCommand.Parameters["@ExpectedAvailability"].Value = string.IsNullOrEmpty(itemModel.ExpectedAvailability) ? (object)DBNull.Value : itemModel.ExpectedAvailability;
-            sqlCommand.Parameters["@ItemDesc"].Value = itemModel.ItemDesc;
             sqlCommand.Parameters["@ItemShortDesc"].Value = itemModel.ItemShortDesc;
             sqlCommand.Parameters["@ItemStarCount"].Value = (int)itemModel.ItemStarCount;
             sqlCommand.Parameters["@ItemStatusId"].Value = (int)itemModel.ItemStatusId;

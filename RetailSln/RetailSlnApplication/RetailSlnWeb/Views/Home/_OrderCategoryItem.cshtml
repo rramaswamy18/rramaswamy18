@@ -13,6 +13,7 @@
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[parentCategoryId];
     int pageSize = Model.PageSize;
     int startIndex = (Model.PageNum - 1) * pageSize;
+    int itemSeqNum = startIndex + 1;
     int totalRowCount = categoryLayoutModel.CategoryItemMasterHierModels.Count;
     if (categoryLayoutModel.CategoryItemMasterHierModels.Count == 0)
     {
@@ -62,7 +63,7 @@
             @BuildPaginationLinks(pageCount)
             <br style="clear: both;" />
         }
-        @BuildOrderCategoryItem(paymentInfoModel, categoryItemHierModels)
+        @BuildOrderCategoryItem(paymentInfoModel, categoryItemHierModels, itemSeqNum)
         if (Model.ParentCategoryId != 0)
         {
             <br style="clear: both;" />
@@ -122,14 +123,14 @@
         else
         {
             <li class="page-item">
-                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum + 1)), '@baseUrl');" , title="Jump to page# @(Model.PageNum + 1)">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum + 1), '@baseUrl');" , title="Jump to page# @(Model.PageNum + 1)">
                     Next
                 </a>
             </li>
         }
     </ul>
 }
-@helper BuildOrderCategoryItem(PaymentInfo1Model paymentInfoModel, List<CategoryItemMasterHierModel> categoryItemHierModels)
+@helper BuildOrderCategoryItem(PaymentInfo1Model paymentInfoModel, List<CategoryItemMasterHierModel> categoryItemMasterHierModels, int itemSeqNum)
 {
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
@@ -138,39 +139,39 @@
     int imageIndex = -1, imageCountIndex = 0, imageCountPerRow;
     List<CategoryItemMasterHierModel> categoryItemHierModelsRecursive;
     CategoryLayoutModel categoryLayoutModel;
-    foreach (var categoryItemHierModel in categoryItemHierModels)
+    foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
     {
-        categoryOrItem = categoryItemHierModel.CategoryOrItem;
+        categoryOrItem = categoryItemMasterHierModel.CategoryOrItem;
         imageDivWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageDivWidth");
         imageHeight = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageHeight");
         imageWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageWidth");
         imageCountPerRow = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageCountPerRow"));
 
         //New code
-        if (categoryItemHierModel.ProcessType == "Recursive")
+        if (categoryItemMasterHierModel.ProcessType == "Recursive")
         {
-            categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[categoryItemHierModel.CategoryModel.CategoryId.Value];
+            categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[categoryItemMasterHierModel.CategoryModel.CategoryId.Value];
             categoryItemHierModelsRecursive = categoryLayoutModel.CategoryItemMasterHierModels;
             <br style="clear: both;" />
-            @BuildOrderCategoryItem(paymentInfoModel, categoryItemHierModelsRecursive)
+            @BuildOrderCategoryItem(paymentInfoModel, categoryItemHierModelsRecursive, itemSeqNum)
         }//if (categoryItemHierModel.ProcessType == "Recursive")
         else
         {
-            if (categoryItemHierModel.ProcessType == "ParentCategoryName")
+            if (categoryItemMasterHierModel.ProcessType == "ParentCategoryName")
             {
                 <a href="@Url.Action("Index", "Home")" style="color: #000000; padding: 18px;" title="Return to categories">
                     <i class="fa fa-arrow-circle-left" style="font-size: 36px;"></i>
                 </a>
-                <span style="color: #a54000; font-family: 'Comic Sans MS'; font-size: 27px; font-weight: bold; letter-spacing: 4px; padding-left: 18px; padding-right: 18px; text-align: center; text-transform: uppercase;">@categoryItemHierModel.ParentCategoryModel.CategoryDesc</span>
+                <span style="color: #a54000; font-family: 'Comic Sans MS'; font-size: 27px; font-weight: bold; letter-spacing: 4px; padding-left: 18px; padding-right: 18px; text-align: center; text-transform: uppercase;">@categoryItemMasterHierModel.ParentCategoryModel.CategoryDesc</span>
                 <br style="clear: both;" />
             }//if (categoryItemHierModel.ProcessType == "ParentCategoryName")
             else
             {
-                if (categoryItemHierModel.CategoryId != null)
+                if (categoryItemMasterHierModel.CategoryId != null)
                 {
                     categoryCountIndex++;
                     <div style="border-radius: 25px; color: #000000; display: inline-block; font-size: 20px; font-weight: bold; padding: 18px;">
-                        @BuildCategory(categoryItemHierModel.CategoryModel, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                        @BuildCategory(categoryItemMasterHierModel.CategoryModel, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
                     </div>
                 }//if (categoryItemHierModel.CategoryId != null)
                 else
@@ -178,7 +179,7 @@
                     imageIndex++;
                     imageCountIndex++;
                     <div style="display: inline-block; padding: 18px; vertical-align: top; width: @imageDivWidth;">
-                        @BuildItem(paymentInfoModel, categoryItemHierModel.ItemMasterModel, categoryItemHierModel.SeqNum, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+                        @BuildItem(paymentInfoModel, categoryItemMasterHierModel.ItemMasterModel, itemSeqNum++, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
                     </div>
                 }//else (categoryItemHierModel.CategoryId != null)
             }//else (categoryItemHierModel.ProcessType == "ParentCategoryName")
@@ -194,8 +195,6 @@
             imageCountIndex = 0;
         }//if (imageCountIndex == imageCountPerRow)
     }//foreach (var categoryItemHierModel in categoryItemHierModels)
-    @*<br style="clear: both;" />
-        <span style="color: #000000;">@(imageIndex + 1)</span>*@
 }@*helper BuildOrderCategoryItem(List<CategoryItemHierModel> categoryItemHierModels)*@
 @helper BuildCategory(CategoryModel categoryModel, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
@@ -206,14 +205,13 @@
         </div>
     </a>
 }
-@helper BuildItem(PaymentInfo1Model paymentInfoModel, ItemMasterModel itemMasterModel, float seqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+@helper BuildItem(PaymentInfo1Model paymentInfoModel, ItemMasterModel itemMasterModel, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
-    //int k;
     string defaultOrderQty = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty");
     var shoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems;
     ShoppingCartItemModel shoppingCartItemModel;
     <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
-        <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@itemMasterModel.ImageTitle" />
+        <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
     </a>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
@@ -225,30 +223,19 @@
     }
     <br style="clear: both;" />
     <br style="clear: both;" />
-    <div style="text-align: left; width: 100%;">
-        @if (itemMasterModel.ItemModels.Count == 1)
+    <div style="text-align: left;">
+        <span style="color: #1d1d1d; font-family: Arial; font-size: 16px; font-style: normal; font-weight: 400; line-height: 21px;">
+            @if (itemMasterModel.ItemModels.Count == 1)
+            {
+                @(itemMasterModel.ItemModels[0].ItemRateFormatted + " - ")
+            }
+            @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
+        </span>
+        @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
         {
-            <span style="color: #1d1d1d; font-family: Arial; font-size: 16px; font-style: normal; font-weight: 400; line-height: 21px;">@(itemMasterModel.ItemModels[0].ItemRateFormatted + " - " + itemMasterModel.ItemModels[0].ItemShortDesc)</span>
+            <br style="clear: both;" />
+            <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
         }
-        else
-        {
-            <span style="color: #1d1d1d; font-family: Arial; font-size: 16px; font-style: normal; font-weight: 400; line-height: 21px;">@(itemMasterModel.ItemModels[0].ItemShortDesc)</span>
-        }
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                --- Item(s) ---&nbsp;<span class="caret" style="color: #000000; font-size: 15px;"></span>
-            </button>
-            <table class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px; width: 100%;">
-                <tr>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px;">Rate</th>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; width: 100%;">Spec(s)</th>
-                </tr>
-                <tr>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; "><a href="#" style="text-decoration: underline;">$9.99</a></td>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; ">Small | Brown</td>
-                </tr>
-            </table>
-        </div>
     </div>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
@@ -268,8 +255,7 @@
         int index = 0;
         string prefixString = "", optionText;
         <br style="clear: both;" />
-        @*<span style="color: #000000; font-size: 12px; font-weight: bold;">1. Material Raw; 2. Color Brown</span>*@
-        if (itemMasterModel.ItemMasterItemSpecModels.Count > 0)
+        if (itemMasterModel.ItemMasterItemSpecModels != null && itemMasterModel.ItemMasterItemSpecModels.Count > 0)
         {
             <span style="color: #000000; font-size: 11px; font-weight: 600;">
                 @foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
@@ -285,9 +271,9 @@
             if (itemMasterModel.ItemModels[0].ItemItemSpecModels.Count > 0)
             {
                 <span style="color: #000000; font-size: 11px; font-weight: 600;">
-                    @foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
+                    @foreach (var itemItemSpecModel in itemMasterModel.ItemModels[0].ItemItemSpecModels)
                     {
-                        @(prefixString + ++index + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
+                        @(prefixString + ++index + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
                         prefixString = " | ";
                         brFlag = true;
                     }
@@ -298,48 +284,67 @@
         {
             <br style="clear: both;" />
         }
-        if (itemMasterModel.ItemModels.Count > 1)
-        {
-            if (itemMasterModel.ItemModels != null && itemMasterModel.ItemModels.Count > 0)
-            {
-                <select class="form-control">
-                    <option value="">--- Select ---</option>
-                    @foreach (var itemModel in itemMasterModel.ItemModels)
-                    {
-                        optionText = itemModel.ItemRateFormatted;
-                        if (itemModel.ItemItemSpecModels != null && itemModel.ItemItemSpecModels.Count > 0)
-                        {
-                            foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
-                            {
-                                optionText += " | " + itemItemSpecModel.ItemSpecValueForDisplay;
-                            }
-                            <option value="@itemModel.ItemId">@optionText</option>
-                        }
-                    }
-                </select>
-            }
-        }
-        <div style="float: left; font-size: 12px; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">
-            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ItemModels[0].ImageTitle" type="number" value="@defaultOrderQty" />
+        <div style="font-size: 12px; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">
+            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="@defaultOrderQty" />
             @if (defaultOrderQty == "")
             {
-                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ItemModels[0].ImageTitle" /></a>
+                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount, @imageIndex);" style="float: left;" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ItemModels[0].ImageTitle" /></a>
             }
             else
             {
-                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ItemModels[0].ImageTitle" /></a>
+                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" style="float: left;" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
             }
         </div>
+        <br style="clear: both;" />
         shoppingCartItemModel = shoppingCartItems?.FirstOrDefault(x => x.ItemId == itemMasterModel.ItemModels[0].ItemId);
-        if (shoppingCartItemModel != null)
+        <span style="font-family: Arial; font-size: 12px; font-weight: bold;">
+            <i class="fa fa-remove" id="spnMessageRemove@(imageIndex)" style="color: #ff0000; display: none; padding-left: 7px; padding-right: 1px;"></i>
+            <span id="spnMessageError@(imageIndex)" style="color: #ff0000; display: none; font-size: 12px; padding-right: 5px;">Error???</span>
+        </span>
+        if (itemMasterModel.ItemModels.Count > 1)
         {
-            <span style="font-family: Arial; font-size: 12px; font-weight: bold;">
-                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-                <span style="color: #a54000; font-size: 12px; padding-right: 5px;">Added...<span style="color: #0000ff; font-size:12px;">@(shoppingCartItemModel?.OrderQty)</span></span>
+            <span id="spnMessageItem@(imageIndex)" style="color: #0000ff; font-family: Arial; font-size: 12px; font-weight: bold;">
+                Select item from below
                 <br style="clear: both;">
             </span>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton@(imageIndex)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #a50040; font-family: Arial; font-size: 12px; font-weight: bold;">
+                    --- Item(s) ---<span class="caret" style="color: #000000; font-size: 20px;">&nbsp;&nbsp;&nbsp;</span>
+                </button>
+                <table class="dropdown-menu" aria-labelledby="dropdownMenuButton@(imageIndex)" style="font-size: 12px; width: 100%;">
+                    <tr>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px;">Rate</th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; width: 100%;">Spec(s)</th>
+                    </tr>
+                    @foreach (var itemModel in itemMasterModel.ItemModels)
+                    {
+                        <tr>
+                            @{
+                                optionText = "";
+                                if (itemModel.ItemItemSpecModels != null && itemModel.ItemItemSpecModels.Count > 0)
+                                {
+                                    prefixString = "";
+                                    foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
+                                    {
+                                        optionText += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                                        prefixString = " | ";
+                                    }
+                                }
+                            }
+                            <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px;"><a href="javascript: void(0);" onclick="javascript: return tempFunction('@itemModel.ItemId', '@itemModel.ItemRateFormatted', '@optionText', '@imageIndex');" style="font-weight: bold; text-decoration: underline;">@itemModel.ItemRateFormatted</a></td>
+                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 11px; font-weight: 600; padding: 3px;">
+                                @optionText
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <span id="itemId@(imageIndex)" style="display: none;"></span>
+        }
+        else
+        {
+            <span id="itemId@(imageIndex)" style="display: none;">@itemMasterModel.ItemModels[0].ItemId</span>
         }
     }//else (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
-    <br style="clear: both;" />
-    <span id="itemId@(imageIndex)" style="display: none;">@itemMasterModel.ItemModels[0].ItemId</span>
+    @*<br style="clear: both;" />*@
 }

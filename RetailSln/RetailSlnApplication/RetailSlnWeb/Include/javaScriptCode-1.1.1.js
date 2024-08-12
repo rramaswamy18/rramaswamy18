@@ -60,8 +60,7 @@ function validateDecimal(event, inputData) {
             returnValue = false;
         }
     }
-
-    alert(returnValue + " " + event.keyCode + " " + inputData + " " + inputData.indexOf('.'));
+    //alert(returnValue + " " + event.keyCode + " " + inputData + " " + inputData.indexOf('.'));
     return returnValue;
 }
 function ajaxGet(url, queryString, ajaxUpdateTargetIdSuccess, ajaxUpdateTargetIdError, menuLinkNamePrefix, menuLinkIndex, menuLinkCount, className, selectedClassName) {

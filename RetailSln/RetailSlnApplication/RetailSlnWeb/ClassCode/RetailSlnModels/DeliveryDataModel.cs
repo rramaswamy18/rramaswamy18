@@ -40,6 +40,10 @@ namespace RetailSlnModels
 
         public long? PrimaryTelephoneTelephoneCode { set; get; }
 
+        public long OrderHeaderId { set; get; }
+
+        public DemogInfoAddressModel DeliveryAddressModel { set; get; }
+
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

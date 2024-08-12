@@ -15,8 +15,6 @@ namespace RetailSlnModels
 
         public string HSNCode { set; get; }
 
-        public string ItemDesc { set; get; }
-
         public float? ItemDiscountAmount { set; get; }
 
         public float? ItemDiscountPercent { set; get; }

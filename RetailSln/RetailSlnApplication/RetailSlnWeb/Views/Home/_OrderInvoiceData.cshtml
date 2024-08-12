@@ -1,0 +1,97 @@
+﻿@model RetailSlnModels.PaymentInfo1Model
+@using RetailSlnCacheData
+<table class="table table-responsive">
+    <tr>
+        <th class="text-left" colspan="2" scope="row">
+            <span style="color: #000000; font-weight: bold;">Dear Valued Customer,</span>
+            <br />
+            Please find the details of your purchase
+        </th>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Order#
+        </th>
+        <td class="text-left">
+            @Model.PaymentDataModel.OrderHeaderId
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Invoice Amount
+        </th>
+        <td class="text-left">
+            @Model.PaymentDataModel.OrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            User Name
+        </th>
+        <td class="text-left">
+            @Model.OrderSummaryModel.UserFullName
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Email Address
+        </th>
+        <td class="text-left">
+            @Model.OrderSummaryModel.EmailAddress
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Gift Cert Payment Amount
+        </th>
+        <td class="text-left">
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Coupon Payment Amount
+        </th>
+        <td class="text-left">
+        </td>
+    </tr>
+    @*<tr>
+        <th class="text-left" scope="row">
+            Name on card
+        </th>
+        <td class="text-left">
+            @Model.CardHolderName
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Credit Card Last 4
+        </th>
+        <td class="text-left">
+            @Model.CreditCardNumberLast4
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Credit Card Payment Amount
+        </th>
+        <td class="text-left">
+            @Model.CreditCardPaymentAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            CC Process Status
+        </th>
+        <td class="text-left">
+            @Model.CreditCardProcessStatus
+        </td>
+    </tr>
+    <tr>
+        <th class="text-left" scope="row">
+            Unique Ref#
+        </th>
+        <td class="text-left">
+            @Model.CreditCardProcessMessage
+        </td>
+    </tr>*@
+</table>

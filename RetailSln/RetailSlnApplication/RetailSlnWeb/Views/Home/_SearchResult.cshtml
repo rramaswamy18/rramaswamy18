@@ -4,15 +4,15 @@
     var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
     paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
     paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
-    paymentInfoModel.ShoppingCartModel.BackToTop = false;
-    paymentInfoModel.ShoppingCartModel.Checkout = false;
+    paymentInfoModel.ShoppingCartModel.BackToTop = true;
+    paymentInfoModel.ShoppingCartModel.Checkout = true;
     paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
     paymentInfoModel.ShoppingCartModel.ShoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
     paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
 }
 Search results for : <span style="color: #000000;">@Model.SearchKeywordText</span>
 <br />
-@Html.Partial("_SearchResultItem", Model.ItemListModel)
+@Html.Partial("_SearchResultItemMaster", Model.ItemMasterListModel)
 <br />
 @Html.Partial("_SearchResultCategory", Model.CategoryListModel)
 <br />

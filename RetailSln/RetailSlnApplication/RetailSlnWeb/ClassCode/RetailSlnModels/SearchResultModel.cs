@@ -11,7 +11,7 @@ namespace RetailSlnModels
         public string SearchKeywordText { set; get; }
         public List<SearchMetaDataModel> SearchMetaDataModels { set; get; }
         public CategoryListModel CategoryListModel { set; get; }
-        public ItemListModel ItemListModel { set; get; }
+        public ItemMasterListModel ItemMasterListModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

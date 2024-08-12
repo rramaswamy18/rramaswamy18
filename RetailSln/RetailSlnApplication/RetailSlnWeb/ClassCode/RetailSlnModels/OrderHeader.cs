@@ -16,7 +16,5 @@ namespace RetailSlnModels
         public string OrderNumber { set; get; }
         public long OrderStatusId { set; get; }
         public long PersonId { set; get; }
-        public long? TelephoneCountryId { set; get; }
-        public long? TelephoneNumber { set; get; }
     }
 }

@@ -14,8 +14,6 @@ namespace RetailSlnModels
 
         public long BundleItemId { set; get; }
 
-        public string ItemDesc { set; get; }
-
         public long ItemId { set; get; }
 
         public string ItemShortDesc { set; get; }

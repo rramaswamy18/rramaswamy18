@@ -20,8 +20,6 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,OrderDateTime" + Environment.NewLine;
             sqlStmt += "              ,OrderStatusId" + Environment.NewLine;
             sqlStmt += "              ,PersonId" + Environment.NewLine;
-            sqlStmt += "              ,TelephoneCountryId" + Environment.NewLine;
-            sqlStmt += "              ,TelephoneNumber" + Environment.NewLine;
             sqlStmt += "              ,AddUserId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
@@ -33,8 +31,6 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,@OrderDateTime" + Environment.NewLine;
             sqlStmt += "              ,@OrderStatusId" + Environment.NewLine;
             sqlStmt += "              ,@PersonId" + Environment.NewLine;
-            sqlStmt += "              ,@TelephoneCountryId" + Environment.NewLine;
-            sqlStmt += "              ,@TelephoneNumber" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
@@ -44,8 +40,6 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.VarChar, 21);
             sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@TelephoneCountryId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@TelephoneNumber", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
             sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
             sqlCommand.Parameters["@OrderHeaderId"].Direction = ParameterDirection.ReturnValue;
@@ -60,7 +54,6 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,DimensionUnitId" + Environment.NewLine;
             sqlStmt += "              ,ItemId" + Environment.NewLine;
             sqlStmt += "              ,ItemShortDesc" + Environment.NewLine;
-            sqlStmt += "              ,ItemDesc" + Environment.NewLine;
             sqlStmt += "              ,ItemRate" + Environment.NewLine;
             sqlStmt += "              ,LengthValue" + Environment.NewLine;
             sqlStmt += "              ,OrderAmount" + Environment.NewLine;
@@ -82,7 +75,6 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,@DimensionUnitId" + Environment.NewLine;
             sqlStmt += "              ,@ItemId" + Environment.NewLine;
             sqlStmt += "              ,@ItemShortDesc" + Environment.NewLine;
-            sqlStmt += "              ,@ItemDesc" + Environment.NewLine;
             sqlStmt += "              ,@ItemRate" + Environment.NewLine;
             sqlStmt += "              ,@LengthValue" + Environment.NewLine;
             sqlStmt += "              ,@OrderAmount" + Environment.NewLine;
@@ -102,7 +94,6 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@DimensionUnitId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ItemShortDesc", SqlDbType.NVarChar, 512);
-            sqlCommand.Parameters.Add("@ItemDesc", SqlDbType.NVarChar, 1024);
             sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
             sqlCommand.Parameters.Add("@LengthValue", SqlDbType.Float);
             sqlCommand.Parameters.Add("@OrderAmount", SqlDbType.Float);
@@ -167,28 +158,28 @@ namespace RetailSlnDataLayer
             sqlStmt += "        INSERT RetailSlnSch.OrderPayment" + Environment.NewLine;
             sqlStmt += "              (" + Environment.NewLine;
             sqlStmt += "               ClientId" + Environment.NewLine;
+            sqlStmt += "              ,CouponId" + Environment.NewLine;
             sqlStmt += "              ,CreditCardDataId" + Environment.NewLine;
             sqlStmt += "              ,GiftCertId" + Environment.NewLine;
             sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
-            //sqlStmt += "              ,PaymentMethodId" + Environment.NewLine;
             sqlStmt += "              ,AddUserId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
             sqlStmt += "        OUTPUT INSERTED.OrderHeaderId" + Environment.NewLine;
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @ClientId" + Environment.NewLine;
+            sqlStmt += "              ,@CouponId" + Environment.NewLine;
             sqlStmt += "              ,@CreditCardDataId" + Environment.NewLine;
             sqlStmt += "              ,@GiftCertId" + Environment.NewLine;
             sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
-            //sqlStmt += "              ,@PaymentMethodId" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CouponId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@CreditCardDataId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@GiftCertId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
-            //sqlCommand.Parameters.Add("@PaymentMethodId ", SqlDbType.Int);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
             sqlCommand.Parameters.Add("@OrderPaymentId", SqlDbType.BigInt);
             sqlCommand.Parameters["@OrderPaymentId"].Direction = ParameterDirection.ReturnValue;
@@ -248,12 +239,11 @@ namespace RetailSlnDataLayer
         }
         private static SqlCommand BuildSqlCommandItemInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            string sqlStmt = "INSERT RetailSlnSch.Item(ClientId, ExpectedAvailability, ItemDesc, ItemRate, ItemShortDesc, ItemStarCount, ItemStatusId, AddUserId, UpdUserId)";
-            sqlStmt += "OUTPUT INSERTED.ItemId SELECT @ClientId, @ExpectedAvailability, @ItemDesc, @ItemRate, @ItemShortDesc, @ItemStarCount, @ItemStatusId, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
+            string sqlStmt = "INSERT RetailSlnSch.Item(ClientId, ExpectedAvailability, ItemRate, ItemShortDesc, ItemStarCount, ItemStatusId, AddUserId, UpdUserId)";
+            sqlStmt += "OUTPUT INSERTED.ItemId SELECT @ClientId, @ExpectedAvailability, @ItemRate, @ItemShortDesc, @ItemStarCount, @ItemStatusId, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ExpectedAvailability", SqlDbType.NVarChar, 50);
-            sqlCommand.Parameters.Add("@ItemDesc", SqlDbType.NVarChar, 250);
             sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
             sqlCommand.Parameters.Add("@ItemShortDesc0", SqlDbType.NVarChar, 512);
             sqlCommand.Parameters.Add("@ItemShortDesc1", SqlDbType.NVarChar, 512);
@@ -266,11 +256,10 @@ namespace RetailSlnDataLayer
         }
         private static SqlCommand BuildSqlCommandItemUpdate(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            string sqlStmt = "UPDATE RetailSlnSch.Item SET ExpectedAvailability = @ExpectedAvailability, ItemDesc = @ItemDesc, ItemRate = @ItemRate, ItemShortDesc = @ItemShortDesc, ItemStarCount = @ItemStarCount, ItemStatusId = @ItemStatusId, UpdUserId = @LoggedInUserId, UpdUserName = SUSER_NAME(), UpdDateTime = GETDATE() WHERE ItemId = @ItemId";
+            string sqlStmt = "UPDATE RetailSlnSch.Item SET ExpectedAvailability = @ExpectedAvailability, ItemRate = @ItemRate, ItemShortDesc = @ItemShortDesc, ItemStarCount = @ItemStarCount, ItemStatusId = @ItemStatusId, UpdUserId = @LoggedInUserId, UpdUserName = SUSER_NAME(), UpdDateTime = GETDATE() WHERE ItemId = @ItemId";
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ExpectedAvailability", SqlDbType.NVarChar, 50);
-            sqlCommand.Parameters.Add("@ItemDesc", SqlDbType.NVarChar, 250);
             sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
             sqlCommand.Parameters.Add("@ItemShortDesc", SqlDbType.NVarChar, 250);
             sqlCommand.Parameters.Add("@ItemStarCount", SqlDbType.Int);

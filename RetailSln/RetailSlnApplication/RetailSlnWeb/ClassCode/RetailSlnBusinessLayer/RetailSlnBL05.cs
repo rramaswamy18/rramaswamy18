@@ -167,7 +167,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = shippingAndHandlingChargesRate,
         //                ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + paymentInfoModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " KG - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
@@ -184,7 +183,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ApiShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemRate = shippingAndHandlingChargesRate,
         //                    ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
@@ -223,7 +221,6 @@ namespace RetailSlnBusinessLayer
         //            shoppingCartItemModel.DimensionUnitId = (DimensionUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecUnitValue);
         //            shoppingCartItemModel.HeightValue = float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.AttribName == "ProductHeight").ItemSpecValue);
         //            shoppingCartItemModel.HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay;
-        //            shoppingCartItemModel.ItemDesc = itemModel.ItemDesc;
         //            shoppingCartItemModel.ItemDiscountAmount = 0;
         //            shoppingCartItemModel.ItemDiscountPercent = 0;
         //            shoppingCartItemModel.ItemRate = itemModel.ItemRate;
@@ -321,7 +318,6 @@ namespace RetailSlnBusinessLayer
         //        {
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemRateBeforeDiscount = null,
@@ -354,7 +350,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ApiShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemRate = apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
         //                    ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
@@ -388,7 +383,6 @@ namespace RetailSlnBusinessLayer
         //            (
         //                new ApiShoppingCartItemModel
         //                {
-        //                    ItemDesc = null,
         //                    ItemId = null,
         //                    ItemRate = apiShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
         //                    ItemShortDesc = salesTaxCaptionId.CodeDataDesc0,
@@ -428,7 +422,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemRateBeforeDiscount = null,
@@ -444,7 +437,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemRateBeforeDiscount = null,
@@ -460,7 +452,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemRateBeforeDiscount = null,
@@ -476,7 +467,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemRateBeforeDiscount = null,
@@ -492,7 +482,6 @@ namespace RetailSlnBusinessLayer
         //        (
         //            new ApiShoppingCartItemModel
         //            {
-        //                ItemDesc = null,
         //                ItemId = null,
         //                ItemRate = null,
         //                ItemRateBeforeDiscount = null,

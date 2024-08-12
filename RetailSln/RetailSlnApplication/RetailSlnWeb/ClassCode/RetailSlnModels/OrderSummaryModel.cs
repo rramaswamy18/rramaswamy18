@@ -18,5 +18,6 @@ namespace RetailSlnModels
         public string TelephoneCode { set; get; }
         public string TelephoneCountryId { set; get; }
         public string TelephoneNumber { set; get; }
+        public string UserFullName { set; get; }
     }
 }

@@ -467,7 +467,6 @@ namespace RetailSlnDataLayer
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                             ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
                             ItemName = sqlDataReader["ItemName"].ToString(),
-                            ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                             ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
                             ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
                             ImageName = sqlDataReader["ImageName"].ToString(),
@@ -734,7 +733,6 @@ namespace RetailSlnDataLayer
         //                    ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
         //                    ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
         //                    ItemName = sqlDataReader["ItemName"].ToString(),
-        //                    ItemDesc = sqlDataReader["ItemDesc"].ToString(),
         //                    ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
         //                    ImageName = sqlDataReader["ImageName"].ToString(),
         //                    ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
@@ -745,7 +743,6 @@ namespace RetailSlnDataLayer
         //                    UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
         //                }
         //            );
-
         //        }
         //        sqlDataReader.Close();
         //    }
@@ -1026,7 +1023,6 @@ namespace RetailSlnDataLayer
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                             ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
                             ItemName = sqlDataReader["ItemName"].ToString(),
-                            ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                             ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
                             ImageName = sqlDataReader["ImageName"].ToString(),
                             ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
@@ -1205,7 +1201,6 @@ namespace RetailSlnDataLayer
                             {
                                 ItemId = long.Parse(sqlDataReader["EntityId"].ToString()),
                                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                                ItemDesc = sqlDataReader["EntityDesc"].ToString(),
                             };
                         }
                         sqlDataReaderRead = sqlDataReader.Read();
@@ -1232,9 +1227,13 @@ namespace RetailSlnDataLayer
                 sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
                 sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
                 sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+                //sqlStmt += "UNION" + Environment.NewLine;
+                //sqlStmt += "        SELECT DISTINCT 'ITEMMASTER' AS EntityTypeNameDesc, ItemMaster.ItemMasterId, 1 AS SeqNum" + Environment.NewLine;
+                //sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
+                //sqlStmt += "         WHERE ItemMasterDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
                 sqlStmt += "      ORDER BY" + Environment.NewLine;
-                sqlStmt += "               SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
-                sqlStmt += "              ,SearchMetaData.SeqNum" + Environment.NewLine;
+                sqlStmt += "               EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 List<SearchMetaDataModel> searchMetaDataModels = new List<SearchMetaDataModel>();

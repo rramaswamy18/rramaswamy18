@@ -118,7 +118,7 @@ namespace RetailSlnCacheData
             foreach (var itemSpecModel in retailSlnInitModel.ItemSpecModels)
             {
                 itemSpecModel.ItemSpecMasterModel = retailSlnInitModel.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemSpecModel.ItemSpecMasterId);
-                itemSpecModel.ItemSpecValueForDisplay = itemSpecModel.ItemSpecMasterModel.SpecDesc + ": " + itemSpecModel.ItemSpecValue;
+                itemSpecModel.ItemSpecValueForDisplay = /*itemSpecModel.ItemSpecMasterModel.SpecDesc + ": " +*/ itemSpecModel.ItemSpecValue;
                 if (itemSpecModel.ItemSpecValue != "")
                 {
                     if (itemSpecModel.ItemSpecMasterModel.CodeTypeId != null)
@@ -153,6 +153,14 @@ namespace RetailSlnCacheData
             {
                 itemMasterModel.ItemModels = retailSlnInitModel.ItemModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
                 itemMasterModel.ImageTitle = itemMasterModel.ItemMasterDesc + " #" + itemMasterModel.ItemMasterId;
+                if (itemMasterModel.ItemMasterItemSpecModels == null)
+                {
+                    itemMasterModel.ItemMasterItemSpecModels = new List<ItemSpecModel>();
+                }
+                if (itemMasterModel.ItemMasterItemSpecModelsForDisplay == null)
+                {
+                    itemMasterModel.ItemMasterItemSpecModelsForDisplay = new Dictionary<string, ItemSpecModel>();
+                }
             }
             foreach (var itemModel in retailSlnInitModel.ItemModels)
             {
@@ -173,6 +181,10 @@ namespace RetailSlnCacheData
                 itemModel.ItemInfoModels = retailSlnInitModel.ItemInfoModels.FindAll(x => x.ItemId == itemModel.ItemId);
                 itemModel.ItemImageModels = retailSlnInitModel.ItemImageModels.FindAll(x => x.ItemId == itemModel.ItemId);
                 itemModel.ItemSpecModelsForDisplay = new Dictionary<string, ItemSpecModel>();
+                foreach (var itemSpecModel in itemModel.ItemSpecModels)
+                {
+                    itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
+                }
                 //foreach (var itemSpecModel in itemModel.ItemSpecModels)
                 //{
                 //    switch (itemSpecModel.ItemSpecMasterModel.SpecName)

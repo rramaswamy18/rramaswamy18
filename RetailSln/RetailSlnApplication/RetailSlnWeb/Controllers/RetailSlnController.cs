@@ -821,17 +821,18 @@ namespace RetailSlnWeb.Controllers
                 actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
                 controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
                 var parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
+                parentCategoryId = long.TryParse(id, out long tempParentCategoryId) ? tempParentCategoryId : parentCategoryId;
+                CategoryModel categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == parentCategoryId);
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
                     ActionName = actionName,
                     ControllerName = controllerName,
-                    ParentCategoryId = long.TryParse(id, out long tempParentCategoryId) ? tempParentCategoryId : parentCategoryId,
-                    PageNum = int.TryParse(pageNum, out int tempPageNum) ? tempPageNum : 50,
-                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                    ParentCategoryId = parentCategoryId,
+                    PageNum = int.TryParse(pageNum, out int tempPageNum) ? tempPageNum : 1,
+                    PageSize = categoryModel.MaxPerPage, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
                 };
                 success = true;
                 processMessage = "SUCCESS!!!";
-                var categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == long.Parse(id));
                 htmlString = archLibBL.ViewToHtmlString(this, categoryModel.ViewName, orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -923,14 +924,16 @@ namespace RetailSlnWeb.Controllers
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-            var htmlString = retailSlnBL.PaymentInfo3(paymentInfoModel, sessionObjectModel, razorpay_payment_id, razorpay_order_id, razorpay_signature, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            string htmlString = retailSlnBL.PaymentInfo3(paymentInfoModel, sessionObjectModel, razorpay_payment_id, razorpay_order_id, razorpay_signature, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            ArchLibBL archLibBL = new ArchLibBL();
+            ActionResult actionResult = View("PaymentInfo3", paymentInfoModel);
             FormsAuthentication.SignOut();
             Session.Abandon();
             Request.GetOwinContext().Authentication.SignOut();
             Session["SessionObject"] = null;
             Session["PaymentInfo"] = null;
             Session.Abandon();
-            return View("PaymentInfo3", null, htmlString);
+            return actionResult;
         }
 
         // POST: PaymentInfo4

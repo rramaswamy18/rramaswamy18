@@ -5,10 +5,22 @@
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCartModel"];
-    if (shoppingCartModel == null)
+    var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+    paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
+    paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
+    paymentInfoModel.ShoppingCartModel.BackToTop = true;
+    paymentInfoModel.ShoppingCartModel.Checkout = true;
+    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
+    //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = new ShoppingCartSummaryModel();
+    paymentInfoModel.ShoppingCartModel.ShoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
+    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
+    for (int i = 1; i < paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count; i++)
     {
-        shoppingCartModel = new ShoppingCartModel();
+        paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.RemoveAt(1);
+    }
+    foreach (var shoppingCartItem in paymentInfoModel.ShoppingCartModel.ShoppingCartItems)
+    {
+        shoppingCartItem.ShoppingCartItemSummarys = new List<ShoppingCartItemModel>();
     }
 }
 <div class="center">
@@ -20,12 +32,13 @@
     </div>
     <div class="col-md-12" id="divShoppingCart">
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
-        @Html.Partial("_ShoppingCart", shoppingCartModel)
+        @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
     </div>
 </div>
 <br style="clear: both;" />
 @{
-    string scrollIntoViewDocumentElementId = "", focusDocumentElementId = ""; ;
+    //string scrollIntoViewDocumentElementId = "";
+    string focusDocumentElementId = ""; ;
     switch (Model.QueryString)
     {
         case "REGISTER":

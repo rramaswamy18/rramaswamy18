@@ -1,0 +1,118 @@
+﻿@model ItemMasterListModel
+@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@*
+    @model string
+    @using ArchitectureLibraryCacheData
+    @using RetailSlnCacheData
+    @using RetailSlnEnumerations
+    @{
+        var clientId = ArchLibCache.ClientId;
+        var clientName = ArchLibCache.ClientName;
+        var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+        var searchText = Model.Trim().ToLower();
+        var itemModels = RetailSlnCache.ItemModels.Where(x => x.ItemShortDesc0.ToLower().Contains(searchText) || x.ItemShortDesc1.ToLower().Contains(searchText) || x.ItemShortDesc2.ToLower().Contains(searchText) || x.ItemShortDesc3.ToLower().Contains(searchText)).ToList();
+        int index = 0;
+    }
+*@
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int index = 0, index1;
+    bool brFlag;
+    string prefixString;
+}
+<table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 73%;">
+    <tr>
+        <th class="text-center" style="vertical-align: top;">
+            #
+        </th>
+        <th class="text-center" style="vertical-align: top;">
+            Id
+        </th>
+        <th class="text-left" style="vertical-align: top; width: 279px;">
+            Item
+        </th>
+        <th class="text-left" style="vertical-align: top; width: 99px;">
+        </th>
+        <th class="text-left" style="vertical-align: top; white-space: nowrap;">
+        </th>
+    </tr>
+    @foreach (var itemMasterModel in Model.ItemMasterModels)
+    {
+        index++;
+        <tr>
+            <td style="vertical-align: top;">
+                @index
+            </td>
+            <td style="vertical-align: top;">
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+                    @itemMasterModel.ItemMasterId
+                </a>
+            </td>
+            <td class="text-left" style="vertical-align: top;">
+                @itemMasterModel.ItemMasterDesc
+                <br style="clear: both;" />
+                @if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                {
+                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
+                }
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>
+            </td>
+            <td class="text-left" style="vertical-align: top;">
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+                    <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 90px; width: 90px;" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
+                </a>
+            </td>
+            <td class="text-left" style="vertical-align: top;">
+                <table style="padding: 5px;">
+                    @foreach (var itemModel in itemMasterModel.ItemModels)
+                    {
+                        prefixString = "";
+                        brFlag = false;
+                        index1 = 0;
+                        <tr>
+                            <td style="font-size: 13px; padding: 5px; vertical-align: top;">
+                                @itemModel.ItemRateFormatted
+                            </td>
+                            <td style="padding: 5px; vertical-align: top;">
+                                <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
+                                &nbsp;
+                                <a href="javascript: void(0);" onclick="javascript: return addToCartGet1_onclick(@itemMasterModel.ItemMasterId, @index);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+                                <br style="clear: both;" />
+                                <span style="color: #000000; font-size: 11px; font-weight: 600;">
+                                    @if (itemMasterModel.ItemMasterItemSpecModels != null && itemMasterModel.ItemMasterItemSpecModels.Count > 0)
+                                    {
+                                        foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
+                                        {
+                                            @(prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
+                                            prefixString = " | ";
+                                            brFlag = true;
+                                        }
+                                    }
+                                    @if (itemModel.ItemItemSpecModels.Count > 0)
+                                    {
+                                        foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
+                                        {
+                                            @(prefixString + ++index1 + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
+                                            prefixString = " | ";
+                                            brFlag = true;
+                                        }
+                                        <br style="clear: both;" />
+                                    }
+                                    @if (brFlag)
+                                    {
+                                        <br style="clear: both;" />
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    }
+</table>

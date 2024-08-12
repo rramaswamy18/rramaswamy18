@@ -5,6 +5,7 @@ using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using RetailSlnBusinessLayer;
+using RetailSlnCacheData;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
@@ -63,13 +64,14 @@ namespace RetailSlnWeb.Controllers
                 actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
                 controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
                 parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
+                CategoryModel categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == parentCategoryId);
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
                     ActionName = actionName,
                     ControllerName = controllerName,
                     ParentCategoryId = parentCategoryId,
                     PageNum = 1,
-                    PageSize = 50, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
+                    PageSize = categoryModel.MaxPerPage, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
                 };
                 actionResult = View("Index", orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");

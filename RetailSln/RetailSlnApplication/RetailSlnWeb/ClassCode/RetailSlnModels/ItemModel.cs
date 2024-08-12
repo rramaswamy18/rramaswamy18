@@ -29,11 +29,6 @@ namespace RetailSlnModels
 
         public string ImageTitle { set; get; }
 
-        [Display(Name = "Description")]
-        [MaxLength(1024, ErrorMessage = "Desc not to exceed 1024 characters")]
-        [Required(ErrorMessage = "Please enter description")]
-        public string ItemDesc { set; get; }
-
         public YesNoEnum? ItemForSaleId { set; get; }
 
         public long ItemMasterId { set; get; }

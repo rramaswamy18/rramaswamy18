@@ -125,7 +125,6 @@ namespace RetailSlnDataLayer
                         ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                         ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
                         ItemName = sqlDataReader["ItemName"].ToString(),
-                        ItemDesc = sqlDataReader["ItemDesc"].ToString(),
                         ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
                         ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
                         ImageName = sqlDataReader["ImageName"].ToString(),

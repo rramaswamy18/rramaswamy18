@@ -15,7 +15,6 @@ namespace RetailSlnModels
         public DimensionUnitEnum DimensionUnitId { set; get; }
         public float HeightValue { set; get; }
         public string HSNCode { set; get; }
-        public string ItemDesc { set; get; }
         public float ItemDiscountAmount { set; get; }
         public long? ItemId { set; get; }
         public float ItemRate { set; get; }
