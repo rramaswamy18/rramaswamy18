@@ -11,10 +11,12 @@ namespace RetailSlnModels
         public float? AmountPaidByCreditCard { set; get; }
         public float? AmountPaidByGiftCert { set; get; }
         public float? BalanceDue { set; get; }
+        public string BalanceDueFormatted { set; get; }
         public bool ShowDiscountsAdditionalCharges { set; get; }
         public float? TotalAmountPaid { set; get; }
         public float? TotalDiscountAmount { set; get; }
         public float? TotalInvoiceAmount { set; get; }
+        public string TotalInvoiceAmountFormatted { set; get; }
         public long? TotalItemsCount { set; get; }
         public float? TotalOrderAmount { set; get; }
         public float? TotalOrderAmountBeforeDiscount { set; get; }

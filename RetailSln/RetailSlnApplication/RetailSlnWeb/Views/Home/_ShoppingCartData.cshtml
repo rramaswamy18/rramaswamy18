@@ -17,7 +17,6 @@
 }
 else
 {
-    <span>@Model.ShoppingCartItems.Count</span>
     <table class="table table-striped">
         <tr>
             @if (Model.Checkout)
@@ -170,6 +169,10 @@ else
                             totalWeightFlag = false;
                             <br />
                             <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.ShoppingCartSummaryModel.TotalWeightCalc&nbsp;Grams</span>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(shoppingCartSummary.OrderComments))
+                        { 
+                            @shoppingCartSummary.OrderComments
                         }
                     </td>
                     <td class="text-right">@shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")</td>

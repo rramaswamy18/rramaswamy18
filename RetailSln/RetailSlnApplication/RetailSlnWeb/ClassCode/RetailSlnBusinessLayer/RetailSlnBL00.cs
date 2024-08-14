@@ -617,18 +617,30 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.OpenSqlConnection();
                 if (razorPayIntegration.CheckPaymentSuccess(razorpay_payment_id, razorpay_order_id, razorpay_signature))
                 {
-                    paymentInfoModel.PaymentDataModel = new PaymentData1Model
-                    {
-                        PaymentAmount = float.Parse(paymentInfoModel.CreditCardDataModel.CreditCardAmount),
-                        PaymentReferenceNumber = "Payment Id : " + razorpay_payment_id + " - Order Id : " + razorpay_order_id,
-                    };
                     creditCardServiceBL.UpdCreditCardData(paymentInfoModel.CreditCardDataModel.CreditCardDataId, razorpay_payment_id, razorpay_order_id, razorpay_signature, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    var shoppingCartSummaryItemPaymentAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AmountPaidByCreditCard);
-                    shoppingCartSummaryItemPaymentAmount.OrderAmount = paymentInfoModel.PaymentDataModel.PaymentAmount;
-                    var shoppingCartSummaryItemTotalInvoiceAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalInvoiceAmount);
-                    var shoppingCartSummaryItemBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
-                    shoppingCartSummaryItemBalanceDue.OrderAmount -= paymentInfoModel.PaymentDataModel.PaymentAmount;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid += float.Parse(paymentInfoModel.CreditCardDataModel.CreditCardAmount);
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount - paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    var shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AmountPaidByCreditCard);
+                    shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
+                    shoppingCartSummaryItem.OrderComments = "Payment Id : " + razorpay_payment_id + " - Order Id : " + razorpay_order_id;
+                    shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
+                    shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
+                    shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+                    shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue;
                     CreateOrder(paymentInfoModel, sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
+                    string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
+                    string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
+                    emailBodyHtml += signatureHtml;
+                    PDFUtility pDFUtility = new PDFUtility();
+                    string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
+                    pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, emailDirectoryName + paymentInfoModel.OrderSummaryModel.OrderHeaderId + ".pdf");
+                    List<string> emailAttachmentFileNames = new List<string>
+                    {
+                        emailDirectoryName + paymentInfoModel.OrderSummaryModel.OrderHeaderId + ".pdf",
+                    };
+                    archLibBL.SendEmail(paymentInfoModel.OrderSummaryModel.EmailAddress, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
                     return null;
                 }
                 else
@@ -724,9 +736,11 @@ namespace RetailSlnBusinessLayer
                     AmountPaidByCreditCard = 0,
                     AmountPaidByGiftCert = 0,
                     BalanceDue = 0,
+                    BalanceDueFormatted = "",
                     TotalAmountPaid = 0,
                     TotalDiscountAmount = 0,
                     TotalInvoiceAmount = 0,
+                    TotalInvoiceAmountFormatted = "",
                     TotalItemsCount = 0,
                     TotalOrderAmount = 0,
                     TotalOrderAmountBeforeDiscount = 0,
@@ -1211,7 +1225,9 @@ namespace RetailSlnBusinessLayer
                 }
             );
             paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = totalInvoiceAmount;
+            paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = totalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
             paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount = totalInvoiceAmount;
+            paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted = totalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
         }
         private void BuildCreditCardDataModel(PaymentInfo1Model paymentInfoModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -1261,10 +1277,13 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.DeliveryDataModel.OrderHeaderId = orderHeader.OrderHeaderId;
                 paymentInfoModel.OrderSummaryModel.OrderHeaderId = orderHeader.OrderHeaderId;
                 ApplicationDataContext.AddDeliveryInfo(paymentInfoModel.DeliveryDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                paymentInfoModel.PaymentDataModel.CouponId = 0;
-                paymentInfoModel.PaymentDataModel.CreditCardDataId = paymentInfoModel.CreditCardDataModel.CreditCardDataId;
-                paymentInfoModel.PaymentDataModel.GiftCertId = 0;
-                paymentInfoModel.PaymentDataModel.OrderHeaderId = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value;
+                paymentInfoModel.PaymentDataModel = new PaymentData1Model
+                {
+                    CouponId = 0,
+                    CreditCardDataId = paymentInfoModel.CreditCardDataModel.CreditCardDataId,
+                    GiftCertId = 0,
+                    OrderHeaderId = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value,
+                };
                 paymentInfoModel.OrderSummaryModel.UserFullName = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim();
                 ApplicationDataContext.AddOrderPayment(paymentInfoModel.PaymentDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return;

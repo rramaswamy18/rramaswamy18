@@ -1,97 +1,73 @@
-﻿@model RetailSlnModels.PaymentInfo1Model
+﻿@model PaymentInfo1Model
+@using ArchitectureLibraryCacheData
 @using RetailSlnCacheData
-<table class="table table-responsive">
+@using RetailSlnModels
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
     <tr>
-        <th class="text-left" colspan="2" scope="row">
-            <span style="color: #000000; font-weight: bold;">Dear Valued Customer,</span>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" />
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "BusinessName1", "")
             <br />
-            Please find the details of your purchase
-        </th>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            Order#
-        </th>
-        <td class="text-left">
-            @Model.PaymentDataModel.OrderHeaderId
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressLine1", "")
+            <br />
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCountryName", "")
+            <br />
+            <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
+            <br />
+            <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/SMSIcon3_Small.png" />
+            <br />
+            <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
         </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            Invoice Amount
-        </th>
-        <td class="text-left">
-            @Model.PaymentDataModel.OrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-        </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            User Name
-        </th>
-        <td class="text-left">
-            @Model.OrderSummaryModel.UserFullName
-        </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            Email Address
-        </th>
-        <td class="text-left">
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
             @Model.OrderSummaryModel.EmailAddress
+            <br />
+            @Model.OrderSummaryModel.UserFullName
+            <br />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
+            {
+                <br />
+                @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
+            }
+            <br />
+            @Model.DeliveryDataModel.DeliveryAddressModel.CityName
+            <br />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
+            <br />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+            Order# @Model.OrderSummaryModel.OrderHeaderId
+            <br />
+            Prim. <a href="tel: @("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)</a>
+            <br />
+            Alt.
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.AlternateTelephoneNum))
+            {
+                <a href="tel: @("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)</a>
+            }
+            <br />
+            Amount:&nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted
+            <br />
+            Due:&nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted
         </td>
     </tr>
     <tr>
-        <th class="text-left" scope="row">
-            Gift Cert Payment Amount
-        </th>
-        <td class="text-left">
+        <td colspan="4" style="text-align: left; word-wrap: break-word;">
+            @Model.DeliveryDataModel.DeliveryInstructions
         </td>
     </tr>
     <tr>
-        <th class="text-left" scope="row">
-            Coupon Payment Amount
-        </th>
-        <td class="text-left">
+        <td colspan="4" style="border-collapse: collapse; border-style: none; border-width: 0px;">
+            @Html.Partial("_ShoppingCartEmailBody1", Model.ShoppingCartModel)
         </td>
     </tr>
-    @*<tr>
-        <th class="text-left" scope="row">
-            Name on card
-        </th>
-        <td class="text-left">
-            @Model.CardHolderName
-        </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            Credit Card Last 4
-        </th>
-        <td class="text-left">
-            @Model.CreditCardNumberLast4
-        </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            Credit Card Payment Amount
-        </th>
-        <td class="text-left">
-            @Model.CreditCardPaymentAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-        </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            CC Process Status
-        </th>
-        <td class="text-left">
-            @Model.CreditCardProcessStatus
-        </td>
-    </tr>
-    <tr>
-        <th class="text-left" scope="row">
-            Unique Ref#
-        </th>
-        <td class="text-left">
-            @Model.CreditCardProcessMessage
-        </td>
-    </tr>*@
 </table>

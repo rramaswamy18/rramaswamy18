@@ -31,6 +31,8 @@ namespace RetailSlnModels
 
         public float? OrderAmount { set; get; }
 
+        public string OrderAmountFormatted { set; get; }
+
         public float? OrderAmountBeforeDiscount { set; get; }
 
         public string OrderComments { set; get; }

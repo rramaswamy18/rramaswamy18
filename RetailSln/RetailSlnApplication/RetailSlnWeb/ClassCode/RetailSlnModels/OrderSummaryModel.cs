@@ -9,10 +9,14 @@ namespace RetailSlnModels
     {
         public string AspNetUserId { set; get; }
         //public long? DeliveryAddressId { set; get; }
+        //public float BalanceDue { set; get; }
+        //public string BalanceDueFormatted { set; get; }
         public long? OrderHeaderId { set; get; }
         public CorpAcctModel CorpAcctModel { set; get; }
         public string EmailAddress { set; get; }
         public string FirstName { set; get; }
+        //public float InvoiceAmount { set; get; }
+        //public string InvoiceAmountFormatted { set; get; }
         public string LastName { set; get; }
         public long? PersonId { set; get; }
         public string TelephoneCode { set; get; }

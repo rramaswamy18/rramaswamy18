@@ -1245,6 +1245,8 @@
     <Content Include="Views\Home\PaymentInfo3.cshtml" />
     <Content Include="Views\Home\_OrderInvoice.cshtml" />
     <Content Include="Views\Home\_OrderInvoiceData.cshtml" />
+    <Content Include="Views\Home\_ShoppingCartEmailBody1.cshtml" />
+    <Content Include="Views\Home\_OrderInvoiceDataSubject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
