@@ -7,14 +7,6 @@
             <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
                 <tr>
                     <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Order#
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @Model.OrderSummaryModel.OrderHeaderId
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
                         Delivery Address
                     </th>
                     <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
@@ -25,6 +17,22 @@
                         @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
                         <br />
                         @Model.DeliveryAddressModel.CountryDesc
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Primary Tel:
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
+                        @Model.DeliveryDataModel.PrimaryTelephoneFormatted
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Alternate Tel:
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
+                        @Model.DeliveryDataModel.AlternateTelephoneFormatted
                     </td>
                 </tr>
                 <tr>

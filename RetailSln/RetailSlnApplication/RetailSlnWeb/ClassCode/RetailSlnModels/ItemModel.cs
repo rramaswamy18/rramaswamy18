@@ -33,6 +33,8 @@ namespace RetailSlnModels
 
         public long ItemMasterId { set; get; }
 
+        public ItemMasterModel ItemMasterModel { set; get; }
+
         public string ItemName { set; get; }
 
         [Display(Name = "Item Rate")]

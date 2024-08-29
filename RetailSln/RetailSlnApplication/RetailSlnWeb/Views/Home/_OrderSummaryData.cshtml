@@ -1,0 +1,26 @@
+﻿@model RetailSlnModels.OrderSummaryModel
+@using System.Web.Mvc
+@{
+    var htmlFieldPrefix = ((ViewDataDictionary)(ViewData)).TemplateInfo.HtmlFieldPrefix;
+    htmlFieldPrefix += htmlFieldPrefix == "" ? "" : "_";
+}
+<style>
+    #@(htmlFieldPrefix)FirstName-error, #@(htmlFieldPrefix)LastName-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div class="row" style="padding-left: 18px; padding-right: 18px;">
+    <div style="float: left; padding-right: 5px;">
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })
+        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control validate", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.FirstName), style = "width: 95%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, "", new { id = htmlFieldPrefix + "FirstName-error" }).ToHtmlString()))
+    </div>
+    <div style="float: left;">
+        @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })
+        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control validate", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.LastName), style = "width: 95%;" })
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LastName, "", new { id = htmlFieldPrefix + "LastName-error" }).ToHtmlString()))
+    </div>
+</div>

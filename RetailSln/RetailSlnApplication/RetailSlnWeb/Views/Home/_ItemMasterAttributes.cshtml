@@ -1,25 +1,25 @@
-﻿@model RetailSlnModels.ItemAttributesModel
+﻿@model RetailSlnModels.ItemMasterAttributesModel
 @using RetailSlnModels
-@Html.Partial("_ItemOrder", Model.ItemModel)
+@Html.Partial("_ItemOrder", Model.ItemMasterModel)
 @{
     int i;
     <div style="float: left; width: 27px;">
         &nbsp;
     </div>
-    for (i = 0; i < Model.ItemAttributesTabs.Count; i++)
+    for (i = 0; i < Model.ItemMasterAttributesTabs.Count; i++)
     {
         <div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle; ">
-            <a id="divTab@(i)" href="javascript: void(0);" onclick="javascript: return divTab_onclick(@i, @Model.ItemAttributesTabs.Count)" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@(i + 1). @Model.ItemAttributesTabs[i]</a>
+            <a id="divTab@(i)" href="javascript: void(0);" onclick="javascript: return divTab_onclick('@i', '@Model.ItemMasterAttributesTabs.Count')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">@(i + 1). @Model.ItemMasterAttributesTabs[i]</a>
         </div>
         <div style="float: left; width: 27px;">
             &nbsp;
         </div>
     }
     <br style="clear: both;" />
-    for (i = 0; i < Model.ItemAttributesTabs.Count; i++)
+    for (i = 0; i < Model.ItemMasterAttributesTabs.Count; i++)
     {
         <div id="divTabData@(i)" class="col-md-12" style="padding-left: 27px; text-align: left;">
-            @Html.Partial(Model.ItemAttributesViews[i], Model.ItemAttributesDatas[i])
+            @Html.Partial(Model.ItemMasterAttributesViews[i], Model.ItemMasterAttributesDatas[i])
         </div>
     }
     var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
@@ -35,7 +35,7 @@
     @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
 </div>
 <script type="text/javascript">
-    divTab_onclick(@Model.TabId, @Model.ItemAttributesTabs.Count);
+    divTab_onclick('@Model.TabId', '@Model.ItemMasterAttributesTabs.Count');
     function divTab_onclick(index, count) {
         for (var i = 0; i < count; i++) {
             document.getElementById("divTabData" + i).style.display = "none";

@@ -6,7 +6,7 @@
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
 @{
-    int index = 0;
+    int index = 0, itemSeqNumStart = Model.ItemSeqNumStart;
     string prefixSeqNum = Model.PrefixSeqNum, prefixSeqNum1;
     <table class="table table-condensed table-responsive" style="width: 81%;">
         <tr>
@@ -21,6 +21,7 @@
             <th class="text-right">
                 Quantity
             </th>
+            <th>Rate</th>
             <th></th>
             <th></th>
         </tr>
@@ -36,27 +37,31 @@
                         <a href="@Url.Action("ItemAttributes", "Home", new { id = itemBundleItemModel.ItemModel.ItemId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemBundleItemModel.ItemModel.ItemShortDesc">
                             @itemBundleItemModel.ItemModel.ItemId
                         </a>
+                        <input id="itemId@(itemSeqNumStart)" name="itemId@(itemSeqNumStart)" type="text" value="@itemBundleItemModel.ItemModel.ItemId" />
                     </td>
                     <td class="text-left" style="vertical-align: top;">
                         <a href="@Url.Action("ItemAttributes", "Home", new { id = itemBundleItemModel.ItemModel.ItemId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemBundleItemModel.ItemModel.ItemShortDesc">
-                            <img alt="@(itemBundleItemModel.ItemModel.ItemShortDesc0 + " " + itemBundleItemModel.ItemModel.ItemShortDesc1 + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Items/@itemBundleItemModel.ItemModel.ImageName" style="height: 90px; width: 90px;" title="@(itemBundleItemModel.ItemModel.ItemShortDesc0 + " " + itemBundleItemModel.ItemModel.ItemShortDesc1 + " " + imageTitle)" />
+                            <img alt="@(itemBundleItemModel.ItemModel.ItemShortDesc0 + " " + itemBundleItemModel.ItemModel.ItemShortDesc1 + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemBundleItemModel.ItemModel.ItemMasterModel.ImageName" style="height: 90px; width: 90px;" title="@(itemBundleItemModel.ItemModel.ItemShortDesc0 + " " + itemBundleItemModel.ItemModel.ItemShortDesc1 + " " + imageTitle)" />
                         </a>
                     </td>
-                    <td class="text-left" style="font-weight: bold; vertical-align: top;">
-                        @itemBundleItemModel.ItemModel.ItemShortDesc1
+                    <td class="text-left" style="vertical-align: top;">
+                        <span style="color: #000000; font-weight: bold;">@itemBundleItemModel.ItemModel.ItemShortDesc1</span>
                         @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
                         {
                             <div id="divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)" style="display: none;"></div>
                         }
                     </td>
                     <td class="text-right" style="vertical-align: top;">
-                        @itemBundleItemModel.Quantity
+                        <input class="form-control" id="orderQty@(itemSeqNumStart)" name="orderQty@(itemSeqNumStart)" style="width: 45px;" type="text" value="@itemBundleItemModel.Quantity" />
+                    </td>
+                    <td class="text-right" style="vertical-align: top;">
+                        @itemBundleItemModel.ItemModel.ItemRateFormatted
                     </td>
                     <td class="text-left" style="vertical-align: top;">
                         @if (itemBundleItemModel.ItemModel.ItemTypeId == RetailSlnEnumerations.ItemTypeEnum.ItemBundle)
                         {
                             prefixSeqNum1 = prefixSeqNum + index + ".";
-                            <button class="btn btn-success" onclick="javascript: return btnViewBundle_onclick(@itemBundleItemModel.ItemModel.ItemId, '@prefixSeqNum1', 0, 'divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)');">View Bundle</button>
+                            <button class="btn btn-success" onclick="javascript: return btnViewBundle_onclick(@itemBundleItemModel.ItemModel.ItemId, '@prefixSeqNum1', 0, 'divItemBundleItem@(itemBundleItemModel.ItemBundleItemId)', '@itemSeqNumStart');">View Bundle</button>
                         }
                     </td>
                     <td class="text-left" style="vertical-align: top;">
@@ -66,6 +71,7 @@
                         }
                     </td>
                 </tr>
+                itemSeqNumStart++;
             }
         }
     </table>

@@ -131,55 +131,60 @@ namespace RetailSlnBusinessLayer
             return categoryListModel;
         }
         // GET : ItemAttributes
-        public ItemAttributesModel ItemAttributes(long itemId, long tabId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, long tabId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                ItemAttributesModel itemAttributesModel = new ItemAttributesModel
+                ItemMasterAttributesModel itemMasterAttributesModel = new ItemMasterAttributesModel
                 {
-                    ItemAttributesTabs = new List<string>
+                    ItemMasterAttributesTabs = new List<string>
                     {
                         "Specification(s)",
                         "Product Info",
                         "Image(s)",
                         "Bundled Item(s)",
                     },
-                    ItemAttributesViews = new List<string>
+                    ItemMasterAttributesViews = new List<string>
                     {
-                        "_ItemAttributes0",
-                        "_ItemAttributes1",
-                        "_ItemAttributes2",
-                        "_ItemAttributes3",
+                        "_ItemMasterAttributes0",
+                        "_ItemMasterAttributes1",
+                        "_ItemMasterAttributes2",
+                        "_ItemMasterAttributes3",
                     },
-                    ItemId = itemId,
+                    ItemId = itemMasterId,
                     TabId = tabId,
-                    ItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId),
-                    ItemAttributesDatas = new List<object>(),
-                    //ItemInfoListModel = ItemInfoList(itemId, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId),
+                    ItemMasterAttributesDatas = new List<object>(),
                 };
-                var itemSpecListModel = new ItemSpecListModel
+                var itemMasterSpecListModel = new ItemMasterSpecListModel
                 {
-                    ItemModel = itemAttributesModel.ItemModel,
-                    ItemSpecModels = itemAttributesModel.ItemModel.ItemSpecModels,
+                    ItemMasterModel = itemMasterAttributesModel.ItemMasterModel,
+                    //ItemSpecModels = itemAttributesModel.ItemMasterModel.ItemMasterSpecModels,
                 };
                 var itemInfoListModel = new ItemInfoListModel
                 {
-                    ItemModel = itemAttributesModel.ItemModel,
-                    ItemInfoModels = itemAttributesModel.ItemModel.ItemInfoModels,
+                    //ItemModel = itemAttributesModel.ItemMasterSpecListModel,
+                    //ItemInfoModels = itemAttributesModel.ItemMasterModel.ItemInfoModels,
                 };
                 var itemImageListModel = new ItemImageListModel
                 {
-                    ItemModel = itemAttributesModel.ItemModel,
+                    //ItemModel = itemAttributesModel.ItemMasterModel,
                 };
-                var itemBundleItemDataModel = ItemBundleItemData(itemId, "", 0, clientId, ipAddress, execUniqueId, loggedInUserId);
-                itemAttributesModel.ItemAttributesDatas.Add(itemSpecListModel);
-                itemAttributesModel.ItemAttributesDatas.Add(itemInfoListModel);
-                itemAttributesModel.ItemAttributesDatas.Add(itemImageListModel);
-                itemAttributesModel.ItemAttributesDatas.Add(itemBundleItemDataModel);
-                return itemAttributesModel;
+                ItemBundleDataModel itemBundleDataModel = new ItemBundleDataModel
+                {
+                    ItemMasterId = itemMasterId,
+                    ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId),
+                    //ItemBundleModel = RetailSlnCache.ItemBundleModels.First(x => x.ItemId == itemMasterId),
+                };
+                //ItemBundleItemData(itemMasterId, "", 0, clientId, ipAddress, execUniqueId, loggedInUserId);
+                itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemMasterSpecListModel);
+                itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemInfoListModel);
+                itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemImageListModel);
+                itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemBundleDataModel);
+                return itemMasterAttributesModel;
             }
             catch (Exception exception)
             {
@@ -191,38 +196,36 @@ namespace RetailSlnBusinessLayer
             }
         }
         // GET : ItemBundleItemData
-        public ItemBundleItemDataModel ItemBundleItemData(long bundleItemId, string prefixSeqNum, int paddingLeft, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ItemBundleDataModel ItemBundleData(long itemId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ItemBundleItemDataModel itemBundleItemDataModel;
-
+            ItemBundleDataModel itemBundleDataModel;
             try
             {
-                itemBundleItemDataModel = new ItemBundleItemDataModel
+                var itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId);
+                itemBundleDataModel = new ItemBundleDataModel
                 {
-                    BundleItemId = bundleItemId,
-                    PrefixSeqNum = prefixSeqNum,
-                    BundleItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == bundleItemId),
-                    ItemBundleItemModels = RetailSlnCache.ItemBundleItemModels.FindAll(x => x.BundleItemId == bundleItemId),
+                    ItemMasterId = itemModel.ItemMasterId,
+                    ItemBundleModel = RetailSlnCache.ItemBundleModels.FirstOrDefault(x => x.ItemId == itemId),
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseMessages = new List<string>(),
                         ResponseTypeId = ResponseTypeEnum.Success,
-                    }
+                    },
                 };
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-                itemBundleItemDataModel = new ItemBundleItemDataModel
+                itemBundleDataModel = new ItemBundleDataModel
                 {
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseMessages = new List<string>
                         {
-                            "Error occurred while populating for Bundle " + bundleItemId,
+                            "Error occurred while populating for Item " + itemId,
                             exception.Message,
                         },
                         ResponseTypeId = ResponseTypeEnum.Error,
@@ -233,8 +236,56 @@ namespace RetailSlnBusinessLayer
             finally
             {
             }
-            return itemBundleItemDataModel;
-        }        // GET : ItemAttributes
+            return itemBundleDataModel;
+        }
+        //// GET : ItemAttributes
+        //public ItemBundleItemDataModel ItemBundleItemData(long bundleItemId, string prefixSeqNum, int paddingLeft, int itemSeqNumStart, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ItemBundleItemDataModel_zzz itemBundleItemDataModel;
+        //    try
+        //    {
+        //        var bundleItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == bundleItemId);
+        //        itemBundleItemDataModel = new ItemBundleItemDataModel_zzz
+        //        {
+        //            BundleItemId = bundleItemId,
+        //            PrefixSeqNum = prefixSeqNum,
+        //            ItemSeqNumStart = itemSeqNumStart,
+        //            BundleItemModel = bundleItemModel,
+        //            ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == bundleItemModel.ItemMasterId),
+        //            ItemBundleItemModels = RetailSlnCache.ItemBundleItemModels.FindAll(x => x.ItemId == bundleItemId),
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseMessages = new List<string>(),
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //            BundleItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == bundleItemModel.ItemMasterId),
+        //        };
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        itemBundleItemDataModel = new ItemBundleItemDataModel_zzz
+        //        {
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseMessages = new List<string>
+        //                {
+        //                    "Error occurred while populating for Bundle " + bundleItemId,
+        //                    exception.Message,
+        //                },
+        //                ResponseTypeId = ResponseTypeEnum.Error,
+        //                ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //            }
+        //        };
+        //    }
+        //    finally
+        //    {
+        //    }
+        //    return itemBundleItemDataModel;
+        //}        // GET : ItemAttributes
         // GET : ItemHierList
         public CategoryItemHierListModel ItemHierList(long itemId, int assignedPageNum, int assignedRowCount, int pageNum, int rowCount, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

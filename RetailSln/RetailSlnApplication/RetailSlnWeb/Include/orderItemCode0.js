@@ -7,7 +7,6 @@ function addToCart_onclick(parentCategoryId, pageNum, pageSize, totalRowCount, i
     var jsonPostData = {};
     var shoppingCartItemModels = [];
     var shoppingCartItemModel, itemId, orderQty, orderComments, errorFlag;
-
     try {
         //var a = 0, b = 1, c;
         //c = b / a;
@@ -82,6 +81,282 @@ function addToCart_onclick(parentCategoryId, pageNum, pageSize, totalRowCount, i
         console.log(err);
         document.getElementById("divErrorMessage").innerHTML = "Error while adding to cart";
     }
+}
+function addToCartGet0_onclick(itemId, index) {
+    var returnValue = true, errorMessage = "";
+    var orderQty = document.getElementById("orderQty" + index).value;
+    console.log("addToCartGet0_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    try {
+        var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
+        var minValue = document.getElementById("orderQty" + index).getAttribute("min");
+        var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
+        document.getElementById("spnMessageSuccess" + index).style.display = "none";
+        document.getElementById("spnMessageError" + index).style.display = "none";
+        if ((/^\d+$/.test(itemId))) {//itemId is a number
+            ;
+        }
+        else {
+            errorMessage = "Invalid item selected";
+            returnValue = false;
+        }
+        if ((/^\d+$/.test(orderQty)) && orderQty.length <= maxLength && orderQty >= minValue && orderQty <= maxValue) {//Valid orderQty
+            ;
+        }
+        else {
+            if (errorMessage != "") {
+                errorMessage += "<br />";
+            }
+            errorMessage += "Invalid order quantity";
+            returnValue = false;
+        }
+        if (returnValue) {
+            var url = "/Home/AddToCart1/";
+            $('#loadingModal').modal('hide');
+            $.ajax({
+                url: url,
+                type: "GET",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                dataType: "json",
+                data: { "itemId": itemId, "orderQty": orderQty },
+                async: true,
+                success: function (responseData, textStatus, request) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCartGet0_onclick", "00090000", "SUCCESS!!!");
+                    document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
+                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("orderQty" + index).value = "";
+                    document.getElementById("spnMessageSuccess" + index).style.display = "block";
+                    document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
+                },
+                error: function (xhr, exception) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCartGet0_onclick", "00099000", "ERROR???");
+                    console.log(exception, xhr);
+                    var jsonData = JSON.parse(xhr.responseText);
+                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                    document.getElementById("spnMessageError" + index).style.display = "block";
+                    document.getElementById("spnMessageErrorText" + index).innerHTML = jsonData.errorMessage;
+                }
+            });
+        }
+        else {
+            $('#loadingModal').modal('hide');
+            document.getElementById("spnMessageError" + index).style.display = "block";
+            document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
+        }
+    }
+    catch (err) {
+        $('#loadingModal').modal('hide');
+        alert("Please fix errors to continue???");
+        console.log(err);
+        returnValue = false;
+    }
+    return returnValue;
+}
+function addToCartGet2_onclick(itemId, index) {
+    var returnValue = true, errorMessage = "";
+    var orderQty = document.getElementById("orderQty" + index).value;
+    console.log("addToCartGet2_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    try {
+        var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
+        var minValue = document.getElementById("orderQty" + index).getAttribute("min");
+        var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
+        document.getElementById("spnMessageSuccess" + index).style.display = "none";
+        document.getElementById("spnMessageError" + index).style.display = "none";
+        if ((/^\d+$/.test(itemId))) {//itemId is a number
+            ;
+        }
+        else {
+            errorMessage = "Invalid item selected";
+            returnValue = false;
+        }
+        if ((/^\d+$/.test(orderQty)) && orderQty.length <= maxLength && orderQty >= minValue && orderQty <= maxValue) {//Valid orderQty
+            var itemBundleId, discountPercent, itemBundleItemId, quantity, itemRateBeforeDiscount, itemRateAfterDiscount, itemTypeId;
+            itemBundleId = document.getElementById("itemBundleId").innerText;
+            discountPercent = document.getElementById("discountPercent").innerText;
+            var jsonPostData = {};
+            var shoppingCartItemBundleModels = [];
+            var shoppingCartItemBundleModel, orderQtyHtmlElement, itemId, orderQty, orderComments = "";
+            document.getElementById("spnMessageError").innerHTML = "";
+            document.getElementById("spnMessageError").style.display = "none";
+            for (var i = 0; ; i++) {
+                orderQtyHtmlElement = document.getElementById("orderQty" + i);
+                if (orderQtyHtmlElement == null) {
+                    break;
+                }
+                else {
+                    orderQty = document.getElementById("orderQty" + i).value;
+                    itemBundleItemId = document.getElementById("itemBundleItemId" + i).innerText;
+                    quantity = document.getElementById("quantity" + i).innerText;
+                    itemRateBeforeDiscount = document.getElementById("itemRateBeforeDiscount" + i).innerText;
+                    itemRateAfterDiscount = document.getElementById("itemRateAfterDiscount" + i).innerText;
+                    itemTypeId = document.getElementById("itemTypeId" + i).innerText;
+                    if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + i).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + i).getAttribute("min") && orderQty <= document.getElementById("orderQty" + i).getAttribute("max")) {
+                        itemId = document.getElementById("itemId" + i).innerText;
+                        itemBundleItemId = document.getElementById("itemBundleItemId" + i).innerText;
+                        if (itemId.trim() === "") {
+                            document.getElementById("spnMessageError").innerHTML = "Error???";
+                            document.getElementById("spnMessageError").style.display = "block";
+                            returnValue = false;
+                            break;
+                        }
+                        else {
+                            orderComments = "";//document.getElementById("orderComments" + i).value;
+                            shoppingCartItemBundleModel = {};
+                            shoppingCartItemBundleModel.ItemBundleItemId = itemBundleItemId;
+                            shoppingCartItemBundleModel.ItemId = itemId;
+                            shoppingCartItemBundleModel.ItemTypeId = itemTypeId;
+                            shoppingCartItemBundleModel.OrderQty = orderQty;
+                            shoppingCartItemBundleModel.ItemRateBeforeDiscount = itemRateBeforeDiscount;
+                            shoppingCartItemBundleModel.ItemRateAfterDiscount = itemRateAfterDiscount;
+                            shoppingCartItemBundleModel.OrderComments = orderComments;
+                            shoppingCartItemBundleModel.Quantity = quantity;
+                            shoppingCartItemBundleModels.push(shoppingCartItemBundleModel);
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            if (errorMessage != "") {
+                errorMessage += "<br />";
+            }
+            errorMessage += "Invalid order quantity";
+            returnValue = false;
+        }
+        if (returnValue) {
+            jsonPostData.ItemBundleId = itemBundleId;
+            jsonPostData.DiscountPercent = discountPercent;
+            jsonPostData.ItemId = itemId;
+            jsonPostData.OrderQty = orderQty;
+            jsonPostData.OrderComments = orderComments;
+            jsonPostData.ShoppingCartItemBundleModels = shoppingCartItemBundleModels;
+            var jsonPostDataString = JSON.stringify(jsonPostData);
+            console.log(jsonPostData);
+            var url = "/Home/AddToCart2/";
+            $('#loadingModal').modal('hide');
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                //dataType: "json",
+                data: jsonPostDataString,//{ "itemId": itemId, "orderQty": orderQty },
+                async: true,
+                success: function (responseData, textStatus, request) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCartGet2_onclick", "00090000", "SUCCESS!!!");
+                    document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
+                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("orderQty" + index).value = "";
+                    document.getElementById("spnMessageSuccess" + index).style.display = "block";
+                    document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
+                },
+                error: function (xhr, exception) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCartGet2_onclick", "00099000", "ERROR???");
+                    console.log(exception, xhr);
+                    var jsonData = JSON.parse(xhr.responseText);
+                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                    document.getElementById("spnMessageError" + index).style.display = "block";
+                    document.getElementById("spnMessageErrorText" + index).innerHTML = jsonData.errorMessage;
+                }
+            });
+        }
+        else {
+            $('#loadingModal').modal('hide');
+            document.getElementById("spnMessageError" + index).style.display = "block";
+            document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
+        }
+    }
+    catch (err) {
+        $('#loadingModal').modal('hide');
+        alert("Please fix errors to continue???");
+        console.log(err);
+        returnValue = false;
+    }
+    return returnValue;
+}
+function addToCartGet0_onclickBackup(itemId, index) {
+    var returnValue = true, errorMessage = "";
+    var orderQty = document.getElementById("orderQty" + index).value;
+    console.log("addToCartGet0_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    try {
+        var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
+        var minValue = document.getElementById("orderQty" + index).getAttribute("min");
+        var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
+        document.getElementById("spnMessageSuccess" + index).style.display = "none";
+        document.getElementById("spnMessageError" + index).style.display = "none";
+        if ((/^\d+$/.test(itemId))) {//itemId is a number
+            ;
+        }
+        else {
+            errorMessage = "Invalid item selected";
+            returnValue = false;
+        }
+        if ((/^\d+$/.test(orderQty)) && orderQty.length <= maxLength && orderQty >= minValue && orderQty <= maxValue) {//Valid orderQty
+            ;
+        }
+        else {
+            if (errorMessage != "") {
+                errorMessage += "<br />";
+            }
+            errorMessage += "Invalid order quantity";
+            returnValue = false;
+        }
+        if (returnValue) {
+            var url = "/Home/AddToCart1/";
+            $('#loadingModal').modal('hide');
+            $.ajax({
+                url: url,
+                type: "GET",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                dataType: "json",
+                data: { "itemId": itemId, "orderQty": orderQty },
+                async: true,
+                success: function (responseData, textStatus, request) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCartGet0_onclick", "00090000", "SUCCESS!!!");
+                    document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
+                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("orderQty" + index).value = "";
+                    document.getElementById("spnMessageSuccess" + index).style.display = "block";
+                    document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
+                },
+                error: function (xhr, exception) {
+                    $('#loadingModal').modal('hide');
+                    console.log("addToCartGet0_onclick", "00099000", "ERROR???");
+                    console.log(exception, xhr);
+                    var jsonData = JSON.parse(xhr.responseText);
+                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+                    document.getElementById("spnMessageError" + index).style.display = "block";
+                    document.getElementById("spnMessageErrorText" + index).innerHTML = jsonData.errorMessage;
+                }
+            });
+        }
+        else {
+            $('#loadingModal').modal('hide');
+            document.getElementById("spnMessageError" + index).style.display = "block";
+            document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
+        }
+    }
+    catch (err) {
+        $('#loadingModal').modal('hide');
+        alert("Please fix errors to continue???");
+        console.log(err);
+        returnValue = false;
+    }
+    return returnValue;
 }
 function addToCart_onclickBackup(parentCategoryId, pageNum, pageSize, totalRowCount, imageIndex) {
     console.log("addToCart_onclick", "00000000", "ENTER!!!");
@@ -389,6 +664,29 @@ function orderQty_onfocus(documentElementId) {
 function orderQty_oninput(index) {
     if (document.getElementById("orderQty" + index).value.length > document.getElementById("orderQty" + index).getAttribute("maxlength")) {
         document.getElementById("orderQty" + index).value = document.getElementById("orderQty" + index).value.substr(0, document.getElementById("orderQty" + index).getAttribute("maxlength"));
+    }
+}
+function orderQty_oninput1() {
+    var orderQty, orderQty1;
+    orderQty = document.getElementById("orderQty").value;
+    if ((/^\d+$/.test(orderQty))) {
+        for (var i = 0; ; i++) {
+            if (document.getElementById("orderQty" + i) == null) {
+                break;
+            }
+            orderQty1 = document.getElementById("orderQty" + i).value;
+            if ((/^\d+$/.test(orderQty1))) {
+            }
+            else {
+                orderQty1 = 0;
+            }
+            document.getElementById("orderQty" + i).value = parseInt(orderQty1) * orderQty;
+        }
+    }
+}
+function orderQty_oninput2(orderQtyIndex, orderQtyIndexStart, orderQtyIndexFinish) {
+    for (var i = orderQtyIndexStart; i <= orderQtyIndexFinish; i++) {
+        document.getElementById("orderQty" + i).value = document.getElementById("itemBundleItemQuantity" + orderQtyIndex).innerText * document.getElementById("orderQty" + orderQtyIndex).value;
     }
 }
 function removeFromCart_onclick(index) {

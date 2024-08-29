@@ -411,6 +411,41 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static List<ItemBundleModel> GetItemBundles(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.ItemBundle ORDER BY ItemBundleId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<ItemBundleModel> itemBundleModels = new List<ItemBundleModel>();
+                while (sqlDataReader.Read())
+                {
+                    itemBundleModels.Add
+                    (
+                        new ItemBundleModel
+                        {
+                            ItemBundleId = long.Parse(sqlDataReader["ItemBundleId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return itemBundleModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static List<ItemBundleItemModel> GetItemBundleItems(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -431,9 +466,9 @@ namespace RetailSlnDataLayer
                         {
                             ItemBundleItemId = long.Parse(sqlDataReader["ItemBundleItemId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            BundleItemId = long.Parse(sqlDataReader["BundleItemId"].ToString()),
-                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            ItemBundleId = long.Parse(sqlDataReader["ItemBundleId"].ToString()),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
                             Quantity = short.Parse(sqlDataReader["Quantity"].ToString()),
                         }
                      );
@@ -799,37 +834,37 @@ namespace RetailSlnDataLayer
         //        throw;
         //    }
         //}
-        public static List<ItemBundleItemModel> GetItemBundleItems(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                List<ItemBundleItemModel> itemBundleItemModels = new List<ItemBundleItemModel>();
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemBundleItem WHERE ItemBundleItem.ItemId = " + itemId + " ORDER BY ItemBundleItem.SeqNum", sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                while (sqlDataReader.Read())
-                {
-                    itemBundleItemModels.Add
-                    (
-                        new ItemBundleItemModel
-                        {
-                            BundleItemId = long.Parse(sqlDataReader["BundleItemId"].ToString()),
-                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
-                        }
-                    );
-                }
-                sqlDataReader.Close();
-                return itemBundleItemModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static List<ItemBundleItemModel> GetItemBundleItems(long itemId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        List<ItemBundleItemModel> itemBundleItemModels = new List<ItemBundleItemModel>();
+        //        SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemBundleItem WHERE ItemBundleItem.ItemId = " + itemId + " ORDER BY ItemBundleItem.SeqNum", sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        while (sqlDataReader.Read())
+        //        {
+        //            itemBundleItemModels.Add
+        //            (
+        //                new ItemBundleItemModel
+        //                {
+        //                    BundleItemId = long.Parse(sqlDataReader["BundleItemId"].ToString()),
+        //                    ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+        //                    SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+        //                }
+        //            );
+        //        }
+        //        sqlDataReader.Close();
+        //        return itemBundleItemModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         public static List<ItemImageModel> GetItemImages(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

@@ -234,15 +234,17 @@
     <Compile Include="ClassCode\RetailSlnModels\GiftCertModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertPaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertValidateModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemBundleDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemDataModel_zzz.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemBundleModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterItemSpecModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\ItemSpecListModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemMasterSpecListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\ItemAttributesModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemMasterAttributesModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleDiscountModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
@@ -280,6 +282,8 @@
     <Compile Include="ClassCode\RetailSlnModels\SearchKeywordModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchResultModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ShoppingCartBundleModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemBundleModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
@@ -782,15 +786,6 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster448.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster449.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster45.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster450.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster451.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster452.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster453.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster454.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster455.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster456.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster457.png" />
-    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster458.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster46.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster47.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster48.png" />
@@ -1061,7 +1056,7 @@
     <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\Home.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\LoginUserProf.cshtml" />
+    <None Include="Views\Home\LoginUserProf.cshtml.zzz" />
     <Content Include="Views\Home\Payment.cshtml" />
     <Content Include="Views\Home\PicGallery.cshtml" />
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
@@ -1070,7 +1065,7 @@
     <Content Include="Views\Home\RegisterLoginContactResetPassword.cshtml" />
     <Content Include="Views\Home\RegisterUserLoginUser.cshtml" />
     <Content Include="Views\Home\RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\ResetPassword.cshtml" />
+    <None Include="Views\Home\ResetPassword.cshtml.zzz" />
     <Content Include="Views\Home\ResetPasswordContactUs.cshtml" />
     <Content Include="Views\Home\ReturnPolicy.cshtml" />
     <Content Include="Views\Home\SEOPage1.cshtml" />
@@ -1219,14 +1214,14 @@
     <Content Include="Views\Home\_DeliveryInfoData1.cshtml" />
     <Content Include="Views\Home\_PaymentInfo3.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0.cshtml" />
-    <Content Include="Views\Home\ItemAttributes.cshtml" />
-    <Content Include="Views\Home\_ItemAttributes.cshtml" />
-    <Content Include="Views\Home\_ItemAttributes0.cshtml" />
-    <Content Include="Views\Home\_ItemAttributes1.cshtml" />
-    <Content Include="Views\Home\_ItemAttributes2.cshtml" />
+    <Content Include="Views\Home\ItemMasterAttributes.cshtml" />
+    <Content Include="Views\Home\_ItemMasterAttributes.cshtml" />
+    <Content Include="Views\Home\_ItemMasterAttributes0.cshtml" />
+    <Content Include="Views\Home\_ItemMasterAttributes1.cshtml" />
+    <Content Include="Views\Home\_ItemMasterAttributes2.cshtml" />
     <Content Include="Views\Home\_ItemOrder.cshtml" />
-    <Content Include="Views\Home\_ItemAttributes3.cshtml" />
-    <Content Include="Views\Home\_ItemBundleItemData.cshtml" />
+    <Content Include="Views\Home\_ItemMasterAttributes3.cshtml" />
+    <Content Include="Views\Home\_ItemBundleItemData_zzz.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\_DashboardLayout.cshtml" />
     <Content Include="Views\Dashboard\_DashboardHeader.cshtml" />
@@ -1247,6 +1242,8 @@
     <Content Include="Views\Home\_OrderInvoiceData.cshtml" />
     <Content Include="Views\Home\_ShoppingCartEmailBody1.cshtml" />
     <Content Include="Views\Home\_OrderInvoiceDataSubject.cshtml" />
+    <Content Include="Views\Home\_OrderSummaryData.cshtml" />
+    <Content Include="Views\Home\_ItemBundleData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,49 @@
+﻿@model RetailSlnModels.ItemBundleDataModel
+<div id="divItemBundle"></div>
+<script>
+    btnItemBundleLoad_onclick('@Model.ItemMasterModel.ItemModels[0].ItemId');
+    function btnItemBundleLoad_onclick(itemId) {
+        console.log("00000000", "btnItemBundleLoad_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/ItemBundleData/" + itemId;
+        try {
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                //dataType: "html",
+                //data: postData,
+                //async: false,
+                success: function (responseData, textStatus, request) {
+                    $("#loadingModal").modal('hide');
+                    document.getElementById("divItemBundle").innerHTML = responseData.htmlString;
+                    if (responseData.success) {
+                    }
+                    else {
+                        alert("Error occurred");
+                    }
+                    console.log("00001000", "btnItemBundleLoad_onclick success", responseData.processMessage);
+                },
+                error: function (xhr, exception) {
+                    $("#loadingModal").modal('hide');
+                    console.log("00099000", "btnItemBundleLoad_onclick", "ERROR???", exception, xhr);
+                    alert("Please fix errors to continue???....");
+                }
+            });
+        }
+        catch (err) {
+            $('#loadingModal').modal('hide');
+            alert("Please fix errors to continue???");
+            console.log("00099100", "btnItemBundleLoad_onclick", "ERROR???", err);
+        }
+        return false;
+    }
+    function btnItemBundleView_onclick(itemBundleElementId) {
+        document.getElementById(itemBundleElementId).style.display = "block";
+        return false;
+    }
+    function btnItemBundleHide_onclick(itemBundleElementId) {
+        document.getElementById(itemBundleElementId).style.display = "none";
+        return false;
+    }
+</script>

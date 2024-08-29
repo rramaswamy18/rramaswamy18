@@ -1,0 +1,62 @@
+﻿@model RetailSlnModels.ItemMasterSpecListModel
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+}
+<table class="table table-condensed table-responsive" style="padding: 0px;">
+    <tr>
+        <td style="padding: 0px; width: 65%;">
+            <table class="table table-bordered" style="width: 81%;">
+                <colgroup>
+                    <col style="width: 27%;" />
+                    <col style="width: 45%;" />
+                </colgroup>
+                <tr>
+                    <th style="background: #e5e4e2;">
+                        Description
+                    </th>
+                    <th style="background: #e5e4e2;">
+                        Value
+                    </th>
+                </tr>
+                @{
+                    foreach (var itemMasterItemSpecModel in Model.ItemMasterModel.ItemMasterItemSpecModels)
+                    {
+                        <tr>
+                            <td>
+                                @itemMasterItemSpecModel.ItemSpecMasterModel.SpecDesc
+                            </td>
+                            <td>
+                                @itemMasterItemSpecModel.ItemSpecValue
+                            </td>
+                        </tr>
+                    }
+                    foreach (var itemSpecModel in Model.ItemMasterModel.ItemModels[0].ItemSpecModels)
+                    {
+                        if (itemSpecModel.SeqNumItemMaster == null && itemSpecModel.SeqNumItem == null)
+                        {
+                            <tr>
+                                <td>
+                                    @itemSpecModel.ItemSpecMasterModel.SpecDesc
+                                </td>
+                                <td>
+                                    @itemSpecModel.ItemSpecValue
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        </td>
+        <td style="padding: 0px; width: 35%;">
+            <table class="table table-condensed table-responsive">
+                <tr>
+                    <th class="text-left">
+                        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ItemMasterModel.ImageName" />
+                    </th>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

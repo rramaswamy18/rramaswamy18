@@ -233,6 +233,32 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
+        // POST: AddToCart
+        public void AddToCart2(ref PaymentInfo1Model paymentInfo1Model, ShoppingCartBundleModel shoppingCartBundleModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            for (int i = 0; i < shoppingCartBundleModel.ShoppingCartItemBundleModels.Count; i++)
+            {
+
+            }
+            try
+            {
+                if (paymentInfo1Model == null)
+                {
+                    paymentInfo1Model = new PaymentInfo1Model();
+                }
+                //ShoppingCartModel shoppingCartModel;
+                //ShoppingCartItemModel shoppingCartItemModel;
+                //shoppingCartModel = paymentInfo1Model.ShoppingCartModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         // GET: Checkout
         public CheckoutModel Checkout(PaymentInfo1Model paymentInfoModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -1277,6 +1303,7 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.DeliveryDataModel.OrderHeaderId = orderHeader.OrderHeaderId;
                 paymentInfoModel.OrderSummaryModel.OrderHeaderId = orderHeader.OrderHeaderId;
                 ApplicationDataContext.AddDeliveryInfo(paymentInfoModel.DeliveryDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.UpdPerson(paymentInfoModel.OrderSummaryModel.PersonId.Value, paymentInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.OrderSummaryModel.LastName, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.PaymentDataModel = new PaymentData1Model
                 {
                     CouponId = 0,

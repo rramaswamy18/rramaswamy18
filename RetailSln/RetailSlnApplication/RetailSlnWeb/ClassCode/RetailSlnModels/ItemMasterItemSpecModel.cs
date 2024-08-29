@@ -12,5 +12,7 @@ namespace RetailSlnModels
         public long ItemMasterId { set; get; }
         public long ItemSpecId { set; get; }
         public float SeqNumItemMaster { set; get; }
+        public ItemMasterModel ItemMasterModel { set; get; }
+        public List<ItemSpecModel> ItemSpecModels { set; get; }
     }
 }

@@ -28,6 +28,7 @@ namespace RetailSlnModels
         public List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
         public List<ItemInfoModel> ItemInfoModels { set; get; }
         public List<ItemImageModel> ItemImageModels { set; get; }
+        public List<ItemBundleModel> ItemBundleModels { set; get; }
         public List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public List<ItemBundleDiscountModel> ItemBundleDiscountModels { set; get; }
         public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }

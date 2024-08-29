@@ -3,6 +3,7 @@ using ArchitectureLibraryUtility;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -66,6 +67,34 @@ namespace RetailSlnDataLayer
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
             }
+        }
+        public static void UpdPerson(long personId, string firstName, string lastName, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+                SqlCommand sqlCommand = new SqlCommand("UPDATE ArchLib.Person SET FirstName = @FirstName, LastName = @LastName, UpdUserId = @LoggedInUserId, UpdUserName = SUSER_NAME(), UpdDateTime = GETDATE() WHERE PersonId = @PersonId", sqlConnection);
+                sqlCommand.Parameters.Add("@FirstName", SqlDbType.NVarChar, 100);
+                sqlCommand.Parameters.Add("@LastName", SqlDbType.NVarChar, 100);
+                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+                sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+                sqlCommand.Parameters["@FirstName"].Value = firstName;
+                sqlCommand.Parameters["@LastName"].Value = lastName;
+                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+                sqlCommand.Parameters["@PersonId"].Value = personId;
+                sqlCommand.ExecuteNonQuery();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@model RetailSlnModels.ItemInfoListModel
-@{
+@*@{
     int i;
     for (i = 0; i < Model.ItemInfoModels.Count; i++)
     {
@@ -18,9 +18,9 @@
             @Html.Raw(Model.ItemInfoModels[i].ItemInfoText)
         </div>
     }
-}
+}*@
 <script type="text/javascript">
-    divTabItemInfo_onclick(0, @Model.ItemInfoModels.Count);
+    @*divTabItemInfo_onclick(0, @Model.ItemInfoModels.Count);*@
     function divTabItemInfo_onclick(index, count) {
         for (var i = 0; i < count; i++) {
             document.getElementById("divTabItemInfoData" + i).style.display = "none";

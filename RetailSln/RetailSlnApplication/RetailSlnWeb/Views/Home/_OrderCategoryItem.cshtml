@@ -239,7 +239,7 @@
     </div>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
-        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemModels[0].ItemId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
+        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
     }
     <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
     <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>

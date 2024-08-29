@@ -1,4 +1,5 @@
 ﻿@model RetailSlnModels.PaymentInfo1Model
+@using System.Web.Mvc
 @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
 {
     <div class="row validationSummaryMessage">
@@ -20,24 +21,29 @@
 <div class="col-md-6" style="float: left; text-align: left;">
     <table>
         <tr>
+            <td colspan="2" style="padding: 0px; width: 100%;">
+                @Html.Partial("_OrderSummaryData", Model.OrderSummaryModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "OrderSummaryModel" } })
+            </td>
+        </tr>
+        <tr>
             <td style="padding: 0px; width: 50%;">
                 <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment...</h3>
-                @Html.Partial("_PaymentModeData1", Model.PaymentModeModel, new ViewDataDictionary { TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "PaymentModeModel" } })
+                @Html.Partial("_PaymentModeData1", Model.PaymentModeModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "PaymentModeModel" } })
             </td>
             <td style="padding: 0px; width: 50%;">
                 <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery...</h3>
-                @Html.Partial("_DeliveryMethodData1", Model.DeliveryMethodModel, new ViewDataDictionary { TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "DeliveryMethodModel" } })
+                @Html.Partial("_DeliveryMethodData1", Model.DeliveryMethodModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "DeliveryMethodModel" } })
             </td>
         </tr>
     </table>
     <hr />
-    @Html.Partial("_GiftCertPayment", Model.GiftCertPaymentModel, new ViewDataDictionary { TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "GiftCertPaymentModel" } })
+    @Html.Partial("_GiftCertPayment", Model.GiftCertPaymentModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "GiftCertPaymentModel" } })
     <hr />
-    @Html.Partial("_CouponPayment", Model.CouponPaymentModel, new ViewDataDictionary { TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "CouponPaymentModel" } })
+    @Html.Partial("_CouponPayment", Model.CouponPaymentModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "CouponPaymentModel" } })
 </div>
 <div class="col-md-6" style="float: left; text-align: left;">
-    @Html.Partial("_DeliveryAddressData1", Model.DeliveryAddressModel, new ViewDataDictionary { TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "DeliveryAddressModel" } })
-    @Html.Partial("_DeliveryDataData1", Model.DeliveryDataModel, new ViewDataDictionary { TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "DeliveryDataModel" } })
+    @Html.Partial("_DeliveryAddressData1", Model.DeliveryAddressModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "DeliveryAddressModel" } })
+    @Html.Partial("_DeliveryDataData1", Model.DeliveryDataModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "DeliveryDataModel" } })
     <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process</button>
 </div>
 @{

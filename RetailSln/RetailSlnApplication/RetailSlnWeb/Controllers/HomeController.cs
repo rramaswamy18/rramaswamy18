@@ -317,35 +317,35 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("LoginUserProf")]
-        public ActionResult LoginUserProf()
-        {
-            ViewData["ActionName"] = "LoginUserProf";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
-                loginUserProfModel.CaptchaAnswerLogin = null;
-                loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
-                loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
-                actionResult = View("LoginUserProf", loginUserProfModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("LoginUserProf")]
+        //public ActionResult LoginUserProf()
+        //{
+        //    ViewData["ActionName"] = "LoginUserProf";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
+        //        loginUserProfModel.CaptchaAnswerLogin = null;
+        //        loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
+        //        loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
+        //        actionResult = View("LoginUserProf", loginUserProfModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
 
         [AllowAnonymous]
         [HttpPost]
@@ -752,33 +752,33 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("ResetPassword")]
-        public ActionResult ResetPassword()
-        {
-            ViewData["ActionName"] = "ResetPassword";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                ResetPasswordModel resetPasswordModel = archLibBL.ResetPassword(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                Session["CaptchaNumberResetPassword0"] = resetPasswordModel.CaptchaNumberResetPassword0;
-                Session["CaptchaNumberResetPassword1"] = resetPasswordModel.CaptchaNumberResetPassword1;
-                actionResult = View("ResetPassword", resetPasswordModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("ResetPassword")]
+        //public ActionResult ResetPassword()
+        //{
+        //    ViewData["ActionName"] = "ResetPassword";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        ResetPasswordModel resetPasswordModel = archLibBL.ResetPassword(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        Session["CaptchaNumberResetPassword0"] = resetPasswordModel.CaptchaNumberResetPassword0;
+        //        Session["CaptchaNumberResetPassword1"] = resetPasswordModel.CaptchaNumberResetPassword1;
+        //        actionResult = View("ResetPassword", resetPasswordModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
 
         [AllowAnonymous]
         [HttpPost]

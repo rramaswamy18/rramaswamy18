@@ -12,15 +12,27 @@ namespace RetailSlnModels
 
         public long ClientId { set; get; }
 
-        public long BundleItemId { set; get; }
-
-        public ItemModel BundleItemModel { set; get; }
-
-        public float SeqNum { set; get; }
+        public long ItemBundleId { set; get; }
 
         public long ItemId { set; get; }
 
+        public float ItemRateAfterDiscount { set; get; }
+
+        public string ItemRateAfterDiscountFormatted { set; get; }
+
+        public float ItemRateBeforeDiscount { set; get; }
+
+        public float OrderQtyIndex { set; get; }
+
+        public float? OrderQtyIndexFinish { set; get; }
+
+        public float? OrderQtyIndexStart { set; get; }
+
         public short Quantity { set; get; }
+
+        public float SeqNum { set; get; }
+
+        public ItemBundleModel ItemBundleModel { set; get; }
 
         public ItemModel ItemModel { set; get; }
     }

@@ -6,14 +6,11 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class ItemSpecListModel
+    public class ItemBundleDataModel
     {
-        public string Dummy { set; get; } = "Dummy Data";
-
-        public ItemModel ItemModel { set; get; }
-
-        public List<ItemSpecModel> ItemSpecModels { set; get; }
-
+        public long ItemMasterId { set; get; }
+        public ItemMasterModel ItemMasterModel { set; get; }
+        public ItemBundleModel ItemBundleModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }
