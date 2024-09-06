@@ -17,6 +17,7 @@ namespace RetailSlnModels
         public float? TotalDiscountAmount { set; get; }
         public float? TotalInvoiceAmount { set; get; }
         public string TotalInvoiceAmountFormatted { set; get; }
+        public string TotalInvoiceAmountInWords { set; get; }
         public long? TotalItemsCount { set; get; }
         public float? TotalOrderAmount { set; get; }
         public float? TotalOrderAmountBeforeDiscount { set; get; }

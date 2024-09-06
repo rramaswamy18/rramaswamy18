@@ -25,47 +25,6 @@ namespace RetailSlnWeb.Controllers
 {
     public partial class HomeController : Controller
     {
-        // GET: AddToCart
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult AddToCart(string id, string itemId, string orderQty)
-        {
-            ViewData["ActionName"] = "AddToCart";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            int shoppingCartItemsCount = 0;
-            string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-                retailSlnBL.AddToCart(ref paymentInfoModel, long.Parse(itemId), long.Parse(orderQty), Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                long.TryParse(id, out long tempId);
-                success = true;
-                processMessage = "SUCCESS!!!";
-                Session["PaymentInfo"] = paymentInfoModel;
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderCategoryItem", tempId);
-                shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
-                shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while adding item to cart";
-            }
-            actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-            return actionResult;
-        }
-
         // GET: AddToCart1
         [AllowAnonymous]
         [HttpGet]
@@ -99,7 +58,7 @@ namespace RetailSlnWeb.Controllers
                 success = true;
                 processMessage = "SUCCESS!!!";
                 Session["PaymentInfo"] = paymentInfoModel;
-                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
+                htmlString = ""; //archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
                 shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
                 shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -115,185 +74,56 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // POST: AddToCart
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult AddToCart2(ShoppingCartBundleModel shoppingCartBundleModel)
-        {
-            ViewData["ActionName"] = "AddToCart";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            int shoppingCartItemsCount = 0;
-            string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-                retailSlnBL.AddToCart2(ref paymentInfoModel, shoppingCartBundleModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while adding item to cart";
-            }
-            success = true;
-            processMessage = "SUCESS!!!";
-            htmlString = "Ummachi Kapathu";
-            actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-            return actionResult;
-            //string actionName, aspNetRoleName, controllerName, viewName;
-            //try
-            //{
-            //    //int x = 1, y = 0, z = x / y;
-            //    PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-            //    success = false;
-            //    if (addToCartModel.ShoppingCartItemModels != null)
-            //    {
-            //        foreach (var shoppingCartItemModel in addToCartModel.ShoppingCartItemModels)
-            //        {
-            //            if (shoppingCartItemModel.OrderQty != null)
-            //            {
-            //                success = true;
-            //                break;
-            //            }
-            //        }
-            //    }
-            //    if (!success)
-            //    {
-            //        processMessage = "ERROR???";
-            //        htmlString = "Please enter order quantity for a min of 1 item";
-            //    }
-            //    else
-            //    {
-            //        retailSlnBL.AddToCart(ref paymentInfoModel, addToCartModel.ShoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            //        success = true;
-            //        processMessage = "SUCCESS!!!";
-            //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-            //        if (sessionObjectModel == null)
-            //        {
-            //            aspNetRoleName = "DEFAULTROLE";
-            //        }
-            //        else
-            //        {
-            //            aspNetRoleName = sessionObjectModel.AspNetRoleName;
-            //        }
-            //        var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-            //        actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-            //        controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-            //        viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
-            //        OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-            //        {
-            //            ActionName = actionName,
-            //            ControllerName = controllerName,
-            //            ParentCategoryId = addToCartModel.ParentCategoryId.Value,
-            //            PageNum = addToCartModel.PageNum.Value,
-            //            PageSize = addToCartModel.PageSize.Value,
-            //            TotalRowCount = addToCartModel.TotalRowCount.Value,
-            //        };
-            //        Session["PaymentInfo"] = paymentInfoModel;
-            //        htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
-            //        shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
-            //        shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            //    }
-            //}
-            //catch (Exception exception)
-            //{
-            //    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-            //    success = false;
-            //    processMessage = "ERROR???";
-            //    htmlString = "Error while adding item to cart";
-            //}
-        }
-
-        // POST: AddToCart
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult AddToCart(AddToCartModel addToCartModel)
-        {
-            ViewData["ActionName"] = "AddToCart";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            int shoppingCartItemsCount = 0;
-            string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            string actionName, aspNetRoleName, controllerName, viewName;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-                success = false;
-                if (addToCartModel.ShoppingCartItemModels != null)
-                {
-                    foreach (var shoppingCartItemModel in addToCartModel.ShoppingCartItemModels)
-                    {
-                        if (shoppingCartItemModel.OrderQty != null)
-                        {
-                            success = true;
-                            break;
-                        }
-                    }
-                }
-                if (!success)
-                {
-                    processMessage = "ERROR???";
-                    htmlString = "Please enter order quantity for a min of 1 item";
-                }
-                else
-                {
-                    retailSlnBL.AddToCart(ref paymentInfoModel, addToCartModel.ShoppingCartItemModels, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                    if (sessionObjectModel == null)
-                    {
-                        aspNetRoleName = "DEFAULTROLE";
-                    }
-                    else
-                    {
-                        aspNetRoleName = sessionObjectModel.AspNetRoleName;
-                    }
-                    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                    actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-                    controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-                    viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
-                    OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-                    {
-                        ActionName = actionName,
-                        ControllerName = controllerName,
-                        ParentCategoryId = addToCartModel.ParentCategoryId.Value,
-                        PageNum = addToCartModel.PageNum.Value,
-                        PageSize = addToCartModel.PageSize.Value,
-                        TotalRowCount = addToCartModel.TotalRowCount.Value,
-                    };
-                    Session["PaymentInfo"] = paymentInfoModel;
-                    htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
-                    shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
-                    shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while adding item to cart";
-            }
-            actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-            return actionResult;
-        }
+        #region
+        //// POST: AddToCart2
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult AddToCart2(ShoppingCartBundleModel shoppingCartBundleModel)
+        //{
+        //    ViewData["ActionName"] = "AddToCart1";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    int shoppingCartItemsCount = 0;
+        //    string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //    try
+        //    {
+        //        long itemId, orderQty;
+        //        //int x = 1, y = 0, z = x / y;
+        //        PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+        //        itemId = shoppingCartBundleModel.ItemId;
+        //        orderQty = shoppingCartBundleModel.OrderQty;
+        //        ShoppingCartItemModel shoppingCartItemModel = new ShoppingCartItemModel
+        //        {
+        //            ItemId = itemId,
+        //            OrderQty = orderQty,
+        //        };
+        //        retailSlnBL.AddToCart2(ref paymentInfoModel, shoppingCartItemModel, shoppingCartBundleModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        //long.TryParse(id, out long tempId);
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //        Session["PaymentInfo"] = paymentInfoModel;
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
+        //        shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
+        //        shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = "Error while adding item to cart";
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET: Checkout
         [AllowAnonymous]
@@ -836,112 +666,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        //// GET : ItemBundleItemData
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public ActionResult ItemBundleItemData(string id, string prefixSeqNum, string paddingLeft, string itemSeqNumStart)
-        //{
-        //    ViewData["ActionName"] = "ItemBundleItemData";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        ItemBundleItemDataModel_zzz itemBundleItemDataModel = retailSlnBL.ItemBundleItemData(long.Parse(id), prefixSeqNum, int.Parse(paddingLeft), int.Parse(itemSeqNumStart), clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        if (itemBundleItemDataModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Success)
-        //        {
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_ItemBundleItemData", itemBundleItemDataModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_Error", itemBundleItemDataModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //        }
-        //        actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ModelState.AddModelError("", "Item Bundle Item Data / GET");
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error");
-        //    }
-        //    return actionResult;
-        //}
-
-        #region
-        //// GET : ItemBundleItemListView
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("ItemBundleItemListView")]
-        //public ActionResult ItemBundleItemListView(string id)
-        //{
-        //    ViewData["ActionName"] = "ItemBundleItemListView";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "0000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    try
-        //    {
-        //        long itemId = long.Parse(id);
-        //        ItemBundleItemListModel itemBundleItemList = retailSlnBL.ItemBundleItemList(itemId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("ItemBundleItemListView", itemBundleItemList);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ModelState.AddModelError("", "Item Image List View / GET");
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error");
-        //    }
-        //    return actionResult;
-        //}
-
-        //// GET : ItemInfoList
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("ItemInfoList")]
-        //public ActionResult ItemInfoList(string id)
-        //{
-        //    ViewData["ActionName"] = "ItemInfoList";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        long itemId = long.Parse(id);
-        //        ItemInfoListModel itemInfoListModel = retailSlnBL.ItemInfoList(itemId, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("ItemInfoList", itemInfoListModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ModelState.AddModelError("", "Item Spec List / GET");
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error");
-        //    }
-        //    return actionResult;
-        //}
-        #endregion
-
         // GET: OrderCategoryItem
         [AllowAnonymous]
         [HttpGet]
@@ -1002,6 +726,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: OrderCategoryItemAll
         [AllowAnonymous]
         [HttpGet]
         [Route("OrderCategoryItemAll")]
@@ -1146,37 +871,11 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
                 retailSlnBL.RemoveFromCart(paymentInfoModel, removeFromCartModel.RemoveFromCartIndex.Value, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ShoppingCartModel shoppingCartModel = paymentInfoModel.ShoppingCartModel;
                 success = true;
                 processMessage = "SUCCESS!!!";
-                string aspNetRoleName, actionName, controllerName, viewName;
-                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                if (sessionObjectModel == null)
-                {
-                    aspNetRoleName = "DEFAULTROLE";
-                }
-                else
-                {
-                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
-                }
-                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-                controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-                viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
-                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-                {
-                    ActionName = actionName,
-                    ControllerName = controllerName,
-                    ParentCategoryId = removeFromCartModel.ParentCategoryId.Value,
-                    PageNum = removeFromCartModel.PageNum.Value,
-                    PageSize = removeFromCartModel.PageSize.Value,
-                    TotalRowCount = removeFromCartModel.TotalRowCount.Value,
-                };
-                htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
-                shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count;
-                shoppingCartTotalAmount = shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
+                shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
             }
             catch (Exception exception)
             {
@@ -1185,9 +884,73 @@ namespace RetailSlnWeb.Controllers
                 processMessage = "ERROR???";
                 htmlString = "Error while removing item to cart";
             }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
+
+        //#region
+        //public ActionResult RemoveFromCartBackup(RemoveFromCartModel removeFromCartModel)
+        //{
+        //    ViewData["ActionName"] = "RemoveFromCart";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    int shoppingCartItemsCount = 0;
+        //    string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+        //        retailSlnBL.RemoveFromCart(paymentInfoModel, removeFromCartModel.RemoveFromCartIndex.Value, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ShoppingCartModel shoppingCartModel = paymentInfoModel.ShoppingCartModel;
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //        string aspNetRoleName, actionName, controllerName, viewName;
+        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+        //        if (sessionObjectModel == null)
+        //        {
+        //            aspNetRoleName = "DEFAULTROLE";
+        //        }
+        //        else
+        //        {
+        //            aspNetRoleName = sessionObjectModel.AspNetRoleName;
+        //        }
+        //        var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //        actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
+        //        controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
+        //        viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
+        //        OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+        //        {
+        //            ActionName = actionName,
+        //            ControllerName = controllerName,
+        //            ParentCategoryId = removeFromCartModel.ParentCategoryId.Value,
+        //            PageNum = removeFromCartModel.PageNum.Value,
+        //            PageSize = removeFromCartModel.PageSize.Value,
+        //            TotalRowCount = removeFromCartModel.TotalRowCount.Value,
+        //        };
+        //        htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
+        //        shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count;
+        //        shoppingCartTotalAmount = shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //        actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount = shoppingCartModel.ShoppingCartItems.Count, shoppingCartTotalAmount = shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "") }, JsonRequestBehavior.AllowGet);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = "Error while removing item to cart";
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+        //    return actionResult;
+        //}
+        //#endregion
 
         // GET: SearchResult
         [AllowAnonymous]
@@ -1221,6 +984,34 @@ namespace RetailSlnWeb.Controllers
             }
         }
 
+        // GET: ShoppingCartSummary
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult ShoppingCart()
+        {
+            ViewData["ActionName"] = "ShoppingCart";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+            int shoppingCartItemsCount = 0;
+            string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+            paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
+            shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
+            shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+            paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
+            paymentInfoModel.ShoppingCartModel.Checkout = true;
+            success = true;
+            processMessage = "SUCCESS!!!";
+            htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart2", paymentInfoModel.ShoppingCartModel);
+            actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
         // GET: ShoppingCartComments
         [AllowAnonymous]
         [HttpGet]
@@ -1230,22 +1021,29 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            //ArchLibBL archLibBL = new ArchLibBL();
+            ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
             try
             {
                 //int x = 1, y = 0, z = x / y;
                 PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
                 retailSlnBL.ShoppingCartComments(paymentInfoModel, index, orderComments, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                actionResult = Json(new { success = false, errorMessage = "Error in shopping cart comments" }, JsonRequestBehavior.AllowGet);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while updating comments";
             }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
 
@@ -1283,26 +1081,5 @@ namespace RetailSlnWeb.Controllers
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
-
-        //private string BuildOrderCategoryItemViewHtmlString()
-        //{
-        //    string actionName, aspNetRoleName = "DEFAULTROLE", controllerName, viewName;
-        //    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-        //    actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-        //    controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-        //    viewName = aspNetRoleKVPs["ViewName02"].KVPValueData;
-        //    long parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
-        //    OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-        //    {
-        //        ActionName = actionName,
-        //        ControllerName = controllerName,
-        //        ParentCategoryId = parentCategoryId,
-        //        PageNum = 1,
-        //        PageSize = 50,
-        //    };
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    var htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
-        //    return htmlString;
-        //}
     }
 }

@@ -68,8 +68,8 @@ namespace RetailSlnBusinessLayer
             }
         }
 
-        // GET: Items
-        public List<ItemMasterModel> Items(string categoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // GET: ItemMasters
+        public List<ItemMasterModel> ItemMasters(string categoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -81,11 +81,11 @@ namespace RetailSlnBusinessLayer
                 pageNum = pageNum > 0 ? (pageNum = pageNum - 1) : pageNum;
                 int.TryParse(rowCountParm, out int rowCount);
                 rowCount = rowCount == 0 || rowCount > 50 ? 50 : rowCount;
-                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
                 List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
-                foreach (var categoryItemHierModel in categoryItemHierModels)
+                foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
                 {
-                    itemMasterModels.Add(categoryItemHierModel.ItemMasterModel);
+                    itemMasterModels.Add(categoryItemMasterHierModel.ItemMasterModel);
                 }
                 return itemMasterModels;
             }

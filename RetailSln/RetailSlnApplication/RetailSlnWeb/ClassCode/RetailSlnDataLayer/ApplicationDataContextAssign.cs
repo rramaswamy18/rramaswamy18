@@ -39,6 +39,22 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@WidthValue"].Value = orderDetail.WidthValue;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
+        public static void AssignOrderDetailItemBundle(OrderDetailItemBundle orderDetailItemBundle, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@DiscountPercent"].Value = orderDetailItemBundle.DiscountPercent;
+            sqlCommand.Parameters["@ItemBundleId"].Value = orderDetailItemBundle.ItemBundleId;
+            sqlCommand.Parameters["@ItemBundleIItemId"].Value = orderDetailItemBundle.ItemBundleItemId;
+            sqlCommand.Parameters["@ItemMasterDesc"].Value = orderDetailItemBundle.ItemMasterDesc;
+            sqlCommand.Parameters["@ItemRate"].Value = orderDetailItemBundle.ItemRate;
+            sqlCommand.Parameters["@ItemRateBeforeDiscount"].Value = orderDetailItemBundle.ItemRateBeforeDiscount;
+            sqlCommand.Parameters["@OrderAmount"].Value = orderDetailItemBundle.OrderAmount;
+            sqlCommand.Parameters["@OrderAmountBeforeDiscount"].Value = orderDetailItemBundle.OrderAmountBeforeDiscount;
+            sqlCommand.Parameters["@OrderDetailId"].Value = orderDetailItemBundle.OrderDetailId;
+            sqlCommand.Parameters["@OrderQty"].Value = orderDetailItemBundle.OrderQty;
+            sqlCommand.Parameters["@SeqNum"].Value = orderDetailItemBundle.SeqNum;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        }
         //public static void AssignDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         //{
         //    sqlCommand.Parameters["@ClientId"].Value = clientId;

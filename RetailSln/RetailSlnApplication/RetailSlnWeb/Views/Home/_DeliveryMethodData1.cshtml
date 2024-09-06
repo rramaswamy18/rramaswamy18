@@ -22,10 +22,18 @@
         string buttonChecked, foreColor;
         List<ArchitectureLibraryModels.CodeDataModel> codeDataModels;
         buttonChecked = "";// "checked='checked'";
-        foreColor = "#0000ff";
+        foreColor = "#000000";
         codeDataModels = Model.DeliveryMethods;
         for (int i = 0; i < codeDataModels.Count; i++)
         {
+            if (Model != null && Model.DeliveryMethodId != null && (int)Model.DeliveryMethodId == codeDataModels[i].CodeDataNameId)
+            {
+                buttonChecked = "checked='checked'";
+            }
+            else
+            {
+                buttonChecked = "";
+            }
             <tr>
                 <td style="padding-right: 9px; vertical-align: top;">
                     <input @buttonChecked class="form-control" id="@(htmlFieldPrefix)DeliveryMethodId@(i)" name="@(htmlFieldPrefixName)DeliveryMethodId" style="color: #000000; font-weight: 900;" type="radio" value="@codeDataModels[i].CodeDataNameId" />
@@ -38,13 +46,13 @@
                 </th>
             </tr>
             buttonChecked = "";
-            if (foreColor == "#0000ff")
+            if (foreColor == "#000000")
             {
                 foreColor = "#a54000";
             }
             else
             {
-                foreColor = "#0000ff";
+                foreColor = "#000000";
             }
         }
     }

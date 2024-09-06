@@ -9,6 +9,14 @@ namespace RetailSlnModels
     public class OrderSummaryModel
     {
         public string AspNetUserId { set; get; }
+
+        public string AuthorizedSignature { set; get; }
+
+        public long AuthorizedSignatureText { set; get; }
+
+        public string AuthorizedSignatureFontFamily { set; get; }
+
+        public string AuthorizedSignatureFontSize { set; get; }
         //public long? DeliveryAddressId { set; get; }
         //public float BalanceDue { set; get; }
         //public string BalanceDueFormatted { set; get; }
@@ -26,6 +34,8 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Last Name")]
         [StringLength(100, MinimumLength = 1, ErrorMessage = "Last Name")]
         public string LastName { set; get; }
+
+        public string OrderDateTime { set; get; }
 
         public long? OrderHeaderId { set; get; }
 

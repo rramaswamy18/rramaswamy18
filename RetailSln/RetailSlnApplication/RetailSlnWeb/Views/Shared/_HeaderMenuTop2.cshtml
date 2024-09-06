@@ -11,7 +11,16 @@
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
-            <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divShoppingCartBackToTop').scrollIntoView(); document.getElementById('divShoppingCartBackToTop').focus();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
+            @*<a href="javascript: void(0);" onclick="javascript: return document.getElementById('divShoppingCartBackToTop').scrollIntoView(); document.getElementById('divShoppingCartBackToTop').focus();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
+            <img alt="View Cart - @imageTitle" src="~/Images/ShoppingCart1.png" style="height: 27px; width: 27px;" title="View Cart -@imageTitle" />
+            <span id="shoppingCartItemsCount" style="display: none;"></span>
+            <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount" style="background-color: #9a031e;">
+                $0.00
+            </span>
+            <br />
+            <p class="text-overflow-ellipsis">View Cart</p>
+        </a>*@
+            <a href="javascript: void(0);" onclick="javascript: return shoppingCart_onclick();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
                 <img alt="View Cart - @imageTitle" src="~/Images/ShoppingCart1.png" style="height: 27px; width: 27px;" title="View Cart -@imageTitle" />
                 <span id="shoppingCartItemsCount" style="display: none;"></span>
                 <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount" style="background-color: #9a031e;">

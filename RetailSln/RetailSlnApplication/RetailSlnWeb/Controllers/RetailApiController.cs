@@ -108,10 +108,10 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: Items
+        // GET: ItemMasters
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Items(string id, string pageNum, string rowCount)
+        public ActionResult ItemMasters(string id, string pageNum, string rowCount)
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -121,15 +121,15 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                ApiItemsModel apiItemsModel = new ApiItemsModel
+                ApiItemMasterModel apiItemMasterModel = new ApiItemMasterModel
                 {
-                    ItemModels = null,//retailSlnBL.Items(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ItemMasterModels = retailSlnBL.ItemMasters(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseTypeId = ResponseTypeEnum.Success,
                     },
                 };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemsModel) }, JsonRequestBehavior.AllowGet);
+                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMasterModel) }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception exception)
             {
@@ -145,6 +145,46 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
+
+        #region
+        //// GET: Items
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult Items(string id, string pageNum, string rowCount)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApiItemsModel apiItemsModel = new ApiItemsModel
+        //        {
+        //            ItemModels = null,//retailSlnBL.Items(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemsModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ApiCategorysModel apiCategoriesModel = new ApiCategorysModel
+        //        {
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Error,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiCategoriesModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET: LoginUserProf
         [AllowAnonymous]

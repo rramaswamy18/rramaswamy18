@@ -9,7 +9,7 @@ namespace RetailSlnModels
 {
     public class ShoppingCartModel
     {
-        public bool BackToTop { set; get; }
+        public bool ShowDetail { set; get; }
         public bool Checkout { set; get; }
         public ShoppingCartSummaryModel ShoppingCartSummaryModel { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartItems { set; get; }

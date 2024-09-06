@@ -16,11 +16,7 @@ namespace RetailSlnModels
 
         public long ItemId { set; get; }
 
-        public float ItemRateAfterDiscount { set; get; }
-
         public string ItemRateAfterDiscountFormatted { set; get; }
-
-        public float ItemRateBeforeDiscount { set; get; }
 
         public float OrderQtyIndex { set; get; }
 

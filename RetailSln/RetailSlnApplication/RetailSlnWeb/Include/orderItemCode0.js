@@ -1,189 +1,106 @@
 ﻿//Sriramajayam
 //orderItemCode0.js
-function addToCart_onclick(parentCategoryId, pageNum, pageSize, totalRowCount, imageIndex) {
-    console.log("addToCart_onclick", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
-    var jsonPostData = {};
-    var shoppingCartItemModels = [];
-    var shoppingCartItemModel, itemId, orderQty, orderComments, errorFlag;
-    try {
-        //var a = 0, b = 1, c;
-        //c = b / a;
-        document.getElementById("spnMessageError" + imageIndex).innerHTML = "";
-        document.getElementById("spnMessageError" + imageIndex).style.display = "none";
-        orderQty = document.getElementById("orderQty" + imageIndex).value;
-
-        if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + imageIndex).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + imageIndex).getAttribute("min") && orderQty <= document.getElementById("orderQty" + imageIndex).getAttribute("max")) {
-            itemId = document.getElementById("itemId" + imageIndex).innerText;
-            if (itemId.trim() === "") {
-                $('#loadingModal').modal('hide');
-                document.getElementById("spnMessageError" + imageIndex).innerHTML = "Select valid item";
-                document.getElementById("spnMessageError" + imageIndex).style.display = "block";
-                errorFlag = true;
-            }
-            else {
-                orderComments = "";//document.getElementById("orderComments" + i).value;
-                shoppingCartItemModel = {};
-                shoppingCartItemModel.ItemId = itemId;
-                shoppingCartItemModel.OrderQty = orderQty;
-                shoppingCartItemModel.OrderComments = orderComments;
-                shoppingCartItemModels.push(shoppingCartItemModel);
-                errorFlag = false;
-            }
-        }
-        else {
-            $('#loadingModal').modal('hide');
-            document.getElementById("spnMessageError" + imageIndex).innerHTML = "Enter valid quantity";
-            document.getElementById("spnMessageError" + imageIndex).style.display = "block";
-            document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
-            errorFlag = true;
-        }
-
-        if (!errorFlag) {
-            var jsonPostDataString;
-            jsonPostData.ParentCategoryId = parentCategoryId;
-            jsonPostData.PageNum = pageNum;
-            jsonPostData.PageSize = pageSize;
-            jsonPostData.TotalRowCount = totalRowCount;
-            jsonPostData.ShoppingCartItemModels = shoppingCartItemModels;
-            jsonPostDataString = JSON.stringify(jsonPostData);
-            var url = "/Home/AddToCart/";
-            $.ajax({
-                url: url,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: jsonPostDataString,
-                success: function (responseData, textStatus, request) {
-                    $('#loadingModal').modal('hide');
-                    console.log("00001000", "addToCart_onclick success", responseData.processMessage);
-                    if (responseData.success) {
-                        document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
-                        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    }
-                    else {
-                        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                    }
-                },
-                error: function (xhr, exception) {
-                    $('#loadingModal').modal('hide');
-                    console.log("addToCart_onclick", "00099000", "ERROR???");
-                    console.log(xhr, exception);
-                }
-            });
-        }
-    }
-    catch (err) {
-        $('#loadingModal').modal('hide');
-        console.log("addToCart_onclick", "00099100", "ERROR???");
-        console.log(err);
-        document.getElementById("divErrorMessage").innerHTML = "Error while adding to cart";
-    }
-}
-function addToCartGet0_onclick(itemId, index) {
+function addToCart1_onclick(itemId, index) {
+    console.log("addToCartGet1_onclick", "00000000", "ENTER!!!");
     var returnValue = true, errorMessage = "";
-    var orderQty = document.getElementById("orderQty" + index).value;
-    console.log("addToCartGet0_onclick", "00000000", "ENTER!!!");
+    var orderQty, itemIdNull;
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
+    var returnObject = {};
+    returnObject.itemId = "";
+    returnObject.itemIdNull = null;
+    returnObject.orderQty = "";
+    if (returnValue = validateItemIdOrderQty(itemId, orderQty, returnObject, index, errorMessage)) {
+        itemId = returnObject.itemId;
+        itemIdNull = returnObject.itemIdNull;
+        orderQty = returnObject.orderQty;
+    }
+    else {
+        $('#loadingModal').modal('hide');
+        return returnValue;
+    }
     try {
-        var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
-        var minValue = document.getElementById("orderQty" + index).getAttribute("min");
-        var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
-        document.getElementById("spnMessageSuccess" + index).style.display = "none";
-        document.getElementById("spnMessageError" + index).style.display = "none";
-        if ((/^\d+$/.test(itemId))) {//itemId is a number
-            ;
-        }
-        else {
-            errorMessage = "Invalid item selected";
-            returnValue = false;
-        }
-        if ((/^\d+$/.test(orderQty)) && orderQty.length <= maxLength && orderQty >= minValue && orderQty <= maxValue) {//Valid orderQty
-            ;
-        }
-        else {
-            if (errorMessage != "") {
-                errorMessage += "<br />";
-            }
-            errorMessage += "Invalid order quantity";
-            returnValue = false;
-        }
-        if (returnValue) {
-            var url = "/Home/AddToCart1/";
-            $('#loadingModal').modal('hide');
-            $.ajax({
-                url: url,
-                type: "GET",
-                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-                dataType: "json",
-                data: { "itemId": itemId, "orderQty": orderQty },
-                async: true,
-                success: function (responseData, textStatus, request) {
-                    $('#loadingModal').modal('hide');
-                    console.log("addToCartGet0_onclick", "00090000", "SUCCESS!!!");
-                    document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
+        console.log(1, itemId, itemIdNull, orderQty, index, returnValue, errorMessage);
+        var url = "/Home/AddToCart1/";
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            data: { "itemId": itemId, "orderQty": orderQty },
+            async: true,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCartGet1_onclick", "00090000", "SUCCESS!!!");
+                if (responseData.success) {
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    document.getElementById("orderQty" + index).value = "";
                     document.getElementById("spnMessageSuccess" + index).style.display = "block";
                     document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
-                },
-                error: function (xhr, exception) {
-                    $('#loadingModal').modal('hide');
-                    console.log("addToCartGet0_onclick", "00099000", "ERROR???");
-                    console.log(exception, xhr);
-                    var jsonData = JSON.parse(xhr.responseText);
-                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                    document.getElementById("spnMessageError" + index).style.display = "block";
-                    document.getElementById("spnMessageErrorText" + index).innerHTML = jsonData.errorMessage;
+                    document.getElementById("orderQty" + index).value = "";
                 }
-            });
-        }
-        else {
-            $('#loadingModal').modal('hide');
-            document.getElementById("spnMessageError" + index).style.display = "block";
-            document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
-        }
+                else {
+                    document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+                    document.getElementById("spnMessageError" + index).style.display = "block";
+                    document.getElementById("spnMessageErrorText" + index).innerHTML = "Error occurred";
+                }
+                if (itemIdNull) {
+                    document.getElementById("itemId" + index).innerText = "";
+                    document.getElementById("spnMessageItem" + index).innerText = "Select item from below";
+                }
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("addToCartGet1_onclick", "00099000", "ERROR???");
+                console.log("addToCartGet1_onclick", "00099100", exception, xhr);
+                var jsonData = JSON.parse(xhr.responseText);
+                document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+                document.getElementById("spnMessageError" + index).style.display = "block";
+                document.getElementById("spnMessageErrorText" + index).innerHTML = "Error occurred";
+            }
+        });
     }
     catch (err) {
-        $('#loadingModal').modal('hide');
-        alert("Please fix errors to continue???");
         console.log(err);
-        returnValue = false;
+        $('#loadingModal').modal('hide');
+        if (errorMessage === "") {
+            errorMessage = "Error while adding to cart";
+        }
+        document.getElementById("divErrorMessage").innerHTML = errorMessage;
+        document.getElementById("spnMessageError" + index).style.display = "block";
+        document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
     }
-    return returnValue;
+    return false;
 }
 function addToCartGet2_onclick(itemId, index) {
     var returnValue = true, errorMessage = "";
-    var orderQty = document.getElementById("orderQty" + index).value;
+    var itemIdMain = document.getElementById("itemId" + index).innerText;
+    var orderQtyMain = document.getElementById("orderQty" + index).value;
     console.log("addToCartGet2_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     try {
+        document.getElementById("divErrorMessage").innerHTML = "";
+        document.getElementById("spnMessageSuccessText" + index).innerHTML = "";
+        document.getElementById("spnMessageSuccess" + index).style.display = "none";
+        document.getElementById("spnMessageErrorText" + index).innerHTML = "";
+        document.getElementById("spnMessageError" + index).style.display = "none";
         var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
         var minValue = document.getElementById("orderQty" + index).getAttribute("min");
         var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
-        document.getElementById("spnMessageSuccess" + index).style.display = "none";
-        document.getElementById("spnMessageError" + index).style.display = "none";
         if ((/^\d+$/.test(itemId))) {//itemId is a number
             ;
         }
         else {
-            errorMessage = "Invalid item selected";
+            errorMessage = "Select valid item";
             returnValue = false;
         }
-        if ((/^\d+$/.test(orderQty)) && orderQty.length <= maxLength && orderQty >= minValue && orderQty <= maxValue) {//Valid orderQty
-            var itemBundleId, discountPercent, itemBundleItemId, quantity, itemRateBeforeDiscount, itemRateAfterDiscount, itemTypeId;
+        if ((/^\d+$/.test(orderQtyMain)) && orderQtyMain.length <= maxLength && orderQtyMain >= minValue && orderQtyMain <= maxValue) {//Valid orderQtyMain
+            var itemBundleId, discountPercent, itemBundleItemId, quantity, itemRateBeforeDiscount, itemRateAfterDiscount, itemTypeId, orderQty;
             itemBundleId = document.getElementById("itemBundleId").innerText;
             discountPercent = document.getElementById("discountPercent").innerText;
             var jsonPostData = {};
             var shoppingCartItemBundleModels = [];
             var shoppingCartItemBundleModel, orderQtyHtmlElement, itemId, orderQty, orderComments = "";
-            document.getElementById("spnMessageError").innerHTML = "";
-            document.getElementById("spnMessageError").style.display = "none";
             for (var i = 0; ; i++) {
                 orderQtyHtmlElement = document.getElementById("orderQty" + i);
                 if (orderQtyHtmlElement == null) {
@@ -193,27 +110,25 @@ function addToCartGet2_onclick(itemId, index) {
                     orderQty = document.getElementById("orderQty" + i).value;
                     itemBundleItemId = document.getElementById("itemBundleItemId" + i).innerText;
                     quantity = document.getElementById("quantity" + i).innerText;
-                    itemRateBeforeDiscount = document.getElementById("itemRateBeforeDiscount" + i).innerText;
-                    itemRateAfterDiscount = document.getElementById("itemRateAfterDiscount" + i).innerText;
                     itemTypeId = document.getElementById("itemTypeId" + i).innerText;
                     if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + i).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + i).getAttribute("min") && orderQty <= document.getElementById("orderQty" + i).getAttribute("max")) {
-                        itemId = document.getElementById("itemId" + i).innerText;
+                        itemBundleId = document.getElementById("itemBundleId" + i).innerText;
                         itemBundleItemId = document.getElementById("itemBundleItemId" + i).innerText;
+                        itemId = document.getElementById("itemId" + i).innerText;
                         if (itemId.trim() === "") {
-                            document.getElementById("spnMessageError").innerHTML = "Error???";
-                            document.getElementById("spnMessageError").style.display = "block";
+                            document.getElementById("spnMessageErrorText" + index).innerHTML = "Select valid item";
+                            document.getElementById("spnMessageError" + index).style.display = "block";
                             returnValue = false;
                             break;
                         }
                         else {
                             orderComments = "";//document.getElementById("orderComments" + i).value;
                             shoppingCartItemBundleModel = {};
+                            shoppingCartItemBundleModel.ItemBundleId = itemBundleId;
                             shoppingCartItemBundleModel.ItemBundleItemId = itemBundleItemId;
                             shoppingCartItemBundleModel.ItemId = itemId;
                             shoppingCartItemBundleModel.ItemTypeId = itemTypeId;
                             shoppingCartItemBundleModel.OrderQty = orderQty;
-                            shoppingCartItemBundleModel.ItemRateBeforeDiscount = itemRateBeforeDiscount;
-                            shoppingCartItemBundleModel.ItemRateAfterDiscount = itemRateAfterDiscount;
                             shoppingCartItemBundleModel.OrderComments = orderComments;
                             shoppingCartItemBundleModel.Quantity = quantity;
                             shoppingCartItemBundleModels.push(shoppingCartItemBundleModel);
@@ -232,8 +147,8 @@ function addToCartGet2_onclick(itemId, index) {
         if (returnValue) {
             jsonPostData.ItemBundleId = itemBundleId;
             jsonPostData.DiscountPercent = discountPercent;
-            jsonPostData.ItemId = itemId;
-            jsonPostData.OrderQty = orderQty;
+            jsonPostData.ItemId = itemIdMain;
+            jsonPostData.OrderQty = orderQtyMain;
             jsonPostData.OrderComments = orderComments;
             jsonPostData.ShoppingCartItemBundleModels = shoppingCartItemBundleModels;
             var jsonPostDataString = JSON.stringify(jsonPostData);
@@ -252,12 +167,12 @@ function addToCartGet2_onclick(itemId, index) {
                 success: function (responseData, textStatus, request) {
                     $('#loadingModal').modal('hide');
                     console.log("addToCartGet2_onclick", "00090000", "SUCCESS!!!");
-                    document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
                     document.getElementById("orderQty" + index).value = "";
                     document.getElementById("spnMessageSuccess" + index).style.display = "block";
                     document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
+                    resetOrderQtyToMinQty();
                 },
                 error: function (xhr, exception) {
                     $('#loadingModal').modal('hide');
@@ -284,27 +199,52 @@ function addToCartGet2_onclick(itemId, index) {
     }
     return returnValue;
 }
-function addToCartGet0_onclickBackup(itemId, index) {
-    var returnValue = true, errorMessage = "";
-    var orderQty = document.getElementById("orderQty" + index).value;
-    console.log("addToCartGet0_onclick", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
+function resetOrderQtyToMinQty() {
+    document.getElementById("orderQty").value = "";
+    for (var i = 0; ; i++) {
+        orderQtyHtmlElement = document.getElementById("orderQty" + i);
+        if (orderQtyHtmlElement == null) {
+            break;
+        }
+        else {
+            document.getElementById("orderQty" + i).value = document.getElementById("quantity" + i).innerText;
+        }
+    }
+    return false;
+}
+function validateItemIdOrderQty(itemId, orderQty, returnObject, index, errorMessage) {
+    console.log("validateItemIdOrderQty", "00000000", "ENTER!!!");
+    var returnValue = true, errorMessage = "", itemIdNull;
     try {
-        var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
-        var minValue = document.getElementById("orderQty" + index).getAttribute("min");
-        var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
+        console.log(1, itemId, index);
+        //var a = 0, b = 1, c;
+        //c = b / a;
+        if (itemId === '' || itemId === null || itemId === undefined) {
+            itemIdNull = true;
+            itemId = document.getElementById("itemId" + index).innerText;
+            console.log(2, itemId, itemIdNull, index);
+        }
+        else {
+            itemIdNull = false;
+        }
+        returnObject.itemIdNull = itemIdNull;
+        orderQty = document.getElementById("orderQty" + index).value;
+        console.log(3, itemId, index, orderQty);
+        document.getElementById("divErrorMessage").innerHTML = "";
+        document.getElementById("spnMessageSuccessText" + index).innerHTML = "";
         document.getElementById("spnMessageSuccess" + index).style.display = "none";
+        document.getElementById("spnMessageErrorText" + index).innerHTML = "";
         document.getElementById("spnMessageError" + index).style.display = "none";
         if ((/^\d+$/.test(itemId))) {//itemId is a number
             ;
         }
         else {
-            errorMessage = "Invalid item selected";
+            errorMessage = "Select valid item from below";
             returnValue = false;
+            console.log(3.1, returnValue, errorMessage);
         }
-        if ((/^\d+$/.test(orderQty)) && orderQty.length <= maxLength && orderQty >= minValue && orderQty <= maxValue) {//Valid orderQty
-            ;
+        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
+        if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + index).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + index).getAttribute("min") && orderQty <= document.getElementById("orderQty" + index).getAttribute("max")) {
         }
         else {
             if (errorMessage != "") {
@@ -313,223 +253,30 @@ function addToCartGet0_onclickBackup(itemId, index) {
             errorMessage += "Invalid order quantity";
             returnValue = false;
         }
+        console.log(4, returnValue, errorMessage);
         if (returnValue) {
-            var url = "/Home/AddToCart1/";
-            $('#loadingModal').modal('hide');
-            $.ajax({
-                url: url,
-                type: "GET",
-                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-                dataType: "json",
-                data: { "itemId": itemId, "orderQty": orderQty },
-                async: true,
-                success: function (responseData, textStatus, request) {
-                    $('#loadingModal').modal('hide');
-                    console.log("addToCartGet0_onclick", "00090000", "SUCCESS!!!");
-                    document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
-                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                    document.getElementById("orderQty" + index).value = "";
-                    document.getElementById("spnMessageSuccess" + index).style.display = "block";
-                    document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
-                },
-                error: function (xhr, exception) {
-                    $('#loadingModal').modal('hide');
-                    console.log("addToCartGet0_onclick", "00099000", "ERROR???");
-                    console.log(exception, xhr);
-                    var jsonData = JSON.parse(xhr.responseText);
-                    document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                    document.getElementById("spnMessageError" + index).style.display = "block";
-                    document.getElementById("spnMessageErrorText" + index).innerHTML = jsonData.errorMessage;
-                }
-            });
+            returnObject.itemId = itemId;
+            returnObject.orderQty = orderQty;
         }
         else {
-            $('#loadingModal').modal('hide');
+            console.log("validateItemIdOrderQty", "00001000", "ERROR???", errorMessage);
+            document.getElementById("divErrorMessage").innerHTML = errorMessage;
             document.getElementById("spnMessageError" + index).style.display = "block";
             document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
         }
     }
     catch (err) {
-        $('#loadingModal').modal('hide');
-        alert("Please fix errors to continue???");
+        alert(err);
+        console.log("validateItemIdOrderQty", "00090000", "ERROR???");
         console.log(err);
-        returnValue = false;
+        if (errorMessage === "") {
+            errorMessage = "Error while adding to cart";
+        }
+        document.getElementById("divErrorMessage").innerHTML = errorMessage;
+        document.getElementById("spnMessageError" + index).style.display = "block";
+        document.getElementById("spnMessageErrorText" + index).innerHTML = errorMessage;
     }
     return returnValue;
-}
-function addToCart_onclickBackup(parentCategoryId, pageNum, pageSize, totalRowCount, imageIndex) {
-    console.log("addToCart_onclick", "00000000", "ENTER!!!");
-    var flag = true;
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
-    var jsonPostData = {};
-    var shoppingCartItemModels = [];
-    var shoppingCartItemModel, orderQtyHtmlElement, itemId, orderQty, orderComments;
-    for (var i = 0; ; i++) {
-        orderQtyHtmlElement = document.getElementById("orderQty" + i);
-        if (orderQtyHtmlElement == null) {
-            break;
-        }
-        else {
-            document.getElementById("spnMessageError" + i).innerHTML = "";
-            document.getElementById("spnMessageError" + i).style.display = "none";
-            orderQty = document.getElementById("orderQty" + i).value;
-            if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + i).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + i).getAttribute("min") && orderQty <= document.getElementById("orderQty" + i).getAttribute("max")) {
-                itemId = document.getElementById("itemId" + i).innerText;
-                if (itemId.trim() === "") {
-                    document.getElementById("spnMessageError" + i).innerHTML = "Error???";
-                    document.getElementById("spnMessageError" + i).style.display = "block";
-                    flag = false;
-                }
-                else {
-                    orderComments = "";//document.getElementById("orderComments" + i).value;
-                    shoppingCartItemModel = {};
-                    shoppingCartItemModel.ItemId = itemId;
-                    shoppingCartItemModel.OrderQty = orderQty;
-                    shoppingCartItemModel.OrderComments = orderComments;
-                    shoppingCartItemModels.push(shoppingCartItemModel);
-                }
-            }
-        }
-    }
-    if (!flag || shoppingCartItemModels.length === 0) {
-        $('#loadingModal').modal('hide');
-        document.getElementById("spnMessageError" + imageIndex).innerHTML = "Error???";
-        document.getElementById("spnMessageError" + imageIndex).style.display = "block";
-        document.getElementById("divErrorMessage").innerHTML = "Please enter order quantity for a min of 1 item";
-    }
-    else {
-        var jsonPostDataString;
-        jsonPostData.ParentCategoryId = parentCategoryId;
-        jsonPostData.PageNum = pageNum;
-        jsonPostData.PageSize = pageSize;
-        jsonPostData.TotalRowCount = totalRowCount;
-        jsonPostData.ShoppingCartItemModels = shoppingCartItemModels;
-        jsonPostDataString = JSON.stringify(jsonPostData);
-        var url = "/Home/AddToCart/";
-        $.ajax({
-            url: url,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: jsonPostDataString,
-            success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
-                console.log("00001000", "addToCart_onclick success", responseData.processMessage);
-                if (responseData.success) {
-                    document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
-                    document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                    document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                }
-                else {
-                    document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                }
-            },
-            error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
-                console.log("addToCart_onclick", "00099000", "ERROR???");
-                console.log(xhr, exception);
-            }
-        });
-    }
-}
-function addToCartGet_onclick(index, defaultOrderQty, categoryId) {
-    console.log("addToCartGet_onclick", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
-    //document.getElementById("addToCart" + index).innerHTML = "";
-    try {
-        var itemId = document.getElementById("itemId" + index).innerText;
-        var orderQty = document.getElementById("orderQty" + index).value;
-        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
-        if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + index).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + index).getAttribute("min") && orderQty <= document.getElementById("orderQty" + index).getAttribute("max")) {
-        }
-        else {
-            $('#loadingModal').modal('hide');
-            document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
-            return false;
-        }
-        var url = "/Home/AddToCart/" + categoryId;
-        $.ajax({
-            url: url,
-            type: "GET",
-            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            dataType: "json",
-            data: { "itemId": itemId, "orderQty": orderQty },
-            async: true,
-            success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
-                console.log("addToCartGet_onclick", "00090000", "SUCCESS!!!");
-                //var jsonData = JSON.parse(responseData);
-                document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
-                document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                document.getElementById("orderQty" + index).value = defaultOrderQty;
-            },
-            error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
-                console.log("addToCartGet_onclick", "00099000", "ERROR???");
-                console.log(exception, xhr);
-                var jsonData = JSON.parse(xhr.responseText);
-                document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
-            }
-        });
-    }
-    catch (err) {
-        console.log("Please fix errors to continue???", err);
-        alert("Please fix errors to continue???");
-    }
-    return false;
-}
-function addToCartGet1_onclick(itemId, index) {
-    var orderQty = document.getElementById("orderQty" + index).value;
-    console.log("addToCartGet1_onclick", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    document.getElementById("divErrorMessage").innerHTML = "";
-    try {
-        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
-        if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + index).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + index).getAttribute("min") && orderQty <= document.getElementById("orderQty" + index).getAttribute("max")) {
-        }
-        else {
-            $('#loadingModal').modal('hide');
-            document.getElementById("divErrorMessage").innerHTML = "Enter valid order quantity";
-            return false;
-        }
-        var url = "/Home/AddToCart1/";
-        $.ajax({
-            url: url,
-            type: "GET",
-            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            dataType: "json",
-            data: { "itemId": itemId, "orderQty": orderQty },
-            async: true,
-            success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
-                console.log("addToCartGet1_onclick", "00090000", "SUCCESS!!!");
-                //var jsonData = JSON.parse(responseData);
-                document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
-                document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                document.getElementById("orderQty" + index).value = "";
-            },
-            error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
-                console.log("addToCartGet1_onclick", "00099000", "ERROR???");
-                console.log(exception, xhr);
-                var jsonData = JSON.parse(xhr.responseText);
-                document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
-                //document.getElementById("addToCart" + index).innerHTML = "<i class='fa fa-times' style='color: #ff0000; padding-right: 5px;'></i><span style='color: #ff0000;'>Error???</span><br />";
-            }
-        });
-    }
-    catch (err) {
-        $('#loadingModal').modal('hide');
-        alert("Please fix errors to continue???");
-        console.log(err);
-    }
-    return false;
 }
 function categoryId_onclick(categoryId, pageNum, baseUrl) {
     console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId);
@@ -620,14 +367,9 @@ function checkoutValidate_onclick() {
 }
 function orderComments_onchange(index) {
     console.log("orderComments_onchange", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     try {
         var orderComments = document.getElementById("orderComments" + index).value;
-        if (orderComments === null || orderComments === "") {
-            $('#loadingModal').modal('hide');
-            return;
-        }
         var url = "/Home/ShoppingCartComments";
         $.ajax({
             url: url,
@@ -638,11 +380,9 @@ function orderComments_onchange(index) {
             data: { "index": index, "orderComments": orderComments },
             async: true,
             success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
                 console.log("orderComments_onchange", "00090000", "SUCCESS!!!", responseData.success);
             },
             error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
                 console.log("orderComments_onchange", "00099000", "ERROR???");
                 console.log(exception, xhr);
                 var jsonData = JSON.parse(xhr.responseText);
@@ -651,7 +391,9 @@ function orderComments_onchange(index) {
         });
     }
     catch (err) {
-        alert("Please fix errors to continue???");
+        console.log("orderComments_onchange", "00099000", "ERROR???");
+        console.log(err);
+        document.getElementById("divErrorMessage").innerHTML = "Error while updating comments";
     }
     return false;
 }
@@ -685,20 +427,20 @@ function orderQty_oninput1() {
     }
 }
 function orderQty_oninput2(orderQtyIndex, orderQtyIndexStart, orderQtyIndexFinish) {
+    if (orderQtyIndexStart === '') {
+        return false;
+    }
+    orderQtyIndexStart = parseInt(orderQtyIndexStart);
+    orderQtyIndexFinish = parseInt(orderQtyIndexFinish);
     for (var i = orderQtyIndexStart; i <= orderQtyIndexFinish; i++) {
-        document.getElementById("orderQty" + i).value = document.getElementById("itemBundleItemQuantity" + orderQtyIndex).innerText * document.getElementById("orderQty" + orderQtyIndex).value;
+        document.getElementById("orderQty" + i).value = document.getElementById("quantity" + orderQtyIndex).innerText * document.getElementById("orderQty" + orderQtyIndex).value;
     }
 }
 function removeFromCart_onclick(index) {
     console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
-    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     var jsonPostData =
     {
-        ParentCategoryId: document.getElementById("ParentCategoryId").value,
-        PageNum: document.getElementById("PageNum").value,
-        PageSize: document.getElementById("PageSize").value,
-        TotalRowCount: document.getElementById("TotalRowCount").value,
         RemoveFromCartIndex: index,
     };
     var jsonPostDataString = JSON.stringify(jsonPostData);
@@ -713,10 +455,9 @@ function removeFromCart_onclick(index) {
             data: jsonPostDataString,
             async: true,
             success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
                 console.log("removeFromCart_onclick", "00090000", "SUCCESS!!!");
                 if (responseData.success) {
-                    document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                    document.getElementById("divShoppingCartData").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
                 }
@@ -734,7 +475,9 @@ function removeFromCart_onclick(index) {
         });
     }
     catch (err) {
-        alert("Please fix errors to continue???");
+        console.log("removeFromCart_onclick", "00099000", "ERROR???");
+        console.log(err);
+        document.getElementById("divErrorMessage").innerHTML = "Error while removing item";
     }
     return false;
 }
@@ -747,6 +490,33 @@ function searchTermButton_onclick(searchTermElementId) {
     else {
         window.location.href = "/Home/SearchResult?id=" + document.getElementById(searchTermElementId).value;
     }
+}
+function shoppingCart_onclick() {
+    console.log("showShoppingCart_onclick", "00000000", "ENTER!!!");
+    var url = "/Home/ShoppingCart/";
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "json",
+        //data: { "itemId": itemId, "orderQty": orderQty },
+        async: true,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("showShoppingCart_onclick", "00090000", "SUCCESS!!!");
+            console.log(responseData);
+            document.getElementById("divShoppingCartData").innerHTML = responseData.htmlString;
+            document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+            document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+            $('#divShoppingCartPopupModal').modal({ backdrop: 'static', keyboard: false });
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("showShoppingCart_onclick", "00099000", "ERROR???");
+            console.log(exception, xhr);
+            document.getElementById("divErrorMessage").innerHTML = "Error while getting shopping cart";
+        }
+    });
 }
 function shoppingCartSummary_onclick() {
     var url = "/Home/ShoppingCartSummary/";

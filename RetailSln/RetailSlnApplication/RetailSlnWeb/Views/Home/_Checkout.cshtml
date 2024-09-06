@@ -1,8 +1,8 @@
 ﻿@model RetailSlnModels.CheckoutModel
 <div class="container center" id="divOrderProcess">
     @*<p>_Checkout Before</p>
-    @Html.Partial("_PaymentInfo3")
-    <p>_Checkout After</p>*@
+        @Html.Partial("_PaymentInfo3")
+        <p>_Checkout After</p>*@
     <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
         Checkout
     </h2>
@@ -53,14 +53,15 @@
         @*@Html.Partial("_LoginUserProfGuest", Model.LoginUserProfGuestModel)*@
         @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
     </div>
-</div>
-<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
-<div class="center" id="divShoppingCart" style="width: 81%;">
+    <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
     @{
-        Model.PaymentInfoModel.ShoppingCartModel.BackToTop = false;
         Model.PaymentInfoModel.ShoppingCartModel.Checkout = false;
+        Model.PaymentInfoModel.ShoppingCartModel.ShowDetail = true;
+        Model.PaymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
     }
-    @Html.Partial("_ShoppingCart", Model.PaymentInfoModel.ShoppingCartModel)
+    <div class="center" style="width: 81%;">
+        @Html.Partial("_ShoppingCart", Model.PaymentInfoModel.ShoppingCartModel)
+    </div>
 </div>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="~/Include/orderItemCode1.js" type="text/javascript"></script>

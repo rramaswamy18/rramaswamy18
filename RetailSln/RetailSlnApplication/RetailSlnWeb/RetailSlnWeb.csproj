@@ -201,6 +201,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ApiDeliveryMethodModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiDemogInfoAddressModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiIndexModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiItemMasterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiItemsModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiLoginUserProfModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiPaymentMethodModel.cs" />
@@ -1244,6 +1245,9 @@
     <Content Include="Views\Home\_OrderInvoiceDataSubject.cshtml" />
     <Content Include="Views\Home\_OrderSummaryData.cshtml" />
     <Content Include="Views\Home\_ItemBundleData.cshtml" />
+    <Content Include="Views\Home\_ShoppingCartModal.cshtml" />
+    <Content Include="Views\Home\_ShoppingCart2.cshtml" />
+    <Content Include="Views\Home\_ShoppingCartData2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

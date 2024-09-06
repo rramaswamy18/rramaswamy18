@@ -7,11 +7,24 @@
             <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
                 <tr>
                     <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Name
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
                         Delivery Address
                     </th>
                     <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
                         @Model.DeliveryAddressModel.AddressLine1
                         <br />
+                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+                        {
+                            @Model.DeliveryAddressModel.AddressLine2
+                            <br />
+                        }
                         @Model.DeliveryAddressModel.CityName
                         <br />
                         @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
@@ -35,14 +48,6 @@
                         @Model.DeliveryDataModel.AlternateTelephoneFormatted
                     </td>
                 </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Instructions
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
-                        @Model.DeliveryDataModel.DeliveryInstructions
-                    </td>
-                </tr>
             </table>
         </td>
         <td style="padding: 0px; vertical-align: top;">
@@ -53,14 +58,6 @@
                     </th>
                     <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
                         @Model.OrderSummaryModel.EmailAddress
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Name
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())
                     </td>
                 </tr>
                 <tr>
@@ -101,9 +98,42 @@
             </table>
         </td>
     </tr>
+    <tr>
+        <td colspan="2" style="padding: 0px; vertical-align: top; width: 100%;">
+            <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px; width: 100%;">
+                <tr>
+                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                        Instructions
+                    </th>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; word-wrap: break-word;">
+                        @Model.DeliveryDataModel.DeliveryInstructions
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 </table>
+<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
 @{
-    Model.ShoppingCartModel.BackToTop = false;
     Model.ShoppingCartModel.Checkout = false;
+    Model.ShoppingCartModel.ShowDetail = true;
+    Model.ShoppingCartModel.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
 }
-@Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+<div class="center" style="width: 81%;">
+    @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+</div>
+<div class="center" style="width: 45%;">
+    @switch (Model.PaymentModeModel.PaymentModeId)
+    {
+        case PaymentModeEnum.COD:
+        case PaymentModeEnum.CreditSale:
+            <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Continue Process</button>
+            break;
+        case PaymentModeEnum.PaymentGateway:
+            <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button>
+            break;
+        case PaymentModeEnum.ProcessCreditCard:
+            <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Credit Card - Processing</button>
+            break;
+    }
+</div>

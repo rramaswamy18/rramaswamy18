@@ -22,18 +22,18 @@
             @Html.Partial(Model.ItemMasterAttributesViews[i], Model.ItemMasterAttributesDatas[i])
         </div>
     }
-    var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-    paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
-    paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
-    paymentInfoModel.ShoppingCartModel.BackToTop = true;
-    paymentInfoModel.ShoppingCartModel.Checkout = true;
-    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
-    paymentInfoModel.ShoppingCartModel.ShoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
-    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
+    //var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+    //paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
+    //paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
+    //paymentInfoModel.ShoppingCartModel.BackToTop = true;
+    //paymentInfoModel.ShoppingCartModel.Checkout = true;
+    //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
+    //paymentInfoModel.ShoppingCartModel.ShoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems ?? new List<ShoppingCartItemModel>();
+    //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
 }
-<div class="center" id="divShoppingCart" style="width: 81%;">
+@*<div class="center" id="divShoppingCart" style="width: 81%;">
     @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
-</div>
+</div>*@
 <script type="text/javascript">
     divTab_onclick('@Model.TabId', '@Model.ItemMasterAttributesTabs.Count');
     function divTab_onclick(index, count) {

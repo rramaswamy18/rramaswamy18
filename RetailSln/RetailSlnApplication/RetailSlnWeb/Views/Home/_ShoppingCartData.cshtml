@@ -3,17 +3,9 @@
 @{
     int index = 0;
     Model.ShoppingCartSummaryModel = Model.ShoppingCartSummaryModel ?? new RetailSlnModels.ShoppingCartSummaryModel();
-    Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
 }
 @if (Model == null || Model.ShoppingCartItems == null || Model.ShoppingCartItems.Count == 0)
 {
-    @*<div style="display: table; width: 100%;">
-        <div style="display: table-row;">
-            <div style="color: #ff9900; display: table-cell; font-size: 27px; font-weight: bold; text-align: center; vertical-align: top; ">
-                Your shopping cart is empty
-            </div>
-        </div>
-    </div>*@
 }
 else
 {
@@ -51,10 +43,13 @@ else
                     </td>
                     <td class="text-left">
                         @shoppingCartItem.ItemShortDesc
-                        <br />
-                        <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
-                        <br />
-                        @(shoppingCartItem.HSNCode + ", " + shoppingCartItem.ProductCode) 
+                        @*if (Model.ShowDetail)
+                            {
+                                <br />
+                                <span>Weight: </span>@shoppingCartItem.WeightValue<span>&nbsp;</span>@shoppingCartItem.WeightUnitId
+                            }
+                            <br />*@
+                        @(shoppingCartItem.HSNCode + ", " + shoppingCartItem.ProductCode)
                     </td>
                     <td class="text-center">
                         @shoppingCartItem.OrderQty
@@ -67,40 +62,41 @@ else
                     </td>
                     @if (Model.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges)
                     {
+
                         <td>
                             <table class="table table-condensed table-responsive table-striped">
-                                <tr>
-                                    <th>
-                                        Desc
-                                    </th>
-                                    <th>
-                                    </th>
-                                    <th class="text-right">
-                                        %
-                                    </th>
-                                    <th class="text-right">
-                                        Amt
-                                    </th>
-                                </tr>
                                 @if (shoppingCartItem.ItemRateBeforeDiscount != shoppingCartItem.ItemRate)
                                 {
-                                <tr>
-                                    <th scope="row">
-                                        Rate
-                                    </th>
-                                    <td class="text-right">
-                                        <span style="color: #000000; font-weight: bold;">MSRP</span><br />
-                                        @shoppingCartItem.ItemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                    </td>
-                                    <td class="text-right">
-                                        <span style="color: #000000; font-weight: bold;">Disc.</span><br />
-                                        @(shoppingCartItem.ItemDiscountPercent.Value.ToString("#0.00") + "%")
-                                    </td>
-                                    <td class="text-right">
-                                        <span style="color: #000000; font-weight: bold;">After Disc.</span><br />
-                                        @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td class="text-right">
+                                            <span style="color: #000000; font-weight: bold;">Before</span><br />
+                                            @shoppingCartItem.ItemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                        </td>
+                                        <td class="text-right">
+                                            <span style="color: #000000; font-weight: bold;">Disc.</span><br />
+                                            @(shoppingCartItem.ItemDiscountPercent.Value.ToString("#0.00") + "%")
+                                        </td>
+                                        <td class="text-right">
+                                            <span style="color: #000000; font-weight: bold;">After</span><br />
+                                            @shoppingCartItem.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                        </td>
+                                    </tr>
+                                }
+                                @if (shoppingCartItem.ShoppingCartItemSummarys.Count > 0)
+                                {
+                                    <tr>
+                                        <th>
+                                            Desc
+                                        </th>
+                                        <th>
+                                        </th>
+                                        <th class="text-right">
+                                            %
+                                        </th>
+                                        <th class="text-right">
+                                            Amt
+                                        </th>
+                                    </tr>
                                 }
                                 @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
                                 {
@@ -124,7 +120,7 @@ else
                 </tr>
                 <tr>
                     <td></td>
-                    <td colspan="6">
+                    <td class="text-left" colspan="6">
                         @if (Model.Checkout)
                         {
                             @Html.TextBoxFor(m => shoppingCartItem.OrderComments, new { id = "orderComments" + (index - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onchange = "javascript: return orderComments_onchange(" + (index - 1) + ");" })
@@ -140,10 +136,10 @@ else
     </table>
 }
 @{
-    if (Model != null && Model.ShoppingCartSummaryItems != null && Model.ShoppingCartSummaryItems.Count != 0)
+    if (Model != null && Model.ShoppingCartSummaryItems != null && Model.ShoppingCartSummaryItems.Count != 0 && Model.ShoppingCartItems.Count != 0)
     {
         index = 0;
-        bool totalWeightFlag = true;
+        //bool totalWeightFlag = true;
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
         <table class="table table-striped">
             <tr>
@@ -164,14 +160,15 @@ else
                     <th scope="row">@(index + ".")</th>
                     <td class="text-left">
                         @shoppingCartSummary.ItemShortDesc
-                        @if (totalWeightFlag)
-                        {
-                            totalWeightFlag = false;
-                            <br />
-                            <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.ShoppingCartSummaryModel.TotalWeightCalc&nbsp;Grams</span>
-                        }
+                        @*if (totalWeightFlag)
+                            {
+                                totalWeightFlag = false;
+                                <br />
+                                <span>Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.ShoppingCartSummaryModel.TotalWeightCalc&nbsp;Grams</span>
+                            }*@
                         @if (!string.IsNullOrWhiteSpace(shoppingCartSummary.OrderComments))
-                        { 
+                        {
+                            <br />
                             @shoppingCartSummary.OrderComments
                         }
                     </td>

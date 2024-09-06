@@ -9,6 +9,8 @@ namespace RetailSlnModels
 {
     public class ShoppingCartItemBundleModel
     {
+        public long ItemBundleId { set; get; }
+
         public long ItemBundleItemId { set; get; }
 
         public long ItemId { set; get; }

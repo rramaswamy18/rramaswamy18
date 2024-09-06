@@ -8,7 +8,7 @@
     var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
     paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
     paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
-    paymentInfoModel.ShoppingCartModel.BackToTop = true;
+    //paymentInfoModel.ShoppingCartModel.BackToTop = true;
     paymentInfoModel.ShoppingCartModel.Checkout = true;
     paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
     //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = new ShoppingCartSummaryModel();
@@ -30,10 +30,10 @@
     <div class="col-md-6" id="divLoginUserProfScrollIntoView" style="float: right; text-align: left;">
         @Html.Partial("_LoginUserProf1", Model.LoginUserProfModel)
     </div>
-    <div class="col-md-12" id="divShoppingCart">
+    @*<div class="col-md-12" id="divShoppingCart">
         <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
         @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
-    </div>
+    </div>*@
 </div>
 <br style="clear: both;" />
 @{

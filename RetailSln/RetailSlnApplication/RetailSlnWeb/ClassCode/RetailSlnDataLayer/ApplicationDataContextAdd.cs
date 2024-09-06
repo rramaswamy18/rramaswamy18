@@ -39,9 +39,30 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling BuildSqlCommandOrderDetailAdd()", "orderDetail.OrderHeaderId", orderDetail.OrderHeaderId.ToString(), "orderDetail.ItemId", orderDetail.ItemId.ToString(), "orderDetail.SeqNum", orderDetail.SeqNum.ToString());
                 SqlCommand sqlCommand = BuildSqlCommandOrderDetailAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AssignOrderDetail(orderDetail, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                orderDetail.OrderDetailId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 After ExecuteScalar()", "orderDetail.OrderDetailId", orderDetail.OrderDetailId.ToString());
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static void AddOrderDetailItemBundle(OrderDetailItemBundle orderDetailItemBundle, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+                SqlCommand sqlCommand = BuildSqlCommandOrderDetailItemBundleAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignOrderDetailItemBundle(orderDetailItemBundle, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 sqlCommand.ExecuteNonQuery();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
@@ -174,10 +195,11 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandOrderPaymentAdd()", "orderDetail.OrderHeaderId", paymentData1Model.OrderHeaderId.ToString(), "paymentData1Model.CreditCardDataId", paymentData1Model.CreditCardDataId.ToString());
                 SqlCommand sqlCommand = BuildSqlCommandOrderPaymentAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AssignOrderPayment(paymentData1Model, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-                sqlCommand.ExecuteNonQuery();
+                paymentData1Model.OrderPaymentId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 After ExecuteScalar()", "paymentData1Model.OrderPaymentId", paymentData1Model.OrderPaymentId.ToString());
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
             }

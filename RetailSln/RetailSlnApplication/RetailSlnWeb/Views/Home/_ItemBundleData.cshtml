@@ -13,21 +13,26 @@
         var clientName = ArchLibCache.ClientName;
         var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
         BuildItemBundle(Model.ItemBundleModel, ref orderQtyIndex, clientId, clientName);
-        <span id="itemBundleId">@Model.ItemBundleModel.ItemBundleId</span>
-        <span id="discountPercent">@Model.ItemBundleModel.DiscountPercent</span>
+        @*if (Model.ItemBundleModel.DiscountPercent > 0)
+        {
+    <span style="color: #000000; font-size: 13px; font-weight: bold; padding-right: 9px;">Bundle Price <span style="color: #0000ff;">@Model.ItemBundleModel.ItemRateAfterDiscountFormatted</span> (Discount of <span style="color: #ff0000;">@Model.ItemBundleModel.DiscountPercentFormatted</span> will be applied) when bundle is not broken</span>
+            <button class="btn btn-primary" onclick="javascript: return resetOrderQtyToMinQty();" style="font-weight: bold;">Reset Qty to Min</button>
+        }*@
+        <span id="itemBundleId" style="display: none;">@Model.ItemBundleModel.ItemBundleId</span>
+        <span id="discountPercent" style="display: none;">@Model.ItemBundleModel.DiscountPercent</span>
         <table class="table table-bordered table-condensed table-responsive" style="width: 81%;">
             <colgroup>
                 <col style="width: 3%;" />
                 <col style="width: 6%;" />
                 <col />
                 <col style="width: 9%;" />
-                <col style="width: 9%;" />
-                <col style="width: 8%;" />
+                <col style="width: 11%;" />
+                <col />
             </colgroup>
             <tr>
                 <th>#</th>
                 <th>Id</th>
-                <th>Ummachi</th>
+                <th>Description</th>
                 <th>Price</th>
                 <th>Qty</th>
             </tr>
@@ -52,23 +57,15 @@
             </td>
             <td>
                 @itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc
-                <span id="itemBundleItemId@(itemBundleItemModel.OrderQtyIndex)">@itemBundleItemModel.ItemBundleItemId</span>
-                <span id="quantity@(itemBundleItemModel.OrderQtyIndex)">@itemBundleItemModel.Quantity</span>
-                <span id="itemTypeId@(itemBundleItemModel.OrderQtyIndex)">@itemBundleItemModel.ItemModel.ItemTypeId</span>
-                <span id="itemRateBeforeDiscount@(itemBundleItemModel.OrderQtyIndex)">@itemBundleItemModel.ItemRateBeforeDiscount</span>
-                <span id="itemRateAfterDiscount@(itemBundleItemModel.OrderQtyIndex)">@itemBundleItemModel.ItemRateAfterDiscount</span>
-                <br /><span>Quantity @itemBundleItemModel.Quantity</span>
-                <br /><span>ItemBundleItemId @itemBundleItemModel.ItemBundleItemId</span>
+                <span id="itemBundleId@(itemBundleItemModel.OrderQtyIndex)" style="display: none;">@itemBundleItemModel.ItemBundleId</span>
+                <span id="itemBundleItemId@(itemBundleItemModel.OrderQtyIndex)" style="display: none;">@itemBundleItemModel.ItemBundleItemId</span>
+                <span id="quantity@(itemBundleItemModel.OrderQtyIndex)" style="display: none;">@itemBundleItemModel.Quantity</span>
+                <span id="itemTypeId@(itemBundleItemModel.OrderQtyIndex)" style="display: none;">@itemBundleItemModel.ItemModel.ItemTypeId</span>
+                <span id="itemId@(itemBundleItemModel.OrderQtyIndex)" style="display: none;">@itemBundleItemModel.ItemModel.ItemId</span>
                 @if (itemBundleItemModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                 {
                     itemBundleModelTemp = RetailSlnCache.ItemBundleModels.First(x => x.ItemId == itemBundleItemModel.ItemModel.ItemId);
                     <br />
-                    <span>ItemTypeId @((int)itemBundleItemModel.ItemModel.ItemTypeId)</span><br />
-                    <span>OrderQtyIndex @itemBundleItemModel.OrderQtyIndex</span><br />
-                    <span>OrderQtyIndexStart @itemBundleItemModel.OrderQtyIndexStart</span><br />
-                    <span>OrderQtyIndexFinish @itemBundleItemModel.OrderQtyIndexFinish</span><br />
-                    <span>ItemRateBeforeDiscount @itemBundleItemModel.ItemRateBeforeDiscount</span><br />
-                    <span>ItemRateAfterDiscount @itemBundleItemModel.ItemRateAfterDiscount</span><br />
                     <button class="btn btn-success" onclick="javascript: return btnItemBundleView_onclick('tblItemBundle@(itemBundleModelTemp.ItemBundleId)');" style="font-size: 12px;">View</button>
                     <span style="padding-left: 3px;"><button class="btn btn-primary" onclick="javascript: return btnItemBundleHide_onclick('tblItemBundle@(itemBundleModelTemp.ItemBundleId)');" style="font-size: 12px;">Hide</button></span>
                     <table class="table table-bordered table-condensed table-responsive" id="tblItemBundle@(itemBundleModelTemp.ItemBundleId)" style="display: none; float: left;">
@@ -77,7 +74,7 @@
                             <col style="width: 6%;" />
                             <col />
                             <col style="width: 9%;" />
-                            <col style="width: 8%;" />
+                            <col style="width: 10%;" />
                             <col style="width: 8%;" />
                         </colgroup>
                         <tr>
@@ -87,40 +84,68 @@
                             <th>Price</th>
                             <th>Qty</th>
                         </tr>
-                        @BuildItemBundle(itemBundleModelTemp, false, clientId, clientName)
+                        @BuildItemBundle(itemBundleModelTemp, true, clientId, clientName)
                     </table>
                 }
             </td>
             <td class="text-right">
-                @itemBundleItemModel.ItemRateAfterDiscountFormatted
+                @*Min : @itemBundleItemModel.Quantity
+                <br />*@
+                @itemBundleItemModel.ItemModel.ItemRateFormatted
             </td>
             <td>
-                <span id="itemId@(itemBundleItemModel.OrderQtyIndex)">@itemBundleItemModel.ItemModel.ItemId</span>
-                @if (itemBundleItemModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                @if (itemEdit)
                 {
-                    <br /><span>@itemEdit</span>
-                    itemBundleModelTemp = RetailSlnCache.ItemBundleModels.First(x => x.ItemId == itemBundleItemModel.ItemModel.ItemId);
-                    @*<input class="form-control" id="orderQty@(seqNumSave)" min="0" max="999" maxlength="3" name="orderQty@(seqNum)" oninput="javascript: return orderQty_oninput('@(seqNum + 1)', '@(itemBundleModelTemp.ItemBundleItemModels.Count)', '@(itemBundleModel.Discount)');" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />*@
-                    if (itemEdit)
-                    {
-                        <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="0" max="999" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" oninput="javascript: return orderQty_oninput2('@itemBundleItemModel.OrderQtyIndex', '@itemBundleItemModel.OrderQtyIndexStart', '@itemBundleItemModel.OrderQtyIndexFinish');" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />
-                    }
-                    else
-                    {
-                        <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="0" max="999" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" oninput="javascript: return false;" readonly="readonly" style="width: 72px;" value="@itemBundleItemModel.Quantity" />
-                    }
+                    <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="0" max="99" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" oninput="javascript: return orderQty_oninput2('@itemBundleItemModel.OrderQtyIndex', '@itemBundleItemModel.OrderQtyIndexStart', '@itemBundleItemModel.OrderQtyIndexFinish');" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />
+                    <a href="javascript: void(0);" onclick="javascript: return addToCart1_onclick(@itemBundleItemModel.ItemModel.ItemMasterModel.ItemModels[0].ItemId, @itemBundleItemModel.OrderQtyIndex);" title="Enter quantity and click add to cart @itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemBundleItemModel.ItemModel.ItemMasterModel.ImageTitle" /></a>
+                    @*if (itemBundleItemModel.ItemModel.ItemMasterModel.ItemModels.Count > 1)
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCart1_onclick(null, @itemBundleItemModel.OrderQtyIndex);" title="Enter quantity and click add to cart @itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemBundleItemModel.ItemModel.ItemMasterModel.ImageTitle" /></a>
+            }
+            else
+            {
+                <a href="javascript: void(0);" onclick="javascript: return addToCart1_onclick(@itemBundleItemModel.ItemModel.ItemMasterModel.ItemModels[0].ItemId, @itemBundleItemModel.OrderQtyIndex);" title="Enter quantity and click add to cart @itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemBundleItemModel.ItemModel.ItemMasterModel.ImageTitle" /></a>
+            }*@
+                    <span id="spnMessageSuccess@(itemBundleItemModel.OrderQtyIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                        <br style="clear: both;" />
+                        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(itemBundleItemModel.OrderQtyIndex)" style="color: #0000ff; font-size:12px;"></span></span>
+                    </span>
+                    <span id="spnMessageError@(itemBundleItemModel.OrderQtyIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                        <br style="clear: both;" />
+                        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                        <span id="spnMessageErrorText@(itemBundleItemModel.OrderQtyIndex)" style="color: #ff0000;"></span>
+                    </span>
+                }
+                @*else
+                {
+                    <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="0" max="99" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" oninput="javascript: return false;" readonly="readonly" style="width: 72px;" value="@itemBundleItemModel.Quantity" />
+                }
+                <span>@itemEdit</span>
+            @if (itemBundleItemModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+            {
+                itemBundleModelTemp = RetailSlnCache.ItemBundleModels.First(x => x.ItemId == itemBundleItemModel.ItemModel.ItemId);
+        <input class="form-control" id="orderQty@(seqNumSave)" min="0" max="999" maxlength="3" name="orderQty@(seqNum)" oninput="javascript: return orderQty_oninput('@(seqNum + 1)', '@(itemBundleModelTemp.ItemBundleItemModels.Count)', '@(itemBundleModel.Discount)');" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />
+                if (itemEdit)
+                {
+                    <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="0" max="99" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" oninput="javascript: return orderQty_oninput2('@itemBundleItemModel.OrderQtyIndex', '@itemBundleItemModel.OrderQtyIndexStart', '@itemBundleItemModel.OrderQtyIndexFinish');" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />
                 }
                 else
                 {
-                    if (itemEdit)
-                    {
-                        <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="1" max="999" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />
-                    }
-                    else
-                    {
-                        <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="1" max="999" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" onkeypress="javascript: return false;" onkeyup="javascript: return false;" readonly="readonly" style="width: 72px;" value="@itemBundleItemModel.Quantity" />
-                    }
+                    <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="0" max="99" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" oninput="javascript: return false;" readonly="readonly" style="width: 72px;" value="@itemBundleItemModel.Quantity" />
                 }
+            }
+            else
+            {
+                if (itemEdit)
+                {
+                    <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="1" max="99" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" style="width: 72px;" type="number" value="@itemBundleItemModel.Quantity" />
+                }
+                else
+                {
+                    <input class="form-control" id="orderQty@(itemBundleItemModel.OrderQtyIndex)" min="1" max="99" maxlength="3" name="orderQty@(itemBundleItemModel.OrderQtyIndex)" onkeypress="javascript: return false;" onkeyup="javascript: return false;" readonly="readonly" style="width: 72px;" value="@itemBundleItemModel.Quantity" />
+                }
+            }*@
             </td>
             <td>
                 <img alt="@(itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc + " " + itemBundleItemModel.ItemModel.ItemMasterModel.ImageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemBundleItemModel.ItemModel.ItemMasterModel.ImageName" style="height: 90px; width: 90px;" title="@(itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc + " " + itemBundleItemModel.ItemModel.ItemMasterModel.ImageTitle)" />

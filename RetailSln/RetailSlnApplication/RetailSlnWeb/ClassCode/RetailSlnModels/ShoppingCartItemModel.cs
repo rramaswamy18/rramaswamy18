@@ -15,6 +15,11 @@ namespace RetailSlnModels
 
         public string HSNCode { set; get; }
 
+        public ItemBundleModel ItemBundleModel { set; get; }
+
+        //public long? ItemBundleId { set; get; }
+        //public long? ItemBundleItemId { set; get; }
+
         public float? ItemDiscountAmount { set; get; }
 
         public float? ItemDiscountPercent { set; get; }

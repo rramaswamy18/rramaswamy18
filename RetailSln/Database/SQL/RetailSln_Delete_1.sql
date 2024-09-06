@@ -37,6 +37,9 @@ DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);
 DELETE RetailSlnSch.OrderPayment WHERE OrderPaymentId > 0
 DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
 
+DELETE RetailSlnSch.OrderDetailItemBundle --WHERE OrderDetailId > 0
+DBCC CHECKIDENT ('RetailSlnSch.OrderDetailItemBundle', RESEED, 0);
+
 DELETE RetailSlnSch.OrderDetail WHERE OrderDetailId > 0
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
 
@@ -77,3 +80,28 @@ INNER JOIN [ArchLib].[DemogInfoZipPlus]
   ORDER BY DemogInfoAddressUpload.DemogInfoAddressUploadId
     SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] OFF
 --
+SELECT IDENT_CURRENT('RetailSlnSch.Person')
+SELECT IDENT_CURRENT('RetailSlnSch.PersonRelation')
+SELECT IDENT_CURRENT('RetailSlnSch.DemogInfoAddress')
+SELECT IDENT_CURRENT('RetailSlnSch.Document')
+SELECT IDENT_CURRENT('RetailSlnSch.EmailData')
+SELECT IDENT_CURRENT('RetailSlnSch.CreditCardData')
+SELECT IDENT_CURRENT('RetailSlnSch.GiftCert')
+SELECT IDENT_CURRENT('RetailSlnSch.OrderDelivery')
+SELECT IDENT_CURRENT('RetailSlnSch.OrderPayment')
+SELECT IDENT_CURRENT('RetailSlnSch.OrderDetailItemBundle')
+SELECT IDENT_CURRENT('RetailSlnSch.OrderDetail')
+SELECT IDENT_CURRENT('RetailSlnSch.OrderHeader')
+
+DBCC CHECKIDENT ('ArchLib.Person', RESEED, 0);
+DBCC CHECKIDENT ('ArchLib.PersonRelation', RESEED, 0);
+DBCC CHECKIDENT ('ArchLib.DemogInfoAddress', RESEED, 2);
+DBCC CHECKIDENT ('ArchLib.Document', RESEED, 0);
+DBCC CHECKIDENT ('ArchLib.EmailData', RESEED, 0);
+DBCC CHECKIDENT ('ArchLib.CreditCardData', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.GiftCert', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.OrderDetailItemBundle', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
+DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);

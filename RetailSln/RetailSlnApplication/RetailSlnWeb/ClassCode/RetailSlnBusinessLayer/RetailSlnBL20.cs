@@ -145,14 +145,14 @@ namespace RetailSlnBusinessLayer
                         "Specification(s)",
                         "Product Info",
                         "Image(s)",
-                        "Bundled Item(s)",
+                        //"Bundled Item(s)",
                     },
                     ItemMasterAttributesViews = new List<string>
                     {
                         "_ItemMasterAttributes0",
                         "_ItemMasterAttributes1",
                         "_ItemMasterAttributes2",
-                        "_ItemMasterAttributes3",
+                        //"_ItemMasterAttributes3",
                     },
                     ItemId = itemMasterId,
                     TabId = tabId,
@@ -173,17 +173,22 @@ namespace RetailSlnBusinessLayer
                 {
                     //ItemModel = itemAttributesModel.ItemMasterModel,
                 };
-                ItemBundleDataModel itemBundleDataModel = new ItemBundleDataModel
-                {
-                    ItemMasterId = itemMasterId,
-                    ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId),
-                    //ItemBundleModel = RetailSlnCache.ItemBundleModels.First(x => x.ItemId == itemMasterId),
-                };
                 //ItemBundleItemData(itemMasterId, "", 0, clientId, ipAddress, execUniqueId, loggedInUserId);
                 itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemMasterSpecListModel);
                 itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemInfoListModel);
                 itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemImageListModel);
-                itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemBundleDataModel);
+                if (itemMasterAttributesModel.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                {
+                    itemMasterAttributesModel.ItemMasterAttributesTabs.Add("Bundled Item(s)");
+                    itemMasterAttributesModel.ItemMasterAttributesViews.Add("_ItemMasterAttributes3");
+                    ItemBundleDataModel itemBundleDataModel = new ItemBundleDataModel
+                    {
+                        ItemMasterId = itemMasterId,
+                        ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId),
+                        //ItemBundleModel = RetailSlnCache.ItemBundleModels.First(x => x.ItemId == itemMasterId),
+                    };
+                    itemMasterAttributesModel.ItemMasterAttributesDatas.Add(itemBundleDataModel);
+                }
                 return itemMasterAttributesModel;
             }
             catch (Exception exception)

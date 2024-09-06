@@ -1,0 +1,13 @@
+﻿@model RetailSlnModels.ShoppingCartModel
+@{
+    var shoppingCartAvailable = Model != null && Model.ShoppingCartItems != null && Model.ShoppingCartItems.Count > 0;
+    if (!shoppingCartAvailable)
+    {
+        <div class="center" style="text-align: center; vertical-align: top;">
+            <h3 style="color: #ff9900; font-size: 27px; font-weight: bold;">
+                Your&nbsp;shopping&nbsp;cart&nbsp;is&nbsp;empty
+            </h3>
+        </div>
+    }
+}
+@Html.Partial("_ShoppingCartData2", Model)

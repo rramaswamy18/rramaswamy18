@@ -27,11 +27,11 @@
         </tr>
         <tr>
             <td style="padding: 0px; width: 50%;">
-                <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment...</h3>
+                <h3 style="color: #ff0000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment...</h3>
                 @Html.Partial("_PaymentModeData1", Model.PaymentModeModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "PaymentModeModel" } })
             </td>
             <td style="padding: 0px; width: 50%;">
-                <h3 style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery...</h3>
+                <h3 style="color: #0000ff; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery...</h3>
                 @Html.Partial("_DeliveryMethodData1", Model.DeliveryMethodModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "DeliveryMethodModel" } })
             </td>
         </tr>
@@ -47,7 +47,8 @@
     <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process</button>
 </div>
 @{
-    Model.ShoppingCartModel.BackToTop = false;
     Model.ShoppingCartModel.Checkout = false;
+    Model.ShoppingCartModel.ShowDetail = true;
+    Model.ShoppingCartModel.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
 }
 @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)

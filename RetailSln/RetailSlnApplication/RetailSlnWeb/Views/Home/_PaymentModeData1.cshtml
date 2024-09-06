@@ -21,11 +21,20 @@
     @{
         string foreColor = "#0000ff";
         var codeDataModels = Model.PaymentModes;
+        string buttonChecked = "";// "checked='checked'";
         for (int i = 0; i < codeDataModels.Count; i++)
         {
+            if (Model != null && Model.PaymentModeId != null && (int)Model.PaymentModeId == codeDataModels[i].CodeDataNameId)
+            {
+                buttonChecked = "checked='checked'";
+            }
+            else
+            {
+                buttonChecked = "";
+            }
             <tr>
                 <td style="padding-right: 9px; vertical-align: top;">
-                    <input class="form-control" id="@(htmlFieldPrefix)PaymentModeId@(i)" name="@(htmlFieldPrefixName)PaymentModeId" style="color: #000000; font-weight: 900;" type="radio" value="@codeDataModels[i].CodeDataNameId" />
+                    <input @buttonChecked class="form-control" id="@(htmlFieldPrefix)PaymentModeId@(i)" name="@(htmlFieldPrefixName)PaymentModeId" style="color: #000000; font-weight: 900;" type="radio" value="@codeDataModels[i].CodeDataNameId" />
                 </td>
                 <td style="padding-right: 9px; vertical-align: middle;">
                     <img src="~/Images/@codeDataModels[i].CodeDataDesc1" style="height: 27px; width: 36px;" />

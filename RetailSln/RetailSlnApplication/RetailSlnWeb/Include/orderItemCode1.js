@@ -294,7 +294,7 @@ function paymentInfo1Save_onclick() {
     });
 }
 function paymentInfo2Save_onclick() {
-    console.log("00000000", "paymentInfo2Save_onclick");
+    console.log("paymentInfo2Save_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/PaymentInfo2";
     $.ajax({
@@ -305,11 +305,12 @@ function paymentInfo2Save_onclick() {
         //data: postData,
         //async: false,
         success: function (responseData, textStatus, request) {
-            console.log("00000100", "paymentInfo2Save_onclick");
+            //document.getElementById("formPaymentInfoData").innerHTML = responseData.processMessage;
+            console.log("paymentInfo2Save_onclick", "00001000", "SUCCESS!!!");
             console.log(9, responseData);
             $("#loadingModal").modal('hide');
             if (responseData.success) {
-                console.log("00000200", "paymentInfo2Save_onclick");
+                console.log("paymentInfo2Save_onclick", "00002000", responseData.success, responseData.processMessage);
                 var jsonObject = JSON.parse(responseData.htmlString);
                 console.log(9.9, responseData.htmlString, jsonObject);
                 var options = {
@@ -346,16 +347,19 @@ function paymentInfo2Save_onclick() {
                 rzp1.open();
             }
             else {
-                document.getElementById("formPaymentInfoData").innerHTML = responseData.htmlString;
+                console.log("paymentInfo2Save_onclick", "00090900", "ERROR???");
+                console.log(responseData);
+                //document.getElementById("formPaymentInfoData").innerHTML = responseData.htmlString;
+                alert("Error occurred in Payment Gateway call");
             }
             console.log("00001000", "paymentInfo2Save_onclick success", responseData.processMessage);
             $("#loadingModal").modal('hide');
         },
         error: function (xhr, exception) {
             $("#loadingModal").modal('hide');
-            document.getElementById("formPaymentInfoData").innerHTML = xhr.responseText;
+            //document.getElementById("formPaymentInfoData").innerHTML = xhr.responseText;
             console.log("00099000", "paymentInfo2Save_onclick error", exception, xhr);
-            $("#loadingModal").modal('hide');
+            alert("Error occurred in Payment Gateway call");
         }
     });
 }

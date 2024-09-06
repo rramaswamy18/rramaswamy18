@@ -40,7 +40,6 @@
         var paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
         paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model();
         paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel();
-        paymentInfoModel.ShoppingCartModel.BackToTop = true;
         paymentInfoModel.ShoppingCartModel.Checkout = true;
         paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
         //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = new ShoppingCartSummaryModel();
@@ -69,9 +68,9 @@
             <br style="clear: both;" />
             @BuildPaginationLinks(pageCount)
         }
-        <div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
-            @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
-        </div>
+        @*<div id="divShoppingCart" style="margin-left: auto; margin-right: auto; width: 72%;">
+                @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
+            </div>*@
     }
 }@*helper BuildOrderCategoryItemHier(long parentCategoryId)*@
 @helper BuildPaginationLinks(int pageCount)
@@ -207,17 +206,16 @@
 }
 @helper BuildItem(PaymentInfo1Model paymentInfoModel, ItemMasterModel itemMasterModel, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
-    string defaultOrderQty = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "DefaultOrderQty");
     var shoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems;
     ShoppingCartItemModel shoppingCartItemModel;
-    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
         <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
     </a>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
         <div style="position: relative;">
             <div style="bottom: 1px; right: 2px; position: absolute;">
-                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" target="_blank" title="@itemMasterModel.ImageTitle">Item Bundle&nbsp;</a>
+                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" title="@itemMasterModel.ImageTitle">Item Bundle&nbsp;</a>
             </div>
         </div>
     }
@@ -239,10 +237,10 @@
     </div>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
-        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
+        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
     }
-    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
-    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>
+    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
+    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>
     if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
     {
         <br style="clear: both;" />
@@ -251,7 +249,7 @@
     }//if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     else
     {
-        bool brFlag = false;
+        //bool brFlag = false;
         int index = 0;
         string prefixString = "", optionText;
         <br style="clear: both;" />
@@ -262,7 +260,7 @@
                 {
                     @(prefixString + ++index + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
                     prefixString = " | ";
-                    brFlag = true;
+                    //brFlag = true;
                 }
             </span>
         }
@@ -275,34 +273,38 @@
                     {
                         @(prefixString + ++index + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
                         prefixString = " | ";
-                        brFlag = true;
+                        //brFlag = true;
                     }
                 </span>
             }
         }
-        if (brFlag)
-        {
-            <br style="clear: both;" />
-        }
         <div style="font-size: 12px; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">
-            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="@defaultOrderQty" />
-            @if (defaultOrderQty == "")
+            <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(@(imageIndex));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
+            @if (itemMasterModel.ItemModels.Count > 1)
             {
-                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ParentCategoryId, @Model.PageNum, @Model.PageSize, @Model.TotalRowCount, @imageIndex);" style="float: left;" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ItemModels[0].ImageTitle" /></a>
+                <a href="javascript: void(0);" onclick="javascript: return addToCart1_onclick(null, @imageIndex);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
             }
             else
             {
-                <a href="javascript: void(0);" onclick="javascript: return addToCartGet_onclick(@imageIndex, '@defaultOrderQty', @Model);" style="float: left;" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+                <a href="javascript: void(0);" onclick="javascript: return addToCart1_onclick(@itemMasterModel.ItemModels[0].ItemId, @imageIndex);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
             }
         </div>
-        <br style="clear: both;" />
         shoppingCartItemModel = shoppingCartItems?.FirstOrDefault(x => x.ItemId == itemMasterModel.ItemModels[0].ItemId);
-        <span style="font-family: Arial; font-size: 12px; font-weight: bold;">
-            <i class="fa fa-remove" id="spnMessageRemove@(imageIndex)" style="color: #ff0000; display: none; padding-left: 7px; padding-right: 1px;"></i>
-            <span id="spnMessageError@(imageIndex)" style="color: #ff0000; display: none; font-size: 12px; padding-right: 5px;">Error???</span>
+        <span id="spnMessageSuccess@(imageIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+            <br style="clear: both;" />
+            <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+            <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(imageIndex)" style="color: #0000ff; font-size:12px;"></span></span>
+        </span>
+        <span id="spnMessageError@(imageIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+            <br style="clear: both;" />
+            <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+            <span id="spnMessageErrorText@(imageIndex)" style="color: #ff0000;"></span>
         </span>
         if (itemMasterModel.ItemModels.Count > 1)
         {
+            //if (itemMasterModel.ItemTypeId != ItemTypeEnum.ItemBundle)
+            //{
+            <br style="clear: both;" />
             <span id="spnMessageItem@(imageIndex)" style="color: #0000ff; font-family: Arial; font-size: 12px; font-weight: bold;">
                 Select item from below
                 <br style="clear: both;">
@@ -340,10 +342,17 @@
                 </table>
             </div>
             <span id="itemId@(imageIndex)" style="display: none;"></span>
+            //}
         }
         else
         {
             <span id="itemId@(imageIndex)" style="display: none;">@itemMasterModel.ItemModels[0].ItemId</span>
+        }
+        if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        {
+            <br style="clear: both;" />
+            <p style="font-weight: bold;">-- OR --</p>
+            <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #0000ff; font-size: 13px; font-weight:bold; text-decoration: underline;" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Order your items from bundle</a>
         }
     }//else (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
     @*<br style="clear: both;" />*@

@@ -77,30 +77,47 @@
                 </div>
             </th>
         }
-        <th class="text-left" style="white-space: nowrap;">
-            <input class="form-control" id="orderQty" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: orderQty_oninput1();" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
-            &nbsp;
+    <th class="text-left" style="white-space: nowrap;">
+        @*<input class="form-control" id="orderQty" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: orderQty_oninput1();" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
+        &nbsp;
+        @if (Model.ItemTypeId == ItemTypeEnum.ItemBundle)
+        {
             <a href="javascript: void(0);" onclick="javascript: return addToCartGet2_onclick(document.getElementById('itemId').innerText, '');" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
-            <span id="spnMessageSuccess" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                @*<br style="clear: both;" />*@
-                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-                <span style="color: #a54000; font-size: 12px; padding-right: 5px;">Added...<span id="spnMessageSuccessText" style="color: #0000ff; font-size:12px;"></span></span>
-            </span>
-            <table id="spnMessageError" style="display: none; padding: 0px; ">
-                <tr>
-                    <td style="padding-left: 7px; padding-right: 5px; vertical-align: top;">
-                        <i class="fa fa-remove" style="color: #ff0000;"></i>
-                    </td>
-                    <td id="spnMessageErrorText" style="color: #ff0000; float: left; font-size: 12px;">
-                    </td>
-                </tr>
-            </table>
-            @*<span id="spnMessageError" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                    <i class="fa fa-remove" style="color: #ff0000; float: left; padding-left: 7px; padding-right: 5px;"></i>
-                    <span id="spnMessageErrorText" style="color: #ff0000; float: left; font-size: 12px;"></span>
-                    <br style="clear: both;" />
-                </span>*@
-        </th>
+        }
+        else
+        {
+            <a href="javascript: void(0);" onclick="javascript: return addToCartGet1_onclick(document.getElementById('itemId').innerText, '');" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
+        }*@
+        <!--<span id="spnMessageSuccess" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        @*<br style="clear: both;" />*@
+        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText" style="color: #0000ff; font-size:12px;"></span></span>
+    </span>
+    <span id="spnMessageError" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        @*<br style="clear: both;" />*@
+        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+        <span id="spnMessageErrorText" style="color: #ff0000;"></span>
+    </span>
+    <span id="spnMessageSuccess" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">-->
+        @*<br style="clear: both;" />*@
+        <!--<i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+        <span style="color: #a54000; font-size: 12px; padding-right: 5px;">Added...<span id="spnMessageSuccessText" style="color: #0000ff; font-size:12px;"></span></span>
+    </span>
+    <table style="padding: 0px;">
+        <tr>
+            <td style="padding-left: 7px; padding-right: 5px; vertical-align: top;">
+                <i class="fa fa-remove" id="spnMessageError" style="color: #ff0000; display: none;"></i>
+            </td>
+            <td id="spnMessageErrorText" style="color: #ff0000; float: left; font-size: 12px;">
+            </td>
+        </tr>
+    </table>-->
+        @*<span id="spnMessageError" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+            <i class="fa fa-remove" style="color: #ff0000; float: left; padding-left: 7px; padding-right: 5px;"></i>
+            <span id="spnMessageErrorText" style="color: #ff0000; float: left; font-size: 12px;"></span>
+            <br style="clear: both;" />
+        </span>*@
+    </th>
     </tr>
 </table>
 @if (itemId0 != null)

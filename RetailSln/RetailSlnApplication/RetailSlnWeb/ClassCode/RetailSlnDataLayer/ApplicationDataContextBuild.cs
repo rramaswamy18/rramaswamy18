@@ -111,6 +111,60 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@OrderDetailId"].Direction = ParameterDirection.ReturnValue;
             return sqlCommand;
         }
+        private static SqlCommand BuildSqlCommandOrderDetailItemBundleAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "";
+            sqlStmt += "        INSERT RetailSlnSch.OrderDetailItemBundle" + Environment.NewLine;
+            sqlStmt += "              (" + Environment.NewLine;
+            sqlStmt += "               ClientId" + Environment.NewLine;
+            sqlStmt += "              ,DiscountPercent" + Environment.NewLine;
+            sqlStmt += "              ,ItemBundleId" + Environment.NewLine;
+            sqlStmt += "              ,ItemBundleIItemId" + Environment.NewLine;
+            sqlStmt += "              ,ItemMasterDesc" + Environment.NewLine;
+            sqlStmt += "              ,ItemRate" + Environment.NewLine;
+            sqlStmt += "              ,ItemRateBeforeDiscount" + Environment.NewLine;
+            sqlStmt += "              ,OrderAmount" + Environment.NewLine;
+            sqlStmt += "              ,OrderAmountBeforeDiscount" + Environment.NewLine;
+            sqlStmt += "              ,OrderDetailId" + Environment.NewLine;
+            sqlStmt += "              ,OrderQty" + Environment.NewLine;
+            sqlStmt += "              ,SeqNum" + Environment.NewLine;
+            sqlStmt += "              ,AddUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId" + Environment.NewLine;
+            sqlStmt += "              )" + Environment.NewLine;
+            sqlStmt += "        OUTPUT INSERTED.OrderDetailItemBundleId" + Environment.NewLine;
+            sqlStmt += "        SELECT" + Environment.NewLine;
+            sqlStmt += "               @ClientId" + Environment.NewLine;
+            sqlStmt += "              ,@DiscountPercent" + Environment.NewLine;
+            sqlStmt += "              ,@ItemBundleId" + Environment.NewLine;
+            sqlStmt += "              ,@ItemBundleIItemId" + Environment.NewLine;
+            sqlStmt += "              ,@ItemMasterDesc" + Environment.NewLine;
+            sqlStmt += "              ,@ItemRate" + Environment.NewLine;
+            sqlStmt += "              ,@ItemRateBeforeDiscount" + Environment.NewLine;
+            sqlStmt += "              ,@OrderAmount" + Environment.NewLine;
+            sqlStmt += "              ,@OrderAmountBeforeDiscount" + Environment.NewLine;
+            sqlStmt += "              ,@OrderDetailId" + Environment.NewLine;
+            sqlStmt += "              ,@OrderQty" + Environment.NewLine;
+            sqlStmt += "              ,@SeqNum" + Environment.NewLine;
+            sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+            sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@DiscountPercent", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@ItemBundleId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ItemBundleIItemId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ItemMasterDesc", SqlDbType.NVarChar, 512);
+            sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@ItemRateBeforeDiscount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@OrderAmount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@OrderAmountBeforeDiscount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@OrderDetailId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters.Add("@OrderDetailItemBundleId", SqlDbType.BigInt);
+            sqlCommand.Parameters["@OrderDetailItemBundleId"].Direction = ParameterDirection.ReturnValue;
+            return sqlCommand;
+        }
         private static SqlCommand BuildSqlCommandDeliveryInfoAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string sqlStmt = "         INSERT RetailSlnSch.OrderDelivery" + Environment.NewLine;
@@ -165,7 +219,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,AddUserId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
-            sqlStmt += "        OUTPUT INSERTED.OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "        OUTPUT INSERTED.OrderPaymentId" + Environment.NewLine;
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @ClientId" + Environment.NewLine;
             sqlStmt += "              ,@CouponId" + Environment.NewLine;

@@ -1,60 +1,13 @@
 ﻿@model RetailSlnModels.ShoppingCartModel
 @{
     var shoppingCartAvailable = Model != null && Model.ShoppingCartItems != null && Model.ShoppingCartItems.Count > 0;
- }
-<div id="divShoppingCartBackToTop" style="display: table; width: 100%;">
-    <div style="display: table-row;">
-        @if (Model == null || Model.BackToTop)
-        {
-            <div style="display: table-cell; float: left; vertical-align: top;">
-                <a href="javascript: void(0);" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="text-decoration: underline;">
-                    <h3 style="font-size: 24px; font-weight: bold;">
-                        Back to top
-                    </h3>
-                </a>
-            </div>
-        }
-        @if (shoppingCartAvailable)
-        {
-            <div style="display: table-cell; text-align: center; vertical-align: top;">
-                <h3 style="color: #ff9900; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">
-                    Shopping&nbsp;&nbsp;Cart
-                </h3>
-            </div>
-        }
-        else
-        {
-
-            <div style="display: table-cell; text-align: center; vertical-align: top;">
-                <h3 style="color: #ff9900; font-size: 27px; font-weight: bold;">
-                    Your&nbsp;shopping&nbsp;cart&nbsp;is&nbsp;empty
-                </h3>
-            </div>
-        }
-        @if (Model != null && Model.Checkout && shoppingCartAvailable)
-        {
-            <div style="display: table-cell; float: right; vertical-align: top;">
-                <h3>
-                    <i class="fa" style="font-size: 24px">&#xf07a;</i>
-                    &nbsp;
-                    <a href="javascript: return void(0);" onclick="javascript: return checkoutValidate_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
-                        <span style="color: #000000; font-size: 24px; text-decoration: underline;">Checkout</span>
-                    </a>
-                </h3>
-            </div>
-        }
-        else
-        {
-            <div style="display: table-cell; float: right; vertical-align: top;">
-                <h3>
-                    <i class="fa" style="font-size: 24px"></i>
-                    &nbsp;
-                    <span style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
-                        <span style="color: #000000; font-size: 24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    </span>
-                </h3>
-            </div>
-        }
-    </div>
-</div>
+    if (!shoppingCartAvailable)
+    {
+        <div class="center" style="text-align: center; vertical-align: top;">
+            <h3 style="color: #ff9900; font-size: 27px; font-weight: bold;">
+                Your&nbsp;shopping&nbsp;cart&nbsp;is&nbsp;empty
+            </h3>
+        </div>
+    }
+}
 @Html.Partial("_ShoppingCartData", Model)
