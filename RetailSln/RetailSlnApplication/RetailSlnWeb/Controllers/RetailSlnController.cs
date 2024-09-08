@@ -761,7 +761,27 @@ namespace RetailSlnWeb.Controllers
         [HttpPost]
         public ActionResult PaymentInfo1()
         {//Credit Sale
-            return null;
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            success = true;
+            processMessage = "SUCCESS!!!";
+            PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            htmlString = retailSlnBL.PaymentInfo1(paymentInfoModel, sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            FormsAuthentication.SignOut();
+            Session.Abandon();
+            Request.GetOwinContext().Authentication.SignOut();
+            Session["SessionObject"] = null;
+            Session["PaymentInfo"] = null;
+            Session.Abandon();
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+            return actionResult;
         }
 
         // POST: PaymentInfo2

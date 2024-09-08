@@ -3,7 +3,7 @@
 @{
     int index = 0;
     float discountPercent, itemRate, itemRateBeforeDiscount, orderAmount, orderAmountBeforeDiscount;
-    <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin: auto 0; padding: 5px; width: 100%;">
         <tr>
             <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                 #
@@ -45,7 +45,7 @@
                         <br />
                         Prod&nbsp;Code&nbsp;:&nbsp;@shoppingCartItem.ProductCode
                         @*<br />
-                        Weight : @(shoppingCartItem.WeightValue + " " + shoppingCartItem.WeightUnitId)*@
+                            Weight : @(shoppingCartItem.WeightValue + " " + shoppingCartItem.WeightUnitId)*@
                     </td>
                     <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                         @shoppingCartItem.OrderQty
@@ -126,8 +126,7 @@
     </table>
     <br />
     index = 0;
-    //bool totalWeightFlag = true;
-    <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin: auto 0; padding: 5px; width: 100%;">
         <tr>
             <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                 #.
@@ -149,11 +148,11 @@
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
                     @shoppingCartSummary.ItemShortDesc
                     @*if (totalWeightFlag)
-                    {
-                        totalWeightFlag = false;
-                        <br />
-                        <span style="color: #000000;">Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.ShoppingCartSummaryModel.TotalWeightCalc&nbsp;@Model.ShoppingCartSummaryModel.TotalWeightCalcUnit</span>
-                    }*@
+                        {
+                            totalWeightFlag = false;
+                            <br />
+                            <span style="color: #000000;">Total Weight: </span><span style="color: #000000; font-weight: bold;">@Model.ShoppingCartSummaryModel.TotalWeightCalc&nbsp;@Model.ShoppingCartSummaryModel.TotalWeightCalcUnit</span>
+                        }*@
                 </td>
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                     @shoppingCartSummary.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
