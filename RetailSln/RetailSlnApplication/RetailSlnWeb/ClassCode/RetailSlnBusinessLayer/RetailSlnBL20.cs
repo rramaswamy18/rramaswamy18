@@ -22,7 +22,7 @@ namespace RetailSlnBusinessLayer
 {
     public partial class RetailSlnBL
     {
-        //GET CategoryHierList
+        // GET: CategoryHierList
         public CategoryItemHierListModel CategoryHierList(long parentCategoryId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -80,7 +80,7 @@ namespace RetailSlnBusinessLayer
             }
             return categoryHierListModel;
         }
-        //GET CategoryList
+        // GET: CategoryList
         public CategoryListModel CategoryList(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -129,6 +129,228 @@ namespace RetailSlnBusinessLayer
                 }
             }
             return categoryListModel;
+        }
+        // GET: ItemMasterList
+        public ItemMasterListModel ItemMasterList(string pageNumParm, string rowCountParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ItemMasterListModel itemMasterListModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                int.TryParse(pageNumParm, out int pageNum);
+                pageNum = pageNum == 0 ? 1 : pageNum;
+                int.TryParse(rowCountParm, out int rowCount);
+                rowCount = rowCount == 0 ? 50 : rowCount;
+                ApplicationDataContext.OpenSqlConnection();
+                itemMasterListModel = new ItemMasterListModel
+                {
+                    ItemMasterModels = ApplicationDataContext.GetItemMasters((pageNum - 1) * rowCount, rowCount, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    PageNum = pageNum,
+                    RowCount = rowCount,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                itemMasterListModel = new ItemMasterListModel
+                {
+                    ItemMasterModels = null,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading item master(s) from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return itemMasterListModel;
+        }
+        // GET: ItemMasterInfo
+        public ItemMasterModel ItemMasterInfo(string itemMasterIdParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ItemMasterModel itemMasterModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                int.TryParse(itemMasterIdParm, out int itemMasterId);
+                ApplicationDataContext.OpenSqlConnection();
+                itemMasterModel = ApplicationDataContext.GetItemMaster(itemMasterId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                itemMasterModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ResponseTypeId = ResponseTypeEnum.Success,
+                };
+                for (int i = 0; i < 2; i++)
+                {
+                    itemMasterModel.ItemMasterInfoModels.Add
+                    (
+                        new ItemMasterInfoModel
+                        {
+                            ItemMasterInfoId = null,
+                            ItemMasterId = itemMasterId,
+                            ItemMasterInfoLabelText = null,
+                            ItemMasterInfoText = null,
+                        }
+                    );
+                }
+                itemMasterModel.ItemMasterInfoModels[1].ItemMasterInfoLabelText = "Label";
+                itemMasterModel.ItemMasterInfoModels[2].ItemMasterInfoText = "Text";
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                itemMasterModel = new ItemMasterModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading item master(s) from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return itemMasterModel;
+        }
+        // POST: ItemMasterInfo
+        public void ItemMasterInfo(ref ItemMasterModel itemMasterModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ItemMasterInfoValidate(itemMasterModel, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (modelStateDictionary.IsValid)
+                {
+                    ApplicationDataContext.OpenSqlConnection();
+                    foreach (var itemMasterInfoModel in itemMasterModel.ItemMasterInfoModels)
+                    {
+                        if (string.IsNullOrWhiteSpace(itemMasterInfoModel.ItemMasterInfoLabelText) && string.IsNullOrWhiteSpace(itemMasterInfoModel.ItemMasterInfoText) && itemMasterInfoModel.SeqNum == null && itemMasterInfoModel.ItemMasterInfoId != null)
+                        {//All entries are blank excepting id - This is valid - Delete this row from DB
+                            ApplicationDataContext.ItemMasterInfoDelete(itemMasterInfoModel.ItemMasterInfoId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        }
+                    }
+                }
+                else
+                {
+                    modelStateDictionary.AddModelError("", "Error while validating item master info");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                itemMasterModel = new ItemMasterModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading item master(s) from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return;
+        }
+        // Validation : Validate ItemMasterInfo
+        public void ItemMasterInfoValidate(ItemMasterModel itemMasterModel, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            modelStateDictionary.Clear();
+            int validEntries = 0;
+            for (int i = 0; i < itemMasterModel.ItemMasterInfoModels.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoLabelText) && string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoText) && itemMasterModel.ItemMasterInfoModels[i].SeqNum == null && itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoId == null)
+                {//All entries are blank - skip this
+
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoLabelText) && string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoText) && itemMasterModel.ItemMasterInfoModels[i].SeqNum == null && itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoId != null)
+                    {//All entries are blank excepting id - This is valid - Delete this row from DB
+                        validEntries++;
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoLabelText) && !string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoText) && float.TryParse(itemMasterModel.ItemMasterInfoModels[i].SeqNum.ToString(), out float tempFloat))
+                        {//All fields exist - no errors - Add or Upd DB
+                            validEntries++;
+                        }
+                        else
+                        {
+                            if (string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoLabelText))
+                            {
+                                modelStateDictionary.AddModelError("ItemMasterInfoModels[" + i + "].ItemMasterInfoLabelText", "Enter label");
+                                modelStateDictionary.AddModelError("", "Enter label " + (i + 1));
+                            }
+                            if (string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterInfoModels[i].ItemMasterInfoText))
+                            {
+                                modelStateDictionary.AddModelError("ItemMasterInfoModels[" + i + "].ItemMasterInfoText", "Enter text");
+                                modelStateDictionary.AddModelError("", "Enter text " + (i + 1));
+                            }
+                            if (!float.TryParse(itemMasterModel.ItemMasterInfoModels[i].SeqNum.ToString(), out tempFloat))
+                            {
+                                modelStateDictionary.AddModelError("ItemMasterInfoModels[" + i + "].SeqNum", "Seq#");
+                                modelStateDictionary.AddModelError("", "Seq# " + (i + 1));
+                            }
+                        }
+                    }
+                }
+            }
+            if (validEntries == 0)
+            {
+                modelStateDictionary.AddModelError("", "No action to be taken");
+            }
         }
         // GET : ItemAttributes
         public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, long tabId, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

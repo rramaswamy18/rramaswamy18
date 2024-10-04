@@ -1,0 +1,100 @@
+﻿@model RetailSlnModels.PaymentInfo1Model
+@using RetailSlnEnumerations
+<div class="center col-md-11">
+    <h2 class="text-center mb-4" style="color: #a54000; font-size: 24px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+        Credit&nbsp;&nbsp;Card
+    </h2>
+    @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+        </div>
+    }
+    @if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }
+    <div class="col-md-5">
+        <table style="padding: 0px;">
+            <tr>
+                <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                    @Model.OrderSummaryModel.EmailAddress
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                    @((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                    @Model.DeliveryAddressModel.AddressLine1
+                    <br />
+                    @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+                    {
+                        @Model.DeliveryAddressModel.AddressLine2
+                        <br />
+                    }
+                    @Model.DeliveryAddressModel.CityName
+                    <br />
+                    @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
+                    <br />
+                    @Model.DeliveryAddressModel.CountryDesc
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                    @Model.DeliveryDataModel.PrimaryTelephoneFormatted
+                </td>
+            </tr>
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.AlternateTelephoneFormatted))
+            {
+                <tr>
+                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @Model.DeliveryDataModel.AlternateTelephoneFormatted
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                    @Model.DeliveryMethodModel.DeliveryMethodDesc
+                    <br />
+                    @Model.PaymentModeModel.PaymentModeDesc
+                </td>
+            </tr>
+            <tr>
+                <th colspan="2" style="padding: 5px; text-align: left; word-break: break-all;">
+                    @Model.DeliveryDataModel.DeliveryInstructions
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-5">
+        <form id="formCreditCardPaymentData">
+            @Html.Partial("_CreditCardPayment", Model.CreditCardProcessModel)
+        </form>
+    </div>
+    <br style="clear: both;" />
+    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: center;">
+        <button class="loginRegisterbtn" id="paymentInfo5Save" onclick="javascript: return paymentInfo5Save_onclick();" style="font-size: 27px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 45%;" type="button">Process</button>
+    </div>
+    <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+    @{
+        Model.ShoppingCartModel.Checkout = false;
+        Model.ShoppingCartModel.ShowDetail = true;
+        Model.ShoppingCartModel.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
+    }
+    <div class="center" style="width: 81%;">
+        @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
+    </div>
+</div>

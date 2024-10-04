@@ -8,6 +8,8 @@ namespace RetailSlnModels
 {
     public class ItemMasterListModel
     {
+        public int PageNum { set; get; }
+        public int RowCount { set; get; }
         public List<ItemMasterModel> ItemMasterModels { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

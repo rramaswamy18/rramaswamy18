@@ -61,38 +61,43 @@ UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'US Dolla
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '236' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'DemogInfoCountryId'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '236' WHERE ClientId = @ClientId AND KVPKey = 'DeliveryInfo' AND KVPSubKey = 'DefaultDemogInfoCountry'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '236' WHERE ClientId = @ClientId AND KVPKey = 'DeliveryInfo' AND KVPSubKey = 'DemogInfoCountryIds'
-UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'BusinessEmail'
-UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'BusinessEmail'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Divine Bija Support' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddressDisplayName'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '' WHERE ClientId = @ClientId AND KVPKey = 'OrderProcess' AND KVPSubKey = 'DefaultOrderQty'
-UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
 END
 
 UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Final Rate USD], '$', '') AS FLOAT), ItemRateMSRP = 0/*[Final Rate USD]*/ FROM dbo.DivineBija_Products WHERE Item.ItemId = DivineBija_Products.Id
 UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Retail Rate USD], '$', '') AS FLOAT), ItemRateMSRP = 0/*[Selling Rate USD]*/ FROM dbo.DivineBija_Books WHERE Item.ItemId = DivineBija_Books.Id
+UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkUsername'
+UPDATE ArchLib.ApplicationDefault SET KVPValue = 'Word9#9Pass9#9Temp' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkPassword'
+UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testaccounts@divinebija.com' WHERE ClientId = 98 AND KVPKey = 'OrderProcess' AND KVPSubKey = 'ToEmailAddress'
 
 SET NOCOUNT OFF
 
 IF @TestOrProdMode = 'TESTMODE'
 BEGIN
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'http://test.divinebija.com/' WHERE ClientId = @ClientId AND KVPKey = 'BaseUrl'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkUsername'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkUsername'
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'Word9#9Pass9#9Temp' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkPassword'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'BusinessEmail'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testinfo@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'BusinessEmail'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'FALSE' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'PickupDirectory'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testaccounts@divinebija.com' WHERE ClientId = 98 AND KVPKey = 'OrderProcess' AND KVPSubKey = 'ToEmailAddress'
 END
 
 IF @TestOrProdMode = 'PRODMODE'
 BEGIN
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'https://www.divinebija.com/' WHERE ClientId = @ClientId AND KVPKey = 'BaseUrl'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'info@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkUsername'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'sales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkUsername'
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'Login9#9Password' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkPassword'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'info@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'BusinessEmail'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'info@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
-    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'info@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'sales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'BusinessEmail'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'sales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'FromEmailAddress'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'sales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'FALSE' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'PickupDirectory'
+    UPDATE ArchLib.ApplicationDefault SET KVPValue = 'accounts@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'OrderProcess' AND KVPSubKey = 'ToEmailAddress'
 END
 
 DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(200, 300)

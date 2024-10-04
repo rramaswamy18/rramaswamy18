@@ -1,4 +1,5 @@
 ﻿@model ArchitectureLibraryModels.RegisterUserProfModel
+@*
 <style>
     #UserTypeId-error {
         color: #ff0000;
@@ -13,6 +14,7 @@
 <div class="row" style="padding-left: 18px; padding-right: 18px;">
     @Html.LabelFor(m => m.UserTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     @Html.DropDownListFor(m => m.UserTypeId, new SelectList(ArchitectureLibraryCacheData.ArchLibCache.UserTypes, "Value", "Text", Model.UserTypeId), null, new { @class = "form-control", style = "font-size: 14px; width: 54%;" })
-    @*Html.DropDownListFor(m => m.UserTypeId, new SelectList(ArchitectureLibraryCacheData.ArchLibCache.UserTypes, "Value", "Text", Model.UserTypeId), "--- Select User Type ---", new { @class = "form-control", style = "font-size: 14px; width: 54%;" })*@
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.UserTypeId, "", new { id = "UserTypeId-error" }).ToHtmlString()))
 </div>
+*@
+<input id="UserTypeId" name="UserTypeId" type="hidden" value="100" />

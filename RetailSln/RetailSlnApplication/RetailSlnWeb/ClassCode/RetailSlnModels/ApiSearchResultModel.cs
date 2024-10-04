@@ -8,8 +8,10 @@ namespace RetailSlnModels
 {
     public class ApiSearchResultModel
     {
-        public List<CategoryModel> CategoryModels { set; get; }
-        public List<ItemModel> ItemModels { set; get; }
+        public string SearchKeywordText { set; get; }
+        public List<SearchMetaDataModel> SearchMetaDataModels { set; get; }
+        public CategoryListModel CategoryListModel { set; get; }
+        public ItemMasterListModel ItemMasterListModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

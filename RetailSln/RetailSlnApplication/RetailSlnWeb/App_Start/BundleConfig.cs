@@ -29,7 +29,7 @@ namespace RetailSlnWeb
             bundles.Add(new StyleBundle("~/Content/css0").Include(
                       "~/Content/jquery-ui.css",
                       "~/Content/bootstrap.css",
-                      "~/Content/meanmenu.css",
+                      //"~/Content/meanmenu.css",
                       "~/Include/StyleSheet1.css",
                       "~/Content/Site0.css"));
             bundles.Add(new ScriptBundle("~/bundles/scripts0").Include(

@@ -103,5 +103,8 @@ DBCC CHECKIDENT ('RetailSlnSch.GiftCert', RESEED, 0);
 DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);
 DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetailItemBundle', RESEED, 0);
+
+DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', NORESEED)
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
+
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);

@@ -41,21 +41,20 @@ namespace RetailSlnModels
         public string CreditCardNumber { get; set; }
         //regex = "^[0-9]{13, 19}$";
 
-        public float? CreditCardPaymentAmount { get; set; }
-
         public string Currency { set; get; }
 
         [Display(Name = "CVV")]
-        [MinLength(3, ErrorMessage = "CVV to be 3 or 4 digits")]
-        [MaxLength(4, ErrorMessage = "CVV to be 3 or 4 digits")]
+        [MinLength(3, ErrorMessage = "CVV to be 3 & 5 digits")]
+        [MaxLength(5, ErrorMessage = "CVV to be 3 & 5 digits")]
         [Required(ErrorMessage = "Enter CVV")]
         public string CVV { set; get; }
         //regex = "^[0-9]{3, 4}$";
 
-        //public PaymentModeEnum? PaymentModeId { set; get; }
+        [Display(Name = "Amount")]
+        public float? CreditCardAmount { set; get; }
 
-        [Display(Name = "Order Amount")]
-        public float? OrderAmount { set; get; }
+        [Display(Name = "Amount")]
+        public string CreditCardAmountFormatted { set; get; }
 
         public bool CreditCardProcessStatus { set; get; }
 

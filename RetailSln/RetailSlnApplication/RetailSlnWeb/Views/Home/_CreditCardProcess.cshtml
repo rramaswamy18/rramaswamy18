@@ -7,7 +7,7 @@
         years.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
     }
 }
-@Html.HiddenFor(m => m.CreditCardPaymentAmount)
+@Html.HiddenFor(m => m.CreditCardAmount)
 @Html.HiddenFor(m => m.EmailAddress)
 @Html.HiddenFor(m => m.UserFullName)
 @if (!ViewData.ModelState.IsValid)

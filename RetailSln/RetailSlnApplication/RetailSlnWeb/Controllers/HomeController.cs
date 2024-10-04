@@ -27,7 +27,7 @@ namespace RetailSlnWeb.Controllers
         private readonly string execUniqueId = Utilities.CreateExecUniqueId();
         private readonly string lastIpAddress = Utilities.GetLastIPAddress();
 
-        // GET: Home
+        // GET: Index
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Index(string id)
@@ -38,18 +38,61 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                string aspNetRoleName;
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                if (sessionObjectModel == null)
+                {
+                    string absoluteUri = Request.Url.AbsoluteUri;
+                    if (absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1)
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                        return RedirectToAction("LoginUserProf");
+                    }
+                    aspNetRoleName = "DEFAULTROLE";
+                }
+                else
+                {
+                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                }
+                OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Index", orderCategoryItemModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "Index / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        public ActionResult IndexBackup(string id)
+        {
+            ViewData["ActionName"] = "Index";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
             try
             {
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                string absoluteUri = Request.Url.AbsoluteUri;
+                string aspNetRoleName, absoluteUri = Request.Url.AbsoluteUri;
                 long parentCategoryId;
-                string actionName, aspNetRoleName, controllerName;
                 if (sessionObjectModel == null)
                 {
                     if (absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1)
                     {
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                        return RedirectToAction("RegisterUserLoginUser");
+                        return RedirectToAction("LoginUserProf");
                     }
                     else
                     {
@@ -61,14 +104,10 @@ namespace RetailSlnWeb.Controllers
                     aspNetRoleName = sessionObjectModel.AspNetRoleName;
                 }
                 var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-                controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-                parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId"].KVPValueData);
+                parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId02"].KVPValueData);
                 CategoryModel categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == parentCategoryId);
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
-                    ActionName = actionName,
-                    ControllerName = controllerName,
                     ParentCategoryId = parentCategoryId,
                     PageNum = 1,
                     PageSize = categoryModel.MaxPerPage, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
@@ -88,6 +127,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: AboutUs
         [AllowAnonymous]
         [HttpGet]
         [Route("AboutUs")]
@@ -116,6 +156,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: CookiePolicy
         [AllowAnonymous]
         [HttpGet]
         [Route("CookiePolicy")]
@@ -142,6 +183,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: ContactUs
         [AllowAnonymous]
         [HttpGet]
         [Route("ContactUs")]
@@ -174,6 +216,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: ContactUs
         [AllowAnonymous]
         [HttpPost]
         public ActionResult ContactUs(ContactUsModel contactUsModel)
@@ -227,6 +270,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: Error404
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Error404(string id)
@@ -254,6 +298,7 @@ namespace RetailSlnWeb.Controllers
             return viewResult;
         }
 
+        // GET: FAQs
         [AllowAnonymous]
         [HttpGet]
         [Route("FAQs")]
@@ -282,6 +327,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: Forbidden
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Forbidden()
@@ -291,6 +337,7 @@ namespace RetailSlnWeb.Controllers
             //return JavaScript(string.Format("window.open('{0}', '_blank', 'left=100,top=100,width=500,height=500,toolbar=no,resizable=no,scrollable=yes');", url));
         }
 
+        // GET: Home
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Home()
@@ -317,36 +364,38 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("LoginUserProf")]
-        //public ActionResult LoginUserProf()
-        //{
-        //    ViewData["ActionName"] = "LoginUserProf";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    try
-        //    {
-        //        LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
-        //        loginUserProfModel.CaptchaAnswerLogin = null;
-        //        loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
-        //        loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
-        //        actionResult = View("LoginUserProf", loginUserProfModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error", responseObjectModel);
-        //    }
-        //    return actionResult;
-        //}
+        // GET: LoginUserProf
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("LoginUserProf")]
+        public ActionResult LoginUserProf()
+        {
+            ViewData["ActionName"] = "LoginUserProf";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
+                loginUserProfModel.CaptchaAnswerLogin = null;
+                loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
+                loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
+                actionResult = View("LoginUserProf", loginUserProfModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
 
+        // POST: LoginUserProf
         [AllowAnonymous]
         [HttpPost]
         public ActionResult LoginUserProf(LoginUserProfModel loginUserProfModel)
@@ -369,9 +418,9 @@ namespace RetailSlnWeb.Controllers
                 {
                     ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
-                    success = true;
-                    processMessage = "SUCCESS!!!";
+                    SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     Session["SessionObject"] = sessionObjectModel;
+                    Session["CreateForSessionObject"] = createForSessionObject;
                     Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
                     var identity = new ClaimsIdentity
                     (
@@ -389,21 +438,25 @@ namespace RetailSlnWeb.Controllers
                     authManager.SignIn(identity);
                     success = true;
                     processMessage = "ERROR???";
-                    string redirectUrl;
-                    string actionName, aspNetRoleName, controllerName;
+                    string aspNetRoleName, redirectUrl;
+                    //string actionName, aspNetRoleName, controllerName;
                     aspNetRoleName = sessionObjectModel.AspNetRoleName;
                     var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                    success = true;
+                    processMessage = "SUCCESS!!!";
                     if (string.IsNullOrWhiteSpace(sessionObjectModel.FirstName) || string.IsNullOrEmpty(sessionObjectModel.LastName))
                     {
-                        actionName = aspNetRoleKVPs["ActionName00"].KVPValueData;
-                        controllerName = aspNetRoleKVPs["ControllerName00"].KVPValueData;
+                        //actionName = aspNetRoleKVPs["ActionName00"].KVPValueData;
+                        //controllerName = aspNetRoleKVPs["ControllerName00"].KVPValueData;
+                        redirectUrl = Url.Action("UserProfile", "Home");
                     }
                     else
                     {
-                        actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
-                        controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
+                        //actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
+                        //controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
+                        redirectUrl = Url.Action("Index", "Home");
                     }
-                    redirectUrl = Url.Action(actionName, controllerName);
+                    //redirectUrl = Url.Action(actionName, controllerName);
                     actionResult = Json(new { success, processMessage, redirectUrl });
                     //return Content(@"/Home/UserProfile");
                     //return new HttpStatusCodeResult(System.Net.HttpStatusCode.Redirect,url)
@@ -438,6 +491,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: Logout
         [AllowAnonymous]
         [HttpGet]
         [Route("Logout")]
@@ -455,6 +509,7 @@ namespace RetailSlnWeb.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: PicGallery
         [AllowAnonymous]
         [HttpGet]
         [Route("PicGallery")]
@@ -483,6 +538,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: PrivacyPolicy
         [AllowAnonymous]
         [HttpGet]
         [Route("PrivacyPolicy")]
@@ -509,6 +565,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: Products
         [AllowAnonymous]
         [HttpGet]
         [Route("Products")]
@@ -537,6 +594,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: ProductsAndServices
         [AllowAnonymous]
         [HttpGet]
         [Route("ProductsAndServices")]
@@ -565,6 +623,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: RefundPolicy
         [AllowAnonymous]
         [HttpGet]
         [Route("RefundPolicy")]
@@ -591,88 +650,93 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("RegisterLoginContactResetPassword")]
-        public ActionResult RegisterLoginContactResetPassword(string id)
-        {
-            //int x = 1, y = 0, z = x / y;
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                ViewData["ActionName"] = "REGISTER";
-            }
-            else
-            {
-                ViewData["ActionName"] = id.ToUpper();
-            }
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                RegisterLoginContactResetPasswordModel registerLoginContactResetPasswordModel = archLibBL.RegisterLoginContactResetPassword(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerLoginContactResetPasswordModel.QueryString = id;
-                actionResult = View("RegisterLoginContactResetPassword", registerLoginContactResetPasswordModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
-                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
+        #region Commented
+        //// GET: RegisterLoginContactResetPassword
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("RegisterLoginContactResetPassword")]
+        //public ActionResult RegisterLoginContactResetPassword(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    if (string.IsNullOrWhiteSpace(id))
+        //    {
+        //        ViewData["ActionName"] = "REGISTER";
+        //    }
+        //    else
+        //    {
+        //        ViewData["ActionName"] = id.ToUpper();
+        //    }
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        RegisterLoginContactResetPasswordModel registerLoginContactResetPasswordModel = archLibBL.RegisterLoginContactResetPassword(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        registerLoginContactResetPasswordModel.QueryString = id;
+        //        actionResult = View("RegisterLoginContactResetPassword", registerLoginContactResetPasswordModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
+        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("RegisterUserLoginUser")]
-        public ActionResult RegisterUserLoginUser(string id)
-        {
-            //int x = 1, y = 0, z = x / y;
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                ViewData["ActionName"] = "REGISTER";
-            }
-            else
-            {
-                ViewData["ActionName"] = id.ToUpper();
-            }
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
-                actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
-                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
+        //// GET: RegisterUserLoginUser
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("RegisterUserLoginUser")]
+        //public ActionResult RegisterUserLoginUser(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    if (string.IsNullOrWhiteSpace(id))
+        //    {
+        //        ViewData["ActionName"] = "REGISTER";
+        //    }
+        //    else
+        //    {
+        //        ViewData["ActionName"] = id.ToUpper();
+        //    }
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
+        //        actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
+        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
 
+        // GET: RegisterUserProf
         [AllowAnonymous]
         [HttpGet]
         [Route("RegisterUserProf")]
         public ActionResult RegisterUserProf(string id)
         {
-            int x = 1, y = 0, z = x / y;
+            //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "RegisterUserProf";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -697,6 +761,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: RegisterUserProf
         [AllowAnonymous]
         [HttpPost]
         public ActionResult RegisterUserProf(RegisterUserProfModel registerUserProfModel)
@@ -752,34 +817,44 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("ResetPassword")]
-        //public ActionResult ResetPassword()
-        //{
-        //    ViewData["ActionName"] = "ResetPassword";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    try
-        //    {
-        //        ResetPasswordModel resetPasswordModel = archLibBL.ResetPassword(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["CaptchaNumberResetPassword0"] = resetPasswordModel.CaptchaNumberResetPassword0;
-        //        Session["CaptchaNumberResetPassword1"] = resetPasswordModel.CaptchaNumberResetPassword1;
-        //        actionResult = View("ResetPassword", resetPasswordModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error", responseObjectModel);
-        //    }
-        //    return actionResult;
-        //}
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("ResetPassword")]
+        public ActionResult ResetPassword(string id)
+        {
+            //int x = 1, y = 0, z = x / y;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                ViewData["ActionName"] = "RESETPASSWORD";
+            }
+            else
+            {
+                ViewData["ActionName"] = id.ToUpper();
+            }
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ResetPasswordModel resetPasswordModel = archLibBL.ResetPassword(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("ResetPassword", resetPasswordModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "Reset Password GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
 
+        // POST: ResetPassword
         [AllowAnonymous]
         [HttpPost]
         public ActionResult ResetPassword(ResetPasswordModel resetPasswordModel)
@@ -832,44 +907,48 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("ResetPasswordContactUs")]
-        public ActionResult ResetPasswordContactUs(string id)
-        {
-            //int x = 1, y = 0, z = x / y;
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                ViewData["ActionName"] = "RESETPASSWORD";
-            }
-            else
-            {
-                ViewData["ActionName"] = id.ToUpper();
-            }
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ResetPasswordContactUsModel resetPasswordContactUsModel = archLibBL.ResetPasswordContactUs(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                resetPasswordContactUsModel.QueryString = id;
-                actionResult = View("ResetPasswordContactUs", resetPasswordContactUsModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "Reset Password / Contact Us GET");
-                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
+        #region Commented
+        //// GET: ResetPasswordContactUs
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("ResetPasswordContactUs")]
+        //public ActionResult ResetPasswordContactUs(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    if (string.IsNullOrWhiteSpace(id))
+        //    {
+        //        ViewData["ActionName"] = "RESETPASSWORD";
+        //    }
+        //    else
+        //    {
+        //        ViewData["ActionName"] = id.ToUpper();
+        //    }
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ResetPasswordContactUsModel resetPasswordContactUsModel = archLibBL.ResetPasswordContactUs(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        resetPasswordContactUsModel.QueryString = id;
+        //        actionResult = View("ResetPasswordContactUs", resetPasswordContactUsModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ModelState.AddModelError("", "Reset Password / Contact Us GET");
+        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
 
+        // GET: ResetPasswordContactUs
         [AllowAnonymous]
         [HttpGet]
         [Route("ReturnPolicy")]
@@ -896,6 +975,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: ResetPasswordContactUs
         [AllowAnonymous]
         [HttpGet]
         [Route("ShippingPolicy")]
@@ -922,6 +1002,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: TermsofService
         [AllowAnonymous]
         [HttpGet]
         [Route("TermsofService")]
@@ -948,6 +1029,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: SEOPage1
         [AllowAnonymous]
         [HttpGet]
         [Route("SEOPage1")]
@@ -956,6 +1038,7 @@ namespace RetailSlnWeb.Controllers
             return View();
         }
 
+        // GET: Services
         [AllowAnonymous]
         [HttpGet]
         [Route("Services")]
@@ -984,6 +1067,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: Testimonials
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Testimonials()
@@ -1011,6 +1095,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: Unauthorized
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Unauthorized()
@@ -1018,6 +1103,7 @@ namespace RetailSlnWeb.Controllers
             return View();
         }
 
+        // GET: UpdatePassword
         [AllowAnonymous]
         [HttpGet]
         public ActionResult UpdatePassword(string id)
@@ -1055,6 +1141,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: UpdatePassword
         [AllowAnonymous]
         [HttpPost]
         public ActionResult UpdatePassword(UpdatePasswordModel updatePasswordModel)
@@ -1071,13 +1158,13 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(updatePasswordModel);
-                archLibBL.UpdatePassword(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdatePasswordSuccessModel updatePasswordSuccessModel = archLibBL.UpdatePassword(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     success = true;
                     processMessage = "SUCCESS!!!";
                     //actionResult = PartialView("_UpdatePasswordSuccess", updatePasswordModel);
-                    htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordSuccess", updatePasswordModel);
+                    htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordSuccess", updatePasswordSuccessModel);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                 }
                 else
@@ -1113,6 +1200,39 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: UpdatePasswordSuccess
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult UpdatePasswordSuccess()
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "UpdatePassword";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                UpdatePasswordSuccessModel updatePasswordSuccessModel = archLibBL.UpdatePasswordSuccess(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("UpdatePasswordSuccess", updatePasswordSuccessModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "Update Password / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                Session["CaptchaNumberLogin0"] = null;
+                Session["CaptchaNumberLogin1"] = null;
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        // GET: UserProfile
         [Authorize]
         [AjaxAuthorize]
         [HttpGet]
@@ -1145,6 +1265,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: UserProfile
         [Authorize]
         [AjaxAuthorize]
         [HttpPost]
@@ -1263,6 +1384,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: ValidateEmailAddress
         [AllowAnonymous]
         [HttpGet]
         public string ValidateEmailAddress(string id)

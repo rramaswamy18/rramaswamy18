@@ -1,6 +1,9 @@
 ﻿@model RetailSlnModels.PaymentInfo1Model
 @using RetailSlnEnumerations
-@Html.Partial("_PaymentInfo3")
+@if (Model.PaymentModeModel.PaymentModeId == PaymentModeEnum.PaymentGateway)
+{
+    @Html.Partial("_PaymentInfo3")
+}
 <table style="padding: 0px;">
     <tr>
         <td style="padding: 0px; padding-right: 15px; vertical-align: top;">
@@ -90,7 +93,7 @@
                                 <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button>
                                 break;
                             case PaymentModeEnum.ProcessCreditCard:
-                                <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Credit Card - Processing</button>
+                                <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process Credit Card</button>
                                 break;
                         }
                     </td>
@@ -99,19 +102,26 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="padding: 0px; vertical-align: top; width: 100%;">
-            <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px; width: 100%;">
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Instructions
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; word-wrap: break-word;">
-                        @Model.DeliveryDataModel.DeliveryInstructions
-                    </td>
-                </tr>
-            </table>
-        </td>
+        <th colspan="2" style="text-align: left; word-break: break-all;">
+            @Model.DeliveryDataModel.DeliveryInstructions
+        </th>
     </tr>
+    @*
+        <tr>
+            <td colspan="2" style="padding: 0px; text-align: left; vertical-align: top; width: 100%;">
+                <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px; width: 100%;">
+                    <tr>
+                        <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                            Instructions
+                        </th>
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; word-wrap: break-word;">
+                            @Model.DeliveryDataModel.DeliveryInstructions
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    *@
 </table>
 <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
 @{

@@ -23,6 +23,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
+using System.Runtime.Remoting.Lifetime;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -949,6 +950,99 @@ namespace RetailSlnBusinessLayer
             }
             return;
         }
+        // GET: OrderCategoryItem
+        public OrderCategoryItemModel OrderCategoryItem(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                if (string.IsNullOrWhiteSpace(parentCategoryIdParm))
+                {
+                    parentCategoryIdParm = aspNetRoleKVPs["ParentCategoryId02"].KVPValueData;
+                }
+                if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(pageSizeParm))
+                {
+                    pageNumParm = "1";
+                    pageSizeParm = "45";
+                }
+                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+                int.TryParse(pageNumParm, out int pageNum);
+                pageNum = pageNum == 0 ? 1 : pageNum;
+                int.TryParse(pageSizeParm, out int pageSize);
+                pageSize = pageSize == 0 ? 45 : pageSize;
+                CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = categoryLayoutModel.CategoryItemMasterHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
+                int totalRowCount = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null).Count;
+                int pageCount = totalRowCount / pageSize;
+                if (totalRowCount % pageSize != 0)
+                {
+                    pageCount++;
+                }
+                OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+                {
+                    CategoryCount = categoryItemMasterHierModels.Count,
+                    PageCount = pageCount,
+                    PageNum = pageNum,
+                    PageSize = pageSize,
+                    ParentCategoryId = parentCategoryId,
+                    ItemMasterModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll
+                                       (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
+                                       .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * pageSize).Take(pageSize)
+                                       .Select(r => r.ItemMasterModel).ToList(),
+                    TotalRowCount = totalRowCount,
+                };
+                return orderCategoryItemModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+        }
+        // GET: OrderCategoryItemList
+        public OrderCategoryItemListModel OrderCategoryItemList(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                if (string.IsNullOrWhiteSpace(parentCategoryIdParm))
+                {
+                    parentCategoryIdParm = aspNetRoleKVPs["ParentCategoryId02"].KVPValueData;
+                }
+                if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(rowCountParm))
+                {
+                    pageNumParm = aspNetRoleKVPs["PageNum02"].KVPValueData;
+                    rowCountParm = aspNetRoleKVPs["RowCount02"].KVPValueData;
+                }
+                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+                int.TryParse(pageNumParm, out int pageNum);
+                pageNum = pageNum == 0 ? 1 : pageNum;
+                int.TryParse(rowCountParm, out int rowCount);
+                rowCount = rowCount == 0 ? 45 : rowCount;
+                OrderCategoryItemListModel orderCategoryItemListModel = new OrderCategoryItemListModel
+                {
+                    ParentCategoryId = parentCategoryId,
+                    PageNum = pageNum,
+                    RowCount = rowCount,
+                    ItemMasterModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll
+                                       (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
+                                       .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * rowCount).Take(rowCount)
+                                       .Select(r => r.ItemMasterModel).ToList(),
+                };
+                return orderCategoryItemListModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+        }
         // POST: RemoveFromCart
         public void RemoveFromCart(PaymentInfo1Model paymentInfoModel, int index, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -1120,7 +1214,17 @@ namespace RetailSlnBusinessLayer
                     shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
                     shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
                     shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue;
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords = ConvertAmountToWordsRupees(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount.Value);
+                    string amountInWords;
+                    switch (clientId)
+                    {
+                        case 97:
+                            amountInWords = ConvertAmountToWordsRupees(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount.Value);
+                            break;
+                        default:
+                            amountInWords = ConvertAmountToWordsDollars(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount.Value);
+                            break;
+                    }
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords = amountInWords;
                     paymentInfoModel.OrderSummaryModel.AuthorizedSignature = ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignature", "");
                     paymentInfoModel.OrderSummaryModel.AuthorizedSignatureText = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignatureFont", ""));
                     long codeDataNameId = paymentInfoModel.OrderSummaryModel.AuthorizedSignatureText;
@@ -1156,6 +1260,155 @@ namespace RetailSlnBusinessLayer
             {
                 ApplicationDataContext.CloseSqlConnection();
             }
+        }
+        // POST : PaymentInfo5
+        public string PaymentInfo5(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {//RazorpayReturn
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            string htmlString;
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                //creditCardProcessor = "NUVEIPROD";
+                CreditCardDataModel creditCardDataModel = new CreditCardDataModel
+                {
+                    CreditCardAmount = paymentInfoModel.CreditCardProcessModel.CreditCardAmount.Value.ToString("0.00"),
+                    CreditCardExpMM = paymentInfoModel.CreditCardProcessModel.CardExpiryMM,
+                    CreditCardExpYear = paymentInfoModel.CreditCardProcessModel.CardExpiryYYYY,
+                    CreditCardNumber = paymentInfoModel.CreditCardProcessModel.CreditCardNumber,
+                    CreditCardNumberLast4 = paymentInfoModel.CreditCardProcessModel.CreditCardNumber.Substring(paymentInfoModel.CreditCardProcessModel.CreditCardNumber.Length - 4),
+                    CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    CreditCardProcessor = creditCardProcessor,
+                    CreditCardSecCode = paymentInfoModel.CreditCardProcessModel.CVV,
+                    CreditCardTranType = "PAYMENT",
+                    CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                    NameAsOnCard = paymentInfoModel.CreditCardProcessModel.CardHolderName,
+                };
+                //creditCardDataModel.CreditCardAmount = "0.09";
+                //creditCardDataModel.CreditCardAmount = null;
+                //paymentInfoModel.CreditCardDataModel.CreditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                //paymentInfoModel.CreditCardDataModel.CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation");
+                //paymentInfoModel.CreditCardDataModel.CreditCardKVPs = GetCreditCardKVPs(paymentInfoModel.CreditCardDataModel.CreditCardProcessor, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+                var creditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var creditCardLast4 = paymentInfoModel.CreditCardDataModel.CreditCardNumberLast4;
+                var creditCardProcessMessage = processMessage;
+                if (creditCardProcessStatus)
+                {
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid += float.Parse(paymentInfoModel.CreditCardDataModel.CreditCardAmount);
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount = (float)Math.Round(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount.Value, 2);
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid = (float)Math.Round(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid.Value, 2);
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount - paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid.Value;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    var shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AmountPaidByCreditCard);
+                    shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
+                    shoppingCartSummaryItem.OrderComments = "Reference# : " + processMessage;
+                    shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
+                    shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
+                    shoppingCartSummaryItem = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+                    shoppingCartSummaryItem.OrderAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue;
+                    string amountInWords;
+                    switch (clientId)
+                    {
+                        case 97:
+                            amountInWords = ConvertAmountToWordsRupees(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount.Value);
+                            break;
+                        default:
+                            amountInWords = ConvertAmountToWordsDollars(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount.Value);
+                            break;
+                    }
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords = amountInWords;
+                    paymentInfoModel.OrderSummaryModel.AuthorizedSignature = ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignature", "");
+                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureText = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignatureFont", ""));
+                    long codeDataNameId = paymentInfoModel.OrderSummaryModel.AuthorizedSignatureText;
+                    CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
+                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
+                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
+                    CreateOrder(paymentInfoModel, "", "", sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    htmlString = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
+                    string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
+                    string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
+                    string emailBodyHtml = htmlString + signatureHtml;
+                    PDFUtility pDFUtility = new PDFUtility();
+                    string emailDirectoryName = Utilities.GetApplicationValue("EmailDirectoryName");
+                    pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, emailDirectoryName + paymentInfoModel.OrderSummaryModel.OrderHeaderId + ".pdf");
+                    List<string> emailAttachmentFileNames = new List<string>
+                    {
+                        emailDirectoryName + paymentInfoModel.OrderSummaryModel.OrderHeaderId + ".pdf",
+                    };
+                    var toemailAddresss = paymentInfoModel.OrderSummaryModel.EmailAddress + ";" + ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "ToEmailAddress");
+                    archLibBL.SendEmail(toemailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    modelStateDictionary.AddModelError("", "Error while processing credit card");
+                    modelStateDictionary.AddModelError("", processMessage);
+                    paymentInfoModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                    htmlString = archLibBL.ViewToHtmlString(controller, "_PaymentInfo4", paymentInfoModel);
+                }
+                return htmlString;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : SearchForEmailAddress
+        public SearchForEmailAddressModel SearchForEmailAddress(string searchText, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SearchForEmailAddressModel searchForEmailAddressModel;
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                searchForEmailAddressModel = new SearchForEmailAddressModel
+                {
+                    SearchText = searchText,
+                    SearchForEmailAddressDataModels = ApplicationDataContext.GetSearchForEmailAddresss(searchText, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                searchForEmailAddressModel = new SearchForEmailAddressModel
+                {
+                    SearchText = searchText,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            "Error while searching " + searchText,
+                            exception.Message,
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    }
+                };
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+            return searchForEmailAddressModel;
         }
         // GET : SearchResult
         public SearchResultModel SearchResult(string searchKeywordText, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -1392,6 +1645,63 @@ namespace RetailSlnBusinessLayer
                 }
             }
             amountInWords += amountInWordsTemp + " Rupees";
+
+            return amountInWords;
+        }
+        private static string ConvertAmountToWordsDollars(float amountParm)
+        {
+            long amount = (long)amountParm, quotient;
+            string amountInWords = "", amountInWordsTemp;
+
+            quotient = amount / 1000000;
+            amount = amount - quotient * 1000000;
+            amountInWords += ConvertHundredsToWords(quotient, "Million");
+
+            quotient = amount / 1000;
+            amount = amount - quotient * 1000;
+            amountInWordsTemp = ConvertHundredsToWords(quotient, "Thousand");
+            if (amountInWords != "")
+            {
+                amountInWords += " ";
+            }
+            amountInWords += amountInWordsTemp;
+
+            quotient = amount / 100;
+            amount = amount - quotient * 100;
+            amountInWordsTemp = ConvertHundredsToWords(quotient, "Hundred");
+            if (amountInWords != "")
+            {
+                if (amountInWordsTemp != "")
+                {
+                    amountInWords += " ";
+                }
+            }
+            amountInWords += amountInWordsTemp;
+
+            amountInWordsTemp = ConvertHundredsToWords(amount, "");
+            if (amountInWords != "")
+            {
+                if (amountInWordsTemp != "")
+                {
+                    amountInWords += " ";
+                }
+            }
+            amountInWords += amountInWordsTemp;
+
+            amount = (long)Math.Round((amountParm - Math.Truncate(amountParm)) * 100);
+            if (amount > 0)
+            {
+                amountInWords += "And";
+            }
+            amountInWordsTemp = ConvertHundredsToWords(amount, "");
+            if (amountInWords != "")
+            {
+                if (amountInWordsTemp != "")
+                {
+                    amountInWords += " ";
+                }
+            }
+            amountInWords += amountInWordsTemp + " Dollars";
 
             return amountInWords;
         }

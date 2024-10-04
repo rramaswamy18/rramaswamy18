@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Code\Publish\RetailSln\Web</_PublishTargetUrl>
-    <History>True|2024-09-06T17:56:01.4655219Z||;True|2024-09-06T07:37:03.3623430-07:00||;True|2024-09-06T06:33:58.2416222-07:00||;True|2024-09-06T05:57:26.5090731-07:00||;True|2024-09-05T12:49:39.0096001-07:00||;True|2024-09-04T15:33:57.7727886-07:00||;True|2024-08-28T18:09:57.0360902-07:00||;True|2024-08-14T09:10:46.8524046-07:00||;True|2024-08-12T14:08:51.5102073-07:00||;True|2024-08-12T06:09:01.7944463-07:00||;True|2024-08-12T06:08:16.8440610-07:00||;True|2024-08-10T09:14:43.4314377-07:00||;True|2024-08-07T10:40:24.6067946-07:00||;True|2024-08-06T21:48:00.7480612-07:00||;True|2024-08-06T21:47:39.1404580-07:00||;True|2024-08-06T07:13:25.9045823-07:00||;True|2024-08-06T07:09:02.2080065-07:00||;True|2024-08-05T16:13:17.5944458-07:00||;True|2024-08-02T20:27:12.8279176-07:00||;True|2024-08-02T19:51:27.1769587-07:00||;True|2024-07-23T18:25:49.8193140-07:00||;True|2024-07-16T07:12:23.3850125-07:00||;True|2024-07-15T19:15:58.6280904-07:00||;True|2024-07-15T12:47:10.4912998-07:00||;True|2024-07-14T11:22:57.9373615-07:00||;True|2024-07-14T11:18:56.7506933-07:00||;True|2024-07-12T19:34:31.6951487-07:00||;True|2024-07-11T15:16:21.5420414-07:00||;True|2024-07-11T10:10:09.9769083-07:00||;True|2024-07-07T15:41:02.0710511-07:00||;True|2024-07-05T10:08:53.2860243-07:00||;True|2024-06-25T09:18:13.0764937-07:00||;True|2024-06-24T04:11:09.4452246-07:00||;True|2024-06-15T07:25:46.8149677-07:00||;True|2024-06-15T07:19:58.0404215-07:00||;True|2024-06-12T11:58:29.2274884-07:00||;True|2024-06-10T10:14:38.8679765-07:00||;True|2024-06-09T04:08:32.7221483-07:00||;True|2024-06-07T11:03:46.7114506-07:00||;True|2024-06-06T08:02:03.8097261-07:00||;True|2024-06-06T07:46:02.4398979-07:00||;True|2024-06-04T13:28:41.5097234-07:00||;True|2024-06-03T18:53:01.0503948-07:00||;True|2024-06-03T18:29:55.5726570-07:00||;True|2024-05-24T08:58:40.2961607-07:00||;True|2024-05-23T09:28:53.5936404-07:00||;True|2024-04-17T20:05:50.8017888-07:00||;True|2024-04-01T17:48:13.5083475-07:00||;True|2024-04-01T17:37:30.3531862-07:00||;True|2024-03-22T11:35:03.5606410-07:00||;True|2024-03-21T16:09:29.5727178-07:00||;True|2024-03-02T14:04:43.3737467-08:00||;True|2024-02-27T12:48:15.7511694-08:00||;True|2024-02-13T20:02:27.7607663-08:00||;True|2024-02-12T18:59:57.6176080-08:00||;True|2024-02-08T01:01:06.9496744-08:00||;True|2024-01-17T19:40:12.7165730-08:00||;True|2023-11-27T16:16:36.2366300-08:00||;True|2023-11-22T11:22:03.3150286-08:00||;True|2023-11-22T07:55:58.4478811-08:00||;True|2023-11-21T20:10:38.2648175-08:00||;True|2023-11-21T20:10:13.2242525-08:00||;True|2023-11-15T21:18:27.8545770-08:00||;True|2023-10-16T20:31:54.3152964-07:00||;True|2023-09-27T22:11:24.7525807-07:00||;True|2023-09-27T21:28:51.1324426-07:00||;True|2023-09-27T10:19:49.5680486-07:00||;True|2023-09-24T20:06:43.5860371-07:00||;True|2023-09-24T20:05:10.1864480-07:00||;True|2023-09-23T08:24:54.8490716-07:00||;True|2023-09-20T21:05:01.7492112-07:00||;True|2023-09-17T19:28:48.1909362-07:00||;</History>
+    <History>True|2024-10-03T15:14:49.2776072Z||;True|2024-10-02T11:39:10.3259368-07:00||;True|2024-09-13T20:00:21.2086971-07:00||;True|2024-09-06T10:56:01.4655219-07:00||;True|2024-09-06T07:37:03.3623430-07:00||;True|2024-09-06T06:33:58.2416222-07:00||;True|2024-09-06T05:57:26.5090731-07:00||;True|2024-09-05T12:49:39.0096001-07:00||;True|2024-09-04T15:33:57.7727886-07:00||;True|2024-08-28T18:09:57.0360902-07:00||;True|2024-08-14T09:10:46.8524046-07:00||;True|2024-08-12T14:08:51.5102073-07:00||;True|2024-08-12T06:09:01.7944463-07:00||;True|2024-08-12T06:08:16.8440610-07:00||;True|2024-08-10T09:14:43.4314377-07:00||;True|2024-08-07T10:40:24.6067946-07:00||;True|2024-08-06T21:48:00.7480612-07:00||;True|2024-08-06T21:47:39.1404580-07:00||;True|2024-08-06T07:13:25.9045823-07:00||;True|2024-08-06T07:09:02.2080065-07:00||;True|2024-08-05T16:13:17.5944458-07:00||;True|2024-08-02T20:27:12.8279176-07:00||;True|2024-08-02T19:51:27.1769587-07:00||;True|2024-07-23T18:25:49.8193140-07:00||;True|2024-07-16T07:12:23.3850125-07:00||;True|2024-07-15T19:15:58.6280904-07:00||;True|2024-07-15T12:47:10.4912998-07:00||;True|2024-07-14T11:22:57.9373615-07:00||;True|2024-07-14T11:18:56.7506933-07:00||;True|2024-07-12T19:34:31.6951487-07:00||;True|2024-07-11T15:16:21.5420414-07:00||;True|2024-07-11T10:10:09.9769083-07:00||;True|2024-07-07T15:41:02.0710511-07:00||;True|2024-07-05T10:08:53.2860243-07:00||;True|2024-06-25T09:18:13.0764937-07:00||;True|2024-06-24T04:11:09.4452246-07:00||;True|2024-06-15T07:25:46.8149677-07:00||;True|2024-06-15T07:19:58.0404215-07:00||;True|2024-06-12T11:58:29.2274884-07:00||;True|2024-06-10T10:14:38.8679765-07:00||;True|2024-06-09T04:08:32.7221483-07:00||;True|2024-06-07T11:03:46.7114506-07:00||;True|2024-06-06T08:02:03.8097261-07:00||;True|2024-06-06T07:46:02.4398979-07:00||;True|2024-06-04T13:28:41.5097234-07:00||;True|2024-06-03T18:53:01.0503948-07:00||;True|2024-06-03T18:29:55.5726570-07:00||;True|2024-05-24T08:58:40.2961607-07:00||;True|2024-05-23T09:28:53.5936404-07:00||;True|2024-04-17T20:05:50.8017888-07:00||;True|2024-04-01T17:48:13.5083475-07:00||;True|2024-04-01T17:37:30.3531862-07:00||;True|2024-03-22T11:35:03.5606410-07:00||;True|2024-03-21T16:09:29.5727178-07:00||;True|2024-03-02T14:04:43.3737467-08:00||;True|2024-02-27T12:48:15.7511694-08:00||;True|2024-02-13T20:02:27.7607663-08:00||;True|2024-02-12T18:59:57.6176080-08:00||;True|2024-02-08T01:01:06.9496744-08:00||;True|2024-01-17T19:40:12.7165730-08:00||;True|2023-11-27T16:16:36.2366300-08:00||;True|2023-11-22T11:22:03.3150286-08:00||;True|2023-11-22T07:55:58.4478811-08:00||;True|2023-11-21T20:10:38.2648175-08:00||;True|2023-11-21T20:10:13.2242525-08:00||;True|2023-11-15T21:18:27.8545770-08:00||;True|2023-10-16T20:31:54.3152964-07:00||;True|2023-09-27T22:11:24.7525807-07:00||;True|2023-09-27T21:28:51.1324426-07:00||;True|2023-09-27T10:19:49.5680486-07:00||;True|2023-09-24T20:06:43.5860371-07:00||;True|2023-09-24T20:05:10.1864480-07:00||;True|2023-09-23T08:24:54.8490716-07:00||;True|2023-09-20T21:05:01.7492112-07:00||;True|2023-09-17T19:28:48.1909362-07:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -16,13 +16,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/10/2013 17:29:20</publishTime>
     </File>
     <File Include="bin/ArchitectureLibraryDLL.dll">
-      <publishTime>07/15/2024 18:40:15</publishTime>
+      <publishTime>09/25/2024 15:37:14</publishTime>
     </File>
     <File Include="bin/ArchitectureLibraryDLL.dll.config">
       <publishTime>06/04/2024 17:42:31</publishTime>
     </File>
     <File Include="bin/ArchitectureLibraryDLL.pdb">
-      <publishTime>07/15/2024 18:40:15</publishTime>
+      <publishTime>09/25/2024 15:37:14</publishTime>
     </File>
     <File Include="bin/BouncyCastle.Crypto.dll">
       <publishTime>10/19/2021 11:53:32</publishTime>
@@ -139,10 +139,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/30/2024 04:19:02</publishTime>
     </File>
     <File Include="bin/RetailSlnWeb.dll">
-      <publishTime>09/06/2024 10:55:58</publishTime>
+      <publishTime>10/03/2024 08:14:44</publishTime>
     </File>
     <File Include="bin/RetailSlnWeb.pdb">
-      <publishTime>09/06/2024 10:55:58</publishTime>
+      <publishTime>10/03/2024 08:14:44</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>02/15/2022 05:38:32</publishTime>
@@ -8619,8 +8619,14 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="ClientSpecific/97_DivineBija.in/Documents/Images_Original/DivineBijaBanner.jpg">
       <publishTime>03/01/2024 06:49:03</publishTime>
     </File>
+    <File Include="ClientSpecific/97_DivineBija.in/Views/Home/_OrderInvoiceData.cshtml">
+      <publishTime>09/07/2024 17:32:00</publishTime>
+    </File>
     <File Include="ClientSpecific/97_DivineBija.in/Views/Home/_OrderReceiptDataEmailBody.cshtml">
       <publishTime>04/29/2024 19:14:00</publishTime>
+    </File>
+    <File Include="ClientSpecific/97_DivineBija.in/Views/Home/_ShoppingCartEmailBody1.cshtml">
+      <publishTime>09/07/2024 17:52:03</publishTime>
     </File>
     <File Include="ClientSpecific/97_DivineBija.in/Views/Shared/_Footer.cshtml">
       <publishTime>04/21/2024 21:06:55</publishTime>
@@ -8810,6 +8816,1353 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/Image_003.webp">
       <publishTime>04/21/2024 20:16:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster1.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster10.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster100.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster101.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster102.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster103.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster104.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster105.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster106.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster107.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster108.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster109.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster11.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster110.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster111.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster112.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster113.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster114.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster115.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster116.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster117.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster118.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster119.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster12.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster120.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster121.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster122.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster123.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster124.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster125.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster126.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster127.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster128.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster129.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster13.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster130.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster131.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster132.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster133.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster134.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster135.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster136.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster137.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster138.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster139.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster14.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster140.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster141.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster142.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster143.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster144.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster145.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster146.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster147.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster148.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster149.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster15.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster150.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster151.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster152.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster153.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster154.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster155.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster156.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster157.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster158.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster159.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster16.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster160.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster161.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster162.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster163.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster164.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster165.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster166.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster167.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster168.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster169.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster17.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster170.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster171.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster172.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster173.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster174.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster175.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster176.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster177.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster178.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster179.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster18.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster180.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster181.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster182.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster183.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster184.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster185.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster186.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster187.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster188.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster189.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster19.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster190.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster191.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster192.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster193.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster194.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster195.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster196.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster197.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster198.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster199.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster2.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster20.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster200.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster201.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster202.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster203.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster204.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster205.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster206.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster207.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster208.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster209.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster21.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster210.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster211.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster212.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster213.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster214.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster215.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster216.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster217.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster218.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster219.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster22.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster220.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster221.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster222.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster223.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster224.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster225.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster226.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster227.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster228.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster229.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster23.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster230.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster231.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster232.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster233.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster234.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster235.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster236.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster237.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster238.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster239.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster24.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster240.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster241.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster242.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster243.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster244.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster245.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster246.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster247.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster248.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster249.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster25.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster250.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster251.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster252.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster253.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster254.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster255.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster256.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster257.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster258.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster259.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster26.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster260.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster261.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster262.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster263.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster264.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster265.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster266.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster267.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster268.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster269.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster27.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster270.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster271.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster272.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster273.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster274.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster275.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster276.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster277.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster278.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster279.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster28.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster280.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster281.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster282.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster283.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster284.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster285.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster286.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster287.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster288.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster289.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster29.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster290.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster291.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster292.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster293.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster294.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster295.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster296.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster297.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster298.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster299.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster3.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster30.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster300.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster301.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster302.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster303.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster304.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster305.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster306.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster307.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster308.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster309.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster31.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster310.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster311.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster312.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster313.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster314.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster315.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster316.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster317.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster318.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster319.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster32.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster320.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster321.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster322.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster323.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster324.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster325.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster326.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster327.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster328.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster329.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster33.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster330.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster331.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster332.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster333.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster334.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster335.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster336.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster337.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster338.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster339.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster34.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster340.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster341.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster342.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster343.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster344.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster345.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster346.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster347.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster348.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster349.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster35.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster350.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster351.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster352.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster353.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster354.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster355.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster356.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster357.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster358.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster359.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster36.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster360.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster361.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster362.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster363.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster364.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster365.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster366.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster367.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster368.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster369.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster37.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster370.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster371.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster372.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster373.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster374.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster375.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster376.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster377.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster378.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster379.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster38.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster380.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster381.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster382.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster383.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster384.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster385.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster386.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster387.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster388.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster389.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster39.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster390.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster391.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster392.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster393.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster394.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster395.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster396.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster397.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster398.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster399.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster4.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster40.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster400.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster401.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster402.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster403.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster404.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster405.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster406.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster407.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster408.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster409.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster41.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster410.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster411.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster412.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster413.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster414.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster415.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster416.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster417.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster418.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster419.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster42.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster420.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster421.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster422.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster423.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster424.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster425.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster426.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster427.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster428.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster429.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster43.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster430.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster431.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster432.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster433.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster434.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster435.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster436.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster437.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster438.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster439.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster44.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster440.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster441.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster442.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster443.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster444.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster445.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster446.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster447.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster448.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster449.png">
+      <publishTime>09/06/2024 13:05:49</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster45.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster46.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster47.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster48.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster49.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster5.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster50.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster51.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster52.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster53.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster54.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster55.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster56.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster57.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster58.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster59.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster6.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster60.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster61.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster62.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster63.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster64.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster65.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster66.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster67.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster68.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster69.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster7.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster70.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster71.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster72.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster73.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster74.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster75.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster76.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster77.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster78.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster79.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster8.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster80.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster81.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster82.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster83.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster84.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster85.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster86.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster87.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster88.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster89.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster9.png">
+      <publishTime>09/06/2024 13:05:47</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster90.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster91.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster92.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster93.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster94.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster95.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster96.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster97.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster98.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
+    </File>
+    <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/ItemMaster/ItemMaster99.png">
+      <publishTime>09/06/2024 13:05:48</publishTime>
     </File>
     <File Include="ClientSpecific/98_DivineBija.com/Documents/Images/Items/Item1.png">
       <publishTime>07/25/2024 16:41:51</publishTime>
@@ -11469,14 +12822,26 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Include/javaScriptCode-1.1.1.min.js">
       <publishTime>09/16/2023 12:49:29</publishTime>
     </File>
+    <File Include="Include/jquery-te-1.4.0.css">
+      <publishTime>09/18/2024 15:55:07</publishTime>
+    </File>
+    <File Include="Include/jquery-te-1.4.0.js">
+      <publishTime>09/18/2024 16:13:15</publishTime>
+    </File>
+    <File Include="Include/jquery-te-1.4.0.min.js">
+      <publishTime>09/18/2024 13:23:08</publishTime>
+    </File>
+    <File Include="Include/jquery-te.png">
+      <publishTime>09/18/2024 13:23:08</publishTime>
+    </File>
     <File Include="Include/orderItemCode.js">
       <publishTime>02/20/2024 19:35:03</publishTime>
     </File>
     <File Include="Include/orderItemCode0.js">
-      <publishTime>09/05/2024 08:25:23</publishTime>
+      <publishTime>09/25/2024 04:57:29</publishTime>
     </File>
     <File Include="Include/orderItemCode1.js">
-      <publishTime>09/04/2024 17:36:07</publishTime>
+      <publishTime>09/13/2024 15:05:39</publishTime>
     </File>
     <File Include="Include/orderItemCode2.js">
       <publishTime>04/03/2024 19:44:51</publishTime>
@@ -11498,6 +12863,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Include/StyleSheet2.min.css">
       <publishTime>09/16/2023 12:49:29</publishTime>
+    </File>
+    <File Include="Include/TextEditor.css">
+      <publishTime>09/25/2024 08:51:11</publishTime>
     </File>
     <File Include="libman.json">
       <publishTime>05/28/2024 09:03:17</publishTime>
@@ -11584,7 +12952,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2023 12:38:49</publishTime>
     </File>
     <File Include="Views/Dashboard/Index.cshtml">
-      <publishTime>07/24/2024 05:57:57</publishTime>
+      <publishTime>09/17/2024 08:16:54</publishTime>
     </File>
     <File Include="Views/Dashboard/_CategoryHier.cshtml">
       <publishTime>07/22/2024 16:43:58</publishTime>
@@ -11593,16 +12961,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/22/2024 17:55:52</publishTime>
     </File>
     <File Include="Views/Dashboard/_CategoryList.cshtml">
-      <publishTime>07/28/2024 08:35:11</publishTime>
+      <publishTime>09/18/2024 16:45:29</publishTime>
     </File>
     <File Include="Views/Dashboard/_DashboardHeader.cshtml">
-      <publishTime>07/20/2024 10:09:55</publishTime>
+      <publishTime>09/18/2024 13:29:08</publishTime>
     </File>
     <File Include="Views/Dashboard/_DashboardHeaderMenu.cshtml">
-      <publishTime>07/22/2024 20:52:45</publishTime>
+      <publishTime>09/25/2024 08:58:10</publishTime>
     </File>
     <File Include="Views/Dashboard/_DashboardHeaderMenuHamburger.cshtml">
-      <publishTime>07/20/2024 09:16:10</publishTime>
+      <publishTime>09/17/2024 08:06:31</publishTime>
     </File>
     <File Include="Views/Dashboard/_DashboardHeaderMenuTop.cshtml">
       <publishTime>07/20/2024 10:23:40</publishTime>
@@ -11615,6 +12983,12 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Views/Dashboard/_ItemHierData.cshtml">
       <publishTime>07/22/2024 17:55:37</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_ItemMasterInfo.cshtml">
+      <publishTime>09/19/2024 12:47:50</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_ItemMasterList.cshtml">
+      <publishTime>09/18/2024 16:46:13</publishTime>
     </File>
     <File Include="Views/Dashboard/_SearchKeyword.cshtml">
       <publishTime>07/24/2024 06:05:42</publishTime>
@@ -11670,8 +13044,11 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Views/Home/Home.cshtml">
       <publishTime>04/13/2024 06:50:55</publishTime>
     </File>
+    <File Include="Views/Home/Index - Copy.cshtml">
+      <publishTime>09/20/2024 15:49:45</publishTime>
+    </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>09/03/2024 11:25:43</publishTime>
+      <publishTime>09/20/2024 16:40:33</publishTime>
     </File>
     <File Include="Views/Home/ItemAttributes.cshtml">
       <publishTime>07/10/2024 07:50:18</publishTime>
@@ -11692,7 +13069,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>11/21/2023 15:04:07</publishTime>
     </File>
     <File Include="Views/Home/LoginUserProf.cshtml">
-      <publishTime>09/16/2023 12:53:00</publishTime>
+      <publishTime>09/20/2024 09:38:14</publishTime>
     </File>
     <File Include="Views/Home/OrderCategoryItem.cshtml">
       <publishTime>02/24/2024 07:41:43</publishTime>
@@ -11702,6 +13079,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Views/Home/OrderCategoryItemAll.cshtml">
       <publishTime>04/14/2024 16:52:26</publishTime>
+    </File>
+    <File Include="Views/Home/OrderCategoryItemList.cshtml">
+      <publishTime>09/20/2024 14:30:46</publishTime>
     </File>
     <File Include="Views/Home/OrderListView.cshtml">
       <publishTime>03/19/2024 15:27:55</publishTime>
@@ -11740,10 +13120,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/15/2024 20:30:34</publishTime>
     </File>
     <File Include="Views/Home/RegisterUserProf.cshtml">
-      <publishTime>08/15/2024 20:53:15</publishTime>
+      <publishTime>09/19/2024 19:01:14</publishTime>
     </File>
     <File Include="Views/Home/ResetPassword.cshtml">
-      <publishTime>09/16/2023 12:53:00</publishTime>
+      <publishTime>09/21/2024 09:35:34</publishTime>
     </File>
     <File Include="Views/Home/ResetPasswordContactUs.cshtml">
       <publishTime>08/15/2024 20:33:17</publishTime>
@@ -11771,6 +13151,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Views/Home/UpdatePassword.cshtml">
       <publishTime>08/15/2024 20:35:19</publishTime>
+    </File>
+    <File Include="Views/Home/UpdatePasswordSuccess.cshtml">
+      <publishTime>09/09/2024 13:43:33</publishTime>
     </File>
     <File Include="Views/Home/UserProfile.cshtml">
       <publishTime>10/26/2023 17:13:11</publishTime>
@@ -11826,14 +13209,17 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Views/Home/_CouponPayment.cshtml">
       <publishTime>06/21/2024 07:07:45</publishTime>
     </File>
+    <File Include="Views/Home/_CreditCardPayment.cshtml">
+      <publishTime>09/13/2024 12:30:01</publishTime>
+    </File>
     <File Include="Views/Home/_CreditCardProcess.cshtml">
-      <publishTime>05/01/2024 12:53:48</publishTime>
+      <publishTime>09/11/2024 10:21:15</publishTime>
     </File>
     <File Include="Views/Home/_DeliveryAddressData.cshtml">
       <publishTime>03/20/2024 15:42:33</publishTime>
     </File>
     <File Include="Views/Home/_DeliveryAddressData1.cshtml">
-      <publishTime>07/02/2024 18:38:23</publishTime>
+      <publishTime>09/07/2024 19:30:42</publishTime>
     </File>
     <File Include="Views/Home/_DeliveryDataData1.cshtml">
       <publishTime>06/20/2024 18:56:17</publishTime>
@@ -11962,13 +13348,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/21/2024 19:38:38</publishTime>
     </File>
     <File Include="Views/Home/_LoginUserProf.cshtml">
-      <publishTime>02/28/2024 18:31:13</publishTime>
+      <publishTime>09/20/2024 11:09:31</publishTime>
     </File>
     <File Include="Views/Home/_LoginUserProf1.cshtml">
       <publishTime>02/28/2024 18:30:17</publishTime>
     </File>
     <File Include="Views/Home/_LoginUserProfData.cshtml">
-      <publishTime>02/27/2024 18:46:16</publishTime>
+      <publishTime>09/20/2024 09:46:03</publishTime>
     </File>
     <File Include="Views/Home/_LoginUserProfGuest.cshtml">
       <publishTime>05/13/2024 14:56:42</publishTime>
@@ -11977,7 +13363,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/13/2024 14:57:51</publishTime>
     </File>
     <File Include="Views/Home/_OrderCategoryItem.cshtml">
-      <publishTime>09/05/2024 10:08:16</publishTime>
+      <publishTime>09/23/2024 13:17:19</publishTime>
     </File>
     <File Include="Views/Home/_OrderCategoryItem1.cshtml">
       <publishTime>02/18/2024 02:02:34</publishTime>
@@ -11986,13 +13372,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/28/2024 17:25:33</publishTime>
     </File>
     <File Include="Views/Home/_OrderCategoryItemList.cshtml">
-      <publishTime>09/01/2024 17:16:08</publishTime>
+      <publishTime>09/25/2024 04:28:58</publishTime>
     </File>
     <File Include="Views/Home/_OrderInvoice.cshtml">
       <publishTime>08/13/2024 17:06:05</publishTime>
     </File>
     <File Include="Views/Home/_OrderInvoiceData.cshtml">
-      <publishTime>09/06/2024 10:24:18</publishTime>
+      <publishTime>09/07/2024 18:33:55</publishTime>
     </File>
     <File Include="Views/Home/_OrderInvoiceDataSubject.cshtml">
       <publishTime>08/14/2024 08:22:21</publishTime>
@@ -12040,13 +13426,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/04/2024 17:34:04</publishTime>
     </File>
     <File Include="Views/Home/_PaymentInfo0.cshtml">
-      <publishTime>09/05/2024 12:03:47</publishTime>
+      <publishTime>09/10/2024 16:21:17</publishTime>
     </File>
     <File Include="Views/Home/_PaymentInfo1.cshtml">
       <publishTime>07/05/2024 17:51:36</publishTime>
     </File>
     <File Include="Views/Home/_PaymentInfo3.cshtml">
       <publishTime>07/15/2024 20:23:26</publishTime>
+    </File>
+    <File Include="Views/Home/_PaymentInfo4.cshtml">
+      <publishTime>09/13/2024 12:20:06</publishTime>
     </File>
     <File Include="Views/Home/_PaymentModeData.cshtml">
       <publishTime>04/22/2024 12:12:30</publishTime>
@@ -12085,10 +13474,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/04/2024 11:20:53</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserProf.cshtml">
-      <publishTime>02/28/2024 18:32:12</publishTime>
+      <publishTime>09/20/2024 10:07:09</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserProfData.cshtml">
-      <publishTime>04/19/2024 14:52:35</publishTime>
+      <publishTime>09/20/2024 09:40:21</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserProfEmailBody.cshtml">
       <publishTime>11/21/2023 16:46:06</publishTime>
@@ -12117,6 +13506,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Views/Home/_ReturnPolicy.cshtml">
       <publishTime>03/13/2024 09:52:43</publishTime>
     </File>
+    <File Include="Views/Home/_SearchForEmailAddress.cshtml">
+      <publishTime>09/25/2024 04:31:38</publishTime>
+    </File>
     <File Include="Views/Home/_SearchResult.cshtml">
       <publishTime>09/04/2024 11:21:39</publishTime>
     </File>
@@ -12127,7 +13519,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/21/2024 11:58:03</publishTime>
     </File>
     <File Include="Views/Home/_SearchResultItemMaster.cshtml">
-      <publishTime>08/31/2024 11:53:15</publishTime>
+      <publishTime>09/23/2024 12:56:47</publishTime>
     </File>
     <File Include="Views/Home/_SEOPage1.cshtml">
       <publishTime>09/16/2023 12:53:00</publishTime>
@@ -12154,7 +13546,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>06/08/2024 09:13:44</publishTime>
     </File>
     <File Include="Views/Home/_ShoppingCartEmailBody1.cshtml">
-      <publishTime>09/06/2024 06:18:55</publishTime>
+      <publishTime>09/07/2024 17:56:37</publishTime>
     </File>
     <File Include="Views/Home/_ShoppingCartLink.cshtml">
       <publishTime>11/26/2023 10:46:18</publishTime>
@@ -12184,7 +13576,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2023 12:53:00</publishTime>
     </File>
     <File Include="Views/Home/_UpdatePasswordSuccess.cshtml">
-      <publishTime>09/16/2023 12:53:00</publishTime>
+      <publishTime>09/13/2024 19:33:00</publishTime>
     </File>
     <File Include="Views/Home/_UserProfile.cshtml">
       <publishTime>04/14/2024 19:50:10</publishTime>
@@ -12199,7 +13591,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2023 12:53:00</publishTime>
     </File>
     <File Include="Views/Home/_UserType.cshtml">
-      <publishTime>07/12/2024 16:39:57</publishTime>
+      <publishTime>09/20/2024 09:41:20</publishTime>
     </File>
     <File Include="Views/RetailApi/ShoppingCart.cshtml">
       <publishTime>06/14/2024 18:08:40</publishTime>
@@ -12250,7 +13642,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2023 12:51:56</publishTime>
     </File>
     <File Include="Views/Shared/_HeaderMenu.cshtml">
-      <publishTime>07/28/2024 17:41:07</publishTime>
+      <publishTime>09/23/2024 13:12:53</publishTime>
     </File>
     <File Include="Views/Shared/_HeaderMenu2.cshtml">
       <publishTime>07/10/2024 07:59:58</publishTime>
@@ -12262,7 +13654,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/05/2024 11:10:57</publishTime>
     </File>
     <File Include="Views/Shared/_HeaderMenuTop.cshtml">
-      <publishTime>09/01/2024 18:16:56</publishTime>
+      <publishTime>09/20/2024 08:36:31</publishTime>
     </File>
     <File Include="Views/Shared/_HeaderMenuTop2.cshtml">
       <publishTime>09/04/2024 11:22:50</publishTime>
@@ -12391,7 +13783,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2023 12:38:45</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/23/2024 18:25:39</publishTime>
+      <publishTime>09/13/2024 17:32:13</publishTime>
     </File>
   </ItemGroup>
 </Project>

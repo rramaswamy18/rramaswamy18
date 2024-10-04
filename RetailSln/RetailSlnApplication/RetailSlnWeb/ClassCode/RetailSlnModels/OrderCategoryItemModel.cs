@@ -7,11 +7,14 @@ namespace RetailSlnModels
 {
     public class OrderCategoryItemModel
     {
-        public string ActionName { set; get; }
-        public string ControllerName { set; get; }
+        public int CategoryCount { set; get; }
+        public string OrderCreatedForEmailAddress { set; get; }
+        public long? OrderCreatedForPersonId { set; get; }
         public long ParentCategoryId { set; get; }
+        public int PageCount { set; get; }
         public int PageNum { set; get; }
         public int PageSize { set; get; }
         public long TotalRowCount { set; get; }
+        public List<ItemMasterModel> ItemMasterModels { set; get; }
     }
 }

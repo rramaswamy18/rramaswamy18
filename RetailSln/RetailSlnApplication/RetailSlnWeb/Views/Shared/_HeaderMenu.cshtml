@@ -11,26 +11,6 @@
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
     List<CategoryItemMasterHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemMasterHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
     int mainCategoryCount = 6;
-    //int mainCategoryCount1 = (categoryItemHierModels.Count - mainCategoryCount) / 2;
-    //int mainCategoryCount2 = mainCategoryCount1 + mainCategoryCount;
-    //if (categoryItemHierModels.Count > mainCategoryCount1 * 2 + mainCategoryCount)
-    //{
-    //    mainCategoryCount2++;
-    //}
-    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-    string actionName, aspNetRoleName, controllerName;
-    if (sessionObjectModel == null)
-    {
-        aspNetRoleName = "DEFAULTROLE";
-    }
-    else
-    {
-        aspNetRoleName = sessionObjectModel.AspNetRoleName;
-    }
-    var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-    actionName = aspNetRoleKVPs["ActionName02"].KVPValueData;
-    controllerName = aspNetRoleKVPs["ControllerName02"].KVPValueData;
-    string baseUrl = Url.Action(actionName, controllerName);
 }
 <style>
     ul ul {
@@ -91,7 +71,7 @@
         {
             <li>
                 <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryNameDesc + " " + imageTitle)">
+                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryNameDesc + " " + imageTitle)">
                     @categoryItemHierModels[i].CategoryModel.CategoryDesc
                 </a>
             </li>
@@ -104,42 +84,12 @@
             {
                 <li>
                     <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryNameDesc + " " + imageTitle)">
+                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryNameDesc + " " + imageTitle)">
                         @categoryItemHierModels[i].CategoryModel.CategoryDesc
                     </a>
                 </li>
             }
         </ul>
-        @*<div class="container" style="width: 190px; z-index:20000;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul style="padding-left: 0; list-style-type: none;">
-                            @for (; i < mainCategoryCount2; i++)
-                            {
-                                <li style="padding-bottom: 10px; padding-right: 10px;">
-                                    <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold; white-space: nowrap;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
-                                        @categoryItemHierModels[i].CategoryModel.CategoryDesc
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <ul style="padding-left: 0; list-style-type: none;">
-                            @for (; i < categoryItemHierModels.Count; i++)
-                            {
-                                <li style="padding-bottom: 10px;">
-                                    <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
-                                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1, '@baseUrl');" style="color: #ffffff; font-size: 12px; font-weight: bold; white-space: nowrap;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
-                                        @categoryItemHierModels[i].CategoryModel.CategoryDesc
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>*@
     </li>
     <li>
         <a href="javascript: void(0);" style="cursor: default;">

@@ -12,6 +12,7 @@ namespace RetailSlnModels
         //Additional models --> PaymentDataModel, PersonModel, OrderSumamryModel and...
         public CouponPaymentModel CouponPaymentModel { set; get; }
         public CreditCardDataModel CreditCardDataModel { set; get; }
+        public CreditCardProcessModel CreditCardProcessModel { set; get; }
         public DemogInfoAddressModel DeliveryAddressModel { set; get; }
         public DeliveryDataModel DeliveryDataModel { set; get; }
         public DeliveryMethodModel DeliveryMethodModel { set; get; }

@@ -572,6 +572,166 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static List<ItemMasterModel> GetItemMasters(int offsetRows, int rowCount, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "WITH ItemMasterTemp AS" + Environment.NewLine;
+                sqlStmt += "(" + Environment.NewLine;
+                sqlStmt += $"    SELECT * FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId OFFSET {offsetRows} ROWS FETCH NEXT {rowCount} ROWS ONLY" + Environment.NewLine;
+                sqlStmt += ")" + Environment.NewLine;
+                sqlStmt += "SELECT * FROM ItemMasterTemp INNER JOIN RetailSlnSch.Item ON ItemMasterTemp.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "ORDER BY ItemMasterTemp.ItemMasterId, Item.ItemId" + Environment.NewLine;
+                //sqlStmt += "" + Environment.NewLine;
+                //sqlStmt += "" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                bool sqlDataReaderRead = sqlDataReader.Read();
+                ItemMasterModel itemMasterModel;
+                while (sqlDataReaderRead)
+                {
+                    itemMasterModels.Add
+                    (
+                        itemMasterModel = new ItemMasterModel
+                        {
+                            ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ImageExtension = sqlDataReader["ImageExtension"].ToString(),
+                            ImageName = sqlDataReader["ImageName"].ToString(),
+                            ItemMasterDesc0 = sqlDataReader["ItemMasterDesc0"].ToString(),
+                            ItemMasterDesc1 = sqlDataReader["ItemMasterDesc1"].ToString(),
+                            ItemMasterDesc2 = sqlDataReader["ItemMasterDesc2"].ToString(),
+                            ItemMasterDesc3 = sqlDataReader["ItemMasterDesc3"].ToString(),
+                            ItemMasterDesc = sqlDataReader["ItemMasterDesc"].ToString(),
+                            ItemMasterName = sqlDataReader["ItemMasterName"].ToString(),
+                            ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                            ProductItemId = sqlDataReader["ProductItemId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ProductItemId"].ToString()),
+                            UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                            ItemModels = new List<ItemModel>(),
+                        }
+                    );
+                    while (sqlDataReaderRead && itemMasterModel.ItemMasterId == long.Parse(sqlDataReader["ItemMasterId"].ToString()))
+                    {
+                        itemMasterModel.ItemModels.Add
+                        (
+                            new ItemModel
+                            {
+                                ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                                ExpectedAvailability = string.IsNullOrWhiteSpace(sqlDataReader["ExpectedAvailability"].ToString()) ? null : DateTime.Parse(sqlDataReader["ExpectedAvailability"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
+                                ItemName = sqlDataReader["ItemName"].ToString(),
+                                ItemForSaleId = (YesNoEnum)int.Parse(sqlDataReader["ItemForSaleId"].ToString()),
+                                ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                                ImageName = sqlDataReader["ImageName"].ToString(),
+                                ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
+                                ItemRateMSRP = float.Parse(sqlDataReader["ItemRateMSRP"].ToString()),
+                                ItemShortDesc0 = sqlDataReader["ItemShortDesc0"].ToString(),
+                                ItemShortDesc1 = sqlDataReader["ItemShortDesc1"].ToString(),
+                                ItemShortDesc2 = sqlDataReader["ItemShortDesc2"].ToString(),
+                                ItemShortDesc3 = sqlDataReader["ItemShortDesc3"].ToString(),
+                                ItemShortDesc = sqlDataReader["ItemShortDesc"].ToString(),
+                                ItemStarCount = 4,
+                                ItemStatusId = (ItemStatusEnum)int.Parse(sqlDataReader["ItemStatusId"].ToString()),
+                                ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                                ProductItemId = long.Parse(sqlDataReader["ProductItemId"].ToString()),
+                                UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                            }
+                        );
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+
+                return itemMasterModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static ItemMasterModel GetItemMaster(int itemMasterId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += $"SELECT * FROM RetailSlnSch.ItemMaster INNER JOIN RetailSlnSch.ItemMasterInfo ON ItemMaster.ItemMasterId = ItemMasterInfo.ItemMasterId WHERE ItemMaster.ItemMasterId = {itemMasterId} ORDER BY ItemMasterInfo.SeqNum" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                bool sqlDataReaderRead = sqlDataReader.Read();
+                ItemMasterModel itemMasterModel = null;
+                while (sqlDataReaderRead)
+                {
+                    itemMasterModel = new ItemMasterModel
+                    {
+                        ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        ImageExtension = sqlDataReader["ImageExtension"].ToString(),
+                        ImageName = sqlDataReader["ImageName"].ToString(),
+                        ItemMasterDesc0 = sqlDataReader["ItemMasterDesc0"].ToString(),
+                        ItemMasterDesc1 = sqlDataReader["ItemMasterDesc1"].ToString(),
+                        ItemMasterDesc2 = sqlDataReader["ItemMasterDesc2"].ToString(),
+                        ItemMasterDesc3 = sqlDataReader["ItemMasterDesc3"].ToString(),
+                        ItemMasterDesc = sqlDataReader["ItemMasterDesc"].ToString(),
+                        ItemMasterName = sqlDataReader["ItemMasterName"].ToString(),
+                        ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
+                        ProductItemId = sqlDataReader["ProductItemId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ProductItemId"].ToString()),
+                        UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                        ItemMasterInfoModels = new List<ItemMasterInfoModel>(),
+                        ItemModels = new List<ItemModel>(),
+                    };
+                    while (sqlDataReaderRead && itemMasterModel.ItemMasterId == long.Parse(sqlDataReader["ItemMasterId"].ToString()))
+                    {
+                        itemMasterModel.ItemMasterInfoModels.Add
+                        (
+                            new ItemMasterInfoModel
+                            {
+                                ItemMasterInfoId = long.Parse(sqlDataReader["ItemMasterInfoId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                                ItemMasterInfoLabelText = sqlDataReader["ItemMasterInfoLabelText"].ToString(),
+                                ItemMasterInfoText = sqlDataReader["ItemMasterInfoText"].ToString(),
+                                SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            }
+                        );
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+                sqlStmt = $"SELECT * FROM RetailSlnSch.Item INNER JOIN RetailSlnSch.ItemInfo ON Item.ItemId = ItemInfo.ItemId WHERE Item.ItemMasterId = {itemMasterId} ORDER BY Item.ItemId, ItemInfo.SeqNum" + Environment.NewLine;
+                sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                sqlDataReaderRead = sqlDataReader.Read();
+                ItemModel itemModel;
+                while (sqlDataReaderRead)
+                {
+                    itemModel = new ItemModel
+                    {
+                        ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        ItemInfoModels = new List<ItemInfoModel>(),
+                    };
+                    while (sqlDataReaderRead && itemModel.ItemId == long.Parse(sqlDataReader["ItemId"].ToString()))
+                    {
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+                return itemMasterModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static List<ItemMasterItemSpecModel> GetItemMasterItemSpecs(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1293,6 +1453,53 @@ namespace RetailSlnDataLayer
                     );
                 }
                 return searchMetaDataModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<SearchForEmailAddressDataModel> GetSearchForEmailAddresss(string searchText, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "        SELECT Person.PersonId, AspNetUser.Email, Person.FirstName, Person.LastName" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.CorpAcct" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1 ON CorpAcct.CorpAcctId = PersonExtn1.CorpAcctId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person ON PersonExtn1.PersonId = Person.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
+                sqlStmt += $"        WHERE CorpAcct.CorpAcctName LIKE '%{searchText}%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT Person.PersonId, Person.FirstName, Person.LastName,AspNetUser.Email" + Environment.NewLine;
+                sqlStmt += "          FROM ArchLib.Person" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
+                sqlStmt += $"        WHERE Person.FirstName LIKE '%{searchText}%' OR Person.LastName LIKE '%{searchText}%'" + Environment.NewLine;
+                sqlStmt += "      ORDER BY AspNetUser.Email, Person.FirstName, Person.LastName" + Environment.NewLine;
+                //sqlStmt += "        " + Environment.NewLine;
+                //sqlStmt += "        " + Environment.NewLine;
+                //sqlStmt += "        " + Environment.NewLine;
+                List<SearchForEmailAddressDataModel> searchForEmailAddressDataModels = new List<SearchForEmailAddressDataModel>();
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    searchForEmailAddressDataModels.Add
+                    (
+                        new SearchForEmailAddressDataModel
+                        {
+                            PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                            EmailAddress = sqlDataReader["Email"].ToString(),
+                            FirstName = sqlDataReader["FirstName"].ToString(),
+                            LastName = sqlDataReader["LastName"].ToString(),
+                        }
+                    );
+                }
+                return searchForEmailAddressDataModels;
             }
             catch (Exception exception)
             {

@@ -1,7 +1,10 @@
 ﻿@using ArchitectureLibraryMenuModels
 @{
-    List<MenuUrlAction> menuUrlActions = new List<MenuUrlAction>
+    if (ViewData["ActionName"].ToString() == "ItemMasterInfo")
     {
+    }
+    List<MenuUrlAction> menuUrlActions = new List<MenuUrlAction>
+{
         new MenuUrlAction
         {
             ActionName = "CategoryList",
@@ -10,7 +13,7 @@
         },
         new MenuUrlAction
         {
-            ActionName = "ItemList",
+            ActionName = "ItemMasterList",
             ControllerName = "Dashboard",
             LinkText = "Item",
         },
@@ -28,6 +31,9 @@
         },
     };
 }
+<link type="text/css" rel="stylesheet" href="~/Include/TextEditor.css" />
+<link type="text/css" rel="stylesheet" href="~/Include/jquery-te-1.4.0.css" />
+<script type="text/javascript" src="~/Include/jquery-te-1.4.0.min.js" charset="utf-8"></script>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     @foreach (var menuUrlAction in menuUrlActions)
     {
@@ -39,7 +45,7 @@
 </div>
 <script type="text/javascript">
     function menuLink_onclick(url, pageNum, pageCount) {
-        console.log("menuLink_onclick", "00000000", "ENTER!!!");
+        console.log("menuLink_onclick", "00000000", "ENTER!!!", url);
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         document.getElementById("divErrorMessage").innerHTML = "";
         url += "/" + pageNum + "?pageCount=" + pageCount;
@@ -53,20 +59,100 @@
                 $('#loadingModal').modal('hide');
                 console.log("00001000", "menuLink_onclick success", responseData.processMessage);
                 document.getElementById("divDashboard").innerHTML = responseData.htmlString;
-            //    if (responseData.success) {
-            //        document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
-            //        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-            //        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-            //    }
-            //    else {
-            //        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-            //    }
+                //    if (responseData.success) {
+                //        document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                //        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+                //        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                //    }
+                //    else {
+                //        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+                //    }
             },
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
                 console.log("menuLink_onclick", "00099000", "ERROR???");
                 console.log(xhr, exception);
             }
+        });
+    }
+    function itemMasterInfo_onclick(itemMasterId) {
+        console.log("itemMasterInfo_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        document.getElementById("divErrorMessage").innerHTML = "";
+        url = "/Dashboard/ItemMasterInfo/" + itemMasterId;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "itemMasterInfo_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+                jQueryTextEditorInit();
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("itemMasterInfo_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+                document.getElementById("divErrorMessage").innerHTML = "Error in loading Item Master Spec";
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            }
+        });
+    }
+    function itemMasterInfoSave_onclick() {
+        console.log("itemMasterInfoSave_onclick", "00000000", "ENTER!!!");
+        url = "/Dashboard/ItemMasterInfo/";
+        var postData = $("#formItemMasterInfo").serialize();
+        //var jsonData = {};
+        //jsonData.ItemMasterId = document.getElementById("ItemMasterId").value;
+        //console.log(9, postData);
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "json",
+            data: postData,
+            success: function (responseData, textStatus, request) {
+                console.log("00001000", "itemMasterInfoSave_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+                jQueryTextEditorInit();
+            },
+            error: function (xhr, exception) {
+                console.log("itemMasterInfoSave_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+    function jQueryTextEditorInit() {
+        $('.jqte-test').jqte();
+        $(".jqte_fontsize").each(function () {
+            var sizeValue = $(this).attr("jqte-styleval");
+            $(this).text(sizeValue);
+            $(this).css({
+                "font-size": "14px",
+                "text-decoration": "none"
+            });
+        });
+        $(".jqte_fontsizes").css(
+            {
+                "width": "45px",
+                "min-height": "210px",
+                "text-align": "center"
+            });
+        $(".jqte_tool ").css(
+            {
+                "border": "1px solid #abb2b9",
+                "padding": "2px 8px",
+                "border-radius": "4px",
+                "margin-right": "6px",
+            });
+        // settings of status
+        var jqteStatus = true;
+        $(".status").click(function () {
+            jqteStatus = jqteStatus ? false : true;
+            $('.jqte-test').jqte({ "status": jqteStatus })
         });
     }
 </script>

@@ -195,6 +195,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\PaymentModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiCategoryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiCategorysModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiCodeDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiDeliveryInfoModel.cs" />
@@ -202,6 +203,9 @@
     <Compile Include="ClassCode\RetailSlnModels\ApiDemogInfoAddressModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiIndexModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiItemMasterModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiItemMasterSpecModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiItemMastersModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiItemsModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiLoginUserProfModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiPaymentMethodModel.cs" />
@@ -235,9 +239,11 @@
     <Compile Include="ClassCode\RetailSlnModels\GiftCertModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertPaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertValidateModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\IndexModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemDataModel_zzz.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemMasterInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterItemSpecModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterModel.cs" />
@@ -257,6 +263,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemInfoListAddEditModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemInfoListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemInfoModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderCategoryItemListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderCategoryItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailItemBundle.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetail.cs" />
@@ -279,6 +286,8 @@
     <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApplSessionObjectModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RetailSlnInitModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchForEmailAddressDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchForEmailAddressModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchKeywordListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchKeywordModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataModel.cs" />
@@ -1395,6 +1404,11 @@
     <Content Include="Images\Home2.png" />
     <Content Include="Images\Home3.png" />
     <Content Include="Images\UnderConstruction.jpg" />
+    <Content Include="Include\jquery-te-1.4.0.css" />
+    <Content Include="Include\jquery-te-1.4.0.js" />
+    <Content Include="Include\jquery-te-1.4.0.min.js" />
+    <Content Include="Include\jquery-te.png" />
+    <Content Include="Include\TextEditor.css" />
     <Content Include="libman.json" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Home\_OrderInvoiceData.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Home\_ShoppingCartEmailBody1.cshtml" />
@@ -1508,6 +1522,10 @@
     <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\Home.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Dashboard\_ItemMasterList.cshtml" />
+    <Content Include="Views\Dashboard\_ItemMasterInfo.cshtml" />
+    <Content Include="Views\Home\LoginUserProf.cshtml" />
+    <Content Include="Views\Home\Index - Copy.cshtml" />
     <None Include="Views\Home\LoginUserProf.cshtml.zzz" />
     <Content Include="Views\Home\Payment.cshtml" />
     <Content Include="Views\Home\PicGallery.cshtml" />
@@ -1517,6 +1535,8 @@
     <Content Include="Views\Home\RegisterLoginContactResetPassword.cshtml" />
     <Content Include="Views\Home\RegisterUserLoginUser.cshtml" />
     <Content Include="Views\Home\RegisterUserProf.cshtml" />
+    <Content Include="Views\Home\OrderCategoryItemList.cshtml" />
+    <Content Include="Views\Home\ResetPassword.cshtml" />
     <None Include="Views\Home\ResetPassword.cshtml.zzz" />
     <Content Include="Views\Home\ResetPasswordContactUs.cshtml" />
     <Content Include="Views\Home\ReturnPolicy.cshtml" />
@@ -1699,6 +1719,10 @@
     <Content Include="Views\Home\_ShoppingCartModal.cshtml" />
     <Content Include="Views\Home\_ShoppingCart2.cshtml" />
     <Content Include="Views\Home\_ShoppingCartData2.cshtml" />
+    <Content Include="Views\Home\UpdatePasswordSuccess.cshtml" />
+    <Content Include="Views\Home\_PaymentInfo4.cshtml" />
+    <Content Include="Views\Home\_CreditCardPayment.cshtml" />
+    <Content Include="Views\Home\_SearchForEmailAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

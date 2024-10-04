@@ -7,7 +7,7 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-    List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    List<CategoryItemMasterHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemMasterHierModels;
 }
 <br style="clear: both;" />
 @{
@@ -42,3 +42,50 @@
         Logout
     </a>
 </div>
+
+@*
+    @using ArchitectureLibraryCacheData
+    @using RetailSlnCacheData
+    @using RetailSlnModels
+    @{
+        //DivineBija.in --> 97
+        var clientId = ArchLibCache.ClientId;
+        var clientName = ArchLibCache.ClientName;
+        var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+        CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
+        List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels;
+    }
+    <br style="clear: both;" />
+    @{
+        int i;
+        for (i = 0; i < categoryItemHierModels.Count; i++)
+        {
+            <div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 153px;">
+                <span id="menuCategoryIdA@(i + 1)" style="display: none;">@categoryItemHierModels[i].CategoryModel.CategoryId</span>
+                <a id="menuItemA@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemHierModels[i].CategoryModel.CategoryId, 1);" style="color: #ffffff; font-size: 13px; font-weight: bold;" title="@(categoryItemHierModels[i].CategoryModel.CategoryDesc + " " + imageTitle)">
+                    @categoryItemHierModels[i].CategoryModel.CategoryDesc
+                </a>
+            </div>
+            if (i % 2 != 0)
+            {
+                <br style="clear: both;" />
+            }
+        }
+    }
+    <div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 153px;">
+        <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "REGISTER" })" style="color:#ffffff; font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold;" title="Register - @imageTitle">
+            Register
+        </a>
+    </div>
+    <div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 153px;">
+        <a href="@Url.Action("RegisterUserLoginUser", "Home", new { id = "LOGIN" })" style="color: #ffffff; font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold;" title="Register - @imageTitle">
+            Login
+        </a>
+    </div>
+    <br style="clear: both;" />
+    <div style="padding-bottom: 3px; padding-left: 6px; float: left; width: 135px;">
+        <a href="@Url.Action("Logout", "Home")" style="color:#ffffff; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" title="Register - @imageTitle">
+            Logout
+        </a>
+    </div>
+*@

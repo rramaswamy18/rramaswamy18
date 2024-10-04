@@ -283,3 +283,9 @@ function showHideForHide(inputElementId, typeAttributeValue) {
     $('#' + inputElementId).attr('type', typeAttributeValue);
     $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
 }
+function isNumber1(n) {
+    return !isNaN(parseFloat(n)) && !isNaN(n - 0);
+}
+function isNumber2(n) {
+    return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
+}

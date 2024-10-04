@@ -8,7 +8,7 @@ namespace RetailSlnModels
 {
     public class ApiCategorysModel
     {
-        public List<CategoryModel> CategoryModels { set; get; }
+        public List<ApiCategoryModel> ApiCategoryModels { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

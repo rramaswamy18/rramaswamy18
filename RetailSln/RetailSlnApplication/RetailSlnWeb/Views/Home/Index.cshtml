@@ -3,8 +3,11 @@
 @{
     ViewBag.Title = "Index";
 }
-@Html.Partial("_Home")
+<div id="divOrderItem">
+</div>
 <script type="text/javascript">
+    var categoryCount = parseInt("@Model.CategoryCount");
+    categoryId_onclick(@Model.ParentCategoryId, 1, "@Url.Action("OrderCategoryItem", "Home")");
     function window_onload() {
     }
 </script>

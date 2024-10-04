@@ -1,53 +1,65 @@
 ﻿@model ArchitectureLibraryModels.RegisterUserProfModel
-<h3 style="font-weight: bold;">R E G I S T E R <span style="color: #0000ff;">(First time users)</span></h3>
-<ol id="ulSuccessMessagesRegister" style="color: #0000ff; display: none; font-size: 14px; font-weight: bold;">
-    <li>
-        Your email has been successfully registered
-    </li>
-    <li>
-        Please check your Inbox to complete your registration
-    </li>
-    <li>
-        Your email could be in Junk/Spam folder
-    </li>
-    <li>
-        If so, mark this email address as not spam
-    </li>
-</ol>
-<ul id="ulErrorMessagesRegister" style="display: none; font-size: 14px; font-weight: bold;">
-    <li style="color: #ff0000;">
-        Unable to register, please try again
-    </li>
-    <li>
-        Still facing issues?
-        <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click here to Contact Us...</a>
-    </li>
-</ul>
-<form id="formRegisterUserProfData">
-    @Html.Partial("_RegisterUserProfData", Model)
-</form>
-<p>By creating an account you agree to our <a href="@Url.Action("PrivacyPolicy", "Home")" target="_blank">Terms & Privacy</a>.</p>
-<button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">register</button>
-<ul style="font-weight: bold;">
-    <li>
-        Please enter email address, confirm email address, telephone#
-    </li>
-    <li>
-        Answer captcha question
-    </li>
-    <li>
-        Click <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> to continue
-    </li>
-    <li>
-        Please check your <span style="color: #ff0000; font-size: 15px;">Inbox</span> for email with further instructions
-    </li>
-    <li>
-        If you do not see the email in your Inbox - please check <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
-    </li>
-    <li>
-        If so, move the email to Inbox and mark the <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
-    </li>
-</ul>
+<div class="center" style="width: 45%;">
+    <div class="row" style="text-align: left;">
+        <span style="color: #000000; font-size: 23px; font-weight: bold;">R E G I S T E R <span style="color: #0000ff;">(First time users)</span></span>
+    </div>
+    <div class="row" style="text-align: left;">
+        <ol id="ulSuccessMessagesRegister" style="color: #0000ff; display: none; font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 7px; text-align: left;">
+            <li>
+                Your email has been successfully registered
+            </li>
+            <li>
+                Please check your Inbox to complete your registration
+            </li>
+            <li>
+                Your email could be in Junk/Spam folder
+            </li>
+            <li>
+                If so, mark this email address as not spam
+            </li>
+        </ol>
+        <ul id="ulErrorMessagesRegister" style="display: none; font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+            <li style="color: #ff0000;">
+                Unable to register, please try again
+            </li>
+            <li>
+                Still facing issues?
+                <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click here to Contact Us...</a>
+            </li>
+        </ul>
+    </div>
+    <form id="formRegisterUserProfData">
+        @Html.Partial("_RegisterUserProfData", Model)
+    </form>
+    <div class="row" style="text-align: left;">
+        <p>By creating an account you agree to our <a href="@Url.Action("PrivacyPolicy", "Home")" target="_blank">Terms & Privacy</a>.</p>
+    </div>
+    <div class="row" style="text-align: left;">
+        <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">register</button>
+    </div>
+    <div class="row" style="text-align: left;">
+        <ul style="font-weight: bold; margin-left: 7px; padding-left: 7px; text-align: left; ">
+            <li>
+                Please enter email address, confirm email address, telephone#
+            </li>
+            <li>
+                Answer captcha question
+            </li>
+            <li>
+                Click <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> to continue
+            </li>
+            <li>
+                Please check your <span style="color: #ff0000; font-size: 15px;">Inbox</span> for email with further instructions
+            </li>
+            <li>
+                If you do not see the email in your Inbox - please check <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+            </li>
+            <li>
+                If so, move the email to Inbox and mark the <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+            </li>
+        </ul>
+    </div>
+</div>
 <script type="text/javascript">
     function registerUserSave_onclick() {
         console.log("00000000", "registerUserSave_onclick", "Enter");

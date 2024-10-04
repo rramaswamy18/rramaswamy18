@@ -1,4 +1,5 @@
-﻿using RetailSlnEnumerations;
+﻿using ArchitectureLibraryModels;
+using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -33,7 +34,7 @@ namespace RetailSlnModels
 
         public List<ItemImageModel> ItemMasterImageModels { set; get; }
 
-        public List<ItemInfoModel> ItemMasterInfoModels { set; get; }
+        public List<ItemMasterInfoModel> ItemMasterInfoModels { set; get; }
 
         public List<ItemSpecModel> ItemMasterItemSpecModels { set; get; }
 
@@ -48,5 +49,7 @@ namespace RetailSlnModels
         public string UploadImageFileName { set; get; }
 
         public List<ItemModel> ItemModels { set; get; }
+
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

@@ -278,11 +278,11 @@ function validateItemIdOrderQty(itemId, orderQty, returnObject, index, errorMess
     }
     return returnValue;
 }
-function categoryId_onclick(categoryId, pageNum, baseUrl) {
+function categoryId_onclick(categoryId, pageNum) {
     console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
-    var url = baseUrl + "?id=" + categoryId + "&pageNum=" + pageNum;
+    var url = "/Home/OrderCategoryItem" + "?id=" + categoryId + "&pageNum=" + pageNum;
     $.ajax({
         url: url,
         type: "GET",
@@ -326,13 +326,13 @@ function categoryId_onclick(categoryId, pageNum, baseUrl) {
     });
 }
 function checkoutValidate_onclick() {
-    console.log("00000000", "checkoutValidate_onclick", "Enter");
+    console.log("00000000", "checkoutValidate_onclick", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     var url = "/Home/CheckoutValidate";
     $.ajax({
         url: url,
-        type: "POST",
+        type: "GET",
         //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
         dataType: "json",
         async: true,
@@ -341,7 +341,21 @@ function checkoutValidate_onclick() {
             $('#loadingModal').modal('hide');
             console.log("00001000", "checkoutValidate_onclick success", responseData.processMessage);
             if (responseData.success) {
-                window.location.href = "/Checkout/";
+                url = "/Checkout";
+                var id;
+                try {
+                    id = parseInt(document.getElementById("OrderCreatedForPersonId").value);
+                    if (isNumber2(id)) {
+                        url += "?id=" + id;
+                    }
+                    else {
+                        url += "/";
+                    }
+                }
+                catch (err) {
+                    url += "/";
+                }
+                window.location.href = url;
                 document.getElementById("divScrollIntoView").scrollIntoView();
             }
             else {
@@ -539,4 +553,40 @@ function tempFunction(itemId, itemRate, itemSpecs, itemIndex) {
     document.getElementById("spnMessageItem" + itemIndex).innerHTML = itemRate + " | " + itemSpecs;
     document.getElementById("itemId" + itemIndex).innerHTML = itemId;
     //document.getElementById("dropdownMenuButton" + itemIndex).innerHTML = itemRate + " | " + itemSpecs + '&nbsp;&nbsp;&nbsp;<span class="caret" style="color: #000000; font-size: 20px;"></span>';
+}
+function searchOrderCreatedForEmailAddress_onclick() {
+    console.log("searchOrderCreatedForEmailAddress_onclick", "00000000", "ENTER!!!");
+    var searchOrderCreatedForEmailAddressValue = document.getElementById("searchOrderCreatedForEmailAddress").value;
+    searchOrderCreatedForEmailAddressValue = searchOrderCreatedForEmailAddressValue.trim();
+    if (searchOrderCreatedForEmailAddressValue != "") {
+        var url = "/Home/SearchForEmailAddress/" + searchOrderCreatedForEmailAddressValue;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            dataType: "json",
+            //data: { "itemId": itemId, "orderQty": orderQty },
+            async: true,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("searchOrderCreatedForEmailAddress_onclick", "00001000", responseData.success, responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("OrderCreatedForPersonId").innerHTML = responseData.htmlString;
+                }
+                else {
+                    document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+                }
+                console.log("searchOrderCreatedForEmailAddress_onclick", "00090000", "EXIT!!!");
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("searchOrderCreatedForEmailAddress_onclick", "00099000", "ERROR???");
+                var jsonData = JSON.parse(xhr.responseText);
+                console.log("searchOrderCreatedForEmailAddress_onclick", "00099100", exception, xhr, jsonData);
+                document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+            }
+        });
+    }
+    console.log("searchOrderCreatedForEmailAddress_onclick", "00090000", "EXIT!!!");
+    return false;
 }

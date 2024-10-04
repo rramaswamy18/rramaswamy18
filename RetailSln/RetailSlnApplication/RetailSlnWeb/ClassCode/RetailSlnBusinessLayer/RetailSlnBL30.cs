@@ -44,8 +44,8 @@ namespace RetailSlnBusinessLayer
             }
         }
 
-        // GET: Categories
-        public List<CategoryModel> Categorys(string parentCategoryIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // GET: Categorys
+        public List<ApiCategoryModel> Categorys(string parentCategoryIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -53,13 +53,68 @@ namespace RetailSlnBusinessLayer
             try
             {
                 long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId).OrderBy(x => x.SeqNum).ToList();
-                List<CategoryModel> categoryModels = new List<CategoryModel>();
+                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId == null).OrderBy(x => x.SeqNum).ToList();
+                List<ApiCategoryModel> apiCategoryModels = new List<ApiCategoryModel>();
                 foreach (var categoryItemHierModel in categoryItemHierModels)
                 {
-                    categoryModels.Add(categoryItemHierModel.CategoryModel);
+                    apiCategoryModels.Add
+                    (
+                        new ApiCategoryModel
+                        {
+                            CategoryId = categoryItemHierModel.CategoryId,
+                            ClientId = categoryItemHierModel.ClientId,
+                            AssignItem = categoryItemHierModel.CategoryModel.AssignItem,
+                            AssignSubCategory = categoryItemHierModel.CategoryModel.AssignSubCategory,
+                            CategoryDesc = categoryItemHierModel.CategoryModel.CategoryDesc,
+                            CategoryName = categoryItemHierModel.CategoryModel.CategoryName,
+                            CategoryNameDesc = categoryItemHierModel.CategoryModel.CategoryNameDesc,
+                            CategoryStatusId = categoryItemHierModel.CategoryModel.CategoryStatusId,
+                            DefaultCategory = categoryItemHierModel.CategoryModel.DefaultCategory,
+                            ImageExtension = categoryItemHierModel.CategoryModel.ImageExtension,
+                            ImageName = categoryItemHierModel.CategoryModel.ImageName,
+                            MaxPerPage = categoryItemHierModel.CategoryModel.MaxPerPage,
+                            UploadImageFileName = categoryItemHierModel.CategoryModel.UploadImageFileName,
+                            ViewName = categoryItemHierModel.CategoryModel.ViewName,
+                        }
+                    );
                 }
-                return categoryModels;
+                return apiCategoryModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+
+        // GET: Category
+        public ApiCategoryModel Category(string categoryIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long.TryParse(categoryIdParm, out long categoryId);
+                CategoryModel categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == categoryId);
+                ApiCategoryModel apiCategoryModel = new ApiCategoryModel
+                {
+                    CategoryId = categoryModel.CategoryId,
+                    ClientId = categoryModel.ClientId,
+                    AssignItem = categoryModel.AssignItem,
+                    AssignSubCategory = categoryModel.AssignSubCategory,
+                    CategoryDesc = categoryModel.CategoryDesc,
+                    CategoryName = categoryModel.CategoryName,
+                    CategoryNameDesc = categoryModel.CategoryNameDesc,
+                    CategoryStatusId = categoryModel.CategoryStatusId,
+                    DefaultCategory = categoryModel.DefaultCategory,
+                    ImageExtension = categoryModel.ImageExtension,
+                    ImageName = categoryModel.ImageName,
+                    MaxPerPage = categoryModel.MaxPerPage,
+                    UploadImageFileName = categoryModel.UploadImageFileName,
+                    ViewName = categoryModel.ViewName,
+                };
+                return apiCategoryModel;
             }
             catch (Exception exception)
             {
@@ -69,25 +124,77 @@ namespace RetailSlnBusinessLayer
         }
 
         // GET: ItemMasters
-        public List<ItemMasterModel> ItemMasters(string categoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public List<ApiItemMasterModel> ItemMasters(string parentCategoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                long.TryParse(categoryIdParm, out long categoryId);
+                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
                 int.TryParse(pageNumParm, out int pageNum);
-                pageNum = pageNum > 0 ? (pageNum = pageNum - 1) : pageNum;
+                pageNum = pageNum == 0 ? 1 : pageNum;
                 int.TryParse(rowCountParm, out int rowCount);
-                rowCount = rowCount == 0 || rowCount > 50 ? 50 : rowCount;
-                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
-                List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
-                foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+                rowCount = rowCount == 0 ? 45 : rowCount;
+                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null).OrderBy(x => x.SeqNum).Skip((pageNum - 1) * rowCount).Take(rowCount).ToList();
+                List<ApiItemMasterModel> apiItemMasterModels = new List<ApiItemMasterModel>();
+                ApiItemMasterModel apiItemMasterModel;
+                foreach (var categoryItemHierModel in categoryItemHierModels)
                 {
-                    itemMasterModels.Add(categoryItemMasterHierModel.ItemMasterModel);
+                    apiItemMasterModels.Add
+                    (
+                        apiItemMasterModel = new ApiItemMasterModel
+                        {
+                            ItemMasterId = categoryItemHierModel.ItemMasterModel.ItemMasterId,
+                            ClientId = categoryItemHierModel.ItemMasterModel.ItemMasterId,
+                            ImageExtension = categoryItemHierModel.ItemMasterModel.ImageExtension,
+                            ImageName = categoryItemHierModel.ItemMasterModel.ImageName,
+                            ImageTitle = categoryItemHierModel.ItemMasterModel.ImageTitle,
+                            ItemMasterDesc = categoryItemHierModel.ItemMasterModel.ItemMasterDesc,
+                            ItemMasterDesc0 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc0,
+                            ItemMasterDesc1 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc1,
+                            ItemMasterDesc2 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc2,
+                            ItemMasterDesc3 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc3,
+                            ItemMasterName = categoryItemHierModel.ItemMasterModel.ItemMasterName,
+                            ItemTypeId = categoryItemHierModel.ItemMasterModel.ItemTypeId,
+                            ProductItemId = categoryItemHierModel.ItemMasterModel.ProductItemId,
+                            UploadImageFileName = categoryItemHierModel.ItemMasterModel.UploadImageFileName,
+                            ApiItemModels = new List<ApiItemModel>(),
+                        }
+                    );
+                    foreach (var itemModel in categoryItemHierModel.ItemMasterModel.ItemModels)
+                    {
+                        apiItemMasterModel.ApiItemModels.Add
+                        (
+                            new ApiItemModel
+                            {
+                                ItemId = itemModel.ItemId,
+                                ClientId = itemModel.ClientId,
+                                ExpectedAvailability = itemModel.ExpectedAvailability,
+                                ExpectedAvailabilityFormatted = itemModel.ExpectedAvailabilityFormatted,
+                                ImageName = itemModel.ImageName,
+                                ImageTitle = itemModel.ImageTitle,
+                                ItemForSaleId = itemModel.ItemForSaleId,
+                                ItemMasterId = itemModel.ItemMasterId,
+                                ItemName = itemModel.ItemName,
+                                ItemRate = itemModel.ItemRate,
+                                ItemRateFormatted = itemModel.ItemRateFormatted,
+                                ItemRateMSRP = itemModel.ItemRateMSRP,
+                                ItemShortDesc = itemModel.ItemShortDesc,
+                                ItemShortDesc0 = itemModel.ItemShortDesc0,
+                                ItemShortDesc1 = itemModel.ItemShortDesc1,
+                                ItemShortDesc2 = itemModel.ItemShortDesc2,
+                                ItemShortDesc3 = itemModel.ItemShortDesc3,
+                                ItemStarCount = itemModel.ItemStarCount,
+                                ItemStatusId = itemModel.ItemStatusId,
+                                ItemTypeId = itemModel.ItemTypeId,
+                                ProductItemId = itemModel.ProductItemId,
+                                UploadImageFileName = itemModel.UploadImageFileName,
+                            }
+                        );
+                    }
                 }
-                return itemMasterModels;
+                return apiItemMasterModels;
             }
             catch (Exception exception)
             {
@@ -95,6 +202,177 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
+
+        // GET: ItemMasters
+        public ApiItemMasterModel ItemMaster(string itemMasterIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long.TryParse(itemMasterIdParm, out long itemMasterId);
+                ApiItemMasterModel apiItemMasterModel;
+                ItemMasterModel itemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId);
+                apiItemMasterModel = new ApiItemMasterModel
+                {
+                    ItemMasterId = itemMasterModel.ItemMasterId,
+                    ClientId = itemMasterModel.ItemMasterId,
+                    ImageExtension = itemMasterModel.ImageExtension,
+                    ImageName = itemMasterModel.ImageName,
+                    ImageTitle = itemMasterModel.ImageTitle,
+                    ItemMasterDesc = itemMasterModel.ItemMasterDesc,
+                    ItemMasterDesc0 = itemMasterModel.ItemMasterDesc0,
+                    ItemMasterDesc1 = itemMasterModel.ItemMasterDesc1,
+                    ItemMasterDesc2 = itemMasterModel.ItemMasterDesc2,
+                    ItemMasterDesc3 = itemMasterModel.ItemMasterDesc3,
+                    ItemMasterName = itemMasterModel.ItemMasterName,
+                    ItemTypeId = itemMasterModel.ItemTypeId,
+                    ProductItemId = itemMasterModel.ProductItemId,
+                    UploadImageFileName = itemMasterModel.UploadImageFileName,
+                    ApiItemModels = new List<ApiItemModel>(),
+                };
+                foreach (var itemModel in itemMasterModel.ItemModels)
+                {
+                    apiItemMasterModel.ApiItemModels.Add
+                    (
+                        new ApiItemModel
+                        {
+                            ItemId = itemModel.ItemId,
+                            ClientId = itemModel.ClientId,
+                            ExpectedAvailability = itemModel.ExpectedAvailability,
+                            ExpectedAvailabilityFormatted = itemModel.ExpectedAvailabilityFormatted,
+                            ImageName = itemModel.ImageName,
+                            ImageTitle = itemModel.ImageTitle,
+                            ItemForSaleId = itemModel.ItemForSaleId,
+                            ItemMasterId = itemModel.ItemMasterId,
+                            ItemName = itemModel.ItemName,
+                            ItemRate = itemModel.ItemRate,
+                            ItemRateFormatted = itemModel.ItemRateFormatted,
+                            ItemRateMSRP = itemModel.ItemRateMSRP,
+                            ItemShortDesc = itemModel.ItemShortDesc,
+                            ItemShortDesc0 = itemModel.ItemShortDesc0,
+                            ItemShortDesc1 = itemModel.ItemShortDesc1,
+                            ItemShortDesc2 = itemModel.ItemShortDesc2,
+                            ItemShortDesc3 = itemModel.ItemShortDesc3,
+                            ItemStarCount = itemModel.ItemStarCount,
+                            ItemStatusId = itemModel.ItemStatusId,
+                            ItemTypeId = itemModel.ItemTypeId,
+                            ProductItemId = itemModel.ProductItemId,
+                            UploadImageFileName = itemModel.UploadImageFileName,
+                        }
+                    );
+                }
+                return apiItemMasterModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+
+        #region Comments
+        //// GET: ItemMasters
+        //public List<ItemMasterModel> ItemMasters(string categoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long.TryParse(categoryIdParm, out long categoryId);
+        //        int.TryParse(pageNumParm, out int pageNum);
+        //        pageNum = pageNum > 0 ? (pageNum = pageNum - 1) : pageNum;
+        //        int.TryParse(rowCountParm, out int rowCount);
+        //        rowCount = rowCount == 0 || rowCount > 50 ? 50 : rowCount;
+        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == categoryId).Skip(pageNum * rowCount).Take(rowCount).OrderBy(x => x.SeqNum).ToList();
+        //        List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
+        //        ItemMasterModel itemMasterModel;
+        //        foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+        //        {
+        //            itemMasterModel = new ItemMasterModel
+        //            {
+        //                ClientId = categoryItemMasterHierModel.ItemMasterModel.ClientId,
+        //                ImageExtension = categoryItemMasterHierModel.ItemMasterModel.ImageExtension,
+        //                ImageName = categoryItemMasterHierModel.ItemMasterModel.ImageName,
+        //                ImageTitle = categoryItemMasterHierModel.ItemMasterModel.ImageTitle,
+        //                ItemMasterDesc = categoryItemMasterHierModel.ItemMasterModel.ItemMasterDesc,
+        //                ItemMasterDesc0 = categoryItemMasterHierModel.ItemMasterModel.ItemMasterDesc0,
+        //                ItemMasterDesc1 = categoryItemMasterHierModel.ItemMasterModel.ItemMasterDesc1,
+        //                ItemMasterDesc2 = categoryItemMasterHierModel.ItemMasterModel.ItemMasterDesc2,
+        //                ItemMasterDesc3 = categoryItemMasterHierModel.ItemMasterModel.ItemMasterDesc3,
+        //                ItemMasterId = categoryItemMasterHierModel.ItemMasterModel.ItemMasterId,
+        //                ItemMasterImageModels = null,
+        //                ItemMasterInfoModels = null,
+        //                ItemMasterItemSpecModels = null,
+        //                ItemMasterItemSpecModelsForDisplay = null,
+        //                ItemMasterName = categoryItemMasterHierModel.ItemMasterModel.ItemMasterName,
+        //                ItemTypeId = categoryItemMasterHierModel.ItemMasterModel.ItemTypeId,
+        //                ItemModels = null,
+        //                ProductItemId = categoryItemMasterHierModel.ItemMasterModel.ProductItemId,
+        //                UploadImageFileName = categoryItemMasterHierModel.ItemMasterModel.UploadImageFileName,
+        //            };
+        //            itemMasterModels.Add(itemMasterModel);
+        //        }
+        //        return itemMasterModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+
+        //// GET: ItemMasters
+        //public ApiItemMasterSpecModel ItemSpecs(string itemMasterIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long.TryParse(itemMasterIdParm, out long itemMasterId);
+        //        ItemMasterModel itemMasterModel = RetailSlnCache.ItemMasterModels.Find(x => x.ItemMasterId == itemMasterId);
+        //        ApiItemMasterSpecModel apiItemMasterSpecModel = new ApiItemMasterSpecModel
+        //        {
+        //            ItemMasterModel = new ItemMasterModel
+        //            {
+        //                ClientId = itemMasterModel.ClientId,
+        //                ImageExtension = itemMasterModel.ImageExtension,
+        //                ImageName = itemMasterModel.ImageName,
+        //                ImageTitle = itemMasterModel.ImageTitle,
+        //                ItemMasterDesc = itemMasterModel.ItemMasterDesc,
+        //                ItemMasterDesc0 = itemMasterModel.ItemMasterDesc0,
+        //                ItemMasterDesc1 = itemMasterModel.ItemMasterDesc1,
+        //                ItemMasterDesc2 = itemMasterModel.ItemMasterDesc2,
+        //                ItemMasterDesc3 = itemMasterModel.ItemMasterDesc3,
+        //                ItemMasterId = itemMasterModel.ItemMasterId,
+        //                ItemMasterImageModels = null,
+        //                ItemMasterInfoModels = null,
+        //                ItemMasterItemSpecModels = null,
+        //                ItemMasterItemSpecModelsForDisplay = null,
+        //                ItemMasterName = itemMasterModel.ItemMasterName,
+        //                ItemTypeId = itemMasterModel.ItemTypeId,
+        //                ItemModels = null,
+        //                ProductItemId = itemMasterModel.ProductItemId,
+        //                UploadImageFileName = itemMasterModel.UploadImageFileName,
+        //            },
+        //            ItemSpecModels = itemMasterModel.ItemMasterItemSpecModels,
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            }
+        //        };
+        //        return apiItemMasterSpecModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        #endregion
 
         // GET: LoginUserProf
         public ApiLoginUserProfModel LoginUserProf(string loginEmailAddress, string loginPassword, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -171,6 +449,111 @@ namespace RetailSlnBusinessLayer
             {
                 ArchLibDataContext.CloseSqlConnection();
             }
+        }
+
+        // GET: SearchResult
+        public ApiSearchResultModel SearchResultApi(string searchKeywordText, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ApiSearchResultModel apiSearchResultModel;
+            CategoryModel categoryModel;
+            ItemMasterModel itemMasterModel;
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                apiSearchResultModel = new ApiSearchResultModel
+                {
+                    SearchKeywordText = searchKeywordText,
+                    SearchMetaDataModels = ApplicationDataContext.GetSearchMetaDatas(searchKeywordText, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    CategoryListModel = new CategoryListModel
+                    {
+                        CategoryModels = new List<CategoryModel>(),
+                    },
+                    ItemMasterListModel = new ItemMasterListModel
+                    {
+                        ItemMasterModels = new List<ItemMasterModel>(),
+                    },
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+                foreach (var searchMetaDataModel in apiSearchResultModel.SearchMetaDataModels)
+                {
+                    if (searchMetaDataModel.EntityTypeNameDesc == "CATEGORY")
+                    {
+                        categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == searchMetaDataModel.EntityId);
+                        apiSearchResultModel.CategoryListModel.CategoryModels.Add
+                        (
+                            new CategoryModel
+                            {
+                                ClientId = categoryModel.ClientId,
+                                CategoryId = searchMetaDataModel.EntityId,
+                                AssignSubCategory = categoryModel.AssignSubCategory,
+                                AssignItem = categoryModel.AssignItem,
+                                CategoryDesc = categoryModel.CategoryDesc,
+                                CategoryName = categoryModel.CategoryName,
+                                CategoryNameDesc = categoryModel.CategoryNameDesc,
+                                CategoryStatusId = categoryModel.CategoryStatusId,
+                                CategoryTypeId = categoryModel.CategoryTypeId,
+                                DefaultCategory = categoryModel.DefaultCategory,
+                                ImageExtension = categoryModel.ImageExtension,
+                                ImageName = categoryModel.ImageName,
+                                MaxPerPage = categoryModel.MaxPerPage,
+                                ViewName = categoryModel.ViewName,
+                            }
+                        );
+                    }
+                    else
+                    {
+                        itemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == searchMetaDataModel.EntityId);
+                        apiSearchResultModel.ItemMasterListModel.ItemMasterModels.Add
+                        (
+                            new ItemMasterModel
+                            {
+                                ClientId = itemMasterModel.ClientId,
+                                ItemMasterId = itemMasterModel.ItemMasterId,
+                                ImageExtension = itemMasterModel.ImageExtension,
+                                ImageName = itemMasterModel.ImageName,
+                                ImageTitle = itemMasterModel.ImageTitle,
+                                ItemMasterDesc = itemMasterModel.ItemMasterDesc,
+                                ItemMasterDesc0 = itemMasterModel.ItemMasterDesc0,
+                                ItemMasterDesc1 = itemMasterModel.ItemMasterDesc1,
+                                ItemMasterDesc2 = itemMasterModel.ItemMasterDesc2,
+                                ItemMasterDesc3 = itemMasterModel.ItemMasterDesc3,
+                                ItemMasterName = itemMasterModel.ItemMasterName,
+                                ItemTypeId = itemMasterModel.ItemTypeId,
+                                ProductItemId = itemMasterModel.ProductItemId,
+                            }
+                        );
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                apiSearchResultModel = new ApiSearchResultModel
+                {
+                    SearchKeywordText = searchKeywordText,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            "Error while searching " + searchKeywordText,
+                            exception.Message,
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    },
+                };
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+            return apiSearchResultModel;
         }
 
         // GET: LoginUserProf
