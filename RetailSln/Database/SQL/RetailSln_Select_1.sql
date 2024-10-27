@@ -1,7 +1,8 @@
---USE [RetailSln]
---GO
+USE [RetailSln]
+GO
 
 SELECT * FROM ArchLib.ExceptionLog ORDER BY 1 DESC
+SELECT TOP 1000 * FROM ArchLib.EmailData ORDER BY 1 DESC
 
 SELECT * FROM ArchLib.AspNetRole
 SELECT * FROM ArchLib.AspNetUser

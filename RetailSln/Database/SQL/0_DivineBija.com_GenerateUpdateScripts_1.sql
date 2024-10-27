@@ -68,8 +68,8 @@ UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '' WHERE 
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'PrimaryEmailAddress' AND KVPSubKey = ''
 END
 
-UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Final Rate USD], '$', '') AS FLOAT), ItemRateMSRP = 0/*[Final Rate USD]*/ FROM dbo.DivineBija_Products WHERE Item.ItemId = DivineBija_Products.Id
-UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Retail Rate USD], '$', '') AS FLOAT), ItemRateMSRP = 0/*[Selling Rate USD]*/ FROM dbo.DivineBija_Books WHERE Item.ItemId = DivineBija_Books.Id
+UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Final Rate USD], '$', '') AS FLOAT), ItemRateMSRP = CAST(REPLACE([Final Rate USD], '$', '') AS FLOAT) FROM dbo.DivineBija_Products WHERE Item.ProductItemId = DivineBija_Products.Id
+UPDATE RetailSlnSch.Item SET ItemRate = CAST(REPLACE([Retail Rate USD], '$', '') AS FLOAT), ItemRateMSRP = CAST(REPLACE([Retail Rate USD], '$', '') AS FLOAT) FROM dbo.DivineBija_Books WHERE Item.ProductItemId = DivineBija_Books.Id
 UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testsales@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkUsername'
 UPDATE ArchLib.ApplicationDefault SET KVPValue = 'Word9#9Pass9#9Temp' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'NetworkPassword'
 UPDATE ArchLib.ApplicationDefault SET KVPValue = 'testaccounts@divinebija.com' WHERE ClientId = 98 AND KVPKey = 'OrderProcess' AND KVPSubKey = 'ToEmailAddress'

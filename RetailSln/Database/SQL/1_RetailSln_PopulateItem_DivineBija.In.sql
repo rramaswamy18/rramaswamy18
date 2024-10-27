@@ -8,17 +8,23 @@ DECLARE @ClientId BIGINT = 3
            SET 
                [Central GST] = REPLACE([Central GST], '%', '')
               ,[State GST] = REPLACE([State GST], '%', '')
-              ,[Interstate GST] = CAST([Central GST] AS FLOAT) + CAST([State GST] AS FLOAT)
+--
+        UPDATE dbo.DivineBija_Products
+           SET 
+               [Interstate GST] = CAST([Central GST] AS FLOAT) + CAST([State GST] AS FLOAT)
               ,Description0 = RTRIM(LTRIM(Description0)), Description1 = RTRIM(LTRIM(Description1))
               ,Description2 = RTRIM(LTRIM(Description2)), Description3 = RTRIM(LTRIM(Description3))
-              ,Description = RTRIM(LTRIM(Description0)) + ' ' + RTRIM(LTRIM(Description1)) + ' ' + RTRIM(LTRIM(Description2)) + ' ' + RTRIM(LTRIM(Description3))
+              ,[Description] = RTRIM(LTRIM(Description0)) + ' ' + RTRIM(LTRIM(Description1)) + ' ' + RTRIM(LTRIM(Description2)) + ' ' + RTRIM(LTRIM(Description3))
               ,UniqueDescription = RTRIM(LTRIM(UniqueDescription))
 --
         UPDATE dbo.DivineBija_Books
            SET 
                [Central GST] = REPLACE([Central GST], '%', '')
               ,[State GST] = REPLACE([State GST], '%', '')
-              ,[Interstate GST] = CAST([Central GST] AS FLOAT) + CAST([State GST] AS FLOAT)
+--
+        UPDATE dbo.DivineBija_Books
+           SET 
+               [Interstate GST] = CAST([Central GST] AS FLOAT) + CAST([State GST] AS FLOAT)
               ,ProductDesc0 = RTRIM(LTRIM(ProductDesc0)), ProductDesc1 = RTRIM(LTRIM(ProductDesc1))
               ,ProductDesc = RTRIM(LTRIM(ProductDesc0)) + ' ' + RTRIM(LTRIM(ProductDesc1))
               ,UniqueDescription = RTRIM(LTRIM(UniqueDescription))
@@ -113,7 +119,7 @@ DECLARE @ClientId BIGINT = 3
               )
 --Item & Item Bundle
         SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId, ItemMaster.ItemMasterId
-              ,[Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP
+              ,-1 AS ItemRate, -1 AS ItemRateMSRP
               ,CASE ISNUMERIC([Spec Seq]) WHEN 1 THEN CAST([Spec Seq] AS INT) ELSE 0 END AS ItemSeqNum, Description0 AS ItemShortDesc0
               ,Description1 AS ItemShortDesc1, Description2 AS ItemShortDesc2, Description3 AS ItemShortDesc3, 5 AS ItemStarCount
               ,CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
@@ -134,7 +140,7 @@ DECLARE @ClientId BIGINT = 3
               )
 --Books
         SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
-              ,ItemMaster.ItemMasterId, [Retail Rate INR] AS ItemRate, [MSRP INR] AS ItemRateMSRP, 0 AS ItemSeqNum
+              ,ItemMaster.ItemMasterId, -1 AS ItemRate, -1 AS ItemRateMSRP, 0 AS ItemSeqNum
               ,ProductDesc0 AS ItemShortDesc0, ProductDesc1 AS ItemShortDesc1, '' AS ItemShortDesc2, '' AS ItemShortDesc3
               ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId
               ,UniqueDescription AS ItemUniqueDesc, ItemId AS ProductItemId, Image1 AS UploadImageFileName
@@ -201,20 +207,20 @@ DECLARE @ClientId BIGINT = 3
 --Begin CategoryItemMasterHiers
 --Sequence
 ;
-        WITH UpdateData  As
-        (
-            SELECT [Category Name Desc]
-                  ,[Seq Num]
-                  ,ROW_NUMBER() OVER (PARTITION BY [Category Name Desc] ORDER BY [Category Name Desc], CAST([Seq Num] AS FLOAT)) AS RowNumber
-              FROM dbo.DivineBija_CategoryItemHiers
-        )
-        UPDATE dbo.DivineBija_CategoryItemHiers
-           SET [Seq Num] = RowNumber
-          FROM dbo.DivineBija_CategoryItemHiers
-    INNER JOIN UpdateData
-            ON DivineBija_CategoryItemHiers.[Category Name Desc] = UpdateData.[Category Name Desc]
-           AND DivineBija_CategoryItemHiers.[Seq Num] = UpdateData.[Seq Num]
-;
+--        WITH UpdateData  As
+--        (
+--            SELECT [Category Name Desc]
+--                  ,[Seq Num]
+--                  ,ROW_NUMBER() OVER (PARTITION BY [Category Name Desc] ORDER BY [Category Name Desc], CAST([Seq Num] AS FLOAT)) AS RowNumber
+--              FROM dbo.DivineBija_CategoryItemHiers
+--        )
+--        UPDATE dbo.DivineBija_CategoryItemHiers
+--           SET [Seq Num] = RowNumber
+--          FROM dbo.DivineBija_CategoryItemHiers
+--    INNER JOIN UpdateData
+--            ON DivineBija_CategoryItemHiers.[Category Name Desc] = UpdateData.[Category Name Desc]
+--           AND DivineBija_CategoryItemHiers.[Seq Num] = UpdateData.[Seq Num]
+--;
 --SELECT @ClientId AS ClientId, 9 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
         TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
 --Categories

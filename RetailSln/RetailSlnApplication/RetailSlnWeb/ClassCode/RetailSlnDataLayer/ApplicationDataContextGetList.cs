@@ -1416,19 +1416,25 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                #region
                 string sqlStmt = "";
                 sqlStmt += "        SELECT DISTINCT SearchMetaData.EntityTypeNameDesc, SearchMetaData.EntityId, SearchMetaData.SeqNum" + Environment.NewLine;
                 sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
                 sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
                 sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
-                //sqlStmt += "UNION" + Environment.NewLine;
-                //sqlStmt += "        SELECT DISTINCT 'ITEMMASTER' AS EntityTypeNameDesc, ItemMaster.ItemMasterId, 1 AS SeqNum" + Environment.NewLine;
-                //sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
-                //sqlStmt += "         WHERE ItemMasterDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT 'ITEMMASTER' AS EntityTypeNameDesc, ItemMaster.ItemMasterId, ItemMaster.ItemMasterId AS SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "         WHERE ItemMasterDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT 'CATEGORY' AS EntityTypeNameDesc, Category.CategoryId, Category.CategoryId AS SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.Category" + Environment.NewLine;
+                sqlStmt += "         WHERE CategoryDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
                 sqlStmt += "      ORDER BY" + Environment.NewLine;
                 sqlStmt += "               EntityTypeNameDesc" + Environment.NewLine;
                 sqlStmt += "              ,SeqNum" + Environment.NewLine;
+                #endregion
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 List<SearchMetaDataModel> searchMetaDataModels = new List<SearchMetaDataModel>();
