@@ -110,15 +110,15 @@ DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);
 
 --Insert AspNetUser
-DECLARE @Num INT = 0, @EmailAddress NVARCHAR(500), @NumString NVARCHAR(100)
-WHILE (@Num < 10)
-BEGIN
-    SET @EmailAddress = 'test1' + CONVERT(VARCHAR(3), @Num) + '@email.com'
-	SET @NumString = 'UserId' + CONVERT(VARCHAR(3), @Num)
---
-    INSERT ArchLib.AspNetUser(AspNetUserId, ClientId, Email, TelephoneCountryId, PhoneNumber, UserName, LoginTypeId, UserTypeId, UserStatusId, LoginPassword, PasswordExpiry)
-    SELECT 'UserId' + @NumString AS AspNetUserId, 3 AS ClientId, @EmailAddress AS Email, 236 AS TelephoneCountryId, '1234567890' AS PhoneNumber, @EmailAddress AS UserName, 300 AS LoginTypeId, 100 AS UserTypeId, 100 AS UserStatusId, 'N+OVglExyYV1gxrZzUXJ6CBpMDgaEG1t' AS LoginPassword, CONVERT(NVARCHAR, DATEADD(DD, 180, GETDATE()), 121) AS PasswordExpiry
---
-    INSERT ArchLib.Person(AspNetUserId, FirstName, HomeDemogInfoAddressId, LastName, StatusId)
-	SELECT 'UserId' + @NumString AS AspNetUserId, 'First' + @NumString AS FirstName, 3 + @Num AS HomeDemogInfoAddressId, 'Last' + @NumString AS LastName, 100 StatusId
-END
+--DECLARE @Num INT = 0, @EmailAddress NVARCHAR(500), @NumString NVARCHAR(100)
+--WHILE (@Num < 10)
+--BEGIN
+--    SET @EmailAddress = 'test1' + CONVERT(VARCHAR(3), @Num) + '@email.com'
+--	SET @NumString = 'UserId' + CONVERT(VARCHAR(3), @Num)
+----
+--    INSERT ArchLib.AspNetUser(AspNetUserId, ClientId, Email, TelephoneCountryId, PhoneNumber, UserName, LoginTypeId, UserTypeId, UserStatusId, LoginPassword, PasswordExpiry)
+--    SELECT 'UserId' + @NumString AS AspNetUserId, 3 AS ClientId, @EmailAddress AS Email, 236 AS TelephoneCountryId, '1234567890' AS PhoneNumber, @EmailAddress AS UserName, 300 AS LoginTypeId, 100 AS UserTypeId, 100 AS UserStatusId, 'N+OVglExyYV1gxrZzUXJ6CBpMDgaEG1t' AS LoginPassword, CONVERT(NVARCHAR, DATEADD(DD, 180, GETDATE()), 121) AS PasswordExpiry
+----
+--    INSERT ArchLib.Person(AspNetUserId, FirstName, HomeDemogInfoAddressId, LastName, StatusId)
+--	SELECT 'UserId' + @NumString AS AspNetUserId, 'First' + @NumString AS FirstName, 3 + @Num AS HomeDemogInfoAddressId, 'Last' + @NumString AS LastName, 100 StatusId
+--END

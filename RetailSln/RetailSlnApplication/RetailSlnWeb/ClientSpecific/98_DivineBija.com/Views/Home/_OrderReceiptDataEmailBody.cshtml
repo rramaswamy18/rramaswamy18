@@ -22,13 +22,35 @@
                         @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressLine1", "")
                         <br />
                         @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCountryName", "")
-                    </td>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        <br />
                         <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
                         <br />
                         <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/SMSIcon3_Small.png" />
                         <br />
                         <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.EmailAddress
+                        <br />
+                        @Model.PaymentSummaryDataModel.UserFullName
+                        <br />
+                        @(Model.DeliveryInfoDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryInfoDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryInfoDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryInfoDataModel.DeliveryAddressModel.HouseNumber)
+                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoDataModel.DeliveryAddressModel.AddressLine2))
+                        {
+                            <br />
+                            @Model.DeliveryInfoDataModel.DeliveryAddressModel.AddressLine2
+                        }
+                        <br />
+                        @Model.DeliveryInfoDataModel.DeliveryAddressModel.CityName
+                        <br />
+                        @(Model.DeliveryInfoDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryInfoDataModel.DeliveryAddressModel.ZipCode)
+                        <br />
+                        @(Model.DeliveryInfoDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryInfoDataModel.DeliveryAddressModel.CountryAbbrev)
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Prim. <a href="tel: @("+" + Model.DeliveryInfoDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryInfoDataModel.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryInfoDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryInfoDataModel.PrimaryTelephoneNum)</a>
+                        <br />
+                        Alt. <a href="tel: @("+" + Model.DeliveryInfoDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryInfoDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryInfoDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryInfoDataModel.AlternateTelephoneNum)</a>
                     </td>
                 </tr>
             </table>

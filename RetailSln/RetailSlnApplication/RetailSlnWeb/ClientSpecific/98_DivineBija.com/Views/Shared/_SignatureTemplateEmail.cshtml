@@ -8,8 +8,13 @@
     Thanking You,
     <br />
     Sincerely,
-    <br />
-    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "")</span>
+    @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.AuthorizedSignature))
+    {
+        <br />
+        <span style="color: #000000; font-family: 'Lucida Handwriting'; font-size: 18px; font-weight: bold;">@Model.OrderSummaryModel.AuthorizedSignature</span>
+    }
+    @*<br />
+        <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "")</span>*@
     <br />
     <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeTitle", "")</span>
     <br />
