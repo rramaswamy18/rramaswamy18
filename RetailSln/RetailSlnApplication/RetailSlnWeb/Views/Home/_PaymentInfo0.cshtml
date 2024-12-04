@@ -4,6 +4,24 @@
 {
     @Html.Partial("_PaymentInfo3")
 }
+@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+{
+    <div class="row validationSummaryMessage">
+        @Model.ResponseObjectModel.ValidationSummaryMessage
+    </div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row">
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+    </div>
+}
+@if (Model != null && Model.ResponseObjectModel != null)
+{
+    <div class="row">
+        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+    </div>
+}
 <table style="padding: 0px;">
     <tr>
         <td style="padding: 0px; padding-right: 15px; vertical-align: top;">

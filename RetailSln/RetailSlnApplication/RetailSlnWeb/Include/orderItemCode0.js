@@ -278,11 +278,11 @@ function validateItemIdOrderQty(itemId, orderQty, returnObject, index, errorMess
     }
     return returnValue;
 }
-function categoryId_onclick(categoryId, pageNum) {
+function categoryIdBackup_onclick(categoryId, pageNum) {
     console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
-    var url = "/Home/OrderCategoryItem" + "?id=" + categoryId + "&pageNum=" + pageNum;
+    var url = "/Home/OrderItem" + "?id=" + categoryId + "&pageNum=" + pageNum;
     $.ajax({
         url: url,
         type: "GET",
@@ -324,6 +324,43 @@ function categoryId_onclick(categoryId, pageNum) {
             console.log(xhr, exception);
         }
     });
+}
+function categoryId_onclick(categoryId, pageNum) {
+    console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId, pageNum);
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    document.getElementById("selectedCategoryId").value = categoryId;
+    var url = "/Home/OrderItem" + "?id=" + categoryId + "&pageNum=" + pageNum;
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        //data: jsonPostDataString,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "categoryId_onclick success", responseData.processMessage);
+            if (responseData.success) {
+                document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
+                document.getElementById("divScrollIntoView").scrollIntoView();
+            }
+            else {
+                document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
+            }
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("categoryId_onclick", "00099000", "ERROR???");
+            document.getElementById("divErrorMessage").innerHTML = "Error occurred";
+            console.log(xhr, exception);
+        }
+    });
+}
+function categoryIdPagination_onclick(pageNum) {
+    console.log("categoryIdPagination_onclick", "00000000", "ENTER!!!", pageNum);
+    var categoryId = document.getElementById("selectedCategoryId").value;
+    categoryId_onclick(categoryId, pageNum);
+    console.log("categoryIdPagination_onclick", "00090000", "EXIT!!!");
 }
 function checkoutValidate_onclick() {
     console.log("00000000", "checkoutValidate_onclick", "ENTER!!!");
@@ -381,6 +418,7 @@ function checkoutValidate_onclick() {
 }
 function orderComments_onchange(index) {
     console.log("orderComments_onchange", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     try {
         var orderComments = document.getElementById("orderComments" + index).value;
@@ -452,6 +490,7 @@ function orderQty_oninput2(orderQtyIndex, orderQtyIndexStart, orderQtyIndexFinis
 }
 function removeFromCart_onclick(index) {
     console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     var jsonPostData =
     {
@@ -469,6 +508,7 @@ function removeFromCart_onclick(index) {
             data: jsonPostDataString,
             async: true,
             success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
                 console.log("removeFromCart_onclick", "00090000", "SUCCESS!!!");
                 if (responseData.success) {
                     document.getElementById("divShoppingCartData").innerHTML = responseData.htmlString;
@@ -507,6 +547,7 @@ function searchTermButton_onclick(searchTermElementId) {
 }
 function shoppingCart_onclick() {
     console.log("showShoppingCart_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/ShoppingCart/";
     $.ajax({
         url: url,
@@ -549,13 +590,19 @@ function shoppingCartSummary_onclick() {
         }
     });
 }
-function tempFunction(itemId, itemRate, itemSpecs, itemIndex) {
-    document.getElementById("spnMessageItem" + itemIndex).innerHTML = itemRate + " | " + itemSpecs;
+function tempFunction(itemId, itemRate, itemSpecs, itemIndex, discountPercent) {
+    var spnMessageItemText;
+    spnMessageItemText = itemRate + " | " + itemSpecs;
+    if (discountPercent != "") {
+        spnMessageItemText += " | Disc. " + discountPercent;
+    }
+    document.getElementById("spnMessageItem" + itemIndex).innerHTML = spnMessageItemText;
     document.getElementById("itemId" + itemIndex).innerHTML = itemId;
     //document.getElementById("dropdownMenuButton" + itemIndex).innerHTML = itemRate + " | " + itemSpecs + '&nbsp;&nbsp;&nbsp;<span class="caret" style="color: #000000; font-size: 20px;"></span>';
 }
 function searchOrderCreatedForEmailAddress_onclick() {
     console.log("searchOrderCreatedForEmailAddress_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var searchOrderCreatedForEmailAddressValue = document.getElementById("searchOrderCreatedForEmailAddress").value;
     searchOrderCreatedForEmailAddressValue = searchOrderCreatedForEmailAddressValue.trim();
     if (searchOrderCreatedForEmailAddressValue != "") {

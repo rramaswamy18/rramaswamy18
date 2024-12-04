@@ -1,7 +1,11 @@
 ﻿@using RetailSlnModels
 @model SearchForEmailAddressModel
 <option value="">--- Select ---</option>
-@foreach (var searchForEmailAddressDataModel in Model.SearchForEmailAddressDataModels)
-{
-    <option value="@searchForEmailAddressDataModel.PersonId">@searchForEmailAddressDataModel.EmailAddress</option>
+@{
+    string optionText;
+    foreach (var searchForEmailAddressDataModel in Model.SearchForEmailAddressDataModels)
+    {
+        optionText = searchForEmailAddressDataModel.CorpAcctName + " - " + searchForEmailAddressDataModel.FirstName + " " + searchForEmailAddressDataModel.LastName + " - " + searchForEmailAddressDataModel.EmailAddress;
+        <option value="@searchForEmailAddressDataModel.PersonId">@optionText</option>
+    }
 }

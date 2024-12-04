@@ -72,42 +72,42 @@ namespace RetailSlnWeb.Controllers
         }
 
         // GET: Categorys
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult Categorys(string id)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ApiCategorysModel apiCategorysModel = new ApiCategorysModel
-                {
-                    ApiCategoryModels = retailSlnBL.Categorys(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseTypeId = ResponseTypeEnum.Success,
-                    },
-                };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiCategorysModel) }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ApiCategorysModel apiCategorysModel = new ApiCategorysModel
-                {
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseTypeId = ResponseTypeEnum.Error,
-                    },
-                };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiCategorysModel) }, JsonRequestBehavior.AllowGet);
-            }
-            return actionResult;
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult Categorys(string id)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApiCategorysModel apiCategorysModel = new ApiCategorysModel
+        //        {
+        //            ApiCategoryModels = retailSlnBL.Categorys(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiCategorysModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ApiCategorysModel apiCategorysModel = new ApiCategorysModel
+        //        {
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Error,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiCategorysModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return actionResult;
+        //}
 
         // GET: Category
         [AllowAnonymous]
@@ -145,77 +145,77 @@ namespace RetailSlnWeb.Controllers
         }
 
         // GET: ItemMasters
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult ItemMasters(string id, string pageNum, string rowCount)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ApiItemMastersModel apiItemMastersModel = new ApiItemMastersModel
-                {
-                    ApiItemMasterModels = retailSlnBL.ItemMasters(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseTypeId = ResponseTypeEnum.Success,
-                    },
-                };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMastersModel) }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ApiItemMastersModel apiItemMastersModel = new ApiItemMastersModel
-                {
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseTypeId = ResponseTypeEnum.Error,
-                    },
-                };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMastersModel) }, JsonRequestBehavior.AllowGet);
-            }
-            return actionResult;
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult ItemMasters(string id, string pageNum, string rowCount)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApiItemMastersModel apiItemMastersModel = new ApiItemMastersModel
+        //        {
+        //            ApiItemMasterModels = retailSlnBL.ItemMasters(id, pageNum, rowCount, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId),
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMastersModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ApiItemMastersModel apiItemMastersModel = new ApiItemMastersModel
+        //        {
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Error,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMastersModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return actionResult;
+        //}
 
         // GET: ItemMaster
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult ItemMaster(string id)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ApiItemMasterModel apiItemMasterModel = retailSlnBL.ItemMaster(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                apiItemMasterModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ResponseTypeId = ResponseTypeEnum.Success,
-                };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMasterModel) }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ApiItemMasterModel apiItemMasterModel = new ApiItemMasterModel
-                {
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseTypeId = ResponseTypeEnum.Error,
-                    },
-                };
-                actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMasterModel) }, JsonRequestBehavior.AllowGet);
-            }
-            return actionResult;
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult ItemMaster(string id)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ActionResult actionResult;
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApiItemMasterModel apiItemMasterModel = retailSlnBL.ItemMaster(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        apiItemMasterModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ResponseTypeId = ResponseTypeEnum.Success,
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMasterModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ApiItemMasterModel apiItemMasterModel = new ApiItemMasterModel
+        //        {
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Error,
+        //            },
+        //        };
+        //        actionResult = Json(new { jsonString = JsonConvert.SerializeObject(apiItemMasterModel) }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return actionResult;
+        //}
 
         #region Comments
         //// GET: Categories

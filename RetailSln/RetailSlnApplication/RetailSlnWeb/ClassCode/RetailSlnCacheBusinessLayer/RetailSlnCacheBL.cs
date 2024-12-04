@@ -15,6 +15,10 @@ namespace RetailSlnCacheBusinessLayer
             retailSlnInitModel = new RetailSlnInitModel
             {
                 CategoryModels = ApplicationDataContext.GetCategorys(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                CategoryHierModels = ApplicationDataContext.GetCategoryHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                CategoryItemHierModels = ApplicationDataContext.GetCategoryItemHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                CategoryItemMasterHierModels = ApplicationDataContext.GetCategoryItemMasterHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                ItemDiscountModels = ApplicationDataContext.GetItemDiscounts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemModels = ApplicationDataContext.GetItems(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemMasterModels = ApplicationDataContext.GetItemMasters(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemMasterItemSpecModels = ApplicationDataContext.GetItemMasterItemSpecs(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
@@ -25,7 +29,7 @@ namespace RetailSlnCacheBusinessLayer
                 ItemBundleModels = ApplicationDataContext.GetItemBundles(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemBundleItemModels = ApplicationDataContext.GetItemBundleItems(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemBundleDiscountModels = ApplicationDataContext.GetItemBundleDiscounts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
-                CategoryItemMasterHierModels = ApplicationDataContext.GetCategoryItemMasterHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                //CategoryItemHierModelsNew = ApplicationDataContext.GetCategoryItemHiersNew(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CorpAcctModels = ApplicationDataContext.GetCorpAccts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 DiscountDtlModels = ApplicationDataContext.GetDiscountDtls(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 FestivalListModels = ApplicationDataContext.GetFestivalLists(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),

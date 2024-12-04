@@ -17,6 +17,10 @@
     <span style="color: #000000;">
         @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
         <br />
+        @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1A", "")
+        <br />
+        @ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")
+        <br />
         @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
         <br />
         <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<i style="color: #000000; font-weight: bold;" class="fa fa-phone"></i>&nbsp;Phone

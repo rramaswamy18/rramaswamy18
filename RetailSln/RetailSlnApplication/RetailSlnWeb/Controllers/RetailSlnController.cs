@@ -114,7 +114,7 @@ namespace RetailSlnWeb.Controllers
                             createForSessionObject = null;
                         }
                         Session["CreateForSessionObject"] = createForSessionObject;
-                        retailSlnBL.DeliveryInfo(ref paymentInfoModel, (SessionObjectModel)Session["SessionObject"], false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        retailSlnBL.DeliveryInfo(ref paymentInfoModel, (SessionObjectModel)Session["SessionObject"], createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                         actionResult = View("DeliveryInfo", paymentInfoModel);
                     }
                     else
@@ -176,7 +176,7 @@ namespace RetailSlnWeb.Controllers
                     var authManager = ctx.Authentication;
                     authManager.SignIn(identity);
                     PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-                    retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, null, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", paymentInfoModel);
@@ -351,7 +351,16 @@ namespace RetailSlnWeb.Controllers
                     }
                     if (ModelState.IsValid)
                     {
-                        retailSlnBL.DeliveryInfo(paymentInfoModel, sessionObjectModel, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        SessionObjectModel createForSessionObject;
+                        try
+                        {
+                            createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                        }
+                        catch
+                        {
+                            createForSessionObject = null;
+                        }
+                        retailSlnBL.DeliveryInfo(paymentInfoModel, sessionObjectModel, createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                         Session["PaymentInfo"] = paymentInfoModel;
                         if (paymentInfoModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Success)
                         {
@@ -625,13 +634,72 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: OrderCategoryItem
+        //// GET: OrderCategoryItem
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult OrderCategoryItem(string id, string pageNum)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "OrderCategoryItemData";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+        //        string aspNetRoleName;
+        //        if (sessionObjectModel == null)
+        //        {
+        //            aspNetRoleName = "DEFAULTROLE";
+        //        }
+        //        else
+        //        {
+        //            aspNetRoleName = sessionObjectModel.AspNetRoleName;
+        //        }
+        //        string viewName;
+        //        switch (aspNetRoleName)
+        //        {
+        //            case "BULKORDERSROLE":
+        //            case "MARKETINGROLE":
+        //            case "WHOLESALEROLE":
+        //                viewName = "_OrderItem1";
+        //                break;
+        //            default:
+        //                viewName = "_OrderItem0";
+        //                break;
+        //        }
+        //        var orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, id, pageNum, "45", Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ModelState.AddModelError("", "OrderCategoryItemData / GET");
+        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+        //    return actionResult;
+        //}
+
+        // GET: OrderItem
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult OrderCategoryItem(string id, string pageNum)
+        public ActionResult OrderItem(string id, string pageNum)
         {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "OrderCategoryItemData";
+            ViewData["ActionName"] = "OrderItem";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -643,6 +711,8 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
+                success = true;
+                processMessage = "SUCCESS!!!";
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 string aspNetRoleName;
                 if (sessionObjectModel == null)
@@ -659,16 +729,14 @@ namespace RetailSlnWeb.Controllers
                     case "BULKORDERSROLE":
                     case "MARKETINGROLE":
                     case "WHOLESALEROLE":
-                        viewName = "_OrderCategoryItemList";
+                        viewName = "_OrderItem1";
                         break;
                     default:
-                        viewName = "_OrderCategoryItem";
+                        viewName = "_OrderItem0";
                         break;
                 }
                 var orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, id, pageNum, "45", Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
-                success = true;
-                processMessage = "SUCCESS!!!";
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -694,23 +762,49 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
             bool success;
             string processMessage, htmlString;
-            success = true;
-            processMessage = "SUCCESS!!!";
             PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-            htmlString = retailSlnBL.PaymentInfo1(paymentInfoModel, sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            FormsAuthentication.SignOut();
-            Session.Abandon();
-            Request.GetOwinContext().Authentication.SignOut();
-            Session["SessionObject"] = null;
-            Session["PaymentInfo"] = null;
-            Session.Abandon();
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+            try
+            {
+                success = true;
+                processMessage = "SUCCESS!!!";
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                SessionObjectModel createForSessionObject;
+                try
+                {
+                    createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                }
+                catch
+                {
+                    createForSessionObject = null;
+                }
+                htmlString = retailSlnBL.PaymentInfo1(paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                FormsAuthentication.SignOut();
+                Session.Abandon();
+                Request.GetOwinContext().Authentication.SignOut();
+                Session["SessionObject"] = null;
+                Session["PaymentInfo"] = null;
+                Session.Abandon();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while creating order");
+                paymentInfoModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo0", paymentInfoModel);
+                success = false;
+                processMessage = "ERROR???";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
             return actionResult;
         }
 
@@ -779,7 +873,16 @@ namespace RetailSlnWeb.Controllers
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-            string htmlString = retailSlnBL.PaymentInfo3(paymentInfoModel, sessionObjectModel, razorpay_payment_id, razorpay_order_id, razorpay_signature, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            SessionObjectModel createForSessionObject;
+            try
+            {
+                createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+            }
+            catch
+            {
+                createForSessionObject = null;
+            }
+            string htmlString = retailSlnBL.PaymentInfo3(paymentInfoModel, sessionObjectModel, createForSessionObject, razorpay_payment_id, razorpay_order_id, razorpay_signature, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             ArchLibBL archLibBL = new ArchLibBL();
             ActionResult actionResult = View("PaymentInfo3", paymentInfoModel);
             FormsAuthentication.SignOut();
@@ -879,7 +982,16 @@ namespace RetailSlnWeb.Controllers
                     bool modelValidation = TryValidateModel(creditCardProcessModel);
                     if (modelValidation)
                     {
-                        htmlString = retailSlnBL.PaymentInfo5(paymentInfoModel, sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        SessionObjectModel createForSessionObject;
+                        try
+                        {
+                            createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                        }
+                        catch
+                        {
+                            createForSessionObject = null;
+                        }
+                        htmlString = retailSlnBL.PaymentInfo5(paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                         if (htmlString != null)
                         {
                             success = true;

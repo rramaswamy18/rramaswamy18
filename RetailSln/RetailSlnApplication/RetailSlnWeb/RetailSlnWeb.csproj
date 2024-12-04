@@ -214,7 +214,10 @@
     <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartSummaryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\BusinessInfoModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CategoryHierModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierListModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CategoryItemLayoutModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemMasterHierModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryLayoutModel.cs" />
@@ -796,6 +799,13 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster448.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster449.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster45.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster450.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster451.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster452.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster453.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster454.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster455.png" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster456.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster46.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster47.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster48.png" />
@@ -1671,7 +1681,6 @@
     <Content Include="Views\Dashboard\_ItemMasterInfo.cshtml" />
     <Content Include="Views\Home\LoginUserProf.cshtml" />
     <Content Include="Views\Home\Index - Copy.cshtml" />
-    <None Include="Views\Home\LoginUserProf.cshtml.zzz" />
     <Content Include="Views\Home\Payment.cshtml" />
     <Content Include="Views\Home\PicGallery.cshtml" />
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
@@ -1715,7 +1724,6 @@
     <Content Include="Views\Home\_ProductsAndServices.cshtml" />
     <Content Include="Views\Home\_RegisterLoginContactResetPassword.cshtml" />
     <Content Include="Views\Home\_RegisterUserLoginUser.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProf.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfData.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
@@ -1867,6 +1875,14 @@
     <Content Include="Views\Home\_PaymentInfo4.cshtml" />
     <Content Include="Views\Home\_CreditCardPayment.cshtml" />
     <Content Include="Views\Home\_SearchForEmailAddress.cshtml" />
+    <Content Include="Views\Home\IndexNew.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuBackup2.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuHamburgerBackup2.cshtml" />
+    <Content Include="Views\Home\_OrderItem1.cshtml" />
+    <Content Include="Views\Home\_RegisterUserProf.cshtml" />
+    <Content Include="Views\Home\_OrderItem0.cshtml" />
+    <Content Include="Views\Home\_OrderItem0 - Copy.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenu - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

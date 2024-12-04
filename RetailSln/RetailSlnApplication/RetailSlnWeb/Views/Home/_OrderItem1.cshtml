@@ -1,0 +1,336 @@
+﻿@model OrderCategoryItemModel
+@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnEnumerations
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    long clientId = ArchLibCache.ClientId;
+    string clientName = ArchLibCache.ClientName;
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
+    var categoryOrItem = "Item";//categoryItemMasterHierModel.CategoryOrItem;
+    var imageDivWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageDivWidth");
+    var imageHeight = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageHeight");
+    var imageWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageWidth");
+    var imageCountPerRow = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageCountPerRow"));
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    //int itemSeqNum = 0, imageIndex = 0, imageCountIndex = 0;
+    int index = 0, index1, index2 = -1;
+    bool brFlag;
+    string prefixString;
+    ItemMasterModel itemMasterModel;
+    ItemModel itemModel;
+    @BuildMenu(imageTitle)
+    @BuildPaginationLinks(Model.PageCount)
+    <br style="clear: both;" />
+    <input id="selectedCategoryId" type="hidden" value="@Model.ParentCategoryId" />
+    <table style="margin-left: auto; margin-right: auto;">
+        <tr>
+            <th class="text-right" style="padding: 9px;">
+                Create order for :
+            </th>
+            <td class="text-left" style="padding: 9px;">
+                @switch (aspNetRoleName)
+                {
+                    case "DEFAULTROLE": //Should not reach this condition
+                        @("Invalid")
+                        break;
+                    case "APPLADMN1":
+                    case "MARKETINGROLE":
+                    case "SYSTADMIN":
+                        <input class="form-control validate" id="searchOrderCreatedForEmailAddress" maxlength="250" placeholder="Search for email" , style="width: 243px;" />
+                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderCreatedForEmailAddress, "", new { id = "OrderCreatedForEmailAddress-error" }).ToHtmlString()))
+                        break;
+                    default:
+                        @sessionObjectModel.EmailAddress
+                        break;
+                }
+            </td>
+            @switch (aspNetRoleName)
+            {
+                case "DEFAULTROLE": //Should not reach this condition
+                    break;
+                case "APPLADMN1":
+                case "MARKETINGROLE":
+                case "SYSTADMIN":
+                    <td class="text-left" style="padding: 9px;">
+                        <button class="btn btn-primary" onclick="javascript: return searchOrderCreatedForEmailAddress_onclick();">Search</button>
+                    </td>
+                    <td class="text-left" style="padding: 9px; width: 225px;">
+                        <select aria-label="Person for whom order to be created" class="form-control" id="OrderCreatedForPersonId" name="OrderCreatedForPersonId" style="width: 333px;">
+                            <option value="">--- Select ---</option>
+                        </select>
+                    </td>
+                    break;
+                default:
+                    break;
+            }
+        </tr>
+    </table>
+    <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 81%;">
+        <tr>
+            <th class="text-center" style="vertical-align: top;">
+                #
+            </th>
+            <th class="text-center" style="vertical-align: top;">
+                Id
+            </th>
+            <th class="text-left" style="vertical-align: top; width: 279px;">
+                Item
+            </th>
+            <th class="text-left" style="vertical-align: top; width: 99px;">
+            </th>
+            <th class="text-left" style="vertical-align: top; white-space: nowrap;">
+            </th>
+        </tr>
+        @foreach (var categoryItemLayoutModel in Model.CategoryItemMasterHierModels)
+        {
+            itemMasterModel = categoryItemLayoutModel.ItemMasterModel;
+            index++;
+            <tr>
+                <td style="vertical-align: top;">
+                    @index
+                </td>
+                <td style="vertical-align: top;">
+                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+                        @itemMasterModel.ItemMasterId
+                    </a>
+                </td>
+                <td class="text-left" style="vertical-align: top;">
+                    @itemMasterModel.ItemMasterDesc
+                    <br style="clear: both;" />
+                    @if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                    {
+                        <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
+                    }
+                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
+                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>
+                </td>
+                <td class="text-left" style="vertical-align: top;">
+                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+                        <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 90px; width: 90px;" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
+                    </a>
+                </td>
+                <td class="text-left" style="vertical-align: top;">
+                    <table style="padding: 5px;">
+                        @foreach (var categoryItemHierModel in categoryItemLayoutModel.CategoryItemHierModels)
+                        {
+                            itemModel = categoryItemHierModel.ItemModel;
+                            prefixString = "";
+                            brFlag = false;
+                            index1 = 0;
+                            index2++;
+                            <tr>
+                                <td style="font-size: 13px; padding: 5px; vertical-align: top;">
+                                    @*<a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">*@
+                                    @itemModel.ItemId
+                                    @*</a>*@
+                                </td>
+                                <td style="font-size: 13px; padding: 5px; vertical-align: top;">
+                                    @itemModel.ItemRateFormatted
+                                </td>
+                                <td style="padding: 5px; vertical-align: top;">
+                                    <input class="form-control" id="orderQty@(index2)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput(@(index2));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
+                                    &nbsp;
+                                    <a href="javascript: void(0);" onclick="javascript: return addToCart1_onclick(@itemModel.ItemId, @index2);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+                                    <br style="clear: both;" />
+                                    <span id="spnMessageSuccess@(index2)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(index2)" style="color: #0000ff; font-size:12px;"></span></span>
+                                        <br style="clear: both;" />
+                                    </span>
+                                    <span id="spnMessageError@(index2)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                        <span id="spnMessageErrorText@(index2)" style="color: #ff0000;"></span>
+                                        <br style="clear: both;" />
+                                    </span>
+                                    <span style="color: #000000; font-size: 11px; font-weight: 600;">
+                                        @if (itemMasterModel.ItemMasterItemSpecModels != null && itemMasterModel.ItemMasterItemSpecModels.Count > 0)
+                                        {
+                                            foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
+                                            {
+                                                @(prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
+                                                prefixString = " | ";
+                                                brFlag = true;
+                                            }
+                                        }
+                                        @if (itemModel.ItemItemSpecModels.Count > 0)
+                                        {
+                                            foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
+                                            {
+                                                @(prefixString + ++index1 + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
+                                                prefixString = " | ";
+                                                brFlag = true;
+                                            }
+                                            <br style="clear: both;" />
+                                        }
+                                        @if (brFlag)
+                                        {
+                                            <br style="clear: both;" />
+                                        }
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+        }
+    </table>
+    <br style="clear: both;" />
+    @BuildPaginationLinks(Model.PageCount)
+}
+<style>
+    /*ul li {
+        background-color: #9a031e;
+        display: block;
+        margin-left: 0;
+        padding-bottom: 5px;
+        padding-left: 9px;
+        text-align: left;*/
+    /*width: 15em;*/
+    /*}*/
+
+    ul ul {
+        position: absolute;
+        display: none;
+        padding: 0;
+    }
+
+        ul ul li {
+            background-color: #9a031e;
+            display: block;
+            margin-left: 0;
+            padding-bottom: 5px;
+            padding-left: 9px;
+            text-align: left;
+            /*width: 15em;*/
+        }
+
+    li:hover ul {
+        display: block;
+    }
+</style>
+@helper BuildMenu(string imageTitle)
+{
+    int i;
+    string selectedCategoryDesc = "";
+    <ul style="display: flex; justify-content: center; list-style-type: none;">
+        <li style="background-color: #9a031e; padding-left: 12px; line-height: 45px;">
+            @*<a href="#" style="color: #ffffff; font-size: 15px; font-weight: bold;">Home</a>*@
+        </li>
+        @{
+            for (i = 0; i < 7 && i < Model.CategoryModels.Count; i++)
+            {
+                <li style="background-color: #9a031e; padding-left: 15px; padding-right: 15px; line-height: 45px;">
+                    @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
+                    {
+                        selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
+                        <a class="active" href="javascript: void(0);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
+                            @Model.CategoryModels[i].CategoryDesc
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
+                            @Model.CategoryModels[i].CategoryDesc
+                        </a>
+                    }
+                </li>
+            }
+            if (Model.CategoryModels.Count >= i)
+            {
+                <li style="background-color: #9a031e; padding-left: 15px; padding-right: 27px; line-height: 45px;">
+                    <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+                    <ul class="scrollable-list">
+                        @for (; i < Model.CategoryModels.Count; i++)
+                        {
+                            <li style="background-color: #9a031e; padding-left: 5px; padding-right: 5px; line-height: 18px;">
+                                @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
+                                {
+                                    selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
+                                    <a class="active" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                                        @Model.CategoryModels[i].CategoryDesc
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                                        @Model.CategoryModels[i].CategoryDesc
+                                    </a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        }
+        <li style="background-color: #9a031e; padding-right: 27px; line-height: 45px;">
+            <a href="#" style="color: #61ce70; font-size: 15px; font-weight: bold;">@selectedCategoryDesc</a>
+        </li>
+    </ul>
+}
+@helper BuildPaginationLinks(int pageCount)
+{
+    <ul class="pagination">
+        @if (Model.PageNum == 1)
+        {
+            <li class="page-item">
+                <span class="page-link">Prev</span>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum - 1));" , title="Jump to page# @(Model.PageNum - 1)">
+                    Prev
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= pageCount; i++)
+        {
+            if (i == Model.PageNum)
+            {
+                <li class="page-item active">
+                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i);" , title="Jump to page# @i">
+                        @i
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @i);" , title="Jump to page# @i">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+        @if (Model.PageNum == pageCount)
+        {
+            <li class="page-item">
+                <span class="page-link">Next</span>
+            </li>
+            @*<li class="page-item">
+                    <span class="page-link">Last</span>
+                </li>*@
+        }
+        else
+        {
+            <li class="page-item">
+                <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.ParentCategoryId, @(Model.PageNum + 1));" , title="Jump to page# @(Model.PageNum + 1)">
+                    Next
+                </a>
+            </li>
+        }
+    </ul>
+}

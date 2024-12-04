@@ -1,6 +1,6 @@
 USE [RetailSln]
 GO
---1_RetailSln_PopulateItem_DivineBija.in.sql
+--2_RetailSln_PopulateItem_DivineBija.com.sql
 --Dec 20 2024, Apr 2 2024, Apr 21 2024
 DECLARE @ClientId BIGINT = 3
 --
@@ -412,9 +412,8 @@ SELECT * FROM #TEMP1
             ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
            AND ItemSpecMaster.SpecName
                IN (
-                   DivineBija_Products.[Spec Name 1], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 2]
-                  ,DivineBija_Products.[Spec Name 3], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 4]
-                  ,DivineBija_Products.[Spec Name 5]
+                   DivineBija_Products.[Spec Name 1], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 3]
+                  ,DivineBija_Products.[Spec Name 4], DivineBija_Products.[Spec Name 5]
                   )
               ) A
         WHERE ItemSpec.ItemSpecId = A.ItemSpecId

@@ -1,13 +1,27 @@
-﻿@model OrderCategoryItemModel
+﻿@using RetailSlnCacheData
+@using ArchitectureLibraryModels
+@model OrderCategoryItemModel
 @using RetailSlnModels
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
 }
 <div id="divOrderItem">
+    @Html.Partial(Model.ViewName, Model)
 </div>
 <script type="text/javascript">
-    var categoryCount = parseInt("@Model.CategoryCount");
-    categoryId_onclick(@Model.ParentCategoryId, 1, "@Url.Action("OrderCategoryItem", "Home")");
+    //var categoryCount = parseInt("@RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0].Count");
+    //categoryId_onclick(null, 1);
     function window_onload() {
     }
 </script>

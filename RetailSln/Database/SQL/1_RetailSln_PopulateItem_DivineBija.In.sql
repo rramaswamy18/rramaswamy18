@@ -28,23 +28,7 @@ DECLARE @ClientId BIGINT = 3
               ,ProductDesc0 = RTRIM(LTRIM(ProductDesc0)), ProductDesc1 = RTRIM(LTRIM(ProductDesc1))
               ,ProductDesc = RTRIM(LTRIM(ProductDesc0)) + ' ' + RTRIM(LTRIM(ProductDesc1))
               ,UniqueDescription = RTRIM(LTRIM(UniqueDescription))
---
---;
---        WITH UpdateData  As
---        (
---            SELECT BundleUniqueDescription
---                  ,CAST([Seq Num] AS FLOAT) AS SeqNum
---                  ,ROW_NUMBER() OVER (PARTITION BY BundleUniqueDescription ORDER BY BundleUniqueDescription, CAST([Seq Num] AS FLOAT)) AS RowNumber
---              FROM dbo.DivineBija_ItemBundleItem
---        )
---        UPDATE dbo.DivineBija_ItemBundle
---           SET [Seq Num] = RowNumber
---          FROM dbo.DivineBija_ItemBundle
---    INNER JOIN UpdateData
---            ON DivineBija_ItemBundle.BundleUniqueDescription = UpdateData.BundleUniqueDescription
---           AND DivineBija_ItemBundle.[Seq Num] = UpdateData.RowNumber
---;
---
+--Cleanup
         TRUNCATE TABLE RetailSlnSch.ItemBundleItem
         DELETE RetailSlnSch.ItemBundle
         DBCC CHECKIDENT ('RetailSlnSch.ItemBundle', RESEED, 0);
@@ -92,7 +76,8 @@ DECLARE @ClientId BIGINT = 3
            AND UploadImageFileName IS NULL
 --End Item Master
 --Begin Category
-        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+        TRUNCATE TABLE RetailSlnSch.CategoryItemHier
+        --TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
 --
         DELETE RetailSlnSch.Category
 --
@@ -152,31 +137,7 @@ DECLARE @ClientId BIGINT = 3
       ORDER BY ItemShortDesc0, ItemShortDesc1, ItemShortDesc2, ItemShortDesc3, ItemSeqNum
 --
 --End Item
-
---Begin Item Bundle
---;
---        WITH UpdateData  As
---        (
---            SELECT BundleUniqueDescription
---                  ,[Seq Num]
---                  ,ROW_NUMBER() OVER (PARTITION BY BundleUniqueDescription ORDER BY BundleUniqueDescription) AS RowNumber
---              FROM dbo.DivineBija_ItemBundle
---        )
---        UPDATE dbo.DivineBija_ItemBundle
---           SET [Seq Num] = RowNumber
---          FROM dbo.DivineBija_ItemBundle
---    INNER JOIN UpdateData
---            ON DivineBija_ItemBundle.BundleUniqueDescription = UpdateData.BundleUniqueDescription
---           AND DivineBija_ItemBundle.[Seq Num] = UpdateData.[Seq Num]
---;
---UPDATE dbo.DivineBija_ItemBundle SET BundleItemId = NULL, ItemId = NULL
---UPDATE dbo.DivineBija_ItemBundle SET BundleItemId = Item.ItemId FROM RetailSlnSch.Item WHERE BundleUniqueDescription = Item.ItemUniqueDesc AND BundleItemId IS NULL
---UPDATE dbo.DivineBija_ItemBundle SET ItemId = Item.ItemId FROM RetailSlnSch.Item WHERE ItemUniqueDescription = Item.ItemUniqueDesc AND DivineBija_ItemBundle.ItemId IS NULL
-
---SELECT DISTINCT BundleUniqueDescription FROM dbo.DivineBija_ItemBundle WHERE BundleItemId IS NULL
---SELECT DISTINCT ItemUniqueDescription FROM dbo.DivineBija_ItemBundle WHERE ItemId IS NULL
---
---
+--Begin itemBundle
         INSERT RetailSlnSch.ItemBundle(ClientId, ItemId, DiscountPercent)
         SELECT DISTINCT
                @ClientId AS ClientId
@@ -203,57 +164,217 @@ DECLARE @ClientId BIGINT = 3
       ORDER BY ItemBundle.ItemBundleId
               ,CAST(DivineBija_ItemBundleItem.[Seq Num] AS FLOAT)
 --End Item Bundle
+--Begin CategoryHier(s)
+--CategoryHier
+        TRUNCATE TABLE RetailSlnSch.CategoryHier
+        INSERT RetailSlnSch.CategoryHier(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
+        SELECT @ClientId AS ClientId, DivineBija_CategoryHiers.[Role Name] AS AspNetRoleName, Category.CategoryId, ParentCategory.CategoryId AS ParentCategoryId, DivineBija_CategoryHiers.[Seq Num] AS SeqNum
+          FROM DivineBija_CategoryHiers
+    INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryHiers.[Category Name Desc] = Category.CategoryNameDesc
+    INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
+      ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
+--CategoryItemMasterHier & CategoryItemHier
+		DROP TABLE IF EXISTS #TEMP1A
+		CREATE TABLE #TEMP1A(ParentCategoryId BIGINT, ItemMasterSeqNum FLOAT, ItemMasterId BIGINT, ItemSeqNum FLOAT, ItemId BIGINT, Id BIGINT NOT NULL IDENTITY(1, 1))
+		INSERT #TEMP1A(ParentCategoryId, ItemMasterSeqNum, ItemMasterId, ItemSeqNum, ItemId)
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 1] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 1], '') != ''
+		UNION
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 2] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 2], '') != ''
+		UNION
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 3] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 3], '') != ''
+		UNION
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 4] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 4], '') != ''
+		UNION
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 5] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 5], '') != ''
+		UNION
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 6] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 6], '') != ''
+		UNION
+		SELECT DISTINCT Category.CategoryId AS ParentCategoryId, DivineBija_Books.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Books.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Books INNER JOIN RetailSlnSch.Category ON Category0 = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON ProductDesc0 = ItemMaster.ItemMasterDesc0 AND ProductDesc1 = ItemMaster.ItemMasterDesc1
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Books.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL(Category0, '') != ''
+		UNION
+		SELECT DISTINCT Category.CategoryId AS ParentCategoryId, DivineBija_Books.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Books.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Books INNER JOIN RetailSlnSch.Category ON Category1 = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON ProductDesc0 = ItemMaster.ItemMasterDesc0 AND ProductDesc1 = ItemMaster.ItemMasterDesc1
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Books.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL(Category1, '') != ''
+		UNION
+		SELECT DISTINCT Category.CategoryId AS ParentCategoryId, DivineBija_Books.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Books.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Books INNER JOIN RetailSlnSch.Category ON Category2 = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON ProductDesc0 = ItemMaster.ItemMasterDesc0 AND ProductDesc1 = ItemMaster.ItemMasterDesc1
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Books.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL(Category2, '') != ''
+		ORDER BY Category.CategoryId, ItemMasterSeqNum, ItemSeqNum
 
---Begin CategoryItemMasterHiers
---Sequence
-;
---        WITH UpdateData  As
---        (
---            SELECT [Category Name Desc]
---                  ,[Seq Num]
---                  ,ROW_NUMBER() OVER (PARTITION BY [Category Name Desc] ORDER BY [Category Name Desc], CAST([Seq Num] AS FLOAT)) AS RowNumber
---              FROM dbo.DivineBija_CategoryItemHiers
---        )
---        UPDATE dbo.DivineBija_CategoryItemHiers
---           SET [Seq Num] = RowNumber
---          FROM dbo.DivineBija_CategoryItemHiers
---    INNER JOIN UpdateData
---            ON DivineBija_CategoryItemHiers.[Category Name Desc] = UpdateData.[Category Name Desc]
---           AND DivineBija_CategoryItemHiers.[Seq Num] = UpdateData.[Seq Num]
---;
---SELECT @ClientId AS ClientId, 9 AS CategoryId, 0 AS SeqNum, NULL AS CategoryId, NULL AS Id, 'ParentCategoryName' AS ProcessType, 'Category' AS CategoryOrItem UNION
+		DROP TABLE IF EXISTS #TEMP2A
+		CREATE TABLE #TEMP2A
+		(
+		 ClientId BIGINT, AspNetRoleName NVARCHAR(50), ItemId BIGINT, ItemMasterId BIGINT, ItemMasterSeqNum FLOAT, ItemSeqNum FLOAT, ParentCategoryId BIGINT, Id BIGINT IDENTITY(1, 1),
+		 CONSTRAINT [Temp2A_PK] PRIMARY KEY CLUSTERED(Id),
+		 CONSTRAINT [Temp2A_IX0] UNIQUE NONCLUSTERED(AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum),
+		 CONSTRAINT [Temp2A_IX1] UNIQUE NONCLUSTERED(AspNetRoleName, ParentCategoryId, ItemMasterId, ItemId),
+		)
+		INSERT #TEMP2A(ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, ParentCategoryId)
+		SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, ParentCategoryId
+		FROM #TEMP1A, ArchLib.AspNetRole
+		WHERE AspNetRoleName IN('DEFAULTROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE')
+		AND ParentCategoryId NOT IN(102, 120)--'Bulk Orders', 'Wholesale Orders'
+		UNION
+		SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, ParentCategoryId
+		FROM #TEMP1A, ArchLib.AspNetRole
+		WHERE AspNetRoleName IN('BULKORDERSROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE', 'WHOLESALEROLE')
+		AND ParentCategoryId IN(102, 120)--'Bulk Orders', 'Wholesale Orders')
+		UNION
+		SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, 100 AS ParentCategoryId
+		FROM #TEMP1A, ArchLib.AspNetRole
+		WHERE AspNetRoleName IN('DEFAULTROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE')
+		AND ParentCategoryId NOT IN(102, 120)--('Bulk Orders', 'Wholesale Orders')
+		ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum
+--CategoryItemMasterHier
+/*
+SELECT * FROM #TEMP2A WHERE AspNetRoleName = 'APPLADMN1' AND ParentCategoryId = 100 AND ItemMasterSeqNum = 197
+SELECT ProductItemId, * FROM RetailSlnSch.ItemMaster WHERE ItemMasterId IN(139, 140)
+*/
+		TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+		INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
+		SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum FROM #TEMP2A
+		ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
+--CategoryItemHier
+		TRUNCATE TABLE RetailSlnSch.CategoryItemHier
+		INSERT RetailSlnSch.CategoryItemHier(ClientId, CategoryItemMasterHierId, ItemId, SeqNum)
+		SELECT CategoryItemMasterHier.ClientId, CategoryItemMasterHier.CategoryItemMasterHierId, #TEMP2A.ItemId, #TEMP2A.ItemSeqNum AS SeqNum
+		FROM RetailSlnSch.CategoryItemMasterHier
+		INNER JOIN #TEMP2A ON CategoryItemMasterHier.AspNetRoleName = #TEMP2A.AspNetRoleName
+		AND CategoryItemMasterHier.ParentCategoryId = #TEMP2A.ParentCategoryId
+		AND CategoryItemMasterHier.ItemMasterId = #TEMP2A.ItemMasterId
+		AND CategoryItemMasterHier.SeqNum = #TEMP2A.ItemMasterSeqNum
+		ORDER BY CategoryItemMasterHier.CategoryItemMasterHierId, #TEMP2A.ItemSeqNum
+--CategoryItemMasterHier & CategoryItemHier
+--End CategoryHier(s)
+/*Start Delete
+--CategoryItemMasterHier
         TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
---Categories
-        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemMasterId, ProcessType, CategoryOrItem)
-        SELECT @ClientId AS ClientId, ParentId AS ParentCategoryId, [Seq Num] AS SeqNum, Id AS CategoryId, NULL AS ItemMasterId, '' AS ProcessType
-              ,'Category' AS CategoryOrItem
-          FROM dbo.DivineBija_Categories
-         WHERE ParentId IS NOT NULL
-      ORDER BY CategoryOrItem, ParentCategoryId, SeqNum
---
-        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemMasterId, ProcessType, CategoryOrItem)
---Items
-        SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, [Seq Num] AS SeqNum, NULL AS CategoryId, ItemMaster.ItemMasterId
-              ,'' AS ProcessType, 'Item' AS CategoryOrItem
-          FROM dbo.DivineBija_CategoryItemHiers
-    INNER JOIN RetailSlnSch.Category
-            ON DivineBija_CategoryItemHiers.[Category Name Desc] = Category.CategoryNameDesc
+        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, ItemMasterId, ParentCategoryId, SeqNum)
+        SELECT @ClientId AS ClientId, DivineBija_CategoryItemMasterHiers.[Role Name] AS AspNetRoleName, ItemMaster.ItemMasterId
+		      ,Category.CategoryId AS ParentCategoryId, DivineBija_CategoryItemMasterHiers.[Seq Num] AS SeqNum
+          FROM DivineBija_CategoryItemMasterHiers
+    INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryItemMasterHiers.[Parent CategoryName Desc] = Category.CategoryNameDesc
     INNER JOIN RetailSlnSch.ItemMaster
-            ON DivineBija_CategoryItemHiers.[Item Master Desc] = ItemMaster.ItemMasterDesc
-      ORDER BY ParentCategoryId
-              ,CAST([Seq Num] AS FLOAT)
---
---End CategoryItemMasterHier
-
+            ON DivineBija_CategoryItemMasterHiers.Description0 = ItemMaster.ItemMasterDesc0
+           AND DivineBija_CategoryItemMasterHiers.Description1 = ItemMaster.ItemMasterDesc1
+           AND DivineBija_CategoryItemMasterHiers.Description2 = ItemMaster.ItemMasterDesc2
+           AND DivineBija_CategoryItemMasterHiers.Description3 = ItemMaster.ItemMasterDesc3
+      ORDER BY DivineBija_CategoryItemMasterHiers.[Role Name], Category.CategoryId, DivineBija_CategoryItemMasterHiers.[Seq Num]
+*/
+----Begin CategoryItemHierNew
+----Category
+--        TRUNCATE TABLE RetailSlnSch.CategoryItemHierNew
+--        INSERT RetailSlnSch.CategoryItemHierNew
+--              (ClientId, AspNetRoleName, CategoryId, CategoryOrItem, ItemId, ItemMasterId, ParentCategoryId, ProcessType, SeqNum)
+--        SELECT @ClientId AS ClientId, AspNetRoleName, Category.CategoryId, 'Category' AS CategoryOrItem, NULL AS ItemId, NULL AS ItemMasterId
+--              ,ParentCategory.CategoryId AS ParentCategoryId, '' AS ProcessType, [Seq Num] AS SeqNum
+--          FROM DivineBija_CategoryItemHiersNew
+--    INNER JOIN RetailSlnSch.Category AS ParentCategory ON [Parent Category Name Desc] = ParentCategory.CategoryNameDesc
+--    INNER JOIN RetailSlnSch.Category ON [Category Name Desc] = Category.CategoryNameDesc
+--         WHERE [Item Unique Desc] IS NULL
+--      ORDER BY AspNetRoleName, SeqNum
+----Category
+----Item
+--        INSERT RetailSlnSch.CategoryItemHierNew
+--              (ClientId, AspNetRoleName, CategoryId, CategoryOrItem, ItemId, ItemMasterId, ParentCategoryId, ProcessType, SeqNum)
+--        SELECT @ClientId AS ClientId, AspNetRoleName, NULL AS CategoryId, 'Item' AS CategoryOrItem, Item.ItemId, Item.ItemMasterId
+--              ,ParentCategory.CategoryId AS ParentCategoryId, '' AS ProcessType, [Seq Num] AS SeqNum
+--          FROM DivineBija_CategoryItemHiersNew
+--    INNER JOIN RetailSlnSch.Category AS ParentCategory ON [Parent Category Name Desc] = ParentCategory.CategoryNameDesc
+--    INNER JOIN RetailSlnSch.Item ON [Item Unique Desc] = Item.ItemUniqueDesc
+--         WHERE [Item Unique Desc] IS NOT NULL
+--      ORDER BY AspNetRoleName, ParentCategoryId, SeqNum
+----Item
+----End CategoryItemNewHier
+----Begin CategoryItemHier
+--        TRUNCATE TABLE RetailSlnSch.CategoryItemHier
+----Category
+--        INSERT RetailSlnSch.CategoryItemHier(ClientId, AspNetRoleNames, ParentCategoryId, SeqNum, CategoryId, ItemId, ItemMasterId, ProcessType, CategoryOrItem)
+--        SELECT @ClientId AS ClientId, AspNetRoleNames, ParentId AS ParentCategoryId, [Seq Num] AS SeqNum, Id AS CategoryId, NULL AS ItemMasterId, NULL AS ItemMasterId, '' AS ProcessType
+--              ,'Category' AS CategoryOrItem
+--          FROM dbo.DivineBija_Categories
+--         WHERE ParentId IS NOT NULL
+--      ORDER BY CategoryOrItem, ParentCategoryId, SeqNum
+----Category
+----Item
+--        INSERT RetailSlnSch.CategoryItemHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemId, ItemMasterId, ProcessType, CategoryOrItem)
+--        SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, [Seq Num] AS SeqNum, NULL AS CategoryId, Item.ItemId, Item.ItemMasterId
+--              ,'' AS ProcessType, 'Item' AS CategoryOrItem
+--          FROM dbo.DivineBija_CategoryItemHiers
+--    INNER JOIN RetailSlnSch.Category
+--            ON DivineBija_CategoryItemHiers.[Category Name Desc] = Category.CategoryNameDesc
+--    INNER JOIN RetailSlnSch.Item
+--            ON DivineBija_CategoryItemHiers.[Item Unique Desc] = Item.ItemUniqueDesc
+--      ORDER BY ParentCategoryId
+--              ,CAST([Seq Num] AS FLOAT)
+----Item
+----End CategoryItemHier
+----Begin CategoryItemMasterHier
+--        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+--Categories
+--        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemMasterId, ProcessType, CategoryOrItem)
+--        SELECT @ClientId AS ClientId, ParentId AS ParentCategoryId, [Seq Num] AS SeqNum, Id AS CategoryId, NULL AS ItemMasterId, '' AS ProcessType
+--              ,'Category' AS CategoryOrItem
+--          FROM dbo.DivineBija_Categories
+--         WHERE ParentId IS NOT NULL
+--      ORDER BY CategoryOrItem, ParentCategoryId, SeqNum
+----
+--        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ParentCategoryId, SeqNum, CategoryId, ItemMasterId, ProcessType, CategoryOrItem)
+----ItemMaster
+--        SELECT @ClientId AS ClientId, Category.CategoryId AS ParentCategoryId, [Seq Num] AS SeqNum, NULL AS CategoryId, ItemMaster.ItemMasterId
+--              ,'' AS ProcessType, 'Item' AS CategoryOrItem
+--          FROM dbo.DivineBija_CategoryItemMasterHiers
+--    INNER JOIN RetailSlnSch.Category
+--            ON DivineBija_CategoryItemMasterHiers.[Category Name Desc] = Category.CategoryNameDesc
+--    INNER JOIN RetailSlnSch.ItemMaster
+--            ON DivineBija_CategoryItemMasterHiers.[Item Master Desc] = ItemMaster.ItemMasterDesc
+--      ORDER BY ParentCategoryId
+--              ,CAST([Seq Num] AS FLOAT)
+----
+----End CategoryItemMasterHier
+--End Delete
 --Begin Corp Acct Discount
         TRUNCATE TABLE RetailSlnSch.ItemDiscount
         INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
-        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, 35 AS DiscountPercent
-          FROM RetailSlnSch.Item
-    CROSS JOIN RetailSlnSch.CorpAcct WHERE CreditSale = 1
-      ORDER BY CorpAcctId, ItemId
+        SELECT 3 AS ClientId, CorpAcct.CorpAcctId, Item.ItemId,DivineBija_CorpAcctItems.Discount
+          FROM DivineBija_CorpAcctItems
+    INNER JOIN RetailSlnSch.CorpAcct
+            ON DivineBija_CorpAcctItems.CorpAcctName = CorpAcct.CorpAcctName
+    INNER JOIN RetailSlnSch.Item
+            ON DivineBija_CorpAcctItems.[Item Unique Desc] = Item.ItemUniqueDesc
+         ORDER BY CorpAcctId, ItemId
 --End Corp Acct Discount
-
 --Begin Item Spec
 SET NOCOUNT ON
         TRUNCATE TABLE RetailSlnSch.ItemSpec
@@ -302,10 +423,10 @@ SET NOCOUNT ON
                     SET @SqlStmt = ''
                     SET @SqlStmt = @SqlStmt + 'UPDATE RetailSlnSch.ItemSpec SET ItemSpecUnitValue = CodeData.CodeDataNameId'
                     SET @SqlStmt = @SqlStmt + '  FROM dbo.DivineBija_Products'
-                    SET @SqlStmt = @SqlStmt + '         ,RetailSlnSch.Item'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.Item'
                     SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpec'
-                    SET @SqlStmt = @SqlStmt + '         ,RetailSlnSch.ItemSpecMaster'
-                    SET @SqlStmt = @SqlStmt + '         ,Lookup.CodeData'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpecMaster'
+                    SET @SqlStmt = @SqlStmt + '      ,Lookup.CodeData'
                     SET @SqlStmt = @SqlStmt + ' WHERE '
                     SET @SqlStmt = @SqlStmt + '       Item.ProductItemId = DivineBija_Products.Id'
                     SET @SqlStmt = @SqlStmt + '   AND ItemSpec.ItemId = Item.ItemId'
@@ -350,10 +471,10 @@ SET NOCOUNT ON
                     SET @SqlStmt = ''
                     SET @SqlStmt = @SqlStmt + 'UPDATE RetailSlnSch.ItemSpec SET ItemSpecUnitValue = CodeData.CodeDataNameId'
                     SET @SqlStmt = @SqlStmt + '  FROM dbo.DivineBija_Books'
-                    SET @SqlStmt = @SqlStmt + '         ,RetailSlnSch.Item'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.Item'
                     SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpec'
-                    SET @SqlStmt = @SqlStmt + '         ,RetailSlnSch.ItemSpecMaster'
-                    SET @SqlStmt = @SqlStmt + '         ,Lookup.CodeData'
+                    SET @SqlStmt = @SqlStmt + '      ,RetailSlnSch.ItemSpecMaster'
+                    SET @SqlStmt = @SqlStmt + '      ,Lookup.CodeData'
                     SET @SqlStmt = @SqlStmt + ' WHERE '
                     SET @SqlStmt = @SqlStmt + '       Item.ProductItemId = DivineBija_Books.Id'
                     SET @SqlStmt = @SqlStmt + '   AND ItemSpec.ItemId = Item.ItemId'
@@ -392,10 +513,9 @@ SET NOCOUNT ON
         CLOSE ItemSpecMasterCursor
         DEALLOCATE ItemSpecMasterCursor
 SET NOCOUNT OFF
-SELECT * FROM #TEMP1
+--SELECT * FROM #TEMP1
 --End Item Spec Update
 --End Item Spec
-
 --Begin Item Spec Update SeqNumItemMaster
         UPDATE RetailSlnSch.ItemSpec
            SET SeqNumItemMaster = A.SeqNum
@@ -412,9 +532,8 @@ SELECT * FROM #TEMP1
             ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
            AND ItemSpecMaster.SpecName
                IN (
-                   DivineBija_Products.[Spec Name 1], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 2]
-                  ,DivineBija_Products.[Spec Name 3], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 4]
-                  ,DivineBija_Products.[Spec Name 5]
+                   DivineBija_Products.[Spec Name 1], DivineBija_Products.[Spec Name 2], DivineBija_Products.[Spec Name 3]
+                  ,DivineBija_Products.[Spec Name 4], DivineBija_Products.[Spec Name 5]
                   )
               ) A
         WHERE ItemSpec.ItemSpecId = A.ItemSpecId

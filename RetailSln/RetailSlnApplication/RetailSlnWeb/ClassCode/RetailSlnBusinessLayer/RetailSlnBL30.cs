@@ -45,47 +45,47 @@ namespace RetailSlnBusinessLayer
         }
 
         // GET: Categorys
-        public List<ApiCategoryModel> Categorys(string parentCategoryIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId == null).OrderBy(x => x.SeqNum).ToList();
-                List<ApiCategoryModel> apiCategoryModels = new List<ApiCategoryModel>();
-                foreach (var categoryItemHierModel in categoryItemHierModels)
-                {
-                    apiCategoryModels.Add
-                    (
-                        new ApiCategoryModel
-                        {
-                            CategoryId = categoryItemHierModel.CategoryId,
-                            ClientId = categoryItemHierModel.ClientId,
-                            AssignItem = categoryItemHierModel.CategoryModel.AssignItem,
-                            AssignSubCategory = categoryItemHierModel.CategoryModel.AssignSubCategory,
-                            CategoryDesc = categoryItemHierModel.CategoryModel.CategoryDesc,
-                            CategoryName = categoryItemHierModel.CategoryModel.CategoryName,
-                            CategoryNameDesc = categoryItemHierModel.CategoryModel.CategoryNameDesc,
-                            CategoryStatusId = categoryItemHierModel.CategoryModel.CategoryStatusId,
-                            DefaultCategory = categoryItemHierModel.CategoryModel.DefaultCategory,
-                            ImageExtension = categoryItemHierModel.CategoryModel.ImageExtension,
-                            ImageName = categoryItemHierModel.CategoryModel.ImageName,
-                            MaxPerPage = categoryItemHierModel.CategoryModel.MaxPerPage,
-                            UploadImageFileName = categoryItemHierModel.CategoryModel.UploadImageFileName,
-                            ViewName = categoryItemHierModel.CategoryModel.ViewName,
-                        }
-                    );
-                }
-                return apiCategoryModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public List<ApiCategoryModel> Categorys(string parentCategoryIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId == null).OrderBy(x => x.SeqNum).ToList();
+        //        List<ApiCategoryModel> apiCategoryModels = new List<ApiCategoryModel>();
+        //        foreach (var categoryItemHierModel in categoryItemHierModels)
+        //        {
+        //            apiCategoryModels.Add
+        //            (
+        //                new ApiCategoryModel
+        //                {
+        //                    CategoryId = categoryItemHierModel.CategoryId,
+        //                    ClientId = categoryItemHierModel.ClientId,
+        //                    AssignItem = categoryItemHierModel.CategoryModel.AssignItem,
+        //                    AssignSubCategory = categoryItemHierModel.CategoryModel.AssignSubCategory,
+        //                    CategoryDesc = categoryItemHierModel.CategoryModel.CategoryDesc,
+        //                    CategoryName = categoryItemHierModel.CategoryModel.CategoryName,
+        //                    CategoryNameDesc = categoryItemHierModel.CategoryModel.CategoryNameDesc,
+        //                    CategoryStatusId = categoryItemHierModel.CategoryModel.CategoryStatusId,
+        //                    DefaultCategory = categoryItemHierModel.CategoryModel.DefaultCategory,
+        //                    ImageExtension = categoryItemHierModel.CategoryModel.ImageExtension,
+        //                    ImageName = categoryItemHierModel.CategoryModel.ImageName,
+        //                    MaxPerPage = categoryItemHierModel.CategoryModel.MaxPerPage,
+        //                    UploadImageFileName = categoryItemHierModel.CategoryModel.UploadImageFileName,
+        //                    ViewName = categoryItemHierModel.CategoryModel.ViewName,
+        //                }
+        //            );
+        //        }
+        //        return apiCategoryModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
 
         // GET: Category
         public ApiCategoryModel Category(string categoryIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -124,84 +124,84 @@ namespace RetailSlnBusinessLayer
         }
 
         // GET: ItemMasters
-        public List<ApiItemMasterModel> ItemMasters(string parentCategoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                int.TryParse(pageNumParm, out int pageNum);
-                pageNum = pageNum == 0 ? 1 : pageNum;
-                int.TryParse(rowCountParm, out int rowCount);
-                rowCount = rowCount == 0 ? 45 : rowCount;
-                List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null).OrderBy(x => x.SeqNum).Skip((pageNum - 1) * rowCount).Take(rowCount).ToList();
-                List<ApiItemMasterModel> apiItemMasterModels = new List<ApiItemMasterModel>();
-                ApiItemMasterModel apiItemMasterModel;
-                foreach (var categoryItemHierModel in categoryItemHierModels)
-                {
-                    apiItemMasterModels.Add
-                    (
-                        apiItemMasterModel = new ApiItemMasterModel
-                        {
-                            ItemMasterId = categoryItemHierModel.ItemMasterModel.ItemMasterId,
-                            ClientId = categoryItemHierModel.ItemMasterModel.ItemMasterId,
-                            ImageExtension = categoryItemHierModel.ItemMasterModel.ImageExtension,
-                            ImageName = categoryItemHierModel.ItemMasterModel.ImageName,
-                            ImageTitle = categoryItemHierModel.ItemMasterModel.ImageTitle,
-                            ItemMasterDesc = categoryItemHierModel.ItemMasterModel.ItemMasterDesc,
-                            ItemMasterDesc0 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc0,
-                            ItemMasterDesc1 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc1,
-                            ItemMasterDesc2 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc2,
-                            ItemMasterDesc3 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc3,
-                            ItemMasterName = categoryItemHierModel.ItemMasterModel.ItemMasterName,
-                            ItemTypeId = categoryItemHierModel.ItemMasterModel.ItemTypeId,
-                            ProductItemId = categoryItemHierModel.ItemMasterModel.ProductItemId,
-                            UploadImageFileName = categoryItemHierModel.ItemMasterModel.UploadImageFileName,
-                            ApiItemModels = new List<ApiItemModel>(),
-                        }
-                    );
-                    foreach (var itemModel in categoryItemHierModel.ItemMasterModel.ItemModels)
-                    {
-                        apiItemMasterModel.ApiItemModels.Add
-                        (
-                            new ApiItemModel
-                            {
-                                ItemId = itemModel.ItemId,
-                                ClientId = itemModel.ClientId,
-                                ExpectedAvailability = itemModel.ExpectedAvailability,
-                                ExpectedAvailabilityFormatted = itemModel.ExpectedAvailabilityFormatted,
-                                ImageName = itemModel.ImageName,
-                                ImageTitle = itemModel.ImageTitle,
-                                ItemForSaleId = itemModel.ItemForSaleId,
-                                ItemMasterId = itemModel.ItemMasterId,
-                                ItemName = itemModel.ItemName,
-                                ItemRate = itemModel.ItemRate,
-                                ItemRateFormatted = itemModel.ItemRateFormatted,
-                                ItemRateMSRP = itemModel.ItemRateMSRP,
-                                ItemShortDesc = itemModel.ItemShortDesc,
-                                ItemShortDesc0 = itemModel.ItemShortDesc0,
-                                ItemShortDesc1 = itemModel.ItemShortDesc1,
-                                ItemShortDesc2 = itemModel.ItemShortDesc2,
-                                ItemShortDesc3 = itemModel.ItemShortDesc3,
-                                ItemStarCount = itemModel.ItemStarCount,
-                                ItemStatusId = itemModel.ItemStatusId,
-                                ItemTypeId = itemModel.ItemTypeId,
-                                ProductItemId = itemModel.ProductItemId,
-                                UploadImageFileName = itemModel.UploadImageFileName,
-                            }
-                        );
-                    }
-                }
-                return apiItemMasterModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public List<ApiItemMasterModel> ItemMasters(string parentCategoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        int.TryParse(pageNumParm, out int pageNum);
+        //        pageNum = pageNum == 0 ? 1 : pageNum;
+        //        int.TryParse(rowCountParm, out int rowCount);
+        //        rowCount = rowCount == 0 ? 45 : rowCount;
+        //        List<CategoryItemMasterHierModel> categoryItemHierModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null).OrderBy(x => x.SeqNum).Skip((pageNum - 1) * rowCount).Take(rowCount).ToList();
+        //        List<ApiItemMasterModel> apiItemMasterModels = new List<ApiItemMasterModel>();
+        //        ApiItemMasterModel apiItemMasterModel;
+        //        foreach (var categoryItemHierModel in categoryItemHierModels)
+        //        {
+        //            apiItemMasterModels.Add
+        //            (
+        //                apiItemMasterModel = new ApiItemMasterModel
+        //                {
+        //                    ItemMasterId = categoryItemHierModel.ItemMasterModel.ItemMasterId,
+        //                    ClientId = categoryItemHierModel.ItemMasterModel.ItemMasterId,
+        //                    ImageExtension = categoryItemHierModel.ItemMasterModel.ImageExtension,
+        //                    ImageName = categoryItemHierModel.ItemMasterModel.ImageName,
+        //                    ImageTitle = categoryItemHierModel.ItemMasterModel.ImageTitle,
+        //                    ItemMasterDesc = categoryItemHierModel.ItemMasterModel.ItemMasterDesc,
+        //                    ItemMasterDesc0 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc0,
+        //                    ItemMasterDesc1 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc1,
+        //                    ItemMasterDesc2 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc2,
+        //                    ItemMasterDesc3 = categoryItemHierModel.ItemMasterModel.ItemMasterDesc3,
+        //                    ItemMasterName = categoryItemHierModel.ItemMasterModel.ItemMasterName,
+        //                    ItemTypeId = categoryItemHierModel.ItemMasterModel.ItemTypeId,
+        //                    ProductItemId = categoryItemHierModel.ItemMasterModel.ProductItemId,
+        //                    UploadImageFileName = categoryItemHierModel.ItemMasterModel.UploadImageFileName,
+        //                    ApiItemModels = new List<ApiItemModel>(),
+        //                }
+        //            );
+        //            foreach (var itemModel in categoryItemHierModel.ItemMasterModel.ItemModels)
+        //            {
+        //                apiItemMasterModel.ApiItemModels.Add
+        //                (
+        //                    new ApiItemModel
+        //                    {
+        //                        ItemId = itemModel.ItemId,
+        //                        ClientId = itemModel.ClientId,
+        //                        ExpectedAvailability = itemModel.ExpectedAvailability,
+        //                        ExpectedAvailabilityFormatted = itemModel.ExpectedAvailabilityFormatted,
+        //                        ImageName = itemModel.ImageName,
+        //                        ImageTitle = itemModel.ImageTitle,
+        //                        ItemForSaleId = itemModel.ItemForSaleId,
+        //                        ItemMasterId = itemModel.ItemMasterId,
+        //                        ItemName = itemModel.ItemName,
+        //                        ItemRate = itemModel.ItemRate,
+        //                        ItemRateFormatted = itemModel.ItemRateFormatted,
+        //                        ItemRateMSRP = itemModel.ItemRateMSRP,
+        //                        ItemShortDesc = itemModel.ItemShortDesc,
+        //                        ItemShortDesc0 = itemModel.ItemShortDesc0,
+        //                        ItemShortDesc1 = itemModel.ItemShortDesc1,
+        //                        ItemShortDesc2 = itemModel.ItemShortDesc2,
+        //                        ItemShortDesc3 = itemModel.ItemShortDesc3,
+        //                        ItemStarCount = itemModel.ItemStarCount,
+        //                        ItemStatusId = itemModel.ItemStatusId,
+        //                        ItemTypeId = itemModel.ItemTypeId,
+        //                        ProductItemId = itemModel.ProductItemId,
+        //                        UploadImageFileName = itemModel.UploadImageFileName,
+        //                    }
+        //                );
+        //            }
+        //        }
+        //        return apiItemMasterModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
 
         // GET: ItemMasters
         public ApiItemMasterModel ItemMaster(string itemMasterIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

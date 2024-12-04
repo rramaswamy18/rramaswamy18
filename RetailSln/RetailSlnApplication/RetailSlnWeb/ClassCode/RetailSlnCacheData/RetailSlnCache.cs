@@ -19,17 +19,26 @@ namespace RetailSlnCacheData
 {
     public static class RetailSlnCache
     {
+        #region Properties
         public static BusinessInfoModel BusinessInfoModel { set; get; }
         public static List<DemogInfoAddressModel> BusinessDemogInfoAddressModels { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
+        public static List<CategoryHierModel> CategoryHierModels { set; get; }
+        public static List<CategoryItemHierModel> CategoryItemHierModels { set; get; }
+        public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
         public static CultureInfo CurrencyCultureInfo { set; get; }
         public static string CurrencyDecimalPlaces { set; get; }
         public static string CurrencySymbol { set; get; }
-        public static Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
+        //public static Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
+        public static Dictionary<string, Dictionary<long, List<CategoryModel>>> AspNetRoleParentCategoryCategoryModels { set; get; }
+        public static Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryCategoryItemMasterHierModels { set; get; }
+        public static Dictionary<string, Dictionary<long, List<CategoryItemLayoutModel>>> AspNetRoleCategoryItemLayoutModels { set; get; }
+        //public static Dictionary<string, Dictionary<long, CategoryLayoutModel>> AspNetRoleCategoryLayoutModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static List<FestivalListModel> FestivalListModels { set; get; }
         public static List<FestivalListImageModel> FestivalListImageModels { set; get; }
+        public static List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public static List<ItemMasterModel> ItemMasterModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
@@ -41,7 +50,8 @@ namespace RetailSlnCacheData
         public static List<ItemBundleModel> ItemBundleModels { set; get; }
         public static List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public static List<ItemBundleDiscountModel> ItemBundleDiscountModels { set; get; }
-        public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        //public static List<CategoryItemHierModel> CategoryItemHierModelsNew { set; get; }
+        //public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
         public static List<DemogInfoCountryModel> DeliveryDemogInfoCountryModels { set; get; }
         public static List<SelectListItem> DeliveryDemogInfoCountrySelectListItems { set; get; }
         public static Dictionary<long, List<SelectListItem>> DeliveryDemogInfoCountrySubDivisionSelectListItems { set; get; }
@@ -51,13 +61,16 @@ namespace RetailSlnCacheData
         public static long DefaultDeliveryDemogInfoCountryId { set; get; }
         public static List<KeyValuePair<long, string>> DeliveryDemogInfoCountrys { set; get; }
         public static List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryDemogInfoCountryStates { set; get; }
+        #endregion
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
             retailSlnCacheBL.Initialize(out RetailSlnInitModel retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = retailSlnInitModel.CategoryModels;
+            CategoryHierModels = retailSlnInitModel.CategoryHierModels;
             ItemBundleModels = retailSlnInitModel.ItemBundleModels;
             ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels;
+            ItemDiscountModels = retailSlnInitModel.ItemDiscountModels;
             ItemMasterModels = retailSlnInitModel.ItemMasterModels;
             ItemModels = retailSlnInitModel.ItemModels;
             ItemSpecModels = retailSlnInitModel.ItemSpecModels;
@@ -65,6 +78,7 @@ namespace RetailSlnCacheData
             ItemInfoModels = retailSlnInitModel.ItemInfoModels;
             ItemImageModels = retailSlnInitModel.ItemImageModels;
             ItemSpecMasterModels = retailSlnInitModel.ItemSpecMasterModels;
+            CategoryItemHierModels = retailSlnInitModel.CategoryItemHierModels;
             CategoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels;
             //DeliveryListModels = deliveryListModels;
             //DeliveryChargeModels = deliveryChargeModels;
@@ -81,7 +95,10 @@ namespace RetailSlnCacheData
             DeliveryDemogInfoCountrySelectListItems = retailSlnInitModel.DeliveryDemogInfoCountrySelectListItems;
             DeliveryDemogInfoCountrySubDivisionSelectListItems = retailSlnInitModel.DeliveryDemogInfoSubDivisionSelectListItems;
             DefaultDeliveryDemogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry"));
-            CategoryLayoutModels = retailSlnInitModel.CategoryLayoutModels;
+            //CategoryLayoutModels = retailSlnInitModel.CategoryLayoutModels;
+            AspNetRoleParentCategoryCategoryModels = retailSlnInitModel.AspNetRoleParentCategoryCategoryModels;
+            AspNetRoleParentCategoryCategoryItemMasterHierModels = retailSlnInitModel.AspNetRoleParentCategoryCategoryItemMasterHierModels;
+            AspNetRoleCategoryItemLayoutModels = retailSlnInitModel.AspNetRoleCategoryItemLayoutModels;
             DeliveryMethods = retailSlnInitModel.DeliveryMethods;
             PaymentMethodsCreditSale = retailSlnInitModel.PaymentMethodsCreditSale;
             PaymentMethods = retailSlnInitModel.PaymentMethods;
@@ -99,23 +116,67 @@ namespace RetailSlnCacheData
         }
         private static void BuildCacheModels1(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
+            int i = 0;
+            string aspNetRoleName;
+            long parentCategoryId;
+            foreach (var categoryHierModel in retailSlnInitModel.CategoryHierModels)
+            {
+                categoryHierModel.CategoryModel = retailSlnInitModel.CategoryModels.First(x => x.CategoryId == categoryHierModel.CategoryId);
+                categoryHierModel.ParentCategoryModel = retailSlnInitModel.CategoryModels.First(x => x.CategoryId == categoryHierModel.ParentCategoryId);
+            }
+            foreach (var categoryItemHierModel in retailSlnInitModel.CategoryItemHierModels)
+            {
+                categoryItemHierModel.ItemModel = retailSlnInitModel.ItemModels.First(x => x.ItemId == categoryItemHierModel.ItemId);
+            }
             foreach (var categoryItemMasterHierModel in retailSlnInitModel.CategoryItemMasterHierModels)
             {
-                categoryItemMasterHierModel.CategoryModel = retailSlnInitModel.CategoryModels.FirstOrDefault(x => x.CategoryId == categoryItemMasterHierModel.CategoryId);
-                categoryItemMasterHierModel.ItemMasterModel = retailSlnInitModel.ItemMasterModels.FirstOrDefault(x => x.ItemMasterId == categoryItemMasterHierModel.ItemMasterId);
-                categoryItemMasterHierModel.ParentCategoryModel = retailSlnInitModel.CategoryModels.FirstOrDefault(x => x.CategoryId == categoryItemMasterHierModel.ParentCategoryId);
+                categoryItemMasterHierModel.ItemMasterModel = retailSlnInitModel.ItemMasterModels.First(x => x.ItemMasterId == categoryItemMasterHierModel.ItemMasterId);
+                categoryItemMasterHierModel.ParentCategoryModel = retailSlnInitModel.CategoryModels.First(x => x.CategoryId == categoryItemMasterHierModel.ParentCategoryId);
+                categoryItemMasterHierModel.CategoryItemHierModels = retailSlnInitModel.CategoryItemHierModels.FindAll(x => x.CategoryItemMasterHierId == categoryItemMasterHierModel.CategoryItemMasterHierId);
             }
-            retailSlnInitModel.CategoryLayoutModels = new Dictionary<long, CategoryLayoutModel>();
-            foreach (var categoryModel in retailSlnInitModel.CategoryModels)
+            retailSlnInitModel.AspNetRoleParentCategoryCategoryModels = new Dictionary<string, Dictionary<long, List<CategoryModel>>>();
+            while (i < retailSlnInitModel.CategoryHierModels.Count)
             {
-                retailSlnInitModel.CategoryLayoutModels[(long)categoryModel.CategoryId] = new CategoryLayoutModel();
+                aspNetRoleName = retailSlnInitModel.CategoryHierModels[i].AspNetRoleName;
+                retailSlnInitModel.AspNetRoleParentCategoryCategoryModels[aspNetRoleName] = new Dictionary<long, List<CategoryModel>>();
+                while (i < retailSlnInitModel.CategoryHierModels.Count &&
+                       retailSlnInitModel.CategoryHierModels[i].AspNetRoleName == aspNetRoleName
+                      )
+                {
+                    parentCategoryId = retailSlnInitModel.CategoryHierModels[i].ParentCategoryId;
+                    retailSlnInitModel.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][parentCategoryId] = new List<CategoryModel>();
+                    while (i < retailSlnInitModel.CategoryHierModels.Count &&
+                           retailSlnInitModel.CategoryHierModels[i].AspNetRoleName == aspNetRoleName &&
+                           retailSlnInitModel.CategoryHierModels[i].ParentCategoryId == parentCategoryId
+                          )
+                    {
+                        retailSlnInitModel.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][parentCategoryId].Add(CategoryModels.First(x => x.CategoryId == retailSlnInitModel.CategoryHierModels[i].CategoryId));
+                        i++;
+                    }
+                }
             }
-            foreach (var categoryLayoutModel in retailSlnInitModel.CategoryLayoutModels)
+            i = 0;
+            retailSlnInitModel.AspNetRoleParentCategoryCategoryItemMasterHierModels = new Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>>();
+            while (i < retailSlnInitModel.CategoryItemMasterHierModels.Count)
             {
-                categoryLayoutModel.Value.CategoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-                categoryLayoutModel.Value.CategoryItemMasterHierModels.AddRange(retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == categoryLayoutModel.Key).OrderBy(y => y.SeqNum).ToList());
+                aspNetRoleName = retailSlnInitModel.CategoryItemMasterHierModels[i].AspNetRoleName;
+                retailSlnInitModel.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName] = new Dictionary<long, List<CategoryItemMasterHierModel>>();
+                while (i < retailSlnInitModel.CategoryItemMasterHierModels.Count &&
+                       retailSlnInitModel.CategoryItemMasterHierModels[i].AspNetRoleName == aspNetRoleName
+                      )
+                {
+                    parentCategoryId = retailSlnInitModel.CategoryItemMasterHierModels[i].ParentCategoryId;
+                    retailSlnInitModel.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName][parentCategoryId] = new List<CategoryItemMasterHierModel>();
+                    while (i < retailSlnInitModel.CategoryItemMasterHierModels.Count &&
+                           retailSlnInitModel.CategoryItemMasterHierModels[i].AspNetRoleName == aspNetRoleName &&
+                           retailSlnInitModel.CategoryItemMasterHierModels[i].ParentCategoryId == parentCategoryId
+                          )
+                    {
+                        retailSlnInitModel.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName][parentCategoryId].Add(retailSlnInitModel.CategoryItemMasterHierModels[i]);
+                        i++;
+                    }
+                }
             }
-            return;
         }
         private static void BuildCacheModels2(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -133,7 +194,7 @@ namespace RetailSlnCacheData
                     }
                 }
             }
-            int i = 0;
+            int i = 0, itemSeqNum;
             long itemMasterIdTemp;
             ItemMasterModel itemMasterModelTemp;
             while (i < retailSlnInitModel.ItemMasterItemSpecModels.Count)
@@ -162,10 +223,12 @@ namespace RetailSlnCacheData
                     i++;
                 }
             }
+            itemSeqNum = 0;
             foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
             {
+                itemSeqNum++;
                 itemMasterModel.ItemModels = retailSlnInitModel.ItemModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
-                itemMasterModel.ImageTitle = itemMasterModel.ItemMasterDesc + " #" + itemMasterModel.ItemMasterId;
+                itemMasterModel.ImageTitle = itemMasterModel.ItemMasterDesc + " #" + itemMasterModel.ItemMasterId + " " + itemSeqNum + "/" + retailSlnInitModel.ItemMasterModels.Count;
                 if (itemMasterModel.ItemMasterItemSpecModels == null)
                 {
                     itemMasterModel.ItemMasterItemSpecModels = new List<ItemSpecModel>();
@@ -175,11 +238,13 @@ namespace RetailSlnCacheData
                     itemMasterModel.ItemMasterItemSpecModelsForDisplay = new Dictionary<string, ItemSpecModel>();
                 }
             }
+            itemSeqNum = 0;
             foreach (var itemModel in retailSlnInitModel.ItemModels)
             {
+                itemSeqNum++;
                 itemModel.ItemMasterModel = retailSlnInitModel.ItemMasterModels.First(x => x.ItemMasterId == itemModel.ItemMasterId);
                 itemModel.ItemRateFormatted = itemModel.ItemRate.Value.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                itemModel.ImageTitle = itemModel.ItemShortDesc + " #" + itemModel.ItemId;
+                itemModel.ImageTitle = itemModel.ItemShortDesc + " #" + itemModel.ItemId + " " + itemSeqNum + "/" + retailSlnInitModel.ItemModels.Count;
                 if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
                 {
                     itemModel.ImageTitle += " Sold Out";
@@ -199,125 +264,10 @@ namespace RetailSlnCacheData
                 {
                     itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
                 }
-                //foreach (var itemSpecModel in itemModel.ItemSpecModels)
-                //{
-                //    switch (itemSpecModel.ItemSpecMasterModel.SpecName)
-                //    {
-                //        case "HSNCode":
-                //        case "ProductCode":
-                //            itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
-                //            itemModel.ImageTitle += " " + itemSpecModel.ItemSpecValueForDisplay;
-                //            break;
-                //        case "WeightCalc":
-                //            itemModel.ImageTitle += " Wt: " + itemSpecModel.ItemSpecValue + " G";
-                //            break;
-                //        case "ProductOrVolumetricWeight":
-                //            itemModel.ImageTitle += " Vol Wt: " + itemSpecModel.ItemSpecValue + " G";
-                //            break;
-                //    }
-                //    //if (itemSpecModel.ShowValue)
-                //    //{
-                //    //    itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
-                //    //}
-                //}
+                itemModel.ItemDicountModels = new List<ItemDiscountModel>();
+                itemModel.ItemDicountModels.AddRange(ItemDiscountModels.FindAll(x => x.ItemId == itemModel.ItemId));
             }
             return;
-            //foreach (var joinOutputTemp in joinOutput)
-            //{
-
-            //}
-            //var itemMasterModels = new List<ItemMasterModel>
-            //{
-            //    new ItemMasterModel
-            //    {
-            //        ItemMasterId = 1,
-            //        ItemModels = retailSlnInitModel.ItemModels.Where(im => im.ItemMasterId == 1).ToList(),
-            //        ItemMasterItemSpecModels = retailSlnInitModel.ItemSpecModels.Where(ism => retailSlnInitModel.ItemModels.Any(im => im.ItemId == ism.ItemId && im.ItemMasterId == 1)).ToList()
-            //    },
-            //    new ItemMasterModel
-            //    {
-            //        ItemMasterId = 2,
-            //        ItemModels = retailSlnInitModel.ItemModels.Where(im => im.ItemMasterId == 2).ToList(),
-            //        ItemMasterItemSpecModels = retailSlnInitModel.ItemSpecModels.Where(ism => retailSlnInitModel.ItemModels.Any(im => im.ItemId == ism.ItemId && im.ItemMasterId == 2)).ToList()
-            //    }
-            //};
-            //// Create a dictionary to map ItemMasterId to the corresponding ItemSpecModels
-            //var itemMasterSpecMapping = retailSlnInitModel.ItemModels
-            //    .GroupBy(im => im.ItemMasterId)
-            //    .ToDictionary(
-            //        g => g.Key,
-            //        g => retailSlnInitModel.ItemSpecModels
-            //            .Where(ism => g.Any(im => im.ItemId == ism.ItemId))
-            //            .ToList()
-            //    );
-            //var joinOutput =
-            //    (
-            //        from a1 in retailSlnInitModel.ItemSpecModels
-            //        join a2 in retailSlnInitModel.ItemModels
-            //        on a1.ItemId equals a2.ItemId
-            //        where a1.SeqNumItemMaster != null
-            //        select new
-            //        {
-            //            c1 = a2.ItemMasterId,
-            //            c2 = a1.SeqNumItemMaster,
-            //            c3 = a1.ItemSpecId,
-            //            c4 = itemMasterSpecMapping[a2.ItemMasterId]
-            //        }
-            //    ).OrderBy(x => x.c1).ThenBy(x => x.c2).ToList();
-
-            //var joinOutput =
-            //(
-            //    from a1 in retailSlnInitModel.ItemSpecModels
-            //    join a2 in retailSlnInitModel.ItemModels
-            //    on a1.ItemId equals a2.ItemId
-            //    where a1.SeqNumItemMaster != null
-            //    group a1 by new { a2.ItemMasterId, a1.SeqNumItemMaster } into g
-            //    let allSpecs = g.ToList()
-            //    from spec in allSpecs
-            //    select new
-            //    {
-            //        c1 = g.Key.ItemMasterId,
-            //        c2 = g.Key.SeqNumItemMaster,
-            //        c3 = spec.ItemSpecId,
-            //        c4 = allSpecs
-            //    }
-            //).OrderBy(x => x.c1).ThenBy(x => x.c2).ToList();
-            //
-            //var joinOutput1 =
-            //(
-            //    from a1 in retailSlnInitModel.ItemSpecModels
-            //    join a2 in retailSlnInitModel.ItemModels
-            //    on a1.ItemId equals a2.ItemId
-            //    join a3 in retailSlnInitModel.ItemMasterModels
-            //    on a2.ItemMasterId equals a3.ItemMasterId
-            //    where a1.SeqNumItemMaster != null
-            //    group new { a2.ItemMasterId, a1.SeqNumItemMaster, a1.ItemSpecId }
-            //    by new { a2.ItemMasterId, a1.SeqNumItemMaster }
-            //    into g
-            //    select new
-            //    {
-            //        c1 = g.Key.ItemMasterId,
-            //        c2 = g.Key.SeqNumItemMaster,
-            //        c3 = g.Min(x => x.ItemSpecId),
-            //        c4 = g.ToList(),
-            //        //c4 = a3.ItemMasterItemSpecModels = AddRange List<ItemSpecModel>()
-            //    }
-            //).OrderBy(x => x.c1).ThenBy(x => x.c2).ToList();
-            //var joinOutput2 =
-            //    (
-            //        from a1 in retailSlnInitModel.ItemSpecModels
-            //        join a2 in retailSlnInitModel.ItemModels
-            //        on a1.ItemId equals a2.ItemId
-            //        where a1.SeqNumItemMaster != null
-            //        group a1 by new { a2.ItemMasterId, a1.SeqNumItemMaster } into g
-            //        select new
-            //        {
-            //            c1 = g.Key.ItemMasterId,
-            //            c2 = g.Key.SeqNumItemMaster,
-            //            c3 = g.Min(x => x.ItemSpecId),
-            //            c4 = g.ToList()
-            //        }
-            //    ).OrderBy(x => x.c1).ThenBy(x => x.c2).ToList();
         }
         private static void BuildCacheModels3(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

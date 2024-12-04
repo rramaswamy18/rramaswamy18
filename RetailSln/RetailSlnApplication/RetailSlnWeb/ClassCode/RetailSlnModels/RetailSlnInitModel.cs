@@ -16,11 +16,16 @@ namespace RetailSlnModels
         public CultureInfo CurrencyCultureInfo { set; get; }
         public string CurrencyDecimalPlaces { set; get; }
         public string CurrencySymbol { set; get; }
-        public Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
+        //public Dictionary<long, CategoryLayoutModel> CategoryLayoutModels { set; get; }
+        //public Dictionary<string, Dictionary<long, CategoryLayoutModel>> AspNetRoleCategoryLayoutModels { set; get; }
+        public Dictionary<string, Dictionary<long, List<CategoryModel>>> AspNetRoleParentCategoryCategoryModels { set; get; }
+        public Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryCategoryItemMasterHierModels { set; get; }
+        public Dictionary<string, Dictionary<long, List<CategoryItemLayoutModel>>> AspNetRoleCategoryItemLayoutModels { set; get; }
         public List<CorpAcctModel> CorpAcctModels { set; get; }
         public List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public List<FestivalListModel> FestivalListModels { set; get; }
         public List<FestivalListImageModel> FestivalListImageModels { set; get; }
+        public List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public List<ItemMasterModel> ItemMasterModels { set; get; }
         public List<ItemModel> ItemModels { set; get; }
         public List<ItemMasterItemSpecModel> ItemMasterItemSpecModels { set; get; }
@@ -31,6 +36,9 @@ namespace RetailSlnModels
         public List<ItemBundleModel> ItemBundleModels { set; get; }
         public List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public List<ItemBundleDiscountModel> ItemBundleDiscountModels { set; get; }
+        public List<CategoryItemHierModel> CategoryItemHierModels { set; get; }
+        public List<CategoryHierModel> CategoryHierModels { set; get; }
+        //public List<CategoryItemHierModel> CategoryItemHierModelsNew { set; get; }
         public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
         public List<DemogInfoCountryModel> DeliveryDemogInfoCountryModels { set; get; }
         public List<SelectListItem> DeliveryDemogInfoCountrySelectListItems { set; get; }

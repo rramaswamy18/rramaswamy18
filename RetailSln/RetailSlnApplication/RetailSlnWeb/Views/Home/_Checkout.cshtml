@@ -1,4 +1,26 @@
 ﻿@model RetailSlnModels.CheckoutModel
+@*<div style="margin: auto; text-align: center; width: 81%;">
+    <h2 class="text-center mb-4" style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+        Checkout
+    </h2>
+    <div style="display: inline-block; padding-right: 18px; width: 45%;">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+        }
+        else
+        {
+            <form id="formLoginUserProfData">
+                @Html.Partial("_LoginUserProfData", Model.LoginUserProfModel)
+            </form>
+        }
+    </div>
+    <div style="display: inline-block; padding-left: 18px; width: 45%;">
+        <form id="formLoginUserProfGuestData">
+            @Html.Partial("_LoginUserProfGuestData", Model.LoginUserProfGuestModel)
+        </form>
+    </div>
+</div>*@
 <div class="container center" id="divOrderProcess">
     @*<p>_Checkout Before</p>
         @Html.Partial("_PaymentInfo3")
@@ -49,10 +71,10 @@
             </ul>
         }
     </div>
-    <div class="col-md-6" style="float: left; padding-left: 18px; text-align: left;">
-        @*@Html.Partial("_LoginUserProfGuest", Model.LoginUserProfGuestModel)*@
+    @*<div class="col-md-6" style="float: left; padding-left: 18px; text-align: left;">-->
+        @Html.Partial("_LoginUserProfGuest", Model.LoginUserProfGuestModel)
         @Html.Partial("_RegisterUserProf", Model.RegisterUserProfModel)
-    </div>
+    </div>*@
     <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
     @{
         Model.PaymentInfoModel.ShoppingCartModel.Checkout = false;

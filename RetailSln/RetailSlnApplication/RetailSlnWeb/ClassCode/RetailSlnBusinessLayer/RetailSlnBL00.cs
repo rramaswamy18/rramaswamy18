@@ -788,7 +788,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // GET: DeliveryInfo
-        public void DeliveryInfo(ref PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void DeliveryInfo(ref PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -898,7 +898,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // POST: DeliveryInfo
-        public void DeliveryInfo(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void DeliveryInfo(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, bool apiFlag, bool webFlag, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -958,24 +958,50 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                if (string.IsNullOrWhiteSpace(parentCategoryIdParm))
-                {
-                    parentCategoryIdParm = aspNetRoleKVPs["ParentCategoryId02"].KVPValueData;
-                }
                 if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(pageSizeParm))
                 {
                     pageNumParm = "1";
                     pageSizeParm = "45";
                 }
-                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+                long? parentCategoryId;
+                try
+                {
+                    parentCategoryId = int.Parse(parentCategoryIdParm);
+                }
+                catch
+                {
+                    //For now hardcode based on role - Modify code to get it from Asp KVP table
+                    //Until data in this table needs to be organizws
+                    switch (aspNetRoleName)
+                    {
+                        case "BULKORDERSROLE":
+                            parentCategoryId = 102;
+                            break;
+                        case "WHOLESALEROLE":
+                            parentCategoryId = 120;
+                            break;
+                        default:
+                            parentCategoryId = 100;
+                            break;
+                    }
+                }
+                string viewName;
+                switch (aspNetRoleName)
+                {
+                    case "BULKORDERSROLE":
+                    case "MARKETINGROLE":
+                    case "WHOLESALEROLE":
+                        viewName = "_OrderItem1";
+                        break;
+                    default:
+                        viewName = "_OrderItem0";
+                        break;
+                }
                 int.TryParse(pageNumParm, out int pageNum);
-                pageNum = pageNum == 0 ? 1 : pageNum;
                 int.TryParse(pageSizeParm, out int pageSize);
                 pageSize = pageSize == 0 ? 45 : pageSize;
-                CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
-                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = categoryLayoutModel.CategoryItemMasterHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
-                int totalRowCount = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null).Count;
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName][parentCategoryId.Value];
+                int totalRowCount = categoryItemMasterHierModels.Count;
                 int pageCount = totalRowCount / pageSize;
                 if (totalRowCount % pageSize != 0)
                 {
@@ -983,16 +1009,14 @@ namespace RetailSlnBusinessLayer
                 }
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
-                    CategoryCount = categoryItemMasterHierModels.Count,
+                    CategoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0],
+                    CategoryItemMasterHierModels = categoryItemMasterHierModels.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList(),
                     PageCount = pageCount,
                     PageNum = pageNum,
                     PageSize = pageSize,
-                    ParentCategoryId = parentCategoryId,
-                    ItemMasterModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll
-                                       (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
-                                       .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * pageSize).Take(pageSize)
-                                       .Select(r => r.ItemMasterModel).ToList(),
+                    ParentCategoryId = parentCategoryId.Value,
                     TotalRowCount = totalRowCount,
+                    ViewName = viewName,
                 };
                 return orderCategoryItemModel;
             }
@@ -1002,7 +1026,122 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
+        #region Commented
+        //public OrderCategoryItemModel OrderCategoryItem_Backup(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        Dictionary<long, CategoryLayoutModel> aspNetRoleCategoryLayoutModels = RetailSlnCache.AspNetRoleCategoryLayoutModels[aspNetRoleName];
+        //        CategoryLayoutModel categoryLayoutModel = aspNetRoleCategoryLayoutModels.Values.ElementAt(0);
+        //        //CategoryLayoutModel categoryLayoutModel = aspNetRoleCategoryLayoutModels[0];
+        //        List<CategoryItemHierModel> categoryItemHierModels = categoryLayoutModel.CategoryItemHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
+        //        if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(pageSizeParm))
+        //        {
+        //            pageNumParm = "1";
+        //            pageSizeParm = "45";
+        //        }
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        int.TryParse(pageNumParm, out int pageNum);
+        //        int.TryParse(pageSizeParm, out int pageSize);
+        //        pageSize = pageSize == 0 ? 45 : pageSize;
+        //        //For now hardcode based on role - Get it from Asp KVP table
+        //        //Until data in this table needs to be organizws
+        //        switch (aspNetRoleName)
+        //        {
+        //            case "BULKORDERSROLE":
+        //                parentCategoryId = 102;
+        //                break;
+        //            case "WHOLESALE":
+        //                parentCategoryId = 120;
+        //                break;
+        //            default:
+        //                parentCategoryId = 100;
+        //                break;
+        //        }
+        //        int totalRowCount = RetailSlnCache.CategoryItemHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemId != null).Count;
+        //        int pageCount = totalRowCount / pageSize;
+        //        if (totalRowCount % pageSize != 0)
+        //        {
+        //            pageCount++;
+        //        }
+        //        OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+        //        {
+        //            //CategoryCount = categoryItemHierModels.Count,
+        //            PageCount = pageCount,
+        //            PageNum = pageNum,
+        //            PageSize = pageSize,
+        //            ParentCategoryId = parentCategoryId,
+        //            ItemMasterModels = RetailSlnCache.CategoryItemHierModels.FindAll
+        //                               (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
+        //                               .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * pageSize).Take(pageSize)
+        //                               .Select(r => r.ItemMasterModel).ToList(),
+        //            TotalRowCount = totalRowCount,
+        //        };
+        //        return orderCategoryItemModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //}
+        //// GET: OrderCategoryItem
+        //public OrderCategoryItemModel OrderCategoryItemBackup2(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //        if (string.IsNullOrWhiteSpace(parentCategoryIdParm))
+        //        {
+        //            parentCategoryIdParm = aspNetRoleKVPs["ParentCategoryId02"].KVPValueData;
+        //        }
+        //        if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(pageSizeParm))
+        //        {
+        //            pageNumParm = "1";
+        //            pageSizeParm = "45";
+        //        }
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        int.TryParse(pageNumParm, out int pageNum);
+        //        pageNum = pageNum == 0 ? 1 : pageNum;
+        //        int.TryParse(pageSizeParm, out int pageSize);
+        //        pageSize = pageSize == 0 ? 45 : pageSize;
+        //        CategoryLayoutModel categoryLayoutModel = RetailSlnCache.CategoryLayoutModels[0];
+        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels = categoryLayoutModel.CategoryItemMasterHierModels.FindAll(x => x.CategoryModel.CategoryStatusId == CategoryStatusEnum.Active);
+        //        int totalRowCount = RetailSlnCache.CategoryItemMasterHierModels.FindAll(x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null).Count;
+        //        int pageCount = totalRowCount / pageSize;
+        //        if (totalRowCount % pageSize != 0)
+        //        {
+        //            pageCount++;
+        //        }
+        //        OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
+        //        {
+        //            //CategoryCount = categoryItemMasterHierModels.Count,
+        //            PageCount = pageCount,
+        //            PageNum = pageNum,
+        //            PageSize = pageSize,
+        //            ParentCategoryId = parentCategoryId,
+        //            ItemMasterModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll
+        //                               (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
+        //                               .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * pageSize).Take(pageSize)
+        //                               .Select(r => r.ItemMasterModel).ToList(),
+        //            TotalRowCount = totalRowCount,
+        //        };
+        //        return orderCategoryItemModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //}
         // GET: OrderCategoryItemList
+        #endregion
         public OrderCategoryItemListModel OrderCategoryItemList(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string rowCountParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1030,10 +1169,10 @@ namespace RetailSlnBusinessLayer
                     ParentCategoryId = parentCategoryId,
                     PageNum = pageNum,
                     RowCount = rowCount,
-                    ItemMasterModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll
-                                       (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
-                                       .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * rowCount).Take(rowCount)
-                                       .Select(r => r.ItemMasterModel).ToList(),
+                    //ItemMasterModels = RetailSlnCache.CategoryItemMasterHierModels.FindAll
+                    //                   (x => x.ParentCategoryId == parentCategoryId && x.ItemMasterId != null)
+                    //                   .OrderBy(x => x.SeqNum).Skip((pageNum - 1) * rowCount).Take(rowCount)
+                    //                   .Select(r => r.ItemMasterModel).ToList(),
                 };
                 return orderCategoryItemListModel;
             }
@@ -1112,7 +1251,7 @@ namespace RetailSlnBusinessLayer
 
         }
         // POST : PaymentInfo1
-        public string PaymentInfo1(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public string PaymentInfo1(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {//CreditSales
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1130,7 +1269,7 @@ namespace RetailSlnBusinessLayer
                 CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
-                CreateOrder(paymentInfoModel, "", "", sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CreateOrder(paymentInfoModel, "", "", sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
                 string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
                 string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
@@ -1188,7 +1327,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // POST : PaymentInfo3
-        public string PaymentInfo3(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public string PaymentInfo3(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {//RazorpayReturn
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1231,7 +1370,7 @@ namespace RetailSlnBusinessLayer
                     CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
                     paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
                     paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
-                    CreateOrder(paymentInfoModel, razorpay_payment_id, razorpay_order_id, sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CreateOrder(paymentInfoModel, razorpay_payment_id, razorpay_order_id, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
                     string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
                     string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
@@ -1262,7 +1401,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // POST : PaymentInfo5
-        public string PaymentInfo5(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public string PaymentInfo5(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {//RazorpayReturn
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1328,7 +1467,7 @@ namespace RetailSlnBusinessLayer
                     CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
                     paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
                     paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
-                    CreateOrder(paymentInfoModel, "", "", sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CreateOrder(paymentInfoModel, "", "", sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     htmlString = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
                     string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
                     string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
@@ -1997,6 +2136,8 @@ namespace RetailSlnBusinessLayer
                 var shippingAndHandlingChargesAmount = shippingAndHandlingChargesRate * paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded;
                 var fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
                 var shoppingCartItemSummaryModelsFromCount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count;
+                List<ShoppingCartItemModel> shoppingCartItemModelTemps = new List<ShoppingCartItemModel>();
+                //ShoppingCartItemModel shoppingCartItemModelTemp;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Add
                 (
                     new ShoppingCartItemModel
@@ -2005,6 +2146,19 @@ namespace RetailSlnBusinessLayer
                         ItemRate = shippingAndHandlingChargesRate,
                         ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " KG - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
                         OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
+                        OrderComments = null,
+                        OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
+                        OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+                    }
+                );
+                shoppingCartItemModelTemps.Add
+                (
+                    new ShoppingCartItemModel
+                    {
+                        ItemId = null,
+                        ItemRate = shippingAndHandlingChargesRate,
+                        ItemShortDesc = "Discount - Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " KG - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                        OrderAmount = -1 * (shippingAndHandlingChargesAmount + fuelCharges),
                         OrderComments = null,
                         OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
                         OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
@@ -2026,16 +2180,33 @@ namespace RetailSlnBusinessLayer
                             OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
                         }
                     );
+                    shoppingCartItemModelTemps.Add
+                    (
+                        new ShoppingCartItemModel
+                        {
+                            ItemId = null,
+                            ItemRate = shippingAndHandlingChargesRate,
+                            ItemShortDesc = "Discount - " + salesTaxCaptionId.CodeDataDesc0 + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
+                            OrderAmount = -1 * (shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f,
+                            OrderComments = null,
+                            OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
+                            OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+                        }
+                    );
                 }
                 if (!corpAcctModel.ShippingAndHandlingCharges)
                 {
-                    var shoppingCartItemSummaryModelsToCount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count;
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.AddRange(paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.GetRange(shoppingCartItemSummaryModelsFromCount, shoppingCartItemSummaryModelsToCount - shoppingCartItemSummaryModelsFromCount));
-                    for (int i = shoppingCartItemSummaryModelsToCount; i < paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count; i++)
+                    foreach (var shoppingCartItemModelTemp in shoppingCartItemModelTemps)
                     {
-                        paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].ItemShortDesc = "Discount - " + paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].ItemShortDesc;
-                        paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].OrderAmount = -1 * paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].OrderAmount;
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Add(shoppingCartItemModelTemp);
                     }
+                    //var shoppingCartItemSummaryModelsToCount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count;
+                    //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.InsertRange(shoppingCartItemSummaryModelsToCount, paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.GetRange(shoppingCartItemSummaryModelsFromCount, shoppingCartItemSummaryModelsToCount - shoppingCartItemSummaryModelsFromCount));
+                    //for (int i = shoppingCartItemSummaryModelsToCount; i < paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems.Count; i++)
+                    //{
+                    //    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].ItemShortDesc = "Discount - " + paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].ItemShortDesc;
+                    //    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].OrderAmount = -1 * paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems[i].OrderAmount;
+                    //}
                 }
             }
         }
@@ -2153,7 +2324,7 @@ namespace RetailSlnBusinessLayer
             paymentInfoModel.CreditCardDataModel = creditCardDataModel;
             return;
         }
-        private void CreateOrder(PaymentInfo1Model paymentInfoModel, string razorpay_payment_id, string razorpay_order_id, SessionObjectModel sessionObjectModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateOrder(PaymentInfo1Model paymentInfoModel, string razorpay_payment_id, string razorpay_order_id, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -2161,7 +2332,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                OrderHeader orderHeader = CreateOrderHeader(paymentInfoModel, sessionObjectModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                OrderHeader orderHeader = CreateOrderHeader(paymentInfoModel, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplicationDataContext.AddOrderHeader(orderHeader, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 OrderDetail orderDetail;
                 OrderDetailItemBundle orderDetailItemBundle;
@@ -2213,7 +2384,7 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
-        private OrderHeader CreateOrderHeader(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private OrderHeader CreateOrderHeader(PaymentInfo1Model paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             var orderHeader = new OrderHeader
             {
