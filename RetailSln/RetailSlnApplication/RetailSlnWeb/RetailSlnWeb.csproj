@@ -1802,7 +1802,7 @@
     <Content Include="Views\Shared\_HeaderMenuHamburger.cshtml" />
     <Content Include="Views\Home\_ContactUsData1.cshtml" />
     <Content Include="Views\Home\_ContactUsDetail1.cshtml" />
-    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenuNew.cshtml" />
     <Content Include="Views\Home\_ItemBundleItemListView.cshtml" />
     <Content Include="Views\Home\ItemBundleItemListView.cshtml" />
     <Content Include="Views\GeneralUtility\SqlResult.cshtml" />
@@ -1882,7 +1882,7 @@
     <Content Include="Views\Home\_RegisterUserProf.cshtml" />
     <Content Include="Views\Home\_OrderItem0.cshtml" />
     <Content Include="Views\Home\_OrderItem0 - Copy.cshtml" />
-    <Content Include="Views\Shared\_HeaderMenu - Copy.cshtml" />
+    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

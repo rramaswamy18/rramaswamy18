@@ -735,9 +735,14 @@ namespace RetailSlnWeb.Controllers
                         viewName = "_OrderItem0";
                         break;
                 }
-                var orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, id, pageNum, "45", Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, id, pageNum, "45", sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (ApplicationException ex)
+            {
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = ex.Message }, JsonRequestBehavior.AllowGet);
+                return actionResult;
             }
             catch (Exception exception)
             {

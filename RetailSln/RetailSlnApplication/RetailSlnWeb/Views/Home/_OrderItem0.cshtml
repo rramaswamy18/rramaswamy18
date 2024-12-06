@@ -25,7 +25,7 @@
     var imageCountPerRow = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageCountPerRow"));
     int itemSeqNum = 0, imageIndex = 0, imageCountIndex = 0;
     ItemMasterModel itemMasterModel;
-    @BuildMenu(imageTitle)
+    @*BuildMenuNew(imageTitle)*@
     @BuildPaginationLinks(Model.PageCount)
     <br style="clear: both;" />
     <input id="selectedCategoryId" type="hidden" value="@Model.ParentCategoryId" />
@@ -35,7 +35,7 @@
         imageIndex++;
         imageCountIndex++;
         <div style="display: inline-block; padding: 18px; vertical-align: top; width: @imageDivWidth;">
-            @BuildItem(itemMasterModel, ++itemSeqNum, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
+            @BuildItem(sessionObjectModel, itemMasterModel, ++itemSeqNum, imageIndex, imageDivWidth, imageHeight, imageWidth, clientId, clientName, categoryOrItem)
         </div>
         if (imageCountIndex == imageCountPerRow)
         {
@@ -46,99 +46,169 @@
     <br style="clear: both;" />
     @BuildPaginationLinks(Model.PageCount)
 }
-<style>
-    /*ul li {
+@helper BuildMenuTest(string imageTitle)
+{
+    <style>
+        header {
+            background-color: #9a031e;
+            color: #ffffff;
+            padding: 10px;
+        }
+
+        nav {
+            display: flex;
+        }
+
+        ul {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            margin: 0 10px;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        ul ul {
+            position: absolute;
+            display: none;
+            padding: 0;
+        }
+
+            ul ul li {
+                background-color: #9a031e;
+                display: block;
+                margin-left: 0;
+                padding-bottom: 5px;
+                padding-left: 9px;
+                text-align: left;
+                /*width: 15em;*/
+            }
+
+        li:hover ul {
+            display: block;
+        }
+    </style>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+                <li style="background-color: #9a031e; padding-left: 15px; padding-right: 27px;">
+                    <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+                    <ul class="scrollable-list">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Home</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+}
+@helper BuildMenuNew(string imageTitle)
+{
+    @*Html.Partial("_HeaderMenu", Model)*@
+}
+@helper BuildMenu(string imageTitle)
+{
+    <style>
+        /*ul li {
         background-color: #9a031e;
         display: block;
         margin-left: 0;
         padding-bottom: 5px;
         padding-left: 9px;
         text-align: left;*/
-    /*width: 15em;*/
-    /*}*/
+        /*width: 15em;*/
+        /*}*/
 
-    ul ul {
-        position: absolute;
-        display: none;
-        padding: 0;
-    }
-
-        ul ul li {
-            background-color: #9a031e;
-            display: block;
-            margin-left: 0;
-            padding-bottom: 5px;
-            padding-left: 9px;
-            text-align: left;
-            /*width: 15em;*/
+        ul ul {
+            position: absolute;
+            display: none;
+            padding: 0;
         }
 
-    li:hover ul {
-        display: block;
-    }
-</style>
-@helper BuildMenuNew(string imageTitle)
-{
-    @Html.Partial("_HeaderMenu", Model)
-}
-@helper BuildMenu(string imageTitle)
-{
+            ul ul li {
+                background-color: #9a031e;
+                display: block;
+                margin-left: 0;
+                padding-bottom: 5px;
+                padding-left: 9px;
+                text-align: left;
+                /*width: 15em;*/
+            }
+
+        li:hover ul {
+            display: block;
+        }
+    </style>
     int i;
     string selectedCategoryDesc = "";
-    <ul style="display: flex; justify-content: center; list-style-type: none;">
-        <li style="background-color: #9a031e; padding-left: 12px; line-height: 45px;">
-            @*<a href="#" style="color: #ffffff; font-size: 15px; font-weight: bold;">Home</a>*@
-        </li>
-        @{
-            for (i = 0; i < 7; i++)
-            {
-                <li style="background-color: #9a031e; padding-left: 15px; padding-right: 15px; line-height: 45px;">
-                    @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
-                    {
-                        selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
-                        <a class="active" href="javascript: void(0);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
-                            @Model.CategoryModels[i].CategoryDesc
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
-                            @Model.CategoryModels[i].CategoryDesc
-                        </a>
-                    }
-                </li>
-            }
-            if (Model.CategoryModels.Count >= i)
-            {
-                <li style="background-color: #9a031e; padding-left: 15px; padding-right: 27px; line-height: 45px;">
-                    <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
-                    <ul class="scrollable-list">
-                        @for (; i < Model.CategoryModels.Count; i++)
+    <div class="col-md-12">
+        <ul style="display: flex; justify-content: center; list-style-type: none;">
+            <li style="background-color: #9a031e; padding-left: 12px; line-height: 45px;">
+                @*<a href="#" style="color: #ffffff; font-size: 15px; font-weight: bold;">Home</a>*@
+            </li>
+            @{
+                for (i = 0; i < 7 && i < Model.CategoryModels.Count; i++)
+                {
+                    <li style="background-color: #9a031e; padding-left: 15px; padding-right: 15px; line-height: 45px;">
+                        @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
                         {
-                            <li style="background-color: #9a031e; padding-left: 5px; padding-right: 5px; line-height: 18px;">
-                                @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
-                                {
-                                    selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
-                                    <a class="active" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
-                                        @Model.CategoryModels[i].CategoryDesc
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
-                                        @Model.CategoryModels[i].CategoryDesc
-                                    </a>
-                                }
-                            </li>
+                            selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
+                            <a class="active" href="javascript: void(0);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
+                                @Model.CategoryModels[i].CategoryDesc
+                            </a>
                         }
-                    </ul>
-                </li>
+                        else
+                        {
+                            <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
+                                @Model.CategoryModels[i].CategoryDesc
+                            </a>
+                        }
+                    </li>
+                }
+                if (Model.CategoryModels.Count >= i)
+                {
+                    <li style="background-color: #9a031e; padding-left: 15px; padding-right: 27px; line-height: 45px;">
+                        <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+                        <ul class="scrollable-list">
+                            @for (; i < Model.CategoryModels.Count; i++)
+                            {
+                                <li style="background-color: #9a031e; padding-left: 5px; padding-right: 5px; line-height: 18px;">
+                                    @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
+                                    {
+                                        selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
+                                        <a class="active" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                                            @Model.CategoryModels[i].CategoryDesc
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                                            @Model.CategoryModels[i].CategoryDesc
+                                        </a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
             }
-        }
-        <li style="background-color: #9a031e; padding-right: 27px; line-height: 45px;">
-            <a href="#" style="color: #61ce70; font-size: 15px; font-weight: bold;">@selectedCategoryDesc</a>
-        </li>
-    </ul>
+            <li style="background-color: #9a031e; padding-right: 27px; line-height: 45px;">
+                <a href="#" style="color: #61ce70; font-size: 15px; font-weight: bold;">@selectedCategoryDesc</a>
+            </li>
+        </ul>
+    </div>
 }
 @helper BuildPaginationLinks(int pageCount)
 {
@@ -195,7 +265,7 @@
         }
     </ul>
 }
-@helper BuildItem(ItemMasterModel itemMasterModel, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+@helper BuildItem(SessionObjectModel sessionObjectModel, ItemMasterModel itemMasterModel, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
     //var shoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems;
     //ShoppingCartItemModel shoppingCartItemModel;
@@ -308,7 +378,10 @@
                     <tr>
                         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px;">Rate</th>
                         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; width: 100%;">Spec(s)</th>
-                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; width: 100%;">Disc.</th>
+                        @if (sessionObjectModel != null)
+                        {
+                            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; width: 100%;">Disc.</th>
+                        }
                     </tr>
                     @foreach (var itemModel in itemMasterModel.ItemModels)
                     {
@@ -316,9 +389,9 @@
                             @{
                                 optionText = "";
                                 discountPercent = "";
-                                if (itemModel.ItemDicountModels.Count > 0)
+                                if (itemModel.ItemDiscountModels.Count > 0)
                                 {
-                                    discountPercent = (itemModel.ItemDicountModels[0].DiscountPercent.ToString("0.00") + "%");
+                                    discountPercent = (itemModel.ItemDiscountModels[0].DiscountPercent.ToString("0.00") + "%");
                                 }
                                 else
                                 {
@@ -338,9 +411,12 @@
                             <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 11px; font-weight: 600; padding: 3px;">
                                 @optionText
                             </td>
-                            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 11px; font-weight: 600; padding: 3px; text-align: right;">
-                                @discountPercent
-                            </td>
+                            @if (sessionObjectModel != null)
+                            {
+                                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 11px; font-weight: 600; padding: 3px; text-align: right;">
+                                    @discountPercent
+                                </td>
+                            }
                         </tr>
                     }
                 </table>

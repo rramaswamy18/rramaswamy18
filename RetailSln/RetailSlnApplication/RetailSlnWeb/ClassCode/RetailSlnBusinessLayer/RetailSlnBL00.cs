@@ -951,7 +951,7 @@ namespace RetailSlnBusinessLayer
             return;
         }
         // GET: OrderCategoryItem
-        public OrderCategoryItemModel OrderCategoryItem(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public OrderCategoryItemModel OrderCategoryItem(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1000,6 +1000,10 @@ namespace RetailSlnBusinessLayer
                 int.TryParse(pageNumParm, out int pageNum);
                 int.TryParse(pageSizeParm, out int pageSize);
                 pageSize = pageSize == 0 ? 45 : pageSize;
+                if (RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0].FirstOrDefault(x => x.CategoryId == parentCategoryId.Value) == null)
+                {
+                    throw new ApplicationException("This page is backdated. Reloading page.");
+                }
                 List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName][parentCategoryId.Value];
                 int totalRowCount = categoryItemMasterHierModels.Count;
                 int pageCount = totalRowCount / pageSize;
@@ -1018,6 +1022,24 @@ namespace RetailSlnBusinessLayer
                     TotalRowCount = totalRowCount,
                     ViewName = viewName,
                 };
+                ItemDiscountModel itemDiscountModel;
+                long? corpAcctId = ((ApplSessionObjectModel)sessionObjectModel?.ApplSessionObjectModel)?.CorpAcctModel.CorpAcctId;
+                if (corpAcctId == null)
+                {
+                    corpAcctId = 0;
+                }
+                foreach (var categoryItemMasterHierModel in orderCategoryItemModel.CategoryItemMasterHierModels)
+                {
+                    foreach (var itemModel in categoryItemMasterHierModel.ItemMasterModel.ItemModels)
+                    {
+                        itemModel.ItemDiscountModels = new List<ItemDiscountModel>();
+                        itemDiscountModel = RetailSlnCache.ItemDiscountModels.FirstOrDefault(x => x.CorpAcctId == corpAcctId && x.ItemId == itemModel.ItemId);
+                        if (itemDiscountModel != null)
+                        {
+                            itemModel.ItemDiscountModels.Add(itemDiscountModel);
+                        }
+                    }
+                }
                 return orderCategoryItemModel;
             }
             catch (Exception exception)

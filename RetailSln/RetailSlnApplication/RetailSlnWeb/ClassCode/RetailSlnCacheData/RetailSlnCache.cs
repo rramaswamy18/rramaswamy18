@@ -264,8 +264,8 @@ namespace RetailSlnCacheData
                 {
                     itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
                 }
-                itemModel.ItemDicountModels = new List<ItemDiscountModel>();
-                itemModel.ItemDicountModels.AddRange(ItemDiscountModels.FindAll(x => x.ItemId == itemModel.ItemId));
+                itemModel.ItemDiscountModels = new List<ItemDiscountModel>();
+                //itemModel.ItemDiscountModels.AddRange(ItemDiscountModels.FindAll(x => x.ItemId == itemModel.ItemId));
             }
             return;
         }

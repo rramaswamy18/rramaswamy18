@@ -1,8 +1,7 @@
-﻿@model OrderCategoryItemModel
-@using ArchitectureLibraryCacheData
+﻿@using ArchitectureLibraryCacheData
 @using ArchitectureLibraryModels
-@using RetailSlnEnumerations
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @{
     //DivineBija.in --> 97
@@ -10,6 +9,17 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int mainCategoryCount = 5;
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
+    var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
 }
 <style>
     ul ul {
@@ -31,7 +41,8 @@
     li:hover ul {
         display: block;
     }
-
+</style>
+<style>
     .scrollable-list {
         width: 153px;
         z-index: 20000;
@@ -59,53 +70,33 @@
 <ul class="nav navbar-nav">
     @{
         int i;
-        string selectedCategoryDesc = "";
-        for (i = 0; i < mainCategoryCount; i++)
+        for (i = 0; i < mainCategoryCount && i < categoryModels.Count; i++)
         {
-            <li style="background-color: #9a031e; padding-left: 15px; padding-right: 15px; line-height: 45px;">
-                @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
-                {
-                    selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
-                    <a class="active" href="javascript: void(0);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
-                        @Model.CategoryModels[i].CategoryDesc
-                    </a>
-                }
-                else
-                {
-                    <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
-                        @Model.CategoryModels[i].CategoryDesc
-                    </a>
-                }
+            <li>
+                <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryModels[i].CategoryId</span>
+                <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                    @categoryModels[i].CategoryDesc
+                </a>
             </li>
         }
     }
-    @if (Model.CategoryModels.Count >= i)
-    {
-        <li style="background-color: #9a031e; padding-left: 15px; padding-right: 27px; line-height: 45px;">
-            <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
-            <ul class="scrollable-list">
-                @for (; i < Model.CategoryModels.Count; i++)
-                {
-                    <li style="background-color: #9a031e; padding-left: 5px; padding-right: 5px; line-height: 18px;">
-                        @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
-                        {
-                            selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
-                            <a class="active" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
-                                @Model.CategoryModels[i].CategoryDesc
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
-                                @Model.CategoryModels[i].CategoryDesc
-                            </a>
-                        }
-                    </li>
-                }
-            </ul>
-        </li>
-    }
-    <li style="background-color: #9a031e; padding-right: 27px; line-height: 45px;">
-        <a href="#" style="color: #61ce70; font-size: 15px; font-weight: bold;">@selectedCategoryDesc</a>
+    <li>
+        <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+        <ul class="scrollable-list">
+            @for (; i < categoryModels.Count; i++)
+            {
+                <li>
+                    <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryModels[i].CategoryId</span>
+                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                        @categoryModels[i].CategoryDesc
+                    </a>
+                </li>
+            }
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" style="cursor: default;">
+            <span id="selectedCategoryDesc" style="color: #61ce70; font-weight: bold;"></span>
+        </a>
     </li>
 </ul>

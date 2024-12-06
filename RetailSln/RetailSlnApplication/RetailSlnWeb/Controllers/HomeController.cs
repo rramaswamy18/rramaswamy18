@@ -62,7 +62,7 @@ namespace RetailSlnWeb.Controllers
                 {
                     aspNetRoleName = sessionObjectModel.AspNetRoleName;
                 }
-                OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("Index", orderCategoryItemModel);
             }
             catch (Exception exception)
@@ -369,6 +369,14 @@ namespace RetailSlnWeb.Controllers
             //actionResult = PartialView("_ContactUsData", contactUsModel);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
+        }
+
+        // GET: Error
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult Error()
+        {
+            return View();
         }
 
         // GET: Error404

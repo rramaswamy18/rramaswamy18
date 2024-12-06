@@ -642,7 +642,7 @@ namespace RetailSlnDataLayer
             List<ItemDiscountModel> itemDiscountModels = new List<ItemDiscountModel>();
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemDiscount WHERE CorpAcctId = 0 ORDER BY ItemId", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemDiscount ORDER BY CorpAcctId, ItemId", sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 while (sqlDataReader.Read())
                 {

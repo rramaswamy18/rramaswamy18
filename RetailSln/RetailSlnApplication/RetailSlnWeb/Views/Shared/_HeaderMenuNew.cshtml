@@ -1,0 +1,111 @@
+﻿@model OrderCategoryItemModel
+@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnEnumerations
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    //DivineBija.in --> 97
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int mainCategoryCount = 6;
+}
+<style>
+    ul ul {
+        position: absolute;
+        display: none;
+        padding: 0;
+    }
+
+        ul ul li {
+            background-color: #9a031e;
+            display: block;
+            margin-left: 0;
+            padding-bottom: 5px;
+            padding-left: 9px;
+            text-align: left;
+            /*width: 15em;*/
+        }
+
+    li:hover ul {
+        display: block;
+    }
+
+    .scrollable-list {
+        width: 153px;
+        z-index: 20000;
+        max-height: 360px;
+        overflow-y: auto;
+    }
+
+        .scrollable-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .scrollable-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+            .scrollable-list::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+</style>
+<ul class="nav navbar-nav" style="width: 99%;">
+    @{
+        int i;
+        string selectedCategoryDesc = "";
+        for (i = 0; i < mainCategoryCount && i < Model.CategoryModels.Count; i++)
+        {
+            <li style="background-color: #9a031e; padding-left: 9px; padding-right: 9px; line-height: 36px;">
+                @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
+                {
+                    selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
+                    <a class="active" href="javascript: void(0);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
+                        @Model.CategoryModels[i].CategoryDesc
+                    </a>
+                }
+                else
+                {
+                    <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 15px; font-weight: bold;">
+                        @Model.CategoryModels[i].CategoryDesc
+                    </a>
+                }
+            </li>
+        }
+    }
+    @if (Model.CategoryModels.Count >= i && Model.CategoryModels.Count > mainCategoryCount)
+    {
+        <li style="background-color: #9a031e; padding-left: 15px; padding-right: 27px; line-height: 36px;">
+            <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+            <ul class="scrollable-list">
+                @for (; i < Model.CategoryModels.Count; i++)
+                {
+                    <li style="background-color: #9a031e; padding-left: 5px; padding-right: 5px; line-height: 18px;">
+                        @if (Model.CategoryModels[i].CategoryId == Model.ParentCategoryId)
+                        {
+                            selectedCategoryDesc = Model.CategoryModels[i].CategoryDesc;
+                            <a class="active" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                                @Model.CategoryModels[i].CategoryDesc
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@Model.CategoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 14px; font-weight: bold;" title="@(Model.CategoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                                @Model.CategoryModels[i].CategoryDesc
+                            </a>
+                        }
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    <li style="background-color: #9a031e; padding-right: 27px; line-height: 45px;">
+        <a href="#" style="color: #61ce70; font-size: 15px; font-weight: bold;">@selectedCategoryDesc</a>
+    </li>
+</ul>

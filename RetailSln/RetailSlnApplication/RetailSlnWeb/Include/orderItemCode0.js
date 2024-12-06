@@ -620,6 +620,11 @@ function searchOrderCreatedForEmailAddress_onclick() {
                 if (responseData.success) {
                     document.getElementById("OrderCreatedForPersonId").innerHTML = responseData.htmlString;
                 }
+                else if (responseData.errorCode === "RELOAD_PAGE") {
+                    alert(responseData.message); // Optional: Show an alert message.
+                    location.reload(); // Reload the page.
+                    window.location.href = "/Home/Error";
+                }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = "Error occurred";
                 }

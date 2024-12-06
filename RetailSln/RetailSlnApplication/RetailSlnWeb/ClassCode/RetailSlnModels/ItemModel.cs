@@ -91,7 +91,7 @@ namespace RetailSlnModels
 
         public List<ItemImageModel> ItemImageModels { set; get; }
 
-        public List<ItemDiscountModel> ItemDicountModels { set; get; }
+        public List<ItemDiscountModel> ItemDiscountModels { set; get; }
 
         public List<ItemSpecModel> ItemItemSpecModels { set; get; }
 
