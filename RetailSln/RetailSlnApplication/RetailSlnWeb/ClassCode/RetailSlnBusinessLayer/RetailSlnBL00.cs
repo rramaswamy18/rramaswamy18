@@ -828,14 +828,14 @@ namespace RetailSlnBusinessLayer
                             AspNetUserId = sessionObjectModel.AspNetUserId,
                             //AuthorizedSignature = ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignature", ""),
                             //AuthorizedSignatureText = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignatureFont", "")),
-                            CorpAcctModel = ((ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel).CorpAcctModel,
-                            EmailAddress = sessionObjectModel.EmailAddress,
-                            FirstName = sessionObjectModel.FirstName,
-                            LastName = sessionObjectModel.LastName,
-                            PersonId = sessionObjectModel.PersonId,
+                            CorpAcctModel = ((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel,
+                            EmailAddress = createForSessionObject.EmailAddress,
+                            FirstName = createForSessionObject.FirstName,
+                            LastName = createForSessionObject.LastName,
+                            PersonId = createForSessionObject.PersonId,
                             TelephoneCode = null,
-                            TelephoneCountryId = null,
-                            TelephoneNumber = sessionObjectModel.PhoneNumber,
+                            TelephoneCountryId = createForSessionObject.TelephoneCountryId.Value,
+                            TelephoneNumber = createForSessionObject.PhoneNumber,
                         };
                         paymentInfoModel.CouponPaymentModel = new CouponPaymentModel
                         {
@@ -864,7 +864,7 @@ namespace RetailSlnBusinessLayer
                             ResponseMessages = new List<string>(),
                             ResponseTypeId = ResponseTypeEnum.Success,
                         };
-                        BuildDeliveryInfoLookup(paymentInfoModel, sessionObjectModel, apiFlag, webFlag, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        BuildDeliveryInfoLookup(paymentInfoModel, createForSessionObject, apiFlag, webFlag, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     else
                     {
@@ -906,8 +906,8 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                CorpAcctModel corpAcctModel = (((ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel).CorpAcctModel);
-                CalculateDiscounts(paymentInfoModel, sessionObjectModel.PersonId, corpAcctModel.CorpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CorpAcctModel corpAcctModel = (((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel);
+                CalculateDiscounts(paymentInfoModel, createForSessionObject.PersonId, corpAcctModel.CorpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateShoppingCartTotals(paymentInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 var salesTaxListModels = GetSalesTaxListModels(paymentInfoModel.DeliveryAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 var salesTaxCaptionIds = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SalesTaxType", "");
@@ -1004,7 +1004,15 @@ namespace RetailSlnBusinessLayer
                 {
                     throw new ApplicationException("This page is backdated. Reloading page.");
                 }
-                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName][parentCategoryId.Value];
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+                try
+                {
+                    categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryItemMasterHierModels[aspNetRoleName][parentCategoryId.Value];
+                }
+                catch
+                {
+                    categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+                }
                 int totalRowCount = categoryItemMasterHierModels.Count;
                 int pageCount = totalRowCount / pageSize;
                 if (totalRowCount % pageSize != 0)
@@ -1681,77 +1689,77 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
-        private string ConvertAmountToWords(long amount)
-        {
-            long quotient;
-            string[] numberUnits = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
-            string[] numberTens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
-            string amountInWords;
+        //private string ConvertAmountToWords(long amount)
+        //{
+        //    long quotient;
+        //    string[] numberUnits = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+        //    string[] numberTens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+        //    string amountInWords;
 
-            amountInWords = "";
+        //    amountInWords = "";
 
-            quotient = amount / 1000;
-            amount = amount - quotient * 1000;
+        //    quotient = amount / 1000;
+        //    amount = amount - quotient * 1000;
 
-            if (quotient > 0)
-            {
-                amountInWords += numberUnits[quotient] + " Thousand";
-            }
+        //    if (quotient > 0)
+        //    {
+        //        amountInWords += numberUnits[quotient] + " Thousand";
+        //    }
 
-            quotient = amount / 100;
-            amount = amount - quotient * 100;
+        //    quotient = amount / 100;
+        //    amount = amount - quotient * 100;
 
-            if (quotient > 0)
-            {
-                amountInWords += numberUnits[quotient] + " Hundred";
-            }
+        //    if (quotient > 0)
+        //    {
+        //        amountInWords += numberUnits[quotient] + " Hundred";
+        //    }
 
-            if (amount > 0 && amount < 20)
-            {
-                if (amountInWords == "")
-                {
-                    ;
-                }
-                else
-                {
-                    amountInWords += " ";
-                }
-                amountInWords += numberUnits[amount];
-            }
-            else
-            {
-                quotient = amount / 10;
-                amount = amount - quotient * 10;
-                if (quotient > 0)
-                {
-                    if (amountInWords == "")
-                    {
-                        ;
-                    }
-                    else
-                    {
-                        amountInWords += " ";
-                    }
-                    amountInWords += numberTens[quotient];
-                }
-                if (amount > 0 && amount < 20)
-                {
-                    if (amountInWords == "")
-                    {
-                        ;
-                    }
-                    else
-                    {
-                        amountInWords += " ";
-                    }
-                    amountInWords += numberUnits[amount];
-                }
-            }
+        //    if (amount > 0 && amount < 20)
+        //    {
+        //        if (amountInWords == "")
+        //        {
+        //            ;
+        //        }
+        //        else
+        //        {
+        //            amountInWords += " ";
+        //        }
+        //        amountInWords += numberUnits[amount];
+        //    }
+        //    else
+        //    {
+        //        quotient = amount / 10;
+        //        amount = amount - quotient * 10;
+        //        if (quotient > 0)
+        //        {
+        //            if (amountInWords == "")
+        //            {
+        //                ;
+        //            }
+        //            else
+        //            {
+        //                amountInWords += " ";
+        //            }
+        //            amountInWords += numberTens[quotient];
+        //        }
+        //        if (amount > 0 && amount < 20)
+        //        {
+        //            if (amountInWords == "")
+        //            {
+        //                ;
+        //            }
+        //            else
+        //            {
+        //                amountInWords += " ";
+        //            }
+        //            amountInWords += numberUnits[amount];
+        //        }
+        //    }
 
-            amountInWords += " and 00/100 Dollars.........";
+        //    amountInWords += " and 00/100 Dollars.........";
 
-            return amountInWords;
-        }
+        //    return amountInWords;
+        //}
         private static string ConvertAmountToWordsRupees(float amountParm)
         {
             long amount = (long)amountParm, quotient;
@@ -2411,11 +2419,13 @@ namespace RetailSlnBusinessLayer
             var orderHeader = new OrderHeader
             {
                 ClientId = clientId,
-                EmailAddress = sessionObjectModel.EmailAddress,
-                OrderCreatedByPersonId = sessionObjectModel.PersonId,
+                EmailAddress = createForSessionObject.EmailAddress,
+                OrderCreatedForPersonId = createForSessionObject.PersonId,
                 OrderDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 OrderStatusId = (long)OrderStatusEnum.Open,
                 PersonId = sessionObjectModel.PersonId,
+                TelephoneCountryId = sessionObjectModel.TelephoneCountryId.Value,
+                TelephoneNumber = sessionObjectModel.PhoneNumber,
             };
             return orderHeader;
         }

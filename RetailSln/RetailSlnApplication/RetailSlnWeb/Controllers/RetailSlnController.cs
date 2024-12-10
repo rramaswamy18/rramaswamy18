@@ -108,10 +108,16 @@ namespace RetailSlnWeb.Controllers
                         if (long.TryParse(id, out long personId) && personId > 0)
                         {
                             createForSessionObject = archLibBL.BuildSessionObject(personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
                         }
                         else
                         {
                             createForSessionObject = null;
+                        }
+                        if (createForSessionObject == null)
+                        {
+                            createForSessionObject = (SessionObjectModel)Session["SessionObject"];
                         }
                         Session["CreateForSessionObject"] = createForSessionObject;
                         retailSlnBL.DeliveryInfo(ref paymentInfoModel, (SessionObjectModel)Session["SessionObject"], createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -160,6 +166,9 @@ namespace RetailSlnWeb.Controllers
                 {
                     ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
+                    SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
                     Session["SessionObject"] = sessionObjectModel;
                     Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
                     var identity = new ClaimsIdentity
@@ -291,6 +300,7 @@ namespace RetailSlnWeb.Controllers
                 }
                 else
                 {
+                    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
                     var paymentInfoModelTemp = ((PaymentInfo1Model)Session["PaymentInfo"]);
                     paymentInfoModel.CouponPaymentModel = paymentInfoModelTemp.CouponPaymentModel;
                     paymentInfoModel.GiftCertPaymentModel = paymentInfoModelTemp.GiftCertPaymentModel;
@@ -306,7 +316,7 @@ namespace RetailSlnWeb.Controllers
                     paymentInfoModel.OrderSummaryModel.TelephoneNumber = paymentInfoModelTemp.OrderSummaryModel.TelephoneNumber;
                     paymentInfoModel.ShoppingCartModel = paymentInfoModelTemp.ShoppingCartModel;
                     paymentInfoModel.CreditCardDataModel = paymentInfoModelTemp.CreditCardDataModel;
-                    retailSlnBL.BuildDeliveryInfoLookup(paymentInfoModel, sessionObjectModel, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    retailSlnBL.BuildDeliveryInfoLookup(paymentInfoModel, createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                     retailSlnBL.UpdateDeliveryAddressInfo(paymentInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                     ModelState.Clear();
                     if (
@@ -351,15 +361,19 @@ namespace RetailSlnWeb.Controllers
                     }
                     if (ModelState.IsValid)
                     {
-                        SessionObjectModel createForSessionObject;
-                        try
-                        {
-                            createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                        }
-                        catch
-                        {
-                            createForSessionObject = null;
-                        }
+                        //SessionObjectModel createForSessionObject;
+                        //try
+                        //{
+                        //    createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                        //}
+                        //catch
+                        //{
+                        //    createForSessionObject = null;
+                        //}
+                        //if (createForSessionObject == null)
+                        //{
+                        //    createForSessionObject = (SessionObjectModel)Session["SessionObjectModel"];
+                        //}
                         retailSlnBL.DeliveryInfo(paymentInfoModel, sessionObjectModel, createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                         Session["PaymentInfo"] = paymentInfoModel;
                         if (paymentInfoModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Success)
@@ -723,20 +737,8 @@ namespace RetailSlnWeb.Controllers
                 {
                     aspNetRoleName = sessionObjectModel.AspNetRoleName;
                 }
-                string viewName;
-                switch (aspNetRoleName)
-                {
-                    case "BULKORDERSROLE":
-                    case "MARKETINGROLE":
-                    case "WHOLESALEROLE":
-                        viewName = "_OrderItem1";
-                        break;
-                    default:
-                        viewName = "_OrderItem0";
-                        break;
-                }
                 var orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, id, pageNum, "45", sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, viewName, orderCategoryItemModel);
+                htmlString = archLibBL.ViewToHtmlString(this, orderCategoryItemModel.ViewName, orderCategoryItemModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (ApplicationException ex)
@@ -778,14 +780,10 @@ namespace RetailSlnWeb.Controllers
                 success = true;
                 processMessage = "SUCCESS!!!";
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                SessionObjectModel createForSessionObject;
-                try
+                SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                if (createForSessionObject == null)
                 {
-                    createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                }
-                catch
-                {
-                    createForSessionObject = null;
+                    createForSessionObject = sessionObjectModel;
                 }
                 htmlString = retailSlnBL.PaymentInfo1(paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
@@ -879,13 +877,10 @@ namespace RetailSlnWeb.Controllers
             PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
             SessionObjectModel createForSessionObject;
-            try
+            createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+            if (createForSessionObject == null)
             {
-                createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-            }
-            catch
-            {
-                createForSessionObject = null;
+                createForSessionObject = sessionObjectModel;
             }
             string htmlString = retailSlnBL.PaymentInfo3(paymentInfoModel, sessionObjectModel, createForSessionObject, razorpay_payment_id, razorpay_order_id, razorpay_signature, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             ArchLibBL archLibBL = new ArchLibBL();
@@ -987,14 +982,10 @@ namespace RetailSlnWeb.Controllers
                     bool modelValidation = TryValidateModel(creditCardProcessModel);
                     if (modelValidation)
                     {
-                        SessionObjectModel createForSessionObject;
-                        try
+                        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                        if (createForSessionObject == null)
                         {
-                            createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                        }
-                        catch
-                        {
-                            createForSessionObject = null;
+                            createForSessionObject = sessionObjectModel;
                         }
                         htmlString = retailSlnBL.PaymentInfo5(paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                         if (htmlString != null)

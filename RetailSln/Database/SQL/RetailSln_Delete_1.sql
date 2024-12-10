@@ -104,12 +104,19 @@ DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);
 DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetailItemBundle', RESEED, 0);
 
+SELECT IDENT_CURRENT('RetailSlnSch.OrderDetail')
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', NORESEED)
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
 
+SELECT IDENT_CURRENT('RetailSlnSch.OrderPayment')
 DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', NORESEED);
 DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
 
+SELECT IDENT_CURRENT('RetailSlnSch.OrderDelivery')
+DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', NORESEED)
+DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);
+
+SELECT IDENT_CURRENT('RetailSlnSch.OrderHeader')
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', NORESEED);
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);
 

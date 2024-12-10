@@ -13,10 +13,12 @@ namespace RetailSlnDataLayer
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@EmailAddress"].Value = orderHeader.EmailAddress;
-            sqlCommand.Parameters["@OrderCreatedByPersonId"].Value = (int)orderHeader.OrderCreatedByPersonId;
+            sqlCommand.Parameters["@OrderCreatedForPersonId"].Value = (int)orderHeader.OrderCreatedForPersonId;
             sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
             sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
             sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
+            sqlCommand.Parameters["@TelephoneCountryId"].Value = orderHeader.TelephoneCountryId;
+            sqlCommand.Parameters["@TelephoneNumber"].Value = orderHeader.TelephoneNumber;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignOrderDetail(OrderDetail orderDetail, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

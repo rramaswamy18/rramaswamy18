@@ -528,6 +528,8 @@ namespace RetailSlnWeb.Controllers
                     ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
                     SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
                     Session["SessionObject"] = sessionObjectModel;
                     Session["CreateForSessionObject"] = createForSessionObject;
                     Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);

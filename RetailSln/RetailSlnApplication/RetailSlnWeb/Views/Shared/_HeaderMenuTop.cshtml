@@ -8,14 +8,14 @@
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 15px;">
     <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-right: 0px; text-align: center;">
             <a href="@Url.Action("Index", "Home")" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
                 <img alt="View Cart - @imageTitle" src="~/Images/Home3.png" style="height: 27px; width: 27px;" title="View Cart -@imageTitle" />
                 <br />
-                <p class="text-overflow-ellipsis">Home</p>
+                <p class="text-overflow-ellipsis" style="font-size: 12px; font-weight: bold;">Home</p>
             </a>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-right: 0px; text-align: center;">
             <a href="javascript: void(0);" onclick="javascript: return shoppingCart_onclick();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
                 <img alt="View Cart - @imageTitle" src="~/Images/ShoppingCart1.png" style="height: 27px; width: 27px;" title="View Cart -@imageTitle" />
                 <span id="shoppingCartItemsCount" style="display: none;"></span>
@@ -23,35 +23,38 @@
                     $0.00
                 </span>
                 <br />
-                <p class="text-overflow-ellipsis">View Cart</p>
+                @*<div style="display: none;"></div>*@
+                <p class="text-overflow-ellipsis" style="font-size: 12px; font-weight: bold;">View Cart</p>
             </a>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-right: 0px; text-align: center;">
             <a href="javascript: void(0);" onclick="javascript: return checkoutValidate_onclick();" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Checkout - @imageTitle">
                 <img alt="Checkout - @imageTitle" src="~/Images/Checkout2.png" style="height: 27px; width: 27px;" title="Checkout - @imageTitle" />
                 <br />
-                Checkout
+                <p class="text-overflow-ellipsis" style="font-size: 12px; font-weight: bold;">Checkout</p>
             </a>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-right: 0px; text-align: center;">
             <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Register - @imageTitle">
                 <img alt="Register - @imageTitle" src="~/Images/Register1.png" style="height: 27px; width: 27px;" title="Register - @imageTitle" />
                 <br />
-                Register
+                <p class="text-overflow-ellipsis" style="font-size: 12px; font-weight: bold;">Register</p>
             </a>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-right: 0px; text-align: center;">
             <a href="@Url.Action("LoginUserProf", "Home")" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Sign in - @imageTitle">
                 <img alt="Sign in - @imageTitle" src="~/Images/SignIn2.png" style="height: 27px; width: 27px;" title="Sign in - @imageTitle" />
                 <br />
-                Sign In
+                <p class="text-overflow-ellipsis" style="font-size: 12px; font-weight: bold;">Sign In</p>
             </a>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-right: 0px; text-align: center;">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-right: 0px; text-align: center;">
             <a href="@Url.Action("Logout", "Home")" style="color: #333333; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="Logout - @imageTitle">
                 <img alt="Logout - @imageTitle" src="~/Images/Logout1.png" style="height: 27px; width: 27px;" title="Logout - @imageTitle" />
                 <br />
-                Logout
+                <p class="text-overflow-ellipsis" style="font-size: 12px; font-weight: bold;">Logout</p>
             </a>
         </div>
     </div>

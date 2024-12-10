@@ -1526,7 +1526,7 @@
     <Content Include="Views\Shared\_Error.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_FooterMenu.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LayoutNew.cshtml" />
     <Content Include="Views\Shared\_LoadingModal.cshtml" />
     <Content Include="Views\Shared\_Modal.cshtml" />
     <Content Include="Views\Shared\_ResponseObject.cshtml" />
@@ -1542,7 +1542,6 @@
     <Content Include="Views\Dashboard\_ItemMasterList.cshtml" />
     <Content Include="Views\Dashboard\_ItemMasterInfo.cshtml" />
     <Content Include="Views\Home\LoginUserProf.cshtml" />
-    <Content Include="Views\Home\Index - Copy.cshtml" />
     <Content Include="Views\Home\Payment.cshtml" />
     <Content Include="Views\Home\PicGallery.cshtml" />
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
@@ -1745,6 +1744,8 @@
     <Content Include="Views\Home\_OrderItem0.cshtml" />
     <Content Include="Views\Home\_OrderItem0 - Copy.cshtml" />
     <Content Include="Views\Shared\_HeaderMenu.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -43,7 +43,7 @@ namespace RetailSlnModels
 
         public string TelephoneCode { set; get; }
 
-        public string TelephoneCountryId { set; get; }
+        public long TelephoneCountryId { set; get; }
 
         public string TelephoneNumber { set; get; }
 

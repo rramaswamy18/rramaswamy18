@@ -367,7 +367,7 @@ SELECT ProductItemId, * FROM RetailSlnSch.ItemMaster WHERE ItemMasterId IN(139, 
 --Begin Corp Acct Discount
         TRUNCATE TABLE RetailSlnSch.ItemDiscount
         INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
-        SELECT 3 AS ClientId, CorpAcct.CorpAcctId, Item.ItemId,DivineBija_CorpAcctItems.Discount
+        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId,DivineBija_CorpAcctItems.Discount
           FROM DivineBija_CorpAcctItems
     INNER JOIN RetailSlnSch.CorpAcct
             ON DivineBija_CorpAcctItems.CorpAcctName = CorpAcct.CorpAcctName

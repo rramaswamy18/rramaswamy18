@@ -33,11 +33,13 @@
     @Html.TextBoxFor(m => m.RegisterEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.RegisterEmailAddress), style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.RegisterEmailAddress, "", new { id = "RegisterEmailAddress-error" }).ToHtmlString()))
 </div>
+<br style="clear: both;" />
 <div class="row" style="text-align: left;">
     @Html.LabelFor(m => m.ConfirmRegisterEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     @Html.TextBoxFor(m => m.ConfirmRegisterEmailAddress, new { @class = "form-control validate", oncopy = "javascript: return false;", oncut = "javascript: return false;", ondrag = "javascript: return false;", ondrop = "javascript: return false;", onpaste = "javascript: return false;", onselectstart = "javascript: return false;", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ConfirmRegisterEmailAddress), style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ConfirmRegisterEmailAddress, "", new { id = "ConfirmRegisterEmailAddress-error" }).ToHtmlString()))
 </div>
+<br style="clear: both;" />
 <div class="row" style="text-align: left;">
     @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <br />
@@ -55,3 +57,21 @@
     @Html.TextBoxFor(m => m.CaptchaAnswerRegister, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberRegister0 + " + " + @Model.CaptchaNumberRegister1 + " =?", style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerRegister, "", new { id = "CaptchaAnswerRegister-error" }).ToHtmlString()))
 </div>
+<br style="clear: both;" />
+@*
+        <div class="row" style="text-align: left;">
+        @Html.LabelFor(m => m.OTPSendTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        <br style="clear: both;" />
+        <label class="radio-inline" style="font-weight: bold;">
+            <input id="OTPSendTypeId0" name="OTPSendTypeId" type="radio">Email
+        </label>
+        <label class="radio-inline" style="font-weight: bold;">
+            <input id="OTPSendTypeId1" name="OTPSendTypeId" type="radio">WhatsApp
+        </label>
+        <label class="radio-inline" style="font-weight: bold;">
+            <input id="OTPSendTypeId2" name="OTPSendTypeId" type="radio">SMS
+        </label>
+        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error", style = "float: left; width: 36%;" }).ToHtmlString()))
+    </div>
+    <br style="clear: both;" />
+*@

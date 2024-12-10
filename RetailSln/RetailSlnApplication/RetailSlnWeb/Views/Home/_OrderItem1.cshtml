@@ -29,7 +29,6 @@
     string prefixString;
     ItemMasterModel itemMasterModel;
     ItemModel itemModel;
-    @*Html.Partial("_HeaderMenu", Model)*@
     @BuildPaginationLinks(Model.PageCount)
     <br style="clear: both;" />
     <input id="selectedCategoryId" type="hidden" value="@Model.ParentCategoryId" />

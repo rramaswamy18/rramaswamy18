@@ -25,7 +25,6 @@
     var imageCountPerRow = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageCountPerRow"));
     int itemSeqNum = 0, imageIndex = 0, imageCountIndex = 0;
     ItemMasterModel itemMasterModel;
-    @*BuildMenuNew(imageTitle)*@
     @BuildPaginationLinks(Model.PageCount)
     <br style="clear: both;" />
     <input id="selectedCategoryId" type="hidden" value="@Model.ParentCategoryId" />
@@ -267,8 +266,6 @@
 }
 @helper BuildItem(SessionObjectModel sessionObjectModel, ItemMasterModel itemMasterModel, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
-    //var shoppingCartItems = paymentInfoModel.ShoppingCartModel.ShoppingCartItems;
-    //ShoppingCartItemModel shoppingCartItemModel;
     <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
         <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
     </a>
@@ -435,5 +432,4 @@
             <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #0000ff; font-size: 13px; font-weight:bold; text-decoration: underline;" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Order your items from bundle</a>
         }
     }//else (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
-    @*<br style="clear: both;" />*@
 }

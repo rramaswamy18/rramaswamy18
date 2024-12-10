@@ -8,7 +8,6 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
-    int mainCategoryCount = 5;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string aspNetRoleName;
     if (sessionObjectModel == null)
@@ -20,6 +19,7 @@
         aspNetRoleName = sessionObjectModel.AspNetRoleName;
     }
     var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+    int mainCategoryCount = 7, categoryCount = categoryModels.Count;
 }
 <style>
     ul ul {
