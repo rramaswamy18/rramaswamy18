@@ -981,7 +981,14 @@ namespace RetailSlnBusinessLayer
                             parentCategoryId = 120;
                             break;
                         default:
-                            parentCategoryId = 100;
+                            if (clientId == 98)
+                            {
+                                parentCategoryId = 112;
+                            }
+                            else
+                            {
+                                parentCategoryId = 100;
+                            }
                             break;
                     }
                 }

@@ -32,6 +32,10 @@
             {
                 buttonChecked = "";
             }
+            if (codeDataModels.Count == 1)
+            {
+                buttonChecked = "checked='checked'";
+            }
             <tr>
                 <td style="padding-right: 9px; vertical-align: top;">
                     <input @buttonChecked class="form-control" id="@(htmlFieldPrefix)PaymentModeId@(i)" name="@(htmlFieldPrefixName)PaymentModeId" style="color: #000000; font-weight: 900;" type="radio" value="@codeDataModels[i].CodeDataNameId" />

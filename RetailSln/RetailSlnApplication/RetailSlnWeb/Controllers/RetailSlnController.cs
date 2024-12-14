@@ -170,6 +170,7 @@ namespace RetailSlnWeb.Controllers
                     applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
                     Session["SessionObject"] = sessionObjectModel;
+                    Session["CreateForSessionObject"] = createForSessionObject;
                     Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
                     var identity = new ClaimsIdentity
                     (
@@ -185,7 +186,7 @@ namespace RetailSlnWeb.Controllers
                     var authManager = ctx.Authentication;
                     authManager.SignIn(identity);
                     PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-                    retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, null, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", paymentInfoModel);
