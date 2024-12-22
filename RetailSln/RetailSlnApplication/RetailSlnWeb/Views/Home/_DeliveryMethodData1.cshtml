@@ -1,11 +1,12 @@
-﻿@model RetailSlnModels.DeliveryMethodModel
+﻿@using RetailSlnCacheData
+@model RetailSlnModels.DeliveryMethodModel
 @{
     var htmlFieldPrefix = ((System.Web.Mvc.ViewDataDictionary)(ViewData)).TemplateInfo.HtmlFieldPrefix;
     var htmlFieldPrefixName = htmlFieldPrefix == "" ? "" : htmlFieldPrefix + ".";
     htmlFieldPrefix += htmlFieldPrefix == "" ? "" : "_";
 }
 <style>
-    #DeliveryMethodId-error {
+    #DeliveryMethodId-error #PickupLocationId-error {
         color: #ff0000;
         display: block;
         font-size: 14px;
@@ -19,6 +20,7 @@
         </th>
     </tr>
     @{
+        bool pickupFromStore = false;
         string buttonChecked, foreColor;
         List<ArchitectureLibraryModels.CodeDataModel> codeDataModels;
         buttonChecked = "";// "checked='checked'";
@@ -26,6 +28,10 @@
         codeDataModels = Model.DeliveryMethods;
         for (int i = 0; i < codeDataModels.Count; i++)
         {
+            if (codeDataModels[i].CodeDataNameDesc == "PickupFromStore")
+            {
+                pickupFromStore = true;
+            }
             if (Model != null && Model.DeliveryMethodId != null && (int)Model.DeliveryMethodId == codeDataModels[i].CodeDataNameId)
             {
                 buttonChecked = "checked='checked'";
@@ -59,5 +65,19 @@
                 foreColor = "#000000";
             }
         }
+        if (pickupFromStore)
+        {
+            <tr>
+                <td colspan="3">
+                    @Html.DropDownListFor(m => m.PickupLocationId, new SelectList(RetailSlnCache.PickupLocationModelSelectListItems, "Value", "Text", Model.PickupLocationId), "--- Select Location ---", new { @class = "form-control", style = "font-size: 13px; width: 216px;" })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PickupLocationId, "", new { id = htmlFieldPrefix + "PickupLocationId-error" }).ToHtmlString()))
+                </td>
+            </tr>
+        }
+
     }
 </table>

@@ -1,12 +1,16 @@
-﻿@model ArchitectureLibraryModels.RegisterUserProfModel
+﻿@using ArchitectureLibraryCacheData
+@model ArchitectureLibraryModels.RegisterUserProfModel
 <style>
-    #RegisterEmailAddress-error, #ConfirmRegisterEmailAddress-error, #TelephoneNumber-error, #CaptchaAnswerRegister-error, #TelephoneCountryId-error {
+    #RegisterEmailAddress-error, #ConfirmRegisterEmailAddress-error, #TelephoneNumber-error, #CaptchaAnswerRegister-error, #TelephoneCountryId-error, #OTPSendTypeId-error {
         color: #ff0000;
         display: block;
         font-size: 12px;
         font-weight: bold;
     }
 </style>
+@{
+    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("OTPSendType", "");
+}
 @*
     @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
     {
@@ -27,7 +31,6 @@
         </div>
     }
 *@
-@Html.Partial("_UserType", Model)
 <div class="row" style="text-align: left;">
     @Html.LabelFor(m => m.RegisterEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     @Html.TextBoxFor(m => m.RegisterEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.RegisterEmailAddress), style = "width: 90%;" })
@@ -53,25 +56,25 @@
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error", style = "float: left; width: 36%;" }).ToHtmlString()))
 </div>
 <div class="row" style="text-align: left;">
+    @Html.LabelFor(m => m.OTPSendTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    <br style="clear: both;" />
+    <label class="radio-inline" style="font-weight: bold;">
+        <input id="OTPSendTypeId0" name="OTPSendTypeId" checked="checked" type="radio" value="@codeDataModels[0].CodeDataNameId">@codeDataModels[0].CodeDataDesc0
+    </label>
+    @for (int i = 1; i < codeDataModels.Count; i++)
+    {
+        <label class="radio-inline" style="font-weight: bold;">
+            <input disabled="disabled" id="OTPSendTypeId@(i)" name="OTPSendTypeId" type="radio" value="@codeDataModels[i].CodeDataNameId">@codeDataModels[i].CodeDataDesc0
+        </label>
+    }
+    <br style="clear: both;" />
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPSendTypeId, "", new { id = "OTPSendTypeId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
+</div>
+<br style="clear: both;" />
+<div class="row" style="text-align: left;">
     @Html.LabelFor(m => m.CaptchaAnswerRegister, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberRegister0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberRegister1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
     @Html.TextBoxFor(m => m.CaptchaAnswerRegister, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberRegister0 + " + " + @Model.CaptchaNumberRegister1 + " =?", style = "width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerRegister, "", new { id = "CaptchaAnswerRegister-error" }).ToHtmlString()))
 </div>
 <br style="clear: both;" />
-@*
-        <div class="row" style="text-align: left;">
-        @Html.LabelFor(m => m.OTPSendTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-        <br style="clear: both;" />
-        <label class="radio-inline" style="font-weight: bold;">
-            <input id="OTPSendTypeId0" name="OTPSendTypeId" type="radio">Email
-        </label>
-        <label class="radio-inline" style="font-weight: bold;">
-            <input id="OTPSendTypeId1" name="OTPSendTypeId" type="radio">WhatsApp
-        </label>
-        <label class="radio-inline" style="font-weight: bold;">
-            <input id="OTPSendTypeId2" name="OTPSendTypeId" type="radio">SMS
-        </label>
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error", style = "float: left; width: 36%;" }).ToHtmlString()))
-    </div>
-    <br style="clear: both;" />
-*@
+@Html.Partial("_UserType", Model)

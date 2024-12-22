@@ -19,7 +19,7 @@
         aspNetRoleName = sessionObjectModel.AspNetRoleName;
     }
     var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
-    int mainCategoryCount = 7, categoryCount = categoryModels.Count;
+    int mainCategoryCount = 7;
 }
 <style>
     ul ul {
@@ -69,46 +69,34 @@
 </style>
 <ul class="nav navbar-nav">
     @{
-        if (categoryModels.Count > 1)
-        {
-            int i;
-            for (i = 0; i < mainCategoryCount && i < categoryModels.Count; i++)
-            {
-                <li>
-                    <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryModels[i].CategoryId</span>
-                    <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[i].CategoryNameDesc + " " + imageTitle)">
-                        @categoryModels[i].CategoryDesc
-                    </a>
-                </li>
-            }
-            <li>
-                <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
-                <ul class="scrollable-list">
-                    @for (; i < categoryModels.Count; i++)
-                    {
-                        <li>
-                            <span id="menuCategoryId@(i + 1)" style="display: none;">@categoryModels[i].CategoryId</span>
-                            <a id="menuItem@(i + 1)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[i].CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[i].CategoryNameDesc + " " + imageTitle)">
-                                @categoryModels[i].CategoryDesc
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </li>
-            <li>
-                <a href="javascript: void(0);" style="cursor: default;">
-                    <span id="selectedCategoryDesc" style="color: #61ce70; font-weight: bold;"></span>
-                </a>
-            </li>
-        }
-        else
+        int i;
+        for (i = 0; i < mainCategoryCount && i < categoryModels.Count; i++)
         {
             <li>
-                <span id="menuCategoryId0" style="display: none;">@categoryModels[0].CategoryId</span>
-                <a id="menuItem0" class="active" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[0].CategoryId, 1);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[0].CategoryNameDesc + " " + imageTitle)">
-                    @categoryModels[0].CategoryDesc
+                <span id="menuCategoryId@(i)" style="display: none;">@categoryModels[i].CategoryId</span>
+                <a id="menuCategory@(i)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[i].CategoryId, 1, @categoryModels.Count);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                    @categoryModels[i].CategoryDesc
                 </a>
             </li>
         }
     }
+    <li>
+        <a href="#" style="color: #ffffff; font-weight: bold;" title="@imageTitle">More...</a>
+        <ul class="scrollable-list">
+            @for (; i < categoryModels.Count; i++)
+            {
+                <li>
+                    <span id="menuCategoryId@(i)" style="display: none;">@categoryModels[i].CategoryId</span>
+                    <a id="menuCategory@(i)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryModels[i].CategoryId, 1, @categoryModels.Count);" style="color: #ffffff; font-size: 12px; font-weight: bold;" title="@(categoryModels[i].CategoryNameDesc + " " + imageTitle)">
+                        @categoryModels[i].CategoryDesc
+                    </a>
+                </li>
+            }
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" style="cursor: default; padding-left: 63px;">
+            <span id="selectedCategoryDesc" style="color: #61ce70; font-weight: bold;"></span>
+        </a>
+    </li>
 </ul>

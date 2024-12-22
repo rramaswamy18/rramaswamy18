@@ -1,0 +1,31 @@
+﻿@using ArchitectureLibraryModels
+@{
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
+}
+<table style="margin-left: auto; margin-right: auto;">
+    <tr>
+        <th class="text-right" style="padding: 9px;">
+            Create order for :
+        </th>
+        <td class="text-left" style="padding: 9px;">
+            <input class="form-control validate" id="searchOrderCreatedForEmailAddress" maxlength="250" placeholder="Search for email" , style="width: 243px;" />
+        </td>
+        <td class="text-left" style="padding: 9px;">
+            <button class="btn btn-primary" onclick="javascript: return searchOrderCreatedForEmailAddress_onclick();">Search</button>
+        </td>
+        <td class="text-left" style="padding: 9px; width: 225px;">
+            <select aria-label="Order to be created for" class="form-control" id="OrderCreatedForPersonId" name="OrderCreatedForPersonId" style="width: 351px;">
+                <option value="">--- Select ---</option>
+            </select>
+        </td>
+    </tr>
+</table>

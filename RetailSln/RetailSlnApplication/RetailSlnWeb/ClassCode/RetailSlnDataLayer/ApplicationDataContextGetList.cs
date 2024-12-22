@@ -1700,5 +1700,79 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static List<PickupLocationModel> GetPickupLocations(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                #region
+                sqlStmt += "        SELECT PickupLocation.*" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.AddressLine1" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.AddressLine2" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoCountryId" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoCountry.CountryAbbrev" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoSubDivisionId" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoSubDivision.StateAbbrev" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoCountyId" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoCounty.CountyName" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoCityId" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoCity.CityName" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoZipId" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoZip.ZipCode" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoZipPlusId" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.PickupLocation" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.DemogInfoAddress ON PickupLocation.LocationDemogInfoAddressId = DemogInfoAddress.DemogInfoAddressId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.DemogInfoCountry ON DemogInfoAddress.DemogInfoCountryId = DemogInfoCountry.DemogInfoCountryId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.DemogInfoSubDivision ON DemogInfoAddress.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.DemogInfoCounty ON DemogInfoAddress.DemogInfoCountyId = DemogInfoCounty.DemogInfoCountyId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.DemogInfoCity ON DemogInfoAddress.DemogInfoCityId = DemogInfoCity.DemogInfoCityId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.DemogInfoZip ON DemogInfoAddress.DemogInfoZipId = DemogInfoZip.DemogInfoZipId" + Environment.NewLine;
+                sqlStmt += "      ORDER BY PickupLocation.PickupLocationId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<PickupLocationModel> pickupLocationModels = new List<PickupLocationModel>();
+                #endregion
+                while (sqlDataReader.Read())
+                {
+                    pickupLocationModels.Add
+                    (
+                        new PickupLocationModel
+                        {
+                            PickupLocationId = long.Parse(sqlDataReader["PickupLocationId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            LocationDemogInfoAddressId = long.Parse(sqlDataReader["LocationDemogInfoAddressId"].ToString()),
+                            LocationDesc = sqlDataReader["LocationDesc"].ToString(),
+                            LocationNameDesc = sqlDataReader["LocationNameDesc"].ToString(),
+                            DemogInfoAddressModel = new DemogInfoAddressModel
+                            {
+                                AddressLine1 = sqlDataReader["AddressLine1"].ToString(),
+                                AddressLine2 = sqlDataReader["AddressLine2"].ToString(),
+                                DemogInfoCountryId = long.Parse(sqlDataReader["DemogInfoCountryId"].ToString()),
+                                CountryAbbrev = sqlDataReader["CountryAbbrev"].ToString(),
+                                DemogInfoSubDivisionId = long.Parse(sqlDataReader["DemogInfoSubDivisionId"].ToString()),
+                                StateAbbrev = sqlDataReader["StateAbbrev"].ToString(),
+                                DemogInfoCountyId = long.Parse(sqlDataReader["DemogInfoCountyId"].ToString()),
+                                CountyName = sqlDataReader["CountyName"].ToString(),
+                                DemogInfoCityId = long.Parse(sqlDataReader["DemogInfoCityId"].ToString()),
+                                CityName = sqlDataReader["CityName"].ToString(),
+                                DemogInfoZipId = long.Parse(sqlDataReader["DemogInfoZipId"].ToString()),
+                                ZipCode = sqlDataReader["ZipCode"].ToString(),
+                            },
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return pickupLocationModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
     }
 }

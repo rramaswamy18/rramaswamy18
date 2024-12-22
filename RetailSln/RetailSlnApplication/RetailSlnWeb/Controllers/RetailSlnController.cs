@@ -308,6 +308,7 @@ namespace RetailSlnWeb.Controllers
                     //paymentInfoModel.OrderSummaryModel = paymentInfoModelTemp.OrderSummaryModel;
                     paymentInfoModel.OrderSummaryModel.AspNetUserId = paymentInfoModelTemp.OrderSummaryModel.AspNetUserId;
                     paymentInfoModel.OrderSummaryModel.CorpAcctModel = paymentInfoModelTemp.OrderSummaryModel.CorpAcctModel;
+                    paymentInfoModel.OrderSummaryModel.CreatedByEmailAddress = paymentInfoModelTemp.OrderSummaryModel.CreatedByEmailAddress;
                     paymentInfoModel.OrderSummaryModel.EmailAddress = paymentInfoModelTemp.OrderSummaryModel.EmailAddress;
                     paymentInfoModel.OrderSummaryModel.OrderHeaderId = paymentInfoModelTemp.OrderSummaryModel.OrderHeaderId;
                     paymentInfoModel.OrderSummaryModel.PersonId = paymentInfoModelTemp.OrderSummaryModel.PersonId;
@@ -788,12 +789,12 @@ namespace RetailSlnWeb.Controllers
                 }
                 htmlString = retailSlnBL.PaymentInfo1(paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-                FormsAuthentication.SignOut();
-                Session.Abandon();
-                Request.GetOwinContext().Authentication.SignOut();
-                Session["SessionObject"] = null;
+                //FormsAuthentication.SignOut();
+                //Session.Abandon();
+                //Request.GetOwinContext().Authentication.SignOut();
+                //Session["SessionObject"] = null;
                 Session["PaymentInfo"] = null;
-                Session.Abandon();
+                //Session.Abandon();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
             }
             catch (Exception exception)
@@ -887,11 +888,11 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             ActionResult actionResult = View("PaymentInfo3", paymentInfoModel);
             FormsAuthentication.SignOut();
-            Session.Abandon();
-            Request.GetOwinContext().Authentication.SignOut();
-            Session["SessionObject"] = null;
+            //Session.Abandon();
+            //Request.GetOwinContext().Authentication.SignOut();
+            //Session["SessionObject"] = null;
             Session["PaymentInfo"] = null;
-            Session.Abandon();
+            //Session.Abandon();
             return actionResult;
         }
 

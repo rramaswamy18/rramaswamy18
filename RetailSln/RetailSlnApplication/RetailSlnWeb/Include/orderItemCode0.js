@@ -34,6 +34,8 @@ function addToCart1_onclick(itemId, index) {
                 if (responseData.success) {
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
                     document.getElementById("spnMessageSuccess" + index).style.display = "block";
                     document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
                     document.getElementById("orderQty" + index).value = "";
@@ -169,6 +171,8 @@ function addToCartGet2_onclick(itemId, index) {
                     console.log("addToCartGet2_onclick", "00090000", "SUCCESS!!!");
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
                     document.getElementById("orderQty" + index).value = "";
                     document.getElementById("spnMessageSuccess" + index).style.display = "block";
                     document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
@@ -325,8 +329,20 @@ function categoryIdBackup_onclick(categoryId, pageNum) {
         }
     });
 }
-function categoryId_onclick(categoryId, pageNum) {
-    console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId, pageNum);
+function setCategoryIdSelected(categoryId, categoryCount) {
+    var menuCategoryIdObject, menuCategoryIdObjectA;
+    console.log(categoryId, categoryCount);
+    for (var i = 0; i < categoryCount; i++) {
+        menuCategoryObject = document.getElementById("menuCategory" + i);
+        menuCategoryIdObject = document.getElementById("menuCategoryId" + i);
+        if (menuCategoryIdObject.innerHTML == categoryId) {// || menuCategoryIdObjectA.innerHTML == categoryId) {
+            document.getElementById("selectedCategoryDesc").innerHTML = menuCategoryObject.innerHTML;
+            break;
+        }
+    }
+}
+function categoryId_onclick(categoryId, pageNum, categoryCount) {
+    //console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId, pageNum);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     document.getElementById("divErrorMessage").innerHTML = "";
     document.getElementById("selectedCategoryId").value = categoryId;
@@ -339,8 +355,9 @@ function categoryId_onclick(categoryId, pageNum) {
         //data: jsonPostDataString,
         success: function (responseData, textStatus, request) {
             $('#loadingModal').modal('hide');
-            console.log("00001000", "categoryId_onclick success", responseData.processMessage);
+            //console.log("00001000", "categoryId_onclick success", responseData.processMessage);
             if (responseData.success) {
+                //setCategoryIdSelected(categoryId, categoryCount);
                 document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
                 document.getElementById("divScrollIntoView").scrollIntoView();
             }
@@ -349,7 +366,7 @@ function categoryId_onclick(categoryId, pageNum) {
             }
         },
         error: function (xhr, exception) {
-            $('#loadingModal').modal('hide');
+            ///$('#loadingModal').modal('hide');
             console.log("categoryId_onclick", "00099000", "ERROR???");
             document.getElementById("divErrorMessage").innerHTML = "Error occurred";
             console.log(xhr, exception);
@@ -399,6 +416,8 @@ function checkoutValidate_onclick() {
                 document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
                 document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                 document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
+                document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
                 document.getElementById("divScrollIntoView").scrollIntoView();
                 alert(responseData.htmlString);
             }
@@ -410,6 +429,8 @@ function checkoutValidate_onclick() {
             document.getElementById("divErrorMessage").innerHTML = "Error during checkout";
             document.getElementById("shoppingCartItemsCount").innerHTML = "";
             document.getElementById("shoppingCartTotalAmount").innerHTML = "0.00";
+            document.getElementById("shoppingCartItemsCount1").innerHTML = "";
+            document.getElementById("shoppingCartTotalAmount1").innerHTML = "0.00";
             document.getElementById("divScrollIntoView").scrollIntoView();
             alert("Error during checkout");
         }
@@ -514,6 +535,8 @@ function removeFromCart_onclick(index) {
                     document.getElementById("divShoppingCartData").innerHTML = responseData.htmlString;
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+                    document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
+                    document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
                 }
                 else {
                     document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
@@ -563,6 +586,8 @@ function shoppingCart_onclick() {
             document.getElementById("divShoppingCartData").innerHTML = responseData.htmlString;
             document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
             document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+            document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
+            document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
             $('#divShoppingCartPopupModal').modal({ backdrop: 'static', keyboard: false });
         },
         error: function (xhr, exception) {
@@ -584,6 +609,8 @@ function shoppingCartSummary_onclick() {
             var jsonData = JSON.parse(responseData);
             document.getElementById("shoppingCartItemsCount").innerHTML = jsonData.shoppingCartItemsCount;
             document.getElementById("shoppingCartTotalAmount").innerHTML = jsonData.shoppingCartTotalAmount;
+            document.getElementById("shoppingCartItemsCount1").innerHTML = jsonData.shoppingCartItemsCount;
+            document.getElementById("shoppingCartTotalAmount1").innerHTML = jsonData.shoppingCartTotalAmount;
         },
         error: function (xhr, exception) {
             console.log(43, "ERROR???", exception, xhr);

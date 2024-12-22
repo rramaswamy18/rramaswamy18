@@ -171,7 +171,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@OrderDetailItemBundleId"].Direction = ParameterDirection.ReturnValue;
             return sqlCommand;
         }
-        private static SqlCommand BuildSqlCommandDeliveryInfoAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private static SqlCommand BuildSqlCommandOrderDeliveryAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string sqlStmt = "         INSERT RetailSlnSch.OrderDelivery" + Environment.NewLine;
             sqlStmt += "              (" + Environment.NewLine;
@@ -180,7 +180,9 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,AlternateTelephoneNum" + Environment.NewLine;
             sqlStmt += "              ,DeliveryAddressId" + Environment.NewLine;
             sqlStmt += "              ,DeliveryInstructions" + Environment.NewLine;
+            sqlStmt += "              ,DeliveryMethodId" + Environment.NewLine;
             sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,PickupLocationId" + Environment.NewLine;
             sqlStmt += "              ,PrimaryTelephoneDemogInfoCountryId" + Environment.NewLine;
             sqlStmt += "              ,PrimaryTelephoneNum" + Environment.NewLine;
             sqlStmt += "              ,AddUserId" + Environment.NewLine;
@@ -193,7 +195,9 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,@AlternateTelephoneNum" + Environment.NewLine;
             sqlStmt += "              ,@DeliveryAddressId" + Environment.NewLine;
             sqlStmt += "              ,@DeliveryInstructions" + Environment.NewLine;
+            sqlStmt += "              ,@DeliveryMethodId" + Environment.NewLine;
             sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,@PickupLocationId" + Environment.NewLine;
             sqlStmt += "              ,@PrimaryTelephoneDemogInfoCountryId" + Environment.NewLine;
             sqlStmt += "              ,@PrimaryTelephoneNum" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
@@ -204,7 +208,9 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@AlternateTelephoneNum", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@DeliveryAddressId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@DeliveryInstructions", SqlDbType.NVarChar, 250);
+            sqlCommand.Parameters.Add("@DeliveryMethodId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@PickupLocationId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@PrimaryTelephoneDemogInfoCountryId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@PrimaryTelephoneNum", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
@@ -222,6 +228,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,CreditCardDataId" + Environment.NewLine;
             sqlStmt += "              ,GiftCertId" + Environment.NewLine;
             sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,PaymentModeId" + Environment.NewLine;
             sqlStmt += "              ,AddUserId" + Environment.NewLine;
             sqlStmt += "              ,UpdUserId" + Environment.NewLine;
             sqlStmt += "              )" + Environment.NewLine;
@@ -232,6 +239,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,@CreditCardDataId" + Environment.NewLine;
             sqlStmt += "              ,@GiftCertId" + Environment.NewLine;
             sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,@PaymentModeId" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
             sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
@@ -240,6 +248,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@CreditCardDataId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@GiftCertId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@PaymentModeId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
             sqlCommand.Parameters.Add("@OrderPaymentId", SqlDbType.BigInt);
             sqlCommand.Parameters["@OrderPaymentId"].Direction = ParameterDirection.ReturnValue;

@@ -50,8 +50,6 @@ namespace RetailSlnCacheData
         public static List<ItemBundleModel> ItemBundleModels { set; get; }
         public static List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public static List<ItemBundleDiscountModel> ItemBundleDiscountModels { set; get; }
-        //public static List<CategoryItemHierModel> CategoryItemHierModelsNew { set; get; }
-        //public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
         public static List<DemogInfoCountryModel> DeliveryDemogInfoCountryModels { set; get; }
         public static List<SelectListItem> DeliveryDemogInfoCountrySelectListItems { set; get; }
         public static Dictionary<long, List<SelectListItem>> DeliveryDemogInfoCountrySubDivisionSelectListItems { set; get; }
@@ -61,6 +59,8 @@ namespace RetailSlnCacheData
         public static long DefaultDeliveryDemogInfoCountryId { set; get; }
         public static List<KeyValuePair<long, string>> DeliveryDemogInfoCountrys { set; get; }
         public static List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryDemogInfoCountryStates { set; get; }
+        public static List<PickupLocationModel> PickupLocationModels { set; get; }
+        public static List<SelectListItem> PickupLocationModelSelectListItems { set; get; }
         #endregion
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -105,6 +105,7 @@ namespace RetailSlnCacheData
             DeliveryDemogInfoCountrys = retailSlnInitModel.DeliveryCountrys;
             DeliveryDemogInfoCountryStates = retailSlnInitModel.DeliveryCountryStates;
             BusinessInfoModel = retailSlnInitModel.BusinessInfoModel;
+            PickupLocationModels = retailSlnInitModel.PickupLocationModels;
         }
         private static void BuildCacheModels(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -188,9 +189,16 @@ namespace RetailSlnCacheData
                 {
                     if (itemSpecModel.ItemSpecMasterModel.CodeTypeId != null)
                     {
-                        var abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
-                        var abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemSpecModel.ItemSpecUnitValue));
-                        itemSpecModel.ItemSpecValueForDisplay += " " + abc2.CodeDataDesc0;
+                        try
+                        {
+                            var abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
+                            var abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemSpecModel.ItemSpecUnitValue));
+                            itemSpecModel.ItemSpecValueForDisplay += " " + abc2.CodeDataDesc0;
+                        }
+                        catch
+                        {
+                            Console.WriteLine(itemSpecModel.ItemId);
+                        }
                     }
                 }
             }
@@ -434,6 +442,18 @@ namespace RetailSlnCacheData
             foreach (var festivalListModel in retailSlnInitModel.FestivalListModels)
             {
                 festivalListModel.FestivalListImageModels = retailSlnInitModel.FestivalListImageModels.FindAll(x => x.FestivalListId == festivalListModel.FestivalListId);
+            }
+            PickupLocationModelSelectListItems = new List<SelectListItem>();
+            foreach (var pickupLocationModel in retailSlnInitModel.PickupLocationModels)
+            {
+                PickupLocationModelSelectListItems.Add
+                (
+                    new SelectListItem
+                    {
+                        Text = pickupLocationModel.LocationDesc,
+                        Value = pickupLocationModel.PickupLocationId.Value.ToString(),
+                    }
+                );
             }
             return;
         }

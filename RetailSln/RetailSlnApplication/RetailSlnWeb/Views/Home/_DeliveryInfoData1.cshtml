@@ -26,11 +26,11 @@
             </td>
         </tr>
         <tr>
-            <td style="padding: 0px; width: 50%;">
+            <td style="padding: 0px; vertical-align: top; width: 50%;">
                 <h3 style="color: #ff0000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Payment...</h3>
                 @Html.Partial("_PaymentModeData1", Model.PaymentModeModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "PaymentModeModel" } })
             </td>
-            <td style="padding: 0px; width: 50%;">
+            <td style="padding: 0px; vertical-align: top; width: 50%;">
                 <h3 style="color: #0000ff; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Delivery...</h3>
                 @Html.Partial("_DeliveryMethodData1", Model.DeliveryMethodModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "DeliveryMethodModel" } })
             </td>

@@ -691,9 +691,9 @@ namespace RetailSlnBusinessLayer
                 CheckoutValidate(paymentInfoModel, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CheckoutModel checkoutModel = new CheckoutModel
                 {
-                    ContactUsModel = new ContactUsModel(),
                     LoginUserProfGuestModel = new LoginUserProfGuestModel
                     {
+                        LoginUserProfGuestTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
                         ResponseObjectModel = new ResponseObjectModel
                         {
                             ResponseTypeId = ResponseTypeEnum.Success,
@@ -706,44 +706,27 @@ namespace RetailSlnBusinessLayer
                             ResponseTypeId = ResponseTypeEnum.Success,
                         },
                     },
-                    RegisterUserProfModel = new RegisterUserProfModel
-                    {
-                        RegisterTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "DeliveryInfo", "DefaultDemogInfoCountry")),
-                    },
-                    ResetPasswordModel = new ResetPasswordModel(),
                     PaymentInfoModel = paymentInfoModel,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                    },
                 };
                 if (checkoutModel.PaymentInfoModel != null)
                 {
                     List<string> numberSessions = new List<string>
                     {
-                        "CaptchaNumberCheckoutGuest0",
-                        "CaptchaNumberCheckoutGuest1",
+                        "CaptchaNumberLoginUserProfGuest0",
+                        "CaptchaNumberLoginUserProfGuest1",
                         "CaptchaNumberLogin0",
                         "CaptchaNumberLogin1",
-                        "CaptchaNumberRegister0",
-                        "CaptchaNumberRegister1",
-                        "CaptchaNumberResetPassword0",
-                        "CaptchaNumberResetPassword1",
-                        "CaptchaNumberContactUs0",
-                        "CaptchaNumberContactUs1",
                     };
                     archLibBL.GenerateCaptchaQuesion(httpSessionStateBase, numberSessions);
-                    checkoutModel.ContactUsModel.CaptchaAnswerContactUs = null;
-                    checkoutModel.ContactUsModel.CaptchaNumberContactUs0 = httpSessionStateBase["CaptchaNumberContactUs0"].ToString();
-                    checkoutModel.ContactUsModel.CaptchaNumberContactUs1 = httpSessionStateBase["CaptchaNumberContactUs1"].ToString();
                     checkoutModel.LoginUserProfGuestModel.CaptchaAnswerLoginUserProfGuest = null;
-                    checkoutModel.LoginUserProfGuestModel.CaptchaNumberLoginUserProfGuest0 = httpSessionStateBase["CaptchaNumberCheckoutGuest0"].ToString();
-                    checkoutModel.LoginUserProfGuestModel.CaptchaNumberLoginUserProfGuest1 = httpSessionStateBase["CaptchaNumberCheckoutGuest1"].ToString();
+                    checkoutModel.LoginUserProfGuestModel.CaptchaNumberLoginUserProfGuest0 = httpSessionStateBase["CaptchaNumberLoginUserProfGuest0"].ToString();
+                    checkoutModel.LoginUserProfGuestModel.CaptchaNumberLoginUserProfGuest1 = httpSessionStateBase["CaptchaNumberLoginUserProfGuest1"].ToString();
                     checkoutModel.LoginUserProfModel.CaptchaAnswerLogin = null;
                     checkoutModel.LoginUserProfModel.CaptchaNumberLogin0 = httpSessionStateBase["CaptchaNumberLogin0"].ToString();
                     checkoutModel.LoginUserProfModel.CaptchaNumberLogin1 = httpSessionStateBase["CaptchaNumberLogin1"].ToString();
-                    checkoutModel.RegisterUserProfModel.CaptchaAnswerRegister = null;
-                    checkoutModel.RegisterUserProfModel.CaptchaNumberRegister0 = httpSessionStateBase["CaptchaNumberRegister0"].ToString();
-                    checkoutModel.RegisterUserProfModel.CaptchaNumberRegister1 = httpSessionStateBase["CaptchaNumberRegister1"].ToString();
-                    checkoutModel.ResetPasswordModel.CaptchaAnswerResetPassword = null;
-                    checkoutModel.ResetPasswordModel.CaptchaNumberResetPassword0 = httpSessionStateBase["CaptchaNumberResetPassword0"].ToString();
-                    checkoutModel.ResetPasswordModel.CaptchaNumberResetPassword1 = httpSessionStateBase["CaptchaNumberResetPassword1"].ToString();
                 }
                 return checkoutModel;
             }
@@ -829,7 +812,8 @@ namespace RetailSlnBusinessLayer
                             //AuthorizedSignature = ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignature", ""),
                             //AuthorizedSignatureText = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "AuthorizedSignatureFont", "")),
                             CorpAcctModel = ((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel,
-                            EmailAddress = createForSessionObject.EmailAddress,
+                            CreatedByEmailAddress = sessionObjectModel.EmailAddress.ToLower(),
+                            EmailAddress = createForSessionObject.EmailAddress.ToLower(),
                             FirstName = createForSessionObject.FirstName,
                             LastName = createForSessionObject.LastName,
                             PersonId = createForSessionObject.PersonId,
@@ -996,9 +980,13 @@ namespace RetailSlnBusinessLayer
                 switch (aspNetRoleName)
                 {
                     case "BULKORDERSROLE":
-                    case "MARKETINGROLE":
                     case "WHOLESALEROLE":
                         viewName = "_OrderItem1";
+                        break;
+                    case "APPLADMN1":
+                    case "MARKETINGROLE":
+                    case "SYSTADMIN":
+                        viewName = "_OrderItem2";
                         break;
                     default:
                         viewName = "_OrderItem0";
@@ -1028,12 +1016,13 @@ namespace RetailSlnBusinessLayer
                 }
                 OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
                 {
-                    CategoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0],
+                    //CategoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0],
                     CategoryItemMasterHierModels = categoryItemMasterHierModels.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList(),
                     PageCount = pageCount,
                     PageNum = pageNum,
                     PageSize = pageSize,
                     ParentCategoryId = parentCategoryId.Value,
+                    ParentCategoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == parentCategoryId.Value),
                     TotalRowCount = totalRowCount,
                     ViewName = viewName,
                 };
@@ -1317,8 +1306,13 @@ namespace RetailSlnBusinessLayer
                 {
                     emailDirectoryName + paymentInfoModel.OrderSummaryModel.OrderHeaderId + ".pdf",
                 };
+                string toEmailAddresss = createForSessionObject.EmailAddress;
+                if (createForSessionObject.EmailAddress.ToLower() != sessionObjectModel.EmailAddress.ToLower())
+                {
+                    toEmailAddresss += ";" + sessionObjectModel.EmailAddress;
+                }
                 archLibBL.SendEmail(paymentInfoModel.OrderSummaryModel.EmailAddress, emailSubjectText, emailBodyHtml + signatureHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
-                return emailBodyHtml;
+                 return emailBodyHtml;
             }
             catch (Exception exception)
             {
@@ -2395,9 +2389,11 @@ namespace RetailSlnBusinessLayer
                 ArchLibDataContext.CreateDemogInfoAddress(paymentInfoModel.DeliveryAddressModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.DeliveryDataModel.DeliveryAddressModel = paymentInfoModel.DeliveryAddressModel;
                 paymentInfoModel.DeliveryDataModel.OrderHeaderId = orderHeader.OrderHeaderId;
+                paymentInfoModel.DeliveryDataModel.DeliveryMethodId = (long?)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId;
+                paymentInfoModel.DeliveryDataModel.PickupLocationId = paymentInfoModel.DeliveryMethodModel.PickupLocationId;
                 paymentInfoModel.OrderSummaryModel.OrderHeaderId = orderHeader.OrderHeaderId;
                 paymentInfoModel.OrderSummaryModel.OrderDateTime = orderHeader.OrderDateTime;
-                ApplicationDataContext.AddDeliveryInfo(paymentInfoModel.DeliveryDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.AddOrderDelivery(paymentInfoModel.DeliveryDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplicationDataContext.UpdPerson(paymentInfoModel.OrderSummaryModel.PersonId.Value, paymentInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.OrderSummaryModel.LastName, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.PaymentDataModel = new PaymentData1Model
                 {
@@ -2405,6 +2401,7 @@ namespace RetailSlnBusinessLayer
                     CreditCardDataId = paymentInfoModel.CreditCardDataModel.CreditCardDataId,
                     GiftCertId = 0,
                     OrderHeaderId = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value,
+                    PaymentModeId = (long)paymentInfoModel.PaymentModeModel.PaymentModeId,
                     PaymentReferenceNumber = razorpay_payment_id == "" ? "" : "Ref:&nbsp;" + razorpay_payment_id + "<br />Num:&nbsp;" + razorpay_order_id,
                 };
                 paymentInfoModel.OrderSummaryModel.UserFullName = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim();

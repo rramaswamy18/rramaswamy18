@@ -34,6 +34,7 @@ namespace RetailSlnCacheBusinessLayer
                 DiscountDtlModels = ApplicationDataContext.GetDiscountDtls(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 FestivalListModels = ApplicationDataContext.GetFestivalLists(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 FestivalListImageModels = ApplicationDataContext.GetFestivalListImages(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                PickupLocationModels = ApplicationDataContext.GetPickupLocations(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
             };
             ApplicationDataContext.CloseSqlConnection();
         }

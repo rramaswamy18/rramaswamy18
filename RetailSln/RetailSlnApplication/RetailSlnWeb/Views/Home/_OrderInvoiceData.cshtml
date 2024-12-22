@@ -73,11 +73,13 @@
             @Model.DeliveryMethodModel.DeliveryMethodDesc
         </td>
     </tr>
-    <tr>
-        <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
-            Invoice Amount:&nbsp;<span style="color: #000000; font-weight: bold;">@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords</span>
-        </td>
-    </tr>
+    @*
+        <tr>
+            <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
+                Invoice Amount:&nbsp;<span style="color: #000000; font-weight: bold;">@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords</span>
+            </td>
+        </tr>
+    *@
     <tr>
         <td colspan="4" style="border-collapse: collapse; border-style: none; border-width: 0px;">
             @Html.Partial("_ShoppingCartEmailBody1", Model.ShoppingCartModel)
@@ -88,4 +90,12 @@
             @Model.DeliveryDataModel.DeliveryInstructions
         </td>
     </tr>
+    @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
+    {
+        <tr>
+            <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
+                Order Created by : @Model.OrderSummaryModel.CreatedByEmailAddress
+            </td>
+        </tr>
+    }
 </table>

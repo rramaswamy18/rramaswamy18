@@ -23,6 +23,8 @@ namespace RetailSlnModels
 
         public CorpAcctModel CorpAcctModel { set; get; }
 
+        public string CreatedByEmailAddress { set; get; }
+
         public string EmailAddress { set; get; }
 
         [Display(Name = "First Name")]

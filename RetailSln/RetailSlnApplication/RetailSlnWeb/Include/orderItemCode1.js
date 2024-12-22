@@ -498,10 +498,8 @@ function paymentInfo5Save_onclick() {
                 //    document.getElementById("shoppingCartTotalAmount").innerHTML = "";
             }
             else {
-                alert(1);
                 console.log("00002000", "paymentInfo5Save_onclick", responseData.success, responseData.processMessage);
                 document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-                alert(2);
             }
             console.log("00003000", "paymentInfo5Save_onclick success", responseData.success, responseData.processMessage);
             $("#loadingModal").modal('hide');

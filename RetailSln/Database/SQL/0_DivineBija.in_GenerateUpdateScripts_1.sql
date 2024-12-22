@@ -99,5 +99,40 @@ BEGIN
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'FALSE' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'PickupDirectory'
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'accounts@divinebija.in' WHERE ClientId = 98 AND KVPKey = 'OrderProcess' AND KVPSubKey = 'ToEmailAddress'
 END
-
+--
+--Insert DemogInfoAddress from Upload
+    SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] ON
+	INSERT [ArchLib].[DemogInfoAddress]
+	     (
+		  DemogInfoAddressId, ClientId, AddressLine1, AddressLine2, AddressLine3, AddressLine4, DemogInfoCountryId, DemogInfoSubDivisionId
+		 ,DemogInfoCountyId, DemogInfoCityId, DemogInfoZipId, DemogInfoZipPlusId, AddressTypeId, BuildingTypeId, HouseNumber
+		 ,CountryAbbrev, CountryDesc, StateAbbrev, CountyName, CityName, ZipCode, ZipPlus4
+		 )
+    SELECT DemogInfoAddressUpload.DemogInfoAddressUploadId, DemogInfoAddressUpload.ClientId, DemogInfoAddressUpload.AddressLine1
+	      ,DemogInfoAddressUpload.AddressLine2, DemogInfoAddressUpload.AddressLine3, DemogInfoAddressUpload.AddressLine4
+		  ,DemogInfoCountry.DemogInfoCountryId, DemogInfoSubDivision.DemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId
+		  ,DemogInfoCity.DemogInfoCityId, DemogInfoZip.DemogInfoZipId, DemogInfoZipPlus.DemogInfoZipPlusId, 0, 0, ''
+		  ,DemogInfoCountry.CountryAbbrev,DemogInfoCountry.CountryDesc, DemogInfoSubDivision.StateAbbrev, DemogInfoCounty.CountyName
+		  ,DemogInfoCity.CityName, DemogInfoZip.ZipCode, DemogInfoZipPlus.ZipPlus4
+      FROM [ArchLib].[DemogInfoAddressUpload]
+INNER JOIN [ArchLib].[DemogInfoCountry]
+        ON DemogInfoAddressUpload.CountryAbbrev = DemogInfoCountry.CountryAbbrev
+INNER JOIN [ArchLib].[DemogInfoSubDivision]
+        ON DemogInfoAddressUpload.StateAbbrev = DemogInfoSubDivision.StateAbbrev
+	   AND DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId
+INNER JOIN [ArchLib].[DemogInfoCounty]
+        ON DemogInfoAddressUpload.CountyName = DemogInfoCounty.CountyName
+	   AND DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId
+INNER JOIN [ArchLib].[DemogInfoCity]
+        ON DemogInfoAddressUpload.CityName = DemogInfoCity.CityName
+	   AND DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId
+INNER JOIN [ArchLib].[DemogInfoZip]
+        ON DemogInfoCity.DemogInfoCityId = DemogInfoZip.DemogInfoCityId
+       AND DemogInfoAddressUpload.ZipCode = DemogInfoZip.ZipCode
+INNER JOIN [ArchLib].[DemogInfoZipPlus]
+        ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId
+     WHERE DemogInfoAddressUpload.InstanceClientId = @ClientId
+  ORDER BY DemogInfoAddressUpload.DemogInfoAddressUploadId
+    SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] OFF
+--
 DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(400)

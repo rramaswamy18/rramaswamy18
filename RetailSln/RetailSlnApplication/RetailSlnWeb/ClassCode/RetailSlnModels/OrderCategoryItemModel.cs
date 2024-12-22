@@ -13,6 +13,7 @@ namespace RetailSlnModels
         public string OrderCreatedForEmailAddress { set; get; }
         public long? OrderCreatedForPersonId { set; get; }
         public long ParentCategoryId { set; get; }
+        public CategoryModel ParentCategoryModel { set; get; }
         public int PageCount { set; get; }
         public int PageNum { set; get; }
         public int PageSize { set; get; }

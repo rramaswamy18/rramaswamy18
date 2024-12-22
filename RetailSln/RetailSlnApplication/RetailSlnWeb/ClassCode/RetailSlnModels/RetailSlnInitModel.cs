@@ -52,5 +52,6 @@ namespace RetailSlnModels
         public List<KeyValuePair<long, string>> DeliveryCountrys { set; get; }
         public List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryCountryStates { set; get; }
         public Dictionary<long, List<SelectListItem>> DeliveryDemogInfoSubDivisionSelectListItems { set; get; }
+        public List<PickupLocationModel> PickupLocationModels { set; get; }
     }
 }

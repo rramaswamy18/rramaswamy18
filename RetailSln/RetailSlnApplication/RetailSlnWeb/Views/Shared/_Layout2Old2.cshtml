@@ -1,0 +1,75 @@
+﻿@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gajaashwa Inc." />
+    <meta name="title" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")" />
+    <meta name="description" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Description")" />
+    <meta name="keywords" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Keywords")" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")</title>
+    <link rel="shortcut icon" href="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Favicon.ico" />
+    @Styles.Render("~/Content/css0")
+    @Scripts.Render("~/bundles/scripts0")
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Patua+One|Open+Sans|Lato|Roboto" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    @RenderSection("scripts", required: false)
+    @*<meta name="google-site-verification" content="hcUHXigkvItjrtwx8XIj_7jwJke4wp5fUyHVF_Wq4SU" />
+        <meta name="google-site-verification" content="UBFm0SJBuBobvNYmYRJIbcQXn7RmjuDmau-2W5DbYEc" />*@
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Google Tag Manager -->
+    @*<script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm .js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-KDPL9DB');
+        </script>*@
+    <!-- End Google Tag Manager -->
+</head>
+<body style="margin-left: auto; margin-right: auto; max-width: 100%; padding: 0px;">
+    <!-- Google Tag Manager (noscript) -->
+    @*<noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDPL9DB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>*@
+    <!-- End Google Tag Manager (noscript) -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#toggle-icon').click(function () {
+                $('#myCollapsible').toggleClass('show');
+            });
+            window_onload();
+            shoppingCartSummary_onclick();
+        });
+        function window_onload() {
+            //$(".se-pre-con").fadeOut("slow");
+            alert("Implement window on load in your page");
+        }
+    </script>
+    <script src="~/Include/orderItemCode0.js" type="text/javascript"></script>
+    @Html.Partial("_Header2")
+    <div id="divScrollIntoView"></div>
+    <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">
+        @RenderBody()
+        @Html.Partial("_Footer")
+    </div>
+    @Html.Partial("_ShoppingCartModal")
+    @Html.Partial("_LoadingModal")
+</body>
+</html>

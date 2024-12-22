@@ -14,6 +14,7 @@ namespace RetailSlnModels
         public long GiftCertId { set; get; }
         public long OrderHeaderId { set; get; }
         public long OrderPaymentId { set; get; }
+        public long PaymentModeId { set; get; }
         public string PaymentReferenceNumber { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

@@ -26,6 +26,12 @@ namespace RetailSlnModels
         [Display(Name = "Delivery Instructions")]
         public string DeliveryInstructions { set; get; }
 
+        public long? DeliveryMethodId { set; get; }
+
+        public long OrderHeaderId { set; get; }
+
+        public long? PickupLocationId { set; get; }
+
         public string PrimaryTelephoneFormatted { set; get; }
 
         public string PrimaryTelephoneHref { set; get; }
@@ -39,8 +45,6 @@ namespace RetailSlnModels
         public string PrimaryTelephoneNum { set; get; }
 
         public long? PrimaryTelephoneTelephoneCode { set; get; }
-
-        public long OrderHeaderId { set; get; }
 
         public DemogInfoAddressModel DeliveryAddressModel { set; get; }
 
