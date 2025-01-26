@@ -326,6 +326,7 @@ namespace RetailSlnDataLayer
                         {
                             CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            CorpAcctKey = sqlDataReader["CorpAcctKey"].ToString(),
                             CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
                             CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
                             CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
@@ -334,7 +335,7 @@ namespace RetailSlnDataLayer
                             MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
                             ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
                             TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
-                            DemogInfoAddressModels = new List<DemogInfoAddressModel>(),
+                            CorpAcctLocationModels = new List<CorpAcctLocationModel>(),
                             DiscountDtlModels = new List<DiscountDtlModel>(),
                         }
                      );
@@ -342,6 +343,73 @@ namespace RetailSlnDataLayer
                 sqlDataReader.Close();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return corpAcctModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+
+        }
+        public static List<CorpAcctLocationModel> GetCorpAcctLocations(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.CorpAcctLocation INNER JOIN ArchLib.DemogInfoAddress ON CorpAcctLocation.DemogInfoAddressId = DemogInfoAddress.DemogInfoAddressId ORDER BY CorpAcctId, SeqNum" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<CorpAcctLocationModel> corpAcctLocationModels = new List<CorpAcctLocationModel>();
+                while (sqlDataReader.Read())
+                {
+                    corpAcctLocationModels.Add
+                    (
+                        new CorpAcctLocationModel
+                        {
+                            CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            AlternateTelephoneCountryId = sqlDataReader["AlternateTelephoneCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["AlternateTelephoneCountryId"].ToString()),
+                            AlternateTelephoneNumber = sqlDataReader["AlternateTelephoneNumber"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["AlternateTelephoneNumber"].ToString()),
+                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                            DemogInfoAddressId = long.Parse(sqlDataReader["DemogInfoAddressId"].ToString()),
+                            LocationName = sqlDataReader["LocationName"].ToString(),
+                            PrimaryTelephoneCountryId = sqlDataReader["PrimaryTelephoneCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["PrimaryTelephoneCountryId"].ToString()),
+                            PrimaryTelephoneNumber = sqlDataReader["PrimaryTelephoneNumber"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["PrimaryTelephoneNumber"].ToString()),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            DemogInfoAddressModel = new DemogInfoAddressModel
+                            {
+                                AddressLine1 = sqlDataReader["AddressLine1"].ToString(),
+                                AddressLine2 = sqlDataReader["AddressLine2"].ToString(),
+                                AddressLine3 = sqlDataReader["AddressLine3"].ToString(),
+                                AddressLine4 = sqlDataReader["AddressLine4"].ToString(),
+                                AddressTypeId = (AddressTypeEnum)int.Parse(sqlDataReader["AddressTypeId"].ToString()),
+                                BuildingTypeId = (BuildingTypeEnum)int.Parse(sqlDataReader["BuildingTypeId"].ToString()),
+                                CityName = sqlDataReader["CityName"].ToString(),
+                                CountryAbbrev = sqlDataReader["CountryAbbrev"].ToString(),
+                                CountryDesc = sqlDataReader["CountryDesc"].ToString(),
+                                CountyName = sqlDataReader["CountyName"].ToString(),
+                                DemogInfoCityId = sqlDataReader["DemogInfoCityId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoCityId"].ToString()),
+                                DemogInfoCountyId = sqlDataReader["DemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoCountyId"].ToString()),
+                                DemogInfoCountryId = sqlDataReader["DemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoCountryId"].ToString()),
+                                DemogInfoSubDivisionId = sqlDataReader["DemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoZipId"].ToString()),
+                                DemogInfoZipId = sqlDataReader["DemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoZipId"].ToString()),
+                                DemogInfoZipPlusId = sqlDataReader["DemogInfoZipPlusId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoZipPlusId"].ToString()),
+                                HouseNumber = sqlDataReader["HouseNumber"].ToString(),
+                                ZipCode = sqlDataReader["ZipCode"].ToString(),
+                                ZipPlus4 = sqlDataReader["ZipPlus4"].ToString(),
+                                Comments = sqlDataReader["Comments"].ToString(),
+                                FromDate = sqlDataReader["FromDate"].ToString(),
+                                ToDate = sqlDataReader["ToDate"].ToString(),
+                            },
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return corpAcctLocationModels;
             }
             catch (Exception exception)
             {
@@ -1660,18 +1728,20 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += "        SELECT Person.PersonId, Person.FirstName, Person.LastName, CorpAcct.CorpAcctName, AspNetUser.Email" + Environment.NewLine;
+                sqlStmt += "        SELECT Person.PersonId, Person.FirstName, Person.LastName, CorpAcct.CorpAcctName, CorpAcctLocation.CorpAcctLocationId, CorpAcctLocation.LocationName, AspNetUser.Email" + Environment.NewLine;
                 sqlStmt += "          FROM RetailSlnSch.CorpAcct" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1 ON CorpAcct.CorpAcctId = PersonExtn1.CorpAcctId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CorpAcctLocation ON CorpAcct.CorpAcctId = CorpAcctLocation.CorpAcctId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1 ON CorpAcct.CorpAcctId = PersonExtn1.CorpAcctId AND CorpAcctLocation.CorpAcctLocationId = PersonExtn1.CorpAcctLocationId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN ArchLib.Person ON PersonExtn1.PersonId = Person.PersonId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN ArchLib.AspNetUser ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
-                sqlStmt += $"        WHERE CorpAcct.CorpAcctName LIKE '%{searchText}%'" + Environment.NewLine;
-                sqlStmt += "UNION" + Environment.NewLine;
-                sqlStmt += "        SELECT Person.PersonId, Person.FirstName, Person.LastName, '' AS CorpAcctName, AspNetUser.Email" + Environment.NewLine;
-                sqlStmt += "          FROM ArchLib.Person" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN ArchLib.AspNetUser ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
-                sqlStmt += $"        WHERE Person.FirstName LIKE '%{searchText}%' OR Person.LastName LIKE '%{searchText}%'" + Environment.NewLine;
+                sqlStmt += $"        WHERE CorpAcct.CorpAcctName LIKE '%{searchText}%' OR Person.FirstName LIKE '%{searchText}%' OR Person.LastName LIKE '%{searchText}%' OR AspNetUser.Email LIKE '%{searchText}%'" + Environment.NewLine;
                 sqlStmt += "      ORDER BY AspNetUser.Email, Person.FirstName, Person.LastName" + Environment.NewLine;
+                //sqlStmt += "UNION" + Environment.NewLine;
+                //sqlStmt += "        SELECT Person.PersonId, Person.FirstName, Person.LastName, '' AS CorpAcctName, '' AS LocationName, AspNetUser.Email" + Environment.NewLine;
+                //sqlStmt += "          FROM ArchLib.Person" + Environment.NewLine;
+                //sqlStmt += "    INNER JOIN ArchLib.AspNetUser ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
+                //sqlStmt += $"        WHERE Person.FirstName LIKE '%{searchText}%' OR Person.LastName LIKE '%{searchText}%' OR AspNetUser.Email LIKE '%{searchText}%'" + Environment.NewLine;
+                //sqlStmt += "      ORDER BY AspNetUser.Email, Person.FirstName, Person.LastName" + Environment.NewLine;
                 //sqlStmt += "        " + Environment.NewLine;
                 //sqlStmt += "        " + Environment.NewLine;
                 //sqlStmt += "        " + Environment.NewLine;
@@ -1685,9 +1755,11 @@ namespace RetailSlnDataLayer
                         new SearchForEmailAddressDataModel
                         {
                             CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                            CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
                             EmailAddress = sqlDataReader["Email"].ToString(),
                             FirstName = sqlDataReader["FirstName"].ToString(),
                             LastName = sqlDataReader["LastName"].ToString(),
+                            LocationName = sqlDataReader["LocationName"].ToString(),
                             PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
                         }
                     );
@@ -1710,6 +1782,7 @@ namespace RetailSlnDataLayer
                 string sqlStmt = "";
                 #region
                 sqlStmt += "        SELECT PickupLocation.*" + Environment.NewLine;
+                sqlStmt += "              ,DemogInfoAddress.DemogInfoAddressId" + Environment.NewLine;
                 sqlStmt += "              ,DemogInfoAddress.AddressLine1" + Environment.NewLine;
                 sqlStmt += "              ,DemogInfoAddress.AddressLine2" + Environment.NewLine;
                 sqlStmt += "              ,DemogInfoAddress.DemogInfoCountryId" + Environment.NewLine;
@@ -1748,6 +1821,7 @@ namespace RetailSlnDataLayer
                             LocationNameDesc = sqlDataReader["LocationNameDesc"].ToString(),
                             DemogInfoAddressModel = new DemogInfoAddressModel
                             {
+                                DemogInfoAddressId = long.Parse(sqlDataReader["DemogInfoAddressId"].ToString()),
                                 AddressLine1 = sqlDataReader["AddressLine1"].ToString(),
                                 AddressLine2 = sqlDataReader["AddressLine2"].ToString(),
                                 DemogInfoCountryId = long.Parse(sqlDataReader["DemogInfoCountryId"].ToString()),

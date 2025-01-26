@@ -6,14 +6,14 @@ using System.Web;
 
 namespace RetailSlnEnumerations
 {
-    public enum CorpAcctTypeEnum : int
+    public enum CorpAcctTypeEnum
     {
-        [Description("Individual (Retail)")]
+        [Description("Individual")]
         Individual = 100,
-        [Description("Wholesale")]
+        [Description("Retail / Wholesale")]
         Wholesale = 200,
-        [Description("Bulk Orders")]
-        BulkOrders = 300,
+        [Description("Temple / Bulk Orders")]
+        BulkOrder = 300,
         [Description("Priest")]
         Priest = 400,
     }

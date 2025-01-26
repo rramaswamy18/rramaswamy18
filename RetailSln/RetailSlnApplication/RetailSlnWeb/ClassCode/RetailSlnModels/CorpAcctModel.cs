@@ -13,6 +13,8 @@ namespace RetailSlnModels
 
         public long ClientId { set; get; }
 
+        public string CorpAcctKey { set; get; }
+
         public string CorpAcctName { set; get; }
 
         public CorpAcctTypeEnum? CorpAcctTypeId { set; get; }
@@ -29,7 +31,7 @@ namespace RetailSlnModels
 
         public string TaxIdentNum { set; get; }
 
-        public List<DemogInfoAddressModel> DemogInfoAddressModels { set; get; }
+        public List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
 
         public List<DiscountDtlModel> DiscountDtlModels { set; get; }
 

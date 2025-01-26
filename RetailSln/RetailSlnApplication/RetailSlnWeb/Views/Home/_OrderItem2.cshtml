@@ -1,4 +1,6 @@
 ﻿@using ArchitectureLibraryModels
+@using RetailSlnModels
+@model OrderCategoryItemModel
 @{
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string aspNetRoleName;
@@ -11,21 +13,92 @@
         aspNetRoleName = sessionObjectModel.AspNetRoleName;
     }
 }
-<table style="margin-left: auto; margin-right: auto;">
+<table class="table-responsive" style="margin-left: auto; margin-right: auto; padding: 9px; width: 63%;">
     <tr>
-        <th class="text-right" style="padding: 9px;">
-            Create order for :
-        </th>
-        <td class="text-left" style="padding: 9px;">
-            <input class="form-control validate" id="searchOrderCreatedForEmailAddress" maxlength="250" placeholder="Search for email" , style="width: 243px;" />
+        <td class="text-left" style="padding: 9px; width: 45%;">
+            <input class="form-control validate" id="searchOrderCreatedForEmailAddress" maxlength="250" placeholder="Search for email" style="width: 99%;" />
         </td>
-        <td class="text-left" style="padding: 9px;">
+        <td class="text-left" style="padding: 9px; width: 9%;">
             <button class="btn btn-primary" onclick="javascript: return searchOrderCreatedForEmailAddress_onclick();">Search</button>
         </td>
-        <td class="text-left" style="padding: 9px; width: 225px;">
-            <select aria-label="Order to be created for" class="form-control" id="OrderCreatedForPersonId" name="OrderCreatedForPersonId" style="width: 351px;">
+        <td class="text-left" style="padding: 9px; width: 45%;">
+            <select aria-label="Order to be created for" class="form-control" id="orderCreatedFor" name="orderCreatedFor" onchange="javascript: return orderCreatedFor_onchange();" style="width: 99%;">
                 <option value="">--- Select ---</option>
             </select>
+            <input id="OrderCreatedForPersonId" type="hidden" />
+            <input id="OrderCreatedForLocationId" type="hidden" />
         </td>
     </tr>
 </table>
+<div style="width: 100%; height: 12px; border-bottom: 1px solid black; text-align: center">
+    <a href="javascript: void(0);" id="btnUserAddEdit" onclick="javascript: return btnUserAddEdit_onclick();" style="background-color: #f3f5f6; color: #a54000; font-size: 15px; font-weight: bold; text-decoration: underline;">
+        User Add/Edit
+    </a>
+</div>
+<div id="tblUserAddEdit" style="display: none;">
+    <br style="clear: both;" />
+    <form id="formUserAddEdit">
+        @Html.Partial("_UserAddEdit", Model.UserAddEditModel)
+    </form>
+    <table class="table-responsive" style="margin-left: auto; margin-right: auto; padding: 9px; width: 63%;">
+        <tr>
+            <td class="text-center" style="padding: 0px;">
+                <button class="btn btn-primary" id="btnUserAddEditSave" onclick="javascript: return btnUserAddEditSave_onclick();">Submit</button>
+            </td>
+        </tr>
+    </table>
+</div>
+@Html.Partial("_OrderItem1", Model)
+<script type="text/javascript">
+    function btnUserAddEditSave_onclick() {
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        const formPostData = new FormData(formUserAddEdit);
+        //console.log(formPostData);
+        // Send the POST request
+        fetch('/Home/UserAddEdit', {
+            method: "POST",
+            body: formPostData,
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                $("#loadingModal").modal('hide');
+                console.log(1, responseData);
+                document.getElementById("formUserAddEdit").innerHTML = responseData.htmlString;
+                var returnValue;
+                if (responseData.success) {
+                    alert("User created successfully!!!");
+                    btnUserAddEdit_onclick();
+                    returnValue = true;
+                }
+                else {
+                    returnValue = false;
+                    alert("Please fix errors to continue???");
+                }
+                return returnValue;
+            })
+            .catch(error => {
+                $("#loadingModal").modal('hide');
+                returnValue = false;
+                alert("Error while creating user???");
+                console.log(error);
+                return false;
+            });
+    }
+    function btnUserAddEdit_onclick() {
+        if (document.getElementById("tblUserAddEdit").style.display == "none") {
+            document.getElementById("tblUserAddEdit").style.display = "block";
+        }
+        else {
+            document.getElementById("tblUserAddEdit").style.display = "none";
+        }
+    }
+    function orderCreatedFor_onchange() {
+        document.getElementById("OrderCreatedForPersonId").value = "";
+        document.getElementById("OrderCreatedForLocationId").value = "";
+        var indexOf1 = document.getElementById("orderCreatedFor").value.indexOf(";");
+        if (indexOf1 > -1) { 
+            document.getElementById("OrderCreatedForPersonId").value = document.getElementById("orderCreatedFor").value.substr(0, indexOf1);
+            document.getElementById("OrderCreatedForLocationId").value = document.getElementById("orderCreatedFor").value.substr(indexOf1 + 1);
+        }
+    }
+</script>

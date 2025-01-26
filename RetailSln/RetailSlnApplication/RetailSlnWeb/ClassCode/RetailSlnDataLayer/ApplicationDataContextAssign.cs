@@ -12,13 +12,11 @@ namespace RetailSlnDataLayer
         public static void AssignOrderHeader(OrderHeader orderHeader, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
-            sqlCommand.Parameters["@EmailAddress"].Value = orderHeader.EmailAddress;
-            sqlCommand.Parameters["@OrderCreatedForPersonId"].Value = (int)orderHeader.OrderCreatedForPersonId;
+            sqlCommand.Parameters["@CreatedForPersonId"].Value = (int)orderHeader.CreatedForPersonId;
             sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
             sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
             sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
-            sqlCommand.Parameters["@TelephoneCountryId"].Value = orderHeader.TelephoneCountryId;
-            sqlCommand.Parameters["@TelephoneNumber"].Value = orderHeader.TelephoneNumber;
+            sqlCommand.Parameters["@SaveThisAddress"].Value = orderHeader.SaveThisAddress ? 1 : 0;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignOrderDetail(OrderDetail orderDetail, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -57,18 +55,6 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@SeqNum"].Value = orderDetailItemBundle.SeqNum;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
-        //public static void AssignDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    sqlCommand.Parameters["@ClientId"].Value = clientId;
-        //    sqlCommand.Parameters["@AlternateTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.AlternateTelephoneDemogInfoCountryId;
-        //    sqlCommand.Parameters["@AlternateTelephoneNum"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.AlternateTelephoneNum) ? (object)DBNull.Value : deliveryInfoDataModel.AlternateTelephoneNum;
-        //    sqlCommand.Parameters["@DeliveryAddressId"].Value = deliveryInfoDataModel.DeliveryAddressModel.DemogInfoAddressId;
-        //    sqlCommand.Parameters["@DeliveryInstructions"].Value = string.IsNullOrWhiteSpace(deliveryInfoDataModel.DeliveryInstructions) ? (object)DBNull.Value : deliveryInfoDataModel.DeliveryInstructions;
-        //    sqlCommand.Parameters["@OrderHeaderId"].Value = (int)deliveryInfoDataModel.OrderHeaderId;
-        //    sqlCommand.Parameters["@PrimaryTelephoneDemogInfoCountryId"].Value = deliveryInfoDataModel.PrimaryTelephoneDemogInfoCountryId;
-        //    sqlCommand.Parameters["@PrimaryTelephoneNum"].Value = deliveryInfoDataModel.PrimaryTelephoneNum;
-        //    sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
-        //}
         public static void AssignOrderDelivery(DeliveryDataModel deliveryDataModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;

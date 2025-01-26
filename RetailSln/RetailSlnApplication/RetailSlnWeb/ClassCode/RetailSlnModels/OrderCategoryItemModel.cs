@@ -19,5 +19,6 @@ namespace RetailSlnModels
         public int PageSize { set; get; }
         public int TotalRowCount { set; get; }
         public string ViewName { set; get; }
+        public UserAddEditModel UserAddEditModel { set; get; }
     }
 }

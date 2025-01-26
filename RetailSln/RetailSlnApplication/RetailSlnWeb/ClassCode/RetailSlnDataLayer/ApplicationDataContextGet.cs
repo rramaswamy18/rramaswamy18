@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 namespace RetailSlnDataLayer
@@ -57,7 +58,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static PersonExtn1Model GetPersonExtn1FromPersonId(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static PersonExtn1Model GetPersonExtn1FromPersonId(long personId, long corpAcctLocationId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -65,7 +66,15 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 INNER JOIN RetailSlnSch.CorpAcct ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId WHERE PersonExtn1.PersonId = " + personId + Environment.NewLine;
+                //sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 INNER JOIN RetailSlnSch.CorpAcct ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId WHERE PersonExtn1.PersonId = " + personId + Environment.NewLine;
+                if (corpAcctLocationId > -1)
+                {
+                    sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 WHERE PersonExtn1.PersonId = " + personId + " AND PersonExtn1.CorpAcctLocationId = " + corpAcctLocationId + Environment.NewLine;
+                }
+                else
+                {
+                    sqlStmt += "SELECT TOP 1 * FROM RetailSlnSch.PersonExtn1 WHERE PersonExtn1.PersonId = " + personId + " ORDER BY PersonExtn1.CorpAcctLocationId" + Environment.NewLine;
+                }
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 PersonExtn1Model personExtn1Model;
@@ -77,21 +86,22 @@ namespace RetailSlnDataLayer
                         ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                         PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
                         CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
-                        CorpAcctModel = new CorpAcctModel
-                        {
-                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
-                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
-                            CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
-                            CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
-                            CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
-                            CreditSale = bool.Parse(sqlDataReader["CreditSale"].ToString()),
-                            MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
-                            ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
-                            TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
-                            DemogInfoAddressModels = new List<DemogInfoAddressModel>(),
-                            DiscountDtlModels = new List<DiscountDtlModel>(),
-                        }
+                        CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
+                        //CorpAcctModel = new CorpAcctModel
+                        //{
+                        //    CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                        //    ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        //    CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                        //    CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
+                        //    CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
+                        //    CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
+                        //    CreditSale = bool.Parse(sqlDataReader["CreditSale"].ToString()),
+                        //    MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
+                        //    ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                        //    TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
+                        //    CorpAcctLocationModels = new List<CorpAcctLocationModel>(),
+                        //    DiscountDtlModels = new List<DiscountDtlModel>(),
+                        //}
                     };
                 }
                 else
@@ -331,6 +341,33 @@ namespace RetailSlnDataLayer
                 };
             }
             sqlDataReader.Close();
+        }
+        public static int GetPersonCountForCorpAcctId(long corpAcctId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(DISTINCT PersonId) FROM RetailSlnSch.PersonExtn1 WHERE CorpAcctId = " + corpAcctId, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                int personCount;
+                if (sqlDataReader.Read())
+                {
+                    personCount = int.Parse(sqlDataReader[0].ToString());
+                }
+                else
+                {
+                    personCount = 0;
+                }
+                sqlDataReader.Close();
+                return personCount;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
         }
     }
 }

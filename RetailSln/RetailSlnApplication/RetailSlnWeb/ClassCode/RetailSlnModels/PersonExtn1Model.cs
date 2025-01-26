@@ -12,7 +12,9 @@ namespace RetailSlnModels
         public long ClientId { set; get; }
         public long? PersonId { set; get; }
         public long? CorpAcctId { set; get; }
-        public PersonModel PersonModel { set; get; }
+        public long? CorpAcctLocationId { set; get; }
         public CorpAcctModel CorpAcctModel { set; get; }
+        public CorpAcctLocationModel CorpAcctLocationModel { set; get; }
+        public PersonModel PersonModel { set; get; }
     }
 }

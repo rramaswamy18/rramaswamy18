@@ -11,9 +11,9 @@ namespace RetailSlnModels
     public class PaymentModeModel
     {
         public string PaymentModeDesc { set; get; }
-        [Display(Name = "Payment Mode")]
-        [Required(ErrorMessage = "Select Payment Mode")]
         public string PaymentModeDesc1 { set; get; }
+        [Display(Name = "Payment...")]
+        [Required(ErrorMessage = "Select Payment")]
         public PaymentModeEnum? PaymentModeId { set; get; }
         public string PaymentModeName { set; get; }
         public List<CodeDataModel> PaymentModes { set; get; }

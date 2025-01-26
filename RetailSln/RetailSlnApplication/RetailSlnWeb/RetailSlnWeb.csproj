@@ -225,6 +225,7 @@
     <Compile Include="ClassCode\RetailSlnModels\CategoryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CheckoutModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiCodeTypeModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CorpAcctLocationModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CorpAcctModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CouponPaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CreditCardProcessModel.cs" />
@@ -301,13 +302,13 @@
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\UserAddEditModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\GeneralUtilityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RetailApiController.cs" />
     <Compile Include="Controllers\RetailSlnController.cs" />
-    <Compile Include="Controllers\RetailSlnControllerBackup.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1166,6 +1167,8 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt">
       <DependentUpon>Web.config.txt</DependentUpon>
     </Content>
+    <Content Include="Images\CircleWithPlus.jpeg" />
+    <Content Include="Images\CircleWithPlus.png" />
     <Content Include="Images\CreditCard0.png" />
     <Content Include="Images\Home1.png" />
     <Content Include="Images\Home2.png" />
@@ -1212,6 +1215,7 @@
     <Content Include="Include\jquery-te.png" />
     <Content Include="Include\Site.css" />
     <Content Include="Include\TextEditor.css" />
+    <Content Include="Invoices\%40Temp.txt" />
     <Content Include="libman.json" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Home\_OrderInvoiceData.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Home\_ShoppingCartEmailBody1.cshtml" />
@@ -1358,11 +1362,8 @@
     <Content Include="Views\Home\_Carousel1.cshtml" />
     <Content Include="Views\Home\_Carousel2.cshtml" />
     <Content Include="Views\Home\_ContactUs.cshtml" />
-    <Content Include="Views\Home\_ContactUsData.cshtml" />
-    <Content Include="Views\Home\_ContactUsDetail.cshtml" />
     <Content Include="Views\Home\_ContactUsEmailBody.cshtml" />
     <Content Include="Views\Home\_ContactUsEmailSubject.cshtml" />
-    <Content Include="Views\Home\_ContactUsInfo.cshtml" />
     <Content Include="Views\Home\_Error404.cshtml" />
     <Content Include="Views\Home\_FAQs.cshtml" />
     <Content Include="Views\Home\_Home.cshtml" />
@@ -1404,7 +1405,6 @@
     <Content Include="Views\Home\_UserProfileEmailSubject.cshtml" />
     <Content Include="Views\Home\_OrderCategoryItemAll.cshtml" />
     <Content Include="Views\Home\_Checkout.cshtml" />
-    <Content Include="Views\Home\_DeliveryInfoBackup.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoData.cshtml" />
     <Content Include="Views\Home\_DeliveryAddressData.cshtml" />
     <Content Include="Views\Home\_DeliveryMethodData.cshtml" />
@@ -1456,7 +1456,6 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuHamburger.cshtml" />
     <Content Include="Views\Home\_ContactUsData1.cshtml" />
-    <Content Include="Views\Home\_ContactUsDetail1.cshtml" />
     <Content Include="Views\Shared\_HeaderMenuNew.cshtml" />
     <Content Include="Views\Home\_ItemBundleItemListView.cshtml" />
     <Content Include="Views\Home\ItemBundleItemListView.cshtml" />
@@ -1539,11 +1538,22 @@
     <Content Include="Views\Home\_OrderItem0 - Copy.cshtml" />
     <Content Include="Views\Shared\_HeaderMenu.cshtml" />
     <Content Include="Views\Shared\_LayoutOld1.cshtml" />
-    <Content Include="Views\Home\Index - Copy.cshtml" />
     <Content Include="Views\Home\_OrderItem2.cshtml" />
     <Content Include="Views\Shared\_Layout2Old2.cshtml" />
-    <Content Include="Views\Home\_LoginUserProfGuestEmailSubject.cshtml" />
-    <Content Include="Views\Home\_LoginUserProfGuestEmailBody.cshtml" />
+    <Content Include="Views\Home\_OTPEmailSubject.cshtml" />
+    <Content Include="Views\Home\_OTPEmailBody.cshtml" />
+    <Content Include="Views\Home\_OTPData.cshtml" />
+    <Content Include="Views\Home\_OTPData - Copy.cshtml" />
+    <Content Include="Views\Home\_DeliveryInfoData2.cshtml" />
+    <Content Include="Views\Home\_ContactUsData.cshtml" />
+    <Content Include="Views\Home\_ContactUsInfo1.cshtml" />
+    <Content Include="Views\Home\CheckoutGuest.cshtml" />
+    <Content Include="Views\Home\_CheckoutGuest.cshtml" />
+    <Content Include="Views\Home\_ContactUsInfo2.cshtml" />
+    <Content Include="Views\Home\_ContactUsData2.cshtml" />
+    <Content Include="Views\Home\_UserAddEdit.cshtml" />
+    <Content Include="Views\Home\_UserAddEditEmailBody.cshtml" />
+    <Content Include="Views\Home\_UserAddEditEmailSubject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,82 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@model OTPModel
+@{
+    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("OTPSendType", "");
+    var htmlFieldPrefix = ((System.Web.Mvc.ViewDataDictionary)(ViewData)).TemplateInfo.HtmlFieldPrefix;
+    var htmlFieldPrefixName = htmlFieldPrefix == "" ? "" : htmlFieldPrefix + ".";
+    htmlFieldPrefix += htmlFieldPrefix == "" ? "" : "_";
+}
+<style>
+    #@(htmlFieldPrefix)OTPEmailAddress-error, #@(htmlFieldPrefix)OTPEmailAddressConfirm-error,
+    #@(htmlFieldPrefix)OTPTelephoneCountryId-error, #@(htmlFieldPrefix)OTPTelephoneNumber-error,
+    #@(htmlFieldPrefix)OTPTelephoneCountryIdConfirm-error, #@(htmlFieldPrefix)OTPTelephoneNumberConfirm-error,
+    #@(htmlFieldPrefix)CaptchaAnswerOTP-error, #@(htmlFieldPrefix)OTPCode-error, #@(htmlFieldPrefix)OTPSendTypeId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+    }
+</style>
+@{
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+        </div>
+    }
+    if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }
+}
+<div class="row" style="text-align: left;">
+    @Html.LabelFor(m => m.OTPEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    <br style="clear: both;" />
+    @Html.TextBoxFor(m => m.OTPEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPEmailAddress), style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPEmailAddress, "", new { id = "OTPEmailAddress-error" }).ToHtmlString()))
+</div>
+
+<div class="row" style="text-align: left;">
+    @Html.LabelFor(m => m.OTPTelephoneCountryId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.DropDownListFor(m => m.OTPTelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.OTPTelephoneCountryId), "---", new { @class = "form-control", style = "float: left; font-size: 14px; width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPTelephoneCountryId, "", new { id = "OTPTelephoneCountryId-error", style = "width: 90%;" }).ToHtmlString()))
+</div>
+
+<div class="row" style="text-align: left;">
+    @Html.LabelFor(m => m.OTPTelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.OTPTelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPTelephoneNumber), style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPTelephoneNumber, "", new { id = "OTPTelephoneNumber-error", style = "width: 90%;" }).ToHtmlString()))
+</div>
+
+<div class="row" style="text-align: left;">
+    @Html.LabelFor(m => m.OTPSendTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    <br style="clear: both;" />
+    <label class="radio-inline" style="font-weight: bold;">
+        <input checked="checked" id="@(htmlFieldPrefix)OTPSendTypeId0" name="@(htmlFieldPrefixName)OTPSendTypeId" type="radio" value="@codeDataModels[0].CodeDataNameId" />@codeDataModels[0].CodeDataDesc0
+    </label>
+    @for (int i = 1; i < codeDataModels.Count; i++)
+    {
+        <label class="radio-inline" style="font-weight: bold;">
+            <input disabled="disabled" id="@(htmlFieldPrefix)OTPSendTypeId@(i)" name="@(htmlFieldPrefixName)OTPSendTypeId" type="radio" value="@codeDataModels[i].CodeDataNameId" />@codeDataModels[i].CodeDataDesc0
+        </label>
+    }
+    <button class="btn btn-primary" id="getNewOTPGuest" onclick="javascript: return getNewOTPGuest_onclick();" style="font-size: 18px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">get new otp</button>
+    <br style="clear: both;" />
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPSendTypeId, "", new { id = htmlFieldPrefix + "OTPSendTypeId-error", style = "float: left; width: 63%;" }).ToHtmlString()))
+</div>
+
+<div class="row" style="text-align: left;">
+    @Html.LabelFor(m => m.OTPCode)&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span> Expires <span id="OTPExpiryTime" style="color: #000000; font-size: 18px; font-weight: bold;">@Model.OTPExpiryTime</span>
+    <br style="clear: both;" />
+    @Html.TextBoxFor(m => m.OTPCode, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPCode), style = "width: 90%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPCode, "", new { id = htmlFieldPrefix + "OTPCode-error" }).ToHtmlString()))
+</div>

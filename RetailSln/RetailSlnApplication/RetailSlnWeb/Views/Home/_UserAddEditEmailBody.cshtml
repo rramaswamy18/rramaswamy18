@@ -1,0 +1,49 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model UserAddEditModel
+@{
+    long clientId = ArchLibCache.ClientId;
+}
+Dear Valued Customer,
+<br />
+<br />
+Our staff, has added you to our family:
+<br />
+<br />
+Emai : @Model.EmailAddress
+<br />
+<br />
+Phone# : @Model.TelephoneNumber
+<br />
+<br />
+Login Id : @Model.LoginId
+<br />
+<br />
+Login Type : @Model.LoginTypeId
+<br />
+<br />
+Please click the below link to setup your account
+<br />
+<br />
+<a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action("ResetPassword", "Home")" style="text-decoration: underline;" target="_blank">Click here to Reset Password</a>
+<br />
+Steps to reset
+<br />
+1. Click the link
+<br />
+2. Enter the email address
+<br />
+3. Answer Captcha
+<br />
+4. Click Reset Password
+<br />
+5. Enter the OTP you receive and other information
+<br />
+6. Click Update Password
+<br />
+<br />
+<span style="background-color: #deecf9;">
+    Please do not hesitate to call us at @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") if you have any questions.
+    <br /><br />
+    Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" target="_blank">Contact Us Here</a> to let us know.
+</span>

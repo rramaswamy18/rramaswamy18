@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Mvc;
 
 namespace RetailSlnBusinessLayer
 {
@@ -40,21 +41,45 @@ namespace RetailSlnBusinessLayer
             {
                 paymentInfoModel.DeliveryMethodModel = new DeliveryMethodModel();
             }
-            paymentInfoModel.DeliveryMethodModel.DeliveryMethods = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
-            var codeDataModel = paymentInfoModel.DeliveryMethodModel.DeliveryMethodId == null ? null : paymentInfoModel.DeliveryMethodModel.DeliveryMethods.First(x => x.CodeDataNameId == (long)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId.Value);
-            if (codeDataModel != null)
-            {
-                paymentInfoModel.DeliveryMethodModel.DeliveryMethodDesc = codeDataModel.CodeDataDesc0;
-            }
             if (paymentInfoModel.PaymentModeModel == null)
             {
                 paymentInfoModel.PaymentModeModel = new PaymentModeModel();
             }
-            paymentInfoModel.PaymentModeModel.PaymentModes = new List<CodeDataModel>();
+            var deliveryMethodModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId;
+            var codeDataModel = paymentInfoModel.DeliveryMethodModel.DeliveryMethodId == null ? null : deliveryMethodModels.First(x => x.CodeDataNameId == (long)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId.Value);
+            if (codeDataModel != null)
+            {
+                paymentInfoModel.DeliveryMethodModel.DeliveryMethodDesc = codeDataModel.CodeDataDesc0;
+                paymentInfoModel.DeliveryMethodModel.DeliveryMethodDesc1 = codeDataModel.CodeDataDesc2;
+            }
             ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel;
+            int i, fromIndex, toIndex;
+            if (applSessionObjectModel.CorpAcctModel.CreditSale)
+            {
+                fromIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count - 1;
+                toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count;
+            }
+            else
+            {
+                fromIndex = 0;
+                toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count;
+            }
+            paymentInfoModel.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems = new List<SelectListItem>();
+            for (i = fromIndex; i < toIndex; i++)
+            {
+                paymentInfoModel.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Add(RetailSlnCache.DeliveryMethodSelectListItems[i]);
+            }
+            if (applSessionObjectModel.CorpAcctModel.CreditSale)
+            {
+                paymentInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = RetailSlnCache.PickupLocationDemogInfoAddressModels2;
+            }
+            else
+            {
+                paymentInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = RetailSlnCache.PickupLocationDemogInfoAddressModels1;
+            }
+            paymentInfoModel.PaymentModeModel.PaymentModes = new List<CodeDataModel>();
             var corpAccountId = applSessionObjectModel.CorpAcctModel.CorpAcctId;
             List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
-            int i, fromIndex, toIndex;
             if (applSessionObjectModel.CorpAcctModel.CreditSale)
             {
                 fromIndex = 0;

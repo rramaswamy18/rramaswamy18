@@ -1,10 +1,10 @@
 ﻿//Sriramajayam
 //orderItemCode1.js
-function checkoutGuestUser_onclick() {
+function checkoutLoginUserProfGuest_onclick() {
     console.log("00000000", "loginUserProfGuestSave_onclick", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/CheckoutGuest";
-    var postData = $("#formLoginUserProfGuestData").serialize();
+    var postData = $("#formOTPData").serialize();
     $.ajax({
         url: url,
         type: "POST",
@@ -15,19 +15,20 @@ function checkoutGuestUser_onclick() {
         success: function (responseData, textStatus, request) {
             $("#loadingModal").modal('hide');
             if (responseData.success) {
-                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-                document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
-                document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
+                //document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                //document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
+                //document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
+                window.location = responseData.htmlString;
             }
             else {
-                document.getElementById("formLoginUserProfGuestData").innerHTML = responseData.htmlString;
+                document.getElementById("formOTPData").innerHTML = responseData.htmlString;
             }
-            console.log("00001000", "loginUserProfGuestSave_onclick success", responseData.processMessage);
+            console.log("00001000", "checkoutLoginUserProfGuest_onclick success", responseData.processMessage);
         },
         error: function (xhr, exception) {
             $("#loadingModal").modal('hide');
             document.getElementById("formLoginUserProfGuestData").innerHTML = xhr.responseText;
-            console.log("00099000", "loginUserProfGuestSave_onclick", "ERROR???", exception, xhr);
+            console.log("00099000", "checkoutLoginUserProfGuest_onclick", "ERROR???", exception, xhr);
         }
     });
 }
@@ -46,10 +47,13 @@ function checkoutLoginUser_onclick() {
         success: function (responseData, textStatus, request) {
             $("#loadingModal").modal('hide');
             if (responseData.success) {
-                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-                document.getElementById("divScrollIntoView").scrollIntoView();
+                //document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                //document.getElementById("divScrollIntoView").scrollIntoView();
+                console.log("00000900", "checkoutLoginUser_onclick success");
+                window.location = responseData.htmlString;
             }
             else {
+                console.log("00000950", "checkoutLoginUser_onclick error");
                 document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
                 document.getElementById("divScrollIntoView").scrollIntoView();
                 alert("Please fix error(s) and continue!!!");
@@ -102,6 +106,12 @@ function deliveryInfoSave_onclick() {
             console.log("00099000", "deliveryInfoSave_onclick error", exception, xhr);
         }
     });
+}
+function deliveryMethodIdPickupLocationId_onchange(deliveryMethodElement) {
+    for (var i = 1; i < deliveryMethodElement.options.length; i++) {
+        document.getElementById("divPickupLocationAddress" + i).style.display = "none";
+    }
+    document.getElementById("divPickupLocationAddress" + deliveryMethodElement.selectedIndex).style.display = "block";
 }
 function giftCertBalance_onclick() {
     console.log("00000000", "giftCertBalance_onclick", "ENTER!!!");

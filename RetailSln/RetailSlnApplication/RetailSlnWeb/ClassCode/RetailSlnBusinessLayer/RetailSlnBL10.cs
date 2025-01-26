@@ -7,6 +7,7 @@ using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryTemplate;
 using ArchitectureLibraryUtility;
+using RetailSlnCacheData;
 using RetailSlnDataLayer;
 using RetailSlnEnumerations;
 using RetailSlnModels;
@@ -23,7 +24,7 @@ namespace RetailSlnBusinessLayer
 {
     public partial class RetailSlnBL
     {
-        public ApplSessionObjectModel LoginUserProf(long personId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ApplSessionObjectModel LoginUserProf(long personId, long corpAcctLocationId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ArchitectureLibraryException.ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -31,12 +32,20 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personId, corpAcctLocationId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplSessionObjectModel applSessionObjectModel = new ApplSessionObjectModel
                 {
-                    CorpAcctModel = personExtn1Model.CorpAcctModel,
+                    CorpAcctModel = RetailSlnCache.CorpAcctModels.First(x => x.CorpAcctId == personExtn1Model.CorpAcctId),
                     TotalBalanceDue = 0,
                 };
+                if (corpAcctLocationId == -1)
+                {
+                    applSessionObjectModel.CorpAcctLocationId = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels[0].CorpAcctLocationId.Value;
+                }
+                else
+                {
+                    applSessionObjectModel.CorpAcctLocationId = corpAcctLocationId;
+                }
                 return applSessionObjectModel;
             }
             catch (Exception exception)

@@ -43,6 +43,9 @@ namespace RetailSlnModels
 
         public long? PersonId { set; get; }
 
+        [Display(Name = "Save this address")]
+        public bool SaveThisAddress { set; get; }
+
         public string TelephoneCode { set; get; }
 
         public long TelephoneCountryId { set; get; }

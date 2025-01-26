@@ -388,13 +388,13 @@ namespace RetailSlnBusinessLayer
                 string privateKey = ArchLibCache.GetPrivateKey(clientId);
                 loginPassword = EncryptDecrypt.EncryptDataMd5(loginPassword, privateKey);
                 ApiLoginUserProfModel apiLoginUserProfModel = new ApiLoginUserProfModel();
-                PersonModel personModel = ArchLibDataContext.SelectLoginUserProf(loginEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                PersonModel personModel = ArchLibDataContext.GetPersonFromEmailAddress(loginEmailAddress, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (personModel != null)
                 {
                     long passwordExpiry = long.Parse(DateTime.Parse(personModel.AspNetUserModel.PasswordExpiry).ToString("yyyyMMddHHmmss"));
                     if (personModel.AspNetUserModel.LoginPassword == loginPassword && passwordExpiry >= long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")) && personModel.StatusId == GenericStatusEnum.Active && personModel.AspNetUserModel.UserStatusId == UserStatusEnum.Active)
                     {
-                        PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personModel.PersonId.Value, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personModel.PersonId.Value, -1, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         apiLoginUserProfModel = new ApiLoginUserProfModel
                         {
                             ClientId = clientId,
@@ -569,11 +569,11 @@ namespace RetailSlnBusinessLayer
                 ArchLibDataContext.OpenSqlConnection();
                 string privateKey = ArchLibCache.GetPrivateKey(clientId);
                 ApiLoginUserProfModel apiLoginUserProfModel = new ApiLoginUserProfModel();
-                PersonModel personModel = ArchLibDataContext.SelectLoginUserProf(username, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                PersonModel personModel = ArchLibDataContext.GetPersonFromEmailAddress(username, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (personModel != null)
                 {
                     long passwordExpiry = long.Parse(DateTime.Parse(personModel.AspNetUserModel.PasswordExpiry).ToString("yyyyMMddHHmmss"));
-                    PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personModel.PersonId.Value, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    PersonExtn1Model personExtn1Model = ApplicationDataContext.GetPersonExtn1FromPersonId(personModel.PersonId.Value, -1, ArchLibDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     apiLoginUserProfModel = new ApiLoginUserProfModel
                     {
                         ClientId = clientId,

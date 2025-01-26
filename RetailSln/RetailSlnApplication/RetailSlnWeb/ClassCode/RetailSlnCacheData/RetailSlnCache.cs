@@ -1,7 +1,9 @@
 ﻿using ArchitectureLibraryCacheData;
 using ArchitectureLibraryDataLayer;
 using ArchitectureLibraryEnumerations;
+using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
+using ArchitectureLibraryUtility;
 using RetailSlnCacheBusinessLayer;
 using RetailSlnEnumerations;
 using RetailSlnModels;
@@ -35,6 +37,7 @@ namespace RetailSlnCacheData
         public static Dictionary<string, Dictionary<long, List<CategoryItemLayoutModel>>> AspNetRoleCategoryItemLayoutModels { set; get; }
         //public static Dictionary<string, Dictionary<long, CategoryLayoutModel>> AspNetRoleCategoryLayoutModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
+        public static List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static List<FestivalListModel> FestivalListModels { set; get; }
         public static List<FestivalListImageModel> FestivalListImageModels { set; get; }
@@ -60,7 +63,10 @@ namespace RetailSlnCacheData
         public static List<KeyValuePair<long, string>> DeliveryDemogInfoCountrys { set; get; }
         public static List<KeyValuePair<long, List<KeyValuePair<long, string>>>> DeliveryDemogInfoCountryStates { set; get; }
         public static List<PickupLocationModel> PickupLocationModels { set; get; }
-        public static List<SelectListItem> PickupLocationModelSelectListItems { set; get; }
+        //public static List<SelectListItem> PickupLocationModelSelectListItems { set; get; }
+        public static List<SelectListItem> DeliveryMethodSelectListItems { set; get; }
+        public static List<DemogInfoAddressModel> PickupLocationDemogInfoAddressModels1 { set; get; }
+        public static List<DemogInfoAddressModel> PickupLocationDemogInfoAddressModels2 { set; get; }
         #endregion
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -83,6 +89,7 @@ namespace RetailSlnCacheData
             //DeliveryListModels = deliveryListModels;
             //DeliveryChargeModels = deliveryChargeModels;
             CorpAcctModels = retailSlnInitModel.CorpAcctModels;
+            CorpAcctLocationModels = retailSlnInitModel.CorpAcctLocationModels;
             DiscountDtlModels = retailSlnInitModel.DiscountDtlModels;
             FestivalListModels = retailSlnInitModel.FestivalListModels;
             FestivalListImageModels = retailSlnInitModel.FestivalListImageModels;
@@ -181,6 +188,11 @@ namespace RetailSlnCacheData
         }
         private static void BuildCacheModels2(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<CodeDataModel> abc1;
+            CodeDataModel abc2;
             foreach (var itemSpecModel in retailSlnInitModel.ItemSpecModels)
             {
                 itemSpecModel.ItemSpecMasterModel = retailSlnInitModel.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemSpecModel.ItemSpecMasterId);
@@ -191,13 +203,13 @@ namespace RetailSlnCacheData
                     {
                         try
                         {
-                            var abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
-                            var abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemSpecModel.ItemSpecUnitValue));
+                            abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
+                            abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemSpecModel.ItemSpecUnitValue));
                             itemSpecModel.ItemSpecValueForDisplay += " " + abc2.CodeDataDesc0;
                         }
-                        catch
+                        catch (Exception exception)
                         {
-                            Console.WriteLine(itemSpecModel.ItemId);
+                            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception, "ItemId", itemSpecModel.ItemId.ToString(), "ItemSpecId", itemSpecModel.ItemSpecId.ToString());
                         }
                     }
                 }
@@ -275,6 +287,28 @@ namespace RetailSlnCacheData
                 itemModel.ItemDiscountModels = new List<ItemDiscountModel>();
                 //itemModel.ItemDiscountModels.AddRange(ItemDiscountModels.FindAll(x => x.ItemId == itemModel.ItemId));
             }
+            int itemModelCount;
+            string prefixString;
+            foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
+            {
+                itemMasterModel.ItemRatesForDisplay = "";
+                if (itemMasterModel.ItemModels.Count > 1)
+                {
+                    prefixString = "";
+                    itemModelCount = 0;
+                    foreach (var itemModel in itemMasterModel.ItemModels)
+                    {
+                        itemMasterModel.ItemRatesForDisplay += prefixString + itemModel.ItemRateFormatted;
+                        prefixString = "; ";
+                        itemModelCount++;
+                        if (itemModelCount == 3)
+                        {
+                            break;
+                        }
+                    }
+                    itemMasterModel.ItemRatesForDisplay += "...";
+                }
+            }
             return;
         }
         private static void BuildCacheModels3(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -282,6 +316,8 @@ namespace RetailSlnCacheData
             List<SelectListItem> deliveryDemogInfoSubDivisionSelectListItemsTemp;
             foreach (var corpAcctModel in retailSlnInitModel.CorpAcctModels)
             {
+                corpAcctModel.CorpAcctLocationModels = new List<CorpAcctLocationModel>();
+                corpAcctModel.CorpAcctLocationModels.AddRange(retailSlnInitModel.CorpAcctLocationModels.FindAll(x => x.CorpAcctId == corpAcctModel.CorpAcctId));
                 corpAcctModel.DiscountDtlModels = new List<DiscountDtlModel>();
                 corpAcctModel.DiscountDtlModels.AddRange(retailSlnInitModel.DiscountDtlModels.FindAll(x => x.CorpAcctId == corpAcctModel.CorpAcctId));
             }
@@ -443,17 +479,47 @@ namespace RetailSlnCacheData
             {
                 festivalListModel.FestivalListImageModels = retailSlnInitModel.FestivalListImageModels.FindAll(x => x.FestivalListId == festivalListModel.FestivalListId);
             }
-            PickupLocationModelSelectListItems = new List<SelectListItem>();
-            foreach (var pickupLocationModel in retailSlnInitModel.PickupLocationModels)
+            DeliveryMethodSelectListItems = new List<SelectListItem>();
+            PickupLocationDemogInfoAddressModels1 = new List<DemogInfoAddressModel>();
+            //For Credit Sale and custom location
+            PickupLocationDemogInfoAddressModels2 = new List<DemogInfoAddressModel>
             {
-                PickupLocationModelSelectListItems.Add
-                (
-                    new SelectListItem
+                retailSlnInitModel.PickupLocationModels[0].DemogInfoAddressModel
+            };
+            foreach (var codeDataModel in LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 205))
+            {
+                if (codeDataModel.CodeDataNameDesc == "PickupFromStore")
+                {
+                    var selectListGroup = new SelectListGroup
                     {
-                        Text = pickupLocationModel.LocationDesc,
-                        Value = pickupLocationModel.PickupLocationId.Value.ToString(),
+                        Name = "Pick up from",
+                    };
+                    foreach (var pickupLocationModel in retailSlnInitModel.PickupLocationModels)
+                    {
+                        PickupLocationDemogInfoAddressModels1.Add(pickupLocationModel.DemogInfoAddressModel);
+                        DeliveryMethodSelectListItems.Add
+                        (
+                            new SelectListItem
+                            {
+                                Group = selectListGroup,
+                                Text = pickupLocationModel.LocationDesc,
+                                Value = codeDataModel.CodeDataNameId.ToString() + ";" + pickupLocationModel.PickupLocationId.Value.ToString() + ";",
+                            }
+                        );
                     }
-                );
+                }
+                else
+                {
+                    DeliveryMethodSelectListItems.Add
+                    (
+                        new SelectListItem
+                        {
+                            Text = codeDataModel.CodeDataDesc0,
+                            Value = codeDataModel.CodeDataNameId.ToString() + ";;",
+                        }
+                    );
+                    PickupLocationDemogInfoAddressModels1.Add(new DemogInfoAddressModel { DemogInfoAddressId = -1 });
+                }
             }
             return;
         }

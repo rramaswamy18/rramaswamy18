@@ -7,35 +7,35 @@
         font-weight: bold;
     }
 </style>
-@*
-@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
-{
-    <div class="row validationSummaryMessage" id="divLoginUserProfValidationSummaryMessage">
-        @Model.ResponseObjectModel.ValidationSummaryMessage
-    </div>
+@{
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+        </div>
+    }
+    @*if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row" id="divLoginUserProfResponseObject">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }*@
 }
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="row" id="divLoginUserProfValidationSummary">
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(true, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
-    </div>
-}
-@if (Model != null && Model.ResponseObjectModel != null)
-{
-    <div class="row" id="divLoginUserProfResponseObject">
-        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-    </div>
-}
-*@
 <div class="row" style="text-align: left;">
     @Html.LabelFor(m => m.LoginEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.LoginEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginEmailAddress), style = "width: 90%;" })
+    @Html.TextAreaFor(m => m.LoginEmailAddress, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.LoginEmailAddress), style = "height: 32px; overflow: hidden; resize: none; width: 90%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginEmailAddress, "", new { id = "LoginEmailAddress-error" }).ToHtmlString()))
 </div>
 <div class="row" style="text-align: left;">
     @Html.LabelFor(m => m.LoginPassword, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     <div>
-        @Html.TextBoxFor(m => m.LoginPassword, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginPassword), style = "float: left; width: 76%;", @type = "password" })
+        @Html.TextBoxFor(m => m.LoginPassword, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginPassword), style = "float: left; width: 80%;", @type = "password" })
         <span style="width: 18px;">&nbsp;</span>
         <button class="btn btn-primary" id="btnLoginPassword" onmouseout="javascript: return showHideForHide('LoginPassword', 'password');" onmouseover="javascript: return showHideForShow('LoginPassword', 'text');" type="button" style="width: 50px;">
             <span class="fa fa-eye-slash icon"></span>

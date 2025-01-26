@@ -1,82 +1,234 @@
-﻿@model ArchitectureLibraryModels.RegisterUserProfModel
-<div class="center" id="divRegisterUser" style="width: 100%;">
-    <div class="center" style="width: 45%;">
+﻿@using ArchitectureLibraryCacheData
+@model ArchitectureLibraryModels.RegisterUserProfModel
+@{
+    string divWidth;
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    try
+    {
+        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+        //Not using right now
+        if (userAgent.Contains("iphone;")) //iPhone
+        {
+            divWidth = "90%;";
+        }
+        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
+        {
+            divWidth = "63%";
+        }
+        else
+        {
+            divWidth = "45%;";
+        }
+    }
+    catch
+    {
+        divWidth = "45%;";
+    }
+    //Using this right now
+    if (mobileDevice)
+    {
+        divWidth = "90%;";
+    }
+    else
+    {
+        divWidth = "45%;";
+    }
+    //mobileDevice = true;
+}
+<div id="divRegisterUser" class="container center" style="width: @divWidth;">
+    <div class="row" style="text-align: left;">
         <div class="row" style="text-align: left;">
-            <span style="color: #000000; font-size: 23px; font-weight: bold;">R E G I S T E R <span style="color: #0000ff;">(First time users)</span></span>
-        </div>
-        <div class="row" style="text-align: left;">
+            <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">register</span>&nbsp;<span style="color: #0000ff; font-size: 23px; font-weight: bold;">(First time users)</span>
             <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
                 <li>
-                    Already registered? Need to reset or update your password<br />
-                    <a href="@Url.Action("ResetPassword", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click here to reset your password...</a>
-                </li>
-            </ul>
-            <ol id="ulSuccessMessagesRegister" style="color: #0000ff; display: none; font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 7px; text-align: left;">
-                <li>
-                    Your email has been successfully registered
+                    Already registered, facing issues? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">Click to reset password...</a>
                 </li>
                 <li>
-                    Please check your Inbox to complete your registration
-                </li>
-                <li>
-                    Your email could be in Junk/Spam folder
-                </li>
-                <li>
-                    If so, mark this email address as not spam
-                </li>
-            </ol>
-            <ul id="ulErrorMessagesRegister" style="display: none; font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
-                <li style="color: #ff0000;">
-                    Unable to register, please try again
-                </li>
-                <li>
-                    Still facing issues?
-                    <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click here to Contact Us...</a>
+                    All setup with password...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">Click to login...</a>
                 </li>
             </ul>
         </div>
         <form id="formRegisterUserProfData">
             @Html.Partial("_RegisterUserProfData", Model)
         </form>
+        <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">register</button>
         <div class="row" style="text-align: left;">
-            <p>By creating an account you agree to our <a href="@Url.Action("PrivacyPolicy", "Home")" target="_blank">Terms & Privacy</a>.</p>
-        </div>
-        <div class="row" style="text-align: left;">
-            <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">register</button>
-        </div>
-        <div class="row" style="text-align: left;">
-            <ul style="font-weight: bold; margin-left: 7px; padding-left: 7px; text-align: left; ">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
                 <li>
-                    Please enter email address, confirm email address, telephone#
+                    Already registered, facing issues? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">Click to reset password...</a>
                 </li>
                 <li>
-                    Select where to receive OTP
+                    All setup with password...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">Click to login...</a>
                 </li>
                 <li>
-                    Answer captcha question
+                    Still facing issues?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">Click to Contact Us...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    Enter email address, phone#, where to send OTP, answer captcha
                 </li>
                 <li>
                     Click <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> to continue
                 </li>
-                @*
-                    <li>
-                        You will be redirected to setup your account by creating a password
-                    </li>
-                        <li>
-                            Please check your <span style="color: #ff0000; font-size: 15px;">Inbox</span> for email with further instructions
-                         </li>
-                        <li>
-                            If you do not see the email in your Inbox - please check <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
-                        </li>
-                        <li>
-                            If so, move the email to Inbox and mark the <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
-                        </li>
-                *@
+                <li>
+                    Check your <span style="color: #ff0000; font-size: 15px;">Inbox</span> for OTP, if not <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+                </li>
+                <li>
+                    If so, move to Inbox and mark the <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+                </li>
             </ul>
         </div>
     </div>
 </div>
 <script type="text/javascript">
+    function checkPasswordStrength(password) {
+        //console.log("checkPasswordStrength", "1000");
+        password = " " + password + " ";
+        var i, j, errorMessage = "", errorMessageSpecialCharacter;
+        password = password.trim();
+        //console.log(password, password.length, "password");
+        for (i = 0; i < 5; i++) {
+            document.getElementById("passwordStrengthRemove" + i).style.display = "block";
+            document.getElementById("passwordStrengthCheck" + i).style.display = "none";
+        }
+        if (password == "" || password.length == 0) {
+            errorMessage = "Please enter password";
+            return errorMessage;
+        }
+        var validPasswordChars = new Array();
+        var upperCaseList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //Upper Case
+        var lowerCaseList = "abcdefghijklmnopqrstuvwxyz"; //Lower Case
+        var numberList = "0123456789"; //Numbers
+        var specialCharList = "!@@#$%^&*()_"; //Special Characters
+        //console.log(specialCharList, specialCharList.length);
+        for (i = 0; i < upperCaseList.length; i++) {
+            validPasswordChars.push(upperCaseList.substr(i, 1));
+        }
+        for (i = 0; i < lowerCaseList.length; i++) {
+            validPasswordChars.push(lowerCaseList.substr(i, 1));
+        }
+        for (i = 0; i < numberList.length; i++) {
+            validPasswordChars.push(numberList.substr(i, 1));
+        }
+        for (i = 0; i < specialCharList.length; i++) {
+            validPasswordChars.push(specialCharList.substr(i, 1));
+        }
+        for (i = 0; i < password.length; i++) {
+            for (j = 0; j < validPasswordChars.length; j++) {
+                if (password.substr(i, 1) === validPasswordChars[j]) {
+                    break;
+                }
+            }
+            if (j === validPasswordChars.length) {
+                errorMessage = "Invalid character in password;";
+            }
+        }
+        if (password.length >= 6) { //Length
+            document.getElementById("passwordStrengthRemove0").style.display = "none";
+            document.getElementById("passwordStrengthCheck0").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove0").style.display = "block";
+            document.getElementById("passwordStrengthCheck0").style.display = "none";
+            errorMessage += "Invalid length for password;";
+        }
+        if (new RegExp("[A-Z]").test(password)) { //Uppercase
+            document.getElementById("passwordStrengthRemove1").style.display = "none";
+            document.getElementById("passwordStrengthCheck1").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove1").style.display = "block";
+            document.getElementById("passwordStrengthCheck1").style.display = "none";
+            errorMessage += "Uppercase missing in password;";
+        }
+        if (new RegExp("[a-z]").test(password)) { //Lowercase
+            document.getElementById("passwordStrengthRemove2").style.display = "none";
+            document.getElementById("passwordStrengthCheck2").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove2").style.display = "block";
+            document.getElementById("passwordStrengthCheck2").style.display = "none";
+            errorMessage += "Lowercase missing in password;";
+        }
+        if (new RegExp("[0-9]").test(password)) { //Numbers
+            document.getElementById("passwordStrengthRemove3").style.display = "none";
+            document.getElementById("passwordStrengthCheck3").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove3").style.display = "block";
+            document.getElementById("passwordStrengthCheck3").style.display = "none";
+            errorMessage += "Number missing in password;";
+        }
+        errorMessageSpecialCharacter = "Special character missing in password;";
+        for (i = 0; i < password.length; i++) {
+            if (specialCharList.includes(password.substr(i, 1))) {
+                errorMessageSpecialCharacter = "";
+            } else {
+                ;
+            }
+        }
+        if (errorMessageSpecialCharacter === "") {
+            document.getElementById("passwordStrengthRemove4").style.display = "none";
+            document.getElementById("passwordStrengthCheck4").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove4").style.display = "block";
+            document.getElementById("passwordStrengthCheck4").style.display = "none";
+            errorMessage += errorMessageSpecialCharacter;
+        }
+        return errorMessage;
+    }
+    function getNewOTP_onclick() {
+        console.log("00000000", "resendOTP_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var oTPSendTypeIds, oTPSendTypeId = "", emailAddress;
+        oTPSendTypeIds = document.getElementsByName("OTPSendTypeId");
+        for (var i = 0; i < oTPSendTypeIds.length; i++) {
+            if (oTPSendTypeIds[i].checked) {
+                oTPSendTypeId = oTPSendTypeIds[i].value;
+                break;
+            }
+        }
+        if (oTPSendTypeId === "") {
+            $("#loadingModal").modal('hide');
+            document.getElementById("OTPSendTypeId-error").value = "Select valid OTP Send Type";
+            document.getElementById("OTPSendTypeId-error").innerHTML = "Select valid OTP Send Type";
+            return false;
+        }
+        emailAddress = document.getElementById("EmailAddress").value;
+        var url = "/Home/OTP/" + oTPSendTypeId + "?emailAddress=" + emailAddress;
+        $.ajax({
+            url: url,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            //data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "resendOTP_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("OTPExpiryTime").innerHTML = responseData.oTPExpiryTime;
+                }
+                else {
+                    document.getElementById("OTPExpiryTime").innerHTML = "Error";
+                }
+                //document.getElementById("formLoginUserProfData").innerHTML = responseData;
+                //alert("Login completed successfully!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log(xhr, exception);
+                alert("Error occurred - getting OTP. Please fix errors to continue???");
+            }
+        });
+    }
+    function loginPassword_oninput() {
+        //console.log(document.getElementById("LoginPassword").value);
+        checkPasswordStrength(document.getElementById("LoginPassword").value);
+    }
     function loginUserSave_onclick() {
         console.log("00000000", "loginUserSave_onclick");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -117,8 +269,8 @@
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         var url = "/Home/RegisterUserProf";
         var postData = $("#formRegisterUserProfData").serialize();
-        document.getElementById("ulErrorMessagesRegister").style.display = "none";
-        document.getElementById("ulSuccessMessagesRegister").style.display = "none";
+        //document.getElementById("ulErrorMessagesRegister").style.display = "none";
+        //document.getElementById("ulSuccessMessagesRegister").style.display = "none";
         $.ajax({
             url: url,
             type: "POST",
@@ -131,13 +283,13 @@
                 console.log("00001000", "registerUserSave_onclick success", responseData.processMessage);
                 if (responseData.success) {
                     document.getElementById("divRegisterUser").innerHTML = responseData.htmlString;
-                //    document.getElementById("ulErrorMessagesRegister").style.display = "none";
-                //    document.getElementById("ulSuccessMessagesRegister").style.display = "block";
+                    var errorMessage = checkPasswordStrength(document.getElementById("LoginPassword").value);
+                    document.getElementById("LoginPassword-error").value = errorMessage;
                 }
                 else {
                     document.getElementById("formRegisterUserProfData").innerHTML = responseData.htmlString;
-                    document.getElementById("ulErrorMessagesRegister").style.display = "block";
-                    document.getElementById("ulSuccessMessagesRegister").style.display = "none";
+                    //    document.getElementById("ulErrorMessagesRegister").style.display = "block";
+                    //    document.getElementById("ulSuccessMessagesRegister").style.display = "none";
                 }
                 document.getElementById("divScrollIntoView").scrollIntoView();
                 console.log("00090000", "registerUserSave_onclick success", "Exit");
@@ -146,7 +298,7 @@
                 $("#loadingModal").modal('hide');
                 console.log("00099000", "registerUserSave_onclick error", "ERROR???", exception, xhr);
                 document.getElementById("formRegisterUserProfData").innerHTML = xhr.responseText;
-                document.getElementById("ulErrorMessagesRegister").style.display = "block";
+                //document.getElementById("ulErrorMessagesRegister").style.display = "block";
                 console.log("00090100", "registerUserSave_onclick error", "Exit");
                 //document.getElementById("divScrollIntoViewRegister").scrollIntoView();
             }
@@ -169,7 +321,8 @@
                 console.log("00001000", "updatePasswordSave_onclick success", responseData.processMessage);
                 //console.log(responseData);
                 if (responseData.success) {
-                    document.getElementById("divUpdatePasswordSuccess").innerHTML = responseData.htmlString;
+                    window.location = responseData.redirectUrl;
+                    //document.getElementById("divUpdatePasswordSuccess").innerHTML = responseData.htmlString;
                 }
                 else {
                     document.getElementById("formUpdatePasswordData").innerHTML = responseData.htmlString;
@@ -179,45 +332,6 @@
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
                 document.getElementById("formUpdatePasswordData").innerHTML = xhr.responseText;
-            }
-        });
-    }
-    function getNewOTP_onclick() {
-        console.log("00000000", "resendOTP_onclick");
-        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        var oTPSendTypeIds, oTPSendTypeId, emailAddress;
-        oTPSendTypeIds = document.getElementsByName("OTPSendTypeId");
-        for (var i = 0; i < oTPSendTypeIds.length; i++) {
-            if (oTPSendTypeIds[i].checked) {
-                oTPSendTypeId = oTPSendTypeIds[i].value;
-                break;
-            }
-        }
-        emailAddress = document.getElementById("EmailAddress").value;
-        var url = "/Home/OTP/" + oTPSendTypeId + "?emailAddress=" + emailAddress;
-        $.ajax({
-            url: url,
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            //dataType: "html",
-            //data: postData,
-            //async: false,
-            success: function (responseData, textStatus, request) {
-                $("#loadingModal").modal('hide');
-                console.log("00001000", "resendOTP_onclick success", responseData.processMessage);
-                if (responseData.success) {
-                    document.getElementById("OTPExpiryTime").innerHTML = responseData.oTPExpiryTime;
-                }
-                else {
-                    document.getElementById("OTPExpiryTime").innerHTML = "Error";
-                }
-                //document.getElementById("formLoginUserProfData").innerHTML = responseData;
-                //alert("Login completed successfully!!!");
-            },
-            error: function (xhr, exception) {
-                $("#loadingModal").modal('hide');
-                console.log(xhr, exception);
-                alert("Error occurred - getting OTP. Please fix errors to continue???");
             }
         });
     }

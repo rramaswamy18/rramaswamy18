@@ -39,6 +39,11 @@
                         Delivery Address
                     </th>
                     <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
+                        {
+                            @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
+                            <br />
+                        }
                         @Model.DeliveryAddressModel.AddressLine1
                         <br />
                         @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
@@ -87,6 +92,11 @@
                     </th>
                     <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
                         @Model.DeliveryMethodModel.DeliveryMethodDesc
+                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryMethodModel.DeliveryMethodDesc1))
+                        {
+                            <br />
+                            <span style="color: #ff0000;">@Model.DeliveryMethodModel.DeliveryMethodDesc1</span>
+                        }
                     </td>
                 </tr>
                 <tr>

@@ -69,7 +69,7 @@
         {
             <tr>
                 <td colspan="3">
-                    @Html.DropDownListFor(m => m.PickupLocationId, new SelectList(RetailSlnCache.PickupLocationModelSelectListItems, "Value", "Text", Model.PickupLocationId), "--- Select Location ---", new { @class = "form-control", style = "font-size: 13px; width: 216px;" })
+                    @Html.DropDownListFor(m => m.PickupLocationId, new SelectList(RetailSlnCache.DeliveryMethodSelectListItems, "Value", "Text", Model.PickupLocationId), "--- Select Location ---", new { @class = "form-control", style = "font-size: 13px; width: 216px;" })
                 </td>
             </tr>
             <tr>

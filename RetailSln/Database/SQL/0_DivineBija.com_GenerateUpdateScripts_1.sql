@@ -54,8 +54,11 @@ UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '1-916-84
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '19168476669' WHERE ClientId = @ClientId AND KVPKey = 'ContactWhatsAppPhone'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '+1 (916) 847-6669' WHERE ClientId = @ClientId AND KVPKey = 'ContactWhatsAppPhoneFormatted'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'USA' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CountryAbbrev'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'United States of America' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CountryName'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'en-US' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CultureInfo'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'USD' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CurrencyAbbreviation'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'United States of America' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CountryName'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'United States of America' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CountryDesc'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'C2' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CurrencyDecimalPlaces'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'US Dollar' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'CurrencyName'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '236' WHERE ClientId = @ClientId AND KVPKey = 'Currency' AND KVPSubKey = 'DemogInfoCountryId'
@@ -99,9 +102,6 @@ BEGIN
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'FALSE' WHERE ClientId = @ClientId AND KVPKey = 'SMTP' AND KVPSubKey = 'PickupDirectory'
     UPDATE ArchLib.ApplicationDefault SET KVPValue = 'accounts@divinebija.com' WHERE ClientId = @ClientId AND KVPKey = 'OrderProcess' AND KVPSubKey = 'ToEmailAddress'
 END
-
-DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(200, 400)
-DELETE Lookup.CodeData WHERE CodeTypeId = 205 AND CodeDataNameId IN(100)
 --
 --Insert DemogInfoAddress from Upload
     SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] ON
@@ -134,7 +134,16 @@ INNER JOIN [ArchLib].[DemogInfoZip]
        AND DemogInfoAddressUpload.ZipCode = DemogInfoZip.ZipCode
 INNER JOIN [ArchLib].[DemogInfoZipPlus]
         ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId
-     WHERE DemogInfoAddressUpload.InstanceClientId = 98
+     WHERE DemogInfoAddressUpload.InstanceClientId = @ClientId
   ORDER BY DemogInfoAddressUpload.DemogInfoAddressUploadId
     SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] OFF
 --
+TRUNCATE TABLE RetailSlnSch.PickupLocation
+INSERT RetailSlnSch.PickupLocation(PickupLocationId, ClientId, LocationNameDesc, LocationDesc, LocationDemogInfoAddressId)
+SELECT 0 AS PickupLocationId, @ClientId AS ClientId, 'CustomLocation' AS LocationNameDesc, 'Custom Location' AS LocationDesc, 0 AS LocationDemogInfoAddressId UNION
+SELECT 1 AS PickupLocationId, @ClientId AS ClientId, 'DivineBija_Athipattu' AS LocationNameDesc, 'Divine Bija Athipattu' AS LocationDesc, 1 AS LocationDemogInfoAddressId UNION
+SELECT 2 AS PickupLocationId, @ClientId AS ClientId, 'DivineBija_Mylapore' AS LocationNameDesc, 'Divine Bija Mylapore' AS LocationDesc, 2 AS LocationDemogInfoAddressId
+--
+--
+DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(200, 400)
+DELETE Lookup.CodeData WHERE CodeTypeId = 205 AND CodeDataNameId IN(100)

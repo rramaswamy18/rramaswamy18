@@ -22,6 +22,7 @@ namespace RetailSlnModels
         public Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryCategoryItemMasterHierModels { set; get; }
         public Dictionary<string, Dictionary<long, List<CategoryItemLayoutModel>>> AspNetRoleCategoryItemLayoutModels { set; get; }
         public List<CorpAcctModel> CorpAcctModels { set; get; }
+        public List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public List<FestivalListModel> FestivalListModels { set; get; }
         public List<FestivalListImageModel> FestivalListImageModels { set; get; }

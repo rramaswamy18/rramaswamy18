@@ -5,7 +5,7 @@
     string optionText;
     foreach (var searchForEmailAddressDataModel in Model.SearchForEmailAddressDataModels)
     {
-        optionText = searchForEmailAddressDataModel.CorpAcctName + " - " + searchForEmailAddressDataModel.FirstName + " " + searchForEmailAddressDataModel.LastName + " - " + searchForEmailAddressDataModel.EmailAddress;
-        <option value="@searchForEmailAddressDataModel.PersonId">@optionText</option>
+        optionText = searchForEmailAddressDataModel.LocationName + " - " + searchForEmailAddressDataModel.FirstName + " " + searchForEmailAddressDataModel.LastName + " - " + searchForEmailAddressDataModel.EmailAddress;
+        <option value="@(searchForEmailAddressDataModel.PersonId + ";" + searchForEmailAddressDataModel.CorpAcctLocationId)">@optionText</option>
     }
 }

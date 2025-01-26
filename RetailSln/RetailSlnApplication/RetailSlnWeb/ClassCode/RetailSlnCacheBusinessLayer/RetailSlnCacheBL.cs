@@ -31,6 +31,7 @@ namespace RetailSlnCacheBusinessLayer
                 ItemBundleDiscountModels = ApplicationDataContext.GetItemBundleDiscounts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 //CategoryItemHierModelsNew = ApplicationDataContext.GetCategoryItemHiersNew(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CorpAcctModels = ApplicationDataContext.GetCorpAccts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                CorpAcctLocationModels = ApplicationDataContext.GetCorpAcctLocations(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 DiscountDtlModels = ApplicationDataContext.GetDiscountDtls(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 FestivalListModels = ApplicationDataContext.GetFestivalLists(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 FestivalListImageModels = ApplicationDataContext.GetFestivalListImages(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),

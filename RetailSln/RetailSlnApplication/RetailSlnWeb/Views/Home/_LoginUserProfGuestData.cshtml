@@ -1,7 +1,7 @@
-﻿@using ArchitectureLibraryCacheData
-@model ArchitectureLibraryModels.LoginUserProfGuestModel
+﻿@using ArchitectureLibraryModels
+@model LoginUserProfGuestModel
 <style>
-    #LoginUserProfGuestEmailAddress-error, #ConfirmLoginUserProfGuestEmailAddress-error, #CaptchaAnswerLoginUserProfGuest-error, #LoginUserProfGuestTelephoneNumber-error, #OTPCode-error, #OTPSendTypeId-error {
+    #LoginUserProfGuestEmailAddress-error, #ConfirmLoginUserProfGuestEmailAddress-error, #CaptchaAnswerLoginUserProfGuest-error, #LoginUserProfGuestTelephoneCountryId-error, #LoginUserProfGuestTelephoneNumber-error {
         color: #ff0000;
         display: block;
         font-size: 14px;
@@ -9,26 +9,25 @@
     }
 </style>
 @{
-    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("OTPSendType", "");
-}
-@*@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
     {
-        <div class="row validationSummaryMessage" id="divLoginUserProfValidationSummaryMessage">
+        <div class="row validationSummaryMessage">
             @Model.ResponseObjectModel.ValidationSummaryMessage
         </div>
     }
-    @if (!ViewData.ModelState.IsValid)
+    if (!ViewData.ModelState.IsValid)
     {
-        <div class="row" id="divLoginUserProfValidationSummary">
+        <div class="row">
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
         </div>
     }
-    @if (Model != null && Model.ResponseObjectModel != null)
+    if (Model != null && Model.ResponseObjectModel != null)
     {
-        <div class="row" id="divLoginUserProfResponseObject">
+        <div class="row">
             @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
         </div>
-    }*@
+    }
+}
 <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
     @Html.LabelFor(m => m.LoginUserProfGuestEmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
     @Html.TextBoxFor(m => m.LoginUserProfGuestEmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LoginUserProfGuestEmailAddress), style = "width: 90%;" })
@@ -50,19 +49,9 @@
 </div>
 
 <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-    @Html.LabelFor(m => m.OTPSendTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    <br style="clear: both;" />
-    <label class="radio-inline" style="font-weight: bold;">
-        <input id="OTPSendTypeId0" name="OTPSendTypeId" checked="checked" type="radio" value="@codeDataModels[0].CodeDataNameId">@codeDataModels[0].CodeDataDesc0
-    </label>
-    @for (int i = 1; i < codeDataModels.Count; i++)
-    {
-        <label class="radio-inline" style="font-weight: bold;">
-            <input disabled="disabled" id="OTPSendTypeId@(i)" name="OTPSendTypeId" type="radio" value="@codeDataModels[i].CodeDataNameId">@codeDataModels[i].CodeDataDesc0
-        </label>
-    }
-    <br style="clear: both;" />
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPSendTypeId, "", new { id = "OTPSendTypeId-error", style = "float: left; width: 63%;" }).ToHtmlString()))
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginUserProfGuestTelephoneCountryId, "", new { id = "LoginUserProfGuestTelephoneCountryId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
+    <span style="float: left; padding-right: 9px;">&nbsp;</span>
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginUserProfGuestTelephoneNumber, "", new { id = "LoginUserProfGuestTelephoneNumber-error", style = "float: left; width: 36%;" }).ToHtmlString()))
 </div>
 
 <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
@@ -71,18 +60,8 @@
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerLoginUserProfGuest, "", new { id = "CaptchaAnswerLoginUserProfGuest-error", style = "width: 81%;" }).ToHtmlString()))
 </div>
 
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: center;">
-    <button class="btn btn-primary" id="getNewOTPGuest" onclick="javascript: return getNewOTPGuest_onclick();" style="font-size: 18px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">get new otp</button>
-</div>
+<br style="clear: both;" />
 
-<div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginUserProfGuestTelephoneCountryId, "", new { id = "TelephoneCountryId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
-    <span style="float: left; padding-right: 9px;">&nbsp;</span>
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginUserProfGuestTelephoneNumber, "", new { id = "LoginUserProfGuestTelephoneNumber-error", style = "float: left; width: 36%;" }).ToHtmlString()))
-</div>
-
-<div class="row" style="padding-left: 18px; padding-right: 18px;">
-    @Html.LabelFor(m => m.OTPCode)&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span> Expires <span id="OTPExpiryTime" style="color: #000000; font-size: 18px; font-weight: bold;"></span>
-    @Html.TextBoxFor(m => m.OTPCode, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPCode), style = "width: 90%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPCode, "", new { id = "OTPCode-error" }).ToHtmlString()))
+<div id="divOTPData" style="margin: 0; padding: 0px;">
+    @Html.Partial("_OTPData", Model.OTPModel, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "OTPModel" } })
 </div>

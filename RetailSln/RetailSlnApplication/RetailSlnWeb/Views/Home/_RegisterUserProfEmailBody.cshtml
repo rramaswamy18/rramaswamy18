@@ -11,16 +11,19 @@
             Thank you for your interest in registering - @Model.RegisterEmailAddress
             <br /><br />
             This email is to welcome you to our family, enable you to update your profile and place orders effectively.
-            @*<br />
-        Please <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )@Url.Action(ArchLibCache.GetApplicationDefault(0, "UpdatePasswordAction", "" ), ArchLibCache.GetApplicationDefault(0, "UpdatePasswordController", "" ))/@Model.ResetPasswordQueryString" target="_blank">Click Here</a> to complete the registration process.
-        <br /><br />
-        If you are having issues with the above link - please copy and paste the below in your browser to continue
-        <br />
-        <span style="color:#0000ff;">@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "")/@Url.Action(ArchLibCache.GetApplicationDefault(0, "UpdatePasswordAction", ""), ArchLibCache.GetApplicationDefault(0, "UpdatePasswordController", ""))/@Model.ResetPasswordQueryString</span>*@
             <br /><br />
+            @if (Model.AspNetRoleUserTypeId != 100)
+            {
+                <div>
+                    You requested an elevated role <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.UserTypeDesc</span>
+                    <br />
+                    Our staff will review and respond to your request at the earliest
+                    <br /><br />
+                </div>
+            }
             Your OTP is&nbsp;&nbsp;<span style="color: #0000ff; font-size: 18px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">@Model.OTPCode</span>
             <br />
-            Your OTP will expire in @Model.OTPExpiryDuration at @Model.OTPExpiryDateTime
+            Your OTP will expire at @Model.OTPExpiryDateTime
             <br />
             You requested your OTP to be sent as @Model.OTPSendTypeId.ToString()
             <br /><br />

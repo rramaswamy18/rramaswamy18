@@ -10,6 +10,7 @@ namespace RetailSlnModels
     {
         public LoginUserProfGuestModel LoginUserProfGuestModel { set; get; }
         public LoginUserProfModel LoginUserProfModel { set; get; }
+        public OTPModel OTPModel { set; get; }
         public PaymentInfo1Model PaymentInfoModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

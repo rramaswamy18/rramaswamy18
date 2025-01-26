@@ -86,6 +86,7 @@ SELECT IDENT_CURRENT('RetailSlnSch.OrderHeader')
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', NORESEED);
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);
 
+/*
 --Begin For Dev Only
 DECLARE @ClientId INT = 3
 INSERT ArchLib.AspNetUser(AspNetUserId, ClientId, Email, TelephoneCountryId, PhoneNumber, UserName, LoginTypeId, UserTypeId, UserStatusId, LoginPassword, PasswordExpiry, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount)
@@ -104,9 +105,9 @@ SELECT AspNetUserRoleId, AspNetUserId, AspNetRoleId
 FROM UsersUpload
 
 --PersonExtn1
-INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId)
-SELECT @ClientId AS ClientId, PersonId, CorpAcctId
-FROM UsersUpload
+INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, CorpAcctLocationId)
+SELECT @ClientId AS ClientId, PersonId, UsersUpload.CorpAcctId, CorpAcctLocation.CorpAcctLocationId
+FROM UsersUpload INNER JOIN RetailSlnSch.CorpAcctLocation ON UsersUpload.CorpAcctId = CorpAcctLocation.CorpAcctId
 
 --DemogInfoAddressUploadDev
     SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] ON
@@ -145,3 +146,4 @@ INNER JOIN [ArchLib].[DemogInfoZipPlus]
 DBCC CHECKIDENT ('ArchLib.DemogInfoAddress', NORESEED);
 DBCC CHECKIDENT ('ArchLib.DemogInfoAddress', RESEED, 17);
 --End For Dev Only
+*/

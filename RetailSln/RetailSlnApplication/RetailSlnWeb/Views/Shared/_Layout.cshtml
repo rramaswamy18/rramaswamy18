@@ -6,17 +6,21 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
-    int mainCategoryCount = 7;
+    int mainCategoryCount = 5;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string aspNetRoleName;
+    bool isLoggedIn;
     if (sessionObjectModel == null)
     {
         aspNetRoleName = "DEFAULTROLE";
+        isLoggedIn = false;
     }
     else
     {
         aspNetRoleName = sessionObjectModel.AspNetRoleName;
+        isLoggedIn = true;
     }
+    isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
     var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
     int i;
 }
@@ -67,7 +71,9 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                         <div class="logo-section">
-                            <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="117" height="117" title="@imageTitle" />
+                            <a href="@Url.Action("Index", "Home")" class="navbar-right-link">
+                                <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="117" height="117" title="@imageTitle" />
+                            </a>
                             <p class="company-name font-bold" style="vertical-align: top;">
                                 <span style="color: #9401d9; font-size: 22px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span><br /><span style="color: #ff0000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span><br /><span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
                             </p>
@@ -115,14 +121,14 @@
                                 </a>
                             </div>
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a class="navbar-right-link @(User.Identity.IsAuthenticated ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" title="Login / Sign In - @imageTitle">
+                                <a class="navbar-right-link @(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" title="Login / Sign In - @imageTitle">
                                     <i class="fas fa-user"></i>
                                     <br />
                                     Sign In
                                 </a>
                             </div>
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a class="navbar-right-link @(User.Identity.IsAuthenticated ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" title="Logout - @imageTitle">
+                                <a class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" title="Logout - @imageTitle">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <br />
                                     Logout
@@ -151,20 +157,24 @@
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("Checkout", "Home")" class="navbar-right-link" title="Checkout - @imageTitle">
                                     <img alt="Checkout - @imageTitle" src="https://static-00.iconduck.com/assets.00/checkout-icon-2048x2048-8k7j8q1t.png" style="height: 20px; width: 20px;" title="Checkout - @imageTitle">
+                                    <br style="clear: both;" />
+                                    Check.
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("RegisterUserProf", "Home")" class="navbar-right-link" title="Register - @imageTitle">
                                     <i class="fas fa-user-plus"></i>
+                                    Reg.
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("LoginUserProf", "Home")" class="navbar-right-link" title="Sign In - @imageTitle">
                                     <i class="fas fa-user"></i>
+                                    Login
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="@Url.Action("Logout", "Account")" class="navbar-right-link @(User.Identity.IsAuthenticated ? "" : "disabled-link")" title="Logout - @imageTitle">
+                                <a href="@Url.Action("Logout", "Home")" class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" title="Logout - @imageTitle">
                                     <i class="fas fa-sign-out-alt"></i>
                                 </a>
                             </div>

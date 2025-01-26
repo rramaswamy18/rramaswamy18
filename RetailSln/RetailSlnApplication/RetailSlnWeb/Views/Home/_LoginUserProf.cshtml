@@ -1,47 +1,82 @@
 ﻿@model ArchitectureLibraryModels.LoginUserProfModel
-<div class="center" style="width: 45%;">
+@{
+    string divWidth;
+    try
+    {
+        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+        bool mobileDevice = Request.Browser.IsMobileDevice;
+        //Not using right now
+        if (userAgent.Contains("iphone;")) //iPhone
+        {
+            divWidth = "100%;";
+        }
+        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
+        {
+            divWidth = "63%";
+        }
+        else
+        {
+            divWidth = "45%;";
+        }
+        //Using this right now
+        //mobileDevice = true;
+        if (mobileDevice)
+        {
+            divWidth = "90%;";
+        }
+        else
+        {
+            divWidth = "45%;";
+        }
+    }
+    catch
+    {
+        divWidth = "45%;";
+    }
+}
+<div class="container center" style="width: @divWidth;">
     <div class="row" style="text-align: left;">
-        <span style="color: #000000; font-size: 23px; font-weight: bold;">L O G I N <span style="color: #0000ff;">(Returning users)</span></span>
-    </div>
-    <div class="row" style="text-align: left;">
-        <span style="color: #000000; font-size: 14px; font-weight: bold;">
-            Is this your first time, <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #ff0000; text-decoration: underline;" target="_blank">Please click here to <span style="color: #0000ff; font-size: 18px;">R E G I S T E R</span></a>
-        </span>
-        <ul id="ulErrorMessagesLogin" style="display: none; font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 7px;">
-            <li>
-                Unable to login, please check your email / password
-            </li>
-            <li>
-                Did you forget your password or you think its expired
-                <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">
-                    Click here to reset
-                </a>
-            </li>
-            <li>
-                Still facing issues?
-                <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click here to Contact Us...</a>
-            </li>
-        </ul>
-    </div>
-    <form id="formLoginUserProfData">
-        @Html.Partial("_LoginUserProfData", Model)
-    </form>
-    <div class="row" style="text-align: left;">
+        <div class="row" style="text-align: left;">
+            <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">login</span>&nbsp;<span style="color: #0000ff; font-size: 23px; font-weight: bold;">(Returning users)</span>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    If this your first time?&nbsp;
+                    <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #ff0000; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click here to register...</a>
+                </li>
+                <li>
+                    Did you forget your password?&nbsp;
+                    <a href="@Url.Action("ResetPassword", "Home")" style="color: #0000ff; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click to reset...</a>
+                </li>
+            </ul>
+        </div>
+        <form id="formLoginUserProfData">
+            @Html.Partial("_LoginUserProfData", Model)
+        </form>
         <button class="loginRegisterbtn" id="loginUserSave" onclick="javascript: return loginUserSave_onclick();" style="width: 90%;" type="button">L O G I N</button>
-        <ul style="font-weight: bold; margin-left: 7px; padding-left: 7px; text-align: left; ">
-            <li>
-                Please enter email address, password, captcha answer
-            </li>
-            <li>
-                Click <span style="color: #0000ff; font-size: 18px;">L O G I N</span> to continue
-            </li>
-            <li style="color: #000000;">
-                Password(s) have an expiry. Did you forget your password or you think its expired?
-                <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">
-                    Click here to reset
-                </a>
-            </li>
-        </ul>
+        <div class="row" style="text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    If this your first time?&nbsp;
+                    <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #ff0000; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click here to register...</a>
+                </li>
+                <li>
+                    Did you forget your password?&nbsp;
+                    <a href="@Url.Action("ResetPassword", "Home")" style="color: #0000ff; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click to reset...</a>
+                </li>
+                <li>
+                    Still facing issues?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click to Contact Us...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    Enter email address, password, answer captcha
+                </li>
+                <li>
+                    Click <span style="color: #ff0000; font-size: 23px; letter-spacing: 4px; text-transform: uppercase;">login</span> to continue
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -50,7 +85,7 @@
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         var url = "/Home/LoginUserProf";
         var postData = $("#formLoginUserProfData").serialize();
-        document.getElementById("ulErrorMessagesLogin").style.display = "none";
+        //document.getElementById("ulErrorMessagesLogin").style.display = "none";
         $.ajax({
             url: url,
             type: "POST",
@@ -66,7 +101,7 @@
                 }
                 else {
                     document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
-                    document.getElementById("ulErrorMessagesLogin").style.display = "block";
+                    //document.getElementById("ulErrorMessagesLogin").style.display = "block";
                 }
                 //document.getElementById("formLoginUserProfData").innerHTML = responseData;
                 //alert("Login completed successfully!!!");
@@ -75,7 +110,7 @@
                 $("#loadingModal").modal('hide');
                 console.log("00099000", "loginUserSave_onclick", "ERROR???", exception, xhr);
                 document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
-                document.getElementById("ulErrorMessagesLogin").style.display = "block";
+                //document.getElementById("ulErrorMessagesLogin").style.display = "block";
                 alert("Login encountered errors. Please fix errors to continue???");
             }
         });

@@ -84,8 +84,6 @@ namespace RetailSlnDataLayer
                 SqlCommand sqlCommand = BuildSqlCommandOrderHeaderAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AssignOrderHeader(orderHeader, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 orderHeader.OrderHeaderId = (long)sqlCommand.ExecuteScalar();
-                //orderHeaderModel.OrderNum = "2500000000000000" + orderHeaderModel.OrderHeaderId;
-                //UpdOrderHeader(orderHeaderModel, execUniqueId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
             }
@@ -95,59 +93,6 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        //public static void AddOrderDetails(long orderHeaderId, List<OrderDetailModel> orderDetailModels, List<OrderDetailModel> orderSummaryModels, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-        //        SqlCommand sqlCommand = BuildSqlCommandOrderDetailAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        float seqNum = 0;
-        //        foreach (var orderDetailModel in orderDetailModels)
-        //        {
-        //            orderDetailModel.OrderHeaderId = orderHeaderId;
-        //            orderDetailModel.SeqNum = ++seqNum;
-        //            AssignOrderDetail(orderDetailModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            sqlCommand.ExecuteNonQuery();
-        //        }
-        //        foreach (var orderDetailModel in orderSummaryModels)
-        //        {
-        //            orderDetailModel.OrderHeaderId = orderHeaderId;
-        //            orderDetailModel.SeqNum = ++seqNum;
-        //            AssignOrderDetail(orderDetailModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            sqlCommand.ExecuteNonQuery();
-        //        }
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-        //        return;
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //}
-        //public static void AddDeliveryInfo(DeliveryInfoDataModel deliveryInfoDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-        //        SqlCommand sqlCommand = BuildSqlCommandDeliveryInfoAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        AssignDeliveryInfo(deliveryInfoDataModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        sqlCommand.ExecuteNonQuery();
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-        //        return;
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //}
         public static void AddOrderDelivery(DeliveryDataModel deliveryInfoDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -168,26 +113,6 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        //public static void AddOrderPayment(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-        //        SqlCommand sqlCommand = BuildSqlCommandOrderPaymentAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        AssignOrderPayment(paymentInfoModel, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        sqlCommand.ExecuteNonQuery();
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-        //        return;
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //}
         public static void AddOrderPayment(PaymentData1Model paymentData1Model, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -352,12 +277,10 @@ namespace RetailSlnDataLayer
                     sqlCommandItemImageSrcSetImageName.ExecuteScalar();
                 }
             }
-            //SqlCommand sqlCommandItemImage = BuildSqlCommandItemImageInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-            //SqlCommand sqlCommandItemImageSrcSet = BuildSqlCommandItemImageSrcSetInsert(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
         }
         public static void AddPersonExtn1(long personId, long corpAcctId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            SqlCommand sqlCommand = new SqlCommand("INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, AddUserId, UpdUserId) SELECT @ClientId, @PersonId, @CorpAcctId, @LoggedInUserId, @LoggedInUserId", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, CorpAcctLocationId, AddUserId, UpdUserId) SELECT @ClientId, @PersonId, @CorpAcctId, CorpAcctLocationId, @LoggedInUserId, @LoggedInUserId FROM RetailSlnSch.CorpAcctLocation WHERE CorpAcctId = @CorpAcctId", sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@PersonId", System.Data.SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@CorpAcctId", System.Data.SqlDbType.BigInt);

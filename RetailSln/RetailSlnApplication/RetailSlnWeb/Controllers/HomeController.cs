@@ -1,6 +1,7 @@
 ﻿using ArchitectureLibraryBusinessLayer;
 using ArchitectureLibraryCacheData;
 using ArchitectureLibraryClassCode;
+using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
@@ -523,13 +524,13 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(loginUserProfModel);
-                SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
-                    ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
                     SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
                     Session["SessionObject"] = sessionObjectModel;
                     Session["CreateForSessionObject"] = createForSessionObject;
@@ -550,13 +551,16 @@ namespace RetailSlnWeb.Controllers
                     authManager.SignIn(identity);
                     //success = true;
                     //processMessage = "ERROR???";
-                    string aspNetRoleName, redirectUrl;
-                    //string actionName, aspNetRoleName, controllerName;
+                    string actionName, aspNetRoleName, controllerName, redirectUrl;
+                    //string actionName, aspNetRoleName, controllerName, redirectUrl;
                     aspNetRoleName = sessionObjectModel.AspNetRoleName;
                     var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                     success = true;
                     processMessage = "SUCCESS!!!";
-                    redirectUrl = Url.Action("Index", "Home");
+                    //redirectUrl = Url.Action("Index", "Home");
+                    actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
+                    controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
+                    redirectUrl = Url.Action(actionName, controllerName);
                     //if (string.IsNullOrWhiteSpace(sessionObjectModel.FirstName) || string.IsNullOrEmpty(sessionObjectModel.LastName))
                     //{
                     //    //actionName = aspNetRoleKVPs["ActionName00"].KVPValueData;
@@ -579,6 +583,10 @@ namespace RetailSlnWeb.Controllers
                 }
                 else
                 {
+                    loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
                     success = false;
                     processMessage = "ERROR???";
                     htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
@@ -594,6 +602,10 @@ namespace RetailSlnWeb.Controllers
                 loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
                 loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
                 htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
                 success = false;
                 processMessage = "ERROR???";
@@ -638,20 +650,39 @@ namespace RetailSlnWeb.Controllers
             string oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration;
             try
             {
-                OTPModel oTPModel = archLibBL.OTP(id, aspNetUserId, emailAddress, personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                success = ModelState.IsValid;
-                if (success)
+                OTPSendTypeEnum oTPSendTypeId;
+                try
                 {
-                    processMessage = "SUCCESS!!!";
+                    oTPSendTypeId = (OTPSendTypeEnum)long.Parse(id);
+                    OTPModel oTPModel = archLibBL.OTP(id, aspNetUserId, emailAddress, personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    success = ModelState.IsValid;
+                    if (success)
+                    {
+                        processMessage = "SUCCESS!!!";
+                        htmlString = "OTP generated successfully";
+                        oTPExpiryDate = oTPModel.OTPExpiryDate;
+                        oTPExpiryTime = oTPModel.OTPExpiryTime;
+                        oTPExpiryDuration = oTPModel.OTPExpiryDuration.ToString();
+                    }
+                    else
+                    {
+                        processMessage = "ERROR???";
+                        htmlString = "Error occurred while generating OTP";
+                        oTPExpiryDate = "Error";
+                        oTPExpiryTime = "Error";
+                        oTPExpiryDuration = "Error";
+                    }
                 }
-                else
+                catch (Exception exception)
                 {
+                    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                    success = false;
                     processMessage = "ERROR???";
+                    htmlString = "Select valid OTP Send Type";
+                    oTPExpiryDate = "Error";
+                    oTPExpiryTime = "Error";
+                    oTPExpiryDuration = "Error";
                 }
-                htmlString = "OTP generated successfully";
-                oTPExpiryDate = oTPModel.OTPExpiryDate;
-                oTPExpiryTime = oTPModel.OTPExpiryTime;
-                oTPExpiryDuration = oTPModel.OTPExpiryDuration.ToString();
             }
             catch (Exception exception)
             {
@@ -673,7 +704,7 @@ namespace RetailSlnWeb.Controllers
         // GET: OTP
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult OTPGuest(LoginUserProfGuestModel loginUserProfGuestModel)
+        public ActionResult OTPGuest(OTPModel oTPModel)
         {
             ViewData["ActionName"] = "OTP";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
@@ -684,40 +715,48 @@ namespace RetailSlnWeb.Controllers
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             bool success;
             string processMessage, htmlString;
-            string oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration;
             try
             {
                 ModelState.Clear();
-                TryValidateModel(loginUserProfGuestModel);
+                TryValidateModel(oTPModel);
+                //TryValidateModel(loginUserProfGuestModel.OTPModel, "OTPModel");
                 ModelState.Remove("OTPCode");
-                archLibBL.OTPGuest(ref loginUserProfGuestModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                retailSlnBL.RegisterUserProfPersonExtn1(loginUserProfGuestModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                success = ModelState.IsValid;
-                if (success)
+                archLibBL.OTPGuest(ref oTPModel, false, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (ModelState.IsValid)
+                {
+                    if (oTPModel.NewUser.Value)
+                    {
+                        retailSlnBL.RegisterUserProfPersonExtn1(oTPModel.PersonId.Value, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                }
+                if (ModelState.IsValid)
                 {
                     processMessage = "SUCCESS!!!";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_OTPData", oTPModel);
+                    //Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
                 }
                 else
                 {
                     processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_OTPData", oTPModel);
+                    //Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                 }
-                htmlString = "OTP generated successfully";
-                oTPExpiryDate = loginUserProfGuestModel.OTPExpiryDate;
-                oTPExpiryTime = loginUserProfGuestModel.OTPExpiryTime;
-                oTPExpiryDuration = loginUserProfGuestModel.OTPExpiryDuration.ToString();
+                success = ModelState.IsValid;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 success = false;
                 processMessage = "ERROR???";
-                htmlString = "Error while generating OTP";
-                oTPExpiryDate = "";
-                oTPExpiryTime = "";
-                oTPExpiryDuration = "";
+                ModelState.AddModelError("", "Error while generating OTP");
+                oTPModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPData", oTPModel);
+                //Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
             }
-            actionResult = Json(new { success, processMessage, htmlString, oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration }, JsonRequestBehavior.AllowGet);
-            //Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            actionResult = Json(new { success, processMessage, htmlString}, JsonRequestBehavior.AllowGet);
             return actionResult;
             //string url = "/Home/Forbidden";
             //return JavaScript(string.Format("window.open('{0}', '_blank', 'left=100,top=100,width=500,height=500,toolbar=no,resizable=no,scrollable=yes');", url));
@@ -904,44 +943,54 @@ namespace RetailSlnWeb.Controllers
         //    return actionResult;
         //}
 
-        //// GET: RegisterUserLoginUser
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("RegisterUserLoginUser")]
-        //public ActionResult RegisterUserLoginUser(string id)
-        //{
-        //    //int x = 1, y = 0, z = x / y;
-        //    if (string.IsNullOrWhiteSpace(id))
-        //    {
-        //        ViewData["ActionName"] = "REGISTER";
-        //    }
-        //    else
-        //    {
-        //        ViewData["ActionName"] = id.ToUpper();
-        //    }
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
-        //        actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
-        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-        //        actionResult = View("Error", responseObjectModel);
-        //    }
-        //    return actionResult;
-        //}
+        // GET: RegisterUserLoginUser
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("RegisterUserLoginUser")]
+        public ActionResult RegisterUserLoginUser(string id)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string redirectToAction = "RegisterUserProf";
+            try
+            {
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                }
+                else
+                {
+                    if (id.ToUpper() == "LOGIN")
+                    {
+                        redirectToAction = "LoginUserProf";
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return RedirectToAction(redirectToAction);
+            //string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            //ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            //exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            //ActionResult actionResult;
+            //ArchLibBL archLibBL = new ArchLibBL();
+            //try
+            //{
+            //    //int x = 1, y = 0, z = x / y;
+            //    RegisterUserLoginUserModel registerUserLoginUserModel = archLibBL.RegisterUserLoginUser(id, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    registerUserLoginUserModel.RegisterUserProfModel.QueryString1 = id;
+            //    actionResult = View("RegisterUserLoginUser", registerUserLoginUserModel);
+            //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            //}
+            //catch (Exception exception)
+            //{
+            //    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+            //    ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+            //    ModelState.AddModelError("", "Register User / Login / Reset Password / GET");
+            //    archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+            //    actionResult = View("Error", responseObjectModel);
+            //}
+            //return actionResult;
+        }
         #endregion
 
         // GET: RegisterUserProf
@@ -991,12 +1040,16 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
+                registerUserProfModel.ConfirmRegisterEmailAddress = registerUserProfModel.RegisterEmailAddress;
                 ModelState.Clear();
                 TryValidateModel(registerUserProfModel);
-                archLibBL.RegisterUserProf(ref registerUserProfModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                archLibBL.RegisterUserProf(ref registerUserProfModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
-                    retailSlnBL.RegisterUserProfPersonExtn1(registerUserProfModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (!registerUserProfModel.RedirectToUpdatePassword)
+                    {
+                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserProfModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
                     UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(registerUserProfModel.RegisterEmailAddress, registerUserProfModel.OTPCreatedDateTime, registerUserProfModel.OTPExpiryDateTime, registerUserProfModel.OTPExpiryDuration, registerUserProfModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
@@ -1089,7 +1142,7 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(resetPasswordModel);
-                archLibBL.ResetPassword(ref resetPasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                archLibBL.ResetPassword(ref resetPasswordModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     success = true;
@@ -1392,6 +1445,7 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
             bool success;
             string processMessage, htmlString;
             try
@@ -1399,14 +1453,59 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(updatePasswordModel);
-                UpdatePasswordSuccessModel updatePasswordSuccessModel = archLibBL.UpdatePassword(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdatePasswordSuccessModel updatePasswordSuccessModel = archLibBL.UpdatePassword(ref updatePasswordModel, false, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    //actionResult = PartialView("_UpdatePasswordSuccess", updatePasswordModel);
-                    htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordSuccess", updatePasswordSuccessModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    LoginUserProfModel loginUserProfModel = new LoginUserProfModel
+                    {
+                        LoginEmailAddress = updatePasswordModel.EmailAddress,
+                        LoginPassword = updatePasswordModel.LoginPassword,
+                    };
+                    SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                        ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
+                        SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
+                        Session["SessionObject"] = sessionObjectModel;
+                        Session["CreateForSessionObject"] = createForSessionObject;
+                        Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
+                        var identity = new ClaimsIdentity
+                        (
+                            new[]
+                            {
+                                new Claim(ClaimTypes.Name, sessionObjectModel.FirstName + " " + sessionObjectModel.LastName),
+                                new Claim(ClaimTypes.Email, sessionObjectModel.EmailAddress),
+                                new Claim(ClaimTypes.Role, sessionObjectModel.AspNetRoleName),
+                                //new Claim(ClaimTypes.Country, "India"),
+                            },
+                            "ApplicationCookie"
+                        );
+                        var ctx = Request.GetOwinContext();
+                        var authManager = ctx.Authentication;
+                        authManager.SignIn(identity);
+                        string aspNetRoleName, redirectUrl;
+                        //string actionName, aspNetRoleName, controllerName;
+                        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                        var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                        success = true;
+                        processMessage = "SUCCESS!!!";
+                        redirectUrl = Url.Action("Index", "Home");
+                        actionResult = Json(new { success, processMessage, redirectUrl });
+                        //return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        success = false;
+                        processMessage = "ERROR???";
+                        //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
+                        updatePasswordModel.PasswordStrengthMessages = archLibBL.CreatePasswordStrengthMessages();
+                        htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
+                        actionResult = Json(new { success, processMessage, htmlString });
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                    }
                 }
                 else
                 {
@@ -1415,6 +1514,7 @@ namespace RetailSlnWeb.Controllers
                     //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
                     updatePasswordModel.PasswordStrengthMessages = archLibBL.CreatePasswordStrengthMessages();
                     htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
+                    actionResult = Json(new { success, processMessage, htmlString });
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
             }
@@ -1435,10 +1535,10 @@ namespace RetailSlnWeb.Controllers
                 htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
                 success = false;
                 processMessage = "ERROR???";
+                actionResult = Json(new { success, processMessage, htmlString });
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
             }
             //htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-            actionResult = Json(new { success, processMessage, htmlString });
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }

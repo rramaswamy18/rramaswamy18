@@ -1,81 +1,32 @@
-﻿@using ArchitectureLibraryCacheData
-@model ArchitectureLibraryModels.ContactUsModel
-<style>
-    #FirstName-error, #LastName-error, #EmailAddress-error, #ContactUsTelephoneCountryId-error, #ContactUsTelephoneNumber-error, #CommentsRequests-error, #CaptchaAnswerContactUs-error, #ContactUsTypeId-error {
-        color: #ff0000;
-        display: block;
-        font-size: 12px;
-        font-weight: bold;
+﻿@model ArchitectureLibraryModels.ContactUsModel
+@{
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
     }
-</style>
-@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
-{
-    <div class="row validationSummaryMessage" id="divContactUsValidationSummaryMessage">
-        @Model.ResponseObjectModel.ValidationSummaryMessage
-    </div>
-}
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="row" id="divContactUsValidationSummary">
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3; font-size: 12px; text-align: left;" }).ToHtmlString()))
-    </div>
-}
-@if (Model != null && Model.ResponseObjectModel != null)
-{
-    <div class="row" id="divContactUsResponseObject">
-        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-    </div>
-}
-<div class="col-md-6" style="float: left; text-align: left;">
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.ContactUsTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
-        @Html.DropDownListFor(m => m.ContactUsTypeId, new SelectList(LookupCache.CodeTypeSelectListItems["ContactType"]["CodeDataNameId"], "Value", "Text", Model.ContactUsTypeId), "--- Select ---", new { @class = "form-control", style = "width: 90%;" })
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ContactUsTypeId, "", new { id = "ContactUsTypeId-error" }).ToHtmlString()))
-    </div>
-
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
-        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.FirstName), style = "width: 90%;" })
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, "", new { id = "FirstName-error" }).ToHtmlString()))
-    </div>
-
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.ContactUsTelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
-        <div>
-            @Html.DropDownListFor(m => m.ContactUsTelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.ContactUsTelephoneCountryId), "---", new { @class = "form-control", style = "float: left; font-size: 14px; width: 36%;" })
-            <span style="float: left; width: 9px;">&nbsp;</span>
-            @Html.TextBoxFor(m => m.ContactUsTelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.ContactUsTelephoneNumber), style = "float: left; width: 53%;" })
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(true, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 11px; margin: 0px; padding: 0px; text-align: left;" }).ToHtmlString()))
         </div>
-        <div>
-            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ContactUsTelephoneCountryId, "", new { id = "ContactUsTelephoneCountryId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
-            <span style="float: left; width: 9px;">&nbsp;</span>
-            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ContactUsTelephoneNumber, "", new { id = "ContactUsTelephoneNumber-error", style = "float: left;" }).ToHtmlString()))
+    }
+    if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
         </div>
-    </div>
-</div>
-<div class="col-md-6" style="float: right; text-align: left;">
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
-        @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 90%;" })
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error" }).ToHtmlString()))
-    </div>
-
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
-        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.LastName), style = "width: 90%;" })
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LastName, "", new { id = "LastName-error" }).ToHtmlString()))
-    </div>
-
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.CaptchaAnswerContactUs, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberContactUs0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumberContactUs1</span><span style="color: #000000;">?</span><span style="color: #0000ff; font-weight: bold;"> *</span>
-        @Html.TextBoxFor(m => m.CaptchaAnswerContactUs, null, new { @class = "form-control", placeholder = @Model.CaptchaNumberContactUs0 + " + " + @Model.CaptchaNumberContactUs1 + " =?", style = "width: 90%;" })
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswerContactUs, "", new { id = "CaptchaAnswerContactUs-error" }).ToHtmlString()))
-    </div>
-</div>
-<div class="col-md-12" style="text-align: left;">
-    <div class="row" style="padding-left: 18px; padding-right: 18px; text-align: left;">
-        @Html.LabelFor(m => m.CommentsRequests, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
-        @Html.TextAreaFor(model => model.CommentsRequests, new { @class = "form-control", placeholder = "Write a comment......", style = "height: 135px; width: 95%;" })
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CommentsRequests, "", new { id = "CommentsRequests-error" }).ToHtmlString()))
-    </div>
-</div>
+    }
+    //Using this right now
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    //mobileDevice = true;
+    if (mobileDevice)
+    {
+        @Html.Partial("_ContactUsData2")
+    }
+    else
+    {//2 columns
+        @Html.Partial("_ContactUsData1")
+    }
+}
