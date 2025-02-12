@@ -23,19 +23,21 @@ namespace RetailSlnEnumerations
         [Description("Additional Charges")]
         AdditionalCharges = 700,
         [Description("Discount")]
-        Discount = 600,
+        Discount = 800,
         [Description("Total Invoice Amount")]
-        TotalInvoiceAmount = 800,
+        TotalInvoiceAmount = 900,
+        [Description("Advance Amount Paid")]
+        AdvanceAmountPaid = 1000,
         [Description("Amount Paid by Gift Cert")]
-        AmountPaidByGiftCert = 900,
-        [Description("Amount Paid by Credit Card")]
-        AmountPaidByCreditCard = 1000,
-        [Description("Total Amount Paid")]
-        TotalAmountPaid = 1100,
-        [Description("Balance Due")]
-        BalanceDue = 1200,
+        AmountPaidByGiftCert = 1100,
         [Description("Amount Paid by Coupon")]
-        AmountPaidByCoupon = 1300,
+        AmountPaidByCoupon = 1200,
+        [Description("Amount Paid")]
+        AmountPaidByCreditCard = 1300,
+        [Description("Total Amount Paid")]
+        TotalAmountPaid = 1400,
+        [Description("Balance Due")]
+        BalanceDue = 1500,
         [Description("Other")]
         Other = 9900,
     }

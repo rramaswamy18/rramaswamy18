@@ -268,13 +268,13 @@ function paymentInfo1Save_onclick() {
     console.log("00000000", "paymentInfo1Save_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/PaymentInfo1";
-    //var postData = $("#formPaymentInfoData").serialize();
+    var postData = $("#formPaymentInfo1Data").serialize();
     $.ajax({
         url: url,
         type: "POST",
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
         //dataType: "html",
-        //data: null,
+        data: postData,
         //async: false,
         success: function (responseData, textStatus, request) {
             console.log("00000100", "paymentInfo1Save_onclick", responseData);
@@ -520,4 +520,70 @@ function paymentInfo5Save_onclick() {
             document.getElementById("divOrderProcess").innerHTML = xhr.responseText;
         }
     });
+}
+function ApproverSignatureTextValue_onchange() {
+    console.log(1, document.getElementById("ApproverSignatureTextValue").value);
+    for (var i = 1; ; i++) {
+        try {
+            document.getElementById("ApproverSignatureTextValue" + i).innerHTML = document.getElementById("ApproverSignatureTextValue").value;
+        }
+        catch (err) {
+            //alert(1 + " " + i);
+            //alert(err);
+            console.log(1, i);
+            break;
+        }
+    }
+    return false;
+}
+function ApproverSignatureTextValue_oninput() {
+    console.log(2, document.getElementById("ApproverSignatureTextValue").value);
+    for (var i = 1; ; i++) {
+        try {
+            document.getElementById("ApproverSignatureTextValue" + i).innerHTML = document.getElementById("ApproverSignatureTextValue").value;
+        }
+        catch (err) {
+            //alert(2 + " " + i);
+            //alert(err);
+            console.log(2, i);
+            break;
+        }
+    }
+    return false;
+}
+function ApproverSignatureTextId_onclick() {
+    console.log(3, document.getElementById("ApproverSignatureTextValue").value);
+    document.getElementById("ApproverSignatureTextId").style.fontFamily = document.getElementById("ApproverSignatureTextId").options[document.getElementById("ApproverSignatureTextId").selectedIndex].style.fontFamily;
+}
+function ApproverSignatureTextValue_onchange2() {
+    //console.log(1, document.getElementById("ApproverSignatureTextValue").value);
+    for (var i = 1; document.getElementById("ApproverSignatureTextId").options.length ; i++) {
+        try {
+            document.getElementById("ApproverSignatureTextId").options[i].innerText = document.getElementById("ApproverSignatureTextValue").value;
+            //document.getElementById("ApproverSignatureTextValue" + i).innerHTML = document.getElementById("ApproverSignatureTextValue").value;
+        }
+        catch (err) {
+            //alert(2 + " " + i);
+            //alert(err);
+            //console.log(1, i);
+            break;
+        }
+    }
+    return false;
+}
+function ApproverSignatureTextValue_oninput2() {
+    //console.log(2, document.getElementById("ApproverSignatureTextValue").value);
+    for (var i = 1; document.getElementById("ApproverSignatureTextId").options.length; i++) {
+        try {
+            document.getElementById("ApproverSignatureTextId").options[i].innerText = document.getElementById("ApproverSignatureTextValue").value;
+            //document.getElementById("ApproverSignatureTextValue" + i).innerHTML = document.getElementById("ApproverSignatureTextValue").value;
+        }
+        catch (err) {
+            //alert(2 + " " + i);
+            //alert(err);
+            //console.log(2, i);
+            break;
+        }
+    }
+    return false;
 }

@@ -1,0 +1,110 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@using RetailSlnModels
+@model UserAddEditModel
+<table class="table-responsive" style="margin-left: auto; margin-right: auto; padding: 9px; width: 63%;">
+    <tr>
+        <td class="text-left">
+            @{
+                var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("LoginType", "");
+                if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+                {
+                    <div class="row validationSummaryMessage">
+                        @Model.ResponseObjectModel.ValidationSummaryMessage
+                    </div>
+                }
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row" style="margin-left: auto; margin-right: auto; padding: 5px;">
+                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3; font-size: 12px; text-align: left;" }).ToHtmlString()))
+                    </div>
+                }
+                if (Model != null && Model.ResponseObjectModel != null)
+                {
+                    <div class="row">
+                        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                    </div>
+                }
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 90%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error", style = "width: 95%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.AspNetRoleUserTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.DropDownListFor(m => m.AspNetRoleUserTypeId, new SelectList(ArchLibCache.UserTypes, "Value", "Text", Model.AspNetRoleUserTypeId), "--- User Type ---", new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AspNetRoleUserTypeId, "", new { id = "UserTypeId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.TelephoneCountryId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.DropDownListFor(m => m.TelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.TelephoneCountryId), "---", new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneCountryId, "", new { id = "TelephoneCountryId-error", style = "width: 95%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 1px; vertical-align: top;">
+            @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.TextBoxFor(m => m.TelephoneNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.TelephoneNumber), style = "width: 89%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error", style = "width: 85%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.AlternateTelephoneCountryId, new { @class = "col-form-label" })
+            @Html.DropDownListFor(m => m.AlternateTelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.AlternateTelephoneCountryId), "---", new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 1px; vertical-align: top;">
+            @Html.LabelFor(m => m.AlternateTelephoneNumber, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.AlternateTelephoneNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.AlternateTelephoneNumber), style = "width: 89%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AlternateTelephoneNumber, "", new { id = "AlternateTelephoneNumber-error", style = "width: 85%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.FirstName), style = "width: 90%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.FirstName, "", new { id = "FirstName-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.LastName), style = "width: 90%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LastName, "", new { id = "LastName-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.CorpAcctId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            @Html.DropDownListFor(m => m.CorpAcctId, new SelectList(RetailSlnCache.CorpAcctModels, "CorpAcctId", "CorpAcctName", Model.CorpAcctId), "--- Corp Acct ---", new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CorpAcctId, "", new { id = "CorpAcctId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-left" style="padding: 3px; vertical-align: top;">
+            @Html.LabelFor(m => m.LoginTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">*</span>
+            <br style="clear: both;" />
+            <label class="radio-inline" style="font-weight: bold;">
+                <input disabled="disabled" id="LoginTypeId0" name="LoginTypeId" type="radio" value="@codeDataModels[0].CodeDataNameId">@codeDataModels[0].CodeDataDesc0
+            </label>
+            <label class="radio-inline" style="font-weight: bold;">
+                <input disabled="disabled" id="LoginTypeId1" name="LoginTypeId" type="radio" value="@codeDataModels[1].CodeDataNameId">@codeDataModels[1].CodeDataDesc0
+            </label>
+            <label class="radio-inline" style="font-weight: bold;">
+                <input checked="checked" id="LoginTypeId2" name="LoginTypeId" type="radio" value="@codeDataModels[2].CodeDataNameId">@codeDataModels[2].CodeDataDesc0
+            </label>
+            <br style="clear: both;" />
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LoginTypeId, "", new { id = "OTPSendTypeId-error", style = "float: left; width: 36%;" }).ToHtmlString()))
+        </td>
+    </tr>
+</table>

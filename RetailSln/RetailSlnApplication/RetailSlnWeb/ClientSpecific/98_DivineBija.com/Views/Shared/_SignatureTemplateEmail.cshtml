@@ -8,15 +8,14 @@
     Thanking You,
     <br />
     Sincerely,
-    @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.AuthorizedSignature))
+    @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.AuthorizedSignatureTextValue))
     {
         <br />
-        <span style="color: #000000; font-family: 'Lucida Handwriting'; font-size: 18px; font-weight: bold;">@Model.OrderSummaryModel.AuthorizedSignature</span>
+        <span style="color: #000000; font-family: 'Lucida Handwriting'; font-size: 18px; font-weight: bold;">1. @Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
+        <span style="color: #000000; font-family: '@Model.OrderSummaryModel.AuthorizedSignatureFontFamily'; font-size: @Model.OrderSummaryModel.AuthorizedSignatureFontSize; font-weight: bold;">2. @Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
     }
-    @*<br />
-        <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeName", "")</span>*@
     <br />
-    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "AdminRepresentativeTitle", "")</span>
+    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "Business", "AdminRepresentativeTitle")</span>
     <br />
     <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span>
     <br />

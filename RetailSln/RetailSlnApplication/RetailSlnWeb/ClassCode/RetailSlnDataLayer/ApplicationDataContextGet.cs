@@ -58,6 +58,43 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static float GetCorpAcctLocationMaxSeqNum(long corpAcctId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT MAX(SeqNum) AS MaxSeqNum FROM RetailSlnSch.CorpAcctLocation WHERE CorpAcctId = " + corpAcctId + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                float seqNum;
+                if (sqlDataReader.Read())
+                {
+                    if (sqlDataReader.IsDBNull(0))
+                    {
+                        seqNum = 0;
+                    }
+                    else
+                    {
+                        seqNum = float.Parse(sqlDataReader["MaxSeqNum"].ToString());
+                    }
+                }
+                else
+                {
+                    seqNum = 0;
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return seqNum;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static PersonExtn1Model GetPersonExtn1FromPersonId(long personId, long corpAcctLocationId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -158,6 +195,96 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static long? GetMaxOrderHeaderWIPId(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            long? orderHeaderWIPId;
+            SqlDataReader sqlDataReader = null;
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("SELECT MAX(OrderHeaderWIPId) FROM RetailSlnSch.OrderHeaderWIP WHERE PersonId = " + personId, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                if (sqlDataReader.Read())
+                {
+                    orderHeaderWIPId = long.Parse(sqlDataReader[0].ToString());
+                }
+                else
+                {
+                    orderHeaderWIPId = null;
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                orderHeaderWIPId = null;
+            }
+            finally
+            {
+                sqlDataReader.Close();
+            }
+            return orderHeaderWIPId;
+        }
+        public static OrderHeaderWIPModel GetOrderHeaderWIP(long orderHeaderWIPId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            OrderHeaderWIPModel orderHeaderWIPModel = null;
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "        SELECT *" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.OrderHeaderWIP" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.OrderDetailWIP" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeaderWIP.OrderHeaderWIPId = OrderDetailWIP.OrderHeaderWIPId" + Environment.NewLine;
+                sqlStmt += "         WHERE OrderHeaderWIP.OrderHeaderWIPId = " + orderHeaderWIPId + Environment.NewLine;
+                sqlStmt += "      ORDER BY OrderDetailWIP.SeqNum" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                #endregion
+                #region
+                bool sqlDataReaderRead = sqlDataReader.Read();
+                while (sqlDataReaderRead)
+                {
+                    orderHeaderWIPModel = new OrderHeaderWIPModel
+                    {
+                        OrderHeaderWIPId = long.Parse(sqlDataReader["OrderHeaderWIPId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
+                        CreatedForPersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                        OrderDateTime = sqlDataReader["CreatedForPersonId"].ToString(),
+                        OrderStatusId = sqlDataReader["OrderStatusId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["OrderStatusId"].ToString()),
+                        PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                        OrderDetailWIPModels = new List<OrderDetailWIPModel>(),
+                    };
+                    while (sqlDataReaderRead)
+                    {
+                        orderHeaderWIPModel.OrderDetailWIPModels.Add
+                        (
+                            new OrderDetailWIPModel
+                            {
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                                OrderHeaderWIPId = long.Parse(sqlDataReader["OrderHeaderWIPId"].ToString()),
+                                OrderQty = long.Parse(sqlDataReader["OrderQty"].ToString()),
+                                SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            }
+                        );
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+                #endregion
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+            }
+            return orderHeaderWIPModel;
+        }
         public static GiftCertModel GetGiftCert(string giftCertNumber, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             GiftCertModel giftCertModel;
@@ -222,6 +349,87 @@ namespace RetailSlnDataLayer
                 }
                 sqlDataReader.Close();
                 return seqNum;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static OrderApprovalModel GetOrderApproval(long orderApprovalId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "        SELECT OrderApproval.*" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUserRequestedBy.Email AS ApprovalRequestedByEmailAddress" + Environment.NewLine;
+                sqlStmt += "              ,PersonRequestedBy.FirstName AS ApprovalRequestedByFirstName" + Environment.NewLine;
+                sqlStmt += "              ,PersonRequestedBy.LastName AS ApprovalRequestedByLastName" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUserRequestedBy.PhoneNumber AS ApprovalRequestedByTelephoneNumber" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUserRequestedFor.Email AS ApprovalRequestedForEmailAddress" + Environment.NewLine;
+                sqlStmt += "              ,PersonRequestedFor.FirstName AS ApprovalRequestedForFirstName" + Environment.NewLine;
+                sqlStmt += "              ,PersonRequestedFor.LastName AS ApprovalRequestedForLastName" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUserRequestedFor.PhoneNumber AS ApprovalRequestedForTelephoneNumber" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.OrderApproval" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person AS PersonRequestedBy" + Environment.NewLine;
+                sqlStmt += "            ON OrderApproval.ApprovalRequestedByPersonId = PersonRequestedBy.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser AS AspNetUserRequestedBy" + Environment.NewLine;
+                sqlStmt += "            ON PersonRequestedBy.AspNetUserId = AspNetUserRequestedBy.AspNetUserId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person AS PersonRequestedFor" + Environment.NewLine;
+                sqlStmt += "            ON OrderApproval.ApprovalRequestedForPersonId = PersonRequestedFor.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser AS AspNetUserRequestedFor" + Environment.NewLine;
+                sqlStmt += "            ON PersonRequestedFor.AspNetUserId = AspNetUserRequestedFor.AspNetUserId" + Environment.NewLine;
+                sqlStmt += "         WHERE OrderApproval.OrderApprovalId = " + orderApprovalId + Environment.NewLine;
+                //sqlStmt += "        " + Environment.NewLine;
+                #endregion
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                OrderApprovalModel orderApprovalModel;
+                if (sqlDataReader.Read())
+                {
+                    orderApprovalModel = new OrderApprovalModel
+                    {
+                        OrderApprovalId = long.Parse(sqlDataReader["OrderApprovalId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        ApprovalOTPCode = sqlDataReader["ApprovalOTPCode"].ToString(),
+                        ApprovalOTPCompletedDateTime = sqlDataReader["ApprovalOTPCompletedDateTime"].ToString(),
+                        ApprovalOTPCreatedDateTime = sqlDataReader["ApprovalOTPCreatedDateTime"].ToString(),
+                        ApprovalOTPExpiryDateTime = sqlDataReader["ApprovalOTPExpiryDateTime"].ToString(),
+                        ApprovalOTPExpiryDuration = int.Parse(sqlDataReader["ApprovalOTPExpiryDuration"].ToString()),
+                        ApprovalOTPSendTypeId = (OTPSendTypeEnum)long.Parse(sqlDataReader["ApprovalOTPSendTypeId"].ToString()),
+                        ApprovalRequestedByPersonId = long.Parse(sqlDataReader["ApprovalRequestedByPersonId"].ToString()),
+                        ApprovalRequestedDateTime = sqlDataReader["ApprovalRequestedDateTime"].ToString(),
+                        ApprovalRequestedForPersonId = long.Parse(sqlDataReader["ApprovalRequestedForPersonId"].ToString()),
+                        ApprovalStatusNameDesc = sqlDataReader["ApprovalStatusNameDesc"].ToString(),
+                        ApprovedByPersonId = sqlDataReader["ApprovedByPersonId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ApprovedByPersonId"].ToString()),
+                        ApprovedDateTime = sqlDataReader["ApprovedDateTime"].ToString(),
+                        ApproverComments = sqlDataReader["ApproverComments"].ToString(),
+                        ApproverConsent = bool.Parse(sqlDataReader["ApproverConsent"].ToString()),
+                        ApproverInitialsTextId = sqlDataReader["ApproverInitialsTextId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ApproverInitialsTextId"].ToString()),
+                        ApproverInitialsTextValue = sqlDataReader["ApproverInitialsTextValue"].ToString(),
+                        ApproverSignatureTextId = sqlDataReader["ApproverSignatureTextId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ApproverSignatureTextId"].ToString()),
+                        ApproverSignatureTextValue = sqlDataReader["ApproverSignatureTextValue"].ToString(),
+                        Comments = sqlDataReader["Comments"].ToString(),
+                        OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                        ApprovalRequestedByEmailAddress = sqlDataReader["ApprovalRequestedByEmailAddress"].ToString(),
+                        ApprovalRequestedByFirstName = sqlDataReader["ApprovalRequestedByFirstName"].ToString(),
+                        ApprovalRequestedByLastName = sqlDataReader["ApprovalRequestedByLastName"].ToString(),
+                        ApprovalRequestedByTelephoneNumber = sqlDataReader["ApprovalRequestedByTelephoneNumber"].ToString(),
+                        ApprovalRequestedForEmailAddress = sqlDataReader["ApprovalRequestedForEmailAddress"].ToString(),
+                        ApprovalRequestedForFirstName = sqlDataReader["ApprovalRequestedForFirstName"].ToString(),
+                        ApprovalRequestedForLastName = sqlDataReader["ApprovalRequestedForLastName"].ToString(),
+                        ApprovalRequestedForTelephoneNumber = sqlDataReader["ApprovalRequestedForTelephoneNumber"].ToString(),
+                    };
+                }
+                else
+                {
+                    orderApprovalModel = new OrderApprovalModel();
+                }
+                return orderApprovalModel;
             }
             catch (Exception exception)
             {
@@ -334,9 +542,10 @@ namespace RetailSlnDataLayer
                     CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
                     CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
                     CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
-                    CreditSale = bool.Parse(sqlDataReader["CreditSale"].ToString()),
+                    CreditSale = (YesNoEnum)long.Parse(sqlDataReader["CreditSale"].ToString()),
                     MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
-                    ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                    OrderApprovalRequired = (YesNoEnum)long.Parse(sqlDataReader["OrderApprovalRequired"].ToString()),
+                    ShippingAndHandlingCharges = (YesNoEnum)long.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
                     TaxIdentNum = sqlDataReader["CorpAcctName"].ToString(),
                 };
             }

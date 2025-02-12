@@ -18,7 +18,7 @@ namespace RetailSlnCacheBusinessLayer
                 CategoryHierModels = ApplicationDataContext.GetCategoryHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CategoryItemHierModels = ApplicationDataContext.GetCategoryItemHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CategoryItemMasterHierModels = ApplicationDataContext.GetCategoryItemMasterHiers(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
-                ItemDiscountModels = ApplicationDataContext.GetItemDiscounts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                ItemDiscountModels = null,//ApplicationDataContext.GetItemDiscounts(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemModels = ApplicationDataContext.GetItems(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemMasterModels = ApplicationDataContext.GetItemMasters(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 ItemMasterItemSpecModels = ApplicationDataContext.GetItemMasterItemSpecs(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),

@@ -80,156 +80,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        #region Commented
-        //public ActionResult IndexBackup(string id)
-        //{
-        //    ViewData["ActionName"] = "Index";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    try
-        //    {
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        string aspNetRoleName, absoluteUri = Request.Url.AbsoluteUri;
-        //        long parentCategoryId;
-        //        if (sessionObjectModel == null)
-        //        {
-        //            if (absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1)
-        //            {
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //                return RedirectToAction("LoginUserProf");
-        //            }
-        //            else
-        //            {
-        //                aspNetRoleName = "DEFAULTROLE";
-        //            }
-        //        }
-        //        else
-        //        {
-        //            aspNetRoleName = sessionObjectModel.AspNetRoleName;
-        //        }
-        //        var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-        //        parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId02"].KVPValueData);
-        //        CategoryModel categoryModel = RetailSlnCache.CategoryModels.First(x => x.CategoryId == parentCategoryId);
-        //        OrderCategoryItemModel orderCategoryItemModel = new OrderCategoryItemModel
-        //        {
-        //            ParentCategoryId = parentCategoryId,
-        //            PageNum = 1,
-        //            PageSize = categoryModel.MaxPerPage, //int.TryParse(pageSize, out tempLong) ? int.Parse(pageSize) : 50,
-        //        };
-        //        actionResult = View("Index", orderCategoryItemModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        ModelState.AddModelError("", "Index / GET");
-        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-        //        actionResult = View("Error", responseObjectModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    return actionResult;
-        //}
-        //public ActionResult IndexBackup2(string id)
-        //{
-        //    ViewData["ActionName"] = "Index";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        string aspNetRoleName;
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        if (sessionObjectModel == null)
-        //        {
-        //            string absoluteUri = Request.Url.AbsoluteUri;
-        //            if (
-        //                absoluteUri.ToUpper().IndexOf("BULKORDERSROLE") > -1 || id?.ToUpper().IndexOf("BULKORDERSROLE") > -1 ||
-        //                absoluteUri.ToUpper().IndexOf("MARKETINGROLE") > -1 || id?.ToUpper().IndexOf("MARKETINGROLE") > -1 ||
-        //                absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1
-        //               )
-        //            {
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //                return RedirectToAction("LoginUserProf");
-        //            }
-        //            aspNetRoleName = "DEFAULTROLE";
-        //        }
-        //        else
-        //        {
-        //            aspNetRoleName = sessionObjectModel.AspNetRoleName;
-        //        }
-        //        OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Index", orderCategoryItemModel);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        ModelState.AddModelError("", "Index / GET");
-        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-        //        actionResult = View("Error", responseObjectModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-        //public ActionResult IndexBackup3(string id)
-        //{
-        //    ViewData["ActionName"] = "Index";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        string aspNetRoleName;
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        if (sessionObjectModel == null)
-        //        {
-        //            string absoluteUri = Request.Url.AbsoluteUri;
-        //            if (
-        //                absoluteUri.ToUpper().IndexOf("BULKORDER") > -1 || id?.ToUpper().IndexOf("BULKORDER") > -1 ||
-        //                absoluteUri.ToUpper().IndexOf("MARKETING") > -1 || id?.ToUpper().IndexOf("MARKETING") > -1 ||
-        //                absoluteUri.ToUpper().IndexOf("WHOLESALE") > -1 || id?.ToUpper().IndexOf("WHOLESALE") > -1
-        //               )
-        //            {
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //                return RedirectToAction("LoginUserProf");
-        //            }
-        //            aspNetRoleName = "DEFAULTROLE";
-        //        }
-        //        else
-        //        {
-        //            aspNetRoleName = sessionObjectModel.AspNetRoleName;
-        //        }
-        //        //OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        //actionResult = View("Index", orderCategoryItemModel);
-        //        actionResult = View();
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        ModelState.AddModelError("", "Index / GET");
-        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-        //        actionResult = View("Error", responseObjectModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-        #endregion
-
         // GET: AboutUs
         [AllowAnonymous]
         [HttpGet]
@@ -557,10 +407,27 @@ namespace RetailSlnWeb.Controllers
                     var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                     success = true;
                     processMessage = "SUCCESS!!!";
-                    //redirectUrl = Url.Action("Index", "Home");
-                    actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
-                    controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
+                    switch (aspNetRoleName)
+                    {
+                        case "APPLADMN1":
+                        case "BULKORDERSROLE":
+                        case "SYSTADMIN":
+                        case "MARKETINGROLE":
+                            actionName = "Index";
+                            controllerName = "Dashboard";
+                            break;
+                        default:
+                            actionName = "Index";
+                            controllerName = "Home";
+                            break;
+                    }
+                    actionName = "Index";
+                    controllerName = "Home";
                     redirectUrl = Url.Action(actionName, controllerName);
+                    retailSlnBL.LoadOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //redirectUrl = Url.Action("Index", "Home");
+                    //actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
+                    //controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
                     //if (string.IsNullOrWhiteSpace(sessionObjectModel.FirstName) || string.IsNullOrEmpty(sessionObjectModel.LastName))
                     //{
                     //    //actionName = aspNetRoleKVPs["ActionName00"].KVPValueData;

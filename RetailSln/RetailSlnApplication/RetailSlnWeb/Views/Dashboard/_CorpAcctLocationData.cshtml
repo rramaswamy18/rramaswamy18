@@ -1,0 +1,232 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model CorpAcctLocationModel
+@{
+    //var clientId = ArchLibCache.ClientId;
+    //var clientName = ArchLibCache.ClientName;
+    //var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("YesNo", "");
+}
+<style>
+    #LocationName-error, #PrimaryTelephoneCountryId-error, #PrimaryTelephoneNumber-error, #AlternateTelephoneCountryId-error,
+    #AlternateTelephoneNumber-error, #DemogInfoCountryId-error, #BuildingTypeId-error, #HouseNumber-error, #AddressLine1-error,
+    #AddressLine2-error, #AddressLine3-error, #DemogInfoSubDivisionId-error, #StatusId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row">
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+        </div>
+    </div>
+}
+<table class="table table-condensed" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <tr>
+        <th colspan="2" class="text-center">
+            @{
+                string addEditLabel;
+                if (Model.CorpAcctLocationId == null)
+                {
+                    addEditLabel = "Add";
+                }
+                else
+                {
+                    addEditLabel = "Edit #" + Model.CorpAcctLocationId;
+                }
+            }
+            Corp Acct Location (@addEditLabel)
+        </th>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding-left: 36px;">
+            @{
+                if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+                {
+                    <div class="row validationSummaryMessage">
+                        @Model.ResponseObjectModel.ValidationSummaryMessage
+                    </div>
+                }
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div class="row">
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+                        </div>
+                    </div>
+                }
+                if (Model != null && Model.ResponseObjectModel != null)
+                {
+                    <div class="row" id="divLoginUserProfResponseObject">
+                        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                    </div>
+                }
+            }
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.HiddenFor(m => m.CorpAcctId)
+            @Model.CorpAcctModel.CorpAcctName
+        </th>
+        <th class="text-left" style="font-size: 12px; vertical-align: middle;">
+            @Model.CorpAcctModel.CorpAcctTypeId
+        </th>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.LocationName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.LocationName, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.LocationName, "", new { id = "LocationName-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.PrimaryTelephoneCountryId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.PrimaryTelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.PrimaryTelephoneCountryId), "---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PrimaryTelephoneCountryId, "", new { id = "PrimaryTelephoneCountryId-error", style = "width: 63%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.PrimaryTelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.PrimaryTelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.PrimaryTelephoneNumber), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PrimaryTelephoneNumber, "", new { id = "PrimaryTelephoneNumber-error", style = "width: 63%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.AlternateTelephoneCountryId, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.AlternateTelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.PrimaryTelephoneCountryId), "---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AlternateTelephoneCountryId, "", new { id = "AlternateTelephoneCountryId-error", style = "width: 63%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.AlternateTelephoneNumber, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.AlternateTelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.AlternateTelephoneNumber), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AlternateTelephoneNumber, "", new { id = "TelephAlternateTelephoneNumberoneNumber-error", style = "width: 63%;" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>)
+        </th>
+        <td class="text-left">
+            @if (Model.DemogInfoAddressModel.DemogInfoCountrySelectListItems.Count > 1)
+            {
+                @Html.DropDownListFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, new SelectList(Model.DemogInfoAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DemogInfoAddressModel.DemogInfoCountryId), "---", new { @class = "form-control", onchange = "javascript: demogInfoCountry_onchage(this);", style = "font-size: 13px; width: 63%;" })
+            }
+            else
+            {
+                @Html.DropDownListFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, new SelectList(Model.DemogInfoAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DemogInfoAddressModel.DemogInfoCountryId), null, new { @class = "form-control", style = "font-size: 13px; width: 63%;" })
+            }
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, "", new { id = "DemogInfoCountryId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.BuildingTypeId, new { @class = "col-form-label" })<span style="color: #0000ff; font-weight: bold;">(Required)</span>)
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.DemogInfoAddressModel.BuildingTypeId, new SelectList(Model.DemogInfoAddressModel.BuildingTypeSelectListItems, "Value", "Text", Model.DemogInfoAddressModel.BuildingTypeId), "---", new { @class = "form-control", style = "font-size: 13px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.BuildingTypeId, "", new { id = "BuildingTypeId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.HouseNumber, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.DemogInfoAddressModel.HouseNumber, new { @class = "form-control validate", maxlength = "50", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.HouseNumber), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.HouseNumber, "", new { id = "HouseNumber-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.AddressLine1, "", new { id = "AddressLine1-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.AddressLine2, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.AddressLine2, "", new { id = "AddressLine2-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.AddressLine3, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine3, new { @class = "form-control", maxlength = "250", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine3), style = "height: 32px; overflow: hidden; resize: none; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.AddressLine3, "", new { id = "AddressLine3-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.ZipCode, new { @class = "col-form-label", style = "font-size: 12px;" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            <input id="cityNameZipCodeDataListIds" type="hidden" />
+            @Html.HiddenFor(m => m.DemogInfoAddressModel.DemogInfoCityId)
+            @Html.HiddenFor(m => m.DemogInfoAddressModel.DemogInfoZipId)
+            @Html.HiddenFor(m => m.DemogInfoAddressModel.DemogInfoZipPlusId)
+            @Html.TextBoxFor(m => m.DemogInfoAddressModel.ZipCode, new { @class = "form-control validate", list = "zipCodeDataList", maxlength = "50", onblur = "javascript: return zipCode_onblur('DemogInfoAddressModel_');", oninput = "javascript: return zipCode_oninput('DemogInfoAddressModel_');", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.ZipCode), style = "width: 63%;" })
+            <i class="fa fa-check" id="zipCodeSuccess" style="color: #00d000; display: none; font-size: 12px;"></i>
+            <i class="fa fa-remove" id="zipCodeFailure" style="color: #ff0000; display: none; font-size: 12px;"></i>
+            <datalist id="zipCodeDataList">
+            </datalist>
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.CityName, new { @class = "col-form-label", style = "font-size: 12px;" })&nbsp;<span style="color: #0000ff; font-size: 10px; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.DemogInfoAddressModel.CityName, new { @class = "form-control validate", list = "cityNameDataList", maxlength = 250, onblur = "javascript: return cityName_onblur('DemogInfoAddressModel_');", oninput = "javascript: return cityName_oninput('DemogInfoAddressModel_');", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.CityName), style = "width: 63%;" })
+            <i class="fa fa-check" id="cityNameSuccess" style="color: #00d000; display: none; padding-left: 1px;"></i>
+            <i class="fa fa-remove" id="cityNameFailure" style="color: #ff0000; display: none; padding-left: 1px;"></i>
+            <datalist id="cityNameDataList">
+            </datalist>
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DemogInfoAddressModel.DemogInfoSubDivisionId, new { @class = "col-form-label", style = "font-size: 12px;" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.DemogInfoAddressModel.DemogInfoSubDivisionId, new SelectList(Model.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems, "Value", "Text", Model.DemogInfoAddressModel.DemogInfoSubDivisionId), "---", new { @class = "form-control", style = "font-size: 13px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.DemogInfoSubDivisionId, "", new { id = "DemogInfoSubDivisionId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.StatusId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>)
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.StatusId, new SelectList(codeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.StatusId), "--- Status ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.StatusId, "", new { id = "StatusId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+</table>

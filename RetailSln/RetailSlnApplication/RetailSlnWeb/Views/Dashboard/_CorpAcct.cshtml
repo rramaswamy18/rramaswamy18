@@ -1,0 +1,17 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model CorpAcctModel
+@{
+    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("YesNo", "");
+}
+@Html.Partial("_DashboardHeaderMenu")
+<form id="formCorpAcct">
+    @Html.Partial("_CorpAcctData", Model)
+</form>
+<table style="margin-left: auto; margin-right: auto;">
+    <tr>
+        <th class="text-center" style="width: 100%;">
+            <button class="loginRegisterbtn" id="corpAcctSave" onclick="javascript: return corpAcctSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 135%;" type="button">submit</button>
+        </th>
+    </tr>
+</table>

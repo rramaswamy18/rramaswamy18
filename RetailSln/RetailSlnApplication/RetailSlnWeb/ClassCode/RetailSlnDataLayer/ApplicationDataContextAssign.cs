@@ -9,6 +9,61 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
+        public static void AssignCorpAcctInsert(CorpAcctModel corpAcctModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@CorpAcctName"].Value = corpAcctModel.CorpAcctName;
+            sqlCommand.Parameters["@CorpAcctTypeId"].Value = corpAcctModel.CorpAcctTypeId;
+            sqlCommand.Parameters["@CreditDays"].Value = corpAcctModel.CreditDays;
+            sqlCommand.Parameters["@CreditLimit"].Value = corpAcctModel.CreditLimit;
+            sqlCommand.Parameters["@CreditSale"].Value = corpAcctModel.CreditSale;
+            sqlCommand.Parameters["@DefaultDiscountPercent"].Value = corpAcctModel.DefaultDiscountPercent;
+            sqlCommand.Parameters["@MinOrderAmount"].Value = corpAcctModel.MinOrderAmount;
+            sqlCommand.Parameters["@OrderApprovalRequired"].Value = corpAcctModel.OrderApprovalRequired;
+            sqlCommand.Parameters["@ShippingAndHandlingCharges"].Value = corpAcctModel.ShippingAndHandlingCharges;
+            sqlCommand.Parameters["@TaxIdentNum"].Value = string.IsNullOrWhiteSpace(corpAcctModel.TaxIdentNum) ? (object)DBNull.Value : corpAcctModel.TaxIdentNum;
+            sqlCommand.Parameters["@StatusId"].Value = corpAcctModel.StatusId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        }
+        public static void AssignCorpAcctLocationInsert(CorpAcctLocationModel corpAcctLocationModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@AlternateTelephoneCountryId"].Value = corpAcctLocationModel.AlternateTelephoneCountryId;
+            sqlCommand.Parameters["@AlternateTelephoneNumber"].Value = corpAcctLocationModel.AlternateTelephoneNumber == null ? (object)DBNull.Value : corpAcctLocationModel.AlternateTelephoneNumber;
+            sqlCommand.Parameters["@CorpAcctId"].Value = corpAcctLocationModel.CorpAcctId;
+            sqlCommand.Parameters["@DemogInfoAddressId"].Value = corpAcctLocationModel.DemogInfoAddressModel.DemogInfoAddressId;
+            sqlCommand.Parameters["@LocationName"].Value = corpAcctLocationModel.LocationName;
+            sqlCommand.Parameters["@PrimaryTelephoneCountryId"].Value = corpAcctLocationModel.PrimaryTelephoneCountryId;
+            sqlCommand.Parameters["@PrimaryTelephoneNumber"].Value = corpAcctLocationModel.PrimaryTelephoneNumber;
+            sqlCommand.Parameters["@SeqNum"].Value = corpAcctLocationModel.SeqNum;
+            sqlCommand.Parameters["@StatusId"].Value = corpAcctLocationModel.StatusId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        }
+        public static void AssignOrderApproval(OrderApprovalModel orderApprovalModel, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@ApprovalOTPCode"].Value = DBNull.Value;//orderApprovalModel.ApprovalOTPCode;
+            sqlCommand.Parameters["@ApprovalOTPCompletedDateTime"].Value = DBNull.Value;//orderApprovalModel.ApprovalOTPCompletedDateTime ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApprovalOTPCreatedDateTime"].Value = DBNull.Value;//orderApprovalModel.ApprovalOTPCreatedDateTime;
+            sqlCommand.Parameters["@ApprovalOTPExpiryDateTime"].Value = DBNull.Value;//orderApprovalModel.ApprovalOTPExpiryDateTime;
+            sqlCommand.Parameters["@ApprovalOTPExpiryDuration"].Value = DBNull.Value;//orderApprovalModel.ApprovalOTPExpiryDuration;
+            sqlCommand.Parameters["@ApprovalOTPSendTypeId"].Value = DBNull.Value;//(int)orderApprovalModel.ApprovalOTPSendTypeId;
+            sqlCommand.Parameters["@ApprovalRequestedByPersonId"].Value = orderApprovalModel.ApprovalRequestedByPersonId;
+            sqlCommand.Parameters["@ApprovalRequestedDateTime"].Value = orderApprovalModel.ApprovalRequestedDateTime;
+            sqlCommand.Parameters["@ApprovalRequestedForPersonId"].Value = orderApprovalModel.ApprovalRequestedForPersonId;
+            sqlCommand.Parameters["@ApprovalStatusNameDesc"].Value = orderApprovalModel.ApprovalStatusNameDesc;
+            sqlCommand.Parameters["@ApprovedByPersonId"].Value = orderApprovalModel.ApprovedByPersonId ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApprovedDateTime"].Value = orderApprovalModel.ApprovedDateTime ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApproverComments"].Value = orderApprovalModel.ApproverComments ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApproverConsent"].Value = orderApprovalModel.ApproverConsent;
+            sqlCommand.Parameters["@ApproverInitialsTextId"].Value = orderApprovalModel.ApproverInitialsTextId ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApproverInitialsTextValue"].Value = orderApprovalModel.ApproverInitialsTextValue ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApproverSignatureTextId"].Value = orderApprovalModel.ApproverSignatureTextId ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@ApproverSignatureTextValue"].Value = orderApprovalModel.ApproverSignatureTextValue ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@Comments"].Value = orderApprovalModel.Comments ?? (object)DBNull.Value;
+            sqlCommand.Parameters["@OrderHeaderId"].Value = orderApprovalModel.OrderHeaderId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        }
         public static void AssignOrderHeader(OrderHeader orderHeader, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;

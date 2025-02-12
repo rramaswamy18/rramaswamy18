@@ -10,24 +10,42 @@
             ActionName = "CategoryList",
             ControllerName = "Dashboard",
             LinkText = "Category",
+            QueryString = "?id=",
         },
         new MenuUrlAction
         {
             ActionName = "ItemMasterList",
             ControllerName = "Dashboard",
             LinkText = "Item",
+            QueryString = "?pageNum=1&rowCount=45",
         },
         new MenuUrlAction
         {
             ActionName = "SearchKeywordList",
             ControllerName = "Dashboard",
             LinkText = "Search Keywor(s)",
+            QueryString = "",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "OrderItem",
+            ControllerName = "Dashboard",
+            LinkText = "Order Item",
+            QueryString = "?id=&pageNum=1&rowCount=45",
         },
         new MenuUrlAction
         {
             ActionName = "OrderList",
             ControllerName = "Dashboard",
             LinkText = "Order List",
+            QueryString = "",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "CorpAcctList",
+            ControllerName = "Dashboard",
+            LinkText = "Corp Acct",
+            QueryString = "?pageNum=1&rowCount=45",
         },
     };
 }
@@ -38,17 +56,42 @@
     @foreach (var menuUrlAction in menuUrlActions)
     {
         <div style="float: left; padding-right: 9px;">
-            <a href="javascript: void(0);" onclick="javascript: return menuLink_onclick('@Url.Action(menuUrlAction.ActionName, menuUrlAction.ControllerName)', 1, 50);" style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;">@menuUrlAction.LinkText</a>
+            <a href="javascript: void(0);" onclick="javascript: return menuLink_onclick('@Url.Action(menuUrlAction.ActionName, menuUrlAction.ControllerName)', '@menuUrlAction.QueryString');" style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;">@menuUrlAction.LinkText</a>
         </div>
     }
     <br style="clear: both;" />
 </div>
 <script type="text/javascript">
-    function menuLink_onclick(url, pageNum, pageCount) {
-        console.log("menuLink_onclick", "00000000", "ENTER!!!", url);
+    function addEditLink_onclick(url, queryString) {
+        console.log("addEditLink_onclick", "00000000", "ENTER!!!", url);
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         document.getElementById("divErrorMessage").innerHTML = "";
-        url += "/" + pageNum + "?pageCount=" + pageCount;
+        url += queryString;
+        console.log("addEditLink_onclick", "00001000", "url", url, "queryString", queryString);
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "addEditLink_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("addEditLink_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+    function menuLink_onclick(url, queryString) {
+        console.log("menuLink_onclick", "00000000", "ENTER!!!", url);
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        //document.getElementById("divErrorMessage").innerHTML = "";
+        url += queryString;
+        console.log("menuLink_onclick", "00001000", "url", url, "queryString", queryString);
         $.ajax({
             url: url,
             type: "GET",

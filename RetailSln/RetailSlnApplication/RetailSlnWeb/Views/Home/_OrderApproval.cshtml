@@ -1,0 +1,67 @@
+﻿@using RetailSlnModels
+@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@model OrderApprovalModel
+@Html.Partial("_OrderApprovalData", Model)
+<script type="text/javascript">
+    function ApproverInitialsTextValue_onchange() {
+        console.log(1, document.getElementById("ApproverInitialsTextValue").value);
+        for (var i = 1; ; i++) {
+            try {
+                document.getElementById("ApproverInitialsTextValue" + i).innerHTML = document.getElementById("ApproverInitialsTextValue").value;
+            }
+            catch (err) {
+                //alert(1 + " " + i);
+                //alert(err);
+                console.log(1, i);
+                break;
+            }
+        }
+        return false;
+    }
+    function ApproverInitialsTextValue_oninput() {
+        console.log(2, document.getElementById("ApproverInitialsTextValue").value);
+        for (var i = 1; ; i++) {
+            try {
+                document.getElementById("ApproverInitialsTextValue" + i).innerHTML = document.getElementById("ApproverInitialsTextValue").value;
+            }
+            catch (err) {
+                //alert(2 + " " + i);
+                //alert(err);
+                console.log(2, i);
+                break;
+            }
+        }
+        return false;
+    }
+    function ApproverSignatureTextValue_onchange() {
+        console.log(1, document.getElementById("ApproverSignatureTextValue").value);
+        for (var i = 1; ; i++) {
+            try {
+                document.getElementById("ApproverSignatureTextValue" + i).innerHTML = document.getElementById("ApproverSignatureTextValue").value;
+            }
+            catch (err) {
+                //alert(1 + " " + i);
+                //alert(err);
+                console.log(1, i);
+                break;
+            }
+        }
+        return false;
+    }
+    function ApproverSignatureTextValue_oninput() {
+        console.log(2, document.getElementById("ApproverSignatureTextValue").value);
+        for (var i = 1; ; i++) {
+            try {
+                document.getElementById("ApproverSignatureTextValue" + i).innerHTML = document.getElementById("ApproverSignatureTextValue").value;
+            }
+            catch (err) {
+                //alert(2 + " " + i);
+                //alert(err);
+                console.log(2, i);
+                break;
+            }
+        }
+        return false;
+    }
+</script>

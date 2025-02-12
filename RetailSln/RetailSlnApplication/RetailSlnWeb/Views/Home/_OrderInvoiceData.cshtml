@@ -1,5 +1,6 @@
 ﻿@model PaymentInfo1Model
 @using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
 @using RetailSlnCacheData
 @using RetailSlnModels
 @{
@@ -14,9 +15,9 @@
             <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" />
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
-            <span style="color: #000000; font-size: 18px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">tax invoice</span>
+            <span style="color: #000000; font-size: 18px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">@Model.OrderSummaryModel.InvoiceType</span>
             <br style="clear: both;" />
-            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "BusinessName1", "")
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "NameOnInvoice")
             <br style="clear: both;" />
             @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressLine1", "")
             <br style="clear: both;" />
@@ -89,7 +90,7 @@
             <br style="clear: both;" />
             @Model.DeliveryMethodModel.DeliveryMethodDesc
             @{
-                if (Model.DeliveryMethodModel.PickupLocationId != null)
+                if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > 0)
                 {
                     var pickupLocationModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId);
                     var demogInfoAddressModel = Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels.First(x => x.DemogInfoAddressId == pickupLocationModel.LocationDemogInfoAddressId);
@@ -115,23 +116,61 @@
     *@
     <tr>
         <td colspan="4" style="border-collapse: collapse; border-style: none; border-width: 0px;">
-            @Html.Partial("_ShoppingCartEmailBody1", Model.ShoppingCartModel)
+            @Html.Partial("_ShoppingCartEmailBody1", Model)
         </td>
     </tr>
+    @{
+        if (Model.OrderSummaryModel.InvoiceTypeId == 200)
+        {
+            CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "").First(x => x.CodeDataNameId == Model.OrderApprovalModel.ApproverSignatureTextId);
+            <tr>
+                <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; word-wrap: break-word;">
+                    <span style="color: #000000; font-family: @(codeDataModel.CodeDataNameDesc); font-size: 15px; font-weight: bold;">@Model.OrderApprovalModel.ApproverSignatureTextValue</span>
+                    <br style="clear: both;" />
+                    @DateTime.Parse(Model.OrderApprovalModel.ApprovedDateTime).ToString("MMM-dd-yyyy h:mm tt")
+                    <br style="clear: both;" />
+                    @Model.OrderApprovalModel.ApproverComments
+                </td>
+            </tr>
+        }
+    }
     <tr>
-        <td colspan="4" style="text-align: left; word-wrap: break-word;">
+        <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; word-wrap: break-word;">
             @Model.DeliveryDataModel.DeliveryInstructions
         </td>
     </tr>
-    @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
-    {
-        <tr>
-            <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
-                Order Created by : @Model.OrderSummaryModel.CreatedByEmailAddress
-            </td>
-        </tr>
-    }
+    <tr>
+        <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; word-wrap: break-word;">
+            @if (Model.OrderSummaryModel.InvoiceTypeId == 100)
+            {
+                <span style="color: #000000;">
+                    @(
+                    ArchLibCache.GetApplicationDefault(clientId, "Business", "BankAccountNameCaption") +
+                    " : " +
+                    ArchLibCache.GetApplicationDefault(clientId, "Business", "BankAccountName") +
+                    " " +
+                    ArchLibCache.GetApplicationDefault(clientId, "Business", "BankAccountNumberCaption") +
+                    " " +
+                    ArchLibCache.GetApplicationDefault(clientId, "Business", "BankAccountNumber") +
+                    " " +
+                    ArchLibCache.GetApplicationDefault(clientId, "Business", "BankAccountCodeCaption") +
+                    " " +
+                    ArchLibCache.GetApplicationDefault(clientId, "Business", "BankAccountCode")
+                )
+                    <br style="clear: both;" />
+                </span>
+            }
+            @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
+            {
+                <span style="color: #000000;">Order Created by:&nbsp;</span>@Model.OrderSummaryModel.CreatedByEmailAddress
+            }
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" style="padding: 0px; text-align: left;">
+            <span style="color: #000000; font-family: @Model.OrderSummaryModel.AuthorizedSignatureFontFamily; font-size: @Model.OrderSummaryModel.AuthorizedSignatureFontSize; font-weight: bold;">@Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
+            <br style="clear: both;" />
+            <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "Business", "AdminRepresentativeTitle")<br style="clear: both;" />@DateTime.Now.ToString("MMM-dd-yyyy h:mm tt")</span>
+        </td>
+    </tr>
 </table>
-<div class="col-md-12" style="padding: 5px; width: 100%;">
-    <embed src="~/Invoices/@(Model.OrderSummaryModel.OrderHeaderId + ".pdf")" type="application/pdf" style="width: 100%; height: 900px;" />
-</div>

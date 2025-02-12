@@ -51,9 +51,9 @@
     <!-- End Google Tag Manager (noscript) -->
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#toggle-icon').click(function () {
-                $('#myCollapsible').toggleClass('show');
-            });
+            //$('#toggle-icon').click(function () {
+            //    $('#myCollapsible').toggleClass('show');
+            //});
             window_onload();
         });
         function window_onload() {
@@ -65,7 +65,7 @@
     <div id="divScrollIntoView"></div>
     <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">
         @RenderBody()
-        @Html.Partial("_Footer")
+        @Html.Partial("_DashboardFooter")
     </div>
     @Html.Partial("_LoadingModal")
 </body>

@@ -1,156 +1,192 @@
-﻿@model RetailSlnModels.PaymentInfo1Model
+﻿@using ArchitectureLibraryCacheData
 @using RetailSlnEnumerations
-@if (Model.PaymentModeModel.PaymentModeId == PaymentModeEnum.PaymentGateway)
-{
-    @Html.Partial("_PaymentInfo3")
-}
-@if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
-{
-    <div class="row validationSummaryMessage">
-        @Model.ResponseObjectModel.ValidationSummaryMessage
-    </div>
-}
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="row">
-        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
-    </div>
-}
-@if (Model != null && Model.ResponseObjectModel != null)
-{
-    <div class="row">
-        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-    </div>
-}
-<table style="padding: 0px;">
-    <tr>
-        <td style="padding: 0px; padding-right: 15px; vertical-align: top;">
-            <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Name
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Delivery Address
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
-                        {
-                            @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
-                            <br />
-                        }
-                        @Model.DeliveryAddressModel.AddressLine1
-                        <br />
-                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
-                        {
-                            @Model.DeliveryAddressModel.AddressLine2
-                            <br />
-                        }
-                        @Model.DeliveryAddressModel.CityName
-                        <br />
-                        @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
-                        <br />
-                        @Model.DeliveryAddressModel.CountryDesc
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Primary Tel:
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
-                        @Model.DeliveryDataModel.PrimaryTelephoneFormatted
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Alternate Tel:
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
-                        @Model.DeliveryDataModel.AlternateTelephoneFormatted
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td style="padding: 0px; vertical-align: top;">
-            <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Email Address
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @Model.OrderSummaryModel.EmailAddress
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top; ">
-                        Delivery Method
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @Model.DeliveryMethodModel.DeliveryMethodDesc
-                        @if (!string.IsNullOrWhiteSpace(Model.DeliveryMethodModel.DeliveryMethodDesc1))
-                        {
-                            <br />
-                            <span style="color: #ff0000;">@Model.DeliveryMethodModel.DeliveryMethodDesc1</span>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                        Payment Mode
-                    </th>
-                    <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
-                        @Model.PaymentModeModel.PaymentModeDesc
-                        <br />
-                        <span style="color: #ff0000;">@Model.PaymentModeModel.PaymentModeDesc1</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: center;">
-                        @switch (Model.PaymentModeModel.PaymentModeId)
-                        {
-                            case PaymentModeEnum.COD:
-                            case PaymentModeEnum.CreditSale:
-                                <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Continue Process</button>
-                                break;
-                            case PaymentModeEnum.PaymentGateway:
-                                <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button>
-                                break;
-                            case PaymentModeEnum.ProcessCreditCard:
-                                <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process Credit Card</button>
-                                break;
-                        }
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th colspan="2" style="text-align: left; word-break: break-all;">
-            @Model.DeliveryDataModel.DeliveryInstructions
-        </th>
-    </tr>
-    @*
+@model RetailSlnModels.PaymentInfo1Model
+<style>
+    #PaymentAmount-error, #ApproverSignatureTextValue-error, #ApproverSignatureTextId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<form id="formPaymentInfo1Data">
+    @if (Model.PaymentModeModel.PaymentModeId == PaymentModeEnum.PaymentGateway)
+    {
+        @Html.Partial("_PaymentInfo3")
+    }
+    @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row" style="padding: 18px; text-align: left;">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+        </div>
+    }
+    @if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }
+    <table style="padding: 0px;">
         <tr>
-            <td colspan="2" style="padding: 0px; text-align: left; vertical-align: top; width: 100%;">
-                <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px; width: 100%;">
+            <td style="padding: 0px; padding-right: 15px; vertical-align: top;">
+                <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
                     <tr>
                         <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
-                            Instructions
+                            Delivery Address
                         </th>
-                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; word-wrap: break-word;">
-                            @Model.DeliveryDataModel.DeliveryInstructions
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
+                            {
+                                @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
+                                <br />
+                            }
+                            @Model.DeliveryAddressModel.AddressLine1
+                            <br />
+                            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+                            {
+                                @Model.DeliveryAddressModel.AddressLine2
+                                <br />
+                            }
+                            @Model.DeliveryAddressModel.CityName
+                            <br />
+                            @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
+                            <br />
+                            @Model.DeliveryAddressModel.CountryDesc
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                            Primary Tel:
+                        </th>
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
+                            @Model.DeliveryDataModel.PrimaryTelephoneFormatted
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                            Alternate Tel:
+                        </th>
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 315px; word-wrap: break-word;">
+                            @Model.DeliveryDataModel.AlternateTelephoneFormatted
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                            Email Address
+                        </th>
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                            @Model.OrderSummaryModel.EmailAddress
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="padding: 0px; vertical-align: top;">
+                <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px;">
+                    <colgroup>
+                        <col style="width: 40%;" />
+                        <col style="width: 60%;" />
+                    </colgroup>
+                    @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
+                    {
+                        <tr>
+                            <th colspan="2" style="color: #0000ff; font-size: 12px; padding: 5px; text-align: left; vertical-align: top;">
+                                Sign as :
+                                <span style="color: #000000; font-size: 12px;">@((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                                @*@Html.TextBoxFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, new { @class = "form-control", onchange = "javascript: ApproverSignatureTextValue_onchange2();", oninput = "javascript: ApproverSignatureTextValue_oninput2();", style = "float: left; width: 45%;" })*@
+                                <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" name="ApproverSignatureTextValue" onchange="javascript: ApproverSignatureTextValue_onchange2();" oninput="javascript: ApproverSignatureTextValue_oninput2();" style="width: 90%;" type="text" />
+                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, "", new { id = "ApproverSignatureTextValue-error" }).ToHtmlString()))
+                            </td>
+                            <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                                @{
+                                    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
+                                    <select class="form-control" id="ApproverSignatureTextId" name="ApproverSignatureTextId" onclick="javascript: return ApproverSignatureTextId_onclick();" style="width: 90%;">
+                                        <option value="">--- Select Signature ---</option>
+                                        @foreach (var codeDataModel in codeDataModels)
+                                        {
+                                            <option style="font-family: @(codeDataModel.CodeDataDesc0); font-size: 16px; font-weight: bold;" value="@codeDataModel.CodeDataNameId"></option>
+                                        }
+                                    </select>
+                                }
+                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextId, "", new { id = "ApproverSignatureTextId-error" }).ToHtmlString()))
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top; ">
+                            Delivery Method
+                        </th>
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                            @Model.DeliveryMethodModel.DeliveryMethodDesc
+                            @if (!string.IsNullOrWhiteSpace(Model.DeliveryMethodModel.DeliveryMethodDesc1))
+                            {
+                                <br />
+                                <span style="color: #ff0000;">@Model.DeliveryMethodModel.DeliveryMethodDesc1</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                            Payment Mode
+                        </th>
+                        <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                            @Model.PaymentModeModel.PaymentModeDesc
+                            <br />
+                            <span style="color: #ff0000;">@Model.PaymentModeModel.PaymentModeDesc1</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            @switch (Model.PaymentModeModel.PaymentModeId)
+                            {
+                                case PaymentModeEnum.COD:
+                                case PaymentModeEnum.CreditSale:
+                                    <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Complete Order</button>
+                                    break;
+                                case PaymentModeEnum.PaymentGateway:
+                                    <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button>
+                                    break;
+                                case PaymentModeEnum.ProcessCreditCard:
+                                    <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Process Credit Card</button>
+                                    break;
+                            }
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
-    *@
-</table>
+        <tr>
+            <th colspan="2" style="text-align: left; word-break: break-all;">
+                @Model.DeliveryDataModel.DeliveryInstructions
+            </th>
+        </tr>
+        @*
+            <tr>
+                <td colspan="2" style="padding: 0px; text-align: left; vertical-align: top; width: 100%;">
+                    <table style="color: #000000; font-family: Arial; font-size: 14px; padding: 5px; width: 100%;">
+                        <tr>
+                            <th style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top;">
+                                Instructions
+                            </th>
+                            <td style="font-weight: bold; padding: 5px; text-align: left; vertical-align: top; word-wrap: break-word;">
+                                @Model.DeliveryDataModel.DeliveryInstructions
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        *@
+    </table>
+</form>
 <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
 @{
     Model.ShoppingCartModel.Checkout = false;
@@ -158,20 +194,5 @@
     Model.ShoppingCartModel.ShoppingCartSummaryModel.ShowDiscountsAdditionalCharges = true;
 }
 <div class="center" style="width: 81%;">
-    @Html.Partial("_ShoppingCart", Model.ShoppingCartModel)
-</div>
-<div class="center" style="width: 45%;">
-    @switch (Model.PaymentModeModel.PaymentModeId)
-    {
-        case PaymentModeEnum.COD:
-        case PaymentModeEnum.CreditSale:
-            <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Continue Process</button>
-            break;
-        case PaymentModeEnum.PaymentGateway:
-            <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Payment Gateway</button>
-            break;
-        case PaymentModeEnum.ProcessCreditCard:
-            <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">Credit Card - Processing</button>
-            break;
-    }
+    @Html.Partial("_ShoppingCart2", Model.ShoppingCartModel)
 </div>

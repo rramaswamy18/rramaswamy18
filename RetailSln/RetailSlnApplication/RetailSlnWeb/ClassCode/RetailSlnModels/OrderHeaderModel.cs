@@ -17,9 +17,9 @@ namespace RetailSlnModels
         [Display(Name = "Order Date")]
         public string OrderDate { set; get; }
 
-        public decimal? OrderNumber { set; get; }
+        //public decimal? OrderNumber { set; get; }
 
-        public string OrderNum { set; get; }
+        //public string OrderNum { set; get; }
 
         [Display(Name = "Order Status")]
         public OrderStatusEnum? OrderStatusId { set; get; }

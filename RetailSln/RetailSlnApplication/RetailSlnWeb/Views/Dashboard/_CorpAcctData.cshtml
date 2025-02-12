@@ -1,0 +1,171 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model CorpAcctModel
+@{
+    //var clientId = ArchLibCache.ClientId;
+    //var clientName = ArchLibCache.ClientName;
+    //var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("YesNo", "");
+}
+<style>
+    #CorpAcctName-error, #CorpAcctTypeId-error, #CreditDays-error, #CreditLimit-error, #CreditSale-error,
+    #DefaultDiscountPercent-error, #MinOrderAmount-error, #OrderApprovalRequired-error, #ShippingAndHandlingCharges-error,
+    #TaxIdentNum-error, #StatusId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row">
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+        </div>
+    </div>
+}
+<table class="table table-condensed" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <tr>
+        <th colspan="2" class="text-center">
+            @{
+                string addEditLabel;
+                if (Model.CorpAcctId == null)
+                {
+                    addEditLabel = "Add";
+                }
+                else
+                {
+                    addEditLabel = "Edit #" + Model.CorpAcctId;
+                }
+            }
+            Corp Acct (@addEditLabel)
+        </th>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding-left: 36px;">
+            @{
+                if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+                {
+                    <div class="row validationSummaryMessage">
+                        @Model.ResponseObjectModel.ValidationSummaryMessage
+                    </div>
+                }
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div class="row">
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+                        </div>
+                    </div>
+                }
+                if (Model != null && Model.ResponseObjectModel != null)
+                {
+                    <div class="row" id="divLoginUserProfResponseObject">
+                        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                    </div>
+                }
+            }
+        </td>
+    </tr>
+    <tr>
+        @Html.TextBoxFor(m => m.ClientId)
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.CorpAcctName, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.CorpAcctName, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CorpAcctName, "", new { id = "CorpAcctName-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.CorpAcctTypeId, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.CorpAcctTypeId, new SelectList(ArchLibCache.UserTypes, "Value", "Text", Model.CorpAcctTypeId), "--- Acct Type ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CorpAcctTypeId, "", new { id = "CorpAcctTypeId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.TaxIdentNum, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.TaxIdentNum, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TaxIdentNum, "", new { id = "TaxIdentNum-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.CreditDays, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.CreditDays, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CreditDays, "", new { id = "CreditDays-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.CreditLimit, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.CreditLimit, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CreditLimit, "", new { id = "CreditLimit-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.CreditSale, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.CreditSale, new SelectList(codeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.CreditSale), "--- Credit Sale ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CreditSale, "", new { id = "CorpAcctName-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.DefaultDiscountPercent, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.DefaultDiscountPercent, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DefaultDiscountPercent, "", new { id = "DefaultDiscountPercent-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.MinOrderAmount, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.TextBoxFor(m => m.MinOrderAmount, new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.MinOrderAmount, "", new { id = "MinOrderAmount-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.OrderApprovalRequired, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.OrderApprovalRequired, new SelectList(codeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.CorpAcctId), "--- Approval ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderApprovalRequired, "", new { id = "OrderApprovalRequired-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.ShippingAndHandlingCharges, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.ShippingAndHandlingCharges, new SelectList(codeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.CorpAcctId), "--- S&H ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ShippingAndHandlingCharges, "", new { id = "ShippingAndHandlingCharges-error" }).ToHtmlString()))
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="font-size: 12px; vertical-align: middle;">
+            @Html.LabelFor(m => m.StatusId, new { @class = "col-form-label" })
+        </th>
+        <td class="text-left">
+            @Html.DropDownListFor(m => m.StatusId, new SelectList(codeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.CorpAcctId), "--- Status ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.StatusId, "", new { id = "StatusId-error" }).ToHtmlString()))
+        </td>
+    </tr>
+</table>

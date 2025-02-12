@@ -416,7 +416,7 @@ namespace RetailSlnBusinessLayer
                             DeliveryCountrys = RetailSlnCache.DeliveryDemogInfoCountrys,
                             DeliveryCountryStates = RetailSlnCache.DeliveryDemogInfoCountryStates,
                             DeliveryMethods = RetailSlnCache.DeliveryMethods,
-                            PaymentModes = personExtn1Model.CorpAcctModel.CreditSale ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
+                            PaymentModes = personExtn1Model.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
                             ResponseObjectModel = new ResponseObjectModel
                             {
                                 PropertyErrorsKVP = new List<KeyValuePair<string, List<string>>>(),
@@ -595,7 +595,7 @@ namespace RetailSlnBusinessLayer
                         DeliveryCountrys = RetailSlnCache.DeliveryDemogInfoCountrys,
                         DeliveryCountryStates = RetailSlnCache.DeliveryDemogInfoCountryStates,
                         DeliveryMethods = RetailSlnCache.DeliveryMethods,
-                        PaymentModes = personExtn1Model.CorpAcctModel.CreditSale ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
+                        PaymentModes = personExtn1Model.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PaymentMethodsCreditSale : RetailSlnCache.PaymentMethods,
                         ResponseObjectModel = new ResponseObjectModel
                         {
                             PropertyErrorsKVP = new List<KeyValuePair<string, List<string>>>(),
@@ -728,7 +728,7 @@ namespace RetailSlnBusinessLayer
                 apiShoppingCartModel.BusinessInfoModel = BusinessInfo(null, null, clientId, ipAddress, execUniqueId, loggedInUserId);
                 UpdateDeliveryAddressInfo(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateShoppingCartItems(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                CalculateDiscounts(apiShoppingCartModel, apiShoppingCartModel.ShoppingCartSummaryModel.PersonId.Value, apiShoppingCartModel.ShoppingCartSummaryModel.CorpAcctModel.CorpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CalculateDiscounts(apiShoppingCartModel, apiShoppingCartModel.ShoppingCartSummaryModel.PersonId.Value, apiShoppingCartModel.ShoppingCartSummaryModel.CorpAcctModel.CorpAcctId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateShoppingCartTotals(apiShoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 var salesTaxListModels = GetSalesTaxListModels(apiShoppingCartModel.DeliveryInfoModel.DeliveryAddressModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                 var salesTaxCaptionIds = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SalesTaxType", "");
@@ -799,7 +799,7 @@ namespace RetailSlnBusinessLayer
                         }
                     );
                 }
-                if (!apiShoppingCartModel.ShoppingCartSummaryModel.CorpAcctModel.ShippingAndHandlingCharges)
+                if (!(apiShoppingCartModel.ShoppingCartSummaryModel.CorpAcctModel.ShippingAndHandlingCharges == YesNoEnum.Yes) )
                 {
                     var shoppingCartItemSummaryModelsToCount = apiShoppingCartModel.ShoppingCartItemSummaryModels.Count;
                     apiShoppingCartModel.ShoppingCartItemSummaryModels.AddRange(apiShoppingCartModel.ShoppingCartItemSummaryModels.GetRange(shoppingCartItemSummaryModelsFromCount, shoppingCartItemSummaryModelsToCount - shoppingCartItemSummaryModelsFromCount));

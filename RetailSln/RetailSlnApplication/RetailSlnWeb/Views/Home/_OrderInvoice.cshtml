@@ -1,5 +1,5 @@
 ﻿@model RetailSlnModels.PaymentInfo1Model
-<div class="container center">
+<div class="center container">
     <h2 style="color: #a54000; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
         Order&nbsp;&nbsp;Receipt
     </h2>
@@ -8,7 +8,8 @@
         <br />
         Check your email for a copy of the receipt
     </h4>
-    <a href="@Url.Action("DownloadFile", "Home", new { fileName = Model.OrderSummaryModel.OrderHeaderId + ".pdf" })" style="color: #cd5c5c; font-family: Arial; font-size: 18px; font-weight: bold; text-decoration: underline;">Download Invoice...#@Model.OrderSummaryModel.OrderHeaderId</a>
+    <a href="@Url.Action("DownloadFile", "Home", new { fileName = Model.OrderSummaryModel.DownloadFileNamePdf })" style="color: #cd5c5c; font-family: Arial; font-size: 18px; font-weight: bold; text-decoration: underline;">Download Invoice...#@Model.OrderSummaryModel.OrderHeaderId</a>
     <br />
     @Html.Partial("_OrderInvoiceData", Model)
+    <embed src="~/Invoices/@Model.OrderSummaryModel.DownloadFileNamePdf" type="application/pdf" style="width: 100%; height: 900px;" />
 </div>

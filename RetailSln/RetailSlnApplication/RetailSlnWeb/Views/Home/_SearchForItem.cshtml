@@ -1,0 +1,78 @@
+﻿@using RetailSlnModels
+@model SearchForItemModel
+<div class="center" style="display: table;">
+    @{
+        int index = 0, index1, index2 = -1;
+        string prefixString;
+        bool brFlag;
+        foreach (var itemMasterModel in Model.ItemMasterModels)
+        {
+            index++;
+        <div style="display: table-row;">
+            <div class="text-center" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; display: table-cell; padding:5px; vertical-align: top; width: 1%;">
+                @index
+            </div>
+            <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; width: 36%; ">
+                @itemMasterModel.ItemMasterDesc
+            </div>
+            <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: middle; width: 45%;">
+                <table style="padding: 5px;">
+                    @foreach (var itemModel in itemMasterModel.ItemModels)
+                    {
+                        index1 = 0;
+                        index2++;
+                        prefixString = "";
+                        brFlag = false;
+                        <tr>
+                            <td style="font-size: 13px; padding: 5px; vertical-align: top;">
+                                @itemModel.ItemRateFormatted
+                            </td>
+                            <td style="padding: 5px; vertical-align: top;">
+                                <input class="form-control" id="orderQty@("_A_" + index2)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1('@("_A_" + index2)');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
+                                &nbsp;
+                                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemMasterModel.ItemMasterId, @itemModel.ItemId, '@("_A_" + index2)', null, false);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+                                <br style="clear: both;" />
+                                <span id="spnMessageSuccess@("_A_" + index2)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                    <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                    <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@("_A_" + index2)" style="color: #0000ff; font-size:12px;"></span></span>
+                                    <br style="clear: both;" />
+                                </span>
+                                <span id="spnMessageError@("_A_" + index2)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                    <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                    <span id="spnMessageErrorText@("_A_" + index2)" style="color: #ff0000;"></span>
+                                    <br style="clear: both;" />
+                                </span>
+                                <span style="color: #000000; font-size: 11px; font-weight: 600;">
+                                    @if (itemMasterModel.ItemMasterItemSpecModels != null && itemMasterModel.ItemMasterItemSpecModels.Count > 0)
+                                    {
+                                        foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
+                                        {
+                                            @(prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
+                                            prefixString = " | ";
+                                            brFlag = true;
+                                        }
+                                    }
+                                    @if (itemModel.ItemItemSpecModels.Count > 0)
+                                    {
+                                        foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
+                                        {
+                                            @(prefixString + ++index1 + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
+                                            prefixString = " | ";
+                                            brFlag = true;
+                                        }
+                                        <br style="clear: both;" />
+                                    }
+                                    @if (brFlag)
+                                    {
+                                        <br style="clear: both;" />
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+        }
+    }
+</div>

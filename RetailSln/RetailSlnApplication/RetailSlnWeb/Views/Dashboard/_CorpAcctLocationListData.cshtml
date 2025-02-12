@@ -1,0 +1,113 @@
+﻿@using ArchitectureLibraryEnumerations
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model CorpAcctModel
+<style>
+    .dataStyle {
+        font-family: Arial;
+        font-size: 12px;
+    }
+
+    .hrefStyle {
+        color: #0000ff;
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
+    <tr>
+        <th class="text-left" colspan="1">
+            <a href="javascript: void(0);" onclick="javascript: addEditLink_onclick('@Url.Action("CorpAcctLocation", "Dashboard")', '?id=&corpAcctId=' + @Model.CorpAcctId);">Add New</a>
+        </th>
+        <th class="text-left" colspan="15" style="font-family: Arial; font-size: 18px; font-weight: bold; vertical-align: top;">
+            Corp Account Location(s)
+        </th>
+    </tr>
+    <tr>
+        <th class="dataStyle text-left">
+            Name
+        </th>
+        <th class="dataStyle text-left">
+            Key
+        </th>
+        <th class="dataStyle text-left">
+            Type
+        </th>
+    </tr>
+    <tr>
+        <td class="dataStyle text-left">
+            @Model.CorpAcctName
+        </td>
+        <td class="dataStyle text-left">
+            @Model.CorpAcctKey
+        </td>
+        <td class="dataStyle text-left">
+            @((CorpAcctTypeEnum)Model.CorpAcctTypeId)
+        </td>
+    </tr>
+</table>
+<table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
+    <tr>
+        <th>
+            #
+        </th>
+        <th></th>
+        <th>
+            Location
+        </th>
+        <th>
+            Address
+        </th>
+        <th>
+            Primary#
+        </th>
+        <th>
+            Alternate#
+        </th>
+        <th class="dataStyle text-left">
+            Status
+        </th>
+    </tr>
+    @{
+        foreach (var corpAcctLocationModel in Model.CorpAcctLocationModels)
+        {
+            <tr>
+                <td class="dataStyle text-left">
+                    @corpAcctLocationModel.SeqNum
+                </td>
+                <td class="dataStyle text-right">
+                    <a class="hrefStyle" href="javascript: void(0);">
+                        Edit
+                    </a>
+                </td>
+                <td class="dataStyle text-left">
+                    @corpAcctLocationModel.LocationName
+                </td>
+                <td class="dataStyle text-left">
+                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine1
+                    <br />
+                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine2
+                    <br />
+                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine3
+                    <br />
+                    @corpAcctLocationModel.DemogInfoAddressModel.CityName
+                    <br />
+                    @corpAcctLocationModel.DemogInfoAddressModel.StateAbbrev
+                    &nbsp;
+                    @corpAcctLocationModel.DemogInfoAddressModel.ZipCode
+                </td>
+                <td class="dataStyle text-left">
+                    @corpAcctLocationModel.PrimaryTelephoneNumber
+                </td>
+                <td class="dataStyle text-left">
+                    @corpAcctLocationModel.AlternateTelephoneNumber
+                </td>
+                <td class="dataStyle text-center">
+                    @((YesNoEnum)corpAcctLocationModel.StatusId)
+                </td>
+            </tr>
+        }
+    }
+</table>

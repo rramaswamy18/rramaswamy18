@@ -1,0 +1,111 @@
+﻿@using RetailSlnModels
+@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@model OrderApprovalModel
+@{
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
+        </div>
+    }
+    else
+    {
+<table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
+    <colgroup>
+        <col style="width: 50%;" />
+        <col style="width: 50%;" />
+    </colgroup>
+    <tr>
+        <td class="text-left">
+            <label class="col-form-label">Type your initals & select from below :</label>
+            <br />
+            <input class="form-control" id="ApproverInitialsTextValue" maxlength="5" onchange="javascript: ApproverInitialsTextValue_onchange();" oninput="javascript: ApproverInitialsTextValue_oninput();" style="width: 63%;" type="text" />
+            @{
+                List<CodeDataModel> codeDataModels;
+                codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("InitialsText", "");
+                for (int i = 1; i < codeDataModels.Count; i++)
+                {
+                    <label class="radio-inline" style="font-weight: bold;">
+                        <input id="ApproverInitialsTextId@(i)" name="ApproverInitialsTextId" type="radio" value="@codeDataModels[i].CodeDataNameId"><span id="ApproverInitialsTextValue@(i)" style="color: #000000; font-family: @(codeDataModels[i].CodeDataDesc0); font-size: 18px; font-weight: bold;"></span>
+                    </label>
+                    <br style="clear: both;" />
+                }
+            }
+            <br style="clear: both;" />
+        </td>
+        <td class="text-left">
+            <label class="col-form-label">Type your name & select from below :</label>
+            <br />
+            <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" onchange="javascript: ApproverSignatureTextValue_onchange();" oninput="javascript: ApproverSignatureTextValue_oninput();" style="width: 63%;" type="text" />
+            @{
+                codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
+                for (int i = 1; i < codeDataModels.Count; i++)
+                {
+                    <label class="radio-inline" style="font-weight: bold;">
+                        <input id="ApproverSignatureTextId@(i)" name="ApproverSignatureTextId" type="radio" value="@codeDataModels[i].CodeDataNameId"><span id="ApproverSignatureTextValue@(i)" style="color: #000000; font-family: @(codeDataModels[i].CodeDataDesc0); font-size: 18px; font-weight: bold;"></span>
+                    </label>
+                    <br style="clear: both;" />
+                }
+            }
+            <br style="clear: both;" />
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left">
+            <label class="col-form-label">Approve :</label>
+            <br />
+            <label class="radio-inline" style="font-weight: bold;">
+                <input checked="checked" id="ApprovalApproveOrDeny0" name="ApprovalApproveOrDeny" type="radio" value="@Model.ApprovalApproveOrDeny" />Yes
+            </label>
+            <label class="radio-inline" style="font-weight: bold;">
+                <input id="ApprovalApproveOrDeny1" name="ApprovalApproveOrDeny" type="radio" value="@Model.ApprovalApproveOrDeny" />No
+            </label>
+        </td>
+        <td class="text-left">
+            <label class="col-form-label">Comments :</label>
+            <br />
+            @Html.Raw(Model.Comments.Replace(Environment.NewLine, "<br />"))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left">
+            <label class="col-form-label">Requested by:</label>
+            <br />
+            @(Model.ApprovalRequestedByFirstName + " " + Model.ApprovalRequestedByLastName)
+            <br />
+            @Model.ApprovalRequestedByEmailAddress
+            <br />
+            @Model.ApprovalRequestedByTelephoneNumber
+        </td>
+        <td class="text-left">
+            <label class="col-form-label">Requested for:</label>
+            <br />
+            @(Model.ApprovalRequestedForFirstName + " " + Model.ApprovalRequestedByLastName)
+            <br />
+            @Model.ApprovalRequestedForEmailAddress
+            <br />
+            @Model.ApprovalRequestedForTelephoneNumber
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left" colspan="2">
+            <label class="col-form-label">Approver Comments :</label>
+            <br />
+            <textarea style="height: 81px; width: 90%;">@Model.ApproverComments</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.Raw(Model.OrderFormHtmlString)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.Raw(Model.OrderHtmlString)
+        </td>
+    </tr>
+</table>
+    }
+}
+

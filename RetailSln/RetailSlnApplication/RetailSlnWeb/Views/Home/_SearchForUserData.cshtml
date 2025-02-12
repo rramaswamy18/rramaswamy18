@@ -1,0 +1,93 @@
+﻿@using RetailSlnModels
+@model SearchForUserDataModel
+@{
+    int index;
+}
+<div class="center" style="display: table;">
+    <div style="display: table-row;">
+        <div style="display: table-cell; vertical-align: top;">
+            <div style="display: table;">
+                <div style="display: table-row;">
+                    <div class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; display: table-cell; font-weight: bold; padding: 5px; vertical-align: top; ">
+                        #
+                    </div>
+                    <div class="text-center" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; font-weight: bold; padding: 5px; vertical-align: top; ">
+                        Sel
+                    </div>
+                    <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; font-weight: bold; padding: 5px; vertical-align: top; ">
+                        Location
+                    </div>
+                </div>
+                @{
+                    index = 0;
+                    foreach (var corpAcctLocationModel in Model.CorpAcctLocationModels)
+                    {
+                        index++;
+                        <div style="display: table-row;">
+                            <div class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-top-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; ">
+                                @index
+                            </div>
+                            <div class="text-center" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-top-style: none; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; ">
+                                <input id="createdForLocationSelect@(index - 1)" name="createdForLocationSelect" type="radio" value="@(index - 1)" />
+                                <input id="createdForCorpAcctLocationId@(index - 1)" type="hidden" value="@corpAcctLocationModel.CorpAcctLocationId" />
+                            </div>
+                            <div class="text-left" id="createdForCorpAcctLocation@(index - 1)" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-top-style: none; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; ">
+                                @corpAcctLocationModel.LocationName
+                                <br />
+                                @corpAcctLocationModel.DemogInfoAddressModel.AddressLine1
+                                @if (!string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.AddressLine2))
+                                {
+                                    <br />
+                                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine2
+                                }
+                                @if (!string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.AddressLine3))
+                                {
+                                    <br />
+                                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine3
+                                }
+                                <br />
+                                @(corpAcctLocationModel.DemogInfoAddressModel.CityName + " " + corpAcctLocationModel.DemogInfoAddressModel.StateAbbrev + " " + corpAcctLocationModel.DemogInfoAddressModel.ZipCode)
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div style="display: table-cell; padding-left: 5px; vertical-align: top;">
+            <div style="display: table;">
+                <div style="display: table-row;">
+                    <div class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; display: table-cell; font-weight: bold; padding: 5px; vertical-align: top;">
+                        #
+                    </div>
+                    <div class="text-center" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; font-weight: bold; padding: 5px; vertical-align: top; ">
+                        Sel
+                    </div>
+                    <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; font-weight: bold; padding: 5px; vertical-align: top; ">
+                        Name
+                    </div>
+                </div>
+                @{
+                    index = 0;
+                    foreach (var personModel in Model.PersonModels)
+                    {
+                        index++;
+                        <div style="display: table-row;">
+                            <div class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-top-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; ">
+                                @index
+                            </div>
+                            <div class="text-center" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-top-style: none; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; ">
+                                <input id="createdForPersonSelect@(index - 1)" name="createdForPersonSelect" type="radio" value="@(index - 1)" />
+                                <input id="createdForPersonId@(index - 1)" type="hidden" value="@personModel.PersonId" />
+                            </div>
+                            <div class="text-left" id="createdForPerson@(index - 1)" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-top-style: none; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; ">
+                                @personModel.AspNetUserModel.Email
+                                <br />
+                                @(personModel.FirstName + " " + @personModel.LastName)
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

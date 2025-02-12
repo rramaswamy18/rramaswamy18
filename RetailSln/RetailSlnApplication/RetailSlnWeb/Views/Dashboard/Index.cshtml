@@ -5,10 +5,11 @@
 <div id="divDashboard">
     @Html.Partial("_DashboardHeaderMenu")
 </div>
+<script src="~/Include/searchDataCode.js" type="text/javascript"></script>
 <script type="text/javascript">
     function window_onload() {
-        menuLink_onclick('@Url.Action("CategoryList", "Dashboard")', 1, 50);
-        //menuLink_onclick('@Url.Action("SearchKeywordList", "Dashboard")', 1, 50);
+        menuLink_onclick('@Url.Action("CorpAcctList", "Dashboard")', "?pageNum=1&rowCount=45");
+        //menuLink_onclick('@Url.Action("CategoryList", "Dashboard")', "?id =");
         //categoryHier_onclick(0);
     }
     function categoryHier_onclick(parentCategoryId) {
@@ -27,14 +28,6 @@
                 $('#loadingModal').modal('hide');
                 console.log("00001000", "categoryHier_onclick success", responseData.processMessage);
                 document.getElementById("divDashboard").innerHTML = responseData.htmlString;
-                //    if (responseData.success) {
-                //        document.getElementById("divOrderItem").innerHTML = responseData.htmlString;
-                //        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-                //        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-                //    }
-                //    else {
-                //        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-                //    }
             },
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
@@ -70,5 +63,132 @@
         tempValue = document.getElementById("CategoryItemHierModels_" + fromIndex + "__CategoryModel_CategoryId").value;
         document.getElementById("CategoryItemHierModels_" + fromIndex + "__CategoryModel_CategoryId").value = document.getElementById("CategoryItemHierModels_" + toIndex + "__CategoryModel_CategoryId").value;
         document.getElementById("CategoryItemHierModels_" + toIndex + "__CategoryModel_CategoryId").value = tempValue;
+    }
+    function corpAcctSave_onclick() {
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        console.log("corpAcctSave_onclick", "00000000", "ENTER!!!");
+        const formPostData = new FormData(formCorpAcct);
+        fetch('/Dashboard/CorpAcct', {
+            method: "POST",
+            body: formPostData,
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                $("#loadingModal").modal('hide');
+                console.log(1, responseData);
+                var returnValue;
+                if (responseData.success) {
+                    alert("Corp acct created successfully!!!");
+                    document.getElementById("formCorpAcct").innerHTML = responseData.htmlString;
+                    returnValue = true;
+                }
+                else {
+                    returnValue = false;
+                    document.getElementById("formCorpAcct").innerHTML = responseData.htmlString;
+                    alert("Please fix errors to continue???");
+                }
+                return returnValue;
+            })
+            .catch(error => {
+                $("#loadingModal").modal('hide');
+                returnValue = false;
+                alert("Error while creating user???");
+                console.log(error);
+                return false;
+            });
+    }
+    function corpAcctLocationSave_onclick() {
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        console.log("corpAcctLocationSave_onclick", "00000000", "ENTER!!!");
+        const formPostData = new FormData(formCorpAcctLocation);
+        fetch('/Dashboard/CorpAcctLocation', {
+            method: "POST",
+            body: formPostData,
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                $("#loadingModal").modal('hide');
+                console.log("corpAcctLocationSave_onclick", "00001000", responseData);
+                var returnValue;
+                if (responseData.success) {
+                    alert("Corp acct location created successfully!!!");
+                    document.getElementById("formCorpAcctLocation").innerHTML = responseData.htmlString;
+                    returnValue = true;
+                }
+                else {
+                    returnValue = false;
+                    document.getElementById("formCorpAcctLocation").innerHTML = responseData.htmlString;
+                    alert("Please fix errors to continue???");
+                }
+                return returnValue;
+            })
+            .catch(error => {
+                $("#loadingModal").modal('hide');
+                returnValue = false;
+                alert("Error while creating user???");
+                console.log(error);
+                return false;
+            });
+    }
+    function corpAcctLocationSave_onclick_Old() {
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        console.log("corpAcctLocationSave_onclick", "00000000", "ENTER!!!");
+        var postDataJsonString = JSON.stringify($("#formCorpAcctLocation").serialize());
+        console.log(postDataJsonString);
+        $.ajax({
+            url: "/Dashboard/CorpAcctLocation",
+            type: "POST",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: postDataJsonString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "corpAcctLocationSave_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("00099000", "corpAcctLocationSave_onclick", "ERROR???");
+                //console.log(xhr.responseText);
+                console.log(xhr, exception);
+            }
+        });
+    }
+    function corpAcctLocationSave_onclick_Backup() {
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        console.log("corpAcctLocationSave_onclick", "00000000", "ENTER!!!");
+        var postData = $("#formCorpAcctLocation").serialize();
+        //console.log(postData);
+        //const formPostData = new FormData(formCorpAcctLocation);
+        //console.log(JSON.stringify(formPostData));
+        fetch('/Dashboard/CorpAcctLocation', {
+            method: "POST",
+            body: postData,
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                $("#loadingModal").modal('hide');
+                console.log(1, responseData);
+                var returnValue;
+                if (responseData.success) {
+                    alert("Corp acct location created successfully!!!");
+                    document.getElementById("formCorpAcctLocation").innerHTML = responseData.htmlString;
+                    returnValue = true;
+                }
+                else {
+                    returnValue = false;
+                    document.getElementById("formCorpAcctLocation").innerHTML = responseData.htmlString;
+                    alert("Please fix errors to continue???");
+                }
+                return returnValue;
+            })
+            .catch(error => {
+                $("#loadingModal").modal('hide');
+                returnValue = false;
+                alert("Error while creating user???");
+                console.log(error);
+                return false;
+            });
     }
 </script>

@@ -213,6 +213,12 @@ DECLARE @ClientId BIGINT = 3
 		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
 		WHERE ISNULL([Category 6], '') != ''
 		UNION
+		SELECT Category.CategoryId AS ParentCategoryId, DivineBija_Products.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Products.[Spec Seq] AS ItemSeqNum, Item.ItemId
+		FROM DivineBija_Products INNER JOIN RetailSlnSch.Category ON [Category 7] = Category.CategoryNameDesc
+		INNER JOIN RetailSlnSch.ItemMaster ON Description0 = ItemMaster.ItemMasterDesc0 AND Description1 = ItemMaster.ItemMasterDesc1 AND Description2 = ItemMaster.ItemMasterDesc2 AND Description3 = ItemMaster.ItemMasterDesc3
+		INNER JOIN RetailSlnSch.Item ON DivineBija_Products.UniqueDescription = Item.ItemUniqueDesc
+		WHERE ISNULL([Category 7], '') != ''
+		UNION
 		SELECT DISTINCT Category.CategoryId AS ParentCategoryId, DivineBija_Books.SeqNumManual AS ItemMasterSeqNum, ItemMaster.ItemMasterId, DivineBija_Books.[Spec Seq] AS ItemSeqNum, Item.ItemId
 		FROM DivineBija_Books INNER JOIN RetailSlnSch.Category ON Category0 = Category.CategoryNameDesc
 		INNER JOIN RetailSlnSch.ItemMaster ON ProductDesc0 = ItemMaster.ItemMasterDesc0 AND ProductDesc1 = ItemMaster.ItemMasterDesc1
@@ -364,17 +370,17 @@ SELECT ProductItemId, * FROM RetailSlnSch.ItemMaster WHERE ItemMasterId IN(139, 
 ----
 ----End CategoryItemMasterHier
 --End Delete
---Begin Corp Acct Discount
-        TRUNCATE TABLE RetailSlnSch.ItemDiscount
-        INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
-        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId,DivineBija_CorpAcctItems.Discount
-          FROM DivineBija_CorpAcctItems
-    INNER JOIN RetailSlnSch.CorpAcct
-            ON DivineBija_CorpAcctItems.CorpAcctName = CorpAcct.CorpAcctName
-    INNER JOIN RetailSlnSch.Item
-            ON DivineBija_CorpAcctItems.[Item Unique Desc] = Item.ItemUniqueDesc
-         ORDER BY CorpAcctId, ItemId
---End Corp Acct Discount
+----Begin Corp Acct Discount
+--        TRUNCATE TABLE RetailSlnSch.ItemDiscount
+--        INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
+--        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId,DivineBija_CorpAcctItems.Discount
+--          FROM DivineBija_CorpAcctItems
+--    INNER JOIN RetailSlnSch.CorpAcct
+--            ON DivineBija_CorpAcctItems.CorpAcctName = CorpAcct.CorpAcctName
+--    INNER JOIN RetailSlnSch.Item
+--            ON DivineBija_CorpAcctItems.[Item Unique Desc] = Item.ItemUniqueDesc
+--         ORDER BY CorpAcctId, ItemId
+----End Corp Acct Discount
 --Begin Item Spec
 SET NOCOUNT ON
         TRUNCATE TABLE RetailSlnSch.ItemSpec

@@ -2,6 +2,9 @@ USE [RetailSln]
 GO
 TRUNCATE TABLE ArchLib.ExceptionLog
 
+TRUNCATE TABLE RetaiLSlnSch.OrderDetailWIP
+TRUNCATE TABLE RetaiLSlnSch.OrderHeaderWIP
+
 TRUNCATE TABLE RetaiLSlnSch.PersonExtn1
 TRUNCATE TABLE ArchLib.Telephone
 DELETE ArchLib.PersonRelation --WHERE PersonId > 0
@@ -30,6 +33,8 @@ DBCC CHECKIDENT ('ArchLib.CreditCardData', RESEED, 0);
 
 DELETE RetailSlnSch.GiftCert WHERE GiftCertId > 0
 DBCC CHECKIDENT ('RetailSlnSch.GiftCert', RESEED, 0);
+
+TRUNCATE TABLE RetaiLSlnSch.OrderApproval
 
 DELETE RetailSlnSch.OrderDelivery WHERE OrderDeliveryId > 0
 DBCC CHECKIDENT ('RetailSlnSch.OrderDelivery', RESEED, 0);

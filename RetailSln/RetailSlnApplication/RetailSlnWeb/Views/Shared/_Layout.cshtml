@@ -76,6 +76,7 @@
                             </a>
                             <p class="company-name font-bold" style="vertical-align: top;">
                                 <span style="color: #9401d9; font-size: 22px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span><br /><span style="color: #ff0000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span><br /><span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
+                                <br style="clear: both;" />
                             </p>
                         </div>
                     </div>
@@ -143,8 +144,10 @@
                     <div class="navbar-header">
                         <div class="nav navbar-nav navbar-right-hamburger">
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center; color: white;">
-                                <a href="#">
+                                <a href="@Url.Action("Index", "Home")">
                                     <i class="fas fa-home"></i>
+                                    <br style="clear: both;" />
+                                    Home1
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style=" padding-right: 0px; text-align: center;">
@@ -155,16 +158,17 @@
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="@Url.Action("Checkout", "Home")" class="navbar-right-link" title="Checkout - @imageTitle">
+                                <a href="javascript: void();" onclick="javascript: return checkoutValidate_onclick();" class="navbar-right-link" title="Checkout - @imageTitle">
                                     <img alt="Checkout - @imageTitle" src="https://static-00.iconduck.com/assets.00/checkout-icon-2048x2048-8k7j8q1t.png" style="height: 20px; width: 20px;" title="Checkout - @imageTitle">
                                     <br style="clear: both;" />
-                                    Check.
+                                    Checkout
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("RegisterUserProf", "Home")" class="navbar-right-link" title="Register - @imageTitle">
                                     <i class="fas fa-user-plus"></i>
-                                    Reg.
+                                    <br style="clear: both;" />
+                                    Register
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">

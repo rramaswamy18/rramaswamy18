@@ -1,0 +1,136 @@
+﻿@using ArchitectureLibraryEnumerations
+@using RetailSlnModels
+@model CorpAcctListModel
+@{
+    //var clientId = ArchLibCache.ClientId;
+    //var clientName = ArchLibCache.ClientName;
+    //var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int index = 0;
+}
+<style>
+    .dataStyle {
+        font-family: Arial;
+        font-size: 12px;
+    }
+
+    .hrefStyle {
+        color: #0000ff;
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 90%;">
+    <tr>
+        <th class="text-left" colspan="3">
+            <a href="javascript: void(0);" onclick="javascript: addEditLink_onclick('@Url.Action("CorpAcct", "Dashboard")', '');">Add New</a>
+        </th>
+        <th class="text-left" colspan="15" style="font-family: Arial; font-size: 18px; font-weight: bold; vertical-align: top;">
+            Corp Account(s)
+        </th>
+    </tr>
+    <tr>
+        <th class="text-right">
+            #
+        </th>
+        <th class="text-right"></th>
+        @*<th class="text-right"></th>*@
+        <th class="text-right"></th>
+        <th class="dataStyle text-left">
+            Unique<br />Key
+        </th>
+        <th class="dataStyle text-left">
+            Name
+        </th>
+        <th class="dataStyle text-left">
+            Type
+        </th>
+        <th class="dataStyle text-left">
+            Credit<br />Days
+        </th>
+        <th class="dataStyle text-center">
+            Credit<br />Limit
+        </th>
+        <th class="dataStyle text-center">
+            Credit<br />Sales
+        </th>
+        <th class="dataStyle text-center">
+            Min<br />Ord Amt
+        </th>
+        <th class="dataStyle text-center">
+            Ord<br />Appr
+        </th>
+        <th class="dataStyle text-center">
+            S&H<br />Charges
+        </th>
+        <th class="dataStyle text-left">
+            Tax#
+        </th>
+        <th class="dataStyle text-left">
+            Status
+        </th>
+    </tr>
+    @foreach (var corpAcctModel in Model.CorpAcctModels)
+    {
+        index++;
+        <tr>
+            <td class="dataStyle text-right">
+                @index
+            </td>
+            <td class="dataStyle text-right">
+                @if (corpAcctModel.CorpAcctId > 0)
+                {
+                    <a class="hrefStyle" href="javascript: void(0);">
+                        Edit
+                    </a>
+                }
+            </td>
+            @*<td class="dataStyle text-right">
+                    <a class="hrefStyle" href="javascript: void(0);">
+                        View
+                    </a>
+                </td>*@
+            <td class="dataStyle text-right">
+                @if (corpAcctModel.CorpAcctId > 0)
+                {
+                    <a class="hrefStyle" href="javascript: void(0);" onclick="menuLink_onclick('@Url.Action("CorpAcctLocationList", "Dashboard")', '?id=@corpAcctModel.CorpAcctId');">
+                        Locn(s)
+                    </a>
+                }
+            </td>
+            <td class="dataStyle text-left">
+                @corpAcctModel.CorpAcctKey
+            </td>
+            <td class="dataStyle text-left">
+                @corpAcctModel.CorpAcctName
+            </td>
+            <td class="dataStyle text-left">
+                @corpAcctModel.CorpAcctTypeId
+            </td>
+            <td class="dataStyle text-right">
+                @corpAcctModel.CreditDays
+            </td>
+            <td class="dataStyle text-right">
+                @corpAcctModel.CreditLimit
+            </td>
+            <td class="dataStyle text-center">
+                @((YesNoEnum)corpAcctModel.CreditSale)
+            </td>
+            <td class="dataStyle text-right">
+                @corpAcctModel.MinOrderAmount
+            <td class="dataStyle text-center">
+                @((YesNoEnum)corpAcctModel.OrderApprovalRequired)
+            </td>
+            <td class="dataStyle text-center">
+                @((YesNoEnum)corpAcctModel.ShippingAndHandlingCharges)
+            </td>
+            <td class="dataStyle text-left">
+                @corpAcctModel.TaxIdentNum
+            </td>
+            <td class="dataStyle text-center">
+                @((YesNoEnum)corpAcctModel.StatusId)
+            </td>
+        </tr>
+    }
+</table>

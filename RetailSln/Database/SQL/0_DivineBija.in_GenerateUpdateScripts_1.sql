@@ -41,10 +41,11 @@ UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'TN' WHER
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Tamil Nadu' WHERE ClientId = @ClientId AND KVPKey = 'AddressStateName'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '600120' WHERE ClientId = @ClientId AND KVPKey = 'AddressZipCode'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '' WHERE ClientId = @ClientId AND KVPKey = 'AddressZipPlus4'
-UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Divine Bija India Pvt Ltd (Vedic Way)' WHERE ClientId = @ClientId AND KVPKey = 'BusinessName1'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Mathangi Divine Mall Pvt Ltd' WHERE ClientId = @ClientId AND KVPKey = 'Business' AND KVPSubKey = 'NameOnInvoice'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Divine Bija India Pvt Ltd' WHERE ClientId = @ClientId AND KVPKey = 'BusinessName1'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Divine Bija' WHERE ClientId = @ClientId AND KVPKey = 'BusinessNameWord1'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'India Pvt Ltd' WHERE ClientId = @ClientId AND KVPKey = 'BusinessNameWord2'
-UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = 'Vedic Way' WHERE ClientId = @ClientId AND KVPKey = 'BusinessNameWord3'
+UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '' WHERE ClientId = @ClientId AND KVPKey = 'BusinessNameWord3'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '919840570834' WHERE ClientId = @ClientId AND KVPKey = 'ContactPhone'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '+91 98405 70834' WHERE ClientId = @ClientId AND KVPKey = 'ContactPhoneFormatted'
 UPDATE ArchLib.ApplicationDefault SET ClientId = @ClientId, KVPValue = '91-984-057-0834' WHERE ClientId = @ClientId AND KVPKey = 'ContactPhoneHref'
@@ -140,57 +141,93 @@ INNER JOIN [ArchLib].[DemogInfoZipPlus]
 --
 TRUNCATE TABLE RetailSlnSch.PickupLocation
 INSERT RetailSlnSch.PickupLocation(PickupLocationId, ClientId, LocationNameDesc, LocationDesc, LocationDemogInfoAddressId)
-SELECT 0 AS PickupLocationId, @ClientId AS ClientId, 'CustomLocation' AS LocationNameDesc, 'Custom Location' AS LocationDesc, 0 AS LocationDemogInfoAddressId UNION
-SELECT 1 AS PickupLocationId, @ClientId AS ClientId, 'Divine_Bija_Mylapre' AS LocationNameDesc, 'Divine Bija Mylapre' AS LocationDesc, 1 AS LocationDemogInfoAddressId UNION
-SELECT 2 AS PickupLocationId, @ClientId AS ClientId, 'DivineBija_Athipattu' AS LocationNameDesc, 'Divine Bija Athipattu' AS LocationDesc, 2 AS LocationDemogInfoAddressId
+SELECT 0 AS PickupLocationId, @ClientId AS ClientId, '' AS LocationNameDesc, '' AS LocationDesc, 0 AS LocationDemogInfoAddressId UNION
+SELECT 1 AS PickupLocationId, @ClientId AS ClientId, 'Divine_Bija_Mylapre' AS LocationNameDesc, 'Divine Bija Mylapre - Pickup' AS LocationDesc, 1 AS LocationDemogInfoAddressId UNION
+SELECT 2 AS PickupLocationId, @ClientId AS ClientId, 'DivineBija_Athipattu' AS LocationNameDesc, 'Divine Bija Athipattu - Pickup' AS LocationDesc, 2 AS LocationDemogInfoAddressId
 --ArchLib.DemogInfoAddress
 --Begin Corp Acct
         TRUNCATE TABLE RetailSlnSch.CorpAcct
-        INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctKey, CorpAcctName, CorpAcctTypeId, CreditDays, CreditLimit, CreditSale, TaxIdentNum, ShippingAndHandlingCharges)
-        SELECT DISTINCT @ClientId AS ClientId, LoginKey AS CorpAcctKey, CorpAcctName, CASE CorpAcctType WHEN 'Individual' THEN 100 ELSE 200 END CorpAcctTypeId, CreditDays, CreditLimit, CreditSale, Tax_Num, SHCharges
+        INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, CreditLimit, CreditSale, DefaultDiscountPercent, MinOrderAmount, OrderApprovalRequired, TaxIdentNum, ShippingAndHandlingCharges, StatusId)
+        SELECT DISTINCT
+               @ClientId AS ClientId, CorpAcctName
+              ,CASE CorpAcctType WHEN 'Individual' THEN 100 WHEN 'Priest' THEN 700 ELSE 500 END CorpAcctTypeId, CreditDays, CreditLimit
+              ,CASE CreditSale WHEN 0 THEN 200 ELSE 100 END AS CreditSale, DefaultDiscountPercent, MinOrderAmount
+              ,CASE OrderApproval WHEN 0 THEN 200 ELSE 100 END AS OrderApproval, Tax_Num
+              ,CASE SHCharges WHEN 0 THEN 200 ELSE 100 END AS SHCharges, 100 AS StatusId
           FROM DivineBija_CorpAcctUpload
       ORDER BY CorpAcctName
 --End Corp Acct
---Begin Corp Acct Location
+----Begin Update CorpAcct Upload DemogInfoAddressId
+--        UPDATE DivineBija_CorpAcctUpload
+--           SET DemogInfoCountryId = NULL, DemogInfoSubDivisionId = NULL, DemogInfoCountyId = NULL, DemogInfoCityId = NULL, DemogInfoZipId = NULL, DemogInfoAddressId = 0
+--        UPDATE DivineBija_CorpAcctUpload
+--           SET DemogInfoCountryId = DemogInfoCountry.DemogInfoCountryId
+--              ,DivineBija_CorpAcctUpload.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
+--          FROM ArchLib.DemogInfoCountry, ArchLib.DemogInfoSubDivision, ArchLib.DemogInfoCounty
+--         WHERE DivineBija_CorpAcctUpload.CountryAbbrev = DemogInfoCountry.CountryAbbrev
+--           AND DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId
+--           AND DivineBija_CorpAcctUpload.StateAbbrev = DemogInfoSubDivision.StateAbbrev
+--           AND DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId
+--           AND DemogInfoCounty.CountyName = ''
+--        UPDATE DivineBija_CorpAcctUpload
+--           SET DemogInfoAddressId = CorpAcctId + 2
+--		 WHERE CorpAcctId > 0
+----End Update CorpAcct Upload DemogInfoAddressId
+--Begin Corp Acct Location DemogInfoAddress
+        DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 2
+        SET IDENTITY_INSERT ArchLib.DemogInfoAddress ON
         INSERT ArchLib.DemogInfoAddress
               (
-               ClientId, AddressLine1, AddressLine2, AddressLine3, AddressLine4, AddressTypeId, BuildingTypeId, CityName, Comments, CountryAbbrev
-              ,CountryDesc, CountyName, DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId, DemogInfoZipId
+               DemogInfoAddressId, ClientId, AddressLine1, AddressLine2, AddressLine3, AddressLine4, AddressTypeId, BuildingTypeId, CityName, Comments
+              ,CountryAbbrev, CountryDesc, CountyName, DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId, DemogInfoZipId
               ,DemogInfoZipPlusId, FromDate, HouseNumber, StateAbbrev, ToDate, ZipCode, ZipPlus4
               )
         SELECT 
-               @ClientId AS ClientId, TRIM(ISNULL(AddressLine1, '')) AS AddressLine1, TRIM(AddressLine2) AS AddressLine2
-			  ,TRIM(AddressLine3) AS AddressLine3, TRIM(AddressLine4) AS AddressLine4, 0 AS AddressTypeId
+               DemogInfoAddressId, @ClientId AS ClientId, TRIM(ISNULL(AddressLine1, '')) AS AddressLine1, TRIM(AddressLine2) AS AddressLine2
+              ,TRIM(AddressLine3) AS AddressLine3, TRIM(AddressLine4) AS AddressLine4, 0 AS AddressTypeId
               ,0 AS BuildingTypeId, CityName, NULL AS Comments, 'IND' AS CountryAbbrev, 'INDIA' AS CountryDesc, '' AS CountyName
-              ,NULL AS DemogInfoCityId, NULL AS DemogInfoCountryId, NULL AS DemogInfoCountyId, NULL AS DemogInfoSubDivisionId
-              ,NULL AS DemogInfoZipId, 0 AS DemogInfoZipPlusId, '1900-01-01' AS FromDate, '' AS HouseNumber, StateAbbrev, '' AS ToDate
+              ,DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId
+              ,DemogInfoZipId, DemogInfoZipId AS DemogInfoZipPlusId, '1900-01-01' AS FromDate, '' AS HouseNumber, StateAbbrev, '' AS ToDate
               ,PINCode AS ZipCode, '' AS ZipPlus4
           FROM DivineBija_CorpAcctUpload
-		 WHERE DivineBija_CorpAcctUpload.Id > 0
-      ORDER BY CorpAcctName, SeqNum
+         WHERE DivineBija_CorpAcctUpload.DemogInfoAddressId <> 0
+      ORDER BY DivineBija_CorpAcctUpload.DemogInfoAddressId
+        SET IDENTITY_INSERT ArchLib.DemogInfoAddress OFF
+--Begin Corp Acct Location
         TRUNCATE TABLE RetailSlnSch.CorpAcctLocation
-        INSERT RetailSlnSch.CorpAcctLocation(ClientId, CorpAcctId, SeqNum, DemogInfoAddressId, LocationName, AlternateTelephoneCountryId, AlternateTelephoneNumber, PrimaryTelephoneCountryId, PrimaryTelephoneNumber)
+        INSERT RetailSlnSch.CorpAcctLocation(ClientId, CorpAcctId, SeqNum, DemogInfoAddressId, LocationName, AlternateTelephoneCountryId, AlternateTelephoneNumber, PrimaryTelephoneCountryId, PrimaryTelephoneNumber, StatusId)
         SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, DivineBija_CorpAcctUpload.SeqNum, 0 AS DemogInfoAddressId
               ,DivineBija_CorpAcctUpload.UniqueName AS LocationName, 106 AS AlternateTelephoneCountryId, AlternatePhone
-			  ,106 AS PrimaryTelephoneCountryId, PrimaryPhone
+              ,106 AS PrimaryTelephoneCountryId, PrimaryPhone, 100 AS StatusId
           FROM RetailSlnSch.CorpAcct
     INNER JOIN DivineBija_CorpAcctUpload
             ON CorpAcct.CorpAcctName = DivineBija_CorpAcctUpload.CorpAcctName
          WHERE DivineBija_CorpAcctUpload.Id = 0
-        INSERT RetailSlnSch.CorpAcctLocation(ClientId, CorpAcctId, SeqNum, DemogInfoAddressId, LocationName, AlternateTelephoneCountryId, AlternateTelephoneNumber, PrimaryTelephoneCountryId, PrimaryTelephoneNumber)
-        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, DivineBija_CorpAcctUpload.SeqNum, DivineBija_CorpAcctUpload.Id + 2 AS DemogInfoAddressId
+        INSERT RetailSlnSch.CorpAcctLocation(ClientId, CorpAcctId, SeqNum, DemogInfoAddressId, LocationName, AlternateTelephoneCountryId, AlternateTelephoneNumber, PrimaryTelephoneCountryId, PrimaryTelephoneNumber, StatusId)
+        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, DivineBija_CorpAcctUpload.SeqNum, DemogInfoAddressId
               ,DivineBija_CorpAcctUpload.UniqueName AS LocationName, 106 AS AlternateTelephoneCountryId, AlternatePhone
-			  ,106 AS PrimaryTelephoneCountryId, PrimaryPhone
+              ,106 AS PrimaryTelephoneCountryId, PrimaryPhone, 100 AS StatusId
           FROM RetailSlnSch.CorpAcct
     INNER JOIN DivineBija_CorpAcctUpload
             ON CorpAcct.CorpAcctName = DivineBija_CorpAcctUpload.CorpAcctName
          WHERE DivineBija_CorpAcctUpload.Id > 0
       ORDER BY CorpAcct.CorpAcctId, DivineBija_CorpAcctUpload.SeqNum
 --End Corp Acct Location
---PersonExtn1
---TRUNCATE TABLE RetaiLSlnSch.PersonExtn1
---INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, CorpAcctLocationId)
---SELECT @ClientId AS ClientId, PersonId, UsersUpload.CorpAcctId, CorpAcctLocation.CorpAcctLocationId
---FROM UsersUpload INNER JOIN RetailSlnSch.CorpAcctLocation ON UsersUpload.CorpAcctId = CorpAcctLocation.CorpAcctId
---PersonExtn1
+--Begin Corp Acct Discount
+        TRUNCATE TABLE RetailSlnSch.ItemDiscount
+        INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
+        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, DivineBija_CorpAcctItems.Discount
+          FROM DivineBija_CorpAcctItems
+    INNER JOIN RetailSlnSch.CorpAcct
+            ON DivineBija_CorpAcctItems.CorpAcctName = CorpAcct.CorpAcctName
+    INNER JOIN RetailSlnSch.Item
+            ON DivineBija_CorpAcctItems.[Item Unique Desc] = Item.ItemUniqueDesc
+UNION
+        SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, CorpAcct.DefaultDiscountPercent
+          FROM RetailSlnSch.CorpAcct
+	CROSS JOIN RetailSlnSch.Item
+         WHERE CorpAcctTypeId = 500
+      ORDER BY CorpAcctId, ItemId
+--End Corp Acct Discount
+--
 DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(400)

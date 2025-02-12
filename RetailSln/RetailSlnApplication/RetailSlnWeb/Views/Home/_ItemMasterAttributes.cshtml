@@ -1,6 +1,5 @@
 ﻿@model RetailSlnModels.ItemMasterAttributesModel
 @using RetailSlnModels
-@Html.Partial("_ItemOrder", Model.ItemMasterModel)
 @{
     int i;
     <div style="float: left; width: 27px;">
@@ -16,9 +15,11 @@
         </div>
     }
     <br style="clear: both;" />
+    @Html.Partial("_ItemOrder", Model.ItemMasterModel)
+    <br style="clear: both;" />
     for (i = 0; i < Model.ItemMasterAttributesTabs.Count; i++)
     {
-        <div id="divTabData@(i)" class="col-md-12" style="padding-left: 27px; text-align: left;">
+        <div id="divTabData@(i)" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
             @Html.Partial(Model.ItemMasterAttributesViews[i], Model.ItemMasterAttributesDatas[i])
         </div>
     }
@@ -32,10 +33,10 @@
     //paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryItems ?? new List<ShoppingCartItemModel>();
 }
 @*<div class="center" id="divShoppingCart" style="width: 81%;">
-    @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
-</div>*@
+        @Html.Partial("_ShoppingCart", paymentInfoModel.ShoppingCartModel)
+    </div>*@
 <script type="text/javascript">
-    divTab_onclick('@Model.TabId', '@Model.ItemMasterAttributesTabs.Count');
+    @*divTab_onclick('@Model.TabId', '@Model.ItemMasterAttributesTabs.Count');*@
     function divTab_onclick(index, count) {
         for (var i = 0; i < count; i++) {
             document.getElementById("divTabData" + i).style.display = "none";
@@ -45,5 +46,8 @@
         document.getElementById("divTabData" + index).style.display = "block";
         document.getElementById("divTab" + index).style.textDecoration = "none";
         document.getElementById("divTab" + index).style.color = "#000000";
+
+        document.getElementById("divTabData" + index).scrollIntoView();
+        document.getElementById("divTabData" + index).focus();
     }
 </script>

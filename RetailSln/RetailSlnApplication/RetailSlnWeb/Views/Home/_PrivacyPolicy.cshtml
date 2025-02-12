@@ -207,14 +207,6 @@
         <br /><br />
         If we transfer your personal information out of Europe, we will rely on recognized transfer mechanisms like the European Commission's Standard Contractual Clauses, or any equivalent contracts issued by the relevant competent authority of the UK, as relevant, unless the data transfer is to a country that has been determined to provide an adequate level of protection.
         <h2 style="color: #000000; font-family: Arial; font-weight: bold;">Contact</h2>
-        Should you have any questions about our privacy practices or this Privacy Policy, or if you would like to exercise any of the rights available to you, please feel free to reach out to us:
-        @*<br />
-        <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Click here to Contact Us</a>
-        <br />
-        <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">Click here to Email Us</a>
-        <br />
-        <span style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold;">Alternatively, you can reach out to us...</span>*@
-        <br />
-        @Html.Partial("_ContactUsInfo")
+        Should you have any questions about our privacy practices or this Privacy Policy, or if you would like to exercise any of the rights available to you, please feel free to reach out to us at <a href="@Url.Action("ContactUs", "Home" )" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")</a>
     </div>
 </div>

@@ -32,7 +32,11 @@ namespace RetailSlnModels
 
         public string ItemMasterName { set; get; }
 
+        public string ItemMasterSpecsForDisplay { set; get; }
+
         public string ItemRatesForDisplay { set; get; }
+
+        public string ItemRatesForDisplayAll { set; get; }
 
         public List<ItemImageModel> ItemMasterImageModels { set; get; }
 

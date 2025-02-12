@@ -1,0 +1,39 @@
+﻿@model PaymentInfo1Model
+@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<table>
+    <tr>
+        <td style="font-family: Arial; font-size: 15px; text-align: left;">
+            <span style="color: #000000; font-weight: bold;">Dear @Model.OrderApprovalModel.ApprovalRequestedForFirstName @Model.OrderApprovalModel.ApprovalRequestedForLastName,</span>
+            <br /><br />
+            Purchase Order # @Model.OrderApprovalModel.OrderHeaderId is waiting for your approval.
+            <br /><br />
+            Please click the below link to approve
+            <br />
+            You need to logged in using to access this page
+            <br />
+            <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )@Url.Action("OrderApproval", "Home")?id=@Model.OrderApprovalModel.OrderApprovalId">Click here to approve Order# @Model.OrderApprovalModel.OrderHeaderId</a>
+            <br /><br />
+            OTP Send Type : @Model.OrderApprovalModel.ApprovalOTPSendTypeId
+            <br />
+            OTP Code : @Model.OrderApprovalModel.ApprovalOTPCode
+            <br />
+            OTP Expiry : @DateTime.Parse(Model.OrderApprovalModel.ApprovalOTPExpiryDateTime).ToString("MMM-dd-yyyy h:mm:ss tt")
+            <br /><br />
+            <span style="color: #000000; font-weight: bold;">Requested by : @Model.OrderApprovalModel.ApprovalRequestedByFirstName @Model.OrderApprovalModel.ApprovalRequestedByLastName,</span>
+            <br /><br />
+            <span style="color: #000000; background-color: #deecf9;">
+                Should you have any questions, please contact our support @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")
+                <br /><br />
+                Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" target="_blank">Contact Us Here</a> to let us know.
+            </span>
+        </td>
+    </tr>
+</table>
+

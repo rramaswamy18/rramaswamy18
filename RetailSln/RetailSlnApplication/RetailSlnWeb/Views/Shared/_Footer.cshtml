@@ -18,7 +18,8 @@
         loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
         loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
     }
-    string whatsAppUrl = "https://api.whatsapp.com/send?phone=", copyrightYear = DateTime.Now.Year.ToString();
+    //string whatsAppUrl = "https://api.whatsapp.com/send?phone=", copyrightYear = DateTime.Now.Year.ToString();
+    string copyrightYear = DateTime.Now.Year.ToString();
 }
 <footer class="footer-section">
     <div class="footer-feature-section">
@@ -88,6 +89,7 @@
                 <br style="clear: both;" />
                 @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", "")
             </p>
+            @*
             <p class="contact-number">
                 <i class="fas fa-phone-alt" style="color: #0898DA; font-size: 17px"></i>
                 <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
@@ -100,6 +102,7 @@
                 <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px;"></i>
                 <a target="_blank" href="@(whatsAppUrl + ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhone", ""))" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhoneFormatted", "")</a>
             </p>
+            *@
             <br style="clear: both;" />
             <div class="app-download-section text-left">
                 <a href="https://play.google.com/store/apps/details?id=your.app.package" target="_blank" class="app-download-button">

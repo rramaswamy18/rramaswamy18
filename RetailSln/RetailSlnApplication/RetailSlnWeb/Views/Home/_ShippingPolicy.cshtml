@@ -22,12 +22,14 @@
         <p><strong>International Orders</strong></p>
         <p class="textclass">Your order may be subject to import duties and taxes (including VAT), which are incurred once a shipment reaches your destination country. <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> is not responsible for these charges if they are applied and is the responsibility of the customer.</p>
         <p><strong>Returns&nbsp;and Refunds</strong></p>
-        <p class="textclass">In the event that your order arrives damaged in any way, please contact us as soon as possible at <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">Contact Us Here</a> with your order number and a picture / photo of the item’s condition. We address these on a case-by-case basis but will try our best to work towards a satisfactory solution. Please read our <a href="@Url.Action("RefundPolicy", "Home")" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">Refund Policy</a> for detailed information about our policies.</p>
+        <p class="textclass">In the event that your order arrives damaged in any way, please contact us as soon as possible at <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">Contact Us Here</a> with your order number and a picture / photo of the item’s condition. We address these on a case-by-case basis but will try our best to work towards a satisfactory solution. Please read our <a href="@Url.Action("RefundPolicy", "Home")" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">Refund Policy</a> for detailed information about our policies.</p>
         <p class="textclass">
-            If you have any further questions, please don't hesitate to reach out to us at <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">Contact Us Here</a>
-            <br /><br />
-            You can also email us at <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")</a>
-            <br />
+            If you have any further questions, please don't hesitate to reach out to us at <a href="@Url.Action("ContactUs", "Home" )" style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")</a>
+            @*
+        <br /><br />
+        You can also email us at <a href="mailto: @ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "FromEmailAddress", "")</a>
+        <br />
+            *@
         </p>
     </div>
 </div>

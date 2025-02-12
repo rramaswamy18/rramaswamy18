@@ -69,6 +69,8 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter short description")]
         public string ItemShortDesc3 { set; get; }
 
+        public string ItemItemSpecsForDisplay { set; get; }
+
         [Display(Name = "Item Star#")]
         [Required(ErrorMessage = "Please enter star#")]
         public int? ItemStarCount { set; get; }

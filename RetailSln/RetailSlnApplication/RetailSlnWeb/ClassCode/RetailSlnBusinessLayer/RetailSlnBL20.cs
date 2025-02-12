@@ -1,4 +1,6 @@
-﻿using ArchitectureLibraryCacheData;
+﻿using ArchitectureLibraryBusinessLayer;
+using ArchitectureLibraryCacheData;
+using ArchitectureLibraryDataLayer;
 using ArchitectureLibraryDocumentService;
 using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
@@ -10,11 +12,13 @@ using RetailSlnEnumerations;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 
@@ -129,6 +133,288 @@ namespace RetailSlnBusinessLayer
                 }
             }
             return categoryListModel;
+        }
+        // GET: CorpAcct
+        public CorpAcctModel CorpAcct(string corpAcctIdParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            CorpAcctModel corpAcctModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                if (long.TryParse(corpAcctIdParm, out long corpAcctId))
+                {
+                    ApplicationDataContext.OpenSqlConnection();
+                    corpAcctModel = ApplicationDataContext.GetCorpAcctCorpAcctLocation(corpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (corpAcctModel == null)
+                    {
+                        corpAcctModel = new CorpAcctModel
+                        {
+                            CorpAcctTypeId = CorpAcctTypeEnum.Individual,
+                            CorpAcctLocationModels = new List<CorpAcctLocationModel>
+                            {
+                                new CorpAcctLocationModel
+                                {
+                                    DemogInfoAddressModel = new DemogInfoAddressModel
+                                    {
+
+                                    },
+                                },
+                            },
+                        };
+                    }
+                    corpAcctModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    };
+                }
+                else
+                {
+                    corpAcctModel = new CorpAcctModel
+                    {
+                        CorpAcctId = null,
+                        CorpAcctTypeId = CorpAcctTypeEnum.Wholesale,
+                        CreditDays = 30,
+                        CreditLimit = 10000,
+                        CreditSale = YesNoEnum.Yes,
+                        DefaultDiscountPercent = 35,
+                        MinOrderAmount = 1000,
+                        OrderApprovalRequired = YesNoEnum.Yes,
+                        ShippingAndHandlingCharges = YesNoEnum.No,
+                        StatusId = YesNoEnum.Yes,
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    };
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                corpAcctModel = new CorpAcctModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            $"Error while loading Corp Acct {corpAcctIdParm} from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return corpAcctModel;
+        }
+        // POST: CorpAcct
+        public void CorpAcct(ref CorpAcctModel corpAcctModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                if (modelStateDictionary.IsValid)
+                {
+                    ApplicationDataContext.OpenSqlConnection();
+                    ApplicationDataContext.AddCorpAcct(corpAcctModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    corpAcctModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET: CorpAcctList
+        public CorpAcctListModel CorpAcctList(string pageNumParm, string rowCountParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            CorpAcctListModel corpAcctListModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                int.TryParse(pageNumParm, out int pageNum);
+                pageNum = pageNum == 0 ? 1 : pageNum;
+                int.TryParse(rowCountParm, out int rowCount);
+                rowCount = rowCount == 0 ? 50 : rowCount;
+                ApplicationDataContext.OpenSqlConnection();
+                corpAcctListModel = new CorpAcctListModel
+                {
+                    CorpAcctModels = ApplicationDataContext.GetCorpAccts((pageNum - 1) * rowCount, rowCount, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                corpAcctListModel = new CorpAcctListModel
+                {
+                    CorpAcctModels = null,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading category(s) from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return corpAcctListModel;
+        }
+        // GET: CorpAcct
+        public CorpAcctLocationModel CorpAcctLocation(string corpAcctLocationIdParm, string corpAcctIdParm, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long demogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId"));
+                CorpAcctLocationModel corpAcctLocationModel;
+                ApplicationDataContext.OpenSqlConnection();
+                if (long.TryParse(corpAcctLocationIdParm, out long corpAcctLocationId))
+                {
+                    corpAcctLocationModel = null;
+                }
+                else
+                {
+                    corpAcctLocationModel = new CorpAcctLocationModel
+                    {
+                        CorpAcctModel = ApplicationDataContext.GetCorpAcct(long.Parse(corpAcctIdParm), ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                        AlternateTelephoneCountryId = demogInfoCountryId,
+                        PrimaryTelephoneCountryId = demogInfoCountryId,
+                        DemogInfoAddressModel = new DemogInfoAddressModel
+                        {
+                            BuildingTypeId = BuildingTypeEnum._,
+                            BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
+                            DemogInfoCountryId = demogInfoCountryId,
+                            DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
+                            DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[demogInfoCountryId],
+                        },
+                        StatusId = YesNoEnum.Yes,
+                    };
+                    corpAcctLocationModel.CorpAcctId = corpAcctLocationModel.CorpAcctModel.CorpAcctId;
+                }
+                return corpAcctLocationModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // POST: CorpAcct
+        public void CorpAcctLocation(ref CorpAcctLocationModel corpAcctLocationModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ApplicationDataContext.OpenSqlConnection();
+                if (modelStateDictionary.IsValid)
+                {
+                    if (corpAcctLocationModel.CorpAcctLocationId == null)
+                    {
+                        archLibBL.GetDemogInfoDataFromDemogInfoZipId(corpAcctLocationModel.DemogInfoAddressModel, ApplicationDataContext.SqlConnectionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        corpAcctLocationModel.DemogInfoAddressModel.FromDate = "1900-01-01";
+                        corpAcctLocationModel.DemogInfoAddressModel.ToDate = "9999-12-31";
+                        ArchLibDataContext.AddDemogInfoAddress(corpAcctLocationModel.DemogInfoAddressModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        float seqNum = ApplicationDataContext.GetCorpAcctLocationMaxSeqNum(corpAcctLocationModel.CorpAcctId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        corpAcctLocationModel.SeqNum = ++seqNum;
+                        ApplicationDataContext.AddCorpAcctLocation(corpAcctLocationModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        ApplicationDataContext.AddPersonExtn1CorpAcctLocation(corpAcctLocationModel.CorpAcctId.Value, corpAcctLocationModel.CorpAcctLocationId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                    else
+                    {
+                        //Update existing CorpAcctLocation and DemogInfoAddress
+                    }
+                }
+                else
+                {
+                    corpAcctLocationModel.CorpAcctModel = ApplicationDataContext.GetCorpAcct(corpAcctLocationModel.CorpAcctId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    long demogInfoCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId"));
+                    if (corpAcctLocationModel.DemogInfoAddressModel == null)
+                    {
+                        corpAcctLocationModel.DemogInfoAddressModel = new DemogInfoAddressModel
+                        {
+                            BuildingTypeId = BuildingTypeEnum._,
+                            BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
+                            DemogInfoCountryId = demogInfoCountryId,
+                            DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
+                            DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[demogInfoCountryId],
+                        };
+                    }
+                    else
+                    {
+                        corpAcctLocationModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
+                        corpAcctLocationModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[demogInfoCountryId];
+                    }
+                    corpAcctLocationModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
         }
         // GET: ItemMasterList
         public ItemMasterListModel ItemMasterList(string pageNumParm, string rowCountParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

@@ -17,14 +17,13 @@ namespace RetailSlnModels
 
         public ItemBundleModel ItemBundleModel { set; get; }
 
-        //public long? ItemBundleId { set; get; }
-        //public long? ItemBundleItemId { set; get; }
-
         public float? ItemDiscountAmount { set; get; }
 
         public float? ItemDiscountPercent { set; get; }
 
         public long? ItemId { set; get; }
+
+        public string ItemItemSpecsForDisplay { set; get; }
 
         public float? ItemRate { set; get; }
 

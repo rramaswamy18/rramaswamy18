@@ -10,6 +10,7 @@ using RetailSlnModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -38,10 +39,10 @@ namespace RetailSlnCacheData
         //public static Dictionary<string, Dictionary<long, CategoryLayoutModel>> AspNetRoleCategoryLayoutModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
-        public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
+        //public static List<DiscountDtlModel> DiscountDtlModels { set; get; }
         public static List<FestivalListModel> FestivalListModels { set; get; }
         public static List<FestivalListImageModel> FestivalListImageModels { set; get; }
-        public static List<ItemDiscountModel> ItemDiscountModels { set; get; }
+        //public static List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public static List<ItemMasterModel> ItemMasterModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
@@ -76,7 +77,7 @@ namespace RetailSlnCacheData
             CategoryHierModels = retailSlnInitModel.CategoryHierModels;
             ItemBundleModels = retailSlnInitModel.ItemBundleModels;
             ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels;
-            ItemDiscountModels = retailSlnInitModel.ItemDiscountModels;
+            //ItemDiscountModels = retailSlnInitModel.ItemDiscountModels;
             ItemMasterModels = retailSlnInitModel.ItemMasterModels;
             ItemModels = retailSlnInitModel.ItemModels;
             ItemSpecModels = retailSlnInitModel.ItemSpecModels;
@@ -90,7 +91,7 @@ namespace RetailSlnCacheData
             //DeliveryChargeModels = deliveryChargeModels;
             CorpAcctModels = retailSlnInitModel.CorpAcctModels;
             CorpAcctLocationModels = retailSlnInitModel.CorpAcctLocationModels;
-            DiscountDtlModels = retailSlnInitModel.DiscountDtlModels;
+            //DiscountDtlModels = retailSlnInitModel.DiscountDtlModels;
             FestivalListModels = retailSlnInitModel.FestivalListModels;
             FestivalListImageModels = retailSlnInitModel.FestivalListImageModels;
             CurrencyCultureInfo = new CultureInfo(ArchLibCache.GetApplicationDefault(clientId, "Currency", "CultureInfo"));
@@ -292,21 +293,40 @@ namespace RetailSlnCacheData
             foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
             {
                 itemMasterModel.ItemRatesForDisplay = "";
+                itemMasterModel.ItemRatesForDisplayAll = "";
                 if (itemMasterModel.ItemModels.Count > 1)
                 {
+                    itemMasterModel.ItemRatesForDisplay = itemMasterModel.ItemModels[0].ItemRateFormatted + "...";
                     prefixString = "";
                     itemModelCount = 0;
                     foreach (var itemModel in itemMasterModel.ItemModels)
                     {
-                        itemMasterModel.ItemRatesForDisplay += prefixString + itemModel.ItemRateFormatted;
-                        prefixString = "; ";
+                        itemMasterModel.ItemRatesForDisplayAll += prefixString + itemModel.ItemRateFormatted;
                         itemModelCount++;
-                        if (itemModelCount == 3)
-                        {
-                            break;
-                        }
+                        prefixString = "; ";
                     }
                     itemMasterModel.ItemRatesForDisplay += "...";
+                    itemMasterModel.ItemRatesForDisplayAll += "...";
+                }
+            }
+            foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
+            {
+                itemMasterModel.ItemMasterSpecsForDisplay = "";
+                prefixString = "";
+                foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
+                {
+                    //itemMasterModel.ItemMasterSpecsForDisplay += prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay;
+                    itemMasterModel.ItemMasterSpecsForDisplay += prefixString + itemMasterItemSpecModel.ItemSpecValueForDisplay;
+                    prefixString = " | ";
+                }
+                foreach (var itemModel in itemMasterModel.ItemModels)
+                {
+                    itemModel.ItemItemSpecsForDisplay = itemMasterModel.ItemMasterSpecsForDisplay;
+                    foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
+                    {
+                        itemModel.ItemItemSpecsForDisplay += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                        prefixString = " | ";
+                    }
                 }
             }
             return;
@@ -339,6 +359,7 @@ namespace RetailSlnCacheData
                     }
                 );
             }
+            //TempFunction(retailSlnInitModel.CorpAcctModels, retailSlnInitModel.CorpAcctLocationModels);
             return;
         }
         private static void BuildCacheModels4(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -494,7 +515,7 @@ namespace RetailSlnCacheData
                     {
                         Name = "Pick up from",
                     };
-                    foreach (var pickupLocationModel in retailSlnInitModel.PickupLocationModels)
+                    foreach (var pickupLocationModel in retailSlnInitModel.PickupLocationModels.Skip(1))
                     {
                         PickupLocationDemogInfoAddressModels1.Add(pickupLocationModel.DemogInfoAddressModel);
                         DeliveryMethodSelectListItems.Add
@@ -523,5 +544,61 @@ namespace RetailSlnCacheData
             }
             return;
         }
+        /*
+        private static void TempFunction(List<CorpAcctModel> corpAcctModels, List<CorpAcctLocationModel> corpAcctLocationModels)
+        {
+            int rowNum = 0;
+            var fileName = Utilities.GetServerMapPath("~") + @"\CorpAcctLocationModel.txt";
+            StreamWriter streamWriter = new StreamWriter(fileName);
+
+            TempFunction1(corpAcctLocationModels, streamWriter, ref rowNum);
+
+            streamWriter.Write(Environment.NewLine);
+            streamWriter.Write(Environment.NewLine);
+
+            var corpAcctLocationModelsTemp = corpAcctModels.First(x => x.CorpAcctId == 41).CorpAcctLocationModels;
+            rowNum = 900;
+            TempFunction1(corpAcctLocationModelsTemp, streamWriter, ref rowNum);
+
+            streamWriter.Close();
+        }
+        private static void TempFunction1(List<CorpAcctLocationModel> corpAcctLocationModels, StreamWriter streamWriter, ref int rowNum)
+        {
+            foreach (var corpAcctLocationModel in corpAcctLocationModels)
+            {
+                rowNum++;
+                streamWriter.Write(rowNum);
+                streamWriter.Write("\t" + corpAcctLocationModel.CorpAcctLocationId);
+                streamWriter.Write("\t" + corpAcctLocationModel.ClientId);
+                streamWriter.Write("\t" + corpAcctLocationModel.AlternateTelephoneCountryId);
+                streamWriter.Write("\t" + corpAcctLocationModel.AlternateTelephoneNumber);
+                streamWriter.Write("\t" + corpAcctLocationModel.CorpAcctId);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressId);
+                streamWriter.Write("\t" + corpAcctLocationModel.LocationName);
+                streamWriter.Write("\t" + corpAcctLocationModel.PrimaryTelephoneCountryId);
+                streamWriter.Write("\t" + corpAcctLocationModel.PrimaryTelephoneNumber);
+                streamWriter.Write("\t" + corpAcctLocationModel.SeqNum);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.AddressLine1);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.AddressLine2);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.AddressLine3);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.AddressLine4);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.AddressName);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.AddressTypeId);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.HouseNumber);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.BuildingTypeId);
+                //streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.);
+                //streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.);
+                //streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.);
+                //streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.CityName);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.StateAbbrev);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.ZipCode);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.CountryAbbrev);
+                streamWriter.Write("\t" + corpAcctLocationModel.DemogInfoAddressModel.CountryDesc);
+
+                streamWriter.Write(Environment.NewLine);
+            }
+        }
+        */
     }
 }

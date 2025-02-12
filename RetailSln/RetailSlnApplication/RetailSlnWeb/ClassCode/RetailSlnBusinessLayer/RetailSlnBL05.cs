@@ -54,7 +54,7 @@ namespace RetailSlnBusinessLayer
             }
             ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)sessionObjectModel.ApplSessionObjectModel;
             int i, fromIndex, toIndex;
-            if (applSessionObjectModel.CorpAcctModel.CreditSale)
+            if (applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes)
             {
                 fromIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count - 1;
                 toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count;
@@ -62,14 +62,14 @@ namespace RetailSlnBusinessLayer
             else
             {
                 fromIndex = 0;
-                toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count;
+                toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count - 1;
             }
             paymentInfoModel.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems = new List<SelectListItem>();
             for (i = fromIndex; i < toIndex; i++)
             {
                 paymentInfoModel.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Add(RetailSlnCache.DeliveryMethodSelectListItems[i]);
             }
-            if (applSessionObjectModel.CorpAcctModel.CreditSale)
+            if (applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes)
             {
                 paymentInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = RetailSlnCache.PickupLocationDemogInfoAddressModels2;
             }
@@ -80,20 +80,26 @@ namespace RetailSlnBusinessLayer
             paymentInfoModel.PaymentModeModel.PaymentModes = new List<CodeDataModel>();
             var corpAccountId = applSessionObjectModel.CorpAcctModel.CorpAcctId;
             List<CodeDataModel> codeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
-            if (applSessionObjectModel.CorpAcctModel.CreditSale)
+            if (applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes)
             {
-                fromIndex = 0;
-                toIndex = 1;
+                //fromIndex = 0;
+                //toIndex = 1;
+                paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[0]);
+                paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[2]);
             }
             else
             {
-                fromIndex = 1;
-                toIndex = codeDataModels.Count;
+                //fromIndex = 1;
+                //toIndex = codeDataModels.Count;
+                for (i = 1; i < codeDataModels.Count; i++)
+                {
+                    paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[i]);
+                }
             }
-            for (i = fromIndex; i < toIndex; i++)
-            {
-                paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[i]);
-            }
+            //for (i = fromIndex; i < toIndex; i++)
+            //{
+            //    paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[i]);
+            //}
             codeDataModel = paymentInfoModel.PaymentModeModel.PaymentModeId == null ? null : paymentInfoModel.PaymentModeModel.PaymentModes.First(x => x.CodeDataNameId == (long)paymentInfoModel.PaymentModeModel.PaymentModeId.Value);
             if (codeDataModel != null)
             {

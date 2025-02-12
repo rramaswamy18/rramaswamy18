@@ -10,13 +10,13 @@ namespace RetailSlnModels
     {
         public string AspNetUserId { set; get; }
 
-        public string AuthorizedSignature { set; get; }
-
-        public long AuthorizedSignatureText { set; get; }
-
         public string AuthorizedSignatureFontFamily { set; get; }
 
         public string AuthorizedSignatureFontSize { set; get; }
+
+        public long AuthorizedSignatureTextId { set; get; }
+
+        public string AuthorizedSignatureTextValue { set; get; }
         //public long? DeliveryAddressId { set; get; }
         //public float BalanceDue { set; get; }
         //public string BalanceDueFormatted { set; get; }
@@ -25,12 +25,26 @@ namespace RetailSlnModels
 
         public string CreatedByEmailAddress { set; get; }
 
+        public string CreatedByFirstName { set; get; }
+
+        public string CreatedByLastName { set; get; }
+
+
+        public string DownloadFullFileNamePdf { set; get; }
+
+
+        public string DownloadFileNamePdf { set; get; }
+
         public string EmailAddress { set; get; }
 
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "First Name")]
         [StringLength(100, MinimumLength = 1, ErrorMessage = "First Name")]
         public string FirstName { set; get; }
+
+        public long InvoiceTypeId { set; get; }
+
+        public string InvoiceType { set; get; }
 
         [Display(Name = "Last Name")]
         [Required(ErrorMessage = "Last Name")]

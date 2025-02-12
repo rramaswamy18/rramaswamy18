@@ -12,7 +12,7 @@ namespace RetailSlnModels
         public long ClientId { set; get; }
         public long CreatedForPersonId { set; get; }
         public string OrderDateTime { set; get; }
-        public string OrderNumber { set; get; }
+        //public string OrderNumber { set; get; }
         public long OrderStatusId { set; get; }
         public long PersonId { set; get; }
         public bool SaveThisAddress { set; get; }

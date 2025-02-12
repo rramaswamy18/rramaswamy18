@@ -6,10 +6,10 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class SearchForEmailAddressModel
+    public class SearchForUserModel
     {
+        public List<SearchForUserDataModel> SearchForUserDataModels { set; get; }
         public string SearchText { set; get; }
-        public List<SearchForEmailAddressDataModel> SearchForEmailAddressDataModels { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

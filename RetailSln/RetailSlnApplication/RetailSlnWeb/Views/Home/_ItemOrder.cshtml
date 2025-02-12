@@ -5,124 +5,88 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     //var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int index = -1, index1 = 0;
     string prefixString = "", optionText;
-    long? itemId0 = null;
-    string itemRateFormatted0 = "", optionText0 = "";
 }
-<table class="table table-condensed table-responsive" style="margin-left: 0 auto; margin-right: 0 auto; padding: 0px; width: 72%;">
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+</style>
+<table class="table table-condensed table-responsive" style="margin-left: 0 auto; margin-right: 0 auto; padding: 0px; width: 99%;">
     <tr>
-        <th class="text-left" style="padding-left: 27px;">
-            <img alt="@(Model.ItemMasterDesc + " " + Model.ImageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ImageName" style="height: 90px; width: 90px;" title="@(Model.ItemMasterDesc + " " + Model.ImageTitle)" />
-        </th>
-        <th class="text-left" style="padding-left: 9px;">
-            @if (Model.ItemModels.Count == 1)
-            {
-                @(Model.ItemModels[0].ItemRateFormatted + " | ")
-            }
+        <th class="text-center" style="font-size: 18px; padding-left: 18px;">
             @Model.ItemMasterDesc
-            <span id="itemId" style="display: none;">@Model.ItemModels[0].ItemId</span>
         </th>
-        @if (Model.ItemModels.Count > 1)
-        {
-            <th class="text-left" style="padding-left: 27px;">
-                <span id="spnMessageItem" style="color: #0000ff; font-family: Arial; font-size: 12px; font-weight: bold;">
-                </span>
-                <br style="clear: both;" />
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #a50040; font-family: Arial; font-size: 12px; font-weight: bold;">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- Select item from the list ---&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="caret" style="color: #000000; font-size: 20px;">&nbsp;</span>
-                    </button>
-                    <table class="dropdown-menu" aria-labelledby="dropdownMenuButton"  style="background-color: #ffffff; font-size: 12px; width: 99%;">
-                        <tr>
-                            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px;">Rate</th>
-                            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px; width: 100%;">Spec(s)</th>
-                        </tr>
-                        @foreach (var itemModel in Model.ItemModels)
+        <td rowspan="2" style="vertical-align: top;">
+            <table class="table-bordered" style="padding: 5px;">
+                <colgroup>
+                    <col style="width: 27px;" />
+                    <col style="width: 189px;" />
+                    <col style="width: 54px;" />
+                    <col style="width: 153px;" />
+                </colgroup>
+                <tr style="background-color: #d0d0d0;">
+                    <th style="padding: 5px; text-align: right;">
+                        #
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Spec(s) (@Model.ItemModels.Count)
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Rate
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Order
+                    </th>
+                </tr>
+                @foreach (var itemModel in Model.ItemModels)
+                {
+                    optionText = "";
+                    if (itemModel.ItemItemSpecModels != null && itemModel.ItemItemSpecModels.Count > 0)
+                    {
+                        prefixString = "";
+                        foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
                         {
-                            <tr>
-                                @{
-                                    optionText = "";
-                                    if (itemModel.ItemItemSpecModels != null && itemModel.ItemItemSpecModels.Count > 0)
-                                    {
-                                        prefixString = "";
-                                        foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
-                                        {
-                                            optionText += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
-                                            prefixString = " | ";
-                                        }
-                                    }
-                                    if (itemId0 == null)
-                                    {
-                                        itemId0 = itemModel.ItemId;
-                                        itemRateFormatted0 = itemModel.ItemRateFormatted;
-                                        optionText0 = optionText;
-                                    }
-                                }
-                                <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 3px;">
-                                    @if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-                                    {
-                                        <a href="javascript: void(0);" onclick="javascript: btnItemBundleLoad_onclick('@itemModel.ItemId'); tempFunction('@itemModel.ItemId', '@itemModel.ItemRateFormatted', '@optionText', '');" style="font-weight: bold; text-decoration: underline;">@itemModel.ItemRateFormatted</a>
-                                    }
-                                    else
-                                    {
-                                        <a href="javascript: void(0);" onclick="javascript: return tempFunction('@itemModel.ItemId', '@itemModel.ItemRateFormatted', '@optionText', '');" style="font-weight: bold; text-decoration: underline;">@itemModel.ItemRateFormatted</a>
-                                    }
-                                </td>
-                                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 11px; font-weight: 600; padding: 3px;">
-                                    @optionText
-                                </td>
-                            </tr>
+                            optionText += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                            prefixString = " | ";
                         }
-                    </table>
-                </div>
-            </th>
-        }
-    <th class="text-left" style="white-space: nowrap;">
-        @*<input class="form-control" id="orderQty" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: orderQty_oninput1();" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
-        &nbsp;
-        @if (Model.ItemTypeId == ItemTypeEnum.ItemBundle)
-        {
-            <a href="javascript: void(0);" onclick="javascript: return addToCartGet2_onclick(document.getElementById('itemId').innerText, '');" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
-        }
-        else
-        {
-            <a href="javascript: void(0);" onclick="javascript: return addToCartGet1_onclick(document.getElementById('itemId').innerText, '');" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
-        }*@
-        <!--<span id="spnMessageSuccess" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-        @*<br style="clear: both;" />*@
-        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText" style="color: #0000ff; font-size:12px;"></span></span>
-    </span>
-    <span id="spnMessageError" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-        @*<br style="clear: both;" />*@
-        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
-        <span id="spnMessageErrorText" style="color: #ff0000;"></span>
-    </span>
-    <span id="spnMessageSuccess" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">-->
-        @*<br style="clear: both;" />*@
-        <!--<i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-        <span style="color: #a54000; font-size: 12px; padding-right: 5px;">Added...<span id="spnMessageSuccessText" style="color: #0000ff; font-size:12px;"></span></span>
-    </span>
-    <table style="padding: 0px;">
-        <tr>
-            <td style="padding-left: 7px; padding-right: 5px; vertical-align: top;">
-                <i class="fa fa-remove" id="spnMessageError" style="color: #ff0000; display: none;"></i>
-            </td>
-            <td id="spnMessageErrorText" style="color: #ff0000; float: left; font-size: 12px;">
-            </td>
-        </tr>
-    </table>-->
-        @*<span id="spnMessageError" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-            <i class="fa fa-remove" style="color: #ff0000; float: left; padding-left: 7px; padding-right: 5px;"></i>
-            <span id="spnMessageErrorText" style="color: #ff0000; float: left; font-size: 12px;"></span>
-            <br style="clear: both;" />
-        </span>*@
-    </th>
+                    }
+                    <tr>
+                        <td style="font-size: 12px; padding: 5px; text-align: right;">
+                            @(++index1).
+                        </td>
+                        <td style="font-size: 12px; padding: 5px; text-align: left;">
+                            @optionText
+                        </td>
+                        <td style="font-size: 12px; padding: 5px; text-align: right;">
+                            @itemModel.ItemRateFormatted
+                        </td>
+                        <td style="padding: 5px; text-align: left;">
+                            <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
+                            <span style="width: 9px;">&nbsp;</span>
+                            <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ItemMasterId, @itemModel.ItemId, @index, null, false);" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
+                            <span id="spnMessageSuccess@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(index)" style="color: #0000ff; font-size:12px;"></span></span>
+                                <br style="clear: both;" />
+                            </span>
+                            <span id="spnMessageError@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                <span id="spnMessageErrorText@(index)" style="color: #ff0000;"></span>
+                                <br style="clear: both;" />
+                            </span>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <th class="text-center" style="font-size: 18px; padding-left: 63px;">
+            <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ImageName" />
+        </th>
     </tr>
 </table>
-@if (itemId0 != null)
-{
-    <script type="text/javascript">
-        tempFunction('@itemId0', '@itemRateFormatted0', '@optionText0', '');
-    </script>
-}

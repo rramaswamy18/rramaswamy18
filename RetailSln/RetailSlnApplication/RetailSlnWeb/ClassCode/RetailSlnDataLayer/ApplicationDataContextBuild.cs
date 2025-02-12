@@ -9,6 +9,125 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
+        private static SqlCommand BuildSqlCommandCorpAcctInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, CreditLimit, CreditSale, DefaultDiscountPercent, MinOrderAmount, OrderApprovalRequired, ShippingAndHandlingCharges, TaxIdentNum, StatusId, AddUserId, UpdUserId)";
+            sqlStmt += "OUTPUT INSERTED.CorpAcctId SELECT @ClientId, @CorpAcctName, @CorpAcctTypeId, @CreditDays, @CreditLimit, @CreditSale, @DefaultDiscountPercent, @MinOrderAmount, @OrderApprovalRequired, @ShippingAndHandlingCharges, @TaxIdentNum, @StatusId, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CorpAcctName", SqlDbType.NVarChar, 100);
+            sqlCommand.Parameters.Add("@CorpAcctTypeId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CreditDays", SqlDbType.SmallInt);
+            sqlCommand.Parameters.Add("@CreditLimit", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@CreditSale", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@DefaultDiscountPercent", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@MinOrderAmount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@OrderApprovalRequired", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ShippingAndHandlingCharges", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@TaxIdentNum", SqlDbType.NVarChar, 100);
+            sqlCommand.Parameters.Add("@StatusId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);
+            return sqlCommand;
+        }
+        private static SqlCommand BuildSqlCommandCorpAcctLocationInsert(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "INSERT RetailSlnSch.CorpAcctLocation(ClientId, AlternateTelephoneCountryId, AlternateTelephoneNumber, CorpAcctId, DemogInfoAddressId, LocationName, PrimaryTelephoneCountryId, PrimaryTelephoneNumber, SeqNum, StatusId, AddUserId, UpdUserId)";
+            sqlStmt += "OUTPUT INSERTED.CorpAcctLocationId SELECT @ClientId, @AlternateTelephoneCountryId, @AlternateTelephoneNumber, @CorpAcctId, @DemogInfoAddressId, @LocationName, @PrimaryTelephoneCountryId, @PrimaryTelephoneNumber, @SeqNum, @StatusId, @LoggedInUserId, @LoggedInUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@AlternateTelephoneCountryId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@AlternateTelephoneNumber", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CorpAcctId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@DemogInfoAddressId", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@LocationName", SqlDbType.NVarChar, 250);
+            sqlCommand.Parameters.Add("@PrimaryTelephoneCountryId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@PrimaryTelephoneNumber", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@StatusId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 250);
+            return sqlCommand;
+        }
+        private static SqlCommand BuildSqlCommandOrderApprovalAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "";
+            sqlStmt += "        INSERT RetailSlnSch.OrderApproval" + Environment.NewLine;
+            sqlStmt += "              (" + Environment.NewLine;
+            sqlStmt += "               ClientId" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalOTPCode" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalOTPCompletedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalOTPCreatedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalOTPExpiryDateTime" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalOTPExpiryDuration" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalOTPSendTypeId" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalRequestedByPersonId" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalRequestedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalRequestedForPersonId" + Environment.NewLine;
+            sqlStmt += "              ,ApprovalStatusNameDesc" + Environment.NewLine;
+            sqlStmt += "              ,ApprovedByPersonId" + Environment.NewLine;
+            sqlStmt += "              ,ApprovedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,ApproverComments" + Environment.NewLine;
+            sqlStmt += "              ,ApproverConsent" + Environment.NewLine;
+            sqlStmt += "              ,ApproverInitialsTextId" + Environment.NewLine;
+            sqlStmt += "              ,ApproverInitialsTextValue" + Environment.NewLine;
+            sqlStmt += "              ,ApproverSignatureTextId" + Environment.NewLine;
+            sqlStmt += "              ,ApproverSignatureTextValue" + Environment.NewLine;
+            sqlStmt += "              ,Comments" + Environment.NewLine;
+            sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,AddUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId" + Environment.NewLine;
+            sqlStmt += "              )" + Environment.NewLine;
+            sqlStmt += "        OUTPUT INSERTED.OrderApprovalId" + Environment.NewLine;
+            sqlStmt += "        SELECT" + Environment.NewLine;
+            sqlStmt += "               @ClientId" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalOTPCode" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalOTPCompletedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalOTPCreatedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalOTPExpiryDateTime" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalOTPExpiryDuration" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalOTPSendTypeId" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalRequestedByPersonId" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalRequestedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalRequestedForPersonId" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovalStatusNameDesc" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovedByPersonId" + Environment.NewLine;
+            sqlStmt += "              ,@ApprovedDateTime" + Environment.NewLine;
+            sqlStmt += "              ,@ApproverComments" + Environment.NewLine;
+            sqlStmt += "              ,@ApproverConsent" + Environment.NewLine;
+            sqlStmt += "              ,@ApproverInitialsTextId" + Environment.NewLine;
+            sqlStmt += "              ,@ApproverInitialsTextValue" + Environment.NewLine;
+            sqlStmt += "              ,@ApproverSignatureTextId" + Environment.NewLine;
+            sqlStmt += "              ,@ApproverSignatureTextValue" + Environment.NewLine;
+            sqlStmt += "              ,@Comments" + Environment.NewLine;
+            sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+            sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApprovalOTPCode", SqlDbType.NVarChar, 18);
+            sqlCommand.Parameters.Add("@ApprovalOTPCompletedDateTime", SqlDbType.VarChar, 21);
+            sqlCommand.Parameters.Add("@ApprovalOTPCreatedDateTime", SqlDbType.VarChar, 21);
+            sqlCommand.Parameters.Add("@ApprovalOTPExpiryDateTime", SqlDbType.VarChar, 21);
+            sqlCommand.Parameters.Add("@ApprovalOTPExpiryDuration", SqlDbType.Int);
+            sqlCommand.Parameters.Add("@ApprovalOTPSendTypeId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApprovalRequestedByPersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApprovalRequestedDateTime", SqlDbType.VarChar, 21);
+            sqlCommand.Parameters.Add("@ApprovalRequestedForPersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApprovalStatusNameDesc", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ApprovedByPersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApprovedDateTime", SqlDbType.VarChar, 21);
+            sqlCommand.Parameters.Add("@ApproverComments", SqlDbType.NVarChar, 50);
+            sqlCommand.Parameters.Add("@ApproverConsent", SqlDbType.Bit);
+            sqlCommand.Parameters.Add("@ApproverInitialsTextId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApproverInitialsTextValue", SqlDbType.NVarChar, 100);
+            sqlCommand.Parameters.Add("@ApproverSignatureTextId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ApproverSignatureTextValue", SqlDbType.NVarChar, 100);
+            sqlCommand.Parameters.Add("@Comments", SqlDbType.NVarChar, 2000);
+            sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters.Add("@OrderApprovalId", SqlDbType.BigInt);
+            sqlCommand.Parameters["@OrderApprovalId"].Direction = ParameterDirection.ReturnValue;
+            return sqlCommand;
+        }
         private static SqlCommand BuildSqlCommandOrderHeaderAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string sqlStmt = "";

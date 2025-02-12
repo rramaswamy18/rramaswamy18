@@ -62,6 +62,9 @@
                                 if (pickupLocationDemogInfoAddressModel.DemogInfoAddressId < 1)
                                 {
                                     <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                                        We will deliver at at the specified address
+                                        <br />
+                                        <span style="color: #ff0000; font-size: 12px; font-weight: bold;">Shipping & Handling charges apply</span>
                                     </div>
                                 }
                                 else
@@ -74,6 +77,7 @@
                                         }
                                         @(pickupLocationDemogInfoAddressModel.CityName + " " + pickupLocationDemogInfoAddressModel.StateAbbrev + " " + pickupLocationDemogInfoAddressModel.ZipCode)
                                         <br />
+                                        <span style="color: #ff0000; font-size: 12px; font-weight: bold;">No Shipping & Handling charges</span>
                                     </div>
                                 }
                                 startIndex++;

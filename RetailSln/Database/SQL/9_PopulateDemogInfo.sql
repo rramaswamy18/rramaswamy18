@@ -1,5 +1,5 @@
 --0_PopulateDemogInfo
-USE [DivineBija.in]
+USE [RetailSln]
 GO
 
      UPDATE SalesTaxRate_USAByZip
@@ -90,31 +90,31 @@ ORDER BY SrceDemogInfoCountryId, DestDemogInfoCountryId, DestDemogInfoSubDivisio
 --       SrceDemogInfoZipId, TaxRegionName
 --  FROM ArchLib.SalesTaxList
 --TRUNCATE TABLE CorpAcctUpload
-TRUNCATE TABLE RetailSlnSch.CorpAcct
-INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, MinOrderAmount, CreditLimit, TaxIdentNum)
-SELECT 97 AS ClientId, '@Individual (Regular or Retail)' AS CorpAcctName, 100 AS CorpAcctTypeId, 0 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, NULL TaxIdentNum
-UNION
-SELECT 97 AS ClientId, MIN(Name) AS CorpAcctName, 200 AS CorpAcctTypeId, 30 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, Tax_No AS TaxIdentNum FROM CorpAcctUpload WHERE Tax_No IS NOT NULL GROUP BY Tax_No
-UNION
-SELECT 97 AS ClientId, Name AS CorpAcctName, 200 AS CorpAcctTypeId, 30 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, Tax_No AS TaxIdentNum FROM CorpAcctUpload WHERE Tax_No IS NULL
-ORDER BY CorpAcctName
-SELECT * FROM RetailSlnSch.CorpAcct ORDER BY CorpAcctId
+--TRUNCATE TABLE RetailSlnSch.CorpAcct
+--INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, MinOrderAmount, CreditLimit, TaxIdentNum)
+--SELECT 97 AS ClientId, '@Individual (Regular or Retail)' AS CorpAcctName, 100 AS CorpAcctTypeId, 0 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, NULL TaxIdentNum
+--UNION
+--SELECT 97 AS ClientId, MIN(Name) AS CorpAcctName, 200 AS CorpAcctTypeId, 30 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, Tax_No AS TaxIdentNum FROM CorpAcctUpload WHERE Tax_No IS NOT NULL GROUP BY Tax_No
+--UNION
+--SELECT 97 AS ClientId, Name AS CorpAcctName, 200 AS CorpAcctTypeId, 30 AS CreditDays, 1000000 CreditLimit, 1000 MinOrderAmount, Tax_No AS TaxIdentNum FROM CorpAcctUpload WHERE Tax_No IS NULL
+--ORDER BY CorpAcctName
+--SELECT * FROM RetailSlnSch.CorpAcct ORDER BY CorpAcctId
 
 SELECT * FROM GSTStateCodeUpload INNER JOIN ArchLib.DemogInfoSubDivision ON StateName = SubDivisionDesc
 SELECT * FROM ArchLib.DemogInfoAddressUpload
 SELECT * FROM ArchLib.DemogInfoData ORDER BY CountryAbbrev, StateAbbrev, CountyName, CityName, ZipCode
-TRUNCATE TABLE CorpAcctEmailUpload
-INSERT CorpAcctEmailUpload(CorpAcctName, SeqNum)
-SELECT CorpAcctName, 1 SeqNum FROM RetailSlnSch.CorpAcct
+--TRUNCATE TABLE CorpAcctEmailUpload
+--INSERT CorpAcctEmailUpload(CorpAcctName, SeqNum)
+--SELECT CorpAcctName, 1 SeqNum FROM RetailSlnSch.CorpAcct
 --IndiaPinCode1A
         PRINT 'IndiaPinCode1A'
         TRUNCATE TABLE IndiaPinCode1A
         INSERT IndiaPinCode1A(CountryAbbrev, CountryDesc, StateAbbrev, StateName, CountyName, CityName, ZipCode)
         SELECT DISTINCT
                'IND' AS CountryAbbrev, 'India' AS CountryDesc, StateAbbrev, StateName, '' AS CountyName, District AS CityName, Pincode AS Zipcode
-          FROM IndiaPinCode1
+          FROM IndiaPinCode9
     INNER JOIN IndiaStateList
-            ON IndiaPinCode1.StateName = IndiaStateList.SubDivisionDesc
+            ON IndiaPinCode9.StateName = IndiaStateList.SubDivisionDesc
          WHERE Delivery= 'Delivery'
       ORDER BY StateName, CityName, Zipcode
 --[ArchLib].[DemogInfoDeNormalized]
