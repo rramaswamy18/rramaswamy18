@@ -12,6 +12,7 @@ namespace RetailSlnModels
         public long ClientId { set; get; }
         public long CorpAcctLocationId { set; get; }
         public long CreatedForPersonId {set; get; }
+        public float MaxSeqNum { set; get; }
         public string OrderDateTime { set; get; }
         public long? OrderStatusId { set; get; }
         public long PersonId { set; get; }

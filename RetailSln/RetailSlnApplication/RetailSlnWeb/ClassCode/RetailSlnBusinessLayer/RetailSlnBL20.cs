@@ -233,6 +233,7 @@ namespace RetailSlnBusinessLayer
                 {
                     ApplicationDataContext.OpenSqlConnection();
                     ApplicationDataContext.AddCorpAcct(corpAcctModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ApplicationDataContext.AddItemDiscountsForCorpAcct(corpAcctModel.CorpAcctId.Value, corpAcctModel.DefaultDiscountPercent.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 else
                 {
@@ -366,7 +367,7 @@ namespace RetailSlnBusinessLayer
                 {
                     if (corpAcctLocationModel.CorpAcctLocationId == null)
                     {
-                        archLibBL.GetDemogInfoDataFromDemogInfoZipId(corpAcctLocationModel.DemogInfoAddressModel, ApplicationDataContext.SqlConnectionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        archLibBL.GetDemogInfoDataFromDemogInfoZipCode(corpAcctLocationModel.DemogInfoAddressModel, ApplicationDataContext.SqlConnectionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                         corpAcctLocationModel.DemogInfoAddressModel.FromDate = "1900-01-01";
                         corpAcctLocationModel.DemogInfoAddressModel.ToDate = "9999-12-31";
                         ArchLibDataContext.AddDemogInfoAddress(corpAcctLocationModel.DemogInfoAddressModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -397,6 +398,7 @@ namespace RetailSlnBusinessLayer
                     }
                     else
                     {
+                        corpAcctLocationModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                         corpAcctLocationModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
                         corpAcctLocationModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[demogInfoCountryId];
                     }
@@ -852,6 +854,69 @@ namespace RetailSlnBusinessLayer
                 }
             }
             return categoryItemHierListModel;
+        }
+        // GET : OrderList
+        public List<OrderListModel> OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(pageSizeParm))
+                {
+                    pageNumParm = "1";
+                    pageSizeParm = "45";
+                }
+                long? corpAcctId, createdForPersonId, personId;
+                switch (sessionObjectModel.AspNetRoleName)
+                {
+                    case "DEFAULTROLE":
+                    case "BULKORDERSROLE":
+                    case "WHOLESALEROLE":
+                        corpAcctId = ((CorpAcctModel)createForessionObjectModel.ApplSessionObjectModel).CorpAcctId;
+                        personId = null;
+                        createdForPersonId = createForessionObjectModel.PersonId;
+                        break;
+                    case "APPLADMN1":
+                    case "MARKETINGROLE":
+                    case "PRIESTROLE":
+                    case "SYSTADMIN":
+                        corpAcctId = null;
+                        personId = null;
+                        createdForPersonId = null;
+                        break;
+                    default:
+                        corpAcctId = -1;
+                        personId = -1;
+                        createdForPersonId = -1;
+                        break;
+                }
+                List<OrderHeader> orderHeaders = ApplicationDataContext.GetOrdersForList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                List<OrderListModel> orderListModels = new List<OrderListModel>();
+                foreach (var orderHeader in orderHeaders)
+                {
+                    orderListModels.Add
+                    (
+                        new OrderListModel
+                        {
+
+                        }
+                    );
+                }
+                return orderListModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
         }
         // GET : SearchKeywordList
         public SearchKeywordListModel SearchKeywordList(int pageNum, int rowCount, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

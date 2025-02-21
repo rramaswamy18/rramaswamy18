@@ -1711,7 +1711,71 @@ namespace RetailSlnDataLayer
             }
             return itemModels;
         }
-        public static List<OrderListModel> GetOrderLists(long? personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //public static List<OrderHeader> GetOrdersForList(long? personId, long? createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        string sqlStmt = "";
+        //        sqlStmt = "        SELECT *" + Environment.NewLine;
+        //        sqlStmt = "          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+        //        sqlStmt = "    INNER JOIN RetailSlnSch.OrderDetail" + Environment.NewLine;
+        //        sqlStmt = "            ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId" + Environment.NewLine;
+        //        sqlStmt = "    INNER JOIN ArchLib.Person" + Environment.NewLine;
+        //        sqlStmt = "            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
+        //        sqlStmt = "    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
+        //        sqlStmt = "            ON OrderHeader.CreatedForPersonId = CreatedForPerson.PersonId" + Environment.NewLine;
+        //        sqlStmt = "      ORDER BY OrderHeader.OrderHeaderId" + Environment.NewLine;
+        //        sqlStmt = "              ,OrderDetail.SeqNum" + Environment.NewLine;
+        //        //sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+        //        //For now get all - add where based on person id & created person id
+        //        //if (personId == null)
+        //        //{
+        //        //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+        //        //}
+        //        //else
+        //        //{
+        //        //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) WHERE OrderHeader.PersonId = " + personId + " ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+        //        //}
+        //        List<OrderHeader> orderHeaders = new List<OrderHeader>();
+        //        OrderHeader orderHeader;
+        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        bool sqlDataReaderRead = sqlDataReader.Read();
+        //        while (sqlDataReaderRead)
+        //        {
+        //            orderHeaders.Add
+        //            (
+        //                orderHeader = new OrderHeader
+        //                {
+        //                    OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+        //                    OrderDetails = new List<OrderDetail>(),
+        //                }
+        //            );
+        //            while (sqlDataReaderRead && orderHeader.OrderHeaderId == long.Parse(sqlDataReader["OrderHeaderId"].ToString()))
+        //            {
+        //                orderHeader.OrderDetails.Add
+        //                (
+        //                    new OrderDetail
+        //                    {
+        //                        OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
+        //                        OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+        //                    }
+        //                );
+        //                sqlDataReaderRead = sqlDataReader.Read();
+        //            }
+        //        }
+        //        return orderHeaders;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        public static List<OrderHeader> GetOrdersForList(long? corpAcctId, long? personId, long? createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1719,58 +1783,61 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                if (personId == null)
+                sqlStmt += "        SELECT *" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.OrderDetail" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.CreatedForPersonId = CreatedForPerson.PersonId" + Environment.NewLine;
+                if (corpAcctId != null && corpAcctId > 0)
                 {
-                    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+                    sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
+                    sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
+                    sqlStmt += $"           AND PersonExtn1.CorpAcctId = {corpAcctId}" + Environment.NewLine;
                 }
-                else
-                {
-                    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) WHERE OrderHeader.PersonId = " + personId + " ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
-                }
+                sqlStmt += "      ORDER BY OrderHeader.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += "              ,OrderDetail.SeqNum" + Environment.NewLine;
+                //sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+                //For now get all - add where based on person id & created person id
+                //if (personId == null)
+                //{
+                //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+                //}
+                //else
+                //{
+                //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) WHERE OrderHeader.PersonId = " + personId + " ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
+                //}
+                List<OrderHeader> orderHeaders = new List<OrderHeader>();
+                OrderHeader orderHeader;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                OrderListModel orderListModel;
-                List<OrderListModel> orderListModels = new List<OrderListModel>();
                 bool sqlDataReaderRead = sqlDataReader.Read();
                 while (sqlDataReaderRead)
                 {
-                    orderListModels.Add
+                    orderHeaders.Add
                     (
-                        orderListModel = new OrderListModel
+                        orderHeader = new OrderHeader
                         {
                             OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
-                            OrderNumber = sqlDataReader["OrderNumber"].ToString(),
-                            OrderDate = DateTime.Parse(sqlDataReader["OrderDate"].ToString()).ToString("MMM-dd-yyyy"),
-                            TotalInvoiceAmount = 0,
-                            ShippingHandlingCharges = 0,
-                            TotalAmountPaid = 0,
-                            BalanceDue = 0,
+                            OrderDetails = new List<OrderDetail>(),
                         }
                     );
-                    while (sqlDataReaderRead && orderListModel.OrderHeaderId == long.Parse(sqlDataReader["OrderHeaderId"].ToString()))
+                    while (sqlDataReaderRead && orderHeader.OrderHeaderId == long.Parse(sqlDataReader["OrderHeaderId"].ToString()))
                     {
-                        switch (sqlDataReader["OrderDetailTypeId"].ToString())
-                        {
-                            case "400":
-                                orderListModel.ShippingHandlingCharges += float.Parse(sqlDataReader["OrderAmount"].ToString());
-                                break;
-                            case "700":
-                                orderListModel.TotalInvoiceAmount += float.Parse(sqlDataReader["OrderAmount"].ToString());
-                                break;
-                            case "1000":
-                                orderListModel.TotalAmountPaid += float.Parse(sqlDataReader["OrderAmount"].ToString());
-                                break;
-                            case "1100":
-                                orderListModel.BalanceDue += float.Parse(sqlDataReader["OrderAmount"].ToString());
-                                break;
-                            default:
-                                break;
-                        }
+                        orderHeader.OrderDetails.Add
+                        (
+                            new OrderDetail
+                            {
+                                OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
+                                OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                            }
+                        );
                         sqlDataReaderRead = sqlDataReader.Read();
                     }
                 }
-                sqlDataReader.Close();
-                return orderListModels;
+                return orderHeaders;
             }
             catch (Exception exception)
             {
@@ -1953,9 +2020,12 @@ namespace RetailSlnDataLayer
                 sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1 ON CorpAcct.CorpAcctId = PersonExtn1.CorpAcctId AND CorpAcctLocation.CorpAcctLocationId = PersonExtn1.CorpAcctLocationId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN ArchLib.Person ON PersonExtn1.PersonId = Person.PersonId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN ArchLib.AspNetUser ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
-                sqlStmt += $"        WHERE CorpAcct.CorpAcctName LIKE '%{searchText}%' OR Person.FirstName LIKE '%{searchText}%' OR Person.LastName LIKE '%{searchText}%' OR AspNetUser.Email LIKE '%{searchText}%'" + Environment.NewLine;
-                sqlStmt += "      ORDER BY CorpAcctLocation.LocationName, AspNetUser.Email, Person.FirstName, Person.LastName" + Environment.NewLine;
-                //sqlStmt += "        " + Environment.NewLine;
+                sqlStmt += $"        WHERE (CorpAcct.CorpAcctName LIKE '%{searchText}%' OR Person.FirstName LIKE '%{searchText}%' OR Person.LastName LIKE '%{searchText}%' OR AspNetUser.Email LIKE '%{searchText}%')" + Environment.NewLine;
+                sqlStmt += "           AND CorpAcct.CorpAcctId > 0" + Environment.NewLine;
+                sqlStmt += "      ORDER BY CorpAcctLocation.LocationName" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.Email" + Environment.NewLine;
+                sqlStmt += "              ,Person.FirstName" + Environment.NewLine;
+                sqlStmt += "              ,Person.LastName" + Environment.NewLine;
                 //sqlStmt += "        " + Environment.NewLine;
                 //sqlStmt += "        " + Environment.NewLine;
                 SearchForUserDataModel searchForEmailAddressDataModel = new SearchForUserDataModel

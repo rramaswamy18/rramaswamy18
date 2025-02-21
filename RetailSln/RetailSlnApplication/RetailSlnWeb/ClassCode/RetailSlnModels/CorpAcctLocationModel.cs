@@ -31,7 +31,7 @@ namespace RetailSlnModels
         public string LocationName { set; get; }
 
         [Display(Name = "Primary Telephone Country")]
-        [Required(ErrorMessage = "Enter Primary Telephone Country")]
+        [Required(ErrorMessage = "Select Country")]
         public long? PrimaryTelephoneCountryId { set; get; }
 
         [Display(Name = "Primary Telephone#")]

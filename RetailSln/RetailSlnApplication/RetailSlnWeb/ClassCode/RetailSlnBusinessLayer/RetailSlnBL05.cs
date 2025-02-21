@@ -85,7 +85,7 @@ namespace RetailSlnBusinessLayer
                 //fromIndex = 0;
                 //toIndex = 1;
                 paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[0]);
-                paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[2]);
+                //paymentInfoModel.PaymentModeModel.PaymentModes.Add(codeDataModels[2]);
             }
             else
             {

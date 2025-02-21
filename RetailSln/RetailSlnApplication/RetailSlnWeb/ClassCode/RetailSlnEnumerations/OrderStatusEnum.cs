@@ -17,10 +17,14 @@ namespace RetailSlnEnumerations
         [Description("In Transit")]
         InTransit = 400,
         [Description("Delivered")]
-        Processed = 500,
+        Delivered = 500,
+        [Description("Partial Payment")]
+        PartialPayment = 800,
+        [Description("Paid")]
+        Paid = 900,
         [Description("On Hold")]
-        OnHold = 600,
+        OnHold = 9000,
         [Description("Canceled")]
-        Canceled = 700,
+        Canceled = 9900,
     }
 }

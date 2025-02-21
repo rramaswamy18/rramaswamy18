@@ -16,10 +16,10 @@
     //mobileDevice = true;
     if (mobileDevice)
     {
-        @Html.Partial("_UserAddEdit2", Model)
+        @Html.Partial("~/Views/Home/_UserAddEdit2.cshtml", Model)
     }
     else
     {
-        @Html.Partial("_UserAddEdit1", Model)
+        @Html.Partial("~/Views/Home/_UserAddEdit1.cshtml", Model)
     }
 }

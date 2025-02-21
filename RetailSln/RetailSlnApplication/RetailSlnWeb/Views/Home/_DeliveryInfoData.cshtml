@@ -46,5 +46,22 @@ else
     @Html.Partial("_DeliveryInfoData1", Model)
 }
 <div class="row" style="text-align: center;">
-    <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 45%;" type="button">Process</button>
+    <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 54%;" type="button">Process</button>
 </div>
+<script type="text/javascript">
+    function btnLoadApproverSignatureTextValue_onclick() {
+        //console.log(3.1, document.getElementById("ApproverSignatureTextValue").value);
+        for (var i = 1; ; i++) {
+            try {
+                //console.log(3.2, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+                document.getElementById("ApproverSignatureTextValue" + i).innerText = document.getElementById("ApproverSignatureTextValue").value;
+                //console.log(3.3, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+            }
+            catch (err) {
+                //console.log(3.9, i);
+                break;
+            }
+        }
+        return false;
+    }
+</script>

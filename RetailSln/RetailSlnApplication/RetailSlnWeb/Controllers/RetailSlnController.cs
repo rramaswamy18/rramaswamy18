@@ -420,9 +420,32 @@ namespace RetailSlnWeb.Controllers
                 shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 if (ModelState.IsValid)
                 {
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    htmlString = "";
+                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                    SessionObjectModel createForessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
+                    switch (sessionObjectModel.AspNetRoleName)
+                    {
+                        case "APPLADMIN1":
+                        case "MARKETINGROLE":
+                        case "SYSTADMIN":
+                            if (sessionObjectModel.PersonId == createForessionObjectModel.PersonId)
+                            {
+                                success = false;
+                                processMessage = "ERROR???";
+                                htmlString = "Select s corp account to place order";
+                            }
+                            else
+                            {
+                                success = true;
+                                processMessage = "SUCCESS!!!";
+                                htmlString = "";
+                            }
+                            break;
+                        default:
+                            success = true;
+                            processMessage = "SUCCESS!!!";
+                            htmlString = "";
+                            break;
+                    }
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                 }
                 else
@@ -511,6 +534,7 @@ namespace RetailSlnWeb.Controllers
                     paymentInfoModel.OrderSummaryModel.TelephoneNumber = paymentInfoModelTemp.OrderSummaryModel.TelephoneNumber;
                     paymentInfoModel.ShoppingCartModel = paymentInfoModelTemp.ShoppingCartModel;
                     paymentInfoModel.CreditCardDataModel = paymentInfoModelTemp.CreditCardDataModel;
+                    paymentInfoModel.OrderHeaderWIPModel = paymentInfoModelTemp.OrderHeaderWIPModel;
                     retailSlnBL.BuildDeliveryInfoLookup(paymentInfoModel, createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                     retailSlnBL.UpdateDeliveryAddressInfo(paymentInfoModel, clientId, ipAddress, execUniqueId, loggedInUserId);
                     ModelState.Clear();
@@ -684,53 +708,52 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // POST : OrderApproval
-        [AjaxAuthorize]
-        [Authorize]
-        [HttpGet]
-        public ActionResult OrderCreatedFor(string id, string locnId)
-        {
-            ViewData["ActionName"] = "OrderCreatedFor";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                long personId = long.Parse(id);
-                long corpAcctLocationId = long.Parse(locnId);
-                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                SessionObjectModel createForSessionObject = archLibBL.BuildSessionObject(personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, corpAcctLocationId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
-                Session["CreateForSessionObject"] = createForSessionObject;
-                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
-                retailSlnBL.UpdateShoppingCart(ref paymentInfoModel, false, true, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                int shoppingCartItemsCount = 0;
-                string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                shoppingCartTotalAmount = paymentInfoModel?.ShoppingCartModel?.ShoppingCartSummaryModel?.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                success = true;
-                processMessage = "SUCCESS!!!";
-                htmlString = "Order Created For Success";
-                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Order Created For Failure";
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            }
-            return actionResult;
-        }
-
         #region
+        // POST : OrderApproval
+        //[AjaxAuthorize]
+        //[Authorize]
+        //[HttpGet]
+        //public ActionResult OrderCreatedFor(string id, string locnId)
+        //{
+        //    ViewData["ActionName"] = "OrderCreatedFor";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        long personId = long.Parse(id);
+        //        long corpAcctLocationId = long.Parse(locnId);
+        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+        //        SessionObjectModel createForSessionObject = archLibBL.BuildSessionObject(personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, corpAcctLocationId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
+        //        Session["CreateForSessionObject"] = createForSessionObject;
+        //        PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+        //        retailSlnBL.UpdateShoppingCart(ref paymentInfoModel, false, true, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        int shoppingCartItemsCount = 0;
+        //        string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //        shoppingCartTotalAmount = paymentInfoModel?.ShoppingCartModel?.ShoppingCartSummaryModel?.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //        htmlString = "Order Created For Success";
+        //        actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = "Order Created For Failure";
+        //        actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return actionResult;
+        //}
         // GET : OrderApproval
         //[AjaxAuthorize]
         //[Authorize]

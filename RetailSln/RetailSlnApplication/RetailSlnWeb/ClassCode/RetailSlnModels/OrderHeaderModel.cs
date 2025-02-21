@@ -1,4 +1,5 @@
 ﻿using ArchitectureLibraryEnumerations;
+using ArchitectureLibraryModels;
 using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,7 @@ namespace RetailSlnModels
         public List<OrderDetailModel> OrderDetailModels { set; get; }
 
         public List<OrderDetailModel> OrderSummaryModels { set; get; }
+
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

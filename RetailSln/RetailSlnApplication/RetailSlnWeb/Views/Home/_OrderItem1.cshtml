@@ -38,23 +38,18 @@
             opacity: 1;
         }
     </style>
-    <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 63%;">
         <tr>
-            <th class="text-center" style="vertical-align: top;">
+            <th class="text-center" style="vertical-align: top; width: 36px;">
                 #
             </th>
-            @*
-                <th class="text-center" style="vertical-align: top;">
-                    Id
-                </th>
-            *@
             <th class="text-left" style="vertical-align: top; width: 99px;">
             </th>
-            <th class="text-left" style="vertical-align: top; width: 279px;">
+            <th class="text-left" style="vertical-align: top;">
                 Item
             </th>
-            <th class="text-left" style="vertical-align: top; white-space: nowrap;">
-            </th>
+            @*<th class="text-left" style="vertical-align: top; white-space: nowrap;">
+            </th>*@
         </tr>
         @foreach (var categoryItemLayoutModel in Model.CategoryItemMasterHierModels)
         {
@@ -78,8 +73,8 @@
                     }
                     <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
                     <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>
-                </td>
-                <td class="text-left" style="vertical-align: top;">
+                @*</td>
+                <td class="text-left" style="vertical-align: top;">*@
                     <table style="padding: 5px;">
                         @foreach (var categoryItemHierModel in categoryItemLayoutModel.CategoryItemHierModels)
                         {
@@ -89,11 +84,9 @@
                             index1 = 0;
                             index2++;
                             <tr>
-                                @*
-                                    <td style="font-size: 13px; padding: 5px; vertical-align: top;">
-                                        @itemModel.ItemId
-                                    </td>
-                                *@
+                                <td style="font-size: 13px; padding: 5px; vertical-align: top;">
+                                    @itemModel.ItemId
+                                </td>
                                 <td style="font-size: 13px; padding: 5px; vertical-align: top;">
                                     @itemModel.ItemRateFormatted
                                 </td>
@@ -117,7 +110,7 @@
                                         {
                                             foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
                                             {
-                                                @(prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
+                                                @(prefixString + @*++index1 + ". " +*@ itemMasterItemSpecModel.ItemSpecValueForDisplay)
                                                 prefixString = " | ";
                                                 brFlag = true;
                                             }
@@ -126,7 +119,7 @@
                                         {
                                             foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
                                             {
-                                                @(prefixString + ++index1 + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
+                                                @(prefixString + @*++index1 + ". " +*@ itemItemSpecModel.ItemSpecValueForDisplay)
                                                 prefixString = " | ";
                                                 brFlag = true;
                                             }

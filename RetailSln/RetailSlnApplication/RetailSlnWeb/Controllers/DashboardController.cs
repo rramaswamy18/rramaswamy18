@@ -6,6 +6,7 @@ using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using RetailSlnBusinessLayer;
+using RetailSlnCacheData;
 using RetailSlnModels;
 using RetailSlnWeb.ClassCode;
 using System;
@@ -43,7 +44,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CategoryHierList(string id)
         {
             ViewData["ActionName"] = "CategoryHierList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -67,7 +68,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CategoryList(string id)
         {
             ViewData["ActionName"] = "CategoryList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -88,7 +89,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CorpAcct(string id)
         {
             ViewData["ActionName"] = "CorpAcct";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -120,7 +121,7 @@ namespace RetailSlnWeb.Controllers
         {
             //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "CorpAcct";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -139,7 +140,7 @@ namespace RetailSlnWeb.Controllers
                     success = true;
                     processMessage = "SUCCESS!!!";
                     CorpAcctListModel corpAcctListModel = retailSlnBL.CorpAcctList(null, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    htmlString = archLibBL.ViewToHtmlString(this, "_CorpAcctList", corpAcctListModel);
+                    htmlString = archLibBL.ViewToHtmlString(this, "_CorpAcctListData", corpAcctListModel);
                 }
                 else
                 {
@@ -165,7 +166,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CorpAcctList(string pageNum, string rowCount)
         {
             ViewData["ActionName"] = "CorpAcctList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -196,7 +197,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CorpAcctLocationList(string id)
         {
             ViewData["ActionName"] = "CorpAcctLocation";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -227,7 +228,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CorpAcctLocation(string id, string corpAcctId)
         {
             ViewData["ActionName"] = "CorpAcctLocation";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -259,7 +260,7 @@ namespace RetailSlnWeb.Controllers
         {
             //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "CorpAcctLocation";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -268,10 +269,11 @@ namespace RetailSlnWeb.Controllers
             bool success;
             string processMessage, htmlString;
             CorpAcctLocationModel corpAcctLocationModel = new CorpAcctLocationModel();
+            long tempLong;
+            #region
             try
             {
-                long tempLong;
-                corpAcctLocationModel.AlternateTelephoneCountryId = long.TryParse(formCollection["AlternateTelephoneCountryId"], out tempLong) ? (long?)null : long.Parse(formCollection["AlternateTelephoneCountryId"]);
+                corpAcctLocationModel.AlternateTelephoneCountryId = long.TryParse(formCollection["AlternateTelephoneCountryId"], out tempLong) ? tempLong : (long?)null;
                 corpAcctLocationModel.AlternateTelephoneNumber = long.TryParse(formCollection["AlternateTelephoneNumber"], out tempLong) ? tempLong : (long?)null;
                 corpAcctLocationModel.CorpAcctId = long.Parse(formCollection["CorpAcctId"]);
                 corpAcctLocationModel.DemogInfoAddressId = long.TryParse(formCollection["DemogInfoAddressId"], out tempLong) ? tempLong : (long?)null;
@@ -279,16 +281,93 @@ namespace RetailSlnWeb.Controllers
                 corpAcctLocationModel.PrimaryTelephoneCountryId = long.TryParse(formCollection["PrimaryTelephoneCountryId"], out tempLong) ? tempLong : (long?)null;
                 corpAcctLocationModel.PrimaryTelephoneNumber = long.TryParse(formCollection["PrimaryTelephoneNumber"], out tempLong) ? tempLong : (long?)null;
                 corpAcctLocationModel.StatusId = long.TryParse(formCollection["StatusId"], out tempLong) ? (YesNoEnum)tempLong : (YesNoEnum?)null;
+                corpAcctLocationModel.DemogInfoAddressModel = new DemogInfoAddressModel
+                {
+                    AddressLine1 = formCollection["DemogInfoAddressModel.AddressLine1"],
+                    AddressLine2 = formCollection["DemogInfoAddressModel.AddressLine2"],
+                    AddressLine3 = formCollection["DemogInfoAddressModel.AddressLine3"],
+                    BuildingTypeId = string.IsNullOrWhiteSpace(formCollection["DemogInfoAddressModel.BuildingTypeId"]) ? (BuildingTypeEnum?)null : (BuildingTypeEnum)long.Parse(formCollection["DemogInfoAddressModel.BuildingTypeId"]),
+                    CityName = formCollection["DemogInfoAddressModel.CityName"],
+                    ZipCode = formCollection["DemogInfoAddressModel.ZipCode"],
+                    DemogInfoCountryId = string.IsNullOrWhiteSpace(formCollection["DemogInfoAddressModel.DemogInfoCountryId"]) ? (long?)null : long.Parse(formCollection["DemogInfoAddressModel.DemogInfoCountryId"]),
+                    DemogInfoSubDivisionId = string.IsNullOrWhiteSpace(formCollection["DemogInfoAddressModel.DemogInfoSubDivisionId"]) ? (long?)null : long.Parse(formCollection["DemogInfoAddressModel.DemogInfoSubDivisionId"]),
+                };
             }
-            catch
+            catch (Exception exception)
             {
-                ;
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
             }
+            #endregion
             try
             {
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
-                TryValidateModel(corpAcctLocationModel);
+                #region
+                if (string.IsNullOrWhiteSpace(corpAcctLocationModel.LocationName))
+                {
+                    ModelState.AddModelError("LocationName", "Enter location name");
+                }
+                if (corpAcctLocationModel.PrimaryTelephoneCountryId == null)
+                {
+                    ModelState.AddModelError("PrimaryTelephoneCountryId", "Select country");
+                }
+                if (corpAcctLocationModel.PrimaryTelephoneNumber == null)
+                {
+                    ModelState.AddModelError("PrimaryTelephoneNumber", "Enter 10 digit telephone number");
+                }
+                else
+                {
+                    if (corpAcctLocationModel.PrimaryTelephoneNumber.Value.ToString().Trim().Length != 10)
+                    {
+                        ModelState.AddModelError("", "Enter 10 digit telephone number");
+                    }
+                }
+                if (corpAcctLocationModel.AlternateTelephoneCountryId == null)
+                {
+                    ModelState.AddModelError("AlternateTelephoneCountryId", "Select country");
+                }
+                if (corpAcctLocationModel.AlternateTelephoneNumber != null && corpAcctLocationModel.AlternateTelephoneNumber.Value.ToString().Trim().Length != 10)
+                {
+                    ModelState.AddModelError("AlternateTelephoneNumber", "Enter 10 digit telephone number");
+                }
+                if (corpAcctLocationModel.StatusId == null)
+                {
+                    ModelState.AddModelError("StatusId", "Select status");
+                }
+                if (corpAcctLocationModel.DemogInfoAddressModel.DemogInfoCountryId == null)
+                {
+                    ModelState.AddModelError("DemogInfoAddressModel.DemogInfoCountryId", "Select country");
+                }
+                if (corpAcctLocationModel.DemogInfoAddressModel.BuildingTypeId == null)
+                {
+                    ModelState.AddModelError("DemogInfoAddressModel.BuildingTypeId", "Select building type");
+                }
+                if (string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.AddressLine1))
+                {
+                    ModelState.AddModelError("DemogInfoAddressModel.AddressLine1", "Enter address line 1");
+                }
+                if (string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.ZipCode))
+                {
+                    ModelState.AddModelError("DemogInfoAddressModel.ZipCode", "Enter 6 digit PIN code");
+                }
+                else
+                {
+                    if (!(long.TryParse(corpAcctLocationModel.DemogInfoAddressModel.ZipCode, out tempLong) && corpAcctLocationModel.DemogInfoAddressModel.ZipCode.Trim().Length == 6))
+                    {
+                        ModelState.AddModelError("DemogInfoAddressModel.ZipCode", "Enter 6 digit PIN code");
+                    }
+                }
+                if (string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.CityName))
+                {
+                    ModelState.AddModelError("DemogInfoAddressModel.CityName", "Enter city name");
+                }
+                if (corpAcctLocationModel.DemogInfoAddressModel.DemogInfoSubDivisionId == null)
+                {
+                    ModelState.AddModelError("DemogInfoAddressModel.DemogInfoSubDivisionId", "Select state");
+                }
+                #endregion
+                //TryValidateModel(corpAcctLocationModel);
+                //TryValidateModel(corpAcctLocationModel.DemogInfoAddressModel, "DemogInfoAddressModel");
                 retailSlnBL.CorpAcctLocation(ref corpAcctLocationModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
@@ -324,7 +403,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult ItemMasterList(string pageNum, string rowCount)
         {
             ViewData["ActionName"] = "ItemMasterList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -358,7 +437,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult ItemMasterInfo(string id)
         {
             ViewData["ActionName"] = "ItemMasterInfo";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -392,7 +471,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult ItemMasterInfo(ItemMasterModel itemMasterModel)
         {
             ViewData["ActionName"] = "ItemMasterInfo";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -437,10 +516,53 @@ namespace RetailSlnWeb.Controllers
         }
 
         [HttpGet]
+        public ActionResult OrderCreatedFor(string id, string locnId)
+        {
+            ViewData["ActionName"] = "OrderCreatedFor";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                long personId = long.Parse(id);
+                long corpAcctLocationId = long.Parse(locnId);
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                SessionObjectModel createForSessionObject = archLibBL.BuildSessionObject(personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, corpAcctLocationId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
+                Session["CreateForSessionObject"] = createForSessionObject;
+                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+                retailSlnBL.UpdateShoppingCart(ref paymentInfoModel, false, true, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                int shoppingCartItemsCount = 0;
+                string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                shoppingCartTotalAmount = paymentInfoModel?.ShoppingCartModel?.ShoppingCartSummaryModel?.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = "Order Created For Success";
+                actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Order Created For Failure";
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
+        [HttpGet]
         public ActionResult OrderItem(string id, string pageNum, string rowCount)
         {
             ViewData["ActionName"] = "OrderItem";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -455,34 +577,114 @@ namespace RetailSlnWeb.Controllers
                 processMessage = "SUCCESS!!!";
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 string aspNetRoleName;
-                if (sessionObjectModel == null)
-                {
-                    aspNetRoleName = "DEFAULTROLE";
-                }
-                else
-                {
-                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
-                }
-                var orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, id, pageNum, rowCount, sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, orderCategoryItemModel.ViewName, orderCategoryItemModel);
+                aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                var orderCategoryItemModel = retailSlnBL.OrderItem(aspNetRoleName, id, pageNum, rowCount, sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderItem2", orderCategoryItemModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException applicationException)
             {
-                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = ex.Message }, JsonRequestBehavior.AllowGet);
-                return actionResult;
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+                //return actionResult;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "OrderCategoryItemData / GET");
+                ModelState.AddModelError("", "OrderItem / GET");
                 archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
                 success = false;
                 processMessage = "ERROR???";
                 htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             }
-            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            //actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
+        [HttpGet]
+        public ActionResult OrderItemData(string id, string pageNum, string rowCount)
+        {
+            ViewData["ActionName"] = "OrderItemData";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = true;
+                processMessage = "SUCCESS!!!";
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                string aspNetRoleName;
+                aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                var orderCategoryItemModel = retailSlnBL.OrderItem(aspNetRoleName, id, pageNum, rowCount, sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderItem3", orderCategoryItemModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (ApplicationException applicationException)
+            {
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderItemData / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
+        [HttpGet]
+        public ActionResult OrderList(string id, string rowCount)
+        {
+            ViewData["ActionName"] = "OrderList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = true;
+                processMessage = "SUCCESS!!!";
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
+                List<OrderListModel> orderListModels = retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderList", orderListModels);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (ApplicationException applicationException)
+            {
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderList / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
             return actionResult;
         }
 
@@ -493,7 +695,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult ItemHierList(string id, string assignedPageNum, string assignedRowCount, string pageNum, string rowCount)
         {
             ViewData["ActionName"] = "ItemHierList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -517,7 +719,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult SearchKeywordList(string pageNum, string rowCount)
         {
             ViewData["ActionName"] = "SearchKeywordList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -540,6 +742,11 @@ namespace RetailSlnWeb.Controllers
             actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
+        }
+
+        private string GetLoggedInUserId()
+        {
+            return ((SessionObjectModel)Session["SessionObject"]).AspNetUserId;
         }
     }
 }

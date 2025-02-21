@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArchitectureLibraryModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,5 +21,7 @@ namespace RetailSlnModels
         public int TotalRowCount { set; get; }
         public string ViewName { set; get; }
         public UserAddEditModel UserAddEditModel { set; get; }
+
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

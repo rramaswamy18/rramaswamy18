@@ -54,6 +54,39 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static void AddItemDiscountsForCorpAcct(long corpAcctId, float discountPercent, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before Insert Item Discount", "corpAcctId", corpAcctId.ToString(), "discountPercent", discountPercent.ToString());
+                string sqlStmt = "";
+                sqlStmt += "INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent, BegEffDate, EndEffDate, AddUserId, UpdUserId)" + Environment.NewLine;
+                sqlStmt += "SELECT ClientId, @CorpAcctId AS CorpAcctId, ItemId, @DiscountPercent AS DiscountPercent, @BegEffDate AS BegEffDate, @EndEffDate AS EndEffDate, @LoggedInUserId AS AddUserId, @LoggedInUserId AS UpdUserId FROM RetailSlnSch.Item ORDER BY Item.ItemId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.Add("@CorpAcctId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@DiscountPercent", SqlDbType.Float);
+                sqlCommand.Parameters.Add("@BegEffDate", SqlDbType.VarChar, 10);
+                sqlCommand.Parameters.Add("@EndEffDate", SqlDbType.VarChar, 10);
+                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 128);
+                sqlCommand.Parameters["@CorpAcctId"].Value = corpAcctId;
+                sqlCommand.Parameters["@DiscountPercent"].Value = discountPercent;
+                sqlCommand.Parameters["@BegEffDate"].Value = "1900-01-01";
+                sqlCommand.Parameters["@EndEffDate"].Value = "9999-12-31";
+                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: After Insert Item Discount", "rowsAffected", rowsAffected.ToString(), "corpAcctId", corpAcctId.ToString(), "discountPercent", discountPercent.ToString());
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static void AddCorpAcctLocation(CorpAcctLocationModel corpAcctLocationModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -278,6 +311,26 @@ namespace RetailSlnDataLayer
                 SqlCommand sqlCommand = BuildSqlCommandOrderHeaderAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AssignOrderHeader(orderHeader, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 orderHeader.OrderHeaderId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static void AddOrderHeaderSummary(OrderHeaderSummary orderHeaderSummary, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
+                SqlCommand sqlCommand = BuildSqlCommandOrderHeaderSummaryAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                AssignOrderHeaderSummary(orderHeaderSummary, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
+                orderHeaderSummary.OrderHeaderSummaryId = (long)sqlCommand.ExecuteScalar();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
                 return;
             }

@@ -1,0 +1,133 @@
+﻿@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@model OrderCategoryItemModel
+@{
+    //bool mobileDevice = Request.Browser.IsMobileDevice;
+    //mobileDevice = true;
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;//, createForEmailAddress, createForLocation;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
+    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+    var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
+    var corpAcctLocationModel = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels.First(x => x.CorpAcctLocationId == applSessionObjectModel.CorpAcctLocationId);
+    var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+}
+<table class="table table-bordered table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
+    <tr>
+        <td style="text-align: left; width: 50%;">
+            <button class="btn btn-primary" id="btnSearchForUserResult" onclick="javascript: return btnSearchForUserResult_onclick();">Show / Hide User Results</button>
+            <br style="clear: both;" />
+            <input class="form-control validate" id="searchForUser" maxlength="50" placeholder="Search User" style="float: left; width: 63%;" />
+            <button class="btn btn-primary" id="btnSearchForUser" onclick="javascript: return btnSearchForUser_onclick();">Search User</button>
+        </td>
+        <td style="text-align: left; width: 50%;">
+            <button class="btn btn-primary" id="btnSearchForItemResult" onclick="javascript: return btnSearchForItemResult_onclick();">Show / Hide Item Results</button>
+            <br style="clear: both;" />
+            <input class="form-control validate" id="searchForItem" maxlength="50" placeholder="Search Item" style="float: left; width: 63%;" />
+            <button class="btn btn-primary" id="btnSearchForItem" onclick="javascript: return btnSearchForItem_onclick();">Search Item</button>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; width: 50%;">
+            <button class="btn btn-primary" id="btnUserAddEdit" onclick="javascript: return btnUserAddEdit_onclick();">Add / Edit User</button>
+        </td>
+        <td style="text-align: left; width: 50%;">
+            <span id="createdForPersonSelected" style="color: #000000; font-family: Arial; font-size: 12px; font-weight: bold;">
+                @createForSessionObject.EmailAddress
+                <br />
+                @(createForSessionObject.FirstName + " " + createForSessionObject.LastName)
+            </span>
+            <br />
+            <span id="createdForLocationSelected" style="color: #000000; font-family: Arial; font-size: 12px; font-weight: bold;">
+                @corpAcctLocationModel.LocationName
+                <br />
+                @corpAcctLocationModel.DemogInfoAddressModel.AddressLine1
+                @if (!string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.AddressLine2))
+                {
+                    <br />
+                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine2
+                }
+                @if (!string.IsNullOrWhiteSpace(corpAcctLocationModel.DemogInfoAddressModel.AddressLine3))
+                {
+                    <br />
+                    @corpAcctLocationModel.DemogInfoAddressModel.AddressLine3
+                }
+                <br />
+                @(corpAcctLocationModel.DemogInfoAddressModel.CityName + " " + corpAcctLocationModel.DemogInfoAddressModel.StateAbbrev + " " + corpAcctLocationModel.DemogInfoAddressModel.ZipCode)
+            </span>
+        </td>
+    </tr>
+</table>
+<div id="divSearchForUserResult" style="display: none; margin-left: auto; margin-right: auto; width: 63%;">
+    <div class="center" style="display: table;">
+        <div style="display: table-row;">
+            <div style="color: #0000ff; display: table-cell; font-size: 18px; font-weight: bold; text-align: left; vertical-align: top; ">
+                Search User Result(s)
+                <span style="width: 36px;">&nbsp;</span>
+                <button class="btn btn-primary" onclick="javascript: return createdFor_onclick();">Select</button>
+                <button class="btn btn-primary" onclick="javascript: return btnSearchForUserResult_onclick();">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="divSearchForUserResultData" style="height: 171px; overflow: auto;"></div>
+</div>
+<div id="divSearchForItemResult" style="display: none; margin-left: auto; margin-right: auto; width: 63%;">
+    <div class="center" style="display: table;">
+        <div style="display: table-row;">
+            <div style="color: #0000ff; display: table-cell; font-size: 18px; font-weight: bold; text-align: left; vertical-align: top; ">
+                Search Item Result(s)
+                <span style="width: 36px;">&nbsp;</span>
+                <button class="btn btn-primary" onclick="javascript: return btnSearchForItemResult_onclick();">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="divSearchForItemResultData" style="height: 189px; overflow: auto;"></div>
+</div>
+<div id="divUserAddEdit" style="display: none;">
+    <div class="center" style="display: table; width: 63%;">
+        <div style="display: table-row;">
+            <div style="color: #0000ff; display: table-cell; font-size: 18px; font-weight: bold; text-align: left; vertical-align: top; ">
+                User Add/Edit
+                <span style="width: 36px;">&nbsp;</span>
+                <button class="btn btn-primary" onclick="javascript: return btnUserAddEdit_onclick();">Close</button>
+            </div>
+        </div>
+    </div>
+    <form id="formUserAddEdit">
+        @Html.Partial("~/Views/Home/_UserAddEdit.cshtml", Model.UserAddEditModel)
+    </form>
+    <table class="table-responsive" style="margin-left: auto; margin-right: auto; padding: 9px; width: 63%;">
+        <tr>
+            <td class="text-center" style="padding: 0px;">
+                <button class="btn btn-primary" id="btnUserAddEditSave" onclick="javascript: return btnUserAddEditSave_onclick();">Submit</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<table class="table table-unbordered table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
+    <tr>
+        <td class="text-right" style="width: 54%;">
+            <select class="form-control" id="categoryId" onchange="javascript: return categoryId_onchange(this.value, 1, 45);">
+                <option value="">--- Select ---</option>
+                @foreach (var categoryModel in categoryModels)
+                {
+                    <option value="@categoryModel.CategoryId">@categoryModel.CategoryDesc</option>
+                }
+            </select>
+        </td>
+        <td class="text-left" style="vertical-align: top; width: 45%;">
+            <label class="col-form-label" id="lblSelectedCategoryDesc" style="color: #0000ff; padding-top: 5px; font-size: 18px; font-weight: bold;">@Model.ParentCategoryModel.CategoryDesc</label>
+        </td>
+    </tr>
+</table>
+<div id="divOrderItem">
+    @Html.Partial("_OrderItem3", Model)
+</div>

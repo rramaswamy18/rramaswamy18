@@ -1,4 +1,4 @@
-﻿using ArchitectureLibraryDocumentModels;
+﻿using ArchitectureLibraryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,15 @@ namespace RetailSlnModels
         public long OrderHeaderId { set; get; }
         public long ClientId { set; get; }
         public long CreatedForPersonId { set; get; }
+        public long InvoiceTypeId { set; get; }
         public string OrderDateTime { set; get; }
         //public string OrderNumber { set; get; }
         public long OrderStatusId { set; get; }
         public long PersonId { set; get; }
         public bool SaveThisAddress { set; get; }
+        public PersonModel PersonModel { set; get; }
+        public PersonModel CreatedForPersonModel { set; get; }
+        public List<OrderDetail> OrderDetails { set; get; }
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

@@ -64,8 +64,18 @@ namespace RetailSlnWeb.Controllers
                 {
                     aspNetRoleName = sessionObjectModel.AspNetRoleName;
                 }
-                OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Index", orderCategoryItemModel);
+                switch (aspNetRoleName)
+                {
+                    case "APPLADMIN1":
+                    case "MARKETINGROLE":
+                    case "SYSTADMIN":
+                        actionResult = RedirectToAction("Index", "Dashboard");
+                        break;
+                    default:
+                        OrderCategoryItemModel orderCategoryItemModel = retailSlnBL.OrderCategoryItem(aspNetRoleName, null, null, null, sessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        actionResult = View("Index", orderCategoryItemModel);
+                        break;
+                }
             }
             catch (Exception exception)
             {
@@ -421,8 +431,8 @@ namespace RetailSlnWeb.Controllers
                             controllerName = "Home";
                             break;
                     }
-                    actionName = "Index";
-                    controllerName = "Home";
+                    //actionName = "Index";
+                    //controllerName = "Home";
                     redirectUrl = Url.Action(actionName, controllerName);
                     retailSlnBL.LoadOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     //redirectUrl = Url.Action("Index", "Home");

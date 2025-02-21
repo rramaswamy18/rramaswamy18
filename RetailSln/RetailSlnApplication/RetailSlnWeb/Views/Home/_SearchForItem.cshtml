@@ -2,7 +2,7 @@
 @model SearchForItemModel
 <div class="center" style="display: table;">
     @{
-        int index = 0, index1, index2 = -1;
+        int index = 0, index2 = -1;//index1, index2 = -1;
         string prefixString;
         bool brFlag;
         foreach (var itemMasterModel in Model.ItemMasterModels)
@@ -14,12 +14,12 @@
             </div>
             <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: top; width: 36%; ">
                 @itemMasterModel.ItemMasterDesc
-            </div>
-            <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: middle; width: 45%;">
+            @*</div>
+            <div class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-left-style: none; border-width: 1px; display: table-cell; padding: 5px; vertical-align: middle; width: 45%;">*@
                 <table style="padding: 5px;">
                     @foreach (var itemModel in itemMasterModel.ItemModels)
                     {
-                        index1 = 0;
+                        //index1 = 0;
                         index2++;
                         prefixString = "";
                         brFlag = false;
@@ -47,7 +47,7 @@
                                     {
                                         foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
                                         {
-                                            @(prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
+                                            @(prefixString + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
                                             prefixString = " | ";
                                             brFlag = true;
                                         }
@@ -56,7 +56,7 @@
                                     {
                                         foreach (var itemItemSpecModel in itemModel.ItemItemSpecModels)
                                         {
-                                            @(prefixString + ++index1 + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
+                                            @(prefixString + ". " + itemItemSpecModel.ItemSpecValueForDisplay)
                                             prefixString = " | ";
                                             brFlag = true;
                                         }

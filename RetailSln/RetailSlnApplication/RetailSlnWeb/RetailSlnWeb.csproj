@@ -188,6 +188,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryMethodEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryTypeEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\InvoiceTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderDetailTypeEnum.cs" />
@@ -277,6 +278,7 @@
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailWIPModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeader.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderHeaderSummary.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderWIPModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderModel.cs" />
@@ -1232,6 +1234,8 @@
     <Content Include="Include\font-awesome\webfonts\fa-solid-900.woff2" />
     <Content Include="Include\font-awesome\webfonts\fa-v4compatibility.ttf" />
     <Content Include="Include\font-awesome\webfonts\fa-v4compatibility.woff2" />
+    <Content Include="fonts\MISTRAL.woff" />
+    <Content Include="fonts\FREESCPT.woff" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Images\Checkout1.jpg" />
     <Content Include="Images\Checkout2.png" />
@@ -1314,6 +1318,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="TestFont1.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1523,14 +1528,12 @@
     <Content Include="Views\Shared\_HeaderMenuHamburgerBackup2.cshtml" />
     <Content Include="Views\Home\_RegisterUserProf.cshtml" />
     <Content Include="Views\Home\_OrderItem0.cshtml" />
-    <Content Include="Views\Home\_OrderItem0 - Copy.cshtml" />
     <Content Include="Views\Shared\_HeaderMenu.cshtml" />
     <Content Include="Views\Shared\_LayoutOld1.cshtml" />
     <Content Include="Views\Shared\_Layout2Old2.cshtml" />
     <Content Include="Views\Home\_OTPEmailSubject.cshtml" />
     <Content Include="Views\Home\_OTPEmailBody.cshtml" />
     <Content Include="Views\Home\_OTPData.cshtml" />
-    <Content Include="Views\Home\_OTPData - Copy.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoData2.cshtml" />
     <Content Include="Views\Home\_ContactUsData.cshtml" />
     <Content Include="Views\Home\_ContactUsInfo1.cshtml" />
@@ -1562,7 +1565,6 @@
     <Content Include="Views\Dashboard\_SearchKeyword.cshtml" />
     <Content Include="Views\Dashboard\_SearchKeywordData.cshtml" />
     <Content Include="Views\Home\_OrderItem1.cshtml" />
-    <Content Include="Views\Home\_OrderItem2.cshtml" />
     <Content Include="Views\Home\_UserAddEdit.cshtml" />
     <Content Include="Views\Home\_UserAddEdit1.cshtml" />
     <Content Include="Views\Home\_UserAddEdit2.cshtml" />
@@ -1578,6 +1580,10 @@
     <Content Include="Views\Dashboard\_CorpAcctLocationData.cshtml" />
     <Content Include="Views\Dashboard\_CorpAcctListData.cshtml" />
     <Content Include="Views\Dashboard\_CorpAcctLocationListData.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem2.cshtml" />
+    <Content Include="Views\Home\_PaymentInfo01.cshtml" />
+    <Content Include="Views\Home\_PaymentInfo02.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

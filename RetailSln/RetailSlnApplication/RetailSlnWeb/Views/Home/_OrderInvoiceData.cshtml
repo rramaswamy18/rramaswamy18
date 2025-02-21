@@ -9,6 +9,21 @@
     var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
 }
+<style>
+    @@font-face {
+        font-family: 'Freestyle Script Regular';
+        font-style: normal;
+        font-weight: normal;
+        src: local('Freestyle Script Regular'), url('../fonts/FREESCPT.woff') format('woff');
+    }
+
+    @@font-face {
+        font-family: 'Mistral';
+        font-style: normal;
+        font-weight: normal;
+        src: local('Mistral'), url('../fonts/MISTRAL.woff') format('woff');
+    }
+</style>
 <table style="padding: 5px; width: 100%;">
     <tr>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
@@ -34,34 +49,6 @@
                 @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentNumber"))
             }
         </td>
-        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; word-break: break-all;">
-            @Model.OrderSummaryModel.EmailAddress
-            <br style="clear: both;" />
-            @Model.OrderSummaryModel.UserFullName
-            <br style="clear: both;" />
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
-            {
-                @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
-                <br />
-            }
-            @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
-            {
-                <br style="clear: both;" />
-                @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
-            }
-            <br style="clear: both;" />
-            @Model.DeliveryDataModel.DeliveryAddressModel.CityName
-            <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
-            <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
-            @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum))
-            {
-                <br style="clear: both;" />
-                @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
-            }
-        </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap;">
             Invoice# @Model.OrderSummaryModel.OrderHeaderId
             <br style="clear: both;" />
@@ -74,10 +61,15 @@
             {
                 <a href="tel: @("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)</a>
             }
-            <br style="clear: both;" />
-            Amount:&nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted
-            <br style="clear: both;" />
-            Balance:&nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted
+            @if (Model.OrderSummaryModel.InvoiceTypeId == 100)
+            {
+                <span style="color: #000000;">
+                    <br style="clear: both;" />
+                    Amount: &nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted
+                    <br style="clear: both;" />
+                    Balance: &nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted
+                </span>
+            }
             @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentReferenceNumber))
             {
                 <br style="clear: both;" />
@@ -107,6 +99,36 @@
             }
         </td>
     </tr>
+    <tr>
+        <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.OrderSummaryModel.EmailAddress
+            <br style="clear: both;" />
+            @Model.OrderSummaryModel.UserFullName
+            <br style="clear: both;" />
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
+            {
+                @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
+                <br />
+            }
+            @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
+            {
+                <br style="clear: both;" />
+                @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
+            }
+            <br style="clear: both;" />
+            @Model.DeliveryDataModel.DeliveryAddressModel.CityName
+            <br style="clear: both;" />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
+            <br style="clear: both;" />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
+            @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum))
+            {
+                <br style="clear: both;" />
+                @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
+            }
+        </td>
+    </tr>
     @*
         <tr>
             <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
@@ -125,7 +147,7 @@
             CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "").First(x => x.CodeDataNameId == Model.OrderApprovalModel.ApproverSignatureTextId);
             <tr>
                 <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; word-wrap: break-word;">
-                    <span style="color: #000000; font-family: @(codeDataModel.CodeDataNameDesc); font-size: 15px; font-weight: bold;">@Model.OrderApprovalModel.ApproverSignatureTextValue</span>
+                        <span style="color: #000000; font-family: @(codeDataModel.CodeDataNameDesc); font-size: @(codeDataModel.CodeDataDesc4); font-weight: bold;">@Model.OrderApprovalModel.ApproverSignatureTextValue</span>
                     <br style="clear: both;" />
                     @DateTime.Parse(Model.OrderApprovalModel.ApprovedDateTime).ToString("MMM-dd-yyyy h:mm tt")
                     <br style="clear: both;" />
@@ -168,6 +190,8 @@
     </tr>
     <tr>
         <td colspan="4" style="padding: 0px; text-align: left;">
+            <br style="clear: both;" />
+            <br style="clear: both;" />
             <span style="color: #000000; font-family: @Model.OrderSummaryModel.AuthorizedSignatureFontFamily; font-size: @Model.OrderSummaryModel.AuthorizedSignatureFontSize; font-weight: bold;">@Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
             <br style="clear: both;" />
             <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "Business", "AdminRepresentativeTitle")<br style="clear: both;" />@DateTime.Now.ToString("MMM-dd-yyyy h:mm tt")</span>

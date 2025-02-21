@@ -68,10 +68,24 @@ namespace RetailSlnDataLayer
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@CreatedForPersonId"].Value = (int)orderHeader.CreatedForPersonId;
+            sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeader.InvoiceTypeId;
             sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
             sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
             sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
             sqlCommand.Parameters["@SaveThisAddress"].Value = orderHeader.SaveThisAddress ? 1 : 0;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        }
+        public static void AssignOrderHeaderSummary(OrderHeaderSummary orderHeaderSummary, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            sqlCommand.Parameters["@ClientId"].Value = clientId;
+            sqlCommand.Parameters["@BalanceDue"].Value = orderHeaderSummary.BalanceDue;
+            sqlCommand.Parameters["@OrderHeaderId"].Value = orderHeaderSummary.OrderHeaderId;
+            sqlCommand.Parameters["@ShippingAndHandlingCharges"].Value = orderHeaderSummary.ShippingAndHandlingCharges;
+            sqlCommand.Parameters["@TotalAmountPaid"].Value = orderHeaderSummary.TotalAmountPaid;
+            sqlCommand.Parameters["@TotalDiscountAmount"].Value = orderHeaderSummary.TotalDiscountAmount;
+            sqlCommand.Parameters["@TotalInvoiceAmount"].Value = orderHeaderSummary.TotalInvoiceAmount;
+            sqlCommand.Parameters["@TotalOrderAmount"].Value = orderHeaderSummary.TotalOrderAmount;
+            sqlCommand.Parameters["@TotalTaxAmount"].Value = orderHeaderSummary.TotalTaxAmount;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
         }
         public static void AssignOrderDetail(OrderDetail orderDetail, SqlCommand sqlCommand, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

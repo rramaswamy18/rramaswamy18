@@ -135,6 +135,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              (" + Environment.NewLine;
             sqlStmt += "               ClientId" + Environment.NewLine;
             sqlStmt += "              ,CreatedForPersonId" + Environment.NewLine;
+            sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
             sqlStmt += "              ,OrderDateTime" + Environment.NewLine;
             sqlStmt += "              ,OrderStatusId" + Environment.NewLine;
             sqlStmt += "              ,PersonId" + Environment.NewLine;
@@ -146,6 +147,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @ClientId" + Environment.NewLine;
             sqlStmt += "              ,@CreatedForPersonId" + Environment.NewLine;
+            sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
             sqlStmt += "              ,@OrderDateTime" + Environment.NewLine;
             sqlStmt += "              ,@OrderStatusId" + Environment.NewLine;
             sqlStmt += "              ,@PersonId" + Environment.NewLine;
@@ -155,6 +157,7 @@ namespace RetailSlnDataLayer
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.VarChar, 21);
             sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
@@ -162,6 +165,51 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
             sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
             sqlCommand.Parameters["@OrderHeaderId"].Direction = ParameterDirection.ReturnValue;
+            return sqlCommand;
+        }
+        private static SqlCommand BuildSqlCommandOrderHeaderSummaryAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string sqlStmt = "";
+            sqlStmt += "        INSERT RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
+            sqlStmt += "              (" + Environment.NewLine;
+            sqlStmt += "               ClientId" + Environment.NewLine;
+            sqlStmt += "              ,BalanceDue" + Environment.NewLine;
+            sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,ShippingAndHandlingCharges" + Environment.NewLine;
+            sqlStmt += "              ,TotalAmountPaid" + Environment.NewLine;
+            sqlStmt += "              ,TotalDiscountAmount" + Environment.NewLine;
+            sqlStmt += "              ,TotalInvoiceAmount" + Environment.NewLine;
+            sqlStmt += "              ,TotalOrderAmount" + Environment.NewLine;
+            sqlStmt += "              ,TotalTaxAmount" + Environment.NewLine;
+            sqlStmt += "              ,AddUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId" + Environment.NewLine;
+            sqlStmt += "              )" + Environment.NewLine;
+            sqlStmt += "        OUTPUT INSERTED.OrderHeaderSummaryId" + Environment.NewLine;
+            sqlStmt += "        SELECT" + Environment.NewLine;
+            sqlStmt += "               @ClientId" + Environment.NewLine;
+            sqlStmt += "              ,@BalanceDue" + Environment.NewLine;
+            sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,@ShippingAndHandlingCharges" + Environment.NewLine;
+            sqlStmt += "              ,@TotalAmountPaid" + Environment.NewLine;
+            sqlStmt += "              ,@TotalDiscountAmount" + Environment.NewLine;
+            sqlStmt += "              ,@TotalInvoiceAmount" + Environment.NewLine;
+            sqlStmt += "              ,@TotalOrderAmount" + Environment.NewLine;
+            sqlStmt += "              ,@TotalTaxAmount" + Environment.NewLine;
+            sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+            sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@BalanceDue", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@ShippingAndHandlingCharges", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@TotalAmountPaid", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@TotalDiscountAmount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@TotalInvoiceAmount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@TotalOrderAmount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@TotalTaxAmount", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters.Add("@OrderHeaderSummaryId", SqlDbType.BigInt);
+            sqlCommand.Parameters["@OrderHeaderSummaryId"].Direction = ParameterDirection.ReturnValue;
             return sqlCommand;
         }
         private static SqlCommand BuildSqlCommandOrderDetailAdd(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
