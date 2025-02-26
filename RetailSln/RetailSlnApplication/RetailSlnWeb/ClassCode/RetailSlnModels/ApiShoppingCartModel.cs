@@ -11,7 +11,7 @@ namespace RetailSlnModels
     {
         public string JwtToken { set; get; }
         public string CreditCardProcessor { set; get; }
-        public BusinessInfoModel BusinessInfoModel { set; get; }
+        public ApiBusinessInfoModel BusinessInfoModel { set; get; }
         public ApiDeliveryInfoModel DeliveryInfoModel { set; get; }
         public List<ApiShoppingCartItemModel> ShoppingCartItemModels { set; get; }
         public List<ApiShoppingCartItemModel> ShoppingCartItemSummaryModels { set; get; }

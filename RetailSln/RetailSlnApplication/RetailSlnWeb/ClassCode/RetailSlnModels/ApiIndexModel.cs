@@ -8,7 +8,7 @@ namespace RetailSlnModels
 {
     public class ApiIndexModel
     {
-        public BusinessInfoModel BusinessInfoModel { set; get; }
+        public ApiBusinessInfoModel ApiBusinessInfoModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

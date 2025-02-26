@@ -421,30 +421,39 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                    SessionObjectModel createForessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
-                    switch (sessionObjectModel.AspNetRoleName)
+                    SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
+                    if (sessionObjectModel != null)
                     {
-                        case "APPLADMIN1":
-                        case "MARKETINGROLE":
-                        case "SYSTADMIN":
-                            if (sessionObjectModel.PersonId == createForessionObjectModel.PersonId)
-                            {
-                                success = false;
-                                processMessage = "ERROR???";
-                                htmlString = "Select s corp account to place order";
-                            }
-                            else
-                            {
+                        switch (sessionObjectModel.AspNetRoleName)
+                        {
+                            case "APPLADMIN1":
+                            case "MARKETINGROLE":
+                            case "SYSTADMIN":
+                                if (createForSessionObjectModel != null && sessionObjectModel.PersonId == createForSessionObjectModel.PersonId)
+                                {
+                                    success = false;
+                                    processMessage = "ERROR???";
+                                    htmlString = "Select corp account to place order";
+                                }
+                                else
+                                {
+                                    success = true;
+                                    processMessage = "SUCCESS!!!";
+                                    htmlString = "";
+                                }
+                                break;
+                            default:
                                 success = true;
                                 processMessage = "SUCCESS!!!";
                                 htmlString = "";
-                            }
-                            break;
-                        default:
-                            success = true;
-                            processMessage = "SUCCESS!!!";
-                            htmlString = "";
-                            break;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        success = true;
+                        processMessage = "SUCCESS!!!";
+                        htmlString = "";
                     }
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                 }
@@ -1426,78 +1435,6 @@ namespace RetailSlnWeb.Controllers
             shoppingCartItemsCount = paymentInfo1Model.ShoppingCartModel.ShoppingCartItems.Count;
             shoppingCartTotalAmount = paymentInfo1Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-            return actionResult;
-        }
-
-        [AjaxAuthorize]
-        [Authorize]
-        [HttpPost]
-        public ActionResult UserAddEdit(UserAddEditModel userAddEditModel)
-        {
-            ViewData["ActionName"] = "UserAddEdit";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            //int x = 1, y = 0, z = x / y;
-            try
-            {
-                //int a1 = 1, a2 = 0, a3 = a1 / a2;
-                ModelState.Clear();
-                TryValidateModel(userAddEditModel);
-                if (ModelState.IsValid)
-                {
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Valid Model");
-                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                    retailSlnBL.UserAddEdit(ref userAddEditModel, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (ModelState.IsValid)
-                    {
-                    }
-                    else
-                    {
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Error while creating User");
-                        success = false;
-                        processMessage = "ERROR???";
-                        userAddEditModel.ResponseObjectModel = new ResponseObjectModel
-                        {
-                            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                        };
-                    }
-                }
-                else
-                {
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Errors");
-                    success = false;
-                    processMessage = "ERROR???";
-                    userAddEditModel.ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                    };
-                }
-                htmlString = archLibBL.ViewToHtmlString(this, "_UserAddEdit", userAddEditModel);
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                ModelState.AddModelError("", "Error occurred while saving User");
-                userAddEditModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                htmlString = archLibBL.ViewToHtmlString(this, "_UserAddEdit", userAddEditModel);
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            }
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
     }

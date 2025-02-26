@@ -36,9 +36,9 @@
         </td>
     </tr>
     <tr>
-        <td style="text-align: left; width: 50%;">
-            <button class="btn btn-primary" id="btnUserAddEdit" onclick="javascript: return btnUserAddEdit_onclick();">Add / Edit User</button>
-        </td>
+        @*<td style="text-align: left; width: 50%;">
+                <button class="btn btn-primary" id="btnUserAddEdit" onclick="javascript: return btnUserAddEdit_onclick();">Add / Edit User</button>
+            </td>*@
         <td style="text-align: left; width: 50%;">
             <span id="createdForPersonSelected" style="color: #000000; font-family: Arial; font-size: 12px; font-weight: bold;">
                 @createForSessionObject.EmailAddress
@@ -63,6 +63,17 @@
                 <br />
                 @(corpAcctLocationModel.DemogInfoAddressModel.CityName + " " + corpAcctLocationModel.DemogInfoAddressModel.StateAbbrev + " " + corpAcctLocationModel.DemogInfoAddressModel.ZipCode)
             </span>
+        </td>
+        <td style="text-align: left; width: 50%;">
+            <select class="form-control" id="categoryId" onchange="javascript: return categoryId_onchange(this.value, 1, 45);">
+                <option value="">--- Select ---</option>
+                @foreach (var categoryModel in categoryModels)
+                {
+                    <option value="@categoryModel.CategoryId">@categoryModel.CategoryDesc</option>
+                }
+            </select>
+            <br style="clear: both;" />
+            <label class="col-form-label" id="lblSelectedCategoryDesc" style="color: #0000ff; padding-top: 5px; font-size: 18px; font-weight: bold;">@Model.ParentCategoryModel.CategoryDesc</label>
         </td>
     </tr>
 </table>
@@ -91,43 +102,6 @@
     </div>
     <div id="divSearchForItemResultData" style="height: 189px; overflow: auto;"></div>
 </div>
-<div id="divUserAddEdit" style="display: none;">
-    <div class="center" style="display: table; width: 63%;">
-        <div style="display: table-row;">
-            <div style="color: #0000ff; display: table-cell; font-size: 18px; font-weight: bold; text-align: left; vertical-align: top; ">
-                User Add/Edit
-                <span style="width: 36px;">&nbsp;</span>
-                <button class="btn btn-primary" onclick="javascript: return btnUserAddEdit_onclick();">Close</button>
-            </div>
-        </div>
-    </div>
-    <form id="formUserAddEdit">
-        @Html.Partial("~/Views/Home/_UserAddEdit.cshtml", Model.UserAddEditModel)
-    </form>
-    <table class="table-responsive" style="margin-left: auto; margin-right: auto; padding: 9px; width: 63%;">
-        <tr>
-            <td class="text-center" style="padding: 0px;">
-                <button class="btn btn-primary" id="btnUserAddEditSave" onclick="javascript: return btnUserAddEditSave_onclick();">Submit</button>
-            </td>
-        </tr>
-    </table>
-</div>
-<table class="table table-unbordered table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
-    <tr>
-        <td class="text-right" style="width: 54%;">
-            <select class="form-control" id="categoryId" onchange="javascript: return categoryId_onchange(this.value, 1, 45);">
-                <option value="">--- Select ---</option>
-                @foreach (var categoryModel in categoryModels)
-                {
-                    <option value="@categoryModel.CategoryId">@categoryModel.CategoryDesc</option>
-                }
-            </select>
-        </td>
-        <td class="text-left" style="vertical-align: top; width: 45%;">
-            <label class="col-form-label" id="lblSelectedCategoryDesc" style="color: #0000ff; padding-top: 5px; font-size: 18px; font-weight: bold;">@Model.ParentCategoryModel.CategoryDesc</label>
-        </td>
-    </tr>
-</table>
 <div id="divOrderItem">
     @Html.Partial("_OrderItem3", Model)
 </div>

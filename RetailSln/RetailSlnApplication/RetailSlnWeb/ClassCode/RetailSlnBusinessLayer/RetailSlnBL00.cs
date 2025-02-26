@@ -68,12 +68,13 @@ namespace RetailSlnBusinessLayer
                 {
                     paymentInfo1Model = paymentInfo1Model ?? new PaymentInfo1Model();
                     ApplicationDataContext.OpenSqlConnection();
-                    ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
-                    long corpAcctId = applSessionObjectModel.CorpAcctModel.CorpAcctId.Value;
-                    if (createOrderWIP)
+                    ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+                    long? corpAcctId = applSessionObjectModel?.CorpAcctModel.CorpAcctId.Value;
+                    if (corpAcctId != null && createOrderWIP)
                     {
                         CreateOrderWIP(ref paymentInfo1Model, applSessionObjectModel.CorpAcctLocationId, itemId, orderQty, apiFlag, webFlag, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
+                    corpAcctId = corpAcctId ?? 0;
                     float itemDiscountPercent, heightValue, lengthValue, widthValue;
                     string dimensionValue;
                     DimensionUnitEnum dimensionUnitValue;
@@ -109,7 +110,7 @@ namespace RetailSlnBusinessLayer
                         itemBundleModel = null;
                         //itemDiscountPercent = 0;
                     }
-                    itemDiscountPercent = GetItemDiscountPercent(itemId, corpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    itemDiscountPercent = GetItemDiscountPercent(itemId, corpAcctId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     dimensionValue = itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductHeight").ItemSpecValue;
                     float.TryParse(dimensionValue, out heightValue);
                     dimensionValue = itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductLength").ItemSpecValue;
@@ -1873,7 +1874,7 @@ namespace RetailSlnBusinessLayer
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            List <ItemDiscountModel> itemDiscountModels = new List <ItemDiscountModel>();
+            List<ItemDiscountModel> itemDiscountModels = new List<ItemDiscountModel>();
             if (itemIds != "")
             {
                 try
@@ -2344,6 +2345,7 @@ namespace RetailSlnBusinessLayer
                 string orderFileName = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString();
                 if (paymentInfoModel.OrderSummaryModel.InvoiceTypeId == 100)
                 {
+                    paymentInfoModel.OrderSummaryModel.InvoiceType = "Tax Invoice";
                 }
                 else
                 {
@@ -2497,8 +2499,11 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                ApplicationDataContext.OrderDetailWIPsDelete(paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ApplicationDataContext.OrderHeaderWIPDelete(paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (paymentInfoModel.OrderHeaderWIPModel != null && paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId != null)
+                {
+                    ApplicationDataContext.OrderDetailWIPsDelete(paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ApplicationDataContext.OrderHeaderWIPDelete(paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exit");
             }
             catch (Exception exception)

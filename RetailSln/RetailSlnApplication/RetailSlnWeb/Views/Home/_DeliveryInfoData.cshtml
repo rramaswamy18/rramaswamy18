@@ -49,19 +49,69 @@ else
     <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 54%;" type="button">Process</button>
 </div>
 <script type="text/javascript">
-    function btnLoadApproverSignatureTextValue_onclick() {
-        //console.log(3.1, document.getElementById("ApproverSignatureTextValue").value);
+    function ApproverSignatureTextValue_onchange1() {
+        console.log(1.1, document.getElementById("ApproverSignatureTextValue").value);
         for (var i = 1; ; i++) {
             try {
-                //console.log(3.2, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
-                document.getElementById("ApproverSignatureTextValue" + i).innerText = document.getElementById("ApproverSignatureTextValue").value;
-                //console.log(3.3, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+                console.log(1.2, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+                document.getElementById("ApproverSignatureTextValue" + i).innerText = document.getElementById("ApproverSignatureTextValue").value.trim();
+                console.log(1.3, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
             }
             catch (err) {
-                //console.log(3.9, i);
+                console.log(1.9, i, err);
                 break;
+            }
+        }
+        if (document.getElementById("ApproverSignatureTextValue").value.trim() === "") {
+            for (var j = 1; j < i; j++) {
+                document.getElementById("ApproverSignatureTextIdValue" + j).style.display = "none";
+            }
+        }
+        else {
+            for (var j = 1; j < i; j++) {
+                document.getElementById("ApproverSignatureTextIdValue" + j).style.display = "table-row";
             }
         }
         return false;
     }
+    function ApproverSignatureTextValue_oninput1() {
+        console.log(2.1, document.getElementById("ApproverSignatureTextValue").value);
+        for (var i = 1; ; i++) {
+            try {
+                console.log(2.2, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+                document.getElementById("ApproverSignatureTextValue" + i).innerText = document.getElementById("ApproverSignatureTextValue").value.trim();
+                console.log(2.3, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+            }
+            catch (err) {
+                console.log(2.9, i, err);
+                break;
+            }
+        }
+        if (document.getElementById("ApproverSignatureTextValue").value.trim() === "") {
+            for (var j = 1; j < i; j++) {
+                document.getElementById("ApproverSignatureTextIdValue" + j).style.display = "none";
+            }
+        }
+        else {
+            for (var j = 1; j < i; j++) {
+                document.getElementById("ApproverSignatureTextIdValue" + j).style.display = "table-row";
+            }
+        }
+        return false;
+    }
+    //function btnLoadApproverSignatureTextValue_onclick() {
+    //    //console.log(3.1, document.getElementById("ApproverSignatureTextValue").value);
+    //    for (var i = 1; ; i++) {
+    //        try {
+    //            //console.log(3.2, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+    //            document.getElementById("ApproverSignatureTextValue" + i).innerText = document.getElementById("ApproverSignatureTextValue").value;
+    //            //console.log(3.3, i, document.getElementById("ApproverSignatureTextValue" + i).innerText);
+    //        }
+    //        catch (err) {
+    //            //console.log(3.9, i);
+    //            break;
+    //        }
+    //    }
+    //    return false;
+    //}
 </script>

@@ -234,6 +234,7 @@ namespace RetailSlnBusinessLayer
                     ApplicationDataContext.OpenSqlConnection();
                     ApplicationDataContext.AddCorpAcct(corpAcctModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     ApplicationDataContext.AddItemDiscountsForCorpAcct(corpAcctModel.CorpAcctId.Value, corpAcctModel.DefaultDiscountPercent.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    RetailSlnCache.CorpAcctModels.Add(ApplicationDataContext.GetCorpAcct(corpAcctModel.CorpAcctId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId));
                 }
                 else
                 {
@@ -856,7 +857,7 @@ namespace RetailSlnBusinessLayer
             return categoryItemHierListModel;
         }
         // GET : OrderList
-        public List<OrderListModel> OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public OrderListModel OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -895,18 +896,22 @@ namespace RetailSlnBusinessLayer
                         break;
                 }
                 List<OrderHeader> orderHeaders = ApplicationDataContext.GetOrdersForList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                List<OrderListModel> orderListModels = new List<OrderListModel>();
+                OrderListModel orderListModel = new OrderListModel
+                {
+                    OrderHeaders = new List<OrderHeader>(),
+                    OrderHeaderSummarys = new List<OrderHeaderSummary>(),
+                };
                 foreach (var orderHeader in orderHeaders)
                 {
-                    orderListModels.Add
-                    (
-                        new OrderListModel
-                        {
+                    //orderListModels.Add
+                    //(
+                    //    new OrderListModel
+                    //    {
 
-                        }
-                    );
+                    //    }
+                    //);
                 }
-                return orderListModels;
+                return orderListModel;
             }
             catch (Exception exception)
             {
@@ -967,6 +972,170 @@ namespace RetailSlnBusinessLayer
                 }
             }
             return searchKeywordListModel;
+        }
+        // GET: UserAddEdit
+        public UserAddEditModel UserAddEdit(string personIdParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            UserAddEditModel userAddEditModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                if (long.TryParse(personIdParm, out long personId))
+                {
+                    ApplicationDataContext.OpenSqlConnection();
+                    userAddEditModel = null;//ApplicationDataContext.GetCorpAcctCorpAcctLocation(corpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (userAddEditModel == null)
+                    {
+                        userAddEditModel = new UserAddEditModel
+                        {
+                            //CorpAcctTypeId = CorpAcctTypeEnum.Individual,
+                            //CorpAcctLocationModels = new List<CorpAcctLocationModel>
+                            //{
+                            //    new CorpAcctLocationModel
+                            //    {
+                            //        DemogInfoAddressModel = new DemogInfoAddressModel
+                            //        {
+
+                            //        },
+                            //    },
+                            //},
+                        };
+                    }
+                    userAddEditModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    };
+                }
+                else
+                {
+                    userAddEditModel = new UserAddEditModel
+                    {
+                        AlternateTelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
+                        TelephoneCountryId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Currency", "DemogInfoCountryId")),
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    };
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                userAddEditModel = new UserAddEditModel
+                {
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            $"Error while loading Corp Acct {personIdParm} from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return userAddEditModel;
+        }
+        // POST: UserAddEdit
+        public void UserAddEdit(ref UserAddEditModel userAddEditModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                if (modelStateDictionary.IsValid)
+                {
+                    ApplicationDataContext.OpenSqlConnection();
+                    //ApplicationDataContext.AddCorpAcct(corpAcctModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //ApplicationDataContext.AddItemDiscountsForCorpAcct(corpAcctModel.CorpAcctId.Value, corpAcctModel.DefaultDiscountPercent.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    userAddEditModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET: UserList
+        public UserListModel UserList(string pageNumParm, string rowCountParm, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            UserListModel userListModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                int.TryParse(pageNumParm, out int pageNum);
+                pageNum = pageNum == 0 ? 1 : pageNum;
+                int.TryParse(rowCountParm, out int rowCount);
+                rowCount = rowCount == 0 ? 50 : rowCount;
+                ApplicationDataContext.OpenSqlConnection();
+                userListModel = new UserListModel
+                {
+                    PersonExtn1Models = ApplicationDataContext.GetPersonExtn1s((pageNum - 1) * rowCount, rowCount, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                userListModel = new UserListModel
+                {
+                    PersonExtn1Models = null,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading user(s) from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return userListModel;
         }
         //#region
         ////GET Category

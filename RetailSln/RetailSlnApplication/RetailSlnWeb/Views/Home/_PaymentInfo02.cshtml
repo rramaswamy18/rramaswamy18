@@ -62,15 +62,15 @@
                     <span style="color: #000000; font-size: 12px;">@((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())</span>
                 </div>
                 <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
-                    <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" name="ApproverSignatureTextValue" @*onchange="javascript: ApproverSignatureTextValue_onchange2();" oninput="javascript: ApproverSignatureTextValue_oninput2();"*@ style="float: left; width: 63%;" type="text" />
-                    <button class="btn btn-primary" id="btnLoadApproverSignatureTextValue" onclick="javascript: return btnLoadApproverSignatureTextValue_onclick();">Load</button>
+                    <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" name="ApproverSignatureTextValue" onchange="javascript: ApproverSignatureTextValue_onchange1();" oninput="javascript: ApproverSignatureTextValue_oninput1();" style="float: left; width: 81%;" type="text" />
+                    @*<button class="btn btn-primary" id="btnLoadApproverSignatureTextValue" onclick="javascript: return btnLoadApproverSignatureTextValue_onclick();">Load</button>*@
                     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, "", new { id = "ApproverSignatureTextValue-error" }).ToHtmlString()))
                 </div>
             </div>
             var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
             for (int i = 1; i < codeDataModels.Count; i++)
             {
-                <div style="display: table-row; padding: 0px; width: 100%;">
+                <div id="ApproverSignatureTextIdValue@(i)" style="display: none; padding: 0px; width: 100%;">
                     <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 0px; text-align: right; vertical-align: top; width: 36%;">
                         <label class="radio-inline" style="font-weight: bold; padding: 0px;">
                             <input id="ApproverSignatureTextId@(i)" name="ApproverSignatureTextId" type="radio" value="@codeDataModels[i].CodeDataNameId">
@@ -144,7 +144,7 @@
                 @if (!string.IsNullOrWhiteSpace(Model.DeliveryMethodModel.DeliveryMethodDesc1))
                 {
                     <br />
-                    <span style="color: #ff0000;">@Model.DeliveryMethodModel.DeliveryMethodDesc1</span>
+                    <span style="color: #0000ff;">@Model.DeliveryMethodModel.DeliveryMethodDesc1</span>
                 }
             </div>
         </div>
@@ -155,7 +155,7 @@
             <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
                 @Model.PaymentModeModel.PaymentModeDesc
                 <br />
-                <span style="color: #ff0000;">@Model.PaymentModeModel.PaymentModeDesc1</span>
+                <span style="color: #0000ff;">@Model.PaymentModeModel.PaymentModeDesc1</span>
             </div>
         </div>
     </div>

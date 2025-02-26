@@ -1,0 +1,23 @@
+﻿@using RetailSlnModels
+@model UserAddEditModel
+@{
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    //mobileDevice = true;
+}
+<style>
+    #EmailAddress-error, #TelephoneCountryId-error, #TelephoneNumber-error, #FirstName-error, #LastName-error,
+    #CorpAcctId-error, #UserTypeId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+    }
+</style>
+@if (mobileDevice)
+{
+    @Html.Partial("_UserAddEditData2", Model)
+}
+else
+{
+    @Html.Partial("_UserAddEditData1", Model)
+}

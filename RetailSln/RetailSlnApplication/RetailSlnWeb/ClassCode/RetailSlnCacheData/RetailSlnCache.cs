@@ -23,7 +23,7 @@ namespace RetailSlnCacheData
     public static class RetailSlnCache
     {
         #region Properties
-        public static BusinessInfoModel BusinessInfoModel { set; get; }
+        public static ApiBusinessInfoModel ApiBusinessInfoModel { set; get; }
         public static List<DemogInfoAddressModel> BusinessDemogInfoAddressModels { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
         public static List<CategoryHierModel> CategoryHierModels { set; get; }
@@ -112,7 +112,7 @@ namespace RetailSlnCacheData
             PaymentMethods = retailSlnInitModel.PaymentMethods;
             DeliveryDemogInfoCountrys = retailSlnInitModel.DeliveryCountrys;
             DeliveryDemogInfoCountryStates = retailSlnInitModel.DeliveryCountryStates;
-            BusinessInfoModel = retailSlnInitModel.BusinessInfoModel;
+            ApiBusinessInfoModel = retailSlnInitModel.BusinessInfoModel;
             PickupLocationModels = retailSlnInitModel.PickupLocationModels;
         }
         private static void BuildCacheModels(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -444,7 +444,7 @@ namespace RetailSlnCacheData
                     deliveryStates.Add(new KeyValuePair<long, string>(deliveryDemogInfoCountryModel.DemogInfoCountryId, demogInfoSubDivisionModel.SubDivisionDesc));
                 }
             }
-            retailSlnInitModel.BusinessInfoModel = new BusinessInfoModel
+            retailSlnInitModel.BusinessInfoModel = new ApiBusinessInfoModel
             {
                 ClientId = clientId,
                 BaseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", ""),

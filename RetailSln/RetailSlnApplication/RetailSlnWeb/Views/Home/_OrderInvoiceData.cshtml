@@ -26,8 +26,8 @@
 </style>
 <table style="padding: 5px; width: 100%;">
     <tr>
-        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
-            <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" />
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; width: 108px;">
+            <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" style="height: 97px; width: 97px;" title="@imageTitle" />
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
             <span style="color: #000000; font-size: 18px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">@Model.OrderSummaryModel.InvoiceType</span>
@@ -37,22 +37,18 @@
             @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressLine1", "")
             <br style="clear: both;" />
             @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCountryName", "")
-            <br style="clear: both;" />
-            <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
-            <br style="clear: both;" />
-            <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/SMSIcon3_Small.png" />
-            <br style="clear: both;" />
-            <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
-            <br style="clear: both;" />
             @if (!string.IsNullOrWhiteSpace(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentNumber")))
             {
+                <br style="clear: both;" />
                 @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentNumber"))
             }
         </td>
-        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap;">
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
             Invoice# @Model.OrderSummaryModel.OrderHeaderId
             <br style="clear: both;" />
             Inv Date @DateTime.Parse(Model.OrderSummaryModel.OrderDateTime).ToString("MMM-dd-yyyy")
+            <br style="clear: both;" />
+            <a href="mailto: @Model.OrderSummaryModel.EmailAddress" style="text-decoration: underline;">@Model.OrderSummaryModel.EmailAddress</a>
             <br style="clear: both;" />
             Prim. <a href="tel: @("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)</a>
             <br style="clear: both;" />
@@ -61,21 +57,17 @@
             {
                 <a href="tel: @("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)</a>
             }
-            @if (Model.OrderSummaryModel.InvoiceTypeId == 100)
-            {
-                <span style="color: #000000;">
-                    <br style="clear: both;" />
-                    Amount: &nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted
-                    <br style="clear: both;" />
-                    Balance: &nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted
-                </span>
-            }
-            @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentReferenceNumber))
-            {
-                <br style="clear: both;" />
-                <br style="clear: both;" />
-                @Html.Raw(Model.PaymentDataModel.PaymentReferenceNumber)
-            }
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; width: 108px;">
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
+            <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
+            <br style="clear: both;" />
+            <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/SMSIcon3_Small.png" />
+            <br style="clear: both;" />
+            <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
             <br style="clear: both;" />
             <br style="clear: both;" />
             @Model.PaymentModeModel.PaymentModeDesc
@@ -98,11 +90,7 @@
                 }
             }
         </td>
-    </tr>
-    <tr>
-        <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
-            @Model.OrderSummaryModel.EmailAddress
-            <br style="clear: both;" />
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
             @Model.OrderSummaryModel.UserFullName
             <br style="clear: both;" />
             @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
@@ -117,9 +105,7 @@
                 @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
             }
             <br style="clear: both;" />
-            @Model.DeliveryDataModel.DeliveryAddressModel.CityName
-            <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
+            @(Model.DeliveryDataModel.DeliveryAddressModel.CityName + " " + Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
             <br style="clear: both;" />
             @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
             @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum))
@@ -129,13 +115,6 @@
             }
         </td>
     </tr>
-    @*
-        <tr>
-            <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
-                Invoice Amount:&nbsp;<span style="color: #000000; font-weight: bold;">@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords</span>
-            </td>
-        </tr>
-    *@
     <tr>
         <td colspan="4" style="border-collapse: collapse; border-style: none; border-width: 0px;">
             @Html.Partial("_ShoppingCartEmailBody1", Model)
@@ -147,7 +126,7 @@
             CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "").First(x => x.CodeDataNameId == Model.OrderApprovalModel.ApproverSignatureTextId);
             <tr>
                 <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; word-wrap: break-word;">
-                        <span style="color: #000000; font-family: @(codeDataModel.CodeDataNameDesc); font-size: @(codeDataModel.CodeDataDesc4); font-weight: bold;">@Model.OrderApprovalModel.ApproverSignatureTextValue</span>
+                    <span style="color: #000000; font-family: @(codeDataModel.CodeDataNameDesc); font-size: @(codeDataModel.CodeDataDesc4); font-weight: bold;">@Model.OrderApprovalModel.ApproverSignatureTextValue</span>
                     <br style="clear: both;" />
                     @DateTime.Parse(Model.OrderApprovalModel.ApprovedDateTime).ToString("MMM-dd-yyyy h:mm tt")
                     <br style="clear: both;" />

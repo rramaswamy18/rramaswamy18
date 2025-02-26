@@ -85,40 +85,43 @@
                 </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="display: table-cell; padding: 0px; width: 50%;">
-                <div style="display: table-row; padding: 0px; width: 100%;">
-                    <div style="color: #0000ff; font-weight: bold; display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 50%;">
-                        Sign as:
-                        <br style="clear: both;" />
-                        <span style="color: #000000; font-size: 12px;">@Model.OrderSummaryModel.FirstName.Trim()</span>
-                        <br style="clear: both;" />
-                        <span style="color: #000000; font-size: 12px;">@Model.OrderSummaryModel.LastName.Trim()</span>
+                @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
+                {
+                    <div style="display: table-row; padding: 0px; width: 100%;">
+                        <div style="color: #0000ff; font-weight: bold; display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 50%;">
+                            Sign as:
+                            <br style="clear: both;" />
+                            <span style="color: #000000; font-size: 12px;">@Model.OrderSummaryModel.FirstName.Trim()</span>
+                            <br style="clear: both;" />
+                            <span style="color: #000000; font-size: 12px;">@Model.OrderSummaryModel.LastName.Trim()</span>
+                        </div>
+                        <div style="font-weight: bold; display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 50%;">
+                            <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" name="ApproverSignatureTextValue" onchange="javascript: ApproverSignatureTextValue_onchange2();" oninput="javascript: ApproverSignatureTextValue_oninput2();" style="width: 90%;" type="text" />
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, "", new { id = "ApproverSignatureTextValue-error" }).ToHtmlString()))
+                        </div>
                     </div>
-                    <div style="font-weight: bold; display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 50%;">
-                        <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" name="ApproverSignatureTextValue" onchange="javascript: ApproverSignatureTextValue_onchange2();" oninput="javascript: ApproverSignatureTextValue_oninput2();" style="width: 90%;" type="text" />
-                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, "", new { id = "ApproverSignatureTextValue-error" }).ToHtmlString()))
-                    </div>
-                </div>
-                <div style="display: table-row; padding: 0px; width: 100%;">
-                    <div style="color: #0000ff; font-weight: bold; display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 50%;">
-                        Select signature:
-                    </div>
-                    <div style="font-weight: bold; display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 50%;">
-                        @{
-                            var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
-                            <select class="form-control" id="ApproverSignatureTextId" name="ApproverSignatureTextId" onchange="javascript: return ApproverSignatureTextId_onchange2();" style="width: 90%;">
-                                <option value="">--- Select Signature ---</option>
-                                @foreach (var codeDataModel in codeDataModels)
-                                {
-                                    if (codeDataModel.CodeDataNameId > 0)
+                    <div style="display: table-row; padding: 0px; width: 100%;">
+                        <div style="color: #0000ff; font-weight: bold; display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 50%;">
+                            Select signature:
+                        </div>
+                        <div style="font-weight: bold; display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 50%;">
+                            @{
+                                var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
+                                <select class="form-control" id="ApproverSignatureTextId" name="ApproverSignatureTextId" onchange="javascript: return ApproverSignatureTextId_onchange2();" style="width: 90%;">
+                                    <option value="">--- Select Signature ---</option>
+                                    @foreach (var codeDataModel in codeDataModels)
                                     {
-                                        <option style="font-family: @(codeDataModel.CodeDataDesc0); font-size: @(codeDataModel.CodeDataDesc1); font-weight: bold;" value="@codeDataModel.CodeDataNameId"></option>
+                                        if (codeDataModel.CodeDataNameId > 0)
+                                        {
+                                            <option style="font-family: @(codeDataModel.CodeDataDesc0); font-size: @(codeDataModel.CodeDataDesc1); font-weight: bold;" value="@codeDataModel.CodeDataNameId"></option>
+                                        }
                                     }
-                                }
-                            </select>
-                        }
-                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextId, "", new { id = "ApproverSignatureTextId-error" }).ToHtmlString()))
+                                </select>
+                            }
+                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextId, "", new { id = "ApproverSignatureTextId-error" }).ToHtmlString()))
+                        </div>
                     </div>
-                </div>
+                }
                 <div style="display: table-row; padding: 0px; width: 100%;">
                     <div style="color: #0000ff; font-weight: bold; display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 50%;">
                         Delivery Method:

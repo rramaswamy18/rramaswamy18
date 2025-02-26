@@ -10,7 +10,7 @@ namespace RetailSlnModels
 {
     public class RetailSlnInitModel
     {
-        public BusinessInfoModel BusinessInfoModel { set; get; }
+        public ApiBusinessInfoModel BusinessInfoModel { set; get; }
         public List<DemogInfoAddressModel> BusinessDemogInfoAddressModels { set; get; }
         public List<CategoryModel> CategoryModels { set; get; }
         public CultureInfo CurrencyCultureInfo { set; get; }

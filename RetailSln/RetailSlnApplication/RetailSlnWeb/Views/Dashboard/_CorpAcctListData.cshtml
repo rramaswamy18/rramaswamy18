@@ -76,7 +76,7 @@
         index++;
         <tr>
             <td class="dataStyle text-right">
-                @index
+                @(++index)
             </td>
             <td class="dataStyle text-right">
                 @if (corpAcctModel.CorpAcctId > 0)
@@ -94,7 +94,7 @@
             <td class="dataStyle text-right">
                 @if (corpAcctModel.CorpAcctId > 0)
                 {
-                    <a class="hrefStyle" href="javascript: void(0);" onclick="menuLink_onclick('@Url.Action("CorpAcctLocationList", "Dashboard")', '?id=@corpAcctModel.CorpAcctId');">
+                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: menuLink_onclick('@Url.Action("CorpAcctLocationList", "Dashboard")', '?id=@corpAcctModel.CorpAcctId');">
                         Locn(s)
                     </a>
                 }

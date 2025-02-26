@@ -1,0 +1,82 @@
+﻿@using RetailSlnModels
+@model UserListModel
+@{
+    int index = 0;
+}
+<style>
+    .dataStyle {
+        font-family: Arial;
+        font-size: 12px;
+    }
+
+    .hrefStyle {
+        color: #0000ff;
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <tr>
+        <th class="text-left" colspan="2">
+            <a href="javascript: void(0);" onclick="javascript: addEditLink_onclick('@Url.Action("UserAddEdit", "Dashboard")', '');">Add New</a>
+        </th>
+        <th class="text-left" colspan="15" style="font-family: Arial; font-size: 18px; font-weight: bold; vertical-align: top;">
+            User List
+        </th>
+    </tr>
+    <tr>
+        <th class="text-right">
+            #
+        </th>
+        <th class="text-right"></th>
+        <th class="dataStyle text-left">
+            Corp Acct Name
+        </th>
+        <th class="dataStyle text-left">
+            First Name
+        </th>
+        <th class="dataStyle text-left">
+            Last Name
+        </th>
+        <th class="dataStyle text-left">
+            Email
+        </th>
+        <th class="dataStyle text-right">
+            Order#
+        </th>
+    </tr>
+    @foreach (var personExtn1Model in Model.PersonExtn1Models)
+    {
+        if (personExtn1Model.CorpAcctId > 0)
+        {
+            <tr>
+                <td class="dataStyle text-right">
+                    @(++index).
+                </td>
+                <td class="dataStyle text-center">
+                    @if (personExtn1Model.OrderCount == 0)
+                    {
+                        <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: menuLink_onclick('@Url.Action("Person", "Dashboard")', '?id=@personExtn1Model.PersonId'">Edit</a>
+                    }
+                </td>
+                <td class="dataStyle text-left">
+                    @personExtn1Model.CorpAcctModel.CorpAcctName
+                </td>
+                <td class="dataStyle text-left">
+                    @personExtn1Model.PersonModel.FirstName
+                </td>
+                <td class="dataStyle text-left">
+                    @personExtn1Model.PersonModel.LastName
+                </td>
+                <td class="dataStyle text-left">
+                    @personExtn1Model.PersonModel.AspNetUserModel.Email
+                </td>
+                <td class="dataStyle text-right">
+                    @personExtn1Model.OrderCount
+                </td>
+            </tr>
+        }
+    }
+</table>

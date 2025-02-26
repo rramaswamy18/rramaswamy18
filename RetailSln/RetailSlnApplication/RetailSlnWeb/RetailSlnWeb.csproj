@@ -169,6 +169,7 @@
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL10.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL20Backup.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL20.cs" />
+    <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL30Backup.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL30.cs" />
     <Compile Include="ClassCode\RetailSlnCacheBusinessLayer\RetailSlnCacheBL.cs" />
     <Compile Include="ClassCode\RetailSlnCacheData\RetailSlnCache.cs" />
@@ -213,7 +214,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApiShoppingCartSummaryModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\BusinessInfoModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ApiBusinessInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryHierModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemHierModel.cs" />
@@ -310,10 +311,12 @@
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\UserAddEditModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\UserListModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\GeneralUtilityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RetailApiBackupController.cs" />
     <Compile Include="Controllers\RetailApiController.cs" />
     <Compile Include="Controllers\RetailSlnController.cs" />
     <Compile Include="Global.asax.cs">
@@ -417,7 +420,9 @@
     <Content Include="ClientSpecific\3_RetailSln\Views\Shared\_SignatureTemplate.cshtml" />
     <Content Include="ClientSpecific\3_RetailSln\Views\Shared\_SignatureTemplateEmail.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Category_Backup.7z" />
-    <None Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_000.webp" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_000.webp" />
+    <None Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_000_20250225.webp" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\Image_000_main.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster1.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster10.png" />
     <Content Include="ClientSpecific\97_DivineBija.in\Documents\Images\ItemMaster\ItemMaster100.png" />
@@ -1221,6 +1226,7 @@
     <Content Include="Include\jquery-te-1.4.0.min.js" />
     <Content Include="Include\jquery-te.png" />
     <Content Include="Include\Site.css" />
+    <Content Include="Include\StyleSheet1.css" />
     <Content Include="Include\TextEditor.css" />
     <Content Include="Invoices\%40Temp.txt" />
     <Content Include="libman.json" />
@@ -1288,7 +1294,7 @@
     <Content Include="Include\orderItemCode0.js" />
     <Content Include="Include\orderItemCode1.js" />
     <Content Include="Include\searchDataCode.js" />
-    <Content Include="Include\StyleSheet1.css" />
+    <Content Include="Include\StyleSheet1_20250225.css" />
     <Content Include="Include\StyleSheet1.min.css" />
     <Content Include="Include\StyleSheet2.css" />
     <Content Include="Include\StyleSheet2.min.css" />
@@ -1332,9 +1338,9 @@
     <Content Include="Views\Shared\Forbidden.cshtml" />
     <Content Include="Views\Shared\Unauthorized.cshtml" />
     <Content Include="Views\Shared\_Error.cshtml" />
-    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Shared\_Footer_20250225.cshtml" />
     <Content Include="Views\Shared\_FooterMenu.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Layout_20250225.cshtml" />
     <Content Include="Views\Shared\_LoadingModal.cshtml" />
     <Content Include="Views\Shared\_Modal.cshtml" />
     <Content Include="Views\Shared\_ResponseObject.cshtml" />
@@ -1541,8 +1547,6 @@
     <Content Include="Views\Home\_CheckoutGuest.cshtml" />
     <Content Include="Views\Home\_ContactUsInfo2.cshtml" />
     <Content Include="Views\Home\_ContactUsData2.cshtml" />
-    <Content Include="Views\Home\_UserAddEditEmailBody.cshtml" />
-    <Content Include="Views\Home\_UserAddEditEmailSubject.cshtml" />
     <Content Include="Views\Shared\_LayoutProd.cshtml" />
     <Content Include="Views\Home\_SearchForItem.cshtml" />
     <Content Include="Views\Home\OrderApproval.cshtml" />
@@ -1565,9 +1569,6 @@
     <Content Include="Views\Dashboard\_SearchKeyword.cshtml" />
     <Content Include="Views\Dashboard\_SearchKeywordData.cshtml" />
     <Content Include="Views\Home\_OrderItem1.cshtml" />
-    <Content Include="Views\Home\_UserAddEdit.cshtml" />
-    <Content Include="Views\Home\_UserAddEdit1.cshtml" />
-    <Content Include="Views\Home\_UserAddEdit2.cshtml" />
     <Content Include="Views\Home\_OrderReceipt.cshtml" />
     <Content Include="Views\Dashboard\_CorpAcct.cshtml" />
     <Content Include="Views\Dashboard\_CorpAcctList.cshtml" />
@@ -1584,6 +1585,18 @@
     <Content Include="Views\Home\_PaymentInfo01.cshtml" />
     <Content Include="Views\Home\_PaymentInfo02.cshtml" />
     <Content Include="Views\Dashboard\_OrderItem3.cshtml" />
+    <Content Include="Views\Dashboard\_UserList.cshtml" />
+    <Content Include="Views\Dashboard\_UserListData.cshtml" />
+    <Content Include="Views\Dashboard\_UserAddEdit.cshtml" />
+    <Content Include="Views\Dashboard\_UserAddEditData1.cshtml" />
+    <Content Include="Views\Dashboard\_UserAddEditData2.cshtml" />
+    <Content Include="Views\Dashboard\_UserAddEditEmailBody.cshtml" />
+    <Content Include="Views\Dashboard\_UserAddEditEmailSubject.cshtml" />
+    <Content Include="Views\Dashboard\_UserAddEditData.cshtml" />
+    <Content Include="Views\Dashboard\_OrderList.cshtml" />
+    <Content Include="Views\Dashboard\_OrderListData.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

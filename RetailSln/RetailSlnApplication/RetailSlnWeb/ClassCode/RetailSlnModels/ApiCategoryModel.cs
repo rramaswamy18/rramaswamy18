@@ -13,17 +13,19 @@ namespace RetailSlnModels
 
         public long? ClientId { set; get; }
 
+        public bool AssignItem { set; get; }
+
         public bool AssignSubCategory { set; get; }
 
-        public bool AssignItem { set; get; }
+        public string CategoryDesc { set; get; }
 
         public string CategoryName { set; get; }
 
         public string CategoryNameDesc { set; get; }
 
-        public string CategoryDesc { set; get; }
-
         public CategoryStatusEnum? CategoryStatusId { set; get; }
+
+        public CategoryTypeEnum? CategoryTypeId { set; get; }
 
         public bool DefaultCategory { set; get; }
 

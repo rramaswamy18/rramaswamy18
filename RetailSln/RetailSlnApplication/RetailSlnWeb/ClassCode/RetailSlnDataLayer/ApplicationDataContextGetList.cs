@@ -336,10 +336,28 @@ namespace RetailSlnDataLayer
                         OrderApprovalRequired = (YesNoEnum)long.Parse(sqlDataReader["OrderApprovalRequired"].ToString()),
                         ShippingAndHandlingCharges = (YesNoEnum)long.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
                         TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
-                        DiscountDtlModels = new List<DiscountDtlModel>(),
                         StatusId = (YesNoEnum)long.Parse(sqlDataReader["StatusId"].ToString()),
                         CorpAcctLocationModels = new List<CorpAcctLocationModel>(),
+                        DiscountDtlModels = new List<DiscountDtlModel>(),
                     };
+                    //corpAcctModel = new CorpAcctModel
+                    //{
+                    //    CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                    //    ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                    //    CorpAcctKey = sqlDataReader["CorpAcctKey"].ToString(),
+                    //    CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                    //    CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
+                    //    CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
+                    //    CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
+                    //    CreditSale = (YesNoEnum)long.Parse(sqlDataReader["CreditSale"].ToString()),
+                    //    MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
+                    //    OrderApprovalRequired = (YesNoEnum)long.Parse(sqlDataReader["OrderApprovalRequired"].ToString()),
+                    //    ShippingAndHandlingCharges = (YesNoEnum)long.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                    //    TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
+                    //    DiscountDtlModels = new List<DiscountDtlModel>(),
+                    //    StatusId = (YesNoEnum)long.Parse(sqlDataReader["StatusId"].ToString()),
+                    //    CorpAcctLocationModels = new List<CorpAcctLocationModel>(),
+                    //};
                 }
                 sqlDataReader.Close();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -1838,6 +1856,101 @@ namespace RetailSlnDataLayer
                     }
                 }
                 return orderHeaders;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<PersonExtn1Model> GetPersonExtn1s(int offsetRows, int rowCount, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                //sqlStmt += "SELECT * FROM ArchLib.Person INNER JOIN ArchLib.AspNerUser ON Person.AspNerUserId = AspNerUser.AspNerUserId ORDER BY CorpAcctId" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               Person.PersonId" + Environment.NewLine;
+                sqlStmt += "              ,Person.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,Person.AspNetUserId" + Environment.NewLine;
+                sqlStmt += "              ,Person.FirstName" + Environment.NewLine;
+                sqlStmt += "              ,Person.LastName" + Environment.NewLine;
+                sqlStmt += "              ,Person.MiddleName" + Environment.NewLine;
+                sqlStmt += "              ,Person.StatusId" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.AlternateTelephoneCountryId" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.AlternateTelephoneNumber" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.AspNetRoleUserTypeId" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.Email" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.PhoneNumber" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.TelephoneCountryId" + Environment.NewLine;
+                //sqlStmt += "              ,PersonExtn1.PersonExtn1Id" + Environment.NewLine;
+                sqlStmt += "              ,PersonExtn1.CorpAcctId" + Environment.NewLine;
+                sqlStmt += "              ,CorpAcct.CorpAcctName" + Environment.NewLine;
+                sqlStmt += "              ,ISNULL(OrderHeaderCount.OrderCount, 0) AS OrderCount" + Environment.NewLine;
+                sqlStmt += "          FROM ArchLib.Person" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser" + Environment.NewLine;
+                sqlStmt += "            ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetRole" + Environment.NewLine;
+                sqlStmt += "            ON AspNetUser.AspNetRoleUserTypeId = AspNetRole.UserTypeId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
+                sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CorpAcct" + Environment.NewLine;
+                sqlStmt += "            ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId" + Environment.NewLine;
+                sqlStmt += "     LEFT JOIN " + Environment.NewLine;
+                sqlStmt += "              (" + Environment.NewLine;
+                sqlStmt += "               SELECT OrderHeader.CreatedForPersonId, COUNT(*) AS OrderCount FROM RetailSlnSch.OrderHeader GROUP BY OrderHeader.CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "              ) AS OrderHeaderCount" + Environment.NewLine;
+                sqlStmt += "            ON PersonExtn1.PersonId = OrderHeaderCount.CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "      ORDER BY " + Environment.NewLine;
+                sqlStmt += "               CorpAcct.CorpAcctName" + Environment.NewLine;
+                sqlStmt += "              ,Person.FirstName" + Environment.NewLine;
+                sqlStmt += "              ,Person.LastName" + Environment.NewLine;
+                //sqlStmt += "               " + Environment.NewLine;
+                //sqlStmt += "               Demog." + Environment.NewLine;
+                #endregion
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<PersonExtn1Model> personExtn1Models = new List<PersonExtn1Model>();
+                while (sqlDataReader.Read())
+                {
+                    personExtn1Models.Add
+                    (
+                        new PersonExtn1Model
+                        {
+                            //PersonExtn1Id = long.Parse(sqlDataReader["PersonExtn1Id"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                            OrderCount = long.Parse(sqlDataReader["OrderCount"].ToString()),
+                            CorpAcctModel = new CorpAcctModel
+                            {
+                                CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
+                            },
+                            PersonModel = new PersonModel
+                            {
+                                FirstName = sqlDataReader["FirstName"].ToString(),
+                                LastName = sqlDataReader["LastName"].ToString(),
+                                StatusId = (GenericStatusEnum)long.Parse(sqlDataReader["StatusId"].ToString()),
+                                AspNetUserModel = new AspNetUserModel
+                                {
+                                    AspNetUserId = sqlDataReader["AspNetUserId"].ToString(),
+                                    Email = sqlDataReader["Email"].ToString(),
+                                    AspNetUserRoleModel = new AspNetUserRoleModel
+                                    {
+
+                                    },
+                                },
+                            },
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return personExtn1Models;
             }
             catch (Exception exception)
             {

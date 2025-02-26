@@ -21,7 +21,7 @@ namespace RetailSlnWeb.ClassCode
                         Error = "NotAuthorized",
                         //LogOnUrl = urlHelper.Action("Index", "Home"),
                         ReturnUrl = HttpContext.Current.Request.Url.AbsolutePath,
-                        UnauthorizedUrl = "Home/Unauthorized",
+                        UnauthorizedUrl = "Home/LoginUserProf",
                         UrlAbsoluteUri = HttpContext.Current.Request.Url.AbsoluteUri,
                         UrlAbsolutePath = HttpContext.Current.Request.Url.AbsolutePath,
                         UrlHost = HttpContext.Current.Request.Url.Host,

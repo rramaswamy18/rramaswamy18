@@ -6,7 +6,7 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class BusinessInfoModel
+    public class ApiBusinessInfoModel
     {
         public long ClientId { set; get; }
         public string BaseUrl { set; get; }

@@ -38,8 +38,6 @@ namespace RetailSlnWeb.Controllers
         }
 
         // GET: CategoryHierList
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpGet]
         public ActionResult CategoryHierList(string id)
         {
@@ -62,8 +60,6 @@ namespace RetailSlnWeb.Controllers
         }
 
         // GET: CategoryList
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpGet]
         public ActionResult CategoryList(string id)
         {
@@ -85,6 +81,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: CorpAcct
         [HttpGet]
         public ActionResult CorpAcct(string id)
         {
@@ -116,6 +113,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: CorpAcct
         [HttpPost]
         public ActionResult CorpAcct(CorpAcctModel corpAcctModel)
         {
@@ -162,6 +160,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: CorpAcctList
         [HttpGet]
         public ActionResult CorpAcctList(string pageNum, string rowCount)
         {
@@ -193,6 +192,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: CorpAcctLocationList
         [HttpGet]
         public ActionResult CorpAcctLocationList(string id)
         {
@@ -224,6 +224,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: CorpAcctLocation
         [HttpGet]
         public ActionResult CorpAcctLocation(string id, string corpAcctId)
         {
@@ -255,6 +256,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: CorpAcctLocation
         [HttpPost]
         public ActionResult CorpAcctLocation(/*CorpAcctLocationModel corpAcctLocationModel*/FormCollection formCollection)
         {
@@ -397,8 +399,6 @@ namespace RetailSlnWeb.Controllers
         }
 
         // GET: ItemMasterList
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpGet]
         public ActionResult ItemMasterList(string pageNum, string rowCount)
         {
@@ -431,8 +431,6 @@ namespace RetailSlnWeb.Controllers
         }
 
         // GET: ItemMasterInfo
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpGet]
         public ActionResult ItemMasterInfo(string id)
         {
@@ -465,8 +463,6 @@ namespace RetailSlnWeb.Controllers
         }
 
         // POST: ItemMasterInfo
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpPost]
         public ActionResult ItemMasterInfo(ItemMasterModel itemMasterModel)
         {
@@ -515,6 +511,29 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: ItemHierList
+        [HttpGet]
+        public ActionResult ItemHierList(string id, string assignedPageNum, string assignedRowCount, string pageNum, string rowCount)
+        {
+            ViewData["ActionName"] = "ItemHierList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            CategoryItemHierListModel itemHierListModel = retailSlnBL.ItemHierList(long.Parse(id), int.Parse(assignedPageNum), int.Parse(assignedRowCount), int.Parse(pageNum), int.Parse(rowCount), clientId, ipAddress, execUniqueId, loggedInUserId);
+            success = true;
+            processMessage = "SUCCESS!!!";
+            htmlString = archLibBL.ViewToHtmlString(this, "_ItemHier", itemHierListModel);
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: OrderCreatedFor
         [HttpGet]
         public ActionResult OrderCreatedFor(string id, string locnId)
         {
@@ -558,6 +577,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: OrderItem
         [HttpGet]
         public ActionResult OrderItem(string id, string pageNum, string rowCount)
         {
@@ -603,6 +623,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: OrderItemData
         [HttpGet]
         public ActionResult OrderItemData(string id, string pageNum, string rowCount)
         {
@@ -646,6 +667,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: OrderList
         [HttpGet]
         public ActionResult OrderList(string id, string rowCount)
         {
@@ -665,8 +687,8 @@ namespace RetailSlnWeb.Controllers
                 processMessage = "SUCCESS!!!";
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
-                List<OrderListModel> orderListModels = retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderList", orderListModels);
+                OrderListModel orderListModel = retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderList", orderListModel);
                 actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -688,33 +710,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: ItemHierList
-        //[AjaxAuthorize]
-        //[Authorize]
-        [HttpGet]
-        public ActionResult ItemHierList(string id, string assignedPageNum, string assignedRowCount, string pageNum, string rowCount)
-        {
-            ViewData["ActionName"] = "ItemHierList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
-            CategoryItemHierListModel itemHierListModel = retailSlnBL.ItemHierList(long.Parse(id), int.Parse(assignedPageNum), int.Parse(assignedRowCount), int.Parse(pageNum), int.Parse(rowCount), clientId, ipAddress, execUniqueId, loggedInUserId);
-            success = true;
-            processMessage = "SUCCESS!!!";
-            htmlString = archLibBL.ViewToHtmlString(this, "_ItemHier", itemHierListModel);
-            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
-
         // GET: SearchKeywordList
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpGet]
         public ActionResult SearchKeywordList(string pageNum, string rowCount)
         {
@@ -744,6 +740,134 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: UserAddEdit
+        [HttpGet]
+        public ActionResult UserAddEdit(string id)
+        {
+            ViewData["ActionName"] = "UserAddEdit";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                success = true;
+                processMessage = "SUCCESS!!!";
+                UserAddEditModel userAddEditModel = retailSlnBL.UserAddEdit(id, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_UserAddEdit", userAddEditModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Error while loading User for Add/Edit";
+            }
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // POST: UserAddEdit
+        [HttpPost]
+        public ActionResult UserAddEdit(UserAddEditModel userAddEditModel)
+        {
+            ViewData["ActionName"] = "UserAddEdit";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            //int x = 1, y = 0, z = x / y;
+            try
+            {
+                //int a1 = 1, a2 = 0, a3 = a1 / a2;
+                ModelState.Clear();
+                TryValidateModel(userAddEditModel);
+                if (ModelState.IsValid)
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Valid Model");
+                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                    retailSlnBL.UserAddEdit(ref userAddEditModel, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                        UserListModel userListModel = retailSlnBL.UserList("1", "45", clientId, ipAddress, execUniqueId, loggedInUserId);
+                        success = true;
+                        processMessage = "SUCCESS!!!";
+                        htmlString = archLibBL.ViewToHtmlString(this, "_UserList", userListModel);
+                    }
+                    else
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Error while creating User");
+                        userAddEditModel.ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                        };
+                        success = false;
+                        processMessage = "ERROR???";
+                        htmlString = archLibBL.ViewToHtmlString(this, "_UserAddEditData", userAddEditModel);
+                    }
+                }
+                else
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Errors");
+                    userAddEditModel.ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                    };
+                    success = false;
+                    processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_UserAddEditData", userAddEditModel);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error occurred while saving User");
+                userAddEditModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "_UserAddEditData", userAddEditModel);
+            }
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: UserList
+        [HttpGet]
+        public ActionResult UserList(string pageNum, string rowCount)
+        {
+            ViewData["ActionName"] = "UserList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            UserListModel userListModel = retailSlnBL.UserList(pageNum, rowCount, clientId, ipAddress, execUniqueId, loggedInUserId);
+            success = true;
+            processMessage = "SUCCESS!!!";
+            htmlString = archLibBL.ViewToHtmlString(this, "_UserList", userListModel);
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // Private: GetLoggedInUserId
         private string GetLoggedInUserId()
         {
             return ((SessionObjectModel)Session["SessionObject"]).AspNetUserId;

@@ -10,6 +10,22 @@
         <col style="width: 25%;" />
     </colgroup>
     <tr>
+        <th class="text-left" colspan="2" style="font-family: Arial; font-size: 18px; font-weight: bold; vertical-align: top;">
+            @{
+                string addEditLabel;
+                if (Model.PersonId == null)
+                {
+                    addEditLabel = "Add";
+                }
+                else
+                {
+                    addEditLabel = "Edit #" + Model.PersonId;
+                }
+            }
+            User (@addEditLabel)
+        </th>
+    </tr>
+    <tr>
         <td class="text-left" colspan="4">
             @{
                 var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("LoginType", "");

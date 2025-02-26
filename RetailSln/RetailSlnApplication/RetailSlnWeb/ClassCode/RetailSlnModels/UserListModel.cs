@@ -6,11 +6,9 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class ApiCategorysModel
+    public class UserListModel
     {
-        public string AspNetRoleName { set; get; }
-        public long ParentCategoryId { set; get; }
-        public List<ApiCategoryModel> ApiCategoryModels { set; get; }
+        public List<PersonExtn1Model> PersonExtn1Models { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

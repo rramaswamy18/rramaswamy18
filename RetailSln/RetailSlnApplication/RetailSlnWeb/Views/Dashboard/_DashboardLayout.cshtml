@@ -53,6 +53,19 @@
             alert("Implement window on load in your page");
         }
     </script>
+    <script type="text/javascript">
+        //session end
+        var sessionTimeoutWarning = @Session.Timeout - 1;
+
+        var sessionTimeout = parseInt(sessionTimeoutWarning) * 60 * 1000;
+        console.log("sessionTimeoutWarning", sessionTimeoutWarning, "sessionTimeout", sessionTimeout);
+        setTimeout(endSession, sessionTimeout);
+
+        function endSession() {
+            console.log("endSession()");
+            window.location = "@Url.Action("Logout", "Home")";
+        }
+    </script>
     @Html.Partial("_DashboardHeader")
     <div id="divScrollIntoView"></div>
     <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">

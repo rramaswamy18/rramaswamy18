@@ -16,18 +16,18 @@ namespace RetailSlnModels
 
         public long? ClientId { set; get; }
 
-        public bool AssignSubCategory { set; get; }
-
         public bool AssignItem { set; get; }
 
-        public string CategoryName { set; get; }
-
-        public string CategoryNameDesc { set; get; }
+        public bool AssignSubCategory { set; get; }
 
         [Display(Name = "Description")]
         [MaxLength(512)]
         [Required(ErrorMessage = "Please enter description for the category")]
         public string CategoryDesc { set; get; }
+
+        public string CategoryName { set; get; }
+
+        public string CategoryNameDesc { set; get; }
 
         [Display(Name = "Category Status")]
         public CategoryStatusEnum? CategoryStatusId { set; get; }
