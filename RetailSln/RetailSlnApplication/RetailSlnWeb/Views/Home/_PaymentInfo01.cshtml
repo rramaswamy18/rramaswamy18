@@ -10,10 +10,6 @@
     }
 </style>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    @if (Model.PaymentModeModel.PaymentModeId == PaymentModeEnum.PaymentGateway)
-    {
-        @Html.Partial("_PaymentInfo3")
-    }
     <div style="float: left; left: 50%; position: relative; ">
         <div style="float: left; left: -50%; position: relative; ">
             @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))

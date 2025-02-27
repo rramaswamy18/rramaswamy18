@@ -1793,7 +1793,7 @@ namespace RetailSlnDataLayer
         //        throw;
         //    }
         //}
-        public static List<OrderHeader> GetOrdersForList(long? corpAcctId, long? personId, long? createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static List<OrderListDataModel> GetOrdersForList(long? corpAcctId, long? personId, long? createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1827,35 +1827,35 @@ namespace RetailSlnDataLayer
                 //{
                 //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) WHERE OrderHeader.PersonId = " + personId + " ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
                 //}
-                List<OrderHeader> orderHeaders = new List<OrderHeader>();
-                OrderHeader orderHeader;
+                List<OrderListDataModel> orderListDataModels = new List<OrderListDataModel>();
+                //OrderHeader orderHeader;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 bool sqlDataReaderRead = sqlDataReader.Read();
-                while (sqlDataReaderRead)
-                {
-                    orderHeaders.Add
-                    (
-                        orderHeader = new OrderHeader
-                        {
-                            OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
-                            OrderDetails = new List<OrderDetail>(),
-                        }
-                    );
-                    while (sqlDataReaderRead && orderHeader.OrderHeaderId == long.Parse(sqlDataReader["OrderHeaderId"].ToString()))
-                    {
-                        orderHeader.OrderDetails.Add
-                        (
-                            new OrderDetail
-                            {
-                                OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
-                                OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
-                            }
-                        );
-                        sqlDataReaderRead = sqlDataReader.Read();
-                    }
-                }
-                return orderHeaders;
+                //while (sqlDataReaderRead)
+                //{
+                //    orderHeaders.Add
+                //    (
+                //        orderHeader = new OrderHeader
+                //        {
+                //            OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                //            OrderDetails = new List<OrderDetail>(),
+                //        }
+                //    );
+                //    while (sqlDataReaderRead && orderHeader.OrderHeaderId == long.Parse(sqlDataReader["OrderHeaderId"].ToString()))
+                //    {
+                //        orderHeader.OrderDetails.Add
+                //        (
+                //            new OrderDetail
+                //            {
+                //                OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
+                //                OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                //            }
+                //        );
+                //        sqlDataReaderRead = sqlDataReader.Read();
+                //    }
+                //}
+                return orderListDataModels;
             }
             catch (Exception exception)
             {

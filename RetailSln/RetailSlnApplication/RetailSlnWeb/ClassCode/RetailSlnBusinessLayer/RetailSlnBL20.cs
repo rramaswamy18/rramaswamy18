@@ -895,22 +895,10 @@ namespace RetailSlnBusinessLayer
                         createdForPersonId = -1;
                         break;
                 }
-                List<OrderHeader> orderHeaders = ApplicationDataContext.GetOrdersForList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 OrderListModel orderListModel = new OrderListModel
                 {
-                    OrderHeaders = new List<OrderHeader>(),
-                    OrderHeaderSummarys = new List<OrderHeaderSummary>(),
+                    OrderListDataModels = ApplicationDataContext.GetOrdersForList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId)
                 };
-                foreach (var orderHeader in orderHeaders)
-                {
-                    //orderListModels.Add
-                    //(
-                    //    new OrderListModel
-                    //    {
-
-                    //    }
-                    //);
-                }
                 return orderListModel;
             }
             catch (Exception exception)

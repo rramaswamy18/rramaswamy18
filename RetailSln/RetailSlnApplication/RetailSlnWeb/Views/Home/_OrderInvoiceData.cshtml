@@ -113,6 +113,11 @@
                 <br style="clear: both;" />
                 @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
             }
+            @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentReferenceNumber))
+            {
+                <br style="clear: both;" />
+                @Html.Raw(Model.PaymentDataModel.PaymentReferenceNumber)
+            }
         </td>
     </tr>
     <tr>

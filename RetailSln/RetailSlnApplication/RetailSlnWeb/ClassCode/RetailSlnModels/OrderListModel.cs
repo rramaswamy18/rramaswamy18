@@ -8,8 +8,7 @@ namespace RetailSlnModels
 {
     public class OrderListModel
     {
-        public List<OrderHeader> OrderHeaders { set; get; }
-        public List<OrderHeaderSummary> OrderHeaderSummarys { set; get; }
+        public List<OrderListDataModel> OrderListDataModels { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

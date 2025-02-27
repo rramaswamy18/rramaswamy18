@@ -23,6 +23,7 @@
             <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Complete Order</button>
             break;
         case PaymentModeEnum.PaymentGateway:
+            @Html.Partial("_PaymentInfo3")
             <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Payment Gateway</button>
             break;
         case PaymentModeEnum.ProcessCreditCard:

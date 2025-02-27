@@ -281,6 +281,7 @@
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderSummary.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderWIPModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderListDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderReceiptModel.cs" />
