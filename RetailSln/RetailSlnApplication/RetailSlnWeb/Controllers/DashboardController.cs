@@ -16,11 +16,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace RetailSlnWeb.Controllers
 {
     [ClassCode.AjaxAuthorize]
     [Authorize]
+    [OutputCache(Duration = 0, NoStore = true, VaryByParam = "*")]
     public class DashboardController : Controller
     {
         private readonly long clientId = long.Parse(Utilities.GetApplicationValue("ClientId"));
@@ -28,11 +30,10 @@ namespace RetailSlnWeb.Controllers
         private readonly string lastIpAddress = Utilities.GetLastIPAddress();
 
         // GET: Dashboard
-        //[AjaxAuthorize]
-        //[Authorize]
         [HttpGet]
         public ActionResult Index()
         {
+            //Session.Timeout = 1;
             ViewData["ActionName"] = "Index";
             return View();
         }
@@ -42,7 +43,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CategoryHierList(string id)
         {
             ViewData["ActionName"] = "CategoryHierList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -64,7 +65,7 @@ namespace RetailSlnWeb.Controllers
         public ActionResult CategoryList(string id)
         {
             ViewData["ActionName"] = "CategoryList";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = GetLoggedInUserId();
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
@@ -710,6 +711,46 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: OrderListView
+        [HttpGet]
+        public ActionResult OrderListView(string id, string invoiceTypeId)
+        {
+            ViewData["ActionName"] = "OrderListView";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderListViewData", (object)(id + ";" + invoiceTypeId));
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (ApplicationException applicationException)
+            {
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderList / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            return actionResult;
+        }
+
         // GET: SearchKeywordList
         [HttpGet]
         public ActionResult SearchKeywordList(string pageNum, string rowCount)
@@ -867,10 +908,27 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        //private ActionResult AbandonSession()
+        //{
+        //    FormsAuthentication.SignOut();
+        //    Session.Abandon();
+        //    Request.GetOwinContext().Authentication.SignOut();
+        //    Session["SessionObject"] = null;
+        //    Session.Abandon();
+        //    return RedirectToAction("LoginUserProf", "Home");
+        //}
+
         // Private: GetLoggedInUserId
         private string GetLoggedInUserId()
         {
             return ((SessionObjectModel)Session["SessionObject"]).AspNetUserId;
         }
+
+        //private bool UserIsAuthenticated()
+        //{
+        //    bool isAuthenticated;
+        //    isAuthenticated = (User.Identity.IsAuthenticated && (SessionObjectModel)Session["SessionObject"] != null);
+        //    return isAuthenticated;
+        //}
     }
 }

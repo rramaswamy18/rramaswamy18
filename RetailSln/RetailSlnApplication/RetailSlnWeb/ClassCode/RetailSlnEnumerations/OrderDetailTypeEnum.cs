@@ -22,6 +22,8 @@ namespace RetailSlnEnumerations
         ShippingHandlingCharges = 600,
         [Description("Additional Charges")]
         AdditionalCharges = 700,
+        [Description("Additional Discount")]
+        AdditionalDiscount = 720,
         [Description("Discount")]
         Discount = 800,
         [Description("Total Invoice Amount")]
@@ -32,8 +34,10 @@ namespace RetailSlnEnumerations
         AmountPaidByGiftCert = 1100,
         [Description("Amount Paid by Coupon")]
         AmountPaidByCoupon = 1200,
-        [Description("Amount Paid")]
+        [Description("Amount Paid (Gateway)")]
         AmountPaidByCreditCard = 1300,
+        [Description("Amount Paid")]
+        AmountPaid = 1350,
         [Description("Total Amount Paid")]
         TotalAmountPaid = 1400,
         [Description("Balance Due")]

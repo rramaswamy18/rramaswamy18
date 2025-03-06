@@ -1,0 +1,23 @@
+﻿@using RetailSlnEnumerations
+@model string
+@{
+    string orderHeaderId = Model.Substring(0, Model.IndexOf(';'));
+    string invoiceTypeId = Model.Substring(Model.IndexOf(';') + 1);
+}
+<table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <tr>
+        <th class="text-center" style="font-size: 18px; text-transform: uppercase;">
+            <span style="color: #0000ff; letter-spacing: 5px;">Invoice#</span>&nbsp;@orderHeaderId&nbsp;-&nbsp;<span style="color: #ff0000; letter-spacing: 5px;">@((InvoiceTypeEnum)int.Parse(invoiceTypeId))</span>
+        </th>
+    </tr>
+    <tr>
+        <td class="text-center">
+            @Html.Raw(File.ReadAllText(Server.MapPath("~/Invoices/" + orderHeaderId + "_" + invoiceTypeId + ".html")))
+        </td>
+    </tr>
+    <tr>
+        <td class="text-center">
+            <embed src="~/Invoices/@(orderHeaderId + "_" + invoiceTypeId + ".pdf")" type="application/pdf" style="width: 100%; height: 900px;" />
+        </td>
+    </tr>
+</table>

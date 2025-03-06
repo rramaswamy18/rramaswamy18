@@ -7,6 +7,10 @@
 <script src="~/Include/orderItemCode0.js" type="text/javascript"></script>
 <script src="~/Include/searchDataCode.js" type="text/javascript"></script>
 <script type="text/javascript">
+    var sessionTimeoutWarning = @Session.Timeout;
+    var sessionTimeout = parseInt(sessionTimeoutWarning) * 60 * 1000;
+    console.log("Session.Timeout Index", @Session.Timeout, "sessionTimeoutWarning", sessionTimeoutWarning, "sessionTimeout", sessionTimeout, getCurrentDateTime());
+    //setTimeout(checkLoggedInStatus, sessionTimeout);
     function window_onload() {
         //menuLink_onclick('@Url.Action("CorpAcctList", "Dashboard")', "?pageNum=1&rowCount=45");
         menuLink_onclick('@Url.Action("OrderItem", "Dashboard")', '');
@@ -69,13 +73,14 @@
             .then((responseData) => {
                 $("#loadingModal").modal('hide');
                 console.log(1, responseData);
-                document.getElementById("formUserAddEdit").innerHTML = responseData.htmlString;
                 var returnValue;
                 if (responseData.success) {
+                    document.getElementById("divDashboard").innerHTML = responseData.htmlString;
                     alert("User created successfully!!!");
                     returnValue = true;
                 }
                 else {
+                    document.getElementById("formUserAddEdit").innerHTML = responseData.htmlString;
                     returnValue = false;
                     alert("Please fix errors to continue???");
                 }
@@ -379,7 +384,7 @@
                 var returnValue;
                 if (responseData.success) {
                     alert("Corp acct created successfully!!!");
-                    document.getElementById("formCorpAcct").innerHTML = responseData.htmlString;
+                    document.getElementById("divDashboard").innerHTML = responseData.htmlString;
                     returnValue = true;
                 }
                 else {
@@ -412,7 +417,7 @@
                 var returnValue;
                 if (responseData.success) {
                     alert("Corp acct location created successfully!!!");
-                    document.getElementById("formCorpAcctLocation").innerHTML = responseData.htmlString;
+                    document.getElementById("divDashboard").innerHTML = responseData.htmlString;
                     returnValue = true;
                 }
                 else {
@@ -620,5 +625,27 @@
         tempValue = document.getElementById("CategoryItemHierModels_" + fromIndex + "__CategoryModel_CategoryId").value;
         document.getElementById("CategoryItemHierModels_" + fromIndex + "__CategoryModel_CategoryId").value = document.getElementById("CategoryItemHierModels_" + toIndex + "__CategoryModel_CategoryId").value;
         document.getElementById("CategoryItemHierModels_" + toIndex + "__CategoryModel_CategoryId").value = tempValue;
+    }
+    function orderListView_onclick(orderHeaderId, invoiceTypeId) {
+        console.log("orderListView_onclick", "00000000", "ENTER!!!");
+        var url = "@Url.Action("OrderListView", "Dashboard")";
+        url += "?id=" + orderHeaderId + "&invoiceTypeId=" + invoiceTypeId;
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("00001000", "orderListView_onclick success", responseData.processMessage);
+                document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("orderListView_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
     }
 </script>

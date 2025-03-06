@@ -135,7 +135,6 @@ namespace RetailSlnDataLayer
             sqlStmt += "              (" + Environment.NewLine;
             sqlStmt += "               ClientId" + Environment.NewLine;
             sqlStmt += "              ,CreatedForPersonId" + Environment.NewLine;
-            sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
             sqlStmt += "              ,OrderDateTime" + Environment.NewLine;
             sqlStmt += "              ,OrderStatusId" + Environment.NewLine;
             sqlStmt += "              ,PersonId" + Environment.NewLine;
@@ -147,7 +146,6 @@ namespace RetailSlnDataLayer
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @ClientId" + Environment.NewLine;
             sqlStmt += "              ,@CreatedForPersonId" + Environment.NewLine;
-            sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
             sqlStmt += "              ,@OrderDateTime" + Environment.NewLine;
             sqlStmt += "              ,@OrderStatusId" + Environment.NewLine;
             sqlStmt += "              ,@PersonId" + Environment.NewLine;
@@ -157,7 +155,6 @@ namespace RetailSlnDataLayer
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.VarChar, 21);
             sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
@@ -174,6 +171,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              (" + Environment.NewLine;
             sqlStmt += "               ClientId" + Environment.NewLine;
             sqlStmt += "              ,BalanceDue" + Environment.NewLine;
+            sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
             sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
             sqlStmt += "              ,ShippingAndHandlingCharges" + Environment.NewLine;
             sqlStmt += "              ,TotalAmountPaid" + Environment.NewLine;
@@ -188,6 +186,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "        SELECT" + Environment.NewLine;
             sqlStmt += "               @ClientId" + Environment.NewLine;
             sqlStmt += "              ,@BalanceDue" + Environment.NewLine;
+            sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
             sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
             sqlStmt += "              ,@ShippingAndHandlingCharges" + Environment.NewLine;
             sqlStmt += "              ,@TotalAmountPaid" + Environment.NewLine;
@@ -200,6 +199,7 @@ namespace RetailSlnDataLayer
             SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
             sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@BalanceDue", SqlDbType.Float);
+            sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@ShippingAndHandlingCharges", SqlDbType.Float);
             sqlCommand.Parameters.Add("@TotalAmountPaid", SqlDbType.Float);

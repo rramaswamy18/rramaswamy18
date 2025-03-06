@@ -25,15 +25,15 @@ body {
     z-index: 1;
 }
 
-.header-section.sticky {
-    max-width: 100%;
-    position: -webkit-sticky; 
-    position: sticky; 
-    top: 0;
-    width: 100%;
-    z-index: 1000; 
-    background-color: #fff; 
-}
+    .header-section.sticky {
+        max-width: 100%;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #fff;
+    }
 
 .top-bar {
     padding: 0px 20px;
@@ -41,7 +41,7 @@ body {
 
 .navbar-collapse {
     position: relative;
-    z-index: 1030; 
+    z-index: 1030;
 }
 
 .dropdown-menu {
@@ -73,6 +73,7 @@ body {
         text-align: center;
     }
 }
+
 @media (max-width: 767px) {
     .logo-section {
         margin-top: 20px;
@@ -80,10 +81,12 @@ body {
         align-items: center;
         text-align: left;
     }
-    .logo-section img {
-        width: 50px !important;
-        height: 50px !important;
-    }
+
+        .logo-section img {
+            width: 50px !important;
+            height: 50px !important;
+        }
+
     .company-name {
         display: none; /* Hide company name on mobile */
     }
@@ -95,14 +98,14 @@ body {
     }
 
     .row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        margin-right: -15px;
+        margin-left: -15px;
     }
 
     .col-xs-12 {
         flex: 1;
     }
+
     .dropdown-menu {
         display: none;
         flex-wrap: wrap;
@@ -159,10 +162,10 @@ body {
     border-radius: 50%;
 }
 
-.search-button img {
-    width: 20px;
-    height: 20px;
-}
+    .search-button img {
+        width: 20px;
+        height: 20px;
+    }
 
 @media (max-width: 413px) {
     .search-container {
@@ -198,11 +201,12 @@ body {
         border-radius: 50%;
     }
 
-    .search-button img {
-        width: 20px;
-        height: 20px;
-    }
+        .search-button img {
+            width: 20px;
+            height: 20px;
+        }
 }
+
 .menu-container {
     position: relative;
     display: inline-block;
@@ -281,6 +285,7 @@ body {
         margin-left: 25px;
     }
 }
+
 @media (max-width: 413px) {
     .navbar-right-hamburger {
         width: 100%;
@@ -703,6 +708,7 @@ body {
     max-height: 400px;
     overflow-y: scroll;
 }
+
 @media (max-width: 768px) {
     .custom-navbar ul {
         columns: 2;
@@ -710,6 +716,7 @@ body {
         -moz-columns: 2;
     }
 }
+
 .validationSummaryMessage {
     color: #000000;
     font-size: 18px;
@@ -742,9 +749,9 @@ body {
     opacity: 0.9;
 }
 
-.loginRegisterbtn:hover {
-    opacity: 1;
-}
+    .loginRegisterbtn:hover {
+        opacity: 1;
+    }
 
 .center {
     border: 0px none;

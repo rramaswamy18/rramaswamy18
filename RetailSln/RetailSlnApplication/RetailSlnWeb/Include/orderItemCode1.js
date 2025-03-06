@@ -440,6 +440,10 @@ function paymentInfo5Save_onclick() {
 //    }
 //    return false;
 //}
+function ApproverSignatureTextId_onchange2() {
+    //console.log(3, document.getElementById("ApproverSignatureTextValue").value);
+    document.getElementById("ApproverSignatureTextId").style.fontFamily = document.getElementById("ApproverSignatureTextId").options[document.getElementById("ApproverSignatureTextId").selectedIndex].style.fontFamily;
+}
 function ApproverSignatureTextValue_onchange2() {
     //console.log(1, document.getElementById("ApproverSignatureTextValue").value);
     for (var i = 1; document.getElementById("ApproverSignatureTextId").options.length; i++) {

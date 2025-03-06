@@ -68,7 +68,6 @@ namespace RetailSlnDataLayer
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@CreatedForPersonId"].Value = (int)orderHeader.CreatedForPersonId;
-            sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeader.InvoiceTypeId;
             sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
             sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
             sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
@@ -79,6 +78,7 @@ namespace RetailSlnDataLayer
         {
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@BalanceDue"].Value = orderHeaderSummary.BalanceDue;
+            sqlCommand.Parameters["@InvoiceTypeId"].Value = (int)orderHeaderSummary.InvoiceTypeId;
             sqlCommand.Parameters["@OrderHeaderId"].Value = orderHeaderSummary.OrderHeaderId;
             sqlCommand.Parameters["@ShippingAndHandlingCharges"].Value = orderHeaderSummary.ShippingAndHandlingCharges;
             sqlCommand.Parameters["@TotalAmountPaid"].Value = orderHeaderSummary.TotalAmountPaid;

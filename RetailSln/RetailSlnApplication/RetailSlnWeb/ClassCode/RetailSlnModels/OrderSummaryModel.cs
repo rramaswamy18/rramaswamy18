@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetailSlnEnumerations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace RetailSlnModels
         [StringLength(100, MinimumLength = 1, ErrorMessage = "First Name")]
         public string FirstName { set; get; }
 
-        public long InvoiceTypeId { set; get; }
+        public InvoiceTypeEnum InvoiceTypeId { set; get; }
 
         public string InvoiceType { set; get; }
 

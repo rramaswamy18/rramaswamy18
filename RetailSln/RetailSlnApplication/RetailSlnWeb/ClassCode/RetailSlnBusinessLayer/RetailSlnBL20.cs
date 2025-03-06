@@ -376,6 +376,9 @@ namespace RetailSlnBusinessLayer
                         corpAcctLocationModel.SeqNum = ++seqNum;
                         ApplicationDataContext.AddCorpAcctLocation(corpAcctLocationModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                         ApplicationDataContext.AddPersonExtn1CorpAcctLocation(corpAcctLocationModel.CorpAcctId.Value, corpAcctLocationModel.CorpAcctLocationId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        CorpAcctLocationModel corpAcctLocationModel1 = ApplicationDataContext.GetCorpAcctLocation(corpAcctLocationModel.CorpAcctLocationId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        RetailSlnCache.CorpAcctLocationModels.Add(corpAcctLocationModel1);
+                        RetailSlnCache.CorpAcctModels.Find(x => x.CorpAcctId == corpAcctLocationModel1.CorpAcctId).CorpAcctLocationModels.Add(corpAcctLocationModel1);
                     }
                     else
                     {
@@ -897,7 +900,11 @@ namespace RetailSlnBusinessLayer
                 }
                 OrderListModel orderListModel = new OrderListModel
                 {
-                    OrderListDataModels = ApplicationDataContext.GetOrdersForList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId)
+                    OrderListDataModels = ApplicationDataContext.GetOrdersForList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
                 };
                 return orderListModel;
             }

@@ -1,4 +1,4 @@
-﻿/*StyleSheet1.css*/
+﻿/*StyleSheet1.min.css*/
 * {
     box-sizing: border-box;
     margin: 0px;
@@ -98,9 +98,8 @@ body {
     }
 
     .row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        margin-right: -15px;
+        margin-left: -15px;
     }
 
     .col-xs-12 {

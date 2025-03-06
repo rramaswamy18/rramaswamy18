@@ -8,9 +8,9 @@ namespace RetailSlnEnumerations
 {
     public enum InvoiceTypeEnum : int
     {
-        [Description("Tax Invoice")]
-        TaxInvoice = 100,
         [Description("Order Form")]
-        OrderForm = 200,
+        OrderForm = 100,
+        [Description("Tax Invoice")]
+        TaxInvoice = 200,
     }
 }

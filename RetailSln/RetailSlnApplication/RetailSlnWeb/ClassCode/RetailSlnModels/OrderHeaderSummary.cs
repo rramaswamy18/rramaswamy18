@@ -1,4 +1,5 @@
 ﻿using ArchitectureLibraryDocumentModels;
+using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace RetailSlnModels
         public long OrderHeaderSummaryId { set; get; }
         public long ClientId { set; get; }
         public float BalanceDue { set; get; }
+        public InvoiceTypeEnum InvoiceTypeId { set; get; }
         public long OrderHeaderId { set; get; }
         public float ShippingAndHandlingCharges { set; get; }
         public float TotalAmountPaid { set; get; }

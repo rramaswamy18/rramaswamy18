@@ -52,20 +52,69 @@
         function window_onload() {
             alert("Implement window on load in your page");
         }
-    </script>
-    <script type="text/javascript">
-        //session end
-        var sessionTimeoutWarning = @Session.Timeout - 1;
-
+        var sessionTimeoutWarning = @Session.Timeout;
         var sessionTimeout = parseInt(sessionTimeoutWarning) * 60 * 1000;
-        console.log("sessionTimeoutWarning", sessionTimeoutWarning, "sessionTimeout", sessionTimeout);
-        setTimeout(endSession, sessionTimeout);
-
-        function endSession() {
-            console.log("endSession()");
-            window.location = "@Url.Action("Logout", "Home")";
+        console.log("Session.Timeout _DashboardLayout", @Session.Timeout, "sessionTimeoutWarning", sessionTimeoutWarning, "sessionTimeout", sessionTimeout, getCurrentDateTime());
+        setTimeout(checkLoggedInStatus, sessionTimeout);
+        function checkLoggedInStatus() {
+            console.log("checkLoggedInStatus() _DashboardLayout Enter", getCurrentDateTime());
+            //Sleep for 5 seconds to make sure the session is cleared by Server
+            sleep(5000); // Wait for 3 seconds
+            console.log("checkLoggedInStatus() _DashboardLayout After Sleep", getCurrentDateTime());
+            fetch("@Url.Action("CheckIsAuthenticated", "Home", new { id = "1" })")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data, data.isAuthenticated);
+                    if (data.isAuthenticated) {
+                        console.log("Continue Session", getCurrentDateTime());
+                        clearTimeout(checkLoggedInStatus);
+                        setTimeout(checkLoggedInStatus, sessionTimeout);
+                    } else {
+                        console.log("End Session", getCurrentDateTime());
+                        window.location = "@Url.Action("LoginUserProf", "Home")";
+                    }
+                });
+        }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     </script>
+    @*
+        <script type="text/javascript">
+            var counter = 0;
+            var testSetTimeoutFunctionId = setInterval(testSetTimeout, 1000); //Will execute every second
+            function testSetTimeout() {
+                counter++;
+                console.log("testSetTimeout", counter);
+                if (counter == 15) {
+                    clearInterval(testSetTimeoutFunctionId);
+                    console.log("testSetTimeout cleared timeout");
+                }
+            }
+        </script>
+        <script type="text/javascript">
+            var sessionTimeoutWarning = @Session.Timeout + 1;
+            var sessionTimeout = parseInt(sessionTimeoutWarning) * 60 * 1000;
+            console.log("Session.Timeout", @Session.Timeout, "sessionTimeoutWarning", sessionTimeoutWarning, "sessionTimeout", sessionTimeout, getCurrentDateTime());
+            setTimeout(checkLoggedInStatus, sessionTimeout);
+
+            function checkLoggedInStatus() {
+                fetch("@Url.Action("CheckAuthStatus", "Dashboard")")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.IsAuthenticated == "true") {
+                            console.log("Continue Session", getCurrentDateTime());
+                            clearTimeout(checkLoggedInStatus);
+                            setTimeout(checkLoggedInStatus, sessionTimeout);
+                        } else {
+                            console.log("End Session", getCurrentDateTime());
+                            //window.location = "@Url.Action("Logout", "Home")";
+                        }
+                    });
+            }
+        </script>
+    *@
     @Html.Partial("_DashboardHeader")
     <div id="divScrollIntoView"></div>
     <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">

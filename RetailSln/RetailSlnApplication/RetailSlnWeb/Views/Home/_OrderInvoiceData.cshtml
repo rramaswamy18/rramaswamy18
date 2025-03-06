@@ -2,6 +2,7 @@
 @using ArchitectureLibraryCacheData
 @using ArchitectureLibraryModels
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @{
     var clientId = ArchLibCache.ClientId;
@@ -126,7 +127,7 @@
         </td>
     </tr>
     @{
-        if (Model.OrderSummaryModel.InvoiceTypeId == 200)
+        if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.OrderForm)
         {
             CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "").First(x => x.CodeDataNameId == Model.OrderApprovalModel.ApproverSignatureTextId);
             <tr>
@@ -147,7 +148,7 @@
     </tr>
     <tr>
         <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; word-wrap: break-word;">
-            @if (Model.OrderSummaryModel.InvoiceTypeId == 100)
+            @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.TaxInvoice)
             {
                 <span style="color: #000000;">
                     @(

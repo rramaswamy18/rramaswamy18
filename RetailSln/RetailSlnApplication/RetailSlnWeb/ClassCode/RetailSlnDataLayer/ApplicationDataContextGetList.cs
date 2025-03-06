@@ -493,6 +493,74 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static CorpAcctLocationModel GetCorpAcctLocation(long corpAcctLocationId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.CorpAcctLocation INNER JOIN ArchLib.DemogInfoAddress ON CorpAcctLocation.DemogInfoAddressId = DemogInfoAddress.DemogInfoAddressId WHERE CorpAcctLocation.CorpAcctLocationId = " + corpAcctLocationId + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                CorpAcctLocationModel corpAcctLocationModel;
+                if (sqlDataReader.Read())
+                {
+                    corpAcctLocationModel = new CorpAcctLocationModel
+                    {
+                        CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        AlternateTelephoneCountryId = sqlDataReader["AlternateTelephoneCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["AlternateTelephoneCountryId"].ToString()),
+                        AlternateTelephoneNumber = sqlDataReader["AlternateTelephoneNumber"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["AlternateTelephoneNumber"].ToString()),
+                        CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                        DemogInfoAddressId = long.Parse(sqlDataReader["DemogInfoAddressId"].ToString()),
+                        LocationName = sqlDataReader["LocationName"].ToString(),
+                        PrimaryTelephoneCountryId = sqlDataReader["PrimaryTelephoneCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["PrimaryTelephoneCountryId"].ToString()),
+                        PrimaryTelephoneNumber = sqlDataReader["PrimaryTelephoneNumber"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["PrimaryTelephoneNumber"].ToString()),
+                        SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                        DemogInfoAddressModel = new DemogInfoAddressModel
+                        {
+                            AddressLine1 = sqlDataReader["AddressLine1"].ToString(),
+                            AddressLine2 = sqlDataReader["AddressLine2"].ToString(),
+                            AddressLine3 = sqlDataReader["AddressLine3"].ToString(),
+                            AddressLine4 = sqlDataReader["AddressLine4"].ToString(),
+                            AddressTypeId = (AddressTypeEnum)int.Parse(sqlDataReader["AddressTypeId"].ToString()),
+                            BuildingTypeId = (BuildingTypeEnum)int.Parse(sqlDataReader["BuildingTypeId"].ToString()),
+                            CityName = sqlDataReader["CityName"].ToString(),
+                            CountryAbbrev = sqlDataReader["CountryAbbrev"].ToString(),
+                            CountryDesc = sqlDataReader["CountryDesc"].ToString(),
+                            CountyName = sqlDataReader["CountyName"].ToString(),
+                            DemogInfoCityId = sqlDataReader["DemogInfoCityId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoCityId"].ToString()),
+                            DemogInfoCountyId = sqlDataReader["DemogInfoCountyId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoCountyId"].ToString()),
+                            DemogInfoCountryId = sqlDataReader["DemogInfoCountryId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoCountryId"].ToString()),
+                            DemogInfoSubDivisionId = sqlDataReader["DemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoZipId"].ToString()),
+                            DemogInfoZipId = sqlDataReader["DemogInfoZipId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoZipId"].ToString()),
+                            DemogInfoZipPlusId = sqlDataReader["DemogInfoZipPlusId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["DemogInfoZipPlusId"].ToString()),
+                            HouseNumber = sqlDataReader["HouseNumber"].ToString(),
+                            ZipCode = sqlDataReader["ZipCode"].ToString(),
+                            ZipPlus4 = sqlDataReader["ZipPlus4"].ToString(),
+                            Comments = sqlDataReader["Comments"].ToString(),
+                            FromDate = sqlDataReader["FromDate"].ToString(),
+                            ToDate = sqlDataReader["ToDate"].ToString(),
+                        },
+                    };
+                    sqlDataReader.Close();
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                    return corpAcctLocationModel;
+                }
+                else
+                {
+                    throw new Exception("Error while getting Corp Acct Location Id = " + corpAcctLocationId);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+
+        }
         public static List<CorpAcctModel> GetCorpAccts(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -1801,14 +1869,40 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += "        SELECT *" + Environment.NewLine;
+                sqlStmt += "        SELECT" + Environment.NewLine;
+                sqlStmt += "               OrderHeader.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForAspNetUser.Email AS CreatedForEmailAddress" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForPerson.PersonId AS CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForPerson.FirstName AS CreatedForFirstName" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForPerson.LastName AS CreatedForLastName" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.Email AS EmailAddress" + Environment.NewLine;
+                sqlStmt += "              ,Person.PersonId" + Environment.NewLine;
+                sqlStmt += "              ,Person.FirstName" + Environment.NewLine;
+                //sqlStmt += "              ,OrderHeader.InvoiceTypeId" + Environment.NewLine;
+                sqlStmt += "              ,Person.LastName" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeader.OrderDateTime" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeader.OrderStatusId" + Environment.NewLine;
+                sqlStmt += "              ,Person.PersonId" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.BalanceDue" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.InvoiceTypeId" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.ShippingAndHandlingCharges" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalAmountPaid" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalDiscountAmount" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalInvoiceAmount" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalOrderAmount" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalTaxAmount" + Environment.NewLine;
+                //sqlStmt += "              ," + Environment.NewLine;
                 sqlStmt += "          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN RetailSlnSch.OrderDetail" + Environment.NewLine;
-                sqlStmt += "            ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.OrderHeaderId = OrderHeaderSummary.OrderHeaderId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN ArchLib.Person" + Environment.NewLine;
                 sqlStmt += "            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser" + Environment.NewLine;
+                sqlStmt += "            ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
                 sqlStmt += "            ON OrderHeader.CreatedForPersonId = CreatedForPerson.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser AS CreatedForAspNetUser" + Environment.NewLine;
+                sqlStmt += "            ON CreatedForPerson.AspNetUserId = CreatedForAspNetUser.AspNetUserId" + Environment.NewLine;
                 if (corpAcctId != null && corpAcctId > 0)
                 {
                     sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
@@ -1816,45 +1910,40 @@ namespace RetailSlnDataLayer
                     sqlStmt += $"           AND PersonExtn1.CorpAcctId = {corpAcctId}" + Environment.NewLine;
                 }
                 sqlStmt += "      ORDER BY OrderHeader.OrderHeaderId" + Environment.NewLine;
-                sqlStmt += "              ,OrderDetail.SeqNum" + Environment.NewLine;
-                //sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
-                //For now get all - add where based on person id & created person id
-                //if (personId == null)
-                //{
-                //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
-                //}
-                //else
-                //{
-                //    sqlStmt = "SELECT * FROM RetailSlnSch.OrderHeader INNER JOIN RetailSlnSch.OrderDetail ON OrderHeader.OrderHeaderId = OrderDetail.OrderHeaderId AND OrderDetail.OrderDetailTypeId IN(400, 700, 1000, 1100) WHERE OrderHeader.PersonId = " + personId + " ORDER BY OrderHeader.OrderHeaderId, OrderDetail.OrderDetailTypeId";
-                //}
-                List<OrderListDataModel> orderListDataModels = new List<OrderListDataModel>();
-                //OrderHeader orderHeader;
+                //sqlStmt += "              ,OrderDetail.SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                bool sqlDataReaderRead = sqlDataReader.Read();
-                //while (sqlDataReaderRead)
-                //{
-                //    orderHeaders.Add
-                //    (
-                //        orderHeader = new OrderHeader
-                //        {
-                //            OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
-                //            OrderDetails = new List<OrderDetail>(),
-                //        }
-                //    );
-                //    while (sqlDataReaderRead && orderHeader.OrderHeaderId == long.Parse(sqlDataReader["OrderHeaderId"].ToString()))
-                //    {
-                //        orderHeader.OrderDetails.Add
-                //        (
-                //            new OrderDetail
-                //            {
-                //                OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
-                //                OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
-                //            }
-                //        );
-                //        sqlDataReaderRead = sqlDataReader.Read();
-                //    }
-                //}
+                List<OrderListDataModel> orderListDataModels = new List<OrderListDataModel>();
+                while (sqlDataReader.Read())
+                {
+                    orderListDataModels.Add
+                    (
+                        new OrderListDataModel
+                        {
+                            OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                            CreatedForEmailAddress = sqlDataReader["CreatedForEmailAddress"].ToString(),
+                            CreatedForFirstName = sqlDataReader["CreatedForFirstName"].ToString(),
+                            CreatedForLastName = sqlDataReader["CreatedForLastName"].ToString(),
+                            CreatedForPersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                            EmailAddress = sqlDataReader["EmailAddress"].ToString(),
+                            FirstName = sqlDataReader["FirstName"].ToString(),
+                            LastName = sqlDataReader["LastName"].ToString(),
+                            OrderDateTime = DateTime.Parse(sqlDataReader["OrderDateTime"].ToString()).ToString("MMM-dd-yyyy h:mm tt"),
+                            OrderStatusId = (OrderStatusEnum)long.Parse(sqlDataReader["OrderStatusId"].ToString()),
+                            PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+
+                            BalanceDue = float.Parse(sqlDataReader["BalanceDue"].ToString()),
+                            InvoiceTypeId = (InvoiceTypeEnum)long.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+                            ShippingAndHandlingCharges = float.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                            TotalAmountPaid = float.Parse(sqlDataReader["TotalAmountPaid"].ToString()),
+                            TotalDiscountAmount = float.Parse(sqlDataReader["TotalDiscountAmount"].ToString()),
+                            TotalInvoiceAmount = float.Parse(sqlDataReader["TotalInvoiceAmount"].ToString()),
+                            TotalOrderAmount = float.Parse(sqlDataReader["TotalOrderAmount"].ToString()),
+                            TotalTaxAmount = float.Parse(sqlDataReader["TotalTaxAmount"].ToString()),
+                        }
+                    );
+                }
+                sqlDataReader.Close();
                 return orderListDataModels;
             }
             catch (Exception exception)

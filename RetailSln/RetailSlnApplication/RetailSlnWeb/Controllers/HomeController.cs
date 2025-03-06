@@ -119,6 +119,47 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: CheckIsAuthenticated
+        [HttpGet]
+        public JsonResult CheckIsAuthenticated(string id)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            //System.Threading.Thread.Sleep(5000); //Sleep for 2 seconds to make sure session has timedout
+            var sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            string aspNetUserId;
+            if (sessionObjectModel != null)
+            {
+                aspNetUserId = sessionObjectModel.AspNetUserId;
+            }
+            else
+            {
+                aspNetUserId = string.Empty;
+            }
+            var isAuthenticated = User.Identity.IsAuthenticated;
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: IsAuthenticatedStatus", "isAuthenticated", isAuthenticated.ToString(), "aspNetUserId", aspNetUserId);
+            //var isAuthenticated = User.Identity.IsAuthenticated && sessionObjectModel != null;
+            isAuthenticated = isAuthenticated && sessionObjectModel != null;
+            if (isAuthenticated)
+            {
+                ;
+            }
+            else
+            {
+                if (id == "1")
+                {
+                    FormsAuthentication.SignOut();
+                    Session.Abandon();
+                    Request.GetOwinContext().Authentication.SignOut();
+                    Session["SessionObject"] = null;
+                    Session.Abandon();
+                }
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return Json(new { isAuthenticated }, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: CookiePolicy
         [AllowAnonymous]
         [HttpGet]
@@ -1153,33 +1194,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: TermsofService
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("TermsofService")]
-        public ActionResult TermsofService()
-        {
-            ViewData["ActionName"] = "TermsofService";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                TermsofServiceModel termsofServiceModel = archLibBL.TermsofService(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("TermsofService", termsofServiceModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
         // GET: SEOPage1
         [AllowAnonymous]
         [HttpGet]
@@ -1212,6 +1226,33 @@ namespace RetailSlnWeb.Controllers
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ModelState.AddModelError("", "Services / GET");
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        // GET: TermsofService
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("TermsofService")]
+        public ActionResult TermsofService()
+        {
+            ViewData["ActionName"] = "TermsofService";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                TermsofServiceModel termsofServiceModel = archLibBL.TermsofService(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("TermsofService", termsofServiceModel);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("Error", responseObjectModel);
             }
@@ -1251,7 +1292,7 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult Unauthorized()
         {
-            return View();
+            return RedirectToAction("LoginUserProf");
         }
 
         #region Commented
