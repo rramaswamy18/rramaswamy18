@@ -99,7 +99,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@OrderAmount"].Value = orderDetail.OrderAmount;
             sqlCommand.Parameters["@OrderComments"].Value = string.IsNullOrEmpty(orderDetail.OrderComments) ? (object)DBNull.Value : orderDetail.OrderComments;
             sqlCommand.Parameters["@OrderDetailTypeId"].Value = (int)orderDetail.OrderDetailTypeId;
-            sqlCommand.Parameters["@OrderHeaderId"].Value = orderDetail.OrderHeaderId;
+            sqlCommand.Parameters["@OrderHeaderSummaryId"].Value = orderDetail.OrderHeaderSummaryId;
             sqlCommand.Parameters["@OrderQty"].Value = orderDetail.OrderQty;
             sqlCommand.Parameters["@SeqNum"].Value = orderDetail.SeqNum;
             sqlCommand.Parameters["@VolumeValue"].Value = orderDetail.VolumeValue;

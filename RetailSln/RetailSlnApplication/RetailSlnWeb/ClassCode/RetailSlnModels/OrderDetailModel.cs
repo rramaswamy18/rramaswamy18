@@ -29,7 +29,7 @@ namespace RetailSlnModels
 
         public OrderDetailTypeEnum? OrderDetailTypeId { set; get; }
 
-        public long OrderHeaderId { set; get; }
+        public long OrderHeaderSummaryId { set; get; }
 
         public string OrderNumber { set; get; }
 

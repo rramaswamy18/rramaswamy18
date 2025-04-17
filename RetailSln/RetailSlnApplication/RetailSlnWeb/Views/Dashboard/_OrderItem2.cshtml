@@ -1,5 +1,7 @@
-﻿@using ArchitectureLibraryModels
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @model OrderCategoryItemModel
 @{
@@ -19,6 +21,11 @@
     var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
     var corpAcctLocationModel = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels.First(x => x.CorpAcctLocationId == applSessionObjectModel.CorpAcctLocationId);
     var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+    long? invoiceTypeId;
+    PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+    InvoiceTypeEnum? invoiceTypeEnum = paymentInfoModel?.OrderSummaryModel?.InvoiceTypeId;
+    invoiceTypeId = invoiceTypeEnum == null ? null : (int)invoiceTypeEnum;
+    List<CodeDataModel> invoiceTypeModels = LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 215);
 }
 <table class="table table-bordered table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
     <tr>
@@ -65,8 +72,26 @@
             </span>
         </td>
         <td style="text-align: left; width: 50%;">
+            <select class="form-control" id="invoiceTypeId" onchange="javascript: return invoiceType_onchange();">
+                <option value="">--- Invoice Type ---</option>
+                @{
+                    foreach (var invoiceTypeModel in invoiceTypeModels)
+                    {
+                        if (invoiceTypeModel.CodeDataNameId == invoiceTypeId)
+                        {
+                            <option selected="selected" value="@invoiceTypeModel.CodeDataNameId">@invoiceTypeModel.CodeDataDesc0</option>
+                        }
+                        else
+                        {
+                            <option value="@invoiceTypeModel.CodeDataNameId">@invoiceTypeModel.CodeDataDesc0</option>
+                        }
+
+                    }
+                }
+            </select>
+            <br style="clear: both;" />
             <select class="form-control" id="categoryId" onchange="javascript: return categoryId_onchange(this.value, 1, 45);">
-                <option value="">--- Select ---</option>
+                <option value="">--- Select Category ---</option>
                 @foreach (var categoryModel in categoryModels)
                 {
                     <option value="@categoryModel.CategoryId">@categoryModel.CategoryDesc</option>

@@ -225,7 +225,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,LengthValue" + Environment.NewLine;
             sqlStmt += "              ,OrderAmount" + Environment.NewLine;
             sqlStmt += "              ,OrderComments" + Environment.NewLine;
-            sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,OrderHeaderSummaryId" + Environment.NewLine;
             sqlStmt += "              ,OrderDetailTypeId" + Environment.NewLine;
             sqlStmt += "              ,OrderQty" + Environment.NewLine;
             sqlStmt += "              ,SeqNum" + Environment.NewLine;
@@ -246,7 +246,7 @@ namespace RetailSlnDataLayer
             sqlStmt += "              ,@LengthValue" + Environment.NewLine;
             sqlStmt += "              ,@OrderAmount" + Environment.NewLine;
             sqlStmt += "              ,@OrderComments" + Environment.NewLine;
-            sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
+            sqlStmt += "              ,@OrderHeaderSummaryId" + Environment.NewLine;
             sqlStmt += "              ,@OrderDetailTypeId" + Environment.NewLine;
             sqlStmt += "              ,@OrderQty" + Environment.NewLine;
             sqlStmt += "              ,@SeqNum" + Environment.NewLine;
@@ -265,7 +265,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters.Add("@LengthValue", SqlDbType.Float);
             sqlCommand.Parameters.Add("@OrderAmount", SqlDbType.Float);
             sqlCommand.Parameters.Add("@OrderComments", SqlDbType.NVarChar, 250);
-            sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@OrderHeaderSummaryId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderDetailTypeId", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
             sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);

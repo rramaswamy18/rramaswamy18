@@ -425,6 +425,7 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(loginUserProfModel);
+                PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
                 SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
@@ -475,7 +476,14 @@ namespace RetailSlnWeb.Controllers
                     //actionName = "Index";
                     //controllerName = "Home";
                     redirectUrl = Url.Action(actionName, controllerName);
-                    retailSlnBL.LoadOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null && paymentInfoModel.ShoppingCartModel.ShoppingCartItems != null)
+                    {
+                        retailSlnBL.CreateOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                    else
+                    {
+                        retailSlnBL.LoadOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
                     //redirectUrl = Url.Action("Index", "Home");
                     //actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
                     //controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
@@ -1411,6 +1419,15 @@ namespace RetailSlnWeb.Controllers
                         success = true;
                         processMessage = "SUCCESS!!!";
                         redirectUrl = Url.Action("Index", "Home");
+                        PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+                        if (paymentInfoModel == null || paymentInfoModel.OrderHeaderWIPModel == null)
+                        {
+                            retailSlnBL.LoadOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        }
+                        else
+                        {
+                            retailSlnBL.CreateOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        }
                         actionResult = Json(new { success, processMessage, redirectUrl });
                         //return RedirectToAction("Index", "Home");
                     }

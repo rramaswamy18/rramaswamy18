@@ -181,6 +181,10 @@ namespace RetailSlnWeb.Controllers
                     var authManager = ctx.Authentication;
                     authManager.SignIn(identity);
                     PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+                    if (paymentInfoModel.OrderHeaderWIPModel == null)
+                    {
+                        retailSlnBL.CreateOrderWIP(false, true, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
                     retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, createForSessionObject, false, true, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
@@ -437,9 +441,18 @@ namespace RetailSlnWeb.Controllers
                                 }
                                 else
                                 {
-                                    success = true;
-                                    processMessage = "SUCCESS!!!";
-                                    htmlString = "";
+                                    if (paymentInfoModel.OrderSummaryModel.InvoiceTypeId == null)
+                                    {
+                                        success = false;
+                                        processMessage = "ERROR???";
+                                        htmlString = "Select invoice type place order";
+                                    }
+                                    else
+                                    {
+                                        success = true;
+                                        processMessage = "SUCCESS!!!";
+                                        htmlString = "";
+                                    }
                                 }
                                 break;
                             default:
@@ -535,6 +548,7 @@ namespace RetailSlnWeb.Controllers
                     paymentInfoModel.OrderSummaryModel.CreatedByFirstName = paymentInfoModelTemp.OrderSummaryModel.CreatedByFirstName;
                     paymentInfoModel.OrderSummaryModel.CreatedByLastName = paymentInfoModelTemp.OrderSummaryModel.CreatedByLastName;
                     paymentInfoModel.OrderSummaryModel.EmailAddress = paymentInfoModelTemp.OrderSummaryModel.EmailAddress;
+                    paymentInfoModel.OrderSummaryModel.InvoiceTypeId = paymentInfoModelTemp.OrderSummaryModel.InvoiceTypeId;
                     paymentInfoModel.OrderSummaryModel.OrderHeaderId = paymentInfoModelTemp.OrderSummaryModel.OrderHeaderId;
                     paymentInfoModel.OrderSummaryModel.PersonId = paymentInfoModelTemp.OrderSummaryModel.PersonId;
                     paymentInfoModel.OrderSummaryModel.OrderHeaderId = paymentInfoModelTemp.OrderSummaryModel.OrderHeaderId;

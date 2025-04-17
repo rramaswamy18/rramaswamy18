@@ -255,6 +255,7 @@ namespace RetailSlnDataLayer
                         ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                         CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
                         CreatedForPersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                        InvoiceTypeId = long.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
                         OrderDateTime = sqlDataReader["CreatedForPersonId"].ToString(),
                         OrderStatusId = sqlDataReader["OrderStatusId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["OrderStatusId"].ToString()),
                         PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),

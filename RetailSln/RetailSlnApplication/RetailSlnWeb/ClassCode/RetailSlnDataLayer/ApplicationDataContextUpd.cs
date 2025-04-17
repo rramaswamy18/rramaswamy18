@@ -13,6 +13,39 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
+        public static void UpdOrderHeaderWIP(OrderHeaderWIPModel orderHeaderWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            #region
+            string sqlStmt = "";
+            sqlStmt += "        UPDATE RetailSlnSch.OrderHeaderWIP" + Environment.NewLine;
+            sqlStmt += "           SET CorpAcctLocationId = @CorpAcctLocationId" + Environment.NewLine;
+            sqlStmt += "              ,CreatedForPersonId = @CreatedForPersonId" + Environment.NewLine;
+            sqlStmt += "              ,InvoiceTypeId = @InvoiceTypeId" + Environment.NewLine;
+            sqlStmt += "              ,PersonId = @PersonId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserId = @LoggedInUserId" + Environment.NewLine;
+            sqlStmt += "              ,UpdUserName = SUSER_NAME()" + Environment.NewLine;
+            sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
+            sqlStmt += "         WHERE OrderHeaderWIPId = @OrderHeaderWIPId" + Environment.NewLine;
+            #endregion
+            #region
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlCommand.Parameters.Add("@CorpAcctLocationId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+            sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
+            #endregion
+            #region
+            sqlCommand.Parameters["@CorpAcctLocationId"].Value = orderHeaderWIPModel.CorpAcctLocationId;
+            sqlCommand.Parameters["@CreatedForPersonId"].Value = orderHeaderWIPModel.CreatedForPersonId;
+            sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeaderWIPModel.InvoiceTypeId;
+            sqlCommand.Parameters["@PersonId"].Value = orderHeaderWIPModel.PersonId;
+            sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+            sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderHeaderWIPModel.OrderHeaderWIPId;
+            #endregion
+            sqlCommand.ExecuteNonQuery();
+        }
         public static void UpdItemSpecs(List<ItemSpecModel> itemAttribModels, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             SqlCommand sqlCommand = new SqlCommand("UPDATE RetailSlnSch.ItemSpec SET ItemSpecUnitValue = @ItemSpecUnitValue, ItemSpecValue = @ItemSpecValue, UpdUserId = @LoggedInUserId, UpdDateTime = GETDATE() WHERE ItemSpecId = @ItemSpecId", sqlConnection);

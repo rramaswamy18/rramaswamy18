@@ -1,9 +1,9 @@
 USE [RetailSln]
 GO
 
+SELECT * FROM ArchLib.ExceptionLog ORDER BY 1 DESC
 SELECT * FROM RetailSlnSch.OrderHeaderSummary ORDER BY 1 DESC
 SELECT * FROM RetailSlnSch.OrderHeader ORDER BY 1 DESC
-SELECT * FROM ArchLib.ExceptionLog ORDER BY 1 DESC
 SELECT TOP 1000 * FROM ArchLib.EmailData ORDER BY 1 DESC
 
 SELECT * FROM ArchLib.AspNetRole

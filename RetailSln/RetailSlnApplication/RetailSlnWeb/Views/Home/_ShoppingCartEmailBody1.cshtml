@@ -27,7 +27,7 @@
             <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                 Amount
             </th>
-            @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.TaxInvoice)
+            @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
             {
                 <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
                     Details
@@ -66,7 +66,7 @@
                     <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: right; vertical-align: top;">
                         @shoppingCartItem.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                     </td>
-                    @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.TaxInvoice)
+                    @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
                     {
                         <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
                             <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
@@ -153,7 +153,7 @@
         </tr>
         @{
             List<ShoppingCartItemModel> shoppingCartSummaryItems;
-            if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.TaxInvoice)
+            if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
             {
                 shoppingCartSummaryItems = shoppingCartModel.ShoppingCartSummaryItems;
             }

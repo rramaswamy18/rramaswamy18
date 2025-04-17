@@ -7,6 +7,8 @@ using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using RetailSlnBusinessLayer;
 using RetailSlnCacheData;
+using RetailSlnDataLayer;
+using RetailSlnEnumerations;
 using RetailSlnModels;
 using RetailSlnWeb.ClassCode;
 using System;
@@ -536,7 +538,61 @@ namespace RetailSlnWeb.Controllers
 
         // GET: OrderCreatedFor
         [HttpGet]
-        public ActionResult OrderCreatedFor(string id, string locnId)
+        public ActionResult InvoiceType(string id)
+        {
+            ViewData["ActionName"] = "OrderCreatedFor";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                long? invoiceTypeId;
+                if (long.TryParse(id, out long invoiceTypeIdTemp))
+                {
+                    invoiceTypeId = invoiceTypeIdTemp;
+                    PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+                    paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model
+                    {
+                        OrderHeaderWIPModel = new OrderHeaderWIPModel(),
+                        OrderSummaryModel = new OrderSummaryModel(),
+                    };
+                    paymentInfoModel.OrderHeaderWIPModel = paymentInfoModel.OrderHeaderWIPModel ?? new OrderHeaderWIPModel();
+                    paymentInfoModel.OrderSummaryModel = paymentInfoModel.OrderSummaryModel ?? new OrderSummaryModel();
+                    paymentInfoModel.OrderSummaryModel.InvoiceTypeId = invoiceTypeId == null ? (InvoiceTypeEnum?)null : (InvoiceTypeEnum)invoiceTypeId;
+                    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                    retailSlnBL.UpdateOrderWIP(ref paymentInfoModel, false, true, null, sessionObjectModel, createForSessionObject, null, null, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    Session["PaymentInfo"] = paymentInfoModel;
+                }
+                else
+                {
+                    invoiceTypeId = null;
+                }
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = "";
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = "Order Created For Failure";
+            }
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: OrderCreatedFor
+        [HttpGet]
+        public ActionResult OrderCreatedFor(string id, string corpAcctLocnId)
         {
             ViewData["ActionName"] = "OrderCreatedFor";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
@@ -551,17 +607,25 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 long personId = long.Parse(id);
-                long corpAcctLocationId = long.Parse(locnId);
+                long corpAcctLocationId = long.Parse(corpAcctLocnId);
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObject = archLibBL.BuildSessionObject(personId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, corpAcctLocationId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
                 Session["CreateForSessionObject"] = createForSessionObject;
                 PaymentInfo1Model paymentInfoModel = (PaymentInfo1Model)Session["PaymentInfo"];
+                paymentInfoModel = paymentInfoModel ?? new PaymentInfo1Model
+                {
+                    OrderHeaderWIPModel = new OrderHeaderWIPModel(),
+                    OrderSummaryModel = new OrderSummaryModel(),
+                };
+                paymentInfoModel.OrderHeaderWIPModel = paymentInfoModel.OrderHeaderWIPModel ?? new OrderHeaderWIPModel();
+                paymentInfoModel.OrderSummaryModel = paymentInfoModel.OrderSummaryModel ?? new OrderSummaryModel();
                 retailSlnBL.UpdateShoppingCart(ref paymentInfoModel, false, true, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 int shoppingCartItemsCount = 0;
                 string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 shoppingCartTotalAmount = paymentInfoModel?.ShoppingCartModel?.ShoppingCartSummaryModel?.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                Session["PaymentInfo"] = paymentInfoModel;
                 success = true;
                 processMessage = "SUCCESS!!!";
                 htmlString = "Order Created For Success";

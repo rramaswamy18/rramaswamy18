@@ -496,6 +496,34 @@
                 return false;
             });
     }
+    function invoiceType_onchange() {
+        console.log("invoiceType_onchange", "00000000", "ENTER!!!");
+        var url = "/Dashboard/InvoiceType" + "?id=" + document.getElementById("invoiceTypeId").value;
+        fetch(url, {
+            method: "GET",
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                $("#loadingModal").modal('hide');
+                console.log(1, responseData);
+                console.log("00001000", "invoiceType_onchange success", responseData.processMessage);
+                if (responseData.success) {
+                    $("#loadingModal").modal('hide');
+                }
+                else {
+                    $("#loadingModal").modal('hide');
+                    alert("Invoice Type error???");
+                }
+                return false;
+            })
+            .catch(error => {
+                $("#loadingModal").modal('hide');
+                alert("Invoice Type error???");
+                console.log(error);
+                return false;
+            });
+        return false;
+    }
     function createdFor_onclick() {
         var i, locationIndex = -1, personIndex = -1;
         for (i = 0; ; i++) {
@@ -533,7 +561,7 @@
         corpAcctLocationId = document.getElementById("createdForCorpAcctLocationId" + locationIndex).value;
         //alert(corpAcctLocationId);
         //alert(personId);
-        var url = "/Dashboard/OrderCreatedFor" + "?id=" + personId + "&locnId=" + corpAcctLocationId;
+        var url = "/Dashboard/OrderCreatedFor" + "?id=" + personId + "&corpAcctLocnId=" + corpAcctLocationId + "&invTypeId=" + document.getElementById("invoiceTypeId").value;
         fetch(url, {
             method: "GET",
         })

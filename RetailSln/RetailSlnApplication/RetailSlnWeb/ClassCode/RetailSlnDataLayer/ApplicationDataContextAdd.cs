@@ -121,6 +121,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "               ClientId" + Environment.NewLine;
                 sqlStmt += "              ,CorpAcctLocationId" + Environment.NewLine;
                 sqlStmt += "              ,CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
                 sqlStmt += "              ,OrderDateTime" + Environment.NewLine;
                 sqlStmt += "              ,OrderStatusId" + Environment.NewLine;
                 sqlStmt += "              ,PersonId" + Environment.NewLine;
@@ -132,6 +133,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "               @ClientId" + Environment.NewLine;
                 sqlStmt += "              ,@CorpAcctLocationId" + Environment.NewLine;
                 sqlStmt += "              ,@CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
                 sqlStmt += "              ,@OrderDateTime" + Environment.NewLine;
                 sqlStmt += "              ,@OrderStatusId" + Environment.NewLine;
                 sqlStmt += "              ,@PersonId" + Environment.NewLine;
@@ -143,15 +145,17 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@CorpAcctLocationId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.NVarChar, 21);
-                sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.NVarChar, 21);
-                sqlCommand.Parameters.Add("@PersonId", SqlDbType.NVarChar, 21);
+                sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
                 #endregion
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = orderHeaderWIPModel.ClientId;
                 sqlCommand.Parameters["@CorpAcctLocationId"].Value = orderHeaderWIPModel.CorpAcctLocationId;
                 sqlCommand.Parameters["@CreatedForPersonId"].Value = orderHeaderWIPModel.CreatedForPersonId;
+                sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeaderWIPModel.InvoiceTypeId;
                 sqlCommand.Parameters["@OrderDateTime"].Value = string.IsNullOrWhiteSpace(orderHeaderWIPModel.OrderDateTime) ? (object)DBNull.Value : orderHeaderWIPModel.OrderDateTime;
                 sqlCommand.Parameters["@OrderStatusId"].Value = orderHeaderWIPModel.OrderStatusId == null ? (object)DBNull.Value : orderHeaderWIPModel.OrderStatusId;
                 sqlCommand.Parameters["@PersonId"].Value = orderHeaderWIPModel.PersonId;
@@ -246,7 +250,7 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling BuildSqlCommandOrderDetailAdd()", "orderDetail.OrderHeaderId", orderDetail.OrderHeaderId.ToString(), "orderDetail.ItemId", orderDetail.ItemId.ToString(), "orderDetail.SeqNum", orderDetail.SeqNum.ToString());
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling BuildSqlCommandOrderDetailAdd()", "orderDetail.OrderHeaderId", orderDetail.OrderHeaderSummaryId.ToString(), "orderDetail.ItemId", orderDetail.ItemId.ToString(), "orderDetail.SeqNum", orderDetail.SeqNum.ToString());
                 SqlCommand sqlCommand = BuildSqlCommandOrderDetailAdd(sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 AssignOrderDetail(orderDetail, sqlCommand, clientId, ipAddress, execUniqueId, loggedInUserId);
                 orderDetail.OrderDetailId = (long)sqlCommand.ExecuteScalar();

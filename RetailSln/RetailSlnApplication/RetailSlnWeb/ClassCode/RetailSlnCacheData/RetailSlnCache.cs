@@ -338,8 +338,8 @@ namespace RetailSlnCacheData
             {
                 corpAcctModel.CorpAcctLocationModels = new List<CorpAcctLocationModel>();
                 corpAcctModel.CorpAcctLocationModels.AddRange(retailSlnInitModel.CorpAcctLocationModels.FindAll(x => x.CorpAcctId == corpAcctModel.CorpAcctId));
-                corpAcctModel.DiscountDtlModels = new List<DiscountDtlModel>();
-                corpAcctModel.DiscountDtlModels.AddRange(retailSlnInitModel.DiscountDtlModels.FindAll(x => x.CorpAcctId == corpAcctModel.CorpAcctId));
+                //corpAcctModel.DiscountDtlModels = new List<DiscountDtlModel>();
+                //corpAcctModel.DiscountDtlModels.AddRange(retailSlnInitModel.DiscountDtlModels.FindAll(x => x.CorpAcctId == corpAcctModel.CorpAcctId));
             }
             DemogInfoCountryModel demogInfoCountryModel;
             retailSlnInitModel.DeliveryDemogInfoCountryModels = new List<DemogInfoCountryModel>();

@@ -25,7 +25,7 @@ namespace RetailSlnModels
         public float OrderAmountBeforeDiscount { set; get; }
         public string OrderComments { set; get; }
         public OrderDetailTypeEnum? OrderDetailTypeId { set; get; }
-        public long OrderHeaderId { set; get; }
+        public long OrderHeaderSummaryId { set; get; }
         public string OrderNumber { set; get; }
         public long OrderQty { set; get; }
         public string ProductCode { set; get; }

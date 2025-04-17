@@ -141,9 +141,12 @@ INNER JOIN [ArchLib].[DemogInfoZipPlus]
 --
 TRUNCATE TABLE RetailSlnSch.PickupLocation
 INSERT RetailSlnSch.PickupLocation(PickupLocationId, ClientId, LocationNameDesc, LocationDesc, LocationDemogInfoAddressId)
-SELECT 0 AS PickupLocationId, @ClientId AS ClientId, '' AS LocationNameDesc, '' AS LocationDesc, 0 AS LocationDemogInfoAddressId UNION
-SELECT 1 AS PickupLocationId, @ClientId AS ClientId, 'Divine_Bija_Mylapre' AS LocationNameDesc, 'Divine Bija Mylapre - Pickup' AS LocationDesc, 1 AS LocationDemogInfoAddressId UNION
-SELECT 2 AS PickupLocationId, @ClientId AS ClientId, 'DivineBija_Athipattu' AS LocationNameDesc, 'Divine Bija Athipattu - Pickup' AS LocationDesc, 2 AS LocationDemogInfoAddressId
+SELECT PickupLocationId, @ClientId AS ClientId, LocationNameDesc, LocationDesc, LocationDemogInfoAddressId
+FROM PickupLocationUpload WHERE InstanceClientId = @ClientId
+ORDER BY PickupLocationId
+--SELECT 0 AS PickupLocationId, @ClientId AS ClientId, '' AS LocationNameDesc, '' AS LocationDesc, 0 AS LocationDemogInfoAddressId UNION
+--SELECT 1 AS PickupLocationId, @ClientId AS ClientId, 'Divine_Bija_Mylapre' AS LocationNameDesc, 'Divine Bija Mylapre - Pickup' AS LocationDesc, 1 AS LocationDemogInfoAddressId UNION
+--SELECT 2 AS PickupLocationId, @ClientId AS ClientId, 'DivineBija_Athipattu' AS LocationNameDesc, 'Divine Bija Athipattu - Pickup' AS LocationDesc, 2 AS LocationDemogInfoAddressId
 --ArchLib.DemogInfoAddress
 --Begin Corp Acct
         TRUNCATE TABLE RetailSlnSch.CorpAcct
@@ -231,3 +234,4 @@ UNION
 --End Corp Acct Discount
 --
 DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(400)
+DELETE RetailSlnSch.PaymentModeFilter WHERE CreditSale = 200 AND PaymentModeId IN(400)
