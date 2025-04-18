@@ -1,0 +1,28 @@
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
+@model PaymentInfoModel
+<table>
+    <tr>
+        <th style="text-align: center;">#</th>
+        <th style="text-align: left;">Description</th>
+        <th style="text-align: right;">Amount</th>
+    </tr>
+    @{
+        int index = 0;
+        foreach (var shoppingCartItemModel in Model.ShoppingCartModel.ShoppingCartItemModels)
+        {
+            index++;
+        <tr>
+            <th style="font-weight: normal; padding: 9px; text-align: center;">@(index + ".")</th>
+            <th style="text-align: center;">@shoppingCartItemModel.ItemId</th>
+            <th style="font-weight: normal; padding: 9px; text-align: left;">@shoppingCartItemModel.ItemShortDesc</th>
+            @foreach (var shoppingCartItemSummary in shoppingCartItemModel.ShoppingCartItemSummarys)
+            {
+                <td>@shoppingCartItemSummary.ItemShortDesc</td>
+                <td>@shoppingCartItemSummary.ItemRateFormatted</td>
+                <td>@shoppingCartItemSummary.OrderAmountFormatted</td>
+            }
+        </tr>
+        }
+    }
+</table>

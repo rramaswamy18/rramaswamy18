@@ -1,0 +1,23 @@
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
+@model PaymentInfoModel
+<form id="formPaymentInfo1Data">
+    @Html.Partial("_PaymentInfo0Data", Model)
+</form>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    @switch (Model.PaymentModeModel.PaymentModeId)
+    {
+        case PaymentModeEnum.COD:
+        case PaymentModeEnum.CreditSale:
+            <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Complete Order</button>
+            break;
+        case PaymentModeEnum.PaymentGateway:
+            @Html.Partial("_PaymentInfo3")
+            <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Payment Gateway</button>
+            break;
+        case PaymentModeEnum.ProcessCreditCard:
+            <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Process Credit Card</button>
+            break;
+    }
+    <hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+</div>

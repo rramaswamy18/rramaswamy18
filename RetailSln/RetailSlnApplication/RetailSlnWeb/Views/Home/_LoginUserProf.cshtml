@@ -1,0 +1,121 @@
+﻿@model ArchitectureLibraryModels.LoginUserProfModel
+@{
+    string divWidth;
+    try
+    {
+        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+        //Not using right now
+        if (userAgent.Contains("iphone;")) //iPhone
+        {
+            divWidth = "100%;";
+        }
+        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
+        {
+            divWidth = "63%";
+        }
+        else
+        {
+            divWidth = "45%;";
+        }
+    }
+    catch
+    {
+        divWidth = "45%;";
+    }
+    //Using this right now
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    //mobileDevice = true;
+    string paddingLeft;
+    if (mobileDevice)
+    {
+        divWidth = "90%;";
+        paddingLeft = "9px;";
+    }
+    else
+    {
+        divWidth = "45%;";
+        paddingLeft = "0px;";
+    }
+}
+<div class="container center" style="padding-left: @paddingLeft; width: @divWidth;">
+    <div class="row" style="text-align: left;">
+        <div class="row" style="padding-left: @paddingLeft; text-align: left;">
+            <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">login</span>&nbsp;<span style="color: #0000ff; font-size: 23px; font-weight: bold;">(Existing User)</span>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    If this your first time? (New User)&nbsp;
+                    <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #ff0000; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click here to register...</a>
+                </li>
+                <li>
+                    Did you forget your password? (Existing User)&nbsp;
+                    <a href="@Url.Action("ResetPassword", "Home")" style="color: #0000ff; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click to reset...</a>
+                </li>
+            </ul>
+        </div>
+        <form id="formLoginUserProfData">
+            @Html.Partial("_LoginUserProfData", Model)
+        </form>
+        <button class="loginRegisterbtn" id="loginUserSave" onclick="javascript: return loginUserSave_onclick();" style="width: 90%;" type="button">L O G I N</button>
+        <div class="row" style="text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    If this your first time?&nbsp;
+                    <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #ff0000; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click here to register...</a>
+                </li>
+                <li>
+                    Did you forget your password?&nbsp;
+                    <a href="@Url.Action("ResetPassword", "Home")" style="color: #0000ff; font-size: 14px; padding-left: 5px; text-decoration: underline;">Click to reset...</a>
+                </li>
+                <li>
+                    Still facing issues?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #0000ff; font-size: 14px; text-decoration: underline;" target="_blank">Click to Contact Us...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    Enter email address, password, answer captcha to login
+                </li>
+                @*<li>
+                        Click <span style="color: #ff0000; font-size: 23px; letter-spacing: 4px; text-transform: uppercase;">login</span> to continue
+                    </li>*@
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function loginUserSave_onclick() {
+        console.log("00000000", "loginUserSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/LoginUserProf";
+        var postData = $("#formLoginUserProfData").serialize();
+        //document.getElementById("ulErrorMessagesLogin").style.display = "none";
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "loginUserSave_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    window.location = responseData.redirectUrl;
+                }
+                else {
+                    document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
+                    //document.getElementById("ulErrorMessagesLogin").style.display = "block";
+                }
+                //document.getElementById("formLoginUserProfData").innerHTML = responseData;
+                //alert("Login completed successfully!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "loginUserSave_onclick", "ERROR???", exception, xhr);
+                document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
+                //document.getElementById("ulErrorMessagesLogin").style.display = "block";
+                alert("Login encountered errors. Please fix errors to continue???");
+            }
+        });
+    }
+</script>

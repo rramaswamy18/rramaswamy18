@@ -1,0 +1,11 @@
+﻿@model ArchitectureLibraryModels.PicGalleryModel
+@{
+    ViewBag.Title = "PicGallery";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+@Html.Partial("_HeaderMenu")
+@Html.Partial("_PicGallery", Model)
+<script type="text/javascript">
+    function window_onload() {
+    }
+</script>

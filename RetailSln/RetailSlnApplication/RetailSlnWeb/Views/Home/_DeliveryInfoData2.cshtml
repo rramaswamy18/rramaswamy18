@@ -1,0 +1,25 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model PaymentInfoModel
+<div class="col-md-12" style="text-align: left;">
+    <div style="display: table; padding: 0px; width: 100%;">
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.OrderSummaryModel.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextAreaFor(m => m.OrderSummaryModel.FirstName, new { @class = "form-control", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.FirstName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.FirstName, "", new { id = "OrderSummaryModel_FirstName-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.OrderSummaryModel.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.LastName, "", new { id = "OrderSummaryModel_LastName-error" }).ToHtmlString()))
+            </div>
+        </div>
+    </div>
+</div>

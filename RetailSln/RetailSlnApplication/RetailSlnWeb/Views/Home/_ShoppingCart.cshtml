@@ -1,0 +1,57 @@
+﻿@using RetailSlnModels
+@model ShoppingCartModel
+@{
+    var shoppingCartAvailable = Model != null && Model.ShoppingCartSummaryModel != null && Model.ShoppingCartSummaryModel.TotalOrderAmount > 0 && Model.ShoppingCartItemModels != null && Model.ShoppingCartItemModels.Count > 0;
+}
+<div class="col-md-12" style="overflow-x: auto;">
+    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
+        <div>
+            <a href="javascript: void(0);" id="hrfBackToTop" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                Back to top
+            </a>
+        </div>
+        <div style="color: #000000; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">
+            Shopping&nbsp;&nbsp;Cart
+        </div>
+        <div>
+            <a href="javascript: return void(0);" onclick="javascript: return checkout_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
+                <i class="fa" style="font-size: 24px">&#xf07a;</i>
+                &nbsp;
+                <span style="color: #000000; font-size: 24px; text-decoration: underline;">Checkout</span>
+            </a>
+        </div>
+    </div>
+    @if (!shoppingCartAvailable)
+    {
+        <h3 style="color: #ff9900; font-size: 27px; font-weight: bold;">
+            Your&nbsp;shopping&nbsp;cart&nbsp;is&nbsp;empty
+        </h3>
+    }
+    else
+    {
+        <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
+            @Html.Partial("_ShoppingCartData", Model)
+        </div>
+        <br style="clear: both;" />
+        <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
+            @Html.Partial("_ShoppingCartSummary", Model)
+        </div>
+    }
+    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
+        <div>
+            <a href="javascript: void(0);" id="hrfBackToTop2" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                Back to top
+            </a>
+        </div>
+        <div style="color: #000000; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">
+            @*Shopping&nbsp;&nbsp;Cart*@
+        </div>
+        <div>
+            <a href="javascript: return void(0);" onclick="javascript: return checkout_onclick();" style="background-color: #ffffff; color: #000000; font-size: 18px; font-weight: bold;">
+                <i class="fa" style="font-size: 24px">&#xf07a;</i>
+                &nbsp;
+                <span style="color: #000000; font-size: 24px; text-decoration: underline;">Checkout</span>
+            </a>
+        </div>
+    </div>
+</div>

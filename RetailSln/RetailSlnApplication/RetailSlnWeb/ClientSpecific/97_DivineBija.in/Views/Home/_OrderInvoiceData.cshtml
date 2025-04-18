@@ -1,0 +1,95 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@using RetailSlnModels
+@model PaymentInfoModel
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+    <tr>
+        <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 16px; font-weight: bold; padding: 5px; text-align: center; vertical-align: top;">
+            TAX INVOICE
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
+            <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" />
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top;">
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "BusinessName1", "")
+            <br />
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressLine1", "")
+            <br />
+            @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCountryName", "")
+            <br />
+            GST# : @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "GSTNumber")
+            <br />
+            <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
+            <br />
+            <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/SMSIcon3_Small.png" />
+            <br />
+            <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; word-break: break-all; width: 549px;">
+            @Model.OrderSummaryModel.EmailAddress
+            <br />
+            @Model.OrderSummaryModel.UserFullName
+            <br />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
+            {
+                <br />
+                @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
+            }
+            <br />
+            @Model.DeliveryDataModel.DeliveryAddressModel.CityName
+            <br />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
+            <br />
+            @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; vertical-align: top; white-space: nowrap; width: 99px;">
+            Invoice# @Model.OrderSummaryModel.OrderHeaderId
+            <br />
+            Inv Date @DateTime.Parse(Model.OrderSummaryModel.OrderDateTime).ToString("MMM-dd-yyyy")
+            <br />
+            Prim. <a href="tel: @("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)</a>
+            <br />
+            Alt.
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.AlternateTelephoneNum))
+            {
+                <a href="tel: @("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)</a>
+            }
+            <br />
+            Amount:&nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted
+            <br />
+            Balance:&nbsp;@Model.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted
+            <br />
+            <br />
+            @Html.Raw(Model.PaymentDataModel.PaymentReferenceNumber)
+            <br />
+            <br />
+            @Model.PaymentModeModel.PaymentModeDesc
+            <br />
+            @Model.DeliveryMethodModel.DeliveryMethodDesc
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" style="font-size: 14px; padding-left: 9px; text-align: left; word-wrap: break-word;">
+            Invoice Amount:&nbsp;<span style="color: #000000; font-weight: bold;">@Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountInWords</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" style="border-collapse: collapse; border-style: none; border-width: 0px;">
+            @Html.Partial("_ShoppingCartEmailBody1", Model.ShoppingCartModel)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" style="text-align: left; word-wrap: break-word;">
+            @Model.DeliveryDataModel.DeliveryInstructions
+        </td>
+    </tr>
+</table>

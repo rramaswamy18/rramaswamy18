@@ -1,0 +1,36 @@
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
+@model ShoppingCartModel
+<hr style="background-color: #000000; display: block; font-size: 18px; font-weight: bold; height: 1px;" />
+<table class="table table-striped">
+    <tr>
+        <th scope="col">
+            #.
+        </th>
+        <th scope="col">
+            Description
+        </th>
+        <th class="text-right" scope="col">
+            Amount
+        </th>
+    </tr>
+    @{
+        int index = 0;
+        foreach (var shoppingCartItemModelSummary in Model.ShoppingCartItemModelsSummary)
+        {
+            index++;
+            <tr>
+                <th scope="row">@(index + ".")</th>
+                <td class="text-left">
+                    @shoppingCartItemModelSummary.ItemShortDesc
+                    @if (shoppingCartItemModelSummary.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount)
+                    {
+                        <br />
+                        @("Total Weight : " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRoundedUnit)
+                    }
+                </td>
+                <td class="text-right">@shoppingCartItemModelSummary.OrderAmountFormatted</td>
+            </tr>
+        }
+    }
+</table>

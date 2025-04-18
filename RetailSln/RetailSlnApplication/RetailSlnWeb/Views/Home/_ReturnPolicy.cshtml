@@ -1,0 +1,33 @@
+﻿@model ArchitectureLibraryModels.ReturnPolicyModel
+@using ArchitectureLibraryCacheData
+@{
+    var clientId = ArchLibCache.ClientId;
+}
+<div style="padding-left: 9%; padding-right: 27%; text-align: left;">
+    <h1 style="color: #000000; font-weight: bold;">&nbsp;</h1>
+</div>
+<div style="padding-left: 9%; padding-right: 27%; text-align: left;">
+    <h1 style="color: #000000; font-weight: bold;">Return Policy</h1>
+    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> Cancellation and Refund Policy
+    <br />
+    <br />
+    <b>DESCRIPTION OF SERVICE</b>
+    <br />
+    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> provides users with the ability to order products and services online that are sometimes forwarded to respective service providers. <br />
+    <br />
+    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> tries to take care in identifying and using reputed vendors for our products who meet our criteria of quality. <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> cannot, however, take responsibility for the quality of the products or partner service quality and/or product delivery. We request customers to report to <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> any incidents of poor service or product quality so it can be highlighted to vendors and may be shared with other customers. <br />
+    <br />
+    <b>REFUND & CANCELLATION POLICY</b>
+    <br />
+    The <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> service involves delivery service and products made to the requirements of the customer placing the order. As the product and service ordered by a customer has no value to anyone and cannot be used elsewhere, any order cancellation, at any time after the order has been placed and product preparation or service delivery has started, involves product wastage. As such we follow a policy where customers are advised to exercise due care and caution before placing any order. Orders once placed cannot be cancelled and consequently we do not refund any payments made. <br />
+    <br />
+    In the rare case of product not being delivered due to reasons within the reasonable control of <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span>, customers will be advised that order will not be executed or customer will be advised to place a new order against any payments made by them but not delivered. Refunds are not given under any circumstances. <br />
+    <br />
+    <b>CHANGES TO THIS REFUND POLICY</b><br />
+    <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> may amend this policy from time to time. If we make any substantial changes, we will post the latest policy on the website. Users will not be informed individually and are advised to check the policy from time to time on our pages. <br />
+    <br />
+    <b>QUESTIONS OR SUGGESTIONS</b><br />
+    If you have questions or suggestions, please send us an email us from our contact us page. <br />
+    @*<br />
+    Please indicate that you have read and accept the terms of the Refund policy by clicking yes below.*@
+</div>

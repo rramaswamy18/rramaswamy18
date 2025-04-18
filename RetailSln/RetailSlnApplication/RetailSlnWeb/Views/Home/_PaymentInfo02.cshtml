@@ -1,0 +1,164 @@
+﻿@using ArchitectureLibraryCacheData
+@model RetailSlnModels.PaymentInfoModel
+<style>
+    @@font-face {
+        font-family: 'Freestyle Script Regular';
+        font-style: normal;
+        font-weight: normal;
+        src: local('Freestyle Script Regular'), url('../fonts/FREESCPT.woff') format('woff');
+    }
+
+    @@font-face {
+        font-family: 'Mistral';
+        font-style: normal;
+        font-weight: normal;
+        src: local('Mistral'), url('../fonts/MISTRAL.woff') format('woff');
+    }
+
+    #PaymentAmount-error, #ApproverSignatureTextValue-error, #ApproverSignatureTextId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div style="float: left; left: 50%; position: relative; ">
+        <div style="float: left; left: -50%; position: relative; ">
+            @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+            {
+                <div class="row validationSummaryMessage">
+                    @Model.ResponseObjectModel.ValidationSummaryMessage
+                </div>
+            }
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="row" style="padding: 18px; text-align: left;">
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+                </div>
+            }
+            @if (Model != null && Model.ResponseObjectModel != null)
+            {
+                <div class="row">
+                    @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div style="display: table; padding: 0px; width: 100%;">
+        @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
+        {
+            <div style="display: table-row; padding: 0px; width: 100%;">
+                <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                    Sign as:
+                    <br style="clear: both;" />
+                    <span style="color: #000000; font-size: 12px;">@((Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim())</span>
+                </div>
+                <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                    <input class="form-control" id="ApproverSignatureTextValue" maxlength="100" name="ApproverSignatureTextValue" onchange="javascript: ApproverSignatureTextValue_onchange1();" oninput="javascript: ApproverSignatureTextValue_oninput1();" style="float: left; width: 81%;" type="text" />
+                    @*<button class="btn btn-primary" id="btnLoadApproverSignatureTextValue" onclick="javascript: return btnLoadApproverSignatureTextValue_onclick();">Load</button>*@
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, "", new { id = "ApproverSignatureTextValue-error" }).ToHtmlString()))
+                </div>
+            </div>
+            var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
+            for (int i = 1; i < codeDataModels.Count; i++)
+            {
+                <div id="ApproverSignatureTextIdValue@(i)" style="display: none; padding: 0px; width: 100%;">
+                    <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 0px; text-align: right; vertical-align: top; width: 36%;">
+                        <label class="radio-inline" style="font-weight: bold; padding: 0px;">
+                            <input id="ApproverSignatureTextId@(i)" name="ApproverSignatureTextId" type="radio" value="@codeDataModels[i].CodeDataNameId">
+                        </label>
+                    </div>
+                    <div id="ApproverSignatureTextValue@(i)" style="display: table-cell; font-family: @(codeDataModels[i].CodeDataDesc0); font-size: @(codeDataModels[i].CodeDataDesc1); font-weight: bold; padding: 0px; text-align: left; vertical-align: bottom; width: 63%;"></div>
+                </div>
+            }
+            <div style="display: table-row; padding: 0px; width: 100%;">
+                <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 0px; text-align: right; vertical-align: top; width: 36%;">
+                </div>
+                <div style="display: table-cell; font-weight: bold; padding: 0px; text-align: left; vertical-align: middle; width: 63%;">
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextId, "", new { id = "ApproverSignatureTextId-error" }).ToHtmlString()))
+                </div>
+            </div>
+        }
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                Delivery Address:
+            </div>
+            <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
+                {
+                    @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
+                    <br />
+                }
+                @Model.DeliveryAddressModel.AddressLine1
+                <br />
+                @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressLine2))
+                {
+                    @Model.DeliveryAddressModel.AddressLine2
+                    <br />
+                }
+                @Model.DeliveryAddressModel.CityName
+                <br />
+                @(@Model.DeliveryAddressModel.ZipCode + " " + Model.DeliveryAddressModel.StateAbbrev)
+                <br />
+                @Model.DeliveryAddressModel.CountryDesc
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                Primary Tel:
+            </div>
+            <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Model.DeliveryDataModel.PrimaryTelephoneFormatted
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                Alternate Tel:
+            </div>
+            <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Model.DeliveryDataModel.AlternateTelephoneFormatted
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                Email Address:
+            </div>
+            <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Model.OrderSummaryModel.EmailAddress
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                Delivery Method:
+            </div>
+            <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Model.DeliveryMethodModel.DeliveryMethodDesc
+                @if (!string.IsNullOrWhiteSpace(Model.DeliveryMethodModel.DeliveryMethodDesc1))
+                {
+                    <br />
+                    <span style="color: #0000ff;">@Model.DeliveryMethodModel.DeliveryMethodDesc1</span>
+                }
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="color: #0000ff; display: table-cell; font-weight: bold; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                Payment Mode:
+            </div>
+            <div style="display: table-cell; font-weight: bold; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Model.PaymentModeModel.PaymentModeDesc
+                <br />
+                <span style="color: #0000ff;">@Model.PaymentModeModel.PaymentModeDesc1</span>
+            </div>
+        </div>
+    </div>
+    <div style="display: table; padding: 0px; width: 100%;">
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 100%;">
+                @Model.DeliveryDataModel.DeliveryInstructions
+            </div>
+        </div>
+    </div>
+</div>

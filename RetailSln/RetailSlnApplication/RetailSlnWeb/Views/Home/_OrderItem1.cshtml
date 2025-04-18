@@ -1,0 +1,115 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model ItemMasterModel
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    //var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int index = -1, index1 = 0;
+    string discountPercent, prefixString = "", optionText;
+}
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+</style>
+<table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; padding: 0px; width: 90%;">
+    <tr>
+        <th class="text-left" style="padding-left: 18px; width: 65%;">
+            <span style="color: #000000; font-size: 18px;">@Model.ItemMasterDesc</span>
+            @if (!string.IsNullOrWhiteSpace(Model.ItemMasterDesc2 + " " + Model.ItemMasterDesc3))
+            {
+                <br style="clear: both;" />
+                <span style="color: #1d1d1d; font-family: Arial; font-size: 14px; font-style: normal; font-weight: 600; line-height: 18px;">@(Model.ItemMasterDesc2 + " " + Model.ItemMasterDesc3)</span>
+            }
+            <table class="table-bordered" style="padding: 5px;">
+                <colgroup>
+                    <col style="width: 27px;" />
+                    <col style="width: 171px;" />
+                    <col style="width: 54px;" />
+                    <col style="width: 54px;" />
+                    <col style="width: 153px;" />
+                </colgroup>
+                <tr style="background-color: #d0d0d0;">
+                    <th style="padding: 5px; text-align: right;">
+                        #
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Spec(s) (@Model.ItemModels.Count)
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Rate
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Disc.
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Order
+                    </th>
+                </tr>
+                @foreach (var itemModel in Model.ItemModels)
+                {
+                    optionText = "";
+                    discountPercent = "";
+                    if (itemModel.ItemDiscountModels.Count > 0)
+                    {
+                        discountPercent = (itemModel.ItemDiscountModels[0].DiscountPercent.ToString("0.00") + "%");
+                    }
+                    else
+                    {
+                        discountPercent = "";
+                    }
+                    if (itemModel.ItemSpecModelsForItem != null && itemModel.ItemSpecModelsForItem.Count > 0)
+                    {
+                        prefixString = "";
+                        foreach (var itemItemSpecModel in itemModel.ItemSpecModelsForItem)
+                        {
+                            optionText += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                            prefixString = " | ";
+                        }
+                    }
+                    <tr>
+                        <td style="font-size: 12px; padding: 5px; text-align: right;">
+                            @(++index1).
+                        </td>
+                        <td style="font-size: 12px; padding: 5px; text-align: left;">
+                            @optionText
+                        </td>
+                        <td style="font-size: 12px; padding: 5px; text-align: right;">
+                            @itemModel.ItemRateFormatted
+                        </td>
+                        <td class="text-right">
+                            @discountPercent
+                        </td>
+                        <td style="padding: 5px; text-align: left;">
+                            <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
+                            <span style="width: 9px;">&nbsp;</span>
+                            <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ItemMasterId, @itemModel.ItemId, @index, null, false);" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
+                            <span id="spnMessageSuccess@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(index)" style="color: #0000ff; font-size:12px;"></span></span>
+                                <br style="clear: both;" />
+                            </span>
+                            <span id="spnMessageError@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                <span id="spnMessageErrorText@(index)" style="color: #ff0000;"></span>
+                                <br style="clear: both;" />
+                            </span>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </table>
+        </th>
+        <td style="padding: 0px; vertical-align: top; width: 35%;">
+            <table class="table table-condensed table-responsive">
+                <tr>
+                    <th class="text-left">
+                        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ImageName" />
+                    </th>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
