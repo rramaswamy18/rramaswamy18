@@ -52,7 +52,7 @@ function searchDataZipCode(htmlFieldPrefix) {
         }
     });
 }
-function demogInfoCountry_onchage(demogInfoCountryElement) {
+function demogInfoCountry_onchage(demogInfoCountryElement, htmlFieldPrefix) {
     if (demogInfoCountryElement.value === "") {
         return false;
     }
@@ -68,9 +68,9 @@ function demogInfoCountry_onchage(demogInfoCountryElement) {
         success: function (responseData, textStatus, request) {
             $("#loadingModal").modal('hide');
             if (responseData.success) {
-                document.getElementById("PrimaryTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
-                document.getElementById("AlternateTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
                 document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId").innerHTML = responseData.htmlString;
+                //document.getElementById("PrimaryTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
+                //document.getElementById("AlternateTelephoneDemogInfoCountryId").value = demogInfoCountryElement.value;
             }
             else {
                 alert("Error while loading states");

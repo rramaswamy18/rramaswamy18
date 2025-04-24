@@ -365,12 +365,12 @@ namespace RetailSlnBusinessLayer
                     {
                         case "BULKORDERSROLE":
                         case "MARKETINGROLE":
-                        case "PRIESTROLE":
                             parentCategoryId = 102;
                             break;
                         case "WHOLESALEROLE":
                             parentCategoryId = 120;
                             break;
+                        case "PRIESTROLE":
                         default:
                             parentCategoryId = 100;
                             break;
@@ -380,7 +380,6 @@ namespace RetailSlnBusinessLayer
                 switch (aspNetRoleName)
                 {
                     case "BULKORDERSROLE":
-                    case "PRIESTROLE":
                     case "WHOLESALEROLE":
                         viewName = "_OrderItem1";
                         break;
@@ -389,11 +388,17 @@ namespace RetailSlnBusinessLayer
                     case "SYSTADMIN":
                         viewName = "_OrderItem2";
                         break;
+                    case "PRIESTROLE":
                     default:
                         viewName = "_OrderItem0";
                         break;
                 }
                 #endregion
+                //For now use default for priest
+                if (aspNetRoleName == "PRIESTROLE")
+                {
+                    aspNetRoleName = "DEFAULTROLE";
+                }
                 var itemMasterModels = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleName][parentCategoryId].Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
                 long totalRowCount = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleName][parentCategoryId].Count;
                 long pageCount = totalRowCount / pageSize;
@@ -522,20 +527,30 @@ namespace RetailSlnBusinessLayer
                 if (razorPayIntegration.CheckPaymentSuccess(razorpay_payment_id, razorpay_order_id, razorpay_signature))
                 {
                     creditCardServiceBL.UpdCreditCardData(paymentInfoModel.CreditCardDataModel.CreditCardDataId, razorpay_payment_id, razorpay_order_id, razorpay_signature, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount;
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount - paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid;
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = "";
-                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureTextId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "AuthorizedSignatureTextId"));
-                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureTextValue = ArchLibCache.GetApplicationDefault(clientId, "Business", "AuthorizedSignatureTextValue");
 
-                    long codeDataNameId = paymentInfoModel.OrderSummaryModel.AuthorizedSignatureTextId;
-                    CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
-                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
-                    paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
-                    CreateOrder(paymentInfoModel, "", "", ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ShoppingCartItemModel shoppingCartItemModelAmountPaid, shoppingCartItemModelBalanceDue;//, shoppingCartItemModelTotalInvoiceAmount;
+                    shoppingCartItemModelAmountPaid = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
+                    shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+
+                    shoppingCartItemModelAmountPaid.OrderAmount = shoppingCartItemModelBalanceDue.OrderAmount;
+                    shoppingCartItemModelAmountPaid.OrderAmountFormatted = shoppingCartItemModelAmountPaid.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    shoppingCartItemModelAmountPaid.OrderComments = "Ref# " + razorpay_payment_id + "; Ord# " + razorpay_order_id;//"Ord# : " + razorpay_order_id + " Ref# : " + razorpay_payment_id;
+
+                    shoppingCartItemModelBalanceDue.OrderAmount = 0;
+                    shoppingCartItemModelBalanceDue.OrderAmountFormatted = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid = shoppingCartItemModelAmountPaid.OrderAmount;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaidFormatted = shoppingCartItemModelAmountPaid.OrderAmountFormatted;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = shoppingCartItemModelBalanceDue.OrderAmount;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = shoppingCartItemModelBalanceDue.OrderAmountFormatted;
+
+                    AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+
+                    CreateOrder(paymentInfoModel, razorpay_order_id, razorpay_payment_id, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     paymentInfoModel.HideShoppingCart = true;
                     paymentInfoModel.ShoppingCartModel.Checkout = true;
-                    //*********DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    httpSessionStateBase["PaymentInfo"] = paymentInfoModel;
                 }
                 return;
             }
@@ -548,6 +563,19 @@ namespace RetailSlnBusinessLayer
             {
                 ApplicationDataContext.CloseSqlConnection();
             }
+        }
+        // PRIVATE: AssignAuthorized
+        private void AssignAuthorizedData(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            paymentInfoModel.OrderSummaryModel.AuthorizedSignatureTextId = long.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "AuthorizedSignatureTextId"));
+            paymentInfoModel.OrderSummaryModel.AuthorizedSignatureTextValue = ArchLibCache.GetApplicationDefault(clientId, "Business", "AuthorizedSignatureTextValue");
+
+            long codeDataNameId = paymentInfoModel.OrderSummaryModel.AuthorizedSignatureTextId;
+            CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
+            paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
+            paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
+
+            return;
         }
         // POST: RemoveFromCart
         public void RemoveFromCart(ref PaymentInfoModel paymentInfoModel, int removeFromIndex, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -620,11 +648,14 @@ namespace RetailSlnBusinessLayer
                     int indexOf1 = paymentInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';');
                     string deliveryMethodId = paymentInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(0, indexOf1);
                     paymentInfoModel.DeliveryMethodModel.DeliveryMethodId = (DeliveryMethodEnum)long.Parse(deliveryMethodId);
+                    var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
+                    var corpAcctLocationModel = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels.First(x => x.CorpAcctLocationId == applSessionObjectModel.CorpAcctLocationId);
                     if (paymentInfoModel.DeliveryMethodModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
                     {
                         int indexOf2 = paymentInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';', indexOf1 + 1);
                         string pickupLocationId = paymentInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(indexOf1 + 1, indexOf2 - indexOf1 - 1);
                         paymentInfoModel.DeliveryMethodModel.PickupLocationId = long.Parse(pickupLocationId);
+                        paymentInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PickupLocationDemogInfoAddressModels2 : RetailSlnCache.PickupLocationDemogInfoAddressModels1;
                     }
                     else
                     {
@@ -903,9 +934,10 @@ namespace RetailSlnBusinessLayer
         private void BuildCreditCardDataModel(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+            ShoppingCartItemModel shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
             paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
             {
-                CreditCardAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString("0.00"),
+                CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString("0.00"),
                 CreditCardExpMM = null,
                 CreditCardExpYear = null,
                 CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId, ipAddress, execUniqueId, loggedInUserId),
@@ -1107,7 +1139,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE: CreateOrder
-        private void CreateOrder(PaymentInfoModel paymentInfoModel, string paymentId, string paymentOrderId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateOrder(PaymentInfoModel paymentInfoModel, string paymentOrderId, string paymentId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1157,7 +1189,11 @@ namespace RetailSlnBusinessLayer
                     GiftCertId = 0,
                     OrderHeaderId = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value,
                     PaymentModeId = (long)paymentInfoModel.PaymentModeModel.PaymentModeId,
-                    PaymentReferenceNumber = paymentId == "" ? "" : "Ref:&nbsp;" + paymentId + "<br />Num:&nbsp;" + paymentOrderId,
+                    PaymentRefNumCaption1 = string.IsNullOrWhiteSpace(paymentId) ? "" : "Ref#:",
+                    PaymentRefNumData1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentId,
+                    PaymentRefNumCaption2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : "Ord#",
+                    PaymentRefNumData2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderId,
+                    //PaymentReferenceNumber = paymentId == "" ? "" : "Ref# " + paymentId + "; Ord# " + paymentOrderId,
                 };
                 ApplicationDataContext.OrderPaymentAdd(paymentInfoModel.PaymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return;

@@ -13,6 +13,57 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
+        public static void CouponListAdd(CouponListModel couponListModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "         INSERT RetailSlnSch.CouponList" + Environment.NewLine;
+                sqlStmt += "               (" + Environment.NewLine;
+                sqlStmt += "                ClientId" + Environment.NewLine;
+                sqlStmt += "               ,CouponNum" + Environment.NewLine;
+                sqlStmt += "               ,BegEffDate" + Environment.NewLine;
+                sqlStmt += "               ,EndEffDate" + Environment.NewLine;
+                sqlStmt += "               ,AddUserId" + Environment.NewLine;
+                sqlStmt += "               ,UpdUserId" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "         OUTPUT INSERTED.CouponListId" + Environment.NewLine;
+                sqlStmt += "         SELECT " + Environment.NewLine;
+                sqlStmt += "                @ClientId" + Environment.NewLine;
+                sqlStmt += "               ,@CouponNum" + Environment.NewLine;
+                sqlStmt += "               ,@BegEffDate" + Environment.NewLine;
+                sqlStmt += "               ,@EndEffDate" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                #endregion
+                #region
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@CouponNum", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters.Add("@BegEffDate", SqlDbType.NVarChar, 10);
+                sqlCommand.Parameters.Add("@EndEffDate", SqlDbType.NVarChar, 10);
+                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+                #endregion
+                #region
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
+                sqlCommand.Parameters["@CouponNum"].Value = couponListModel.CouponNum;
+                sqlCommand.Parameters["@BegEffDate"].Value = couponListModel.BegEffDate;
+                sqlCommand.Parameters["@EndEffDate"].Value = couponListModel.EndEffDate;
+                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+                #endregion
+                couponListModel.CouponListId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static void OrderDeliveryAdd(DeliveryDataModel deliveryDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -655,6 +706,61 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@CorpAcctId"].Value = corpAcctId;
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
             sqlCommand.ExecuteNonQuery();
+        }
+        public static void PriestListAdd(PriestListModel priestListModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "         INSERT RetailSlnSch.PriestList" + Environment.NewLine;
+                sqlStmt += "               (" + Environment.NewLine;
+                sqlStmt += "                ClientId" + Environment.NewLine;
+                sqlStmt += "               ,CommissionPercent" + Environment.NewLine;
+                sqlStmt += "               ,CouponListId" + Environment.NewLine;
+                sqlStmt += "               ,DiscountPercent" + Environment.NewLine;
+                sqlStmt += "               ,PersonId" + Environment.NewLine;
+                sqlStmt += "               ,AddUserId" + Environment.NewLine;
+                sqlStmt += "               ,UpdUserId" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "         OUTPUT INSERTED.PriestListId" + Environment.NewLine;
+                sqlStmt += "         SELECT " + Environment.NewLine;
+                sqlStmt += "                @ClientId" + Environment.NewLine;
+                sqlStmt += "               ,@CommissionPercent" + Environment.NewLine;
+                sqlStmt += "               ,@CouponListId" + Environment.NewLine;
+                sqlStmt += "               ,@DiscountPercent" + Environment.NewLine;
+                sqlStmt += "               ,@PersonId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                #endregion
+                #region
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@CommissionPercent", SqlDbType.Float);
+                sqlCommand.Parameters.Add("@CouponListId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@DiscountPercent", SqlDbType.Float);
+                sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+                #endregion
+                #region
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
+                sqlCommand.Parameters["@CommissionPercent"].Value = priestListModel.CommissionPercent;
+                sqlCommand.Parameters["@CouponListId"].Value = priestListModel.CouponListId;
+                sqlCommand.Parameters["@DiscountPercent"].Value = priestListModel.DiscountPercent;
+                sqlCommand.Parameters["@PersonId"].Value = priestListModel.PersonId;
+                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+                #endregion
+                priestListModel.PriestListId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
         }
     }
 }

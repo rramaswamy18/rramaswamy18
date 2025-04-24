@@ -101,17 +101,16 @@
                 <br style="clear: both;" />
                 @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
             }
-            @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentReferenceNumber))
+            @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentRefNumData1))
             {
                 <br style="clear: both;" />
-                @Html.Raw(Model.PaymentDataModel.PaymentReferenceNumber)
+                @(Model.PaymentDataModel.PaymentRefNumCaption1 + " " + Model.PaymentDataModel.PaymentRefNumData1)
             }
-        </th>
-    </tr>
-    <tr>
-        <th></th>
-        <th colspan="2" style="text-align: left;">
-            @Html.Raw(Model.DeliveryDataModel.DeliveryInstructions?.Replace(Environment.NewLine, "<br />"))
+            @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentRefNumData2))
+            {
+                <br style="clear: both;" />
+                @(Model.PaymentDataModel.PaymentRefNumCaption2 + " " + Model.PaymentDataModel.PaymentRefNumData2)
+            }
         </th>
     </tr>
 </table>

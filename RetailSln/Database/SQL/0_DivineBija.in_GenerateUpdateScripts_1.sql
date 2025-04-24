@@ -177,7 +177,7 @@ ORDER BY PickupLocationId
 --		 WHERE CorpAcctId > 0
 ----End Update CorpAcct Upload DemogInfoAddressId
 --Begin Corp Acct Location DemogInfoAddress
-        DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 2
+        DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 4
         SET IDENTITY_INSERT ArchLib.DemogInfoAddress ON
         INSERT ArchLib.DemogInfoAddress
               (

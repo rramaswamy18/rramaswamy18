@@ -122,7 +122,14 @@ namespace RetailSlnDataLayer
                 sqlDataReader = sqlCommand.ExecuteReader();
                 if (sqlDataReader.Read())
                 {
-                    orderHeaderWIPId = long.Parse(sqlDataReader[0].ToString());
+                    try
+                    {
+                        orderHeaderWIPId = long.Parse(sqlDataReader[0].ToString());
+                    }
+                    catch
+                    {
+                        orderHeaderWIPId = null;
+                    }
                 }
                 else
                 {

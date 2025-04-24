@@ -1,6 +1,7 @@
 ﻿@using ArchitectureLibraryCacheData
 @using ArchitectureLibraryMenuCacheData
 @using ArchitectureLibraryModels
+@using RetailSlnCacheData
 @{
     //DivineBija - 97, 98, 99
     var clientId = ArchLibCache.ClientId;
@@ -29,26 +30,26 @@
                 <i class="fab fa-facebook-f" style="color: #4267b2; font-size: 20px"></i>
             </a>
             @*<a href="#" style="text-decoration: none;" target="_blank" title="Visit us on YouTube - @imageTitle">
-                <i class="fab fa-youtube" style="color: red; font-size: 20px"></i>
-            </a>
-            <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Threads - @imageTitle">
-                <i class="fa-brands fa-threads fab" style="color: black; font-size: 20px"></i>
-            </a>
-            <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on LinkedIn - @imageTitle">
-                <i class="fab fa-linkedin" style="color: #0077B5; font-size: 20px"></i>
-            </a>
-            <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on WhatsApp - @imageTitle">
-                <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px"></i>
-            </a>
-            <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Twitter - @imageTitle">
-                <i class="fa-brands fa-x-twitter fab" style="color: black; font-size: 20px"></i>
-            </a>
-            <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Pinterest - @imageTitle">
-                <i class="fab fa-pinterest-p" style="color: #B7081B; font-size: 20px"></i>
-            </a>
-            <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Instagram - @imageTitle">
-                <i class="fab fa-instagram" style="color: #C21995; font-size: 20px"></i>
-            </a>*@
+                    <i class="fab fa-youtube" style="color: red; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Threads - @imageTitle">
+                    <i class="fa-brands fa-threads fab" style="color: black; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on LinkedIn - @imageTitle">
+                    <i class="fab fa-linkedin" style="color: #0077B5; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on WhatsApp - @imageTitle">
+                    <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Twitter - @imageTitle">
+                    <i class="fa-brands fa-x-twitter fab" style="color: black; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Pinterest - @imageTitle">
+                    <i class="fab fa-pinterest-p" style="color: #B7081B; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Instagram - @imageTitle">
+                    <i class="fab fa-instagram" style="color: #C21995; font-size: 20px"></i>
+                </a>*@
         </div>
     </div>
     <div class="company-details-section">
@@ -90,18 +91,18 @@
                 @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", "")
             </p>
             @*
-            <p class="contact-number">
-                <i class="fas fa-phone-alt" style="color: #0898DA; font-size: 17px"></i>
-                <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
-            </p>
-            <p class="contact-number">
-                <i class="fas fa-sms" style="color: #009184; font-size: 20px"></i>
-                <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
-            </p>
-            <p class="contact-number">
-                <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px;"></i>
-                <a target="_blank" href="@(whatsAppUrl + ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhone", ""))" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhoneFormatted", "")</a>
-            </p>
+                <p class="contact-number">
+                    <i class="fas fa-phone-alt" style="color: #0898DA; font-size: 17px"></i>
+                    <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+                </p>
+                <p class="contact-number">
+                    <i class="fas fa-sms" style="color: #009184; font-size: 20px"></i>
+                    <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+                </p>
+                <p class="contact-number">
+                    <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px;"></i>
+                    <a target="_blank" href="@(whatsAppUrl + ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhone", ""))" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhoneFormatted", "")</a>
+                </p>
             *@
             <br style="clear: both;" />
             <div class="app-download-section text-left">
@@ -122,7 +123,9 @@
             </div>
         </div>
     </div>
-    <div class="copyright-section text-center">
-        <p>Powered by <span class="company-highlight">Gajashwa Inc.</span> © Copyright @copyrightYear</p>
+    <div class="copyright-section">
+        <p style="float: left;">Powered by <span class="company-highlight">Gajashwa Inc.</span> © Copyright @copyrightYear</p>
+        <p style="float: right;">Build @RetailSlnCache.BuildDateTime</p>
+        <br style="clear: both;" />
     </div>
 </footer>

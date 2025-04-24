@@ -56,7 +56,7 @@ namespace RetailSlnWeb.Controllers
                     shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
                     success = true;
                     processMessage = "SUCCESS!!!";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCartContainer", paymentInfoModel.ShoppingCartModel);
+                    htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCartContainer", paymentInfoModel);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Success");
                 }
                 else
@@ -111,17 +111,6 @@ namespace RetailSlnWeb.Controllers
                     if (loggedIn && sessionObject != null & createForSessionObject != null)
                     {
                         retailSlnBL.Checkout(ref paymentInfoModel, sessionObject, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        #region Temp - Prepopulate - Delete later
-                        paymentInfoModel.PaymentModeModel.PaymentModeId = PaymentModeEnum.PaymentGateway;
-                        paymentInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId = "100;;";
-                        paymentInfoModel.DeliveryAddressModel.AddressLine1 = "123 Sri Rama Apt";
-                        paymentInfoModel.DeliveryAddressModel.AddressLine2 = "Near Metro Station";
-                        paymentInfoModel.DeliveryAddressModel.CityName = "CHENNAI";
-                        paymentInfoModel.DeliveryAddressModel.ZipCode = "600003";
-                        paymentInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId = 391;
-                        paymentInfoModel.DeliveryDataModel.PrimaryTelephoneNum = "9880110045";
-                        paymentInfoModel.DeliveryDataModel.DeliveryInstructions = "Delivery Instructions 1 Delivery Instructions 2 Delivery Instructions 3\r\nDelivery Instructions 4 Delivery Instructions 5 Delivery Instructions 6\r\nDelivery Instructions 7 Delivery Instructions 8 Delivery Instructions 9";
-                        #endregion
                         actionResult = View("DeliveryInfo", paymentInfoModel);
                     }
                     else
@@ -580,8 +569,6 @@ namespace RetailSlnWeb.Controllers
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
             SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
             retailSlnBL.PaymentInfo3(paymentInfoModel, razorpay_payment_id, razorpay_order_id, razorpay_signature, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            //ActionResult actionResult = View("OrderInvoice", paymentInfoModel);
-            //return actionResult;
             return RedirectToAction("OrderInvoice");
         }
 
@@ -612,7 +599,7 @@ namespace RetailSlnWeb.Controllers
                 processMessage = "SUCCESS!!!";
                 shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count;
                 shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
-                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
+                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel);
             }
             catch (Exception exception)
             {
@@ -644,7 +631,7 @@ namespace RetailSlnWeb.Controllers
             PaymentInfoModel paymentInfoModel = ((PaymentInfoModel)Session["PaymentInfo"]);
             success = true;
             processMessage = "SUCCESS!!!";
-            htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
+            htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel);
             shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count;
             shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
@@ -674,7 +661,7 @@ namespace RetailSlnWeb.Controllers
                 retailSlnBL.ShoppingCartComments(paymentInfoModel, index, orderComments, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 success = true;
                 processMessage = "SUCCESS!!!";
-                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel.ShoppingCartModel);
+                htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel);
             }
             catch (Exception exception)
             {

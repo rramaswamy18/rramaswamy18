@@ -9,6 +9,7 @@ using RetailSlnModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -19,6 +20,7 @@ namespace RetailSlnCacheData
     public class RetailSlnCache
     {
         #region Properties
+        public static List<AspNetRoleModel> AspNetRoleModelsPriest { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
         public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
@@ -34,6 +36,7 @@ namespace RetailSlnCacheData
         #region
         public static Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryCategoryModels { set; get; }
         public static Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryItemMasterModels { set; get; }
+        public static string BuildDateTime { set; get; }
         public static CultureInfo CurrencyCultureInfo { set; get; }
         public static string CurrencyDecimalPlaces { set; get; }
         public static string CurrencySymbol { set; get; }
@@ -50,6 +53,7 @@ namespace RetailSlnCacheData
         #endregion
         public static void Initialize(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
+            BuildDateTime = GetBuildDateTime();
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
             retailSlnCacheBL.Initialize(out RetailSlnInitModel retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             CategoryModels = retailSlnInitModel.CategoryModels;
@@ -72,6 +76,16 @@ namespace RetailSlnCacheData
             RoundingDigitCount = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "RoundingDigitCount"));
 
             BuildCacheModels(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+        }
+        private static string GetBuildDateTime()
+        {
+            string projectDirectory = Utilities.GetServerMapPath("");
+            StreamReader streamReader = new StreamReader(projectDirectory + @"\BuildDateTime.txt");
+            string buildDateTime = streamReader.ReadToEnd();
+            streamReader.Close();
+            var buildDateTimes = buildDateTime.Split(' ');
+            buildDateTime = buildDateTimes[0] + " " + DateTime.Parse(buildDateTimes[1]).ToString("MMM-dd-yyyy") + " " + buildDateTimes[2];
+            return buildDateTime;
         }
         private static void BuildCacheModels(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -164,6 +178,7 @@ namespace RetailSlnCacheData
                     itemMasterModel.ItemRatesForDisplayAll += "...";
                 }
             }
+            AspNetRoleModelsPriest = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId >= 500 && x.UserTypeId <= 700);
         }
         private static void BuildCacheModels1(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

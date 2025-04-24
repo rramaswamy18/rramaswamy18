@@ -1,0 +1,95 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
+@model RegisterUserEmailModel
+@{
+    long clientId = ArchLibCache.ClientId;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+}
+<table>
+    <tr>
+        <td style="font-family: Arial; font-size: 15px; text-align: left;">
+            <span style="font-weight: bold;">Dear Valued Customer,</span>
+            <br /><br />
+            Thank you for your interest in registering - @Model.RegisterUserModel.RegisterEmailAddress
+            <br /><br />
+            Welcome to <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> family
+            <br /><br />
+                  <div>
+                      You are assigned the role of <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.RegisterUserModel.UserTypeDesc</span>
+                      <br />
+                      Your master coupon number is <span style="color: #000000; font-weight: bold;">@Model.CouponListModel.CouponNum</span>
+                      <br />
+                      Please share the coupon number your customer(s)
+                      <br />
+                      Your customer needs to appy the coupon at time of purchase
+                      <br />
+                      When the customer applies the coupon, you will receive a commission of @(Model.PriestListModel.CommissionPercent + "%") on the order amount.
+                      <br />
+                      This commission is as at time of registration and is subject to change
+                      <br /><br />
+                      Please <a href="@baseUrl/@Url.Action("ResetPassword", "Home")">click here</a> to setup your password. Once you are done with setting up a password you can access the website
+                      <br />
+                      If you are unable to access the above, copy and paste the below Url in your browser...
+                      @baseUrl/@Url.Action("ResetPassword", "Home")
+                  </div>
+            <br /><br />
+            <table class="table table-bordered" style="width: 63%;">
+                <colgroup>
+                    <col style="width: 45%;" />
+                    <col style="width: 55%;" />
+                </colgroup>
+                <tr>
+                    <th style="text-align: right; vertical-align: top;">
+                        Email Address
+                    </th>
+                    <td>
+                        @Model.RegisterUserModel.RegisterEmailAddress
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: right; vertical-align: top;">
+                        Telephone#
+                    </th>
+                    <td>
+                        @("+" + Model.RegisterUserModel.TelephoneDemogInfoCountryModel?.TelephoneCode + " " + Model.RegisterUserModel.TelephoneNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: right; vertical-align: top;">
+                        First Name
+                    </th>
+                    <td>
+                        @Model.RegisterUserModel.FirstName
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: right; vertical-align: top;">
+                        Last Name
+                    </th>
+                    <td>
+                        @Model.RegisterUserModel.LastName
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: right; vertical-align: top;">
+                        Address
+                    </th>
+                    <td style="vertical-align: top;">
+                        @Model.RegisterUserModel.DemogInfoAddressModel.AddressLine1
+                        <br />
+                        @Model.RegisterUserModel.DemogInfoAddressModel.AddressLine2
+                        <br />
+                        @Model.RegisterUserModel.DemogInfoAddressModel.CityName
+                        <br />
+                        @(Model.RegisterUserModel.DemogInfoAddressModel.StateAbbrev + " " + Model.RegisterUserModel.DemogInfoAddressModel.ZipCode)
+                    </td>
+                </tr>
+            </table>
+            <span style="background-color: #deecf9;">
+                Please do not hesitate to call us at @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") if you have any questions.
+                <br /><br />
+                Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" target="_blank">Contact Us Here</a> to let us know.
+            </span>
+        </td>
+    </tr>
+</table>

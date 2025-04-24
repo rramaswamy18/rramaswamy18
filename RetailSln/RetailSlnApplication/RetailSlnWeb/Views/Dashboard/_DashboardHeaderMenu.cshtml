@@ -1,10 +1,21 @@
 ﻿@using ArchitectureLibraryMenuModels
+@using ArchitectureLibraryModels
 @{
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+    }
     //if (ViewData["ActionName"].ToString() == "ItemMasterInfo")
     //{
     //}
     List<MenuUrlAction> menuUrlActions = new List<MenuUrlAction>
-    {
+{
         new MenuUrlAction
         {
             ActionName = "OrderItem",
@@ -19,46 +30,56 @@
             LinkText = "Order List",
             QueryString = "",
         },
-        new MenuUrlAction
-        {
-            ActionName = "CorpAcctList",
-            ControllerName = "Dashboard",
-            LinkText = "Corp Acct",
-            QueryString = "?pageNum=1&rowCount=45",
-        },
-        new MenuUrlAction
-        {
-            ActionName = "UserList",
-            ControllerName = "Dashboard",
-            LinkText = "User(s)",
-            QueryString = "?pageNum=1&rowCount=45",
-        },
-        //new MenuUrlAction
-        //{
-        //    ActionName = "CategoryList",
-        //    ControllerName = "Dashboard",
-        //    LinkText = "Category",
-        //    QueryString = "?id=",
-        //},
-        //new MenuUrlAction
-        //{
-        //    ActionName = "ItemMasterList",
-        //    ControllerName = "Dashboard",
-        //    LinkText = "Item",
-        //    QueryString = "?pageNum=1&rowCount=45",
-        //},
-        //new MenuUrlAction
-        //{
-        //    ActionName = "SearchKeywordList",
-        //    ControllerName = "Dashboard",
-        //    LinkText = "Search Keywor(s)",
-        //    QueryString = "",
-        //},
     };
+    if (aspNetRoleName != "PRIESTROLE")
+    {
+        menuUrlActions.Add
+        (
+            new MenuUrlAction
+            {
+                ActionName = "CorpAcctList",
+                ControllerName = "Dashboard",
+                LinkText = "Corp Acct",
+                QueryString = "?pageNum=1&rowCount=45",
+            }
+        );
+        menuUrlActions.Add
+        (
+            new MenuUrlAction
+            {
+                ActionName = "UserList",
+                ControllerName = "Dashboard",
+                LinkText = "User(s)",
+                QueryString = "?pageNum=1&rowCount=45",
+            }
+        );
+    }
+    //new MenuUrlAction
+    //{
+    //    ActionName = "CategoryList",
+    //    ControllerName = "Dashboard",
+    //    LinkText = "Category",
+    //    QueryString = "?id=",
+    //},
+    //new MenuUrlAction
+    //{
+    //    ActionName = "ItemMasterList",
+    //    ControllerName = "Dashboard",
+    //    LinkText = "Item",
+    //    QueryString = "?pageNum=1&rowCount=45",
+    //},
+    //new MenuUrlAction
+    //{
+    //    ActionName = "SearchKeywordList",
+    //    ControllerName = "Dashboard",
+    //    LinkText = "Search Keywor(s)",
+    //    QueryString = "",
+    //},
+};
 }
 @*<link type="text/css" rel="stylesheet" href="~/Include/TextEditor.css" />
-<link type="text/css" rel="stylesheet" href="~/Include/jquery-te-1.4.0.css" />
-<script type="text/javascript" src="~/Include/jquery-te-1.4.0.min.js" charset="utf-8"></script>*@
+    <link type="text/css" rel="stylesheet" href="~/Include/jquery-te-1.4.0.css" />
+    <script type="text/javascript" src="~/Include/jquery-te-1.4.0.min.js" charset="utf-8"></script>*@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-left: 0px; padding-top: 3px;">
     @foreach (var menuUrlAction in menuUrlActions)
     {

@@ -26,8 +26,17 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            ActionResult actionResult;
             ViewData["ActionName"] = "Index";
-            return View();
+            if (ValidateLoggedInAspNeRole())
+            {
+                actionResult = View();
+            }
+            else
+            {
+                actionResult = RedirectToAction("Index", "Home");
+            }
+            return actionResult;
         }
 
         // GET: OrderItem
@@ -74,6 +83,24 @@ namespace RetailSlnWeb.Controllers
         private string GetLoggedInUserId()
         {
             return ((SessionObjectModel)Session["SessionObject"]).AspNetUserId;
+        }
+
+        private string GetLoggedInUserAspNetRole()
+        {
+            return ((SessionObjectModel)Session["SessionObject"]).AspNetRoleName;
+        }
+        
+        private bool ValidateLoggedInAspNeRole()
+        {
+            var aspNetRoleName = GetLoggedInUserAspNetRole();
+            if (aspNetRoleName == "DEFAULTROLE")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

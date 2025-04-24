@@ -18,7 +18,7 @@
         <th style="text-align: right;">Rate</th>
         <th style="text-align: right;">Qty</th>
         <th style="text-align: right;">Amount</th>
-        @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+        @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice && Model.ShoppingCartModel.ShowDetail)
         {
             <th style="text-align: left;">Other</th>
         }
@@ -62,7 +62,7 @@
                 <td style="text-align: right; vertical-align: top;">
                     @shoppingCartItem.OrderAmountFormatted
                 </td>
-                @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+                @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice && Model.ShoppingCartModel.ShowDetail)
                 {
                     <td style="text-align: left; vertical-align: top;">
                         <table>

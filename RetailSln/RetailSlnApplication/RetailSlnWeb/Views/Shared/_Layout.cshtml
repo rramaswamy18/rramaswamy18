@@ -149,11 +149,11 @@
                                     <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount1" style="background-color: white; color: #9a031e;">$0.00</span>
                                 </a>
                             </div>
-                            <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
+                            @*<div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="javascript: void();" onclick="javascript: return checkoutValidate_onclick();" class="navbar-right-link" title="Checkout - @imageTitle">
                                     Checkout
                                 </a>
-                            </div>
+                            </div>*@
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("RegisterUserProf", "Home")" class="navbar-right-link" title="Register - @imageTitle">
                                     Register
@@ -167,6 +167,11 @@
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("Logout", "Home")" class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" title="Logout - @imageTitle">
                                     Logout
+                                </a>
+                            </div>
+                            <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
+                                <a href="@Url.Action("RegisterUser", "Home", new { id = "700" })" class="navbar-right-link" title="Priest Registration - @imageTitle">
+                                    <img src="~/Images/Priest_2.png" style="height: 27px; width: 27px;" />&nbsp;Priest Register
                                 </a>
                             </div>
                         </div>
@@ -220,6 +225,11 @@
                                     </a>
                                 </li>
                             }
+                            <li>
+                                <a href="@Url.Action("RegisterUser", "Home", new { id = "700" })" style="font-weight: bold;">
+                                    <img src="~/Images/Priest_1.png" style="height: 36px; width: 36px;" />&nbsp;Priest Register
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

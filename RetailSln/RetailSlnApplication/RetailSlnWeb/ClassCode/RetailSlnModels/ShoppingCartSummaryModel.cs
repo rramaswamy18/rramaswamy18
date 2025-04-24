@@ -15,6 +15,7 @@ namespace RetailSlnModels
         public string ShoppingCartTotalAmountDisplay { set; get; }
         public bool ShowDiscountsAdditionalCharges { set; get; }
         public float? TotalAmountPaid { set; get; }
+        public string TotalAmountPaidFormatted { set; get; }
         public float? TotalDiscountAmount { set; get; }
         public float? TotalInvoiceAmount { set; get; }
         public string TotalInvoiceAmountFormatted { set; get; }

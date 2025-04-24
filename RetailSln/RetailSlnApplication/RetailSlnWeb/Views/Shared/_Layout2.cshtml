@@ -106,7 +106,7 @@
                                 </a>
                             </div>
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="javascript: void(0);" onclick="javascript: return checkout_onclick();" class="navbar-right-link" title="Checkout - @imageTitle">
+                                <a href="@Url.Action("Checkout", "Home")" @*href="javascript: void(0);" onclick="javascript: return checkout_onclick();"*@ class="navbar-right-link" title="Checkout - @imageTitle">
                                     <img alt="Checkout - @imageTitle" src="~/Images/Checkout2.png" style="height: 20px; width: 20px;" title="Checkout - @imageTitle">
                                     <br style="clear: both;" />
                                     Checkout

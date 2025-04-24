@@ -45,11 +45,11 @@ DBCC CHECKIDENT ('RetailSlnSch.OrderPayment', RESEED, 0);
 DELETE RetailSlnSch.OrderDetailItemBundle --WHERE OrderDetailId > 0
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetailItemBundle', RESEED, 0);
 
-DELETE RetailSlnSch.OrderHeaderSummary WHERE OrderHeaderSummaryId > 0
-DBCC CHECKIDENT ('RetailSlnSch.OrderHeaderSummary', RESEED, 0);
-
 DELETE RetailSlnSch.OrderDetail WHERE OrderDetailId > 0
 DBCC CHECKIDENT ('RetailSlnSch.OrderDetail', RESEED, 0);
+
+DELETE RetailSlnSch.OrderHeaderSummary WHERE OrderHeaderSummaryId > 0
+DBCC CHECKIDENT ('RetailSlnSch.OrderHeaderSummary', RESEED, 0);
 
 DELETE RetailSlnSch.OrderHeader WHERE OrderHeaderId > 0
 DBCC CHECKIDENT ('RetailSlnSch.OrderHeader', RESEED, 0);
