@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Code\Publish\RetailSln\Web</_PublishTargetUrl>
-    <History>True|2025-04-22T04:08:18.5172461Z||;True|2025-04-21T20:12:22.3725876-07:00||;True|2025-04-21T17:13:57.7310869-07:00||;True|2025-04-20T21:50:06.2327692-07:00||;True|2025-04-20T08:36:01.3023632-07:00||;True|2025-04-20T06:28:20.1374908-07:00||;</History>
+    <History>True|2025-04-24T12:32:35.2285185Z||;True|2025-04-24T05:32:04.4894897-07:00||;True|2025-04-21T21:08:18.5172461-07:00||;True|2025-04-21T20:12:22.3725876-07:00||;True|2025-04-21T17:13:57.7310869-07:00||;True|2025-04-20T21:50:06.2327692-07:00||;True|2025-04-20T08:36:01.3023632-07:00||;True|2025-04-20T06:28:20.1374908-07:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -16,13 +16,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/10/2013 17:29:20</publishTime>
     </File>
     <File Include="bin/ArchitectureLibraryDLL.dll">
-      <publishTime>04/23/2025 20:01:58</publishTime>
+      <publishTime>04/25/2025 10:21:48</publishTime>
     </File>
     <File Include="bin/ArchitectureLibraryDLL.dll.config">
       <publishTime>01/08/2025 12:14:40</publishTime>
     </File>
     <File Include="bin/ArchitectureLibraryDLL.pdb">
-      <publishTime>04/23/2025 20:01:58</publishTime>
+      <publishTime>04/25/2025 10:21:48</publishTime>
     </File>
     <File Include="bin/BouncyCastle.Crypto.dll">
       <publishTime>10/19/2021 11:53:32</publishTime>
@@ -139,10 +139,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/30/2024 04:19:02</publishTime>
     </File>
     <File Include="bin/RetailSlnWeb.dll">
-      <publishTime>04/23/2025 21:29:33</publishTime>
+      <publishTime>04/25/2025 11:07:25</publishTime>
     </File>
     <File Include="bin/RetailSlnWeb.pdb">
-      <publishTime>04/23/2025 21:29:33</publishTime>
+      <publishTime>04/25/2025 11:07:25</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>02/15/2022 05:38:32</publishTime>
@@ -310,7 +310,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>01/23/2014 13:57:34</publishTime>
     </File>
     <File Include="BuildDateTime.txt">
-      <publishTime>04/23/2025 21:29:33</publishTime>
+      <publishTime>04/25/2025 11:07:25</publishTime>
     </File>
     <File Include="ClientSpecific/3_RetailSln/Documents/GiftCertificate/Templates/GiftCertSelectTemplate.png">
       <publishTime>03/04/2025 15:59:13</publishTime>
@@ -2973,6 +2973,15 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Images/Priest_2.png">
       <publishTime>04/23/2025 11:01:11</publishTime>
     </File>
+    <File Include="Images/Purohit.png">
+      <publishTime>04/23/2025 10:55:20</publishTime>
+    </File>
+    <File Include="Images/Purohit_1.png">
+      <publishTime>04/23/2025 11:01:12</publishTime>
+    </File>
+    <File Include="Images/Purohit_2.png">
+      <publishTime>04/23/2025 11:01:11</publishTime>
+    </File>
     <File Include="Images/Register1.png">
       <publishTime>02/20/2025 18:47:55</publishTime>
     </File>
@@ -3205,7 +3214,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>03/22/2025 02:35:48</publishTime>
     </File>
     <File Include="Include/searchDataCode.js">
-      <publishTime>04/23/2025 18:45:48</publishTime>
+      <publishTime>04/25/2025 00:56:40</publishTime>
     </File>
     <File Include="Include/Site.css">
       <publishTime>03/04/2025 15:26:18</publishTime>
@@ -3472,10 +3481,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/22/2025 10:12:28</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserData.cshtml">
-      <publishTime>04/23/2025 20:48:35</publishTime>
+      <publishTime>04/24/2025 05:08:57</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserEmailBody.cshtml">
-      <publishTime>04/23/2025 18:07:15</publishTime>
+      <publishTime>04/25/2025 02:20:42</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserEmailSubject.cshtml">
       <publishTime>04/20/2025 16:53:05</publishTime>
@@ -3493,7 +3502,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>03/11/2025 18:44:02</publishTime>
     </File>
     <File Include="Views/Home/_RegisterUserSuccess.cshtml">
-      <publishTime>04/23/2025 11:40:51</publishTime>
+      <publishTime>04/25/2025 01:32:26</publishTime>
     </File>
     <File Include="Views/Home/_ResetPassword.cshtml">
       <publishTime>03/12/2025 16:38:10</publishTime>
@@ -3559,13 +3568,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/21/2025 15:42:44</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>04/23/2025 03:07:14</publishTime>
+      <publishTime>04/23/2025 22:34:41</publishTime>
     </File>
     <File Include="Views/Shared/_Layout2.cshtml">
       <publishTime>04/20/2025 23:16:47</publishTime>
     </File>
     <File Include="Views/Shared/_Layout3.cshtml">
-      <publishTime>04/23/2025 17:51:55</publishTime>
+      <publishTime>04/25/2025 00:49:18</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutOriginal.cshtml">
       <publishTime>03/04/2025 14:22:44</publishTime>

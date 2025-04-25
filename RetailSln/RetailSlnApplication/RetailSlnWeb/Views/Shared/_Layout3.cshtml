@@ -24,15 +24,15 @@
     var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
     string absoluteUri = Request.Url.AbsoluteUri;
     string homeUrl, hrefTarget;
-    if (absoluteUri.ToUpper().IndexOf("PRIEST") > -1)
+    if (absoluteUri.ToUpper().IndexOf("PUROHIT") > -1)
     {
         homeUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
-        hrefTarget = " href=\"_blank\"";
+        hrefTarget = "_blank";
     }
     else
     {
         homeUrl = Url.Action("Index", "Home");
-        hrefTarget = "";
+        hrefTarget = "_self";
     }
 }
 <!DOCTYPE html>
@@ -80,7 +80,7 @@
                 <div class="row" style="display: flex; align-items: center; justify-content: space-between;">
                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                         <div class="logo-section">
-                            <a href="@homeUrl" class="navbar-right-link" @hrefTarget>
+                            <a href="@homeUrl" class="navbar-right-link" target="@hrefTarget">
                                 <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="117" height="117" title="@imageTitle" />
                             </a>
                             <p class="company-name font-bold">
@@ -101,7 +101,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="nav navbar-nav navbar-right">
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="@homeUrl" class="navbar-right-link" @hrefTarget>
+                                <a href="@homeUrl" class="navbar-right-link" target="@hrefTarget">
                                     <i class="fas fa-home"></i> <br style="clear: both;" />
                                     Home
                                 </a>

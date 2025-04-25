@@ -48,7 +48,14 @@
 }
 <div class="row" style="padding-left: @paddingLeft; text-align: left;">
     @Html.LabelFor(m => m.AspNetRoleUserTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.DropDownListFor(m => m.AspNetRoleUserTypeId, new SelectList(RetailSlnCache.AspNetRoleModelsPriest, "UserTypeId", "Name", Model.AspNetRoleUserTypeId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+    @if (Model.AspNetRoleModels.Count == 1)
+    {
+        @Html.DropDownListFor(m => m.AspNetRoleUserTypeId, new SelectList(Model.AspNetRoleModels, "UserTypeId", "Name", Model.AspNetRoleUserTypeId), null, new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+    }
+    else
+    {
+        @Html.DropDownListFor(m => m.AspNetRoleUserTypeId, new SelectList(Model.AspNetRoleModels, "UserTypeId", "Name", Model.AspNetRoleUserTypeId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 90%;" })
+    }
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.AspNetRoleUserTypeId, "", new { id = "UserTypeId-error" }).ToHtmlString()))
 </div>
 <div class="row" style="padding-left: @paddingLeft; text-align: left;">

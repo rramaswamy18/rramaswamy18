@@ -90,7 +90,7 @@ function cityName_oninput(htmlFieldPrefix) {
     document.getElementById("cityNameSuccess").style.display = "none";
     document.getElementById("cityNameFailure").style.display = "block";
     var cityNameData = document.getElementById(htmlFieldPrefix + "CityName").value;
-    if (cityNameData.length >= 3) {
+    if (cityNameData.length >= 1) {
         if (cityNameData.indexOf(" ; ") > -1) {
             var indexOf = cityNameData.indexOf(" ; ");
             var cityNameValue = cityNameData.substr(0, indexOf);
@@ -139,7 +139,7 @@ function zipCode_oninput(htmlFieldPrefix) {
     document.getElementById("cityNameSuccess").style.display = "none";
     document.getElementById("cityNameFailure").style.display = "block";
     var zipCodeData = document.getElementById(htmlFieldPrefix + "ZipCode").value;
-    if (zipCodeData.length >= 3) {
+    if (zipCodeData.length >= 1) {
         if (zipCodeData.indexOf(" ; ") > -1) {
             var indexOf = zipCodeData.indexOf(" ; ");
             var zipCodeValue = zipCodeData.substr(0, indexOf);

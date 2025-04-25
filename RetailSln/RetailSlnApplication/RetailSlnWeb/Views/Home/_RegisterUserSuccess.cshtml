@@ -53,7 +53,7 @@
             <br />
             @Model.RegisterUserModel.DemogInfoAddressModel.CityName
             <br />
-            @(Model.RegisterUserModel.DemogInfoAddressModel.StateAbbrev + " " + Model.RegisterUserModel.DemogInfoAddressModel.ZipCode)
+            @(Model.RegisterUserModel.DemogInfoAddressModel.SubDivisionDesc + " " + Model.RegisterUserModel.DemogInfoAddressModel.ZipCode)
         </td>
     </tr>
     <tr>
@@ -65,8 +65,8 @@
         </td>
     </tr>
     <tr>
-        <th colspan="2" class="text-right" style="vertical-align: top;">
-            Please share the coupon# with your customers. Request them to apply the coupon at time of purchase. You will receive @(Model.PriestListModel.CommissionPercent + "%") commission on the order amount.
+        <th colspan="2" class="text-left" style="vertical-align: top;">
+            Please share the coupon# with your customers. Request them to apply the coupon at time of purchase. You will receive @(Model.PriestListModel.CommissionPercent + "%") sahayam on the order amount.
         </th>
     </tr>
 </table>

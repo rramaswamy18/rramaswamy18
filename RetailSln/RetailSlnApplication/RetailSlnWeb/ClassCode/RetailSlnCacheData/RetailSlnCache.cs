@@ -84,7 +84,7 @@ namespace RetailSlnCacheData
             string buildDateTime = streamReader.ReadToEnd();
             streamReader.Close();
             var buildDateTimes = buildDateTime.Split(' ');
-            buildDateTime = buildDateTimes[0] + " " + DateTime.Parse(buildDateTimes[1]).ToString("MMM-dd-yyyy") + " " + buildDateTimes[2];
+            buildDateTime = buildDateTimes[0] + " " + DateTime.Parse(buildDateTimes[1]).ToString("MMM-dd-yyyy") + " " + buildDateTimes[2].Trim();
             return buildDateTime;
         }
         private static void BuildCacheModels(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

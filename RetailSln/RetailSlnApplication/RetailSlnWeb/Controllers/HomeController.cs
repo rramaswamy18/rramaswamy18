@@ -63,7 +63,7 @@ namespace RetailSlnWeb.Controllers
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                         return RedirectToAction("LoginUserProf");
                     }
-                    if (absoluteUri.ToUpper().IndexOf("PRIEST") > -1 || id?.ToUpper().IndexOf("PRIEST") > -1)
+                    if (absoluteUri.ToUpper().IndexOf("PUROHIT") > -1 || id?.ToUpper().IndexOf("PUROHIT") > -1)
                     {
                         aspNetRoleName = "PRIESTROLE";
                     }
@@ -737,6 +737,9 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                long.TryParse(id, out long userTypeId);
+                var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == userTypeId);
+                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
                 registerUserModel.DemogInfoAddressModel = new DemogInfoAddressModel
                 {
                     BuildingTypeId = BuildingTypeEnum._,
@@ -744,7 +747,7 @@ namespace RetailSlnWeb.Controllers
                     DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
                     DemogInfoCountrySelectListItems = new List<SelectListItem>
                     {
-                        //new SelectListItem { Value = "41", Text = "Canada" },
+                        new SelectListItem { Value = "41", Text = "Canada" },
                         new SelectListItem { Value = "106", Text = "India" },
                         //new SelectListItem { Value = "159", Text = "Malaysia" },
                         //new SelectListItem { Value = "196", Text = "Singapore"},
@@ -828,10 +831,12 @@ namespace RetailSlnWeb.Controllers
                 {
                     success = false;
                     processMessage = "ERROR???";
+                    var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
+                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
                     registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                     registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = new List<SelectListItem>
                     {
-                        //new SelectListItem { Value = "41", Text = "Canada" },
+                        new SelectListItem { Value = "41", Text = "Canada" },
                         new SelectListItem { Value = "106", Text = "India" },
                         //new SelectListItem { Value = "159", Text = "Malaysia" },
                         //new SelectListItem { Value = "196", Text = "Singapore"},
@@ -857,10 +862,12 @@ namespace RetailSlnWeb.Controllers
                 registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
                 registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
+                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
                 registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                 registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = new List<SelectListItem>
                 {
-                    //new SelectListItem { Value = "41", Text = "Canada" },
+                    new SelectListItem { Value = "41", Text = "Canada" },
                     new SelectListItem { Value = "106", Text = "India" },
                     //new SelectListItem { Value = "159", Text = "Malaysia" },
                     //new SelectListItem { Value = "196", Text = "Singapore"},

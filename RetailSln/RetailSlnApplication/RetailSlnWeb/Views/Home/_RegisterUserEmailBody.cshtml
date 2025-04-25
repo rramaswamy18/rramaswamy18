@@ -23,9 +23,9 @@
                       <br />
                       Your customer needs to appy the coupon at time of purchase
                       <br />
-                      When the customer applies the coupon, you will receive a commission of @(Model.PriestListModel.CommissionPercent + "%") on the order amount.
+                      When the customer applies the coupon, the sahayam is  @(Model.PriestListModel.CommissionPercent + "%") of the order amount.
                       <br />
-                      This commission is as at time of registration and is subject to change
+                      This sahayam is as at time of registration and is subject to change
                       <br /><br />
                       Please <a href="@baseUrl/@Url.Action("ResetPassword", "Home")">click here</a> to setup your password. Once you are done with setting up a password you can access the website
                       <br />
@@ -81,7 +81,7 @@
                         <br />
                         @Model.RegisterUserModel.DemogInfoAddressModel.CityName
                         <br />
-                        @(Model.RegisterUserModel.DemogInfoAddressModel.StateAbbrev + " " + Model.RegisterUserModel.DemogInfoAddressModel.ZipCode)
+                        @(Model.RegisterUserModel.DemogInfoAddressModel.SubDivisionDesc + " " + Model.RegisterUserModel.DemogInfoAddressModel.ZipCode)
                     </td>
                 </tr>
             </table>

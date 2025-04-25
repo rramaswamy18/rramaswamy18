@@ -1081,9 +1081,9 @@
     <Content Include="Images\PostalMail2.jpg" />
     <Content Include="Images\PostalMail3.jpg" />
     <Content Include="Images\PreLoader.gif" />
-    <Content Include="Images\Priest.png" />
-    <Content Include="Images\Priest_2.png" />
-    <Content Include="Images\Priest_1.png" />
+    <Content Include="Images\Purohit.png" />
+    <Content Include="Images\Purohit_2.png" />
+    <Content Include="Images\Purohit_1.png" />
     <Content Include="Images\Register1.png" />
     <Content Include="Images\ShipMyOrder.png" />
     <Content Include="Images\ShoppingCart1.png" />
