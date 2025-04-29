@@ -188,7 +188,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PUBLIC: CreateInvoice
-        public void CreateInvoice(PaymentInfoModel paymentInfoModel, Controller controller, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void CreateInvoice(ref PaymentInfoModel paymentInfoModel, Controller controller, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //If it is not Final Invoice - create invoice as Html and Pdf file and email
             //Set the Invoice Type to Final - create invoice as Html and Pdf
@@ -249,7 +249,7 @@ namespace RetailSlnBusinessLayer
                     pDFFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
                     pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pDFFullFileName);
                 }
-
+                paymentInfoModel = null;
                 return;
             }
             catch (Exception exception)
@@ -271,6 +271,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
+                CalculateDiscounts(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CorpAcctModel corpAcctModel = (((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel);
                 //CalculateDiscounts(paymentInfoModel, createForSessionObject.PersonId, corpAcctModel.CorpAcctId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -457,14 +458,13 @@ namespace RetailSlnBusinessLayer
                 CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("SignatureText", execUniqueId).First(x => x.CodeDataNameId == codeDataNameId);
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
+
                 CreateOrder(paymentInfoModel, "", "", ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.HideShoppingCart = true;
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
-                //string htmlString = CreateInvoice(paymentInfoModel, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+
                 DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //httpSessionStateBase["CreateForSessionObject"] = httpSessionStateBase["SessionObject"];
-                //paymentInfoModel = null;
-                //CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+
                 string htmlString = "";
                 return htmlString;
             }
@@ -550,7 +550,6 @@ namespace RetailSlnBusinessLayer
                     paymentInfoModel.HideShoppingCart = true;
                     paymentInfoModel.ShoppingCartModel.Checkout = true;
                     DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    httpSessionStateBase["PaymentInfo"] = paymentInfoModel;
                 }
                 return;
             }
@@ -668,8 +667,6 @@ namespace RetailSlnBusinessLayer
                     paymentInfoModel.DeliveryMethodModel.DeliveryMethodId = null;
                     paymentInfoModel.DeliveryMethodModel.PickupLocationId = null;
                 }
-                paymentInfoModel.CouponPaymentModel = paymentInfoModelTemp.CouponPaymentModel;
-                paymentInfoModel.GiftCertPaymentModel = paymentInfoModelTemp.GiftCertPaymentModel;
                 paymentInfoModel.OrderSummaryModel.AspNetUserId = paymentInfoModelTemp.OrderSummaryModel.AspNetUserId;
                 paymentInfoModel.OrderSummaryModel.CorpAcctModel = paymentInfoModelTemp.OrderSummaryModel.CorpAcctModel;
                 paymentInfoModel.OrderSummaryModel.CreatedByEmailAddress = paymentInfoModelTemp.OrderSummaryModel.CreatedByEmailAddress;
@@ -929,149 +926,241 @@ namespace RetailSlnBusinessLayer
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
                 throw;
             }
+            finally
+            {
+            }
         }
         // PRIVATE : BuildCreditCardDataModel
         private void BuildCreditCardDataModel(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
-            ShoppingCartItemModel shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
-            paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
             {
-                CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString("0.00"),
-                CreditCardExpMM = null,
-                CreditCardExpYear = null,
-                CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId, ipAddress, execUniqueId, loggedInUserId),
-                CreditCardNumber = null,
-                CreditCardProcessor = creditCardProcessor,
-                CreditCardSecCode = null,
-                CreditCardTranType = "PAYMENT",
-                CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
-                EmailAddress = paymentInfoModel.OrderSummaryModel.EmailAddress,
-                NameAsOnCard = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim(),
-                TelephoneNumber = paymentInfoModel.OrderSummaryModel.TelephoneNumber,
-            };
-            return;
+                var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                ShoppingCartItemModel shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+                paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
+                {
+                    CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString("0.00"),
+                    CreditCardExpMM = null,
+                    CreditCardExpYear = null,
+                    CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    CreditCardNumber = null,
+                    CreditCardProcessor = creditCardProcessor,
+                    CreditCardSecCode = null,
+                    CreditCardTranType = "PAYMENT",
+                    CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                    EmailAddress = paymentInfoModel.OrderSummaryModel.EmailAddress,
+                    NameAsOnCard = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim(),
+                    TelephoneNumber = paymentInfoModel.OrderSummaryModel.TelephoneNumber,
+                };
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        // PRIVATE : CalculateDiscounts
+        private void CalculateDiscounts(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(paymentInfoModel.CouponPaymentModel?.CouponNumber))
+                {
+                    CouponListModel couponListModel = ApplicationDataContext.CouponListGet(paymentInfoModel.CouponPaymentModel.CouponNumber, paymentInfoModel.OrderHeaderWIPModel.OrderDateTime, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (couponListModel != null)
+                    {
+                        var shoppingCartItemModelSummary = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount);
+                        float orderAmount = -1 * shoppingCartItemModelSummary.OrderAmount.Value * couponListModel.DiscountPercent / 100;
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
+                        (
+                            new ShoppingCartItemModel
+                            {
+                                ItemId = null,
+                                ItemRate = 0,
+                                ItemShortDesc = "Coupon Discount " + couponListModel.DiscountPercent + "%",
+                                OrderAmount = orderAmount,
+                                OrderAmountFormatted = orderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                                OrderComments = null,
+                                OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
+                                OrderDetailTypeId = OrderDetailTypeEnum.Discount,
+                            }
+                        );
+                    }
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
         }
         // PRIVATE : CalculateDeliveryCharges
         private void CalculateDeliveryCharges(PaymentInfoModel paymentInfoModel, CorpAcctModel corpAcctModel, List<SalesTaxListModel> salesTaxListModels, List<CodeDataModel> salesTaxCaptionIds, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            if (corpAcctModel.ShippingAndHandlingCharges == YesNoEnum.Yes)
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
             {
-
-                DeliveryChargeModel deliveryChargeModel = GetDeliveryChargeModel(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (deliveryChargeModel != null)
+                if (corpAcctModel.ShippingAndHandlingCharges == YesNoEnum.Yes)
                 {
-                    var shippingAndHandlingChargesRate = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
-                    var shippingAndHandlingChargesAmount = shippingAndHandlingChargesRate * paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded;
-                    var fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
-                    var shoppingCartItemSummaryModelsFromCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Count;
-                    List<ShoppingCartItemModel> shoppingCartItemModelTemps = new List<ShoppingCartItemModel>();
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
-                    (
-                        new ShoppingCartItemModel
-                        {
-                            ItemId = null,
-                            ItemRate = shippingAndHandlingChargesRate,
-                            ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " KG - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
-                            OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
-                            OrderAmountFormatted = (shippingAndHandlingChargesAmount + fuelCharges).ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                            OrderComments = null,
-                            OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
-                            OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
-                        }
-                    );
-                    foreach (var salesTaxListModel in salesTaxListModels)
+                    DeliveryChargeModel deliveryChargeModel = GetDeliveryChargeModel(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (deliveryChargeModel != null)
                     {
-                        var salesTaxCaptionId = salesTaxCaptionIds.First(x => x.CodeDataNameId == (int)salesTaxListModel.SalesTaxCaptionId);
+                        var shippingAndHandlingChargesRate = deliveryChargeModel.DeliveryChargeAmount + deliveryChargeModel.DeliveryChargeAmountAdditional;
+                        var shippingAndHandlingChargesAmount = shippingAndHandlingChargesRate * paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded;
+                        var fuelCharges = shippingAndHandlingChargesAmount * deliveryChargeModel.FuelChargePercent / 100f;
+                        var shoppingCartItemSummaryModelsFromCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Count;
+                        List<ShoppingCartItemModel> shoppingCartItemModelTemps = new List<ShoppingCartItemModel>();
                         paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
                         (
                             new ShoppingCartItemModel
                             {
                                 ItemId = null,
                                 ItemRate = shippingAndHandlingChargesRate,
-                                ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
-                                OrderAmount = (shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f,
-                                OrderAmountFormatted = ((shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f).ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                                ItemShortDesc = "Shipping, Handling & Fuel Charges (" + deliveryChargeModel.FuelChargePercent + "%) " + paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " KG - " + deliveryChargeModel.DeliveryModeId + " - " + deliveryChargeModel.DeliveryTime,
+                                OrderAmount = shippingAndHandlingChargesAmount + fuelCharges,
+                                OrderAmountFormatted = (shippingAndHandlingChargesAmount + fuelCharges).ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
                                 OrderComments = null,
                                 OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
                                 OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
                             }
                         );
+                        foreach (var salesTaxListModel in salesTaxListModels)
+                        {
+                            var salesTaxCaptionId = salesTaxCaptionIds.First(x => x.CodeDataNameId == (int)salesTaxListModel.SalesTaxCaptionId);
+                            paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
+                            (
+                                new ShoppingCartItemModel
+                                {
+                                    ItemId = null,
+                                    ItemRate = shippingAndHandlingChargesRate,
+                                    ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " on S&H, Fuel Charges (" + salesTaxListModel.SalesTaxRate + "%)",
+                                    OrderAmount = (shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f,
+                                    OrderAmountFormatted = ((shippingAndHandlingChargesAmount + fuelCharges) * salesTaxListModel.SalesTaxRate / 100f).ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                                    OrderComments = null,
+                                    OrderQty = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded,
+                                    OrderDetailTypeId = OrderDetailTypeEnum.ShippingHandlingCharges,
+                                }
+                            );
+                        }
                     }
-                }
+            }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
             }
         }
         // PRIVATE : CalculateSalesTax
         private void CalculateSalesTax(PaymentInfoModel paymentInfoModel, List<SalesTaxListModel> salesTaxListModels, List<CodeDataModel> salesTaxCaptionIds, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            float? orderAmout;
-            foreach (var salesTaxListModel in salesTaxListModels)
-            {
-                var salesTaxCaptionId = salesTaxCaptionIds.First(x => x.CodeDataNameId == (int)salesTaxListModel.SalesTaxCaptionId);
-                if (salesTaxListModel.LineItemLevelName == "SUMMARY")
-                {
-                    orderAmout = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount * salesTaxListModel.SalesTaxRate / 100f;
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
-                    (
-                        new ShoppingCartItemModel
-                        {
-                            ItemId = null,
-                            ItemRate = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
-                            ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
-                            OrderAmount = orderAmout,
-                            OrderAmountFormatted = orderAmout.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                            OrderComments = null,
-                            OrderQty = 1,
-                            OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
-                        }
-                    );
-                }
-                else
-                {
-                    float totalSalesTaxAmount = 0, salesTaxAmount;
-                    foreach (var shoppingCartItemModel in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels)
-                    {
-                        var itemSpecValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItemModel.ItemId).ItemSpecModels.ToList().First(x => x.ItemSpecMasterModel.SpecName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemSpecValue;
-                        salesTaxAmount = float.Parse(itemSpecValue) * shoppingCartItemModel.OrderAmount.Value / 100f;
-                        totalSalesTaxAmount += salesTaxAmount;
-                        shoppingCartItemModel.ShoppingCartItemSummarys.Add
-                        (
-                            new ShoppingCartItemModel
-                            {
-                                ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
-                                ItemRate = float.Parse(itemSpecValue),
-                                ItemRateFormatted = (float.Parse(itemSpecValue) / 100f).ToString("#0.00%"),
-                                OrderAmount = salesTaxAmount,
-                                OrderAmountFormatted = salesTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                            }
-                        );
-                    }
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
-                    (
-                        new ShoppingCartItemModel
-                        {
-                            ItemId = null,
-                            ItemRate = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
-                            ItemShortDesc = salesTaxCaptionId.CodeDataDesc0,
-                            OrderAmount = totalSalesTaxAmount,
-                            OrderAmountFormatted = totalSalesTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                            OrderComments = null,
-                            OrderQty = 1,
-                            OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
-                        }
-                    );
-                }
-            }
-        }
-        // PRIVATE : CalculateTotalOrderAmount
-        private void CalculateTotalOrderAmount(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                float? orderAmout;
+                foreach (var salesTaxListModel in salesTaxListModels)
+                {
+                    var salesTaxCaptionId = salesTaxCaptionIds.First(x => x.CodeDataNameId == (int)salesTaxListModel.SalesTaxCaptionId);
+                    if (salesTaxListModel.LineItemLevelName == "SUMMARY")
+                    {
+                        orderAmout = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount * salesTaxListModel.SalesTaxRate / 100f;
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
+                        (
+                            new ShoppingCartItemModel
+                            {
+                                ItemId = null,
+                                ItemRate = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
+                                ItemShortDesc = salesTaxCaptionId.CodeDataDesc0 + " (" + salesTaxListModel.SalesTaxRate + "%)",
+                                OrderAmount = orderAmout,
+                                OrderAmountFormatted = orderAmout.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                                OrderComments = null,
+                                OrderQty = 1,
+                                OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                            }
+                        );
+                    }
+                    else
+                    {
+                        float totalSalesTaxAmount = 0, salesTaxAmount;
+                        foreach (var shoppingCartItemModel in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels)
+                        {
+                            var itemSpecValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItemModel.ItemId).ItemSpecModels.ToList().First(x => x.ItemSpecMasterModel.SpecName == salesTaxListModel.SalesTaxCaptionId.ToString()).ItemSpecValue;
+                            salesTaxAmount = float.Parse(itemSpecValue) * shoppingCartItemModel.OrderAmount.Value / 100f;
+                            totalSalesTaxAmount += salesTaxAmount;
+                            shoppingCartItemModel.ShoppingCartItemSummarys.Add
+                            (
+                                new ShoppingCartItemModel
+                                {
+                                    ItemShortDesc = salesTaxListModel.SalesTaxCaptionId.ToString(),
+                                    ItemRate = float.Parse(itemSpecValue),
+                                    ItemRateFormatted = (float.Parse(itemSpecValue) / 100f).ToString("#0.00%"),
+                                    OrderAmount = salesTaxAmount,
+                                    OrderAmountFormatted = salesTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                                }
+                            );
+                        }
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
+                        (
+                            new ShoppingCartItemModel
+                            {
+                                ItemId = null,
+                                ItemRate = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
+                                ItemShortDesc = salesTaxCaptionId.CodeDataDesc0,
+                                OrderAmount = totalSalesTaxAmount,
+                                OrderAmountFormatted = totalSalesTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                                OrderComments = null,
+                                OrderQty = 1,
+                                OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
+                            }
+                        );
+                    }
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        // PRIVATE : CalculateTotalOrderAmount
+        private void CalculateTotalOrderAmount(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalDiscountAmount = 0;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount = 0;
@@ -1103,16 +1192,19 @@ namespace RetailSlnBusinessLayer
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
                 throw;
             }
+            finally
+            {
+            }
         }
         // PRIVATE: CheckoutValidate
         private void CheckoutValidate(PaymentInfoModel paymentInfoModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                //int x = 1, y = 0, z = x / y;
                 paymentInfoModel = paymentInfoModel ?? new PaymentInfoModel();
                 ShoppingCartModel shoppingCartModel = paymentInfoModel.ShoppingCartModel;
                 if (shoppingCartModel == null)
@@ -1130,12 +1222,16 @@ namespace RetailSlnBusinessLayer
                         throw new Exception("Shopping Cart is Empty");
                     }
                 }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
+            }
+            finally
+            {
             }
         }
         // PRIVATE: CreateOrder
@@ -1146,6 +1242,7 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                //int x = 1, y = 0, z = x / y;
                 CorpAcctModel corpAcctModel = ((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel;
                 OrderHeader orderHeader = CreateOrderHeader(paymentInfoModel, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.OrderHeaderWIPModel.OrderDateTime = orderHeader.OrderDateTime;
@@ -1196,6 +1293,7 @@ namespace RetailSlnBusinessLayer
                     //PaymentReferenceNumber = paymentId == "" ? "" : "Ref# " + paymentId + "; Ord# " + paymentOrderId,
                 };
                 ApplicationDataContext.OrderPaymentAdd(paymentInfoModel.PaymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
             }
             catch (Exception exception)
@@ -1210,35 +1308,51 @@ namespace RetailSlnBusinessLayer
         // PRIVATE: CreateOrderDetail
         private OrderDetail CreateOrderDetail(long orderHeaderSummaryId, int seqNum, ShoppingCartItemModel shoppingCartItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            OrderDetail orderDetail = new OrderDetail
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
             {
-                ClientId = clientId,
-                DimensionUnitId = DimensionUnitEnum.Centimeter,
-                HeightValue = shoppingCartItemModel.HeightValue == null ? 0 : shoppingCartItemModel.HeightValue.Value,
-                HSNCode = shoppingCartItemModel.HSNCode,
-                ItemDiscountAmount = shoppingCartItemModel.ItemDiscountAmount == null ? 0 : shoppingCartItemModel.ItemDiscountAmount.Value,
-                ItemId = shoppingCartItemModel.ItemId,
-                ItemRate = shoppingCartItemModel.ItemRate == null ? 0 : shoppingCartItemModel.ItemRate.Value,
-                ItemRateBeforeDiscount = shoppingCartItemModel.ItemRateBeforeDiscount == null ? 0 : shoppingCartItemModel.ItemRateBeforeDiscount.Value,
-                ItemShortDesc = shoppingCartItemModel.ItemShortDesc,
-                LengthValue = shoppingCartItemModel.LengthValue == null ? 0 : shoppingCartItemModel.LengthValue.Value,
-                OrderAmount = shoppingCartItemModel.OrderAmount == null ? 0 : shoppingCartItemModel.OrderAmount.Value,
-                OrderAmountBeforeDiscount = shoppingCartItemModel.OrderAmountBeforeDiscount == null ? 0 : shoppingCartItemModel.OrderAmountBeforeDiscount.Value,
-                OrderComments = shoppingCartItemModel.OrderComments,
-                OrderDetailTypeId = shoppingCartItemModel.OrderDetailTypeId,
-                OrderHeaderSummaryId = orderHeaderSummaryId,
-                OrderQty = shoppingCartItemModel.OrderQty == null ? 0 : shoppingCartItemModel.OrderQty.Value,
-                ProductCode = shoppingCartItemModel.ProductCode,
-                ProductOrVolumetricWeight = shoppingCartItemModel.ProductOrVolumetricWeight == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeight.Value,
-                ProductOrVolumetricWeightUnitId = shoppingCartItemModel.ProductOrVolumetricWeightUnitId == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeightUnitId.Value,
-                SeqNum = seqNum,
-                VolumeValue = shoppingCartItemModel.VolumeValue == null ? 0 : shoppingCartItemModel.VolumeValue.Value,
-                WeightCalcUnitId = shoppingCartItemModel.WeightCalcUnitId == null ? 0 : shoppingCartItemModel.WeightCalcUnitId.Value,
-                WeightCalcValue = shoppingCartItemModel.WeightCalcValue == null ? 0 : shoppingCartItemModel.WeightCalcValue.Value,
-                WeightUnitId = shoppingCartItemModel.WeightUnitId == null ? 0 : shoppingCartItemModel.WeightUnitId.Value,
-                WeightValue = shoppingCartItemModel.WeightValue == null ? 0 : shoppingCartItemModel.WeightValue.Value,
-            };
-            return orderDetail;
+                //int x = 1, y = 0, z = x / y;
+                OrderDetail orderDetail = new OrderDetail
+                {
+                    ClientId = clientId,
+                    DimensionUnitId = DimensionUnitEnum.Centimeter,
+                    HeightValue = shoppingCartItemModel.HeightValue == null ? 0 : shoppingCartItemModel.HeightValue.Value,
+                    HSNCode = shoppingCartItemModel.HSNCode,
+                    ItemDiscountAmount = shoppingCartItemModel.ItemDiscountAmount == null ? 0 : shoppingCartItemModel.ItemDiscountAmount.Value,
+                    ItemId = shoppingCartItemModel.ItemId,
+                    ItemRate = shoppingCartItemModel.ItemRate == null ? 0 : shoppingCartItemModel.ItemRate.Value,
+                    ItemRateBeforeDiscount = shoppingCartItemModel.ItemRateBeforeDiscount == null ? 0 : shoppingCartItemModel.ItemRateBeforeDiscount.Value,
+                    ItemShortDesc = shoppingCartItemModel.ItemShortDesc,
+                    LengthValue = shoppingCartItemModel.LengthValue == null ? 0 : shoppingCartItemModel.LengthValue.Value,
+                    OrderAmount = shoppingCartItemModel.OrderAmount == null ? 0 : shoppingCartItemModel.OrderAmount.Value,
+                    OrderAmountBeforeDiscount = shoppingCartItemModel.OrderAmountBeforeDiscount == null ? 0 : shoppingCartItemModel.OrderAmountBeforeDiscount.Value,
+                    OrderComments = shoppingCartItemModel.OrderComments,
+                    OrderDetailTypeId = shoppingCartItemModel.OrderDetailTypeId,
+                    OrderHeaderSummaryId = orderHeaderSummaryId,
+                    OrderQty = shoppingCartItemModel.OrderQty == null ? 0 : shoppingCartItemModel.OrderQty.Value,
+                    ProductCode = shoppingCartItemModel.ProductCode,
+                    ProductOrVolumetricWeight = shoppingCartItemModel.ProductOrVolumetricWeight == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeight.Value,
+                    ProductOrVolumetricWeightUnitId = shoppingCartItemModel.ProductOrVolumetricWeightUnitId == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeightUnitId.Value,
+                    SeqNum = seqNum,
+                    VolumeValue = shoppingCartItemModel.VolumeValue == null ? 0 : shoppingCartItemModel.VolumeValue.Value,
+                    WeightCalcUnitId = shoppingCartItemModel.WeightCalcUnitId == null ? 0 : shoppingCartItemModel.WeightCalcUnitId.Value,
+                    WeightCalcValue = shoppingCartItemModel.WeightCalcValue == null ? 0 : shoppingCartItemModel.WeightCalcValue.Value,
+                    WeightUnitId = shoppingCartItemModel.WeightUnitId == null ? 0 : shoppingCartItemModel.WeightUnitId.Value,
+                    WeightValue = shoppingCartItemModel.WeightValue == null ? 0 : shoppingCartItemModel.WeightValue.Value,
+                };
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return orderDetail;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
         }
         // PRIVATE: CreateOrderDetailItemBundleItem
         private OrderDetailItemBundle CreateOrderDetailItemBundleItem(long orderDetailId, long orderQty, int seqNum, ItemBundleModel itemBundleModel, ItemBundleItemModel itemBundleItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -1469,12 +1583,17 @@ namespace RetailSlnBusinessLayer
             {
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalTaxAmount = 0;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalShippingAndHandlingChargesAmount = 0;
-                float totalInvoiceAmount = 0;
+                float totalInvoiceAmount = 0, totalDiscountAmount = 0;
                 foreach (ShoppingCartItemModel shoppingCartItemModelSummaryTemp in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary)
                 {
                     if (shoppingCartItemModelSummaryTemp.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount)
                     {
                         totalInvoiceAmount += shoppingCartItemModelSummaryTemp.OrderAmount.Value;
+                    }
+                    if (shoppingCartItemModelSummaryTemp.OrderDetailTypeId == OrderDetailTypeEnum.Discount)
+                    {
+                        totalDiscountAmount += shoppingCartItemModelSummaryTemp.OrderAmount.Value;
+                        totalInvoiceAmount += totalDiscountAmount;
                     }
                     if (shoppingCartItemModelSummaryTemp.OrderDetailTypeId == OrderDetailTypeEnum.SalesTaxAmount)
                     {
@@ -1607,8 +1726,8 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                ApplicationDataContext.OrderDetailWIPsDelete(paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ApplicationDataContext.OrderHeaderWIPDelete(paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.OrderDetailWIPsDelete(sessionObjectModel.PersonId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.OrderHeaderWIPDelete(sessionObjectModel.PersonId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
             }
             catch (Exception exception)
             {
@@ -1876,16 +1995,24 @@ namespace RetailSlnBusinessLayer
 
             paymentInfoModel.DeliveryMethodModel.DeliveryMethodDesc = paymentInfoModel.DeliveryMethodModel.DeliveryMethodId == null ? "" : LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId).CodeDataDesc0;
 
-            var codeDataModel = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)paymentInfoModel.PaymentModeModel.PaymentModeId);
-            if (codeDataModel != null)
-            {
-                paymentInfoModel.PaymentModeModel.PaymentModeDesc = codeDataModel.CodeDataDesc0;
-                paymentInfoModel.PaymentModeModel.PaymentModeDesc1 = codeDataModel.CodeDataDesc2;
-            }
-            else
+            if (paymentInfoModel.PaymentModeModel.PaymentModeId == null)
             {
                 paymentInfoModel.PaymentModeModel.PaymentModeDesc = "";
                 paymentInfoModel.PaymentModeModel.PaymentModeDesc1 = "";
+            }
+            else
+            {
+                var codeDataModel = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)paymentInfoModel.PaymentModeModel.PaymentModeId);
+                if (codeDataModel != null)
+                {
+                    paymentInfoModel.PaymentModeModel.PaymentModeDesc = codeDataModel.CodeDataDesc0;
+                    paymentInfoModel.PaymentModeModel.PaymentModeDesc1 = codeDataModel.CodeDataDesc2;
+                }
+                else
+                {
+                    paymentInfoModel.PaymentModeModel.PaymentModeDesc = "";
+                    paymentInfoModel.PaymentModeModel.PaymentModeDesc1 = "";
+                }
             }
         }
         // PRIVATE : UpdateDeliveryAddressInfo

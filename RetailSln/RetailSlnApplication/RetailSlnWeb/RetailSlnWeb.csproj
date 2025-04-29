@@ -1153,7 +1153,8 @@
     <Content Include="Include\jquery-te.png" />
     <Content Include="Include\orderItemCode0.js" />
     <Content Include="Include\orderItemCode2.js" />
-    <Content Include="Include\searchDataCode.js" />
+    <Content Include="Include\searchDataCode-1.1.1.min.js" />
+    <Content Include="Include\searchDataCode-1.1.1.js" />
     <Content Include="Include\Site.css" />
     <Content Include="Include\StyleSheet1.min.css" />
     <Content Include="Include\StyleSheet1.css" />
@@ -1242,7 +1243,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_LayoutOriginal.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\_OrderItem0.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -1342,6 +1342,7 @@
     <Content Include="Views\Home\_ContactUsInfo1.cshtml" />
     <Content Include="Views\Home\_ContactUsInfo2.cshtml" />
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
+    <Content Include="Views\Shared\_Layout3Original.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

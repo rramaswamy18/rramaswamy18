@@ -84,16 +84,17 @@ namespace RetailSlnWeb.Controllers
                         actionResult = RedirectToAction("Index", "Dashboard");
                         break;
                     case "PRIESTROLE":
+                        //actionResult = RedirectToAction("RegisterUser", "Home", new { id = 700 });
                         if (sessionObjectModel == null)
                         {
                             actionResult = RedirectToAction("RegisterUser", "Home", new { id = 700 });
                         }
                         else
                         {
-                            //OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, null, null, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                            //actionResult = View("Index", orderItemModel1);
+                            OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, null, null, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            actionResult = View("Index", orderItemModel1);
                             //actionResult = RedirectToAction("Index", "Home");
-                            actionResult = RedirectToAction("Index", "Dashboard");
+                            //actionResult = RedirectToAction("Index", "Dashboard");
                         }
                         break;
                     default:
@@ -798,9 +799,6 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                //ApplicationDataContext.OpenSqlConnection();
-                //archLibBL.GetDemogInfoDataFromDemogInfoZipCode(registerUserModel.DemogInfoAddressModel, ApplicationDataContext.SqlConnectionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, ipAddress);
-                //ApplicationDataContext.CloseSqlConnection();
                 ModelState.Clear();
                 TryValidateModel(registerUserModel);
                 TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
@@ -821,7 +819,6 @@ namespace RetailSlnWeb.Controllers
                     string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
                     registerUserEmailBodyHtml += signatureHtml;
                     archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    //UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(registerUserModel.RegisterEmailAddress, registerUserModel.OTPCreatedDateTime, registerUserModel.OTPExpiryDateTime, registerUserModel.OTPExpiryDuration, registerUserModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserSuccess", registerUserEmailModel);
@@ -1499,9 +1496,10 @@ namespace RetailSlnWeb.Controllers
                 case "MARKETINGROLE":
                     redirectUrl = Url.Action("Index", "Dashboard");
                     break;
+                //case "PRIESTROLE":
+                //    redirectUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+                //    break;
                 case "PRIESTROLE":
-                    redirectUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
-                    break;
                 default:
                     redirectUrl = Url.Action("Index", "Home");
                     break;

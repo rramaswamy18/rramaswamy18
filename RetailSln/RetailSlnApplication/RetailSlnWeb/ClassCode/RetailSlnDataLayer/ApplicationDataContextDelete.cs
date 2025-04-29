@@ -11,14 +11,14 @@ namespace RetailSlnDataLayer
 {
     public partial class ApplicationDataContext
     {
-        public static void OrderDetailWIPsDelete(long createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void OrderDetailWIPsDelete(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                SqlCommand sqlCommand = new SqlCommand($"DELETE RetailSlnSch.OrderDetailWIP WHERE OrderHeaderWIPId IN(SELECT OrderHeaderWIPId FROM RetailSlnSch.OrderHeaderWIP WHERE CreatedForPersonId = {createdForPersonId})", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand($"DELETE RetailSlnSch.OrderDetailWIP WHERE OrderHeaderWIPId IN(SELECT OrderHeaderWIPId FROM RetailSlnSch.OrderHeaderWIP WHERE PersonId = {personId})", sqlConnection);
                 sqlCommand.ExecuteNonQuery();
                 return;
             }
@@ -28,14 +28,14 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void OrderHeaderWIPDelete(long createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void OrderHeaderWIPDelete(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                SqlCommand sqlCommand = new SqlCommand($"DELETE RetailSlnSch.OrderHeaderWIP WHERE CreatedForPersonId = {createdForPersonId}", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand($"DELETE RetailSlnSch.OrderHeaderWIP WHERE PersonId = {personId}", sqlConnection);
                 sqlCommand.ExecuteNonQuery();
                 return;
             }

@@ -351,7 +351,8 @@ namespace RetailSlnWeb.Controllers
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
                 PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-                retailSlnBL.CreateInvoice(paymentInfoModel, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                retailSlnBL.CreateInvoice(ref paymentInfoModel, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                Session["PaymentInfo"] = paymentInfoModel;
                 actionResult = View("OrderInvoice", paymentInfoModel);
             }
             catch (Exception exception)
@@ -569,6 +570,7 @@ namespace RetailSlnWeb.Controllers
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
             SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
             retailSlnBL.PaymentInfo3(paymentInfoModel, razorpay_payment_id, razorpay_order_id, razorpay_signature, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            Session["PaymentInfo"] = paymentInfoModel;
             return RedirectToAction("OrderInvoice");
         }
 

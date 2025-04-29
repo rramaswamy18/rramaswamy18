@@ -11,6 +11,7 @@ namespace RetailSlnModels
         public long? CouponListId { set; get; }
         public string CouponNum { set; get; }
         public string BegEffDate { set; get; }
+        public float DiscountPercent { set; get; }
         public string EndEffDate { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

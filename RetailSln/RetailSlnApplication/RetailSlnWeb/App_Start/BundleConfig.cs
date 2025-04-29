@@ -38,7 +38,7 @@ namespace RetailSlnWeb
                       "~/Scripts/jquery.validate.js",
                       "~/Scripts/jquery.validate.unobtrusive.js",
                       "~/Scripts/bootstrap.js",
-                      //"~/Scripts/jquery.meanmenu.js",
+                      "~/Include/searchDataCode-{version}.js",
                       "~/Include/javaScriptCode-{version}.js"));
             #endregion Ravi Sep 16 2023
         }

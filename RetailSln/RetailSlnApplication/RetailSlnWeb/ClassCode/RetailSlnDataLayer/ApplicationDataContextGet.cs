@@ -12,6 +12,46 @@ namespace RetailSlnDataLayer
 {
     public static partial class ApplicationDataContext
     {
+        public static CouponListModel CouponListGet(string couponNumber, string effDate, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SqlDataReader sqlDataReader = null;
+            CouponListModel couponListModel;
+            try
+            {
+                //SqlCommand sqlCommand = new SqlCommand($"SELECT * FROM RetailSlnSch.CouponList WHERE CouponNum = '{couponNumber}' AND '{effDate}' BETWEEN BegEffDate AND EndEffDate", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand($"SELECT * FROM RetailSlnSch.CouponList WHERE CouponNum = '{couponNumber}'", sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                if (sqlDataReader.Read())
+                {
+                    couponListModel = new CouponListModel
+                    {
+                        BegEffDate = sqlDataReader["BegEffDate"].ToString(),
+                        CouponListId = long.Parse(sqlDataReader["CouponListId"].ToString()),
+                        CouponNum = sqlDataReader["CouponListId"].ToString(),
+                        DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                        EndEffDate = sqlDataReader["EndEffDate"].ToString(),
+                    };
+                }
+                else
+                {
+                    couponListModel = null;
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                couponListModel = null;
+            }
+            finally
+            {
+                sqlDataReader.Close();
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return couponListModel;
+        }
         public static PersonExtn1Model PersonExtn1FromPersonIdGet(long personId, long corpAcctLocationId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

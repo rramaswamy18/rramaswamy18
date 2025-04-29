@@ -19,15 +19,21 @@
                       <br />
                       Your master coupon number is <span style="color: #000000; font-weight: bold;">@Model.CouponListModel.CouponNum</span>
                       <br />
-                      Please share the coupon number your customer(s)
+                      Please share the coupon number with your customer(s)
                       <br />
                       Your customer needs to appy the coupon at time of purchase
                       <br />
                       When the customer applies the coupon, the sahayam is  @(Model.PriestListModel.CommissionPercent + "%") of the order amount.
                       <br />
+                      The discount amount will be reflected in the invoice
+                      <br />
                       This sahayam is as at time of registration and is subject to change
+                      <br />
+                      Sahayam amount will be paid periodically
                       <br /><br />
-                      Please <a href="@baseUrl/@Url.Action("ResetPassword", "Home")">click here</a> to setup your password. Once you are done with setting up a password you can access the website
+                      You have successfully setup the password. Please <a href="@baseUrl/@Url.Action("LoginUserProf", "Home")">click here</a> to login 
+                      <br /><br />
+                      Please <a href="@baseUrl/@Url.Action("ResetPassword", "Home")">click here</a> to reset password
                       <br />
                       If you are unable to access the above, copy and paste the below Url in your browser...
                       @baseUrl/@Url.Action("ResetPassword", "Home")

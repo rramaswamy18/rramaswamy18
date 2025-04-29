@@ -27,6 +27,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "                ClientId" + Environment.NewLine;
                 sqlStmt += "               ,CouponNum" + Environment.NewLine;
                 sqlStmt += "               ,BegEffDate" + Environment.NewLine;
+                sqlStmt += "               ,DiscountPercent" + Environment.NewLine;
                 sqlStmt += "               ,EndEffDate" + Environment.NewLine;
                 sqlStmt += "               ,AddUserId" + Environment.NewLine;
                 sqlStmt += "               ,UpdUserId" + Environment.NewLine;
@@ -36,6 +37,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "                @ClientId" + Environment.NewLine;
                 sqlStmt += "               ,@CouponNum" + Environment.NewLine;
                 sqlStmt += "               ,@BegEffDate" + Environment.NewLine;
+                sqlStmt += "               ,@DiscountPercent" + Environment.NewLine;
                 sqlStmt += "               ,@EndEffDate" + Environment.NewLine;
                 sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
                 sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
@@ -45,6 +47,7 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@CouponNum", SqlDbType.NVarChar, 50);
                 sqlCommand.Parameters.Add("@BegEffDate", SqlDbType.NVarChar, 10);
+                sqlCommand.Parameters.Add("@DiscountPercent", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@EndEffDate", SqlDbType.NVarChar, 10);
                 sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
                 #endregion
@@ -52,6 +55,7 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@CouponNum"].Value = couponListModel.CouponNum;
                 sqlCommand.Parameters["@BegEffDate"].Value = couponListModel.BegEffDate;
+                sqlCommand.Parameters["@DiscountPercent"].Value = couponListModel.DiscountPercent;
                 sqlCommand.Parameters["@EndEffDate"].Value = couponListModel.EndEffDate;
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
                 #endregion

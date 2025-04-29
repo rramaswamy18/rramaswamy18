@@ -66,6 +66,20 @@ namespace RetailSlnWeb.Controllers
             return Json(sqlQueryResults, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult SearchByZipCodeOrCityName(SearchDataModel searchDataModel, string execUniqueId)
+        {
+            ViewData["ActionName"] = "Index";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL generalUtilityBL = new ArchLibBL();
+            List<Dictionary<string, string>> sqlQueryResults = generalUtilityBL.SearchByZipCodeOrCityName(long.Parse(searchDataModel.SearchKeyValuePairs["DemogInfoCountryId"]), searchDataModel.SearchKeyValuePairs["ZipCode"], searchDataModel.SearchKeyValuePairs["CityName"], clientId, ipAddress, execUniqueId, loggedInUserId);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return Json(sqlQueryResults, JsonRequestBehavior.AllowGet);
+        }
+
         //[Authorize]
         [HttpGet]
         //[Route("SqlResult")]
