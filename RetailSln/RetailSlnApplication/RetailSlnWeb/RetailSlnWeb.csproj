@@ -185,6 +185,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\PaymentModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApplSessionObjectModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemMasterHierModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CategoryListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CheckoutModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CompleteOrderModel.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterAttributesModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemMasterListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterModel.cs" />
@@ -225,6 +227,9 @@
     <Compile Include="ClassCode\RetailSlnModels\RegisterUserEmailModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RetailSlnInitModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchKeywordModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchResultModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
@@ -1031,9 +1036,9 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\ItemMaster\ItemMaster98.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\ItemMaster\ItemMaster99.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images_Original\DivineBijaBanner.jpg" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Debug.txt" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt" />
     <Content Include="ClientSpecific\98_DivineBija.com\Web.config.txt" />
+    <None Include="ClientSpecific\98_DivineBija.com\Web.Debug.config.txt" />
+    <None Include="ClientSpecific\98_DivineBija.com\Web.Release.config.txt" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1217,6 +1222,8 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\_Footer.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\_SignatureTemplate.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\_SignatureTemplateEmail.cshtml" />
+    <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_Layout.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\_Layout.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -1342,7 +1349,13 @@
     <Content Include="Views\Home\_ContactUsInfo1.cshtml" />
     <Content Include="Views\Home\_ContactUsInfo2.cshtml" />
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
-    <Content Include="Views\Shared\_Layout3Original.cshtml" />
+    <Content Include="Views\Shared\_Layout4.cshtml" />
+    <Content Include="Views\Home\SearchResult.cshtml" />
+    <Content Include="Views\Home\_SearchResult.cshtml" />
+    <Content Include="Views\Home\_SearchResultCategory.cshtml" />
+    <Content Include="Views\Home\_SearchResultItemMaster.cshtml" />
+    <Content Include="Views\Home\_OTPEmailBody.cshtml" />
+    <Content Include="Views\Home\_OTPEmailSubject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -262,6 +262,7 @@ namespace RetailSlnWeb.Controllers
                         success = true;
                         processMessage = "SUCCESS!!!";
                         retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        Session["PaymentInfo"] = paymentInfoModel;
                         htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo0", paymentInfoModel);
                     }
                     else
@@ -346,10 +347,10 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
             try
             {
-                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
                 PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
                 retailSlnBL.CreateInvoice(ref paymentInfoModel, this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 Session["PaymentInfo"] = paymentInfoModel;
@@ -358,10 +359,21 @@ namespace RetailSlnWeb.Controllers
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "OrderInvoice / GET");
-                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                actionResult = View("Error", responseObjectModel);
+                string aspNetRoleName;
+                try
+                {
+                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                }
+                catch
+                {
+                    aspNetRoleName = "DEFAULTROLE";
+                }
+                OrderItemModel orderItemModel = retailSlnBL.OrderItem(aspNetRoleName, null, null, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Index", orderItemModel);
+                //ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                //ModelState.AddModelError("", "OrderInvoice / GET");
+                //archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                //actionResult = View("Error", responseObjectModel);
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
@@ -608,11 +620,43 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 success = false;
                 processMessage = "ERROR???";
-                htmlString = "Error while removing item to cart";
+                htmlString = "Error while removing item from cart";
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
             return actionResult;
+        }
+
+        // GET: SearchResult
+        [AllowAnonymous]
+        [HttpGet]
+        //[Route("SearchResult")]
+        public ActionResult SearchResult(string id)
+        {
+            ViewData["ActionName"] = "SearchResult";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            //ActionResult actionResult;
+            //bool success;
+            //string processMessage, htmlString;
+            //List<long> searchIds = new List<long> { 0, 9, 18 };
+            //List<ItemModel> searchItems = RetailSlnCache.ItemModels.Where(x => searchIds.Contains(x.ItemId.Value)).ToList();
+            try
+            {
+                var searchResultModel = retailSlnBL.SearchResult(id, clientId, ipAddress, execUniqueId, loggedInUserId);
+                return View("SearchResult", searchResultModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                //success = false;
+                //processMessage = "ERROR???";
+                //htmlString = "Error while searching " + id;
+                return null;
+            }
         }
 
         // GET: ShoppingCart

@@ -4,8 +4,6 @@
     ViewBag.Title = "Index";
 }
 @Html.Partial(Model.ViewName, Model)
-@*<div id="divHome">
-</div>*@
 <script type="text/javascript">
     function window_onload() {
         for (var count = 0; ; count++) {
@@ -32,6 +30,7 @@
                 }
             }
         }
+        shoppingCart_onclick();
         document.getElementById("divScrollIntoView").scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 </script>

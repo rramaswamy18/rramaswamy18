@@ -1,0 +1,7 @@
+﻿@using RetailSlnModels
+@model SearchResultModel
+Search results for : <span style="color: #000000;">@Model.SearchKeywordText</span>
+<br />
+@Html.Partial("_SearchResultItemMaster", Model.ItemMasterListModel)
+<br />
+@Html.Partial("_SearchResultCategory", Model.CategoryListModel)

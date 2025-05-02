@@ -6,8 +6,8 @@
     </h2>
     <h4>
         <span style="color: #0000ff; font-weight: bold;">Your order has been processed successfully</span>
-        <br />
-        Check your email for a copy of the receipt
+        @*<br />
+        Check your email for a copy of the receipt*@
     </h4>
     <a href="@Url.Action("DownloadFile", "Home", new { fileName = Model.OrderSummaryModel.InvoiceFileNamePdf })" style="color: #cd5c5c; font-family: Arial; font-size: 18px; font-weight: bold; text-decoration: underline;">Download Invoice...#@Model.OrderSummaryModel.OrderHeaderId</a>
     <br />

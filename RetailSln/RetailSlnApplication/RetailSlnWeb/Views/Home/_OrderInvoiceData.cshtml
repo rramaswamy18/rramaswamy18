@@ -48,8 +48,14 @@
     }
 </style>
 <div style="overflow-x: auto; width: 100%;">
-    @Html.Partial("_ShoppingCartHeader1", Model)
-    @Html.Partial("_ShoppingCartData1", Model)
-    @Html.Partial("_ShoppingCartSummary1", Model)
-    @Html.Partial("_ShoppingCartFooter1", Model)
+    @{
+        Model.ShoppingCartModel.Checkout = true;
+        Model.ShoppingCartModel.ShowDetail = true;
+        @Html.Partial("_ShoppingCartHeader1", Model)
+        @Html.Partial("_ShoppingCartData1", Model)
+        @Html.Partial("_ShoppingCartSummary1", Model)
+        @Html.Partial("_ShoppingCartFooter1", Model)
+        Model.ShoppingCartModel.Checkout = false;
+        Model.ShoppingCartModel.ShowDetail = false;
+    }
 </div>

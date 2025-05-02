@@ -140,18 +140,18 @@
 </div>
 <div class="row" style="padding-left: @paddingLeft; text-align: left;">
     @Html.LabelFor(m => m.DemogInfoAddressModel.AddressLine1, new { @class = "col-form-label", id = "lblDemogInfoAddressModel_AddressLine1" })&nbsp;<span id="spnDemogInfoAddressModel_AddressLine1Required" style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
-    @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onblur = "", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 86%;" })
+    @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 86%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.AddressLine1, "", new { id = "DemogInfoAddressModel_AddressLine1-error" }).ToHtmlString()))
 </div>
 <div class="row" style="padding-left: @paddingLeft; text-align: left;">
     @Html.LabelFor(m => m.DemogInfoAddressModel.AddressLine2, new { @class = "col-form-label", id = "lblDemogInfoAddressModel_AddressLine2" })
-    @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", onblur = "", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 86%;" })
+    @Html.TextAreaFor(m => m.DemogInfoAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DemogInfoAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 86%;" })
     @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.AddressLine2, "", new { id = "DemogInfoAddressModel_AddressLine2-error" }).ToHtmlString()))
 </div>
 <div class="row" style="padding-left: @paddingLeft; text-align: left;">
     <div style="float: left; width: 45%;">
         @Html.LabelFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, new { @class = "col-form-label", id = "lblDemogInfoAddressModel_DemogInfoCountryId" })<!--<br /><span style="color: #0000ff; font-weight: bold;">(Required)</span>)-->
-        @Html.DropDownListFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, new SelectList(Model.DemogInfoAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DemogInfoAddressModel.DemogInfoCountryId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+        @Html.DropDownListFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, new SelectList(Model.DemogInfoAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DemogInfoAddressModel.DemogInfoCountryId), null, new { @class = "form-control", onchange = "javascript: return demogInfoCountry_onchage(this, 'DemogInfoAddressModel_');", style = "font-size: 13px; width: 95%;" })
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DemogInfoAddressModel.DemogInfoCountryId, "", new { @class = "fieldValidationError", id = "DemogInfoAddressModel_DemogInfoCountryId-error" }).ToHtmlString()))
     </div>
     <div style="float: left; padding: 0px; width: 25%;">

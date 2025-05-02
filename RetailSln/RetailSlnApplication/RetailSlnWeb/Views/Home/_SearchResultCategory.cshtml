@@ -1,0 +1,58 @@
+﻿@model CategoryListModel
+@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@*
+    @model string
+    @using ArchitectureLibraryCacheData
+    @using RetailSlnCacheData
+    @{
+        var clientId = ArchLibCache.ClientId;
+        var clientName = ArchLibCache.ClientName;
+        var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+        var searchText = Model.Trim().ToLower();
+        var categoryModels = RetailSlnCache.CategoryModels.Where(x => x.CategoryDesc.ToLower().Contains(searchText)).ToList();
+        int index = 0;
+    }
+*@
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int index = 0;
+}
+<table class="table table-bordered table-condensed table-hover table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
+    <tr>
+        <th class="text-center" style="width: 9%;">
+            #
+        </th>
+        <th class="text-center" style="width: 9%;">
+            Id
+        </th>
+        <th class="text-left">
+            Category
+        </th>
+        <th class="text-left" style="width: 99px;">
+            Image
+        </th>
+    </tr>
+    @foreach (var categoryModel in Model.CategoryModels)
+    {
+        index++;
+        <tr>
+            <td>
+                @index
+            </td>
+            <td>
+                @categoryModel.CategoryId
+            </td>
+            <td class="text-left">
+                @(categoryModel.CategoryDesc)
+                <br />
+            </td>
+            <td class="text-left">
+                <img alt="@(categoryModel.CategoryDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Category/@categoryModel.ImageName" style="height: 90px; width: 90px;" title="@(categoryModel.CategoryDesc + " " + imageTitle)" />
+            </td>
+        </tr>
+    }
+</table>

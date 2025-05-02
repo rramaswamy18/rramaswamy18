@@ -9,6 +9,7 @@ namespace RetailSlnModels
     public class CouponListModel : AuditInfoModel
     {
         public long? CouponListId { set; get; }
+        public long ClientId { set; get; }
         public string CouponNum { set; get; }
         public string BegEffDate { set; get; }
         public float DiscountPercent { set; get; }

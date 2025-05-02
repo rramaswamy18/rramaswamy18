@@ -9,6 +9,8 @@ namespace RetailSlnEnumerations
     public enum OrderDetailTypeEnum :int
     {
         [Description("Item")]
+        DoNotShow = 0,
+        [Description("Item")]
         Item = 100,
         [Description("Total Order Amount")]
         TotalOrderAmount = 200,

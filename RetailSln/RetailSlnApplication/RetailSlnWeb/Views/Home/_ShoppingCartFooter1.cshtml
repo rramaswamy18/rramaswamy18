@@ -39,7 +39,22 @@
                 @(ArchLibCache.GetApplicationDefault(clientId, "Business", "PaymentUPIIdCaption") + " : " + ArchLibCache.GetApplicationDefault(clientId, "Business", "PaymentUPIId"))
             </th>
             <th style="text-align: left; vertical-align: top;">
-                Order Created by:<br />@Model.OrderSummaryModel.CreatedByEmailAddress
+                @Model.PaymentModeModel.PaymentModeDesc
+                @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentRefNumData1))
+                {
+                    <br style="clear: both;" />
+                    @(Model.PaymentDataModel.PaymentRefNumCaption1 + " " + Model.PaymentDataModel.PaymentRefNumData1)
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.PaymentDataModel.PaymentRefNumData2))
+                {
+                    <br style="clear: both;" />
+                    @(Model.PaymentDataModel.PaymentRefNumCaption2 + " " + Model.PaymentDataModel.PaymentRefNumData2)
+                }
+                @if (Model.OrderSummaryModel.CreatedByEmailAddress != Model.OrderSummaryModel.EmailAddress)
+                {
+                    <br style="clear: both;" />
+                    <pre>Order Created by:</pre><br />@Model.OrderSummaryModel.CreatedByEmailAddress
+                }
             </th>
             @{
                 if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)

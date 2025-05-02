@@ -52,6 +52,68 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return couponListModel;
         }
+        public static PriestListModel PriestListGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SqlDataReader sqlDataReader = null;
+            PriestListModel priestListModel;
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "    SELECT TOP 1" + Environment.NewLine;
+                sqlStmt += "           *" + Environment.NewLine;
+                sqlStmt += "      FROM " + Environment.NewLine;
+                sqlStmt += "           RetailSlnSch.PriestList" + Environment.NewLine;
+                sqlStmt += "INNER JOIN RetailSlnSch.CouponList" + Environment.NewLine;
+                sqlStmt += "        ON PriestList.CouponListId = CouponList.CouponListId" + Environment.NewLine;
+                sqlStmt += $"     WHERE PriestList.PersonId = {personId}" + Environment.NewLine;
+                sqlStmt += "   ORDER BY CouponList.BegEffDate" + Environment.NewLine;
+                sqlStmt += "           ,CouponList.CouponListId" + Environment.NewLine;
+                //sqlStmt = "           " + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                #endregion
+                if (sqlDataReader.Read())
+                {
+                    priestListModel = new PriestListModel
+                    {
+                        PriestListId = long.Parse(sqlDataReader["PriestListId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        CommissionPercent = float.Parse(sqlDataReader["CommissionPercent"].ToString()),
+                        CouponListId = long.Parse(sqlDataReader["CouponListId"].ToString()),
+                        DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                        PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                        CouponListModel = new CouponListModel
+                        {
+                            CouponListId = long.Parse(sqlDataReader["CouponListId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            BegEffDate = sqlDataReader["BegEffDate"].ToString(),
+                            CouponNum = sqlDataReader["CouponListId"].ToString(),
+                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                            EndEffDate = sqlDataReader["EndEffDate"].ToString(),
+                        }
+                    };
+                }
+                else
+                {
+                    priestListModel = null;
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                priestListModel = null;
+            }
+            finally
+            {
+                sqlDataReader.Close();
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return priestListModel;
+        }
         public static PersonExtn1Model PersonExtn1FromPersonIdGet(long personId, long corpAcctLocationId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -278,6 +340,63 @@ namespace RetailSlnDataLayer
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
             }
             return orderHeaderWIPModel;
+        }
+        public static List<SearchMetaDataModel> SearchMetaDatasGet(string searchKeywordText, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "        SELECT DISTINCT SearchMetaData.EntityTypeNameDesc, SearchMetaData.EntityId, SearchMetaData.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT 'ITEMMASTER' AS EntityTypeNameDesc, ItemMaster.ItemMasterId, ItemMaster.ItemMasterId AS SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "         WHERE ItemMasterDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT 'CATEGORY' AS EntityTypeNameDesc, Category.CategoryId, Category.CategoryId AS SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.Category" + Environment.NewLine;
+                sqlStmt += "         WHERE CategoryDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SeqNum" + Environment.NewLine;
+                #endregion
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<SearchMetaDataModel> searchMetaDataModels = new List<SearchMetaDataModel>();
+                SearchMetaDataModel searchMetaDataModel;
+                while (sqlDataReader.Read())
+                {
+                    searchMetaDataModels.Add
+                    (
+                        searchMetaDataModel = new SearchMetaDataModel
+                        {
+                            //SearchMetaDataModelId = long.Parse(sqlDataReader["SearchMetaDataId"].ToString()),
+                            //SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                            EntityTypeNameDesc = sqlDataReader["EntityTypeNameDesc"].ToString(),
+                            EntityId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            SearchKeywordModel = new SearchKeywordModel
+                            {
+                                //SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                                //SearchKeywordText = sqlDataReader["SearchKeywordText"].ToString(),
+                            },
+                        }
+                    );
+                }
+                return searchMetaDataModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
         }
     }
 }

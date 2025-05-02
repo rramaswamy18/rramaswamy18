@@ -46,6 +46,7 @@ function addToCart_onclick(itemMasterId, itemId, elementIdSuffix) {
                     $('#loadingModal').modal('hide');
                     console.log("addToCart_onclick", "00090000", "SUCCESS!!!", responseData);
                     if (responseData.success) {
+                        shoppingCartSummary(responseData.shoppingCartItemsCount, -1, responseData.shoppingCartTotalAmount);
                         document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                         document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
                         document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
@@ -427,6 +428,7 @@ function removeFromCart_onclick(index) {
                 $('#loadingModal').modal('hide');
                 console.log("removeFromCart_onclick", "00090000", "SUCCESS!!!", responseData);
                 if (responseData.success) {
+                    shoppingCartSummary(responseData.shoppingCartItemsCount, -1, responseData.shoppingCartTotalAmount);
                     document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
                     document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
                     document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
@@ -453,6 +455,16 @@ function removeFromCart_onclick(index) {
     }
     return true;
 }
+function searchTermButton_onclick(searchTermElementId) {
+    var indexOf = window.location.href.toUpperCase().indexOf("SEARCHRESULT");
+    console.log("00000000", "searchText_onclick", searchTermElementId, "Enter");
+    if (indexOf === -1) {
+        window.open("/Home/SearchResult?id=" + document.getElementById(searchTermElementId).value, "_blank");
+    }
+    else {
+        window.location.href = "/Home/SearchResult?id=" + document.getElementById(searchTermElementId).value;
+    }
+}
 function shoppingCart_onclick(ev) {
     console.log("shoppingCart_onclick", "00000000", "ENTER!!!");
     var url = "/Home/ShoppingCart/";
@@ -463,22 +475,33 @@ function shoppingCart_onclick(ev) {
         async: true,
         success: function (responseData, textStatus, request) {
             document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
-            shoppingCartSummary(responseData.shoppingCartItemsCount, responseData.shoppingCartTotalAmount);
+            shoppingCartSummary(responseData.shoppingCartItemsCount, -1, responseData.shoppingCartTotalAmount);
         },
         error: function (xhr, exception) {
             console.log(43, "ERROR???", exception, xhr);
         }
     });
     console.log("shoppingCart_onclick", "00001000", document.getElementById("divShoppingCart").offsetTop);
-    ev.preventDefault();
-    document.getElementById("hrfBackToTop").focus({ preventScroll: true });
-    document.getElementById("divShoppingCart").scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-    document.getElementById("hrfBackToTop").scrollTop = 50;
+    try {
+        ev.preventDefault();
+        document.getElementById("hrfBackToTop").focus({ preventScroll: true });
+        document.getElementById("divShoppingCart").scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        document.getElementById("hrfBackToTop").scrollTop = 50;
+    }
+    catch (err) {
+        //console.log(err);
+    }
     console.log("shoppingCart_onclick", "00000000", "EXIT!!!");
 }
-function shoppingCartSummary(totalItemCount, totalOrderAmount) {
+function shoppingCartSummary(totalItemCount, totalOrderAmount, totalOrderAmountFormatted) {
     document.getElementById("shoppingCartItemsCount").innerHTML = totalItemCount;
-    document.getElementById("shoppingCartTotalAmount").innerHTML = totalOrderAmount;
+    document.getElementById("shoppingCartTotalAmount").innerHTML = totalOrderAmountFormatted;
     document.getElementById("shoppingCartItemsCount1").innerHTML = totalItemCount;
-    document.getElementById("shoppingCartTotalAmount1").innerHTML = totalOrderAmount;
+    document.getElementById("shoppingCartTotalAmount1").innerHTML = totalOrderAmountFormatted;
+    if (totalItemCount == 0 || totalOrderAmount == 0) {
+        document.getElementById("hrfCheckoutLink").classList.add("disabled-link");
+    }
+    else {
+        document.getElementById("hrfCheckoutLink").classList.remove("disabled-link");
+    }
 }

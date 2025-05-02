@@ -14,16 +14,16 @@
         opacity: 1;
     }
 </style>
-<table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; padding: 0px; width: 90%;">
+<table class="table table-condensed table-responsive" style="border-style: none; border-width: 0px; margin-left: auto; margin-right: auto; padding: 0px; width: 90%;">
     <tr>
-        <th class="text-left" style="padding-left: 18px; width: 65%;">
+        <th class="text-left" style="border-style: none; border-width: 0px; padding-left: 18px; width: 65%;">
             <span style="color: #000000; font-size: 18px;">@Model.ItemMasterDesc</span>
             @if (!string.IsNullOrWhiteSpace(Model.ItemMasterDesc2 + " " + Model.ItemMasterDesc3))
             {
                 <br style="clear: both;" />
                 <span style="color: #1d1d1d; font-family: Arial; font-size: 14px; font-style: normal; font-weight: 600; line-height: 18px;">@(Model.ItemMasterDesc2 + " " + Model.ItemMasterDesc3)</span>
             }
-            <table class="table-bordered" style="padding: 5px;">
+            <table style="border-style: none; border-width: 0px; padding: 5px;">
                 <colgroup>
                     <col style="width: 27px;" />
                     <col style="width: 171px;" />
@@ -102,10 +102,10 @@
                 }
             </table>
         </th>
-        <td style="padding: 0px; vertical-align: top; width: 35%;">
-            <table class="table table-condensed table-responsive">
+        <td style="border-style: none; border-width: 0px; padding: 0px; vertical-align: top; width: 35%;">
+            <table class="table table-condensed table-responsive" style="border-style: none; border-width: 0px;">
                 <tr>
-                    <th class="text-left">
+                    <th class="text-left" style="border-style: none; border-width: 0px;">
                         <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ImageName" />
                     </th>
                 </tr>

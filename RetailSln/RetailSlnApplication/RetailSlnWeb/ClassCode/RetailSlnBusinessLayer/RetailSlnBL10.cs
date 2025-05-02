@@ -86,7 +86,7 @@ namespace RetailSlnBusinessLayer
                 CouponListModel couponListModel = new CouponListModel
                 {
                     BegEffDate = "1900-01-01",
-                    CouponNum = archLibBL.GenerateRandomKey(int.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "PriestCouponLength"))),
+                    CouponNum = archLibBL.GenerateRandomKey(int.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "PriestCouponLength")), lowerCaseFlag: false, specialCharFlag: false),
                     DiscountPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "PriestUserDiscount")),
                     EndEffDate = "9999-12-31",
                 };

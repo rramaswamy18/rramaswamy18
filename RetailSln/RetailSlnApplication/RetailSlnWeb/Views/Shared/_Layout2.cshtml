@@ -7,6 +7,7 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    //int mainCategoryCount = 5;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string aspNetRoleName;
     bool isLoggedIn;
@@ -106,7 +107,7 @@
                                 </a>
                             </div>
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="@Url.Action("Checkout", "Home")" @*href="javascript: void(0);" onclick="javascript: return checkout_onclick();"*@ class="navbar-right-link" title="Checkout - @imageTitle">
+                                <a class="navbar-right-link" id="hrfCheckoutLink" href="@Url.Action("Checkout", "Home")" title="Checkout - @imageTitle">
                                     <img alt="Checkout - @imageTitle" src="~/Images/Checkout2.png" style="height: 20px; width: 20px;" title="Checkout - @imageTitle">
                                     <br style="clear: both;" />
                                     Checkout
@@ -137,77 +138,6 @@
                     </div>
                 </div>
             </div>
-            @*
-                <nav class="navbar navbar-default">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <div class="nav navbar-nav navbar-right-hamburger">
-                                <div class="nav-hamburger-feature" style=" padding-right: 0px; text-align: center;">
-                                    <a href="javascript: void(0);" onclick="javascript: return shoppingCart_onclick(event);" style="color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400;" title="View Cart - @imageTitle">
-                                        <span style="white-space: nowrap;color: #fff">View cart</span>
-                                        <span id="shoppingCartItemsCount1" style="display: none;">0</span><br />
-                                        <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount1" style="background-color: white; color: #9a031e;">$0.00</span>
-                                    </a>
-                                </div>
-                                <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                    <a href="javascript: void();" onclick="javascript: return checkoutValidate_onclick();" class="navbar-right-link" title="Checkout - @imageTitle">
-                                        Checkout
-                                    </a>
-                                </div>
-                                <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                    <a href="@Url.Action("RegisterUserProf", "Home")" class="navbar-right-link" title="Register - @imageTitle">
-                                        Register
-                                    </a>
-                                </div>
-                                <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                    <a href="@Url.Action("LoginUserProf", "Home")" class="navbar-right-link" title="Sign In - @imageTitle">
-                                        Login
-                                    </a>
-                                </div>
-                                <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                    <a href="@Url.Action("Logout", "Home")" class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" title="Logout - @imageTitle">
-                                        Logout
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="hamburger">
-                                <button type="button" class="navbar navbar-toggle collapsed custom-toggle" data-toggle="collapse" data-target="#feature-section-navbar" aria-expanded="false">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <i class="fas fa-bars"></i>
-                                    <i class="fas fa-times toggle-icon"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="collapse navbar-collapse custom-navbar" id="feature-section-navbar">
-                            <ul class="nav navbar-nav">
-                                @if (categoryItemMasterHierModels.Count > 1)
-                                {
-                                    <li class="dropdown hidden-xs">
-                                        <a aria-haspopup="true" aria-expanded="false" class="navigation-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" style="font-weight: bold;">
-                                            More...&nbsp;<span class="caret" style="color: #ffffff; font-weight: bold;"></span>
-                                        </a>
-                                        <ul class="dropdown-menu" style="margin-top: -1px;">
-                                            @for (; i < categoryItemMasterHierModels.Count; i++)
-                                            {
-                                                <li>
-                                                    <span id="menuCategoryId@(i)" style="display: none;">@categoryItemMasterHierModels[i].CategoryId</span>
-                                                    <a class="nav-links" id="menuCategory@(i)" href="javascript: void(0);" onclick="javascript: return categoryId_onclick(@categoryItemMasterHierModels[i].CategoryId, 1, @categoryItemMasterHierModels.Count);" style="font-weight: bold;" data-toggle="collapse" data-target="#feature-section-navbar">@categoryItemMasterHierModels[i].CategoryModel.CategoryDesc</a>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </li>
-
-                                    <li class="hidden-xs" id="current-active-feature-item">
-                                        <a href="javascript: void(0);" style="cursor: default;">
-                                            <span id="current-active-feature" style="color: #61ce70; font-size: 18px; font-weight: bold;"></span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-           *@
         </header>
         <div class="center main-body" style="padding: 0px; text-align: center; width: 100%;">
             <main role="main" class="pb-3">

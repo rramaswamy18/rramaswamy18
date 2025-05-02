@@ -11,6 +11,6 @@
     @Html.Partial("_ShoppingCart", paymentInfoModel)
 </div>
 <script type="text/javascript">
-    shoppingCartSummary("@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount", "@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted");
+    shoppingCartSummary("@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount", "@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount", "@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted");
     document.getElementById("divScrollIntoView").scrollIntoView({ behavior: 'smooth', block: 'center' });
 </script>
