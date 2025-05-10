@@ -149,7 +149,7 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
-        // GET: DeliveryInfo
+        // GET: Checkout
         public void Checkout(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
@@ -231,8 +231,9 @@ namespace RetailSlnBusinessLayer
                 {
                     toEmailAddresss += ";" + sessionObjectModel.EmailAddress;
                 }
-                archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml + signatureHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
-                paymentInfoModel.OrderSummaryModel.InvoiceHtmlString = emailBodyHtml;//archLibBL.ViewToHtmlString(controller, "_OrderInvoice", paymentInfoModel);
+                //archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
+                archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
+                paymentInfoModel.OrderSummaryModel.InvoiceHtmlString = emailBodyHtml;
                 if (paymentInfoModel.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
                 {
                 }
@@ -397,7 +398,7 @@ namespace RetailSlnBusinessLayer
                 }
                 #endregion
                 //For now use default for priest
-                if (aspNetRoleName == "PRIESTROLE")
+                if (aspNetRoleName == "PRIESTROLE" || aspNetRoleName == "GUESTROLE")
                 {
                     aspNetRoleName = "DEFAULTROLE";
                 }
@@ -410,6 +411,7 @@ namespace RetailSlnBusinessLayer
                 }
                 PaymentInfoModel paymentInfoModel = (PaymentInfoModel)httpSessionStateBase["PaymentInfo"];
                 CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                httpSessionStateBase["PaymentInfo"] = paymentInfoModel;
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 OrderItemModel orderItemModel = new OrderItemModel
                 {
@@ -464,7 +466,10 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.HideShoppingCart = true;
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
 
-                DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (paymentInfoModel.OrderHeaderWIPModel != null && paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId != null && paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId != 0)
+                {
+                    DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
 
                 string htmlString = "";
                 return htmlString;
@@ -588,7 +593,7 @@ namespace RetailSlnBusinessLayer
             {
                 if (removeFromIndex > -1 && removeFromIndex < paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count)
                 {
-                    if (paymentInfoModel?.OrderHeaderWIPModel?.OrderDetailWIPModels?.Count > 0)
+                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && paymentInfoModel?.OrderHeaderWIPModel?.OrderDetailWIPModels?.Count > 0)
                     {
                         ApplicationDataContext.OpenSqlConnection();
                         var orderDetailWIPModel = paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels[removeFromIndex];
@@ -743,6 +748,7 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.OrderSummaryModel.CreatedByLastName = paymentInfoModelTemp.OrderSummaryModel.CreatedByLastName;
                 paymentInfoModel.OrderSummaryModel.EmailAddress = paymentInfoModelTemp.OrderSummaryModel.EmailAddress;
                 paymentInfoModel.OrderSummaryModel.InvoiceTypeId = paymentInfoModelTemp.OrderSummaryModel.InvoiceTypeId;
+                paymentInfoModel.OrderSummaryModel.OrderDateTime = paymentInfoModelTemp.OrderSummaryModel.OrderDateTime;
                 paymentInfoModel.OrderSummaryModel.OrderHeaderId = paymentInfoModelTemp.OrderSummaryModel.OrderHeaderId;
                 paymentInfoModel.OrderSummaryModel.PersonId = paymentInfoModelTemp.OrderSummaryModel.PersonId;
                 paymentInfoModel.OrderSummaryModel.TelephoneCode = paymentInfoModelTemp.OrderSummaryModel.TelephoneCode;
@@ -777,6 +783,7 @@ namespace RetailSlnBusinessLayer
                         modelStateDictionary.AddModelError("GiftCertPaymentModel.GiftCertNumber", "Please enter valid Gift Cert#");
                     }
                 }
+                paymentInfoModel.OrderSummaryModel.UserFullName = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim();
                 UpdateDeliveryAddressInfo(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
             }
         }
@@ -790,20 +797,24 @@ namespace RetailSlnBusinessLayer
             paymentInfoModel.DeliveryAddressModel = paymentInfoModel.DeliveryAddressModel ?? new DemogInfoAddressModel();
             if (string.IsNullOrEmpty(paymentInfoModel.DeliveryAddressModel.AddressLine1) && string.IsNullOrEmpty(paymentInfoModel.DeliveryAddressModel.AddressLine2))
             {//Populate the address with the one in the profile
-                paymentInfoModel.DeliveryAddressModel.BuildingTypeId = createdForDemogInfoAddressModel.BuildingTypeId;
-                paymentInfoModel.DeliveryAddressModel.AddressLine1 = createdForDemogInfoAddressModel.AddressLine1;
-                paymentInfoModel.DeliveryAddressModel.AddressLine2 = createdForDemogInfoAddressModel.AddressLine2;
-                paymentInfoModel.DeliveryAddressModel.CityName = createdForDemogInfoAddressModel.CityName;
-                paymentInfoModel.DeliveryAddressModel.CountryAbbrev = createdForDemogInfoAddressModel.CountryAbbrev;
-                paymentInfoModel.DeliveryAddressModel.CountryDesc = createdForDemogInfoAddressModel.CountryDesc;
-                paymentInfoModel.DeliveryAddressModel.DemogInfoCityId = createdForDemogInfoAddressModel.DemogInfoCityId;
-                paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId = createdForDemogInfoAddressModel.DemogInfoCountryId;
-                paymentInfoModel.DeliveryAddressModel.DemogInfoCountyId = createdForDemogInfoAddressModel.DemogInfoCountyId;
-                paymentInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId = createdForDemogInfoAddressModel.DemogInfoSubDivisionId;
-                paymentInfoModel.DeliveryAddressModel.DemogInfoZipId = createdForDemogInfoAddressModel.DemogInfoZipId;
-                paymentInfoModel.DeliveryAddressModel.StateAbbrev = createdForDemogInfoAddressModel.StateAbbrev;
-                paymentInfoModel.DeliveryAddressModel.ZipCode = createdForDemogInfoAddressModel.ZipCode;
-                paymentInfoModel.DeliveryAddressModel.HouseNumber = createdForDemogInfoAddressModel.HouseNumber;
+                var deliveryDemogInfoCountryModel = RetailSlnCache.DeliveryDemogInfoCountryModels.FirstOrDefault(x => x.DemogInfoCountryId == createdForDemogInfoAddressModel.DemogInfoCountryId);
+                if (deliveryDemogInfoCountryModel?.DemogInfoCountryId == createdForDemogInfoAddressModel.DemogInfoCountryId)
+                {
+                    paymentInfoModel.DeliveryAddressModel.BuildingTypeId = createdForDemogInfoAddressModel.BuildingTypeId;
+                    paymentInfoModel.DeliveryAddressModel.AddressLine1 = createdForDemogInfoAddressModel.AddressLine1;
+                    paymentInfoModel.DeliveryAddressModel.AddressLine2 = createdForDemogInfoAddressModel.AddressLine2;
+                    paymentInfoModel.DeliveryAddressModel.CityName = createdForDemogInfoAddressModel.CityName;
+                    paymentInfoModel.DeliveryAddressModel.CountryAbbrev = createdForDemogInfoAddressModel.CountryAbbrev;
+                    paymentInfoModel.DeliveryAddressModel.CountryDesc = createdForDemogInfoAddressModel.CountryDesc;
+                    paymentInfoModel.DeliveryAddressModel.DemogInfoCityId = createdForDemogInfoAddressModel.DemogInfoCityId;
+                    paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId = createdForDemogInfoAddressModel.DemogInfoCountryId;
+                    paymentInfoModel.DeliveryAddressModel.DemogInfoCountyId = createdForDemogInfoAddressModel.DemogInfoCountyId;
+                    paymentInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId = createdForDemogInfoAddressModel.DemogInfoSubDivisionId;
+                    paymentInfoModel.DeliveryAddressModel.DemogInfoZipId = createdForDemogInfoAddressModel.DemogInfoZipId;
+                    paymentInfoModel.DeliveryAddressModel.StateAbbrev = createdForDemogInfoAddressModel.StateAbbrev;
+                    paymentInfoModel.DeliveryAddressModel.ZipCode = createdForDemogInfoAddressModel.ZipCode;
+                    paymentInfoModel.DeliveryAddressModel.HouseNumber = createdForDemogInfoAddressModel.HouseNumber;
+                }
             }
             paymentInfoModel.DeliveryAddressModel.BuildingTypeId = paymentInfoModel.DeliveryAddressModel.BuildingTypeId ?? BuildingTypeEnum._;
             paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId = paymentInfoModel.DeliveryAddressModel.DemogInfoCountryId ?? RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
@@ -919,7 +930,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplicationDataContext.OpenSqlConnection();
                 SqlConnection sqlConnection = ApplicationDataContext.SqlConnectionObject;
                 ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
@@ -938,7 +949,7 @@ namespace RetailSlnBusinessLayer
                     else
                     {
                         maxSeqNum = 0;
-                        orderHeaderWIPModel = CreateOrderHeaderWIPModel(applSessionObjectModel.CorpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        orderHeaderWIPModel = CreateOrderHeaderWIPModel(applSessionObjectModel.CorpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                         ApplicationDataContext.OrderHeaderWIPAdd(orderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                         orderHeaderWIPId = orderHeaderWIPModel.OrderHeaderWIPId;
                     }
@@ -992,13 +1003,13 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ShoppingCartItemModel shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
                 if (shoppingCartItemModel == null)
                 {
                     CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, null, orderQty, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
-                    if (createForSessionObject != null && createOrderWIP)
+                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createOrderWIP)
                     {
                         ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
                         CreateOrderWIP(ref paymentInfoModel, applSessionObjectModel.CorpAcctLocationId, itemModel.ItemId.Value, orderQty, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -1075,7 +1086,7 @@ namespace RetailSlnBusinessLayer
                 {
                     if (!string.IsNullOrWhiteSpace(paymentInfoModel.CouponPaymentModel?.CouponNumber))
                     {
-                        CouponListModel couponListModel = ApplicationDataContext.CouponListGet(paymentInfoModel.CouponPaymentModel.CouponNumber, paymentInfoModel.OrderHeaderWIPModel.OrderDateTime, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        CouponListModel couponListModel = ApplicationDataContext.CouponListGet(paymentInfoModel.CouponPaymentModel.CouponNumber, paymentInfoModel.OrderSummaryModel.OrderDateTime, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                         if (couponListModel != null)
                         {
                             var shoppingCartItemModelSummary = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount);
@@ -1379,8 +1390,10 @@ namespace RetailSlnBusinessLayer
             {
                 //int x = 1, y = 0, z = x / y;
                 CorpAcctModel corpAcctModel = ((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel;
+                //paymentInfoModel.OrderSummaryModel.OrderDateTime = paymentInfoModel.OrderSummaryModel.OrderDateTime ?? DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 OrderHeader orderHeader = CreateOrderHeader(paymentInfoModel, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                paymentInfoModel.OrderHeaderWIPModel.OrderDateTime = orderHeader.OrderDateTime;
+                paymentInfoModel.OrderHeaderWIPModel = paymentInfoModel.OrderHeaderWIPModel ?? new OrderHeaderWIPModel();
+                paymentInfoModel.OrderHeaderWIPModel.OrderDateTime = paymentInfoModel.OrderSummaryModel.OrderDateTime;
                 ApplicationDataContext.OrderHeaderAdd(orderHeader, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 OrderHeaderSummary orderHeaderSummary = CreateOrderHeaderSummary(paymentInfoModel, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 orderHeaderSummary.OrderHeaderId = orderHeader.OrderHeaderId;
@@ -1412,7 +1425,6 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.DeliveryDataModel.DeliveryMethodId = (long?)paymentInfoModel.DeliveryMethodModel.DeliveryMethodId;
                 paymentInfoModel.DeliveryDataModel.PickupLocationId = paymentInfoModel.DeliveryMethodModel.PickupLocationId;
                 paymentInfoModel.OrderSummaryModel.OrderHeaderId = orderHeader.OrderHeaderId;
-                paymentInfoModel.OrderSummaryModel.UserFullName = createForSessionObject.FirstName + " " + createForSessionObject.LastName;
                 ApplicationDataContext.OrderDeliveryAdd(paymentInfoModel.DeliveryDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.PaymentDataModel = new PaymentDataModel
                 {
@@ -1425,9 +1437,9 @@ namespace RetailSlnBusinessLayer
                     PaymentRefNumData1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentId,
                     PaymentRefNumCaption2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : "Ord#",
                     PaymentRefNumData2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderId,
-                    //PaymentReferenceNumber = paymentId == "" ? "" : "Ref# " + paymentId + "; Ord# " + paymentOrderId,
                 };
                 ApplicationDataContext.OrderPaymentAdd(paymentInfoModel.PaymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ArchLibDataContext.UpdPerson(paymentInfoModel.OrderSummaryModel.PersonId.Value, paymentInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.OrderSummaryModel.LastName, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
             }
@@ -1522,7 +1534,7 @@ namespace RetailSlnBusinessLayer
                 ClientId = clientId,
                 CreatedForPersonId = createForSessionObject.PersonId,
                 InvoiceTypeId = paymentInfoModel.OrderSummaryModel.InvoiceTypeId.Value,
-                OrderDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                OrderDateTime = paymentInfoModel.OrderSummaryModel.OrderDateTime,
                 OrderStatusId = (long)OrderStatusEnum.Open,
                 PersonId = sessionObjectModel.PersonId,
                 SaveThisAddress = true,//paymentInfoModel.OrderSummaryModel.SaveThisAddress,
@@ -1561,10 +1573,10 @@ namespace RetailSlnBusinessLayer
                 }
                 else
                 {
-                    if (paymentInfoModel.OrderHeaderWIPModel == null)
+                    if (paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId == null)
                     {
                         //Create Order Header WIP
-                        paymentInfoModel.OrderHeaderWIPModel = CreateOrderHeaderWIPModel(corpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        paymentInfoModel.OrderHeaderWIPModel = CreateOrderHeaderWIPModel(corpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                         ApplicationDataContext.OrderHeaderWIPAdd(paymentInfoModel.OrderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     OrderDetailWIPModel orderDetailWIPModel;
@@ -1593,7 +1605,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE : CreateOrderHeaderWIPModel
-        private OrderHeaderWIPModel CreateOrderHeaderWIPModel(long corpAcctLocationId, InvoiceTypeEnum? invoiceTypeId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private OrderHeaderWIPModel CreateOrderHeaderWIPModel(long corpAcctLocationId, InvoiceTypeEnum? invoiceTypeId, string orderDateTime, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1605,7 +1617,7 @@ namespace RetailSlnBusinessLayer
                 CreatedForPersonId = createForSessionObject.PersonId,
                 InvoiceTypeId = (long)invoiceTypeId,
                 MaxSeqNum = 0,
-                OrderDateTime = null,
+                OrderDateTime = orderDateTime,
                 OrderStatusId = null,
                 PersonId = sessionObjectModel.PersonId,
                 OrderDetailWIPModels = new List<OrderDetailWIPModel>()
@@ -1623,7 +1635,9 @@ namespace RetailSlnBusinessLayer
             {
                 paymentInfoModel = paymentInfoModel ?? new PaymentInfoModel();
                 paymentInfoModel.CreditCardDataModel = paymentInfoModel.CreditCardDataModel ?? new CreditCardDataModel();
+                paymentInfoModel.OrderHeaderWIPModel = paymentInfoModel.OrderHeaderWIPModel ?? new OrderHeaderWIPModel();
                 paymentInfoModel.OrderSummaryModel = paymentInfoModel.OrderSummaryModel ?? new OrderSummaryModel();
+                paymentInfoModel.OrderSummaryModel.OrderDateTime = paymentInfoModel.OrderSummaryModel.OrderDateTime ?? DateTime.Now.ToString("yyy-MM-dd HH:mm:ss");
                 paymentInfoModel.OrderSummaryModel.InvoiceTypeId = paymentInfoModel.OrderSummaryModel.InvoiceTypeId ?? InvoiceTypeEnum.FinalInvoice;
                 paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel
                 {

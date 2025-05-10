@@ -13,8 +13,14 @@
         <div style="color: #000000; font-size: 24px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">
             Shopping&nbsp;&nbsp;Cart
         </div>
-        <div>
-        </div>
+        @if (shoppingCartAvailable)
+        {
+            <div>
+                <a href="@Url.Action("Checkout", "Home")" id="hrfBackToTop" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                    Checkout
+                </a>
+            </div>
+        }
     </div>
     @if (!shoppingCartAvailable)
     {
@@ -86,6 +92,11 @@
         <div>
             <a href="javascript: void(0);" id="hrfBackToTop2" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
                 Back to top
+            </a>
+        </div>
+        <div>
+            <a href="@Url.Action("Checkout", "Home")" id="hrfBackToTop" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                Checkout
             </a>
         </div>
     }

@@ -682,25 +682,10 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                long.TryParse(id, out long userTypeId);
-                var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == userTypeId);
-                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
-                registerUserModel.DemogInfoAddressModel = new DemogInfoAddressModel
-                {
-                    BuildingTypeId = BuildingTypeEnum._,
-                    BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
-                    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                    DemogInfoCountrySelectListItems = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "41", Text = "Canada" },
-                        new SelectListItem { Value = "106", Text = "India" },
-                        //new SelectListItem { Value = "159", Text = "Malaysia" },
-                        //new SelectListItem { Value = "196", Text = "Singapore"},
-                        new SelectListItem { Value = "236", Text = "United States of America" },
-                    },
-                    DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
-                };
+                RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //long.TryParse(id, out long userTypeId);
+                //var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == userTypeId);
+                //registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
                 #region For Testing - Delete
                 //registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
                 //registerUserModel.TelephoneNumber = "9880110045";
@@ -887,22 +872,24 @@ namespace RetailSlnWeb.Controllers
                 registerUserProfModel.ConfirmRegisterEmailAddress = registerUserProfModel.RegisterEmailAddress;
                 ModelState.Clear();
                 TryValidateModel(registerUserProfModel);
-                archLibBL.RegisterUserProf(ref registerUserProfModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdatePasswordModel updatePasswordModel = archLibBL.RegisterUserProf(ref registerUserProfModel, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     if (!registerUserProfModel.RedirectToUpdatePassword)
                     {
                         retailSlnBL.RegisterUserProfPersonExtn1(registerUserProfModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
-                    UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(registerUserProfModel.RegisterEmailAddress, registerUserProfModel.OTPCreatedDateTime, registerUserProfModel.OTPExpiryDateTime, registerUserProfModel.OTPExpiryDuration, registerUserProfModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
-                    {
-                        BuildingTypeId = BuildingTypeEnum._,
-                        BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
-                        DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                        DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
-                        DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value],
-                    };
+                    //updatePasswordModel = archLibBL.UpdatePassword(registerUserProfModel.RegisterEmailAddress, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, registerUserProfModel.OTPCreatedDateTime, registerUserProfModel.OTPExpiryDateTime, registerUserProfModel.OTPExpiryDuration, registerUserProfModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
+                    //updatePasswordModel.DemogInfoAddressModel. = ;
+                    //updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
+                    //{
+                    //    BuildingTypeId = BuildingTypeEnum._,
+                    //    BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
+                    //    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+                    //    DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
+                    //    DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
+                    //};
                     success = true;
                     processMessage = "SUCCESS!!!";
                     htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePassword", updatePasswordModel);
@@ -994,20 +981,20 @@ namespace RetailSlnWeb.Controllers
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(resetPasswordModel);
-                archLibBL.ResetPassword(ref resetPasswordModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                UpdatePasswordModel updatePasswordModel = archLibBL.ResetPassword(ref resetPasswordModel, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (ModelState.IsValid)
                 {
                     success = true;
                     processMessage = "SUCCESS!!!";
-                    UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(resetPasswordModel.ResetPasswordEmailAddress, resetPasswordModel.OTPCreatedDateTime, resetPasswordModel.OTPExpiryDateTime, resetPasswordModel.OTPExpiryDuration, resetPasswordModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
-                    {
-                        BuildingTypeId = BuildingTypeEnum._,
-                        BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
-                        DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                        DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
-                        DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
-                    };
+                    //UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(resetPasswordModel.ResetPasswordEmailAddress, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, resetPasswordModel.OTPCreatedDateTime, resetPasswordModel.OTPExpiryDateTime, resetPasswordModel.OTPExpiryDuration, resetPasswordModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
+                    //{
+                    //    BuildingTypeId = BuildingTypeEnum._,
+                    //    BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
+                    //    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+                    //    DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
+                    //    DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
+                    //};
                     htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePassword", updatePasswordModel);
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                 }

@@ -1,4 +1,4 @@
-USE [RetailSlnNew]
+USE [RetailSln]
 GO
 --1_RetailSln_PopulateItem_DivineBija.in.sql
 --Dec 20 2024, Apr 2 2024, Apr 21 2024

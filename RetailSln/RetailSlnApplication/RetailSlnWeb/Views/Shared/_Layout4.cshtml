@@ -8,20 +8,17 @@
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-    string aspNetRoleName;
     bool isLoggedIn;
     if (sessionObjectModel == null)
     {
-        aspNetRoleName = "DEFAULTROLE";
         isLoggedIn = false;
     }
     else
     {
-        aspNetRoleName = sessionObjectModel.AspNetRoleName;
         isLoggedIn = true;
     }
     isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
-    var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+    //var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
 }
 <!DOCTYPE html>
 <html lang="en">

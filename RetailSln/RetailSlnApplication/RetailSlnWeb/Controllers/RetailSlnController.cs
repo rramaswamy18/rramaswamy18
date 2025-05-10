@@ -122,9 +122,6 @@ namespace RetailSlnWeb.Controllers
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                //ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                //ModelState.AddModelError("", "Checkout / GET");
-                //actionResult = View("Error", responseObjectModel);
                 actionResult = RedirectToAction("Index");
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -290,6 +287,117 @@ namespace RetailSlnWeb.Controllers
                 actionResult = Json(new { success, processMessage, htmlString });
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: CheckoutGuest
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("CheckoutGuest")]
+        public ActionResult CheckoutGuest()
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "CheckoutGuest";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ArchLibBL archLibBL = new ArchLibBL();
+            LoginUserProfGuestModel loginUserProfGuestModel;
+            try
+            {
+                loginUserProfGuestModel = archLibBL.LoginUserProfGuest(RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while loading Checkout Guest");
+                loginUserProfGuestModel = new LoginUserProfGuestModel
+                {
+                    CaptchaAnswerLoginUserProfGuest = null,
+                    CaptchaNumberLoginUserProfGuest0 = Session["CaptchaNumberLoginUserProfGuest0"].ToString(),
+                    CaptchaNumberLoginUserProfGuest1 = Session["CaptchaNumberLoginUserProfGuest1"].ToString(),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+
+                    },
+                };
+            }
+            return View(loginUserProfGuestModel);
+        }
+
+        // POST: CheckoutGuest
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult CheckoutGuest(LoginUserProfGuestModel loginUserProfGuestModel)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ArchLibBL archLibBL = new ArchLibBL();
+            bool success;
+            string processMessage, htmlString, redirectUrl;
+            ActionResult actionResult;
+            try
+            {
+                ModelState.Clear();
+                TryValidateModel(loginUserProfGuestModel);
+                SessionObjectModel sessionObject = archLibBL.LoginUserProfGuest(ref loginUserProfGuestModel, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (ModelState.IsValid)
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    if (!loginUserProfGuestModel.ExistingUser)
+                    {
+                        retailSlnBL.RegisterUserProfPersonExtn1(sessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                    ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObject.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    sessionObject.ApplSessionObjectModel = applSessionObjectModel;
+                    SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
+                    Session["SessionObject"] = sessionObject;
+                    Session["CreateForSessionObject"] = createForSessionObject;
+                    Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
+                    var identity = new ClaimsIdentity
+                    (
+                        new[]
+                        {
+                            new Claim(ClaimTypes.Name, sessionObject.FirstName + " " + sessionObject.LastName),
+                            new Claim(ClaimTypes.Email, sessionObject.EmailAddress),
+                            //new Claim(ClaimTypes.Country, "India"),
+                        },
+                        "ApplicationCookie"
+                    );
+                    var ctx = Request.GetOwinContext();
+                    var authManager = ctx.Authentication;
+                    authManager.SignIn(identity);
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    htmlString = "";
+                    redirectUrl = Url.Action("Checkout", "Home");
+                }
+                else
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                    success = false;
+                    processMessage = "ERROR???";
+                    redirectUrl = "";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", loginUserProfGuestModel);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while loading Checkout Guest");
+                success = false;
+                processMessage = "ERROR???";
+                redirectUrl = "";
+                htmlString = archLibBL.ViewToHtmlString(this, "_CheckoutGuestData", loginUserProfGuestModel);
+            }
+            actionResult = Json(new { success, processMessage, htmlString, redirectUrl });
             return actionResult;
         }
 

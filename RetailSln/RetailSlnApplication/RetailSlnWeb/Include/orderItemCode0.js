@@ -502,6 +502,11 @@ function shoppingCartSummary(totalItemCount, totalOrderAmount, totalOrderAmountF
         document.getElementById("hrfCheckoutLink").classList.add("disabled-link");
     }
     else {
-        document.getElementById("hrfCheckoutLink").classList.remove("disabled-link");
+        try {
+            document.getElementById("hrfCheckoutLink").classList.remove("disabled-link");
+        }
+        catch (err) {
+            ;
+        }
     }
 }

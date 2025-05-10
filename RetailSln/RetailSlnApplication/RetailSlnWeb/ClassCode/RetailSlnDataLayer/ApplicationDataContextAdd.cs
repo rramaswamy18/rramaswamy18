@@ -619,7 +619,7 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters["@CorpAcctLocationId"].Value = orderHeaderWIPModel.CorpAcctLocationId;
                 sqlCommand.Parameters["@CreatedForPersonId"].Value = orderHeaderWIPModel.CreatedForPersonId;
                 sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeaderWIPModel.InvoiceTypeId;
-                sqlCommand.Parameters["@OrderDateTime"].Value = string.IsNullOrWhiteSpace(orderHeaderWIPModel.OrderDateTime) ? (object)DBNull.Value : orderHeaderWIPModel.OrderDateTime;
+                sqlCommand.Parameters["@OrderDateTime"].Value = orderHeaderWIPModel.OrderDateTime;//string.IsNullOrWhiteSpace(orderHeaderWIPModel.OrderDateTime) ? (object)DBNull.Value : orderHeaderWIPModel.OrderDateTime;
                 sqlCommand.Parameters["@OrderStatusId"].Value = orderHeaderWIPModel.OrderStatusId == null ? (object)DBNull.Value : orderHeaderWIPModel.OrderStatusId;
                 sqlCommand.Parameters["@PersonId"].Value = orderHeaderWIPModel.PersonId;
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;

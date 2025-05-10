@@ -37,6 +37,8 @@ namespace RetailSlnModels
 
         public string InvoiceFileNamePdf { set; get; }
 
+        public string OrderDateTime { set; get; }
+
         public string EmailAddress { set; get; }
 
         [Display(Name = "First Name")]

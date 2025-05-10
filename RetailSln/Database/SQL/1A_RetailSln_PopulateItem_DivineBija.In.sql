@@ -1,4 +1,4 @@
-USE [RetailSlnNew]
+USE [RetailSln]
 GO
 --1A_RetailSlnNew_PopulateItem_DivineBija.in.sql
 --Mar 3 2025
@@ -79,14 +79,14 @@ DECLARE @ClientId BIGINT = 3
         CREATE TABLE #TEMP2A
         (
          ClientId BIGINT, AspNetRoleName NVARCHAR(50), ItemId BIGINT, ItemMasterId BIGINT, ItemMasterSeqNum FLOAT, ItemSeqNum FLOAT, ParentCategoryId BIGINT, Id BIGINT IDENTITY(1, 1),
-         CONSTRAINT [Temp2A_PK] PRIMARY KEY CLUSTERED(Id),
-         CONSTRAINT [Temp2A_IX0] UNIQUE NONCLUSTERED(AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum),
-         CONSTRAINT [Temp2A_IX1] UNIQUE NONCLUSTERED(AspNetRoleName, ParentCategoryId, ItemMasterId, ItemId),
+         CONSTRAINT [Temp2A2_PK] PRIMARY KEY CLUSTERED(Id),
+         CONSTRAINT [Temp2A2_IX0] UNIQUE NONCLUSTERED(AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum),
+         CONSTRAINT [Temp2A2_IX1] UNIQUE NONCLUSTERED(AspNetRoleName, ParentCategoryId, ItemMasterId, ItemId),
         )
         INSERT #TEMP2A(ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, ParentCategoryId)
         SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, ParentCategoryId
         FROM #TEMP1A, ArchLib.AspNetRole
-        WHERE AspNetRoleName IN('DEFAULTROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE')
+        WHERE AspNetRoleName IN('DEFAULTROLE', 'GUESTROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE')
         AND ParentCategoryId NOT IN(102, 120)--'Bulk Orders', 'Wholesale Orders'
         UNION
         SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, ParentCategoryId
@@ -96,7 +96,7 @@ DECLARE @ClientId BIGINT = 3
         UNION
         SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ItemId, ItemMasterId, ItemMasterSeqNum, ItemSeqNum, 100 AS ParentCategoryId
         FROM #TEMP1A, ArchLib.AspNetRole
-        WHERE AspNetRoleName IN('DEFAULTROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE')
+        WHERE AspNetRoleName IN('DEFAULTROLE', 'GUESROLE', 'APPLADMN1', 'SYSTADMIN', 'MARKETINGROLE')
         AND ParentCategoryId NOT IN(102, 120)--('Bulk Orders', 'Wholesale Orders')
         ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum
 --CategoryItemMasterHier
@@ -104,6 +104,6 @@ DECLARE @ClientId BIGINT = 3
         SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum FROM #TEMP2A
         ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 ---
-SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew WHERE AspNetRoleName = 'MARKETINGROLE' AND ParentCategoryId = 0 AND ItemMasterId IS NULL ORDER BY SeqNum
-SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew WHERE AspNetRoleName = 'MARKETINGROLE' AND ParentCategoryId = 112 and CategoryId IS NULL ORDER BY SeqNum
-SELECT AspNetRoleName, ParentCategoryId, COUNT(*) FROM RetailSlnSch.CategoryItemMasterHierNew WHERE CategoryId IS NULL GROUP BY AspNetRoleName, ParentCategoryId ORDER BY AspNetRoleName, ParentCategoryId
+--SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew WHERE AspNetRoleName = 'MARKETINGROLE' AND ParentCategoryId = 0 AND ItemMasterId IS NULL ORDER BY SeqNum
+--SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew WHERE AspNetRoleName = 'MARKETINGROLE' AND ParentCategoryId = 112 and CategoryId IS NULL ORDER BY SeqNum
+--SELECT AspNetRoleName, ParentCategoryId, COUNT(*) FROM RetailSlnSch.CategoryItemMasterHierNew WHERE CategoryId IS NULL GROUP BY AspNetRoleName, ParentCategoryId ORDER BY AspNetRoleName, ParentCategoryId

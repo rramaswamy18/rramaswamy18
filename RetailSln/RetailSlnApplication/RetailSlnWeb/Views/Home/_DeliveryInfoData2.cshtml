@@ -1,6 +1,12 @@
 ﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
 @using RetailSlnModels
 @model PaymentInfoModel
+@{
+    int startIndex;
+    string styleDisplay;
+}
 <div class="col-md-12" style="text-align: left;">
     <div style="display: table; padding: 0px; width: 100%;">
         <div style="display: table-row; padding: 0px; width: 100%;">
@@ -19,6 +25,269 @@
             <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
                 @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;" })
                 @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.LastName, "", new { id = "OrderSummaryModel_LastName-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.PaymentModeModel.PaymentModeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @if (Model.PaymentModeModel.PaymentModes.Count == 1)
+                {
+                    @Html.DropDownListFor(m => m.PaymentModeModel.PaymentModeId, new SelectList(Model.PaymentModeModel.PaymentModes, "CodeDataNameId", "CodeDataDesc0", Model.PaymentModeModel.PaymentModeId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.PaymentModeModel.PaymentModeId, new SelectList(Model.PaymentModeModel.PaymentModes, "CodeDataNameId", "CodeDataDesc0", Model.PaymentModeModel.PaymentModeId), "--- Select Payment ---", new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+                }
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PaymentModeModel.PaymentModeId, "", new { id = "PaymentModeModel_PaymentModeId-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @if (Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Count == 1)
+                {
+                    @Html.DropDownListFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new SelectList(Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems, "Value", "Text", Model.DeliveryMethodModel.DeliveryMethodId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new SelectList(Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems, "Value", "Text", Model.DeliveryMethodModel.DeliveryMethodId), "--- Select Delivery ---", new { @class = "form-control", onchange = "javascript: return deliveryMethodIdPickupLocationId_onchange(this);", style = "font-size: 13px; width: 95%;" })
+                }
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, "", new { id = "DeliveryMethodModel_DeliveryMethodIdPickupLocationId-error" }).ToHtmlString()))
+                @{
+                    int startIndex;
+                    string styleDisplay;
+                    if (Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Count == 1)
+                    {
+                        startIndex = 0;
+                        styleDisplay = "block";
+                    }
+                    else
+                    {
+                        startIndex = 1;
+                        styleDisplay = "none";
+                    }
+                    //styleDisplay = "block";
+                    DemogInfoAddressModel demogInfoAddressModel = null;
+                    if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > -1)
+                    {
+                        demogInfoAddressModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId).DemogInfoAddressModel;
+                    }
+                    foreach (var pickupLocationDemogInfoAddressModel in Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels)
+                    {
+                        if (pickupLocationDemogInfoAddressModel.DemogInfoAddressId < 1)
+                        {
+                            <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                                We will deliver at at the specified address
+                                <br />
+                                <span style="color: #ff0000; font-size: 12px; font-weight: bold;">Shipping & Handling charges apply</span>
+                            </div>
+                        }
+                        else
+                        {
+                            if (demogInfoAddressModel != null && demogInfoAddressModel.DemogInfoAddressId == pickupLocationDemogInfoAddressModel.DemogInfoAddressId)
+                            {
+                                styleDisplay = "block";
+                            }
+                            <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                                @pickupLocationDemogInfoAddressModel.AddressLine1<br />
+                                @if (!string.IsNullOrEmpty(pickupLocationDemogInfoAddressModel.AddressLine2))
+                                {
+                                    @pickupLocationDemogInfoAddressModel.AddressLine2<br />
+                                }
+                                @(pickupLocationDemogInfoAddressModel.CityName + " " + pickupLocationDemogInfoAddressModel.StateAbbrev + " " + pickupLocationDemogInfoAddressModel.ZipCode)
+                                <br />
+                                <span style="color: #ff0000; font-size: 12px; font-weight: bold;">No Shipping & Handling charges</span>
+                            </div>
+                            styleDisplay = "none";
+                        }
+                        startIndex++;
+                    }
+                }
+                @if (Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Count == 1)
+                {
+                    @Html.DropDownListFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new SelectList(Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems, "Value", "Text", Model.DeliveryMethodModel.DeliveryMethodId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new SelectList(Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems, "Value", "Text", Model.DeliveryMethodModel.DeliveryMethodId), "--- Select Delivery ---", new { @class = "form-control", onchange = "javascript: return deliveryMethodIdPickupLocationId_onchange(this);", style = "font-size: 13px; width: 95%;" })
+                }
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, "", new { id = "DeliveryMethodModel_DeliveryMethodIdPickupLocationId-error" }).ToHtmlString()))
+                @{
+                    int startIndex;
+                    string styleDisplay;
+                    if (Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Count == 1)
+                    {
+                        startIndex = 0;
+                        styleDisplay = "block";
+                    }
+                    else
+                    {
+                        startIndex = 1;
+                        styleDisplay = "none";
+                    }
+                    //styleDisplay = "block";
+                    DemogInfoAddressModel demogInfoAddressModel = null;
+                    if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > -1)
+                    {
+                        demogInfoAddressModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId).DemogInfoAddressModel;
+                    }
+                    foreach (var pickupLocationDemogInfoAddressModel in Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels)
+                    {
+                        if (pickupLocationDemogInfoAddressModel.DemogInfoAddressId < 1)
+                        {
+                            <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                                We will deliver at at the specified address
+                                <br />
+                                <span style="color: #ff0000; font-size: 12px; font-weight: bold;">Shipping & Handling charges apply</span>
+                            </div>
+                        }
+                        else
+                        {
+                            if (demogInfoAddressModel != null && demogInfoAddressModel.DemogInfoAddressId == pickupLocationDemogInfoAddressModel.DemogInfoAddressId)
+                            {
+                                styleDisplay = "block";
+                            }
+                            <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                                @pickupLocationDemogInfoAddressModel.AddressLine1<br />
+                                @if (!string.IsNullOrEmpty(pickupLocationDemogInfoAddressModel.AddressLine2))
+                                {
+                                    @pickupLocationDemogInfoAddressModel.AddressLine2<br />
+                                }
+                                @(pickupLocationDemogInfoAddressModel.CityName + " " + pickupLocationDemogInfoAddressModel.StateAbbrev + " " + pickupLocationDemogInfoAddressModel.ZipCode)
+                                <br />
+                                <span style="color: #ff0000; font-size: 12px; font-weight: bold;">No Shipping & Handling charges</span>
+                            </div>
+                            styleDisplay = "none";
+                        }
+                        startIndex++;
+                    }
+                }
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.GiftCertPaymentModel.GiftCertNumber, new { @class = "col-form-label" })
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                <div>
+                    @Html.TextBoxFor(m => m.GiftCertPaymentModel.GiftCertNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertPaymentModel.GiftCertNumber), style = "float: left; padding-right: 18px; width: 72%;", type = "password" })
+                    <span style="width: 18px;">&nbsp;</span>
+                    <button class="btn btn-primary" id="giftCertNumber" onmouseout="javascript: return showHideForHide('GiftCertNumber', 'password');" onmouseover="javascript: return showHideForShow('GiftCertPaymentModel_GiftCertNumber', 'text');" type="button" style="float: left; padding-left: 18px; width: 50px;">
+                        <span class="fa fa-eye-slash icon"></span>
+                    </button>
+                </div>
+                @Html.Raw(HttpUtility.HtmlDecode("<br />" + Html.ValidationMessageFor(m => m.GiftCertPaymentModel.GiftCertKey, "", new { id = "GiftCertPaymentModel_GiftCertKey-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.GiftCertPaymentModel.GiftCertKey, new { @class = "col-form-label" })
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                <div>
+                    @Html.TextBoxFor(m => m.GiftCertPaymentModel.GiftCertKey, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertPaymentModel.GiftCertKey), style = "float: left; padding-right: 18px; width: 72%;", type = "password" })
+                    <span style="width: 18px;">&nbsp;</span>
+                    <button class="btn btn-primary" id="giftCertKey" onmouseout="javascript: return showHideForHide('GiftCertPaymentModel_GiftCertKey', 'password');" onmouseover="javascript: return showHideForShow('GiftCertPaymentModel_GiftCertKey', 'text');" type="button" style="float: left; padding-left: 18px; width: 50px;">
+                        <span class="fa fa-eye-slash icon"></span>
+                    </button>
+                </div>
+                @Html.Raw(HttpUtility.HtmlDecode("<br />" + Html.ValidationMessageFor(m => m.GiftCertPaymentModel.GiftCertKey, "", new { id = "GiftCertKey-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "col-form-label" })
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextBoxFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "form-control validate", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.CouponPaymentModel.CouponNumber), style = "width: 95%;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CouponPaymentModel.CouponNumber, "", new { id = "CouponPaymentModel_CouponNumber-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new { @class = "col-form-label" })<!--<br /><span style="color: #0000ff; font-weight: bold;">(Required)</span>)-->
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @if (Model.DeliveryAddressModel.DemogInfoCountrySelectListItems.Count > 1)
+                {
+                    @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(Model.DeliveryAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), "---", new { @class = "form-control", onchange = "javascript: demogInfoCountry_onchage(this);", style = "font-size: 13px; width: 90%;" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(Model.DeliveryAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+                }
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.DemogInfoCountryId, "", new { @class = "fieldValidationError" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.BuildingTypeId, new { @class = "col-form-label" })<!--<br /><span style="color: #0000ff; font-weight: bold;">(Required)</span>)-->
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.DropDownListFor(m => m.DeliveryAddressModel.BuildingTypeId, new SelectList(Model.DeliveryAddressModel.BuildingTypeSelectListItems, "Value", "Text", Model.DeliveryAddressModel.BuildingTypeId), "---", new { @class = "form-control", style = "font-size: 13px; width: 95%;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.BuildingTypeId, "", new { id = "BuildingTypeId-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.HouseNumber, new { @class = "col-form-label" })
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextBoxFor(m => m.DeliveryAddressModel.HouseNumber, new { @class = "form-control validate", maxlength = "50", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.HouseNumber), style = "width: 95%;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.HouseNumber, "", new { id = "HouseNumber-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onblur = "", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 99%;" })
+                @*@Html.TextBoxFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine1) })*@
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.AddressLine1, "", new { id = "DeliveryAddressModel_AddressLine1-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "col-form-label" })
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 99%;" })
+                @*@Html.TextBoxFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine2) })*@
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.AddressLine2, "", new { id = "DeliveryAddressModel_AddressLine2-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                <input id="cityNameZipCodeDataListIds" type="hidden" />
+                @*@Html.HiddenFor(m => m.CountryAbbrev)*@
+                @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoCityId)
+                @*@Html.HiddenFor(m => m.DemogInfoCountryId)*@
+                @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipId)
+                @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipPlusId)
+                @*@Html.HiddenFor(m => m.StateAbbrev)*@
+                @Html.LabelFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "col-form-label", style = "font-size: 12px;" })<span style="color: #0000ff; font-size: 12px; font-weight: bold;">*</span>
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextBoxFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "form-control validate", list = "zipCodeDataList", maxlength = "50", onblur = "javascript: return zipCode_onblur('DeliveryAddressModel_');", oninput = "javascript: return zipCode_oninput('DeliveryAddressModel_');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.ZipCode), style = "width: 90%;" })
+                <i class="fa fa-check" id="zipCodeSuccess" style="color: #00d000; display: none; font-size: 12px;"></i>
+                <i class="fa fa-remove" id="zipCodeFailure" style="color: #ff0000; display: none; font-size: 12px;"></i>
+                <datalist id="zipCodeDataList">
+                </datalist>
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.ZipCode, "", new { id = "DeliveryAddressModel_ZipCode-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div style="display: table-row; padding: 0px; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: top; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "col-form-label" })
+            </div>
+            <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+                @Html.TextAreaFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(m => m.DeliveryDataModel.DeliveryInstructions) + " (if any...)", rows = "5", style = "width: 190%;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.DeliveryInstructions, "", new { id = "DeliveryDataModel_DeliveryInstructions-error" }).ToHtmlString()))
             </div>
         </div>
     </div>

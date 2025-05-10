@@ -1356,6 +1356,9 @@
     <Content Include="Views\Home\_SearchResultItemMaster.cshtml" />
     <Content Include="Views\Home\_OTPEmailBody.cshtml" />
     <Content Include="Views\Home\_OTPEmailSubject.cshtml" />
+    <Content Include="Views\Home\CheckoutGuest.cshtml" />
+    <Content Include="Views\Home\_CheckoutGuest.cshtml" />
+    <Content Include="Views\Home\_CheckoutGuestData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
