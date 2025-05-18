@@ -79,9 +79,9 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                         <div class="search-container">
-                            <input type="text" class="search-input" placeholder="Search">
-                            <button class="search-button">
-                                <img src="https://static.vecteezy.com/system/resources/thumbnails/014/440/989/small/search-black-shadow-icon-socialicon-set-png.png" alt="Search" />
+                            <input id="searchTerm" class="search-input" placeholder="Search" type="text">
+                            <button class="search-button" id="searchTermButton" onclick="javascript: return searchTermButton_onclick('searchTerm');">
+                                <img alt="Search" src="https://static.vecteezy.com/system/resources/thumbnails/014/440/989/small/search-black-shadow-icon-socialicon-set-png.png" />
                             </button>
                         </div>
                         <div id="divErrorMessage" style="color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold;">

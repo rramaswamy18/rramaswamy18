@@ -15,6 +15,9 @@ namespace RetailSlnModels
         public List<CorpAcctModel> CorpAcctModels { set; get; }
         public List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public List<DeliveryMethodFilterModel> DeliveryMethodFilterModels { set; get; }
+        public List<ItemBundleModel> ItemBundleModels { set; get; }
+        public List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
+        public List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public List<ItemMasterModel> ItemMasterModels { set; get; }
         public List<ItemModel> ItemModels { set; get; }
         public List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }

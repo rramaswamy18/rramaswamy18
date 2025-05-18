@@ -79,10 +79,13 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
     </script>
+    <script src="~/Include/orderItemCode0.js" type="text/javascript"></script>
+    <script src="~/Include/orderItemCode2.js" type="text/javascript"></script>
     @Html.Partial("_DashboardHeader")
     <div id="divScrollIntoView"></div>
     <div class="center" id="divContainer" style="padding: 0px; text-align: center; width: 100%;">
         @RenderBody()
+        @Html.Partial("_ShoppingCartContainer")
         @Html.Partial("_DashboardFooter")
     </div>
     @Html.Partial("_LoadingModal")

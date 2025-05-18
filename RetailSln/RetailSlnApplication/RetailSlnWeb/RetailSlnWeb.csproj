@@ -164,6 +164,7 @@
     <Compile Include="ClassCode\RetailSlnBusinessLayer\NoCache.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL00.cs" />
     <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL10.cs" />
+    <Compile Include="ClassCode\RetailSlnBusinessLayer\RetailSlnBL20.cs" />
     <Compile Include="ClassCode\RetailSlnCacheBusinessLayer\RetailSlnCacheBL.cs" />
     <Compile Include="ClassCode\RetailSlnCacheData\RetailSlnCache.cs" />
     <Compile Include="ClassCode\RetailSlnDataLayer\ApplicationDataContext.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="ClassCode\RetailSlnModels\DiscountDtlModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\GiftCertPaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\InvoiceTypeEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemBundleDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
@@ -208,6 +210,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemCatalogModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderApprovalModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetail.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailItemBundle.cs" />
@@ -216,6 +219,8 @@
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderSummary.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderWIPModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderItemModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderListDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderSummaryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PaymentInfoModel.cs" />
@@ -1256,14 +1261,14 @@
     <Content Include="Views\Shared\_Layout2.cshtml" />
     <Content Include="Views\Shared\_Error.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
-    <Content Include="Views\Home\_ShoppingCart.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCart.cshtml" />
     <Content Include="Views\Shared\_LoadingModal.cshtml" />
     <Content Include="Views\Home\AboutUs.cshtml" />
     <Content Include="Views\Home\ContactUs.cshtml" />
     <Content Include="Views\Home\CookiePolicy.cshtml" />
     <Content Include="Views\Home\_AboutUs.cshtml" />
     <Content Include="Views\Home\_CookiePolicy.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartContainer.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCartContainer.cshtml" />
     <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\_FAQs.cshtml" />
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
@@ -1283,8 +1288,8 @@
     <Content Include="Views\Home\ItemMasterAttributes.cshtml" />
     <Content Include="Views\Home\_ItemMasterAttributes.cshtml" />
     <Content Include="Views\Home\_OrderItem1.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfData.cshtml" />
+    <Content Include="Views\Home\_RegisterUserProfBackup.cshtml" />
+    <Content Include="Views\Home\_RegisterUserProfDataBackup.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
     <Content Include="Views\Home\RegisterUserProf.cshtml" />
@@ -1311,8 +1316,8 @@
     <Content Include="Views\Dashboard\_DashboardHeaderMenuHamburger.cshtml" />
     <Content Include="Views\Dashboard\_DashboardHeaderMenuTop.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem2.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem3.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem2Backup.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem3Old.cshtml" />
     <Content Include="Views\Home\_Checkout.cshtml" />
     <Content Include="Views\Home\Checkout.cshtml" />
     <Content Include="Views\Home\DeliveryInfo.cshtml" />
@@ -1324,16 +1329,15 @@
     <Content Include="Views\Home\_PaymentInfo01.cshtml" />
     <Content Include="Views\Home\_PaymentInfo02.cshtml" />
     <Content Include="Views\Home\_OrderInvoice.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartData1.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartSummary1.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCartData1.cshtml" />
     <Content Include="Views\Shared\_Layout3.cshtml" />
     <Content Include="Views\Home\OrderInvoice.cshtml" />
     <Content Include="Views\Home\_OrderInvoiceData.cshtml" />
     <Content Include="Views\Home\_OrderInvoiceDataSubject.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartHeader1.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCartHeader1.cshtml" />
     <Content Include="Views\Home\_PaymentInfo3.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0Data.cshtml" />
-    <Content Include="Views\Home\_ShoppingCartFooter1.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCartFooter1.cshtml" />
     <Content Include="Views\Home\RegisterUser.cshtml" />
     <Content Include="Views\Home\_RegisterUser.cshtml" />
     <Content Include="Views\Home\_RegisterUserData.cshtml" />
@@ -1359,6 +1363,24 @@
     <Content Include="Views\Home\CheckoutGuest.cshtml" />
     <Content Include="Views\Home\_CheckoutGuest.cshtml" />
     <Content Include="Views\Home\_CheckoutGuestData.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem3.cshtml" />
+    <Content Include="Views\Home\_OrderItem1Old.cshtml" />
+    <Content Include="Views\Home\_OrderItem1Backup.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem3Backup.cshtml" />
+    <Content Include="Views\Home\_ItemBundleData.cshtml" />
+    <Content Include="Views\Dashboard\_OrderItem2.cshtml" />
+    <Content Include="Views\Home\_RegisterUserProfData.cshtml" />
+    <Content Include="Views\Home\_RegisterUserProf.cshtml" />
+    <Content Include="Views\Home\UserProfile.cshtml" />
+    <Content Include="Views\Home\_UserProfile.cshtml" />
+    <Content Include="Views\Home\_UserProfileData1.cshtml" />
+    <Content Include="Views\Home\_UserProfileEmailBody.cshtml" />
+    <Content Include="Views\Home\_UserProfileEmailSubject.cshtml" />
+    <Content Include="Views\Home\_UserProfileData2.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCartSummary1.cshtml" />
+    <Content Include="Views\Home\ItemCatalog.cshtml" />
+    <Content Include="Views\Home\_ItemCatalog.cshtml" />
+    <Content Include="Views\Home\_ItemCatalogData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

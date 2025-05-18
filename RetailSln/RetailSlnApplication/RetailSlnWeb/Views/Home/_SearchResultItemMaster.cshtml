@@ -8,7 +8,7 @@
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int index = 0, index1;
     bool brFlag;
-    string prefixString;
+    string discountPercent, prefixString;
 }
 <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 73%;">
     <tr>
@@ -18,7 +18,7 @@
         <th class="text-center" style="vertical-align: top;">
             Id
         </th>
-        <th class="text-left" style="vertical-align: top; width: 279px;">
+        <th class="text-left" style="vertical-align: top;">
             Item
         </th>
         <th class="text-left" style="vertical-align: top; width: 99px;">
@@ -34,22 +34,25 @@
                 @index
             </td>
             <td style="vertical-align: top;">
-                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="text-decoration: underline;" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="text-decoration: underline;" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
                     @itemMasterModel.ItemMasterId
                 </a>
             </td>
             <td class="text-left" style="vertical-align: top;">
-                @itemMasterModel.ItemMasterDesc
-                <br style="clear: both;" />
+                @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
+                @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
+                {
+                    <br style="clear: both;" />
+                    <span style="color: #1d1d1d; font-family: Arial; font-size: 14px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
+                }
                 @if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                 {
-                    <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
+                    <br style="clear: both;" />
+                    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" target="_blank" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
                 }
-                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 12px; font-weight:bold; text-decoration: underline;" target="_blank" title="View specifications - @itemMasterModel.ItemMasterDesc">Spec(s)</a>
-                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 2 })" style="color: #0000ff; font-size: 12px; font-weight:bold; padding-left: 3px; text-decoration: underline;" target="_blank" title="View more images - @itemMasterModel.ItemMasterDesc">Image(s)</a>
             </td>
             <td class="text-left" style="vertical-align: top;">
-                <a href="@Url.Action("ItemAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" target="_blank" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
                     <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 90px; width: 90px;" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
                 </a>
             </td>
@@ -60,9 +63,21 @@
                         prefixString = "";
                         brFlag = false;
                         index1 = 0;
+                        discountPercent = "";
+                        if (itemModel.ItemDiscountModels != null && itemModel.ItemDiscountModels.Count > 0)
+                        {
+                            discountPercent = (itemModel.ItemDiscountModels[0].DiscountPercent.ToString("0.00") + "%");
+                        }
+                        else
+                        {
+                            discountPercent = "";
+                        }
                         <tr>
                             <td style="font-size: 13px; padding: 5px; vertical-align: top;">
                                 @itemModel.ItemRateFormatted
+                            </td>
+                            <td style="font-size: 13px; padding: 5px; vertical-align: top;">
+                                @discountPercent
                             </td>
                             <td style="padding: 5px; vertical-align: top;">
                                 <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
@@ -80,15 +95,6 @@
                                     <br style="clear: both;" />
                                 </span>
                                 <span style="color: #000000; font-size: 11px; font-weight: 600;">
-                                    @*if (itemMasterModel.ItemMasterItemSpecModels != null && itemMasterModel.ItemMasterItemSpecModels.Count > 0)
-                                    {
-                                        foreach (var itemMasterItemSpecModel in itemMasterModel.ItemMasterItemSpecModels)
-                                        {
-                                            @(prefixString + ++index1 + ". " + itemMasterItemSpecModel.ItemSpecValueForDisplay)
-                                            prefixString = " | ";
-                                            brFlag = true;
-                                        }
-                                    }*@
                                     @if (itemModel.ItemSpecModelsForItem.Count > 0)
                                     {
                                         foreach (var itemItemSpecModel in itemModel.ItemSpecModelsForItem)

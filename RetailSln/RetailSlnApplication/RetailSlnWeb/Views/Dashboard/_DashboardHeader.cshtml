@@ -49,7 +49,7 @@
                 <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount1" style="background-color: white; color: #9a031e; display: none;">$0.00</span>
             </div>
             <div style="float: left; vertical-align: top;">
-                <a class="icon-bar" href="javascript:void(0);" id="hrfHamburgerMenu" onclick="javascript: return hrfHamburgerMenu_onclick();">
+                <a class="icon-bar" href="@Url.Action("Checkout", "Home")" id="hrfHamburgerMenu" @*href="javascript:void(0);" onclick="javascript: return hrfHamburgerMenu_onclick();"*@>
                     <i class="fa fa-bars" style="color: #000000; font-size: 45px;"></i>
                 </a>
             </div>

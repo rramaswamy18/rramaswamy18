@@ -16,20 +16,25 @@
             <br /><br />
                   <div>
                       You are assigned the role of <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.RegisterUserModel.UserTypeDesc</span>
-                      <br />
-                      Your master coupon number is <span style="color: #000000; font-weight: bold;">@Model.CouponListModel.CouponNum</span>
-                      <br />
-                      Please share the coupon number with your customer(s)
-                      <br />
-                      Your customer needs to appy the coupon at time of purchase
-                      <br />
-                      When the customer applies the coupon, the sahayam is  @(Model.PriestListModel.CommissionPercent + "%") of the order amount.
-                      <br />
-                      The discount amount will be reflected in the invoice
-                      <br />
-                      This sahayam is as at time of registration and is subject to change
-                      <br />
-                      Sahayam amount will be paid periodically
+                      @if (!string.IsNullOrWhiteSpace(Model.CouponListModel?.CouponNum))
+                      {
+                          <span style="color: #000000;">
+                              <br />
+                              Your master coupon number is <span style="color: #000000; font-weight: bold;">@Model.CouponListModel.CouponNum</span>
+                              <br />
+                              Please share the coupon number with your customer(s)
+                              <br />
+                              Your customer needs to appy the coupon at time of purchase
+                              <br />
+                              When the customer applies the coupon, the sahayam is  @(Model.PriestListModel.CommissionPercent + "%") of the order amount.
+                              <br />
+                              The discount amount will be reflected in the invoice
+                              <br />
+                              This sahayam is as at time of registration and is subject to change
+                              <br />
+                              Sahayam amount will be paid periodically
+                          </span>
+                      }
                       <br /><br />
                       You have successfully setup the password. Please <a href="@baseUrl/@Url.Action("LoginUserProf", "Home")">click here</a> to login 
                       <br /><br />

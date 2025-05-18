@@ -1,5 +1,23 @@
 ﻿@using RetailSlnModels
 @model ItemMasterAttributesModel
+    @{ 
+        string prefixString, optionText;
+    }
+<table class="table table-condensed table-responsive" style="border-style: none; border-width: 0px; padding: 0px; width: 90%;">
+    <tr>
+        <th class="text-left" style="border-style: none; border-width: 0px; padding-left: 18px; width: 65%;">
+            <span style="color: #000000; font-size: 18px;">@Model.ItemMasterModel.ItemMasterDesc</span>
+            @if (!string.IsNullOrWhiteSpace(Model.ItemMasterModel.ItemMasterDesc2 + " " + Model.ItemMasterModel.ItemMasterDesc3))
+            {
+                <br style="clear: both;" />
+                <span style="color: #1d1d1d; font-family: Arial; font-size: 14px; font-style: normal; font-weight: 600; line-height: 18px;">@(Model.ItemMasterModel.ItemMasterDesc2 + " " + Model.ItemMasterModel.ItemMasterDesc3)</span>
+            }
+        </th>
+    </tr>
+</table>
+<div style="float: left; width: 9px;">
+    &nbsp;
+</div>
 <div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle; ">
     <a id="divTab0" href="javascript: void(0);" onclick="javascript: return divTab_onclick('0', '3')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">1. Order</a>
 </div>
@@ -19,10 +37,39 @@
     @Html.Partial("_OrderItem1", Model.ItemMasterModel)
 </div>
 <div id="divTabData1" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
-    Specifications
 </div>
 <div id="divTabData2" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
-    Bundle
+    <select class="form-control" id="itemBundleItems" onchange="javascript: return btnItemBundleLoad_onclick(this.value);" style="float: left; width: 45%;">
+        @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
+        {
+            optionText = "";
+            if (itemModel.ItemSpecModelsForItem != null && itemModel.ItemSpecModelsForItem.Count > 0)
+            {
+                prefixString = "";
+                foreach (var itemItemSpecModel in itemModel.ItemSpecModelsForItem)
+                {
+                    optionText += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                    prefixString = " | ";
+                }
+            }
+            optionText = optionText == "" ? "" : optionText + " ; ";
+            optionText += itemModel.ItemRateFormatted;
+            <option value="@itemModel.ItemId">@optionText</option>
+        }
+    </select>
+    <input class="form-control" id="orderQty_A" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1('_A');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 72px;" title="Enter quantity and click add to cart" type="number" value="" />
+    <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ItemMasterId, document.getElementById('itemBundleItems').value, '_A', null, false);" title="Enter quantity and click add to cart"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="float: left; height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart" /></a>
+    <span id="spnMessageSuccess_A" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText_A" style="color: #0000ff; font-size:12px;"></span></span>
+        <br style="clear: both;" />
+    </span>
+    <span id="spnMessageError_A" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+        <span id="spnMessageErrorText_A" style="color: #ff0000;"></span>
+        <br style="clear: both;" />
+    </span>
+    <div id="divItemBundle"></div>
 </div>
 <script type="text/javascript">
     divTab_onclick(0, 3);
@@ -38,5 +85,50 @@
 
         document.getElementById("divTabData" + index).scrollIntoView();
         document.getElementById("divTabData" + index).focus();
+    }
+    btnItemBundleLoad_onclick('@Model.ItemMasterModel.ItemModels[0].ItemId');
+    function btnItemBundleLoad_onclick(itemId) {
+        console.log("00000000", "btnItemBundleLoad_onclick", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/ItemBundleData/" + itemId;
+        try {
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+                //dataType: "html",
+                //data: postData,
+                //async: false,
+                success: function (responseData, textStatus, request) {
+                    $("#loadingModal").modal('hide');
+                    document.getElementById("divItemBundle").innerHTML = responseData.htmlString;
+                    if (responseData.success) {
+                    }
+                    else {
+                        alert("Error occurred");
+                    }
+                    console.log("00001000", "btnItemBundleLoad_onclick success", responseData.processMessage);
+                },
+                error: function (xhr, exception) {
+                    $("#loadingModal").modal('hide');
+                    console.log("00099000", "btnItemBundleLoad_onclick", "ERROR???", exception, xhr);
+                    alert("Please fix errors to continue???....");
+                }
+            });
+        }
+        catch (err) {
+            $('#loadingModal').modal('hide');
+            alert("Please fix errors to continue???");
+            console.log("00099100", "btnItemBundleLoad_onclick", "ERROR???", err);
+        }
+        return false;
+    }
+    function btnItemBundleView_onclick(itemBundleElementId) {
+        document.getElementById(itemBundleElementId).style.display = "block";
+        return false;
+    }
+    function btnItemBundleHide_onclick(itemBundleElementId) {
+        document.getElementById(itemBundleElementId).style.display = "none";
+        return false;
     }
 </script>

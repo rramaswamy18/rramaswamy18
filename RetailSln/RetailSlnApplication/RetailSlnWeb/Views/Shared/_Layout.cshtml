@@ -7,7 +7,7 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
-    int mainCategoryCount = 5;
+    int mainCategoryCount = 4;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     string aspNetRoleName;
     bool isLoggedIn;
@@ -149,11 +149,6 @@
                                     <span class="badge badge-warning shoppingCartItemsCount" id="shoppingCartTotalAmount1" style="background-color: white; color: #9a031e;">$0.00</span>
                                 </a>
                             </div>
-                            @*<div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="javascript: void();" onclick="javascript: return checkoutValidate_onclick();" class="navbar-right-link" title="Checkout - @imageTitle">
-                                    Checkout
-                                </a>
-                            </div>*@
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
                                 <a href="@Url.Action("RegisterUserProf", "Home")" class="navbar-right-link" title="Register - @imageTitle">
                                     Register
@@ -170,7 +165,7 @@
                                 </a>
                             </div>
                             <div class="nav-hamburger-feature" style="padding-right: 0px; text-align: center;">
-                                <a href="@Url.Action("RegisterUser", "Home", new { id = "700" })" class="navbar-right-link" title="Purohit Registration - @imageTitle">
+                                <a href="@Url.Action("RegisterUser", "Home")" class="navbar-right-link" title="Purohit Registration - @imageTitle">
                                     <img src="~/Images/Purohit_2.png" style="height: 27px; width: 27px;" />&nbsp;Purohit Register
                                 </a>
                             </div>
@@ -185,6 +180,9 @@
                     </div>
                     <div class="collapse navbar-collapse custom-navbar" id="feature-section-navbar">
                         <ul class="nav navbar-nav">
+                            <li>
+                                <a href="@Url.Action("ItemCatalog", "Home")" style="font-weight: bold;">Catalog</a>
+                            </li>
                             @for (i = 0; i < mainCategoryCount && i < categoryItemMasterHierModels.Count; i++)
                             {
                                 <li>
@@ -226,7 +224,7 @@
                                 </li>
                             }
                             <li>
-                                <a href="@Url.Action("RegisterUser", "Home", new { id = "700" })" style="font-weight: bold;">
+                                <a href="@Url.Action("RegisterUser", "Home")" style="font-weight: bold;">
                                     <img src="~/Images/Purohit_1.png" style="height: 36px; width: 36px;" />&nbsp;Purohit Register
                                 </a>
                             </li>

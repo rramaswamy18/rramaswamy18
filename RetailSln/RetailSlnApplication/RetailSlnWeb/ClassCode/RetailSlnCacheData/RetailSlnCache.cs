@@ -26,6 +26,9 @@ namespace RetailSlnCacheData
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public static List<DeliveryMethodFilterModel> DeliveryMethodFilterModels { set; get; }
+        public static List<ItemBundleModel> ItemBundleModels { set; get; }
+        public static List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
+        public static List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemMasterModel> ItemMasterModels { set; get; }
         public static List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
@@ -61,6 +64,9 @@ namespace RetailSlnCacheData
             CorpAcctModels = retailSlnInitModel.CorpAcctModels;
             CorpAcctLocationModels = retailSlnInitModel.CorpAcctLocationModels;
             DeliveryMethodFilterModels = retailSlnInitModel.DeliveryMethodFilterModels;
+            ItemBundleModels = retailSlnInitModel.ItemBundleModels;
+            ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels;
+            ItemDiscountModels = retailSlnInitModel.ItemDiscountModels;
             ItemModels = retailSlnInitModel.ItemModels;
             ItemMasterModels = retailSlnInitModel.ItemMasterModels;
             ItemSpecMasterModels = retailSlnInitModel.ItemSpecMasterModels;
@@ -92,6 +98,7 @@ namespace RetailSlnCacheData
             BuildCacheModels0(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             BuildCacheModels1(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             BuildCacheModels2(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            BuildCacheModels3(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
         }
         private static void BuildCacheModels0(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -153,6 +160,12 @@ namespace RetailSlnCacheData
                     itemModel.ItemItemSpecsForDisplay += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
                     prefixString = " | ";
                 }
+                itemModel.CorpAcctItemDiscountModels = new Dictionary<long, ItemDiscountModel>();
+                var itemDiscountModels = retailSlnInitModel.ItemDiscountModels.FindAll(x => x.ItemId == itemModel.ItemId);
+                foreach (var itemDiscountModel in itemDiscountModels)
+                {
+                    itemModel.CorpAcctItemDiscountModels[itemDiscountModel.CorpAcctId] = itemDiscountModel;
+                }
             }
             int itemMasterSeqNum = 0;
             int itemModelCount;
@@ -177,6 +190,12 @@ namespace RetailSlnCacheData
                     itemMasterModel.ItemRatesForDisplay += "...";
                     itemMasterModel.ItemRatesForDisplayAll += "...";
                 }
+                //List<CategoryItemMasterHierModel> categoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
+                //itemMasterModel.CategoryModels = new List<CategoryModel>();
+                //foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+                //{
+                //    itemMasterModel.CategoryModels.Add(categoryItemMasterHierModel.ParentCategoryModel);
+                //}
             }
             AspNetRoleModelsPriest = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId >= 500 && x.UserTypeId <= 700);
         }
@@ -242,6 +261,24 @@ namespace RetailSlnCacheData
                           )
                     {
                         AspNetRoleParentCategoryItemMasterModels[aspNetRoleName][parentCategoryId].Add(categoryItemMasterHierModels[i]);
+                        i++;
+                    }
+                }
+            }
+            foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
+            {
+                List<CategoryItemMasterHierModel> aspNetRoleNameCategoryModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId).OrderBy(x => x.AspNetRoleName).ToList();//.ThenBy(x => x.CategoryModel.CategoryDesc).ToList();
+                i = 0;
+                itemMasterModel.AspNetRoleNameCategoryModels = new Dictionary<string, List<CategoryModel>>();
+                while (i < aspNetRoleNameCategoryModels.Count)
+                {
+                    aspNetRoleName = aspNetRoleNameCategoryModels[i].AspNetRoleName;
+                    itemMasterModel.AspNetRoleNameCategoryModels[aspNetRoleName] = new List<CategoryModel>();
+                    while (i < aspNetRoleNameCategoryModels.Count &&
+                           aspNetRoleName == aspNetRoleNameCategoryModels[i].AspNetRoleName
+                          )
+                    {
+                        itemMasterModel.AspNetRoleNameCategoryModels[aspNetRoleName].Add(aspNetRoleNameCategoryModels[i].ParentCategoryModel);
                         i++;
                     }
                 }
@@ -317,7 +354,7 @@ namespace RetailSlnCacheData
                         (
                             new SelectListItem
                             {
-                                Text = pickupLocationModel.LocationDesc,
+                                Text = "Pickup from " + pickupLocationModel.LocationDesc,
                                 Value = codeDataModel.CodeDataNameId.ToString() + ";" + pickupLocationModel.PickupLocationId.Value.ToString() + ";",
                             }
                         );
@@ -335,6 +372,23 @@ namespace RetailSlnCacheData
                     );
                     PickupLocationDemogInfoAddressModels1.Add(new DemogInfoAddressModel { DemogInfoAddressId = -1 });
                 }
+            }
+        }
+        private static void BuildCacheModels3(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            foreach (ItemBundleItemModel itemBundleItemModel in retailSlnInitModel.ItemBundleItemModels)
+            {
+                itemBundleItemModel.ItemModel = ItemModels.First(x => x.ItemId == itemBundleItemModel.ItemId);
+                itemBundleItemModel.ItemBundleModel = ItemBundleModels.First(x => x.ItemBundleId == itemBundleItemModel.ItemBundleId);
+            }
+            //var results = retailSlnInitModel.ItemModels.Where(a => retailSlnInitModel.ItemBundleItemModels.Where(b => b.ItemBundleId == 6 && b.ItemId == a.ItemId).Any()).ToList();
+            foreach (ItemBundleModel itemBundleModel in retailSlnInitModel.ItemBundleModels)
+            {
+                itemBundleModel.ItemModel = retailSlnInitModel.ItemModels.First(x => x.ItemId == itemBundleModel.ItemId);
+                itemBundleModel.DiscountPercentFormatted = (itemBundleModel.DiscountPercent / 100).ToString("0.00%");
+                itemBundleModel.ItemRateAfterDiscount = itemBundleModel.ItemModel.ItemRate.Value * (100 - itemBundleModel.DiscountPercent) / 100;
+                itemBundleModel.ItemRateAfterDiscountFormatted = itemBundleModel.ItemRateAfterDiscount.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                itemBundleModel.ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels.FindAll(x => x.ItemBundleId == itemBundleModel.ItemBundleId);
             }
         }
     }

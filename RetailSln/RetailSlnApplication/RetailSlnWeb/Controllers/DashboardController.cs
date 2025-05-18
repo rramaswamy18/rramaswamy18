@@ -3,6 +3,7 @@ using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
 using RetailSlnBusinessLayer;
+using RetailSlnModels;
 using RetailSlnWeb.ClassCode;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,49 @@ namespace RetailSlnWeb.Controllers
                 htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
             }
             actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
+        // GET: OrderList
+        [HttpGet]
+        public ActionResult OrderList(string id, string rowCount)
+        {
+            ViewData["ActionName"] = "OrderList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = true;
+                processMessage = "SUCCESS!!!";
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
+                OrderListModel orderListModel = retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderList", orderListModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (ApplicationException applicationException)
+            {
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderList / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
             return actionResult;
         }
 

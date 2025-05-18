@@ -80,7 +80,10 @@
                                     styleDisplay = "block";
                                 }
                                 <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
-                                    @pickupLocationDemogInfoAddressModel.AddressLine1<br />
+                                    <span style="color: #0000ff; font-size: 12px; font-weight: bold;">Please pickup from the below address</span>
+                                    <br />
+                                    @pickupLocationDemogInfoAddressModel.AddressLine1
+                                    <br />
                                     @if (!string.IsNullOrEmpty(pickupLocationDemogInfoAddressModel.AddressLine2))
                                     {
                                         @pickupLocationDemogInfoAddressModel.AddressLine2<br />

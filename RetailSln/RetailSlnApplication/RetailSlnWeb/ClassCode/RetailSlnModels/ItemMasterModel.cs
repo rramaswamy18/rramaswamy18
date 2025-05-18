@@ -54,7 +54,7 @@ namespace RetailSlnModels
 
         public string UploadImageFileName { set; get; }
 
-        public List<CategoryModel> CategoryModels { set; get; }
+        public Dictionary<string, List<CategoryModel>> AspNetRoleNameCategoryModels { set; get; }
 
         public List<ItemModel> ItemModels { set; get; }
 

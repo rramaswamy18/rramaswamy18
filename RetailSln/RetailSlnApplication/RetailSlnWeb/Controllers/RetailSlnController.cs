@@ -414,7 +414,7 @@ namespace RetailSlnWeb.Controllers
         // GET : ItemAttributes
         [AllowAnonymous]
         [HttpGet]
-        [Route("ItemAttributes")]
+        [Route("ItemMasterAttributes")]
         public ActionResult ItemMasterAttributes(string id, string tabId)
         {
             ViewData["ActionName"] = "itemAttribsView";
@@ -436,6 +436,77 @@ namespace RetailSlnWeb.Controllers
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ModelState.AddModelError("", "Item Master Attributes View / GET");
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error");
+            }
+            return actionResult;
+        }
+
+        // GET : ItemBundleItemData
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult ItemBundleData(string id)
+        {
+            ViewData["ActionName"] = "ItemBundleData";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                ItemBundleDataModel itemBundleDataModel = retailSlnBL.ItemBundleData(long.Parse(id), null, null, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (itemBundleDataModel.ResponseObjectModel.ResponseTypeId == ResponseTypeEnum.Success)
+                {
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_ItemBundleData", itemBundleDataModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    htmlString = archLibBL.ViewToHtmlString(this, "_Error", itemBundleDataModel);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                }
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Item Bundle Item Data / GET");
+                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error");
+            }
+            return actionResult;
+        }
+
+        // GET : ItemCatalog
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("ItemCatalog")]
+        public ActionResult ItemCatalog()
+        {
+            ViewData["ActionName"] = "ItemCatalog";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            try
+            {
+                ItemCatalogModel itemCatalogModel = retailSlnBL.ItemCatalog(null, null, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("ItemCatalog", itemCatalogModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Item View List / GET");
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("Error");
             }

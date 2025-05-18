@@ -250,6 +250,114 @@ namespace RetailSlnDataLayer
             }
 
         }
+        public static List<ItemBundleModel> ItemBundleList(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.ItemBundle ORDER BY ItemBundleId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<ItemBundleModel> itemBundleModels = new List<ItemBundleModel>();
+                while (sqlDataReader.Read())
+                {
+                    itemBundleModels.Add
+                    (
+                        new ItemBundleModel
+                        {
+                            ItemBundleId = long.Parse(sqlDataReader["ItemBundleId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return itemBundleModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<ItemBundleItemModel> ItemBundleItemList(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                sqlStmt += "SELECT * FROM RetailSlnSch.ItemBundleItem ORDER BY ItemBundleItemId" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<ItemBundleItemModel> itemBundleItemModels = new List<ItemBundleItemModel>();
+                while (sqlDataReader.Read())
+                {
+                    itemBundleItemModels.Add
+                    (
+                        new ItemBundleItemModel
+                        {
+                            ItemBundleItemId = long.Parse(sqlDataReader["ItemBundleItemId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            ItemBundleId = long.Parse(sqlDataReader["ItemBundleId"].ToString()),
+                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            Quantity = short.Parse(sqlDataReader["Quantity"].ToString()),
+                        }
+                     );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return itemBundleItemModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<ItemDiscountModel> ItemDiscountList(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            List<ItemDiscountModel> itemDiscountModels = new List<ItemDiscountModel>();
+            try
+            {
+                string sqlStmt;
+                sqlStmt = "SELECT * FROM RetailSlnSch.ItemDiscount ORDER BY CorpAcctId, ItemId";
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    itemDiscountModels.Add
+                    (
+                        new ItemDiscountModel
+                        {
+                            ItemDiscountId = long.Parse(sqlDataReader["ItemDiscountId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
+                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                        }
+                    );
+                }
+                sqlDataReader.Close();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return itemDiscountModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
         public static List<ItemDiscountModel> ItemDiscountList(long corpAcctId, string itemIds, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -444,6 +552,99 @@ namespace RetailSlnDataLayer
                 }
                 sqlDataReader.Close();
                 return itemSpecModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static List<OrderListDataModel> OrderList(long? corpAcctId, long? personId, long? createdForPersonId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "        SELECT" + Environment.NewLine;
+                sqlStmt += "               OrderHeader.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForAspNetUser.Email AS CreatedForEmailAddress" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForPerson.PersonId AS CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForPerson.FirstName AS CreatedForFirstName" + Environment.NewLine;
+                sqlStmt += "              ,CreatedForPerson.LastName AS CreatedForLastName" + Environment.NewLine;
+                sqlStmt += "              ,AspNetUser.Email AS EmailAddress" + Environment.NewLine;
+                sqlStmt += "              ,Person.PersonId" + Environment.NewLine;
+                sqlStmt += "              ,Person.FirstName" + Environment.NewLine;
+                //sqlStmt += "              ,OrderHeader.InvoiceTypeId" + Environment.NewLine;
+                sqlStmt += "              ,Person.LastName" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeader.OrderDateTime" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeader.OrderStatusId" + Environment.NewLine;
+                sqlStmt += "              ,Person.PersonId" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.BalanceDue" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.InvoiceTypeId" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.ShippingAndHandlingCharges" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalAmountPaid" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalDiscountAmount" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalInvoiceAmount" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalOrderAmount" + Environment.NewLine;
+                sqlStmt += "              ,OrderHeaderSummary.TotalTaxAmount" + Environment.NewLine;
+                //sqlStmt += "              ," + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.OrderHeaderId = OrderHeaderSummary.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser" + Environment.NewLine;
+                sqlStmt += "            ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
+                sqlStmt += "            ON OrderHeader.CreatedForPersonId = CreatedForPerson.PersonId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN ArchLib.AspNetUser AS CreatedForAspNetUser" + Environment.NewLine;
+                sqlStmt += "            ON CreatedForPerson.AspNetUserId = CreatedForAspNetUser.AspNetUserId" + Environment.NewLine;
+                if (corpAcctId != null && corpAcctId > 0)
+                {
+                    sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
+                    sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
+                    sqlStmt += $"           AND PersonExtn1.CorpAcctId = {corpAcctId}" + Environment.NewLine;
+                }
+                sqlStmt += "      ORDER BY OrderHeader.OrderHeaderId" + Environment.NewLine;
+                //sqlStmt += "              ,OrderDetail.SeqNum" + Environment.NewLine;
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                #endregion
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                List<OrderListDataModel> orderListDataModels = new List<OrderListDataModel>();
+                while (sqlDataReader.Read())
+                {
+                    orderListDataModels.Add
+                    (
+                        new OrderListDataModel
+                        {
+                            OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                            CreatedForEmailAddress = sqlDataReader["CreatedForEmailAddress"].ToString(),
+                            CreatedForFirstName = sqlDataReader["CreatedForFirstName"].ToString(),
+                            CreatedForLastName = sqlDataReader["CreatedForLastName"].ToString(),
+                            CreatedForPersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                            EmailAddress = sqlDataReader["EmailAddress"].ToString(),
+                            FirstName = sqlDataReader["FirstName"].ToString(),
+                            LastName = sqlDataReader["LastName"].ToString(),
+                            OrderDateTime = DateTime.Parse(sqlDataReader["OrderDateTime"].ToString()).ToString("MMM-dd-yyyy h:mm tt"),
+                            OrderStatusId = (OrderStatusEnum)long.Parse(sqlDataReader["OrderStatusId"].ToString()),
+                            PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+
+                            BalanceDue = float.Parse(sqlDataReader["BalanceDue"].ToString()),
+                            InvoiceTypeId = (InvoiceTypeEnum)long.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+                            ShippingAndHandlingCharges = float.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                            TotalAmountPaid = float.Parse(sqlDataReader["TotalAmountPaid"].ToString()),
+                            TotalDiscountAmount = float.Parse(sqlDataReader["TotalDiscountAmount"].ToString()),
+                            TotalInvoiceAmount = float.Parse(sqlDataReader["TotalInvoiceAmount"].ToString()),
+                            TotalOrderAmount = float.Parse(sqlDataReader["TotalOrderAmount"].ToString()),
+                            TotalTaxAmount = float.Parse(sqlDataReader["TotalTaxAmount"].ToString()),
+                        }
+                    );
+                }
+                sqlDataReader.Close();
+                return orderListDataModels;
             }
             catch (Exception exception)
             {
