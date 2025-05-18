@@ -1,0 +1,15 @@
+.kc-form-field {
+  @apply w-full;
+
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-flex {
+      padding: 0 16px;
+    }
+
+    .mat-form-field-outline-thick .mat-form-field-outline-start,
+    .mat-form-field-outline-thick .mat-form-field-outline-end,
+    .mat-form-field-outline-thick .mat-form-field-outline-gap {
+      border-width: 1px;
+    }
+  }
+}

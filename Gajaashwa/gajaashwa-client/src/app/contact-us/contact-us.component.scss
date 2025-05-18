@@ -1,0 +1,194 @@
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .contact-section {
+    background-color: #f8f8f8;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .header h4 {
+    font-size: 26px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 10px;
+  }
+  
+  .header h4 .dark {
+    color: #1d2d50; /* Navy */
+  }
+  
+  .header h4 .gold {
+    color: #bfa36f; /* Gold */
+  }
+  
+  .header h2 {
+    margin-top: 40px;
+    font-size: 50px;
+    font-weight: 400;
+    color: #a4a4a4;
+    font-family: sans-serif;
+  }
+  
+  /* Form Styling */
+  .contact-form {
+    width: 100%;
+    max-width: 1140px;
+    border-radius: 6px;
+    padding: 30px;
+    // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  }
+  
+  // .form-group {
+  //   position: relative;
+  //   display: flex;
+  //   align-items: center;
+  //   margin-bottom: 20px;
+  //   border: 1px solid #eee;
+  //   padding: 10px;
+  //   border-radius: 4px;
+  //   transition: border-color 0.3s;
+  // }
+  
+  // .form-group i {
+  //   margin-right: 10px;
+  //   color: #ccc;
+  // }
+  .form-group {
+    position: relative;
+    display: flex;
+    align-items: flex-start; /* align icon to top */
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    padding: 10px;
+    // border-radius: 4px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group i {
+    margin-top: 2px; /* optional fine-tuning */
+    margin-right: 2px;
+    color: #f3f3f3;
+  }
+  
+  
+  .form-group input,
+  .form-group textarea {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    color: #333;
+    background-color: transparent;
+  }
+  
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #b8b8b8; /* Light gray or any color you prefer */
+    opacity: 1;  /* Make sure it's fully visible */
+  }
+
+  textarea {
+    resize: vertical;
+  }
+  
+  .form-group:focus-within {
+    border-color: #bfa36f; /* Gold */
+  }
+  
+  .btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  button[type="submit"] {
+    background: transparent;
+    border: 1px solid #bfa36f;
+    color: #bfa36f;
+    padding: 10px 20px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #bfa36f;
+    color: #fff;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header h2 {
+      font-size: 28px;
+    }
+  
+    .contact-form {
+      padding: 0px;
+    }
+  
+    .form-group input,
+    .form-group textarea {
+      font-size: 15px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .header h2 {
+      font-size: 24px;
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+    }
+  }
+  
+  .double-underline {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+  }
+  
+  .double-underline::before,
+  .double-underline::after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 40px; /* Same width for both lines */
+    bottom: 0;
+  }
+  
+  .double-underline::before {
+    background-color: #1d2d50; /* Navy */
+    left: 50%;
+    transform: translateX(-105%); /* Adjust spacing between lines */
+  }
+  
+  .double-underline::after {
+    background-color: #bfa36f; /* Gold */
+    left: 50%;
+    transform: translateX(5%);
+  }
+  .divider {
+    width: 3px;
+    background-color: #f3f3f3;
+    height: 24px; /* or 100% if you want full height */
+    margin: 0 15px;
+  }
+  

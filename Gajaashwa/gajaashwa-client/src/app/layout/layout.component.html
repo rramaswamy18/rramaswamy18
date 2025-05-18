@@ -1,0 +1,14 @@
+<div class="bg-[#182641] relative">
+    <div class="flex justify-center">
+        <app-header class="px-10 w-full md:w-[75%] fixed bg-[#182641] z-10"
+            (toggleSidenav)="toggleSidenav()"></app-header>
+    </div>
+    <div class="flex justify-center">
+        <main class="w-full md:w-[75%]">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+    <div class="flex justify-center border-t border-gray-500">
+        <app-footer class="w-full md:w-[75%] bg-[#182641]"></app-footer>
+    </div>
+</div>

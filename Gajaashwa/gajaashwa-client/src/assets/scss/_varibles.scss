@@ -1,0 +1,43 @@
+$color-accent: #4164a9;
+$color-warn: #ff9966;
+$color-danger: #b1122a;
+$color-text: #c5ceda;
+
+$color-bg-dark: #0d152f;
+$color-bg-primary: #13293D;
+$color-primary: #5BC4D6;
+$color-bg-card: #151f36;
+$color-bg-card-inner-block: #182641;
+
+$color-border: #495c7d;
+$color-border-200: #23395f;
+
+:root {
+  --color-primary: #{$color-primary};
+  --color-accent: #{$color-accent};
+  --color-warn: #{$color-warn};
+  --color-danger: #{$color-danger};
+
+  --color-bg-dark: #{$color-bg-dark};
+  --color-bg-primary: #{$color-bg-primary};
+  --color-bg-card: #{$color-bg-card};
+  --color-bg-card-inner-block: #{$color-bg-card-inner-block};
+  --color-border: #{$color-border};
+  --color-border-200: #{$color-border-200};
+  --color-text: #{$color-text};
+
+  // Sidenav
+  --sidenavSize: 300px;
+
+
+  --background-kc-stepper: #1A2C4A;
+  --step-active-bg: #243C64;
+  --background-kc-step-number-active: #495C7D;
+  --color-kc-step-number-active: white;
+  --background-kc-step-number: #495C7D;
+  --color-kc-step-number: #C5CEDA;
+  --background-info-name-box: #22375B;
+  --background-block-btn-details-box: #314262;
+  --background: #1A2C4A;
+  --border: #495C7D;
+}

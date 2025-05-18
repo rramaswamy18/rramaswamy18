@@ -1,0 +1,37 @@
+.color-primary {
+  color: var(--color-primary);
+}
+
+.color-primary--bg {
+  background-color: var(--color-primary);
+}
+
+.color-accent--bg {
+  background-color: var(--color-accent);
+}
+
+.color-warn--bg {
+  background-color: var(--color-warn);
+}
+
+.color-danger--bg {
+  background-color: var(--color-danger);
+}
+
+.color-dark-bg--300 {
+  background-color: #131D35;
+}
+
+// text color
+.color-text {
+  color: var(--color-text);
+}
+
+// border color
+.color-border {
+  border-color: var(--color-border);
+}
+
+.color-border-200 {
+  border-color: var(--color-border-200);
+}

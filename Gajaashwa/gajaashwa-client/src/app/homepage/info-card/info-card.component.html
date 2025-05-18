@@ -1,0 +1,19 @@
+<div class="testimonial-card"> 
+    <div class="image-wrapper">
+      <img [src]="image" [alt]="title + ' image'" class="testimonial-image" />
+      <div class="image-overlay">
+        <button class="read-more-btn" [routerLink]="redirectTo">READ MORE</button>
+      </div>
+    </div>
+  
+    <div class="testimonial-header">{{ title }}</div>
+  
+    <div class="testimonial-body">
+      <p>{{ description }}</p>
+      <ul class="testimonial-points">
+        <li *ngFor="let point of points">
+          <span class="checkmark">✔</span> {{ point }}
+        </li>
+      </ul>
+    </div>
+  </div>

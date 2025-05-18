@@ -1,0 +1,161 @@
+
+.footer {
+    background-color: #f8f8f8;
+    font-family: 'Segoe UI', sans-serif;
+    color: #000;
+}
+
+.footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #F0F0F0;
+    padding: 20px 0;
+}
+
+.footer-left, .footer-links, .footer-social {
+    flex: 1;
+    margin: 20px 50px;
+    min-width: 220px;
+}
+
+.footer-left {
+    text-align: start;
+}
+
+.footer-links {
+    text-align: center;
+}
+
+.footer-social {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: end;
+    gap: 20px;
+}
+
+.footer-logo {
+    height: 60px;
+    margin-bottom: 15px;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+.footer-links h4,
+.footer-social h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    color: #001f3f;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links ul li {
+    margin: 8px 0;
+}
+
+.footer-links ul li a {
+    color: #000;
+    text-decoration: none;
+}
+
+.footer-links ul li a:hover {
+    text-decoration: underline;
+}
+
+.social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.social-icons a {
+    margin: 0 5px 5px 0;
+    font-size: 36px;
+    color: #000;
+}
+
+.app-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.app-badges img {
+    height: 40px;
+    margin: 5px;
+    max-width: 100%;
+}
+
+.footer-bottom {
+    border-top: 1px solid #ddd;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: 14px;
+    background-color: #f6f6f6;
+    padding: 20px;
+}
+
+.footer-bottom .brand {
+    color: orange;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .footer-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .footer-left, .footer-links, .footer-social {
+        margin: 15px 20px;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .footer-social {
+        align-items: center;
+    }
+    
+    .social-icons {
+        justify-content: center;
+    }
+    
+    .app-badges {
+        justify-content: center;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-left, .footer-links, .footer-social {
+        min-width: 100%;
+        margin: 10px 0;
+    }
+    
+    .footer-logo {
+        height: 50px;
+    }
+    
+    .social-icons a {
+        font-size: 18px;
+        margin: 0 4px 4px 0;
+    }
+    
+    .app-badges img {
+        height: 35px;
+    }
+}

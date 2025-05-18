@@ -1,0 +1,16 @@
+:root {
+  .p-page {
+    padding: 16px;
+
+    @screen xl {
+      padding: 26px
+    }
+  }
+}
+
+.page {
+  &_container {
+    @apply shadow-inner p-page;
+    background-color: #151F36;
+  }
+}

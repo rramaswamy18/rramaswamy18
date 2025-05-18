@@ -1,0 +1,910 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/f7cb9d7e74.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Responsive Website</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f0;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        h1, h2, h3, p {
+            margin-bottom: 1rem;
+        }
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+
+        .logo img {
+            width: 150px;
+        }
+
+        /* Hide desktop menu on mobile devices by default */
+        .desktop-menu {
+            display: none;
+        }
+
+        .navigation-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .desktop-menu, .mobile-menu, .account-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+            .desktop-menu li a, .account-menu li a {
+                color: white;
+                text-decoration: none;
+                font-size: 16px;
+            }
+
+                .desktop-menu li a:hover, .account-menu li a:hover {
+                    color: #4CAF50;
+                }
+
+        .icon-login, .icon-register {
+            margin-right: 5px;
+        }
+
+        .hamburger-menu {
+            font-size: 24px;
+            color: white;
+            margin-right: 100px;
+            float: left;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+        }
+
+
+        /* Style the slider container with a width, height, and overflow to set the dimensions and clipping for the slider */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        /* Style the slide elements with position absolute, top, left, and opacity to position the slides and fade them in and out when transitioning */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+            /* Style the active slide with opacity 1 to make it visible */
+            .slide.active {
+                opacity: 100;
+            }
+
+            /* Style the slide images to display as block elements with 100% width and height to fill their respective slide containers */
+            .slide img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        /* Style the slide content to position absolutely and center it within the slide container */
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+        }
+
+        /* Style the slide title with a larger font size and margin */
+        .slide-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        /* Style the slide description with a smaller font size and margin */
+        .slide-description {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        /* Style the navigation buttons with position absolute and z-index to position them over the slider */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+            /* Style the previous button with left padding to align it to the left side of the slider */
+            .nav-btn.prev {
+                left: 1rem;
+                padding-right: 1rem;
+            }
+
+            /* Style the next button with right padding to align it to the right side of the slider */
+            .nav-btn.next {
+                right: 1rem;
+                padding-left: 1rem;
+            }
+
+        /* Style the slide indicators container with position absolute, bottom, left, and right to position it at the bottom center of the slider */
+        .slide-indicators {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style the slide indicator elements with a border, width, height, and margin to create a circular shape and spacing between them */
+        .slide-indicator {
+            border: 1px solid #fff;
+            width: 10px;
+            height: 10px;
+            margin: 0 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+            /* Style the active slide indicator with a background color to differentiate it from the inactive slide indicators */
+            .slide-indicator.active {
+                background-color: #fff;
+            }
+        /* Set the position, display, width, height, and object-fit properties for slide images */
+        .slide img {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Position the slide content above the overlay using a z-index of 2 */
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            z-index: 2;
+        }
+
+        /* Add an overlay to each slide using a pseudo-element */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        /* Services Section */
+
+        /* Global Styles */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Services Section */
+
+        #services {
+            background-color: #f7f7f7;
+            padding: 60px 0;
+        }
+
+            #services .services-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+        .service-box {
+            width: calc(50% - 20px);
+            margin-bottom: 40px;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+
+            .service-box img {
+                height: 200px; /* set a fixed height for all images */
+                width: auto; /* preserve aspect ratio */
+                margin-bottom: 10px;
+            }
+
+            .service-box:nth-of-type(2n) {
+                margin-left: 40px;
+            }
+
+        .service-icon {
+            display: block;
+            margin-bottom: 20px;
+            font-size: 50px;
+            color: #5e5e5e;
+            width: 80px;
+            height: 80px;
+            text-align: center;
+            line-height: 80px;
+        }
+
+        .service-title {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
+            text-align: center;
+        }
+
+        .service-description {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .checklist {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        ul.checklist {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+            ul.checklist li {
+                margin-bottom: 10px;
+                list-style-type: none;
+                display: flex;
+                text-align: left;
+            }
+
+                ul.checklist li:before {
+                    content: '\2713';
+                    display: inline-block;
+                    margin-right: 10px;
+                    font-size: 18px;
+                    color: #35a45a;
+                }
+
+        .btn-read-more {
+            margin-top: auto;
+            padding: 15px 100px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-read-more:hover {
+            background-color: #148f77;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 767px) {
+            .service-box {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+
+                .service-box:nth-of-type(2n) {
+                    margin-left: 0 !important;
+                }
+        }
+
+
+        /*Footer CSS*/
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px 20px 10px 20px; /* Adjusted padding */
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .footer-col {
+            width: 25%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+            .footer-col h3 {
+                margin-bottom: 10px;
+            }
+
+            .footer-col ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-wrap: wrap; /* Added flex-wrap */
+            }
+
+                .footer-col ul li {
+                    margin-bottom: 5px;
+                    display: inline-block;
+                    margin-right: 10px;
+                }
+
+                    .footer-col ul li:last-child {
+                        margin-right: 0;
+                    }
+
+                    .footer-col ul li a {
+                        color: #fff;
+                        text-decoration: underline;
+                    }
+
+        .social-icons li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+            .social-icons li:last-child {
+                margin-right: 0;
+            }
+
+            .social-icons li a {
+                color: #fff;
+                font-size: 18px;
+            }
+
+        .contact-info {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* Added flex-wrap */
+        }
+
+            .contact-info li {
+                margin-bottom: 10px;
+                width: 100%; /* Added width */
+            }
+
+                .contact-info li div {
+                    display: flex;
+                    align-items: center;
+                }
+
+                    .contact-info li div i {
+                        margin-right: 10px;
+                        font-size: 18px;
+                    }
+
+                    .contact-info li div span {
+                        color: #fff;
+                        font-size: 14px;
+                    }
+
+        @media only screen and (max-width: 768px) {
+            footer {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .footer-col {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+                .footer-col:last-child {
+                    margin-bottom: 0;
+                }
+
+            .social-icons {
+                margin-top: 10px;
+            }
+
+            .contact-info li div {
+                flex-direction: column;
+            }
+
+                .contact-info li div i {
+                    margin-right: 0;
+                    margin-bottom: 10px;
+                }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Logo">
+            </div>
+            <nav class="navigation-menu">
+                <ul class="mobile-menu" id="mobile-menu">
+                    <li><a href="#" class="hamburger-link"><i class="hamburger-menu">&#9776;</i></a></li>
+                </ul>
+                <ul class="desktop-menu" id="desktop-menu">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Products and Services</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+                <ul class="account-menu">
+                    <li><a href="#"><i class="icon-login">&#128100;</i> Login</a></li>
+                    <li><a href="#"><i class="icon-register">&#128279;</i> Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+
+
+
+
+
+    <!-- Carousel -->
+    <!-- Create a container element with the class "slider-container" -->
+    <div class="slider-container">
+
+        <!-- Inside the container element, create a series of slide elements with the class "slide" -->
+        <div class="slide active">
+
+            <!-- Inside each slide element, create an img element to display the image for the slide -->
+            <img src="resturan.jpg" alt="Slide 1">
+
+            <!-- Also inside each slide element, create a div with the class "slide-content" to display the heading and description for the slide -->
+            <div class="slide-content">
+
+                <!-- Inside the slide content div, create an h2 element with the class "slide-title" for the slide heading -->
+                <h2 class="slide-title">Revolutionize Your Food Business with Our Innovative Delivery Software</h2>
+
+                <!-- Inside the slide content div, create a p element with the class "slide-description" for the slide description -->
+                <p class="slide-description">The company has a food delivery software product that it offers to small businesses wishing to be in the food business without having a kitchen!          .</p>
+
+            </div>
+
+        </div>
+
+        <div class="slide">
+
+            <img src="truch teacher.jpg" alt="Slide 2">
+
+            <div class="slide-content">
+
+                <h2 class="slide-title">Increase Your Online Presence with Our Digital Marketing Services</h2>
+
+                <p class="slide-description">Maximize your online reach and boost your business growth with our comprehensive digital marketing services.</p>
+
+            </div>
+
+        </div>
+
+        <div class="slide">
+
+            <img src="truck driving school website.jpg" alt="Slide 3">
+
+            <div class="slide-content">
+
+                <h2 class="slide-title">Streamline Your Training Compliance with Our Hosted Solution</h2>
+
+                <p class="slide-description">
+                    The company has a hosted
+                    solution for the vocational training
+                    industry to help them comply with
+                    several compliance requirements.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="slide">
+
+            <img src="fbdc8e206ce4c831e322b8cbcd160b77.jpg" alt="Slide 4">
+
+            <div class="slide-content">
+
+                <h2 class="slide-title">Grow Your Business with Our Affordable Products and Revenue-Based Fees</h2>
+
+                <p class="slide-description">
+                    The company offers its products to small to medium size businesses and takes a small fee based on revenues.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Add navigation buttons with the classes "nav-btn prev" and "nav-btn next" -->
+        <button class="nav-btn
+    prev">
+            ❮
+        </button>
+        <button class="nav-btn next">❯</button>
+
+        <!-- Add slide indicators with a container element and individual elements with the class "slide-indicator" for each slide -->
+        <div class="slide-indicators">
+            <div class="slide-indicator active"></div>
+            <div class="slide-indicator"></div>
+            <div class="slide-indicator"></div>
+            <div class="slide-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Services Section-->
+    <section id="services">
+        <div class="container">
+            <div class="services-container">
+                <div class="service-box">
+                    <img src="2a6df69bd686fffea2f99b3c0fac13e8.jpg" class="service-image">
+                    <h3 class="service-title">About Us</h3>
+                    <p class="service-description">We create beautiful and modern websites that are optimized for performance and user experience.</p>
+                    <ul class="checklist">
+                        <li><span class="check-icon"></span> Gajaashwa, Inc was incorporated in June 2005.</li>
+                        <li><span class="check-icon"></span> Gajaashwa, Inc has advisors with experience in various industries.</li>
+                        <li><span class="check-icon"></span> With over 15 years of experience, Gajaashwa, Inc is committed to delivering high-quality software solutions to its clients</li>
+                    </ul>
+
+                    <div class="read-more">
+                        <a href="#" class="btn-read-more">Read More</a>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <img src="fbdc8e206ce4c831e322b8cbcd160b77.jpg" class="service-image">
+                    <h3 class="service-title">Products and Services</h3>
+                    <p class="service-description">We provide web development solutions and food delivery website software as our products and services.</p>
+                    <ul class="checklist">
+                        <li>
+                            <span class="check-icon"></span>Web development solutions
+                        </li>
+                        <li>
+                            <span class="check-icon"></span> Food delivery website software
+                        </li>
+                        <li>
+                            <span class="check-icon"></span> Other digital products and services
+
+
+
+                        </li>
+                    </ul>
+                    <div class="read-more">
+                        <a href="#" class="btn-read-more">Read More</a>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <img src="670c66936da64918e9044bf99b6fed9f.jpg" class="service-image">
+                    <h3 class="service-title">Testimonials</h3>
+                    <p class="service-description">Our customers are satisfied with our web development solutions and food delivery website software. Check out our testimonials!</p>
+                    <ul class="checklist">
+                        <li>
+                            <span class="check-icon"></span>Customer satisfaction
+                        </li>
+                        <li>
+                            <span class="check-icon"></span> Web development and food delivery software solutions are well-received
+                        </li>
+                        <li>
+                            <span class="check-icon"></span> Testimonials available for verification
+
+
+
+                        </li>
+                    </ul>
+                    <div class="read-more">
+                        <a href="#" class="btn-read-more">Read More</a>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <img src="a41d474e-f175-4d0e-a426-1d6cb0948ad6.jpg" class="service-image">
+                    <h3 class="service-title">FAQS</h3>
+                    <p class="service-description">What questions would you like to include in your FAQ section for web development solutions and food delivery website software?</p>
+                    <ul class="checklist">
+                        <li>
+                            <span class="check-icon"></span>What technologies and programming languages do you use to develop websites and web applications?
+                        </li>
+                        <li>
+                            <span class="check-icon"></span> Can I customize the food delivery website software to suit my business needs?
+                        </li>
+                        <li>
+                            <span class="check-icon"></span>Do you provide ongoing support and maintenance for the websites and web applications you develop?
+
+
+
+                        </li>
+                    </ul>
+                    <div class="read-more">
+                        <a href="#" class="btn-read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <script>
+        // 1. Get slide elements
+        const slides = document.querySelectorAll('.slide');
+
+        // 2. Get navigation buttons
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+
+        // 3. Get slide indicators
+        const indicators = document.querySelectorAll('.slide-indicator');
+
+        // 4. Set initial slide index
+        let slideIndex = 0;
+
+        // 5. Show initial slide
+        showSlide(slideIndex);
+
+        // 6. Set event listeners for navigation buttons
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        //
+        // 7. Set event listeners for slide indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                showSlide(index);
+            });
+        });
+
+        // 8. Function to show slide
+        function showSlide(index) {
+            // 9. Remove active class from all slides and indicators
+            slides.forEach((slide) => {
+                slide.classList.remove('active');
+            });
+            indicators.forEach((indicator) => {
+                indicator.classList.remove('active');
+            });
+
+            // 10. Add active class to current slide and indicator
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+
+            // 11. Update slide index
+            slideIndex = index;
+        }
+
+        // 12. Function to show previous slide
+        function prevSlide() {
+            // 13. Decrement slide index
+            slideIndex--;
+
+            // 14. Wrap slide index if necessary
+            if (slideIndex < 0) {
+                slideIndex = slides.length - 1;
+            }
+
+            // 15. Show current slide
+            showSlide(slideIndex);
+        }
+
+        // 16. Function to show next slide
+        function nextSlide() {
+            // 17. Increment slide index
+            slideIndex++;
+
+            // 18. Wrap slide index if necessary
+            if (slideIndex >= slides.length) {
+                slideIndex = 0;
+            }
+
+            // 19. Show current slide
+            showSlide(slideIndex);
+        }
+
+        // 20. Define the slideInterval function
+        const slideInterval = () => {
+            // 21. Set the index of the next slide
+            const nextIndex = (slideIndex + 1) % slides.length;
+
+            // 22. Show the next slide
+            showSlide(nextIndex);
+        };
+
+        // 23. Set the slide interval to run every 3.5 seconds
+        const interval = setInterval(slideInterval, 3500);
+
+        // 24. Clear the slide interval when the mouse enters the slider
+        const slider = document.querySelector('.slider');
+        slider.addEventListener('mouseenter', () => {
+            clearInterval(interval);
+        });
+
+        // 25. Set the slide interval to run again when the mouse leaves the slider
+        slider.addEventListener('mouseleave', () => {
+            interval = setInterval(slideInterval, 3500);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var hamburgerLink = document.querySelector('.hamburger-link');
+            var desktopMenu = document.querySelector('.desktop-menu');
+
+            hamburgerLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                desktopMenu.classList.toggle('hidden');
+                desktopMenu.classList.toggle('visible');
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.hamburger-link').on('click', function (event) {
+                event.preventDefault();
+                $('#desktop-menu').stop().slideToggle();
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var contactForm = document.getElementById("contact-form");
+
+            contactForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                // Perform form validation
+                var isValid = true;
+
+                // Add your form validation logic here
+
+                if (isValid) {
+                    // Submit the form data
+                    // Replace with your form submission logic
+                    console.log("Form submitted successfully");
+                } else {
+                    console.log("Form validation failed");
+                }
+            });
+        });
+    </script>
+
+    </script>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Gajaashwa</h3>
+        </div>
+        <div class="footer-col">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Prods & Services</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Return Policy</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Follow Us</h3>
+            <ul class="social-icons">
+                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <ul class="contact-info">
+                <li>
+                    <div class="address">
+                        <i class="fa fa-map-marker"></i>
+                        <span>
+                            2415 San Ramon Valley Blvd. 4-429
+                            San Ramon, CA 94583, USA
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div class="phone">
+                        <i class="fa fa-phone"></i>
+                        <span>123-456-7890</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="email">
+                        <i class="fa fa-envelope"></i>
+                        <span>info@example.com</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>
