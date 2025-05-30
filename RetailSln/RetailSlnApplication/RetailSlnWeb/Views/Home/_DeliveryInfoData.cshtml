@@ -7,7 +7,7 @@
     #DeliveryAddressModel_DemogInfoSubDivisionId-error, #DeliveryAddressModel_HouseNumber-error,
     #DeliveryDataModel_DeliveryInstructions-error, #PaymentModeModel_PaymentModeId-error,
     #DeliveryMethodModel_DeliveryMethodIdPickupLocationId-error, #DeliveryDataModel_PrimaryTelephoneNum-error,
-    #DeliveryDataModel_AlternateTelephoneNum-error {
+    #DeliveryDataModel_AlternateTelephoneNum-error, #DeliveryDataModel_PrimaryTelephoneDemogInfoCountryId-error {
         color: #ff0000;
         display: block;
         font-size: 12px;
@@ -38,7 +38,7 @@
         //mobileDevice = true;
         if (mobileDevice)
         {
-            @Html.Partial("_DeliveryInfoData1", Model)
+            @Html.Partial("_DeliveryInfoData2", Model)
         }
         else
         {

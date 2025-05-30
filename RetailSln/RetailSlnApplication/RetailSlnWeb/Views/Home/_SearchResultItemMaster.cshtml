@@ -1,5 +1,7 @@
 ﻿@model ItemMasterListModel
 @using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
 @using RetailSlnEnumerations
 @using RetailSlnModels
 @{
@@ -9,6 +11,22 @@
     int index = 0, index1;
     bool brFlag;
     string discountPercent, prefixString;
+    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+    long? corpAcctId = ((ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel)?.CorpAcctModel.CorpAcctId;
+    Dictionary<long, ItemDiscountModel> itemDiscountModels;
+    if (corpAcctId == null)
+    {
+        corpAcctId = 0;
+    }
+    try
+    {
+        itemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId.Value];
+    }
+    catch
+    {
+        itemDiscountModels = new Dictionary<long, ItemDiscountModel>();
+    }
+    ItemDiscountModel itemDiscountModel;
 }
 <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="margin-left: auto; margin-right: auto; width: 73%;">
     <tr>
@@ -63,15 +81,8 @@
                         prefixString = "";
                         brFlag = false;
                         index1 = 0;
-                        discountPercent = "";
-                        if (itemModel.ItemDiscountModels != null && itemModel.ItemDiscountModels.Count > 0)
-                        {
-                            discountPercent = (itemModel.ItemDiscountModels[0].DiscountPercent.ToString("0.00") + "%");
-                        }
-                        else
-                        {
-                            discountPercent = "";
-                        }
+                        itemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+                        discountPercent = itemDiscountModel == null ? "" : itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
                         <tr>
                             <td style="font-size: 13px; padding: 5px; vertical-align: top;">
                                 @itemModel.ItemRateFormatted

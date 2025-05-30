@@ -93,7 +93,7 @@ namespace RetailSlnModels
 
         //public List<ItemImageModel> ItemImageModels { set; get; }
 
-        public Dictionary<long, ItemDiscountModel> CorpAcctItemDiscountModels { set; get; }
+        //public Dictionary<long, List<ItemDiscountModel>> CorpAcctItemDiscountModels { set; get; }
 
         //public List<ItemDiscountModel> ItemDiscountModels { set; get; }
 

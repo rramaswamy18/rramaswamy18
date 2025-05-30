@@ -1,4 +1,5 @@
-﻿using ArchitectureLibraryModels;
+﻿using ArchitectureLibraryEnumerations;
+using ArchitectureLibraryModels;
 using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
@@ -32,19 +33,13 @@ namespace RetailSlnModels
 
         public string ItemMasterName { set; get; }
 
-        //public string ItemMasterSpecsForDisplay { set; get; }
+        [Display(Name = "Status")]
+        [Required(ErrorMessage = "Please select a value")]
+        public YesNoEnum? ItemMasterStatusId { set; get; }
 
         public string ItemRatesForDisplay { set; get; }
 
         public string ItemRatesForDisplayAll { set; get; }
-
-        //public List<ItemImageModel> ItemMasterImageModels { set; get; }
-
-        //public List<ItemMasterInfoModel> ItemMasterInfoModels { set; get; }
-
-        //public List<ItemSpecModel> ItemMasterItemSpecModels { set; get; }
-
-        //public Dictionary<string, ItemSpecModel> ItemMasterItemSpecModelsForDisplay { set; get; }
 
         [Display(Name = "Item Type")]
         [Required(ErrorMessage = "Please select a value")]

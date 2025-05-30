@@ -25,7 +25,7 @@ function addToCart_onclick(itemMasterId, itemId, elementIdSuffix) {
             if (errorMessage != "") {
                 errorMessage += "<br />";
             }
-            errorMessage += "Enter order quantity";
+            errorMessage += "Enter quantity";
             returnValue = false;
         }
         if (returnValue) {
@@ -498,15 +498,15 @@ function shoppingCartSummary(totalItemCount, totalOrderAmount, totalOrderAmountF
     document.getElementById("shoppingCartTotalAmount").innerHTML = totalOrderAmountFormatted;
     document.getElementById("shoppingCartItemsCount1").innerHTML = totalItemCount;
     document.getElementById("shoppingCartTotalAmount1").innerHTML = totalOrderAmountFormatted;
-    if (totalItemCount == 0 || totalOrderAmount == 0) {
-        document.getElementById("hrfCheckoutLink").classList.add("disabled-link");
-    }
-    else {
-        try {
+    try {
+        if (totalItemCount == 0 || totalOrderAmount == 0) {
+            document.getElementById("hrfCheckoutLink").classList.add("disabled-link");
+        }
+        else {
             document.getElementById("hrfCheckoutLink").classList.remove("disabled-link");
         }
-        catch (err) {
-            ;
-        }
+    }
+    catch (err) {
+        ;
     }
 }

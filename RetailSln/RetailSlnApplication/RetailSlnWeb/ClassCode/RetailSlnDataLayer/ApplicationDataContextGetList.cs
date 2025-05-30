@@ -70,7 +70,7 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew ORDER BY AspNetRoleName, ParentCategoryId, SeqNum" + Environment.NewLine;
+                sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemMasterHier ORDER BY AspNetRoleName, ParentCategoryId, SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 List<CategoryItemMasterHierModel> categoryModels = new List<CategoryItemMasterHierModel>();
@@ -358,42 +358,6 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static List<ItemDiscountModel> ItemDiscountList(long corpAcctId, string itemIds, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            List<ItemDiscountModel> itemDiscountModels = new List<ItemDiscountModel>();
-            try
-            {
-                string sqlStmt;
-                sqlStmt = "SELECT * FROM RetailSlnSch.ItemDiscount WHERE ClientId = " + clientId + " AND CorpAcctId = " + corpAcctId + " AND ItemId IN(" + itemIds + ")";
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                while (sqlDataReader.Read())
-                {
-                    itemDiscountModels.Add
-                    (
-                        new ItemDiscountModel
-                        {
-                            ItemDiscountId = long.Parse(sqlDataReader["ItemDiscountId"].ToString()),
-                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
-                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
-                        }
-                    );
-                }
-                sqlDataReader.Close();
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return itemDiscountModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
         public static List<ItemModel> ItemList(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -449,7 +413,7 @@ namespace RetailSlnDataLayer
             List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMaster WHERE ItemMasterStatusId = 100 ORDER BY ItemMasterId", sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 while (sqlDataReader.Read())
                 {
@@ -467,6 +431,7 @@ namespace RetailSlnDataLayer
                             ItemMasterDesc3 = sqlDataReader["ItemMasterDesc3"].ToString(),
                             ItemMasterDesc = sqlDataReader["ItemMasterDesc"].ToString(),
                             ItemMasterName = sqlDataReader["ItemMasterName"].ToString(),
+                            ItemMasterStatusId = (YesNoEnum)int.Parse(sqlDataReader["ItemMasterStatusId"].ToString()),
                             ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
                             ProductItemId = sqlDataReader["ProductItemId"].ToString() == "" ? (long?)null : long.Parse(sqlDataReader["ProductItemId"].ToString()),
                             UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
@@ -608,6 +573,7 @@ namespace RetailSlnDataLayer
                     sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
                     sqlStmt += $"           AND PersonExtn1.CorpAcctId = {corpAcctId}" + Environment.NewLine;
                 }
+                sqlStmt += "         WHERE OrderHeader.OrderHeaderId > 0" + Environment.NewLine;
                 sqlStmt += "      ORDER BY OrderHeader.OrderHeaderId" + Environment.NewLine;
                 //sqlStmt += "              ,OrderDetail.SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);

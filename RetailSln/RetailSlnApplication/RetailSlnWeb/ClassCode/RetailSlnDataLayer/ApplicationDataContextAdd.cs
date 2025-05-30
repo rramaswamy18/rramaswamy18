@@ -701,10 +701,10 @@ namespace RetailSlnDataLayer
         public static void PersonExtn1Add(long personId, long corpAcctId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             SqlCommand sqlCommand = new SqlCommand("INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, CorpAcctLocationId, AddUserId, UpdUserId) SELECT @ClientId, @PersonId, @CorpAcctId, CorpAcctLocationId, @LoggedInUserId, @LoggedInUserId FROM RetailSlnSch.CorpAcctLocation WHERE CorpAcctId = @CorpAcctId", sqlConnection);
-            sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@PersonId", System.Data.SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@CorpAcctId", System.Data.SqlDbType.BigInt);
-            sqlCommand.Parameters.Add("@LoggedInUserId", System.Data.SqlDbType.NVarChar, 512);
+            sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@CorpAcctId", SqlDbType.BigInt);
+            sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 512);
             sqlCommand.Parameters["@ClientId"].Value = clientId;
             sqlCommand.Parameters["@PersonId"].Value = personId;
             sqlCommand.Parameters["@CorpAcctId"].Value = corpAcctId;

@@ -1,0 +1,17 @@
+﻿@using RetailSlnModels
+@model OrderItemDataModel
+@*Html.Raw(Model.OrderItemDataHtmlString)*@
+@{ 
+    StreamReader streamReader = new StreamReader(Model.OrderItemDataHtmlFileName);
+    @Html.Raw(streamReader.ReadToEnd())
+    streamReader.Close();
+}
+<script type="text/javascript">
+    function ParentCategoryId_onclick() {
+        var selectedValue = document.getElementById("ParentCategoryId").value;
+        var url = "@Url.Action("ItemCatalog", "Home", new { id = -1 })";
+        url = url.replace("-1", selectedValue);
+        window.location.href = url;
+        document.getElementById("ParentCategoryId").selectedIndex = 0;
+    }
+</script>

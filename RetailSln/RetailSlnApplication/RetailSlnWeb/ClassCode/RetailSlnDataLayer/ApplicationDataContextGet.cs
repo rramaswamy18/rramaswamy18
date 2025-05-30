@@ -114,7 +114,7 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return priestListModel;
         }
-        public static PersonExtn1Model PersonExtn1FromPersonIdGet(long personId, long corpAcctLocationId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static PersonExtn1Model PersonExtn1FromPersonIdGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -122,15 +122,15 @@ namespace RetailSlnDataLayer
             try
             {
                 string sqlStmt = "";
-                //sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 INNER JOIN RetailSlnSch.CorpAcct ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId WHERE PersonExtn1.PersonId = " + personId + Environment.NewLine;
-                if (corpAcctLocationId > -1)
-                {
-                    sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 WHERE PersonExtn1.PersonId = " + personId + " AND PersonExtn1.CorpAcctLocationId = " + corpAcctLocationId + Environment.NewLine;
-                }
-                else
-                {
-                    sqlStmt += "SELECT TOP 1 * FROM RetailSlnSch.PersonExtn1 WHERE PersonExtn1.PersonId = " + personId + " ORDER BY PersonExtn1.CorpAcctLocationId" + Environment.NewLine;
-                }
+                sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 INNER JOIN RetailSlnSch.CorpAcct ON PersonExtn1.CorpAcctId = CorpAcct.CorpAcctId WHERE PersonExtn1.PersonId = " + personId + " ORDER BY PersonExtn1.CorpAcctId, PersonExtn1.CorpAcctLocationId" + Environment.NewLine;
+                //if (corpAcctLocationId > -1)
+                //{
+                //    sqlStmt += "SELECT * FROM RetailSlnSch.PersonExtn1 WHERE PersonExtn1.PersonId = " + personId + " AND PersonExtn1.CorpAcctLocationId = " + corpAcctLocationId + Environment.NewLine;
+                //}
+                //else
+                //{
+                //    sqlStmt += "SELECT TOP 1 * FROM RetailSlnSch.PersonExtn1 WHERE PersonExtn1.PersonId = " + personId + " ORDER BY PersonExtn1.CorpAcctLocationId" + Environment.NewLine;
+                //}
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 PersonExtn1Model personExtn1Model;
@@ -143,21 +143,6 @@ namespace RetailSlnDataLayer
                         PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
                         CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
                         CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
-                        //CorpAcctModel = new CorpAcctModel
-                        //{
-                        //    CorpAcctId = long.Parse(sqlDataReader["CorpAcctId"].ToString()),
-                        //    ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                        //    CorpAcctName = sqlDataReader["CorpAcctName"].ToString(),
-                        //    CorpAcctTypeId = (CorpAcctTypeEnum)int.Parse(sqlDataReader["CorpAcctTypeId"].ToString()),
-                        //    CreditDays = short.Parse(sqlDataReader["CreditDays"].ToString()),
-                        //    CreditLimit = float.Parse(sqlDataReader["CreditLimit"].ToString()),
-                        //    CreditSale = bool.Parse(sqlDataReader["CreditSale"].ToString()),
-                        //    MinOrderAmount = float.Parse(sqlDataReader["MinOrderAmount"].ToString()),
-                        //    ShippingAndHandlingCharges = bool.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
-                        //    TaxIdentNum = sqlDataReader["TaxIdentNum"].ToString(),
-                        //    CorpAcctLocationModels = new List<CorpAcctLocationModel>(),
-                        //    DiscountDtlModels = new List<DiscountDtlModel>(),
-                        //}
                     };
                 }
                 else

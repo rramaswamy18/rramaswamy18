@@ -203,6 +203,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderItemDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterAttributesModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterListModel.cs" />
@@ -210,7 +211,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\ItemCatalogModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderItemFileModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderApprovalModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetail.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailItemBundle.cs" />
@@ -1042,8 +1043,6 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images\ItemMaster\ItemMaster99.png" />
     <Content Include="ClientSpecific\98_DivineBija.com\Documents\Images_Original\DivineBijaBanner.jpg" />
     <Content Include="ClientSpecific\98_DivineBija.com\Web.config.txt" />
-    <None Include="ClientSpecific\98_DivineBija.com\Web.Debug.config.txt" />
-    <None Include="ClientSpecific\98_DivineBija.com\Web.Release.config.txt" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1060,6 +1059,7 @@
     <Content Include="Content\Site0.min.css" />
     <Content Include="Content\Site0.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Files\OrderItem\%40Temp.txt" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -1364,8 +1364,6 @@
     <Content Include="Views\Home\_CheckoutGuest.cshtml" />
     <Content Include="Views\Home\_CheckoutGuestData.cshtml" />
     <Content Include="Views\Dashboard\_OrderItem3.cshtml" />
-    <Content Include="Views\Home\_OrderItem1Old.cshtml" />
-    <Content Include="Views\Home\_OrderItem1Backup.cshtml" />
     <Content Include="Views\Dashboard\_OrderItem3Backup.cshtml" />
     <Content Include="Views\Home\_ItemBundleData.cshtml" />
     <Content Include="Views\Dashboard\_OrderItem2.cshtml" />
@@ -1378,9 +1376,14 @@
     <Content Include="Views\Home\_UserProfileEmailSubject.cshtml" />
     <Content Include="Views\Home\_UserProfileData2.cshtml" />
     <Content Include="Views\Shared\_ShoppingCartSummary1.cshtml" />
+    <Content Include="Views\Home\_OrderItemData.cshtml" />
+    <Content Include="Views\Home\_OrderItemFile.cshtml" />
+    <Content Include="Views\Dashboard\_OrderList.cshtml" />
+    <Content Include="Views\Dashboard\_OrderListData.cshtml" />
+    <Content Include="Views\Dashboard\_CorpAcctList.cshtml" />
+    <Content Include="Views\Dashboard\_CorpAcctListData.cshtml" />
+    <Content Include="Views\Dashboard\_CategoryList.cshtml" />
     <Content Include="Views\Home\ItemCatalog.cshtml" />
-    <Content Include="Views\Home\_ItemCatalog.cshtml" />
-    <Content Include="Views\Home\_ItemCatalogData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

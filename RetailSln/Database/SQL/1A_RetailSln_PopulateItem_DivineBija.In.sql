@@ -4,13 +4,13 @@ GO
 --Mar 3 2025
 DECLARE @ClientId BIGINT = 3
 --
-        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHierNew
-		INSERT RetailSlnSch.CategoryItemMasterHierNew(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
-        SELECT @ClientId AS ClientId, DivineBija_CategoryHiers.[Role Name] AS AspNetRoleName, Category.CategoryId, ParentCategory.CategoryId AS ParentCategoryId, DivineBija_CategoryHiers.[Seq Num] AS SeqNum
-          FROM DivineBija_CategoryHiers
-    INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryHiers.[Category Name Desc] = Category.CategoryNameDesc
-    INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
-      ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
+    --    TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHierNew
+    --    INSERT RetailSlnSch.CategoryItemMasterHierNew(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
+    --    SELECT @ClientId AS ClientId, DivineBija_CategoryHiers.[Role Name] AS AspNetRoleName, Category.CategoryId, ParentCategory.CategoryId AS ParentCategoryId, DivineBija_CategoryHiers.[Seq Num] AS SeqNum
+    --      FROM DivineBija_CategoryHiers
+    --INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryHiers.[Category Name Desc] = Category.CategoryNameDesc
+    --INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
+    --  ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
         DROP TABLE IF EXISTS #TEMP1A
         CREATE TABLE #TEMP1A(ParentCategoryId BIGINT, ItemMasterSeqNum FLOAT, ItemMasterId BIGINT, ItemSeqNum FLOAT, ItemId BIGINT, Id BIGINT NOT NULL IDENTITY(1, 1))
         INSERT #TEMP1A(ParentCategoryId, ItemMasterSeqNum, ItemMasterId, ItemSeqNum, ItemId)
@@ -100,10 +100,34 @@ DECLARE @ClientId BIGINT = 3
         AND ParentCategoryId NOT IN(102, 120)--('Bulk Orders', 'Wholesale Orders')
         ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum
 --CategoryItemMasterHier
-        INSERT RetailSlnSch.CategoryItemMasterHierNew(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
+        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+--Category Hier
+        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
+        SELECT @ClientId AS ClientId, DivineBija_CategoryHiers.[Role Name] AS AspNetRoleName, Category.CategoryId, ParentCategory.CategoryId AS ParentCategoryId, DivineBija_CategoryHiers.[Seq Num] AS SeqNum
+          FROM DivineBija_CategoryHiers
+    INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryHiers.[Category Name Desc] = Category.CategoryNameDesc
+    INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
+         WHERE DivineBija_CategoryHiers.[Role Name] IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
+      ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
+        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
         SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum FROM #TEMP2A
+         WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
         ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 ---
 --SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew WHERE AspNetRoleName = 'MARKETINGROLE' AND ParentCategoryId = 0 AND ItemMasterId IS NULL ORDER BY SeqNum
 --SELECT * FROM RetailSlnSch.CategoryItemMasterHierNew WHERE AspNetRoleName = 'MARKETINGROLE' AND ParentCategoryId = 112 and CategoryId IS NULL ORDER BY SeqNum
 --SELECT AspNetRoleName, ParentCategoryId, COUNT(*) FROM RetailSlnSch.CategoryItemMasterHierNew WHERE CategoryId IS NULL GROUP BY AspNetRoleName, ParentCategoryId ORDER BY AspNetRoleName, ParentCategoryId
+--        TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+----Category Hier
+--        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
+--        SELECT @ClientId AS ClientId, DivineBija_CategoryHiers.[Role Name] AS AspNetRoleName, Category.CategoryId, ParentCategory.CategoryId AS ParentCategoryId, DivineBija_CategoryHiers.[Seq Num] AS SeqNum
+--          FROM DivineBija_CategoryHiers
+--    INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryHiers.[Category Name Desc] = Category.CategoryNameDesc
+--    INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
+--         WHERE DivineBija_CategoryHiers.[Role Name] IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
+--      ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
+----Item Master Hier
+--        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
+--        SELECT DISTINCT @ClientId AS ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum FROM #TEMP2A
+--         WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
+--        ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum

@@ -1,12 +1,29 @@
 ﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
 @using RetailSlnModels
 @model ItemMasterModel
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    //var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int index = -1, index1 = 0;
     string discountPercent, prefixString = "", optionText;
+    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+    long? corpAcctId = ((ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel)?.CorpAcctModel.CorpAcctId;
+    Dictionary<long, ItemDiscountModel> itemDiscountModels;
+    ItemDiscountModel itemDiscountModel;
+    if (corpAcctId == null)
+    {
+        corpAcctId = 0;
+    }
+    try
+    {
+        itemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId.Value];
+    }
+    catch
+    {
+        itemDiscountModels = new Dictionary<long, ItemDiscountModel>();
+    }
 }
 <style>
     input[type=number]::-webkit-inner-spin-button,
@@ -43,11 +60,12 @@
             </tr>
             @foreach (var itemModel in Model.ItemModels)
             {
+                itemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
                 optionText = "";
                 discountPercent = "";
-                if (itemModel.ItemDiscountModels != null && itemModel.ItemDiscountModels.Count > 0)
+                if (itemDiscountModel != null)
                 {
-                    discountPercent = (itemModel.ItemDiscountModels[0].DiscountPercent.ToString("0.00") + "%");
+                    discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
                 }
                 else
                 {

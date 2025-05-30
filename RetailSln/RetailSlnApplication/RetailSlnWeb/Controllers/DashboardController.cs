@@ -1,4 +1,5 @@
 ﻿using ArchitectureLibraryBusinessLayer;
+using ArchitectureLibraryCacheData;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
@@ -37,6 +38,43 @@ namespace RetailSlnWeb.Controllers
             {
                 actionResult = RedirectToAction("Index", "Home");
             }
+            return actionResult;
+        }
+
+        // GET: CategoryList
+        [HttpGet]
+        public ActionResult CategoryList(string id)
+        {
+            ViewData["ActionName"] = "CategoryList";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                CategoryListModel categoryListModel = retailSlnBL.CategoryList(clientId, ipAddress, execUniqueId, loggedInUserId);
+                success = true;
+                processMessage = "SUCCESS!!!";
+                htmlString = archLibBL.ViewToHtmlString(this, "_CategoryList", categoryListModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderList / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 
@@ -103,7 +141,6 @@ namespace RetailSlnWeb.Controllers
                 OrderListModel orderListModel = retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 htmlString = archLibBL.ViewToHtmlString(this, "_OrderList", orderListModel);
                 actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (ApplicationException applicationException)
             {
@@ -120,6 +157,7 @@ namespace RetailSlnWeb.Controllers
                 htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
                 actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 

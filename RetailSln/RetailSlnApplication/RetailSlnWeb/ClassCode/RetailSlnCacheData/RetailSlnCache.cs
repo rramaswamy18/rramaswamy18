@@ -1,4 +1,5 @@
-﻿using ArchitectureLibraryCacheData;
+﻿using ArchitectureLibraryBusinessLayer;
+using ArchitectureLibraryCacheData;
 using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
@@ -23,6 +24,7 @@ namespace RetailSlnCacheData
         public static List<AspNetRoleModel> AspNetRoleModelsPriest { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
         public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        public static Dictionary<long, Dictionary<long, ItemDiscountModel>> CorpAcctItemDiscountModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public static List<DeliveryMethodFilterModel> DeliveryMethodFilterModels { set; get; }
@@ -160,12 +162,6 @@ namespace RetailSlnCacheData
                     itemModel.ItemItemSpecsForDisplay += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
                     prefixString = " | ";
                 }
-                itemModel.CorpAcctItemDiscountModels = new Dictionary<long, ItemDiscountModel>();
-                var itemDiscountModels = retailSlnInitModel.ItemDiscountModels.FindAll(x => x.ItemId == itemModel.ItemId);
-                foreach (var itemDiscountModel in itemDiscountModels)
-                {
-                    itemModel.CorpAcctItemDiscountModels[itemDiscountModel.CorpAcctId] = itemDiscountModel;
-                }
             }
             int itemMasterSeqNum = 0;
             int itemModelCount;
@@ -204,6 +200,19 @@ namespace RetailSlnCacheData
             int i;
             long parentCategoryId;
             string aspNetRoleName;
+            long corpAcctId;
+            CorpAcctItemDiscountModels = new Dictionary<long, Dictionary<long, ItemDiscountModel>>();
+            i = 0;
+            while (i < retailSlnInitModel.ItemDiscountModels.Count)
+            {
+                corpAcctId = retailSlnInitModel.ItemDiscountModels[i].CorpAcctId;
+                CorpAcctItemDiscountModels[retailSlnInitModel.ItemDiscountModels[i].CorpAcctId] = new Dictionary<long, ItemDiscountModel>();
+                while (i < retailSlnInitModel.ItemDiscountModels.Count && retailSlnInitModel.ItemDiscountModels[i].CorpAcctId == corpAcctId)
+                {
+                    CorpAcctItemDiscountModels[retailSlnInitModel.ItemDiscountModels[i].CorpAcctId][retailSlnInitModel.ItemDiscountModels[i].ItemId] = retailSlnInitModel.ItemDiscountModels[i];
+                    i++;
+                }
+            }
             List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
             foreach (var categoryItemMasterHierModel in retailSlnInitModel.CategoryItemMasterHierModels)
             {
@@ -290,7 +299,6 @@ namespace RetailSlnCacheData
             int i;
             foreach (var corpAcctModel in retailSlnInitModel.CorpAcctModels)
             {
-                //corpAcctModel.CorpAcctLocationModels = new List<CorpAcctLocationModel>();
                 corpAcctModel.CorpAcctLocationModels.AddRange(retailSlnInitModel.CorpAcctLocationModels.FindAll(x => x.CorpAcctId == corpAcctModel.CorpAcctId));
             }
             List<SelectListItem> deliveryDemogInfoSubDivisionSelectListItemsTemp;
@@ -376,6 +384,7 @@ namespace RetailSlnCacheData
         }
         private static void BuildCacheModels3(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
+            ArchLibBL archLibBL = new ArchLibBL();
             foreach (ItemBundleItemModel itemBundleItemModel in retailSlnInitModel.ItemBundleItemModels)
             {
                 itemBundleItemModel.ItemModel = ItemModels.First(x => x.ItemId == itemBundleItemModel.ItemId);
@@ -389,6 +398,16 @@ namespace RetailSlnCacheData
                 itemBundleModel.ItemRateAfterDiscount = itemBundleModel.ItemModel.ItemRate.Value * (100 - itemBundleModel.DiscountPercent) / 100;
                 itemBundleModel.ItemRateAfterDiscountFormatted = itemBundleModel.ItemRateAfterDiscount.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 itemBundleModel.ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels.FindAll(x => x.ItemBundleId == itemBundleModel.ItemBundleId);
+            }
+            string itemCatalogFilesPath = Utilities.GetServerMapPath("~/Files/OrderItem/");
+            //Directory.Delete(itemCatalogFilesPath);
+            DirectoryInfo directoryInfo = new DirectoryInfo(itemCatalogFilesPath);
+            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+            {
+                if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
+                {
+                    fileInfo.Delete();
+                }
             }
         }
     }

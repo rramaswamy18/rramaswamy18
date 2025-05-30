@@ -11,11 +11,15 @@
     {
         aspNetRoleName = sessionObjectModel.AspNetRoleName;
     }
-    //if (ViewData["ActionName"].ToString() == "ItemMasterInfo")
-    //{
-    //}
     List<MenuUrlAction> menuUrlActions = new List<MenuUrlAction>
-{
+    {
+        new MenuUrlAction
+        {
+            ActionName = "OrderList",
+            ControllerName = "Dashboard",
+            LinkText = "Order List",
+            QueryString = "",
+        },
         new MenuUrlAction
         {
             ActionName = "OrderItem",
@@ -25,57 +29,40 @@
         },
         new MenuUrlAction
         {
-            ActionName = "OrderList",
+            ActionName = "CorpAcctList",
             ControllerName = "Dashboard",
-            LinkText = "Order List",
+            LinkText = "Corp Acct",
+            QueryString = "?pageNum=1&rowCount=45",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "UserList",
+            ControllerName = "Dashboard",
+            LinkText = "User(s)",
+            QueryString = "?pageNum=1&rowCount=45",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "CategoryList",
+            ControllerName = "Dashboard",
+            LinkText = "Category",
+            QueryString = "?id=",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "ItemMasterList",
+            ControllerName = "Dashboard",
+            LinkText = "Item",
+            QueryString = "?pageNum=1&rowCount=45",
+        },
+        new MenuUrlAction
+        {
+            ActionName = "SearchKeywordList",
+            ControllerName = "Dashboard",
+            LinkText = "Search Keywor(s)",
             QueryString = "",
         },
     };
-    if (aspNetRoleName != "PRIESTROLE")
-    {
-        menuUrlActions.Add
-        (
-            new MenuUrlAction
-            {
-                ActionName = "CorpAcctList",
-                ControllerName = "Dashboard",
-                LinkText = "Corp Acct",
-                QueryString = "?pageNum=1&rowCount=45",
-            }
-        );
-        menuUrlActions.Add
-        (
-            new MenuUrlAction
-            {
-                ActionName = "UserList",
-                ControllerName = "Dashboard",
-                LinkText = "User(s)",
-                QueryString = "?pageNum=1&rowCount=45",
-            }
-        );
-    }
-    //new MenuUrlAction
-    //{
-    //    ActionName = "CategoryList",
-    //    ControllerName = "Dashboard",
-    //    LinkText = "Category",
-    //    QueryString = "?id=",
-    //},
-    //new MenuUrlAction
-    //{
-    //    ActionName = "ItemMasterList",
-    //    ControllerName = "Dashboard",
-    //    LinkText = "Item",
-    //    QueryString = "?pageNum=1&rowCount=45",
-    //},
-    //new MenuUrlAction
-    //{
-    //    ActionName = "SearchKeywordList",
-    //    ControllerName = "Dashboard",
-    //    LinkText = "Search Keywor(s)",
-    //    QueryString = "",
-    //},
-};
 }
 @*<link type="text/css" rel="stylesheet" href="~/Include/TextEditor.css" />
     <link type="text/css" rel="stylesheet" href="~/Include/jquery-te-1.4.0.css" />

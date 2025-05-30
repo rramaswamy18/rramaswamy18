@@ -17,7 +17,7 @@ namespace RetailSlnBusinessLayer
 {
     public partial class RetailSlnBL
     {
-        public ApplSessionObjectModel LoginUserProf(long personId, long corpAcctLocationId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ApplSessionObjectModel LoginUserProf(long personId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ArchitectureLibraryException.ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -25,20 +25,13 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                PersonExtn1Model personExtn1Model = ApplicationDataContext.PersonExtn1FromPersonIdGet(personId, corpAcctLocationId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                PersonExtn1Model personExtn1Model = ApplicationDataContext.PersonExtn1FromPersonIdGet(personId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplSessionObjectModel applSessionObjectModel = new ApplSessionObjectModel
                 {
                     CorpAcctModel = RetailSlnCache.CorpAcctModels.First(x => x.CorpAcctId == personExtn1Model.CorpAcctId),
                     TotalBalanceDue = 0,
                 };
-                if (corpAcctLocationId == -1)
-                {
-                    applSessionObjectModel.CorpAcctLocationId = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels[0].CorpAcctLocationId.Value;
-                }
-                else
-                {
-                    applSessionObjectModel.CorpAcctLocationId = corpAcctLocationId;
-                }
+                applSessionObjectModel.CorpAcctLocationId = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels[0].CorpAcctLocationId.Value;
                 return applSessionObjectModel;
             }
             catch (Exception exception)
@@ -52,7 +45,42 @@ namespace RetailSlnBusinessLayer
             }
         }
 
-        public void RegisterUserProfPersonExtn1(long personId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //public ApplSessionObjectModel LoginUserProf(long personId, long corpAcctLocationId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ArchitectureLibraryException.ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        PersonExtn1Model personExtn1Model = ApplicationDataContext.PersonExtn1FromPersonIdGet(personId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ApplSessionObjectModel applSessionObjectModel = new ApplSessionObjectModel
+        //        {
+        //            CorpAcctModel = RetailSlnCache.CorpAcctModels.First(x => x.CorpAcctId == personExtn1Model.CorpAcctId),
+        //            TotalBalanceDue = 0,
+        //        };
+        //        if (corpAcctLocationId == -1)
+        //        {
+        //            applSessionObjectModel.CorpAcctLocationId = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels[0].CorpAcctLocationId.Value;
+        //        }
+        //        else
+        //        {
+        //            applSessionObjectModel.CorpAcctLocationId = corpAcctLocationId;
+        //        }
+        //        return applSessionObjectModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        ApplicationDataContext.CloseSqlConnection();
+        //    }
+        //}
+
+        public void RegisterUserProfPersonExtn1(long personId, long corpAcctId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ArchitectureLibraryException.ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -60,7 +88,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                ApplicationDataContext.PersonExtn1Add(personId, 0, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ApplicationDataContext.PersonExtn1Add(personId, corpAcctId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             }
             catch (Exception exception)
             {

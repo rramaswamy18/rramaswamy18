@@ -42,7 +42,7 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                console.log("00001000", "loginUserSave_onclick success", responseData.processMessage);
+                console.log("00001000", "userProfileSave_onclick success", responseData.processMessage);
                 if (responseData.success) {
                     window.location.href = responseData.htmlString;
                 }

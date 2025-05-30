@@ -98,24 +98,14 @@ namespace RetailSlnWeb.Controllers
                 }
                 switch (aspNetRoleName)
                 {
-                    case "APPLADMIN1":
+                    case "APPLADMN1":
                     case "MARKETINGROLE":
                     case "SYSTADMIN":
                         actionResult = RedirectToAction("Index", "Dashboard");
                         break;
                     case "PRIESTROLE":
-                        //actionResult = RedirectToAction("RegisterUser", "Home", new { id = 700 });
-                        if (sessionObjectModel == null)
-                        {
-                            actionResult = RedirectToAction("RegisterUser", "Home", new { id = 700 });
-                        }
-                        else
-                        {
-                            OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                            actionResult = View("Index", orderItemModel1);
-                            //actionResult = RedirectToAction("Index", "Home");
-                            //actionResult = RedirectToAction("Index", "Dashboard");
-                        }
+                        OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        actionResult = View("Index", orderItemModel1);
                         break;
                     default:
                         OrderItemModel orderItemModel = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -757,7 +747,7 @@ namespace RetailSlnWeb.Controllers
                 {
                     if (!registerUserModel.RedirectToUpdatePassword)
                     {
-                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
                     {
@@ -896,7 +886,7 @@ namespace RetailSlnWeb.Controllers
                 {
                     if (!registerUserModel.RedirectToUpdatePassword)
                     {
-                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
                     {
@@ -971,111 +961,6 @@ namespace RetailSlnWeb.Controllers
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
             }
             actionResult = Json(new { success, processMessage, htmlString, redirectUrl });
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
-
-        // GET: RegisterUserProf
-        [AllowAnonymous]
-        [HttpGet]
-        //[Route("RegisterUserProf")]
-        public ActionResult RegisterUserProfOriginal()
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserProf";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                RegisterUserProfModel registerUserProfModel = archLibBL.RegisterUserProf(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                Session["CaptchaNumberRegister0"] = registerUserProfModel.CaptchaNumberRegister0;
-                Session["CaptchaNumberRegister1"] = registerUserProfModel.CaptchaNumberRegister1;
-                actionResult = View("RegisterUserProf", registerUserProfModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
-        // POST: RegisterUserProf
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult RegisterUserProfOriginal(RegisterUserProfModel registerUserProfModel)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                registerUserProfModel.ConfirmRegisterEmailAddress = registerUserProfModel.RegisterEmailAddress;
-                ModelState.Clear();
-                TryValidateModel(registerUserProfModel);
-                UpdatePasswordModel updatePasswordModel = archLibBL.RegisterUserProf(ref registerUserProfModel, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (ModelState.IsValid)
-                {
-                    if (!registerUserProfModel.RedirectToUpdatePassword)
-                    {
-                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserProfModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                    //updatePasswordModel = archLibBL.UpdatePassword(registerUserProfModel.RegisterEmailAddress, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, registerUserProfModel.OTPCreatedDateTime, registerUserProfModel.OTPExpiryDateTime, registerUserProfModel.OTPExpiryDuration, registerUserProfModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    //updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
-                    //updatePasswordModel.DemogInfoAddressModel. = ;
-                    //updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
-                    //{
-                    //    BuildingTypeId = BuildingTypeEnum._,
-                    //    BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
-                    //    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                    //    DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
-                    //    DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
-                    //};
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePassword", updatePasswordModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-                }
-                else
-                {
-                    success = false;
-                    processMessage = "ERROR???";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserProfModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
-                registerUserProfModel.CaptchaAnswerRegister = null;
-                registerUserProfModel.CaptchaNumberRegister0 = Session["CaptchaNumberRegister0"].ToString();
-                registerUserProfModel.CaptchaNumberRegister1 = Session["CaptchaNumberRegister1"].ToString();
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerUserProfModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserProfModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-            }
-            //htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserProfModel);
-            actionResult = Json(new { success, processMessage, htmlString });
-            //actionResult = PartialView("_RegisterUserProfData", registerUserProfModel);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
@@ -1430,150 +1315,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        //public ActionResult UpdatePasswordBackup(UpdatePasswordModel updatePasswordModel)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        ModelState.Clear();
-        //        TryValidateModel(updatePasswordModel);
-        //        //UpdatePasswordSuccessModel updatePasswordSuccessModel = archLibBL.UpdatePassword(ref updatePasswordModel, false, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        if (ModelState.IsValid)
-        //        {
-        //            LoginUserProfModel loginUserProfModel = new LoginUserProfModel
-        //            {
-        //                LoginEmailAddress = updatePasswordModel.EmailAddress,
-        //                LoginPassword = updatePasswordModel.LoginPassword,
-        //            };
-        //            SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            if (ModelState.IsValid)
-        //            {
-        //                ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
-        //                SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
-        //                Session["SessionObject"] = sessionObjectModel;
-        //                Session["CreateForSessionObject"] = createForSessionObject;
-        //                Session.Timeout = int.Parse(ConfigurationManager.AppSettings["AccessTokenExpiryMinutes"]);
-        //                var identity = new ClaimsIdentity
-        //                (
-        //                    new[]
-        //                    {
-        //                    new Claim(ClaimTypes.Name, sessionObjectModel.FirstName + " " + sessionObjectModel.LastName),
-        //                    new Claim(ClaimTypes.Email, sessionObjectModel.EmailAddress),
-        //                    new Claim(ClaimTypes.Role, sessionObjectModel.AspNetRoleName),
-        //                        //new Claim(ClaimTypes.Country, "India"),
-        //                    },
-        //                    "ApplicationCookie"
-        //                );
-        //                var ctx = Request.GetOwinContext();
-        //                var authManager = ctx.Authentication;
-        //                authManager.SignIn(identity);
-        //                //success = true;
-        //                //processMessage = "ERROR???";
-        //                string actionName, aspNetRoleName, controllerName, redirectUrl;
-        //                //string actionName, aspNetRoleName, controllerName, redirectUrl;
-        //                aspNetRoleName = sessionObjectModel.AspNetRoleName;
-        //                var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-        //                success = true;
-        //                processMessage = "SUCCESS!!!";
-        //                switch (aspNetRoleName)
-        //                {
-        //                    case "APPLADMN1":
-        //                    case "BULKORDERSROLE":
-        //                    case "SYSTADMIN":
-        //                    case "MARKETINGROLE":
-        //                        actionName = "Index";
-        //                        controllerName = "Dashboard";
-        //                        break;
-        //                    default:
-        //                        actionName = "Index";
-        //                        controllerName = "Home";
-        //                        break;
-        //                }
-        //                //actionName = "Index";
-        //                //controllerName = "Home";
-        //                redirectUrl = Url.Action(actionName, controllerName);
-        //                //*********retailSlnBL.LoadOrderWIP(this, sessionObjectModel, createForSessionObject, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                //redirectUrl = Url.Action("Index", "Home");
-        //                //actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
-        //                //controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
-        //                //if (string.IsNullOrWhiteSpace(sessionObjectModel.FirstName) || string.IsNullOrEmpty(sessionObjectModel.LastName))
-        //                //{
-        //                //    //actionName = aspNetRoleKVPs["ActionName00"].KVPValueData;
-        //                //    //controllerName = aspNetRoleKVPs["ControllerName00"].KVPValueData;
-        //                //    redirectUrl = Url.Action("UserProfile", "Home");
-        //                //}
-        //                //else
-        //                //{
-        //                //    //actionName = aspNetRoleKVPs["ActionName01"].KVPValueData;
-        //                //    //controllerName = aspNetRoleKVPs["ControllerName01"].KVPValueData;
-        //                //    redirectUrl = Url.Action("Index", "Home");
-        //                //}
-        //                //redirectUrl = Url.Action(actionName, controllerName);
-        //                actionResult = Json(new { success, processMessage, redirectUrl });
-        //                //return Content(@"/Home/UserProfile");
-        //                //return new HttpStatusCodeResult(System.Net.HttpStatusCode.Redirect,url)
-        //                //return PartialView("JavascriptRedirect", new JavascriptRedirectModel("http://www.google.com"));
-        //                //https://stackoverflow.com/questions/1538523/how-to-get-an-asp-net-mvc-ajax-response-to-redirect-to-new-page-instead-of-inser
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-        //            }
-        //            else
-        //            {
-        //                success = false;
-        //                processMessage = "ERROR???";
-        //                //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
-        //                updatePasswordModel.PasswordStrengthMessages = archLibBL.CreatePasswordStrengthMessages();
-        //                htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //                actionResult = Json(new { success, processMessage, htmlString });
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
-        //            updatePasswordModel.PasswordStrengthMessages = archLibBL.CreatePasswordStrengthMessages();
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //            actionResult = Json(new { success, processMessage, htmlString });
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
-        //        updatePasswordModel.CaptchaAnswer = null;
-        //        updatePasswordModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
-        //        updatePasswordModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        updatePasswordModel.PasswordStrengthMessages = archLibBL.CreatePasswordStrengthMessages();
-        //        updatePasswordModel.ResponseObjectModel = new ResponseObjectModel
-        //        {
-        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //        };
-        //        //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        actionResult = Json(new { success, processMessage, htmlString });
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-        //    }
-        //    //htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-
         private string LoginUserProfProcess(string currentLoggedInUserId, SessionObjectModel sessionObjectModel)
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
@@ -1581,10 +1322,11 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            ApplSessionObjectModel applSessionObjectModel;
+            applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
             SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, -1, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
             Session["SessionObject"] = sessionObjectModel;
             Session["CreateForSessionObject"] = createForSessionObject;
@@ -1605,33 +1347,23 @@ namespace RetailSlnWeb.Controllers
             authManager.SignIn(identity);
             string aspNetRoleName, redirectUrl;
             aspNetRoleName = sessionObjectModel.AspNetRoleName;
-            var aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-            switch (aspNetRoleName)
+            Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+            if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
             {
-                case "APPLADMN1":
-                case "BULKORDERSROLE":
-                case "SYSTADMIN":
-                case "MARKETINGROLE":
-                    redirectUrl = Url.Action("Index", "Dashboard");
-                    break;
-                //case "PRIESTROLE":
-                //    redirectUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
-                //    break;
-                case "PRIESTROLE":
-                default:
-                    redirectUrl = Url.Action("Index", "Home");
-                    break;
+                aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+                aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
             }
+            redirectUrl = Url.Action(aspNetRoleKVPs["ActionName00"].KVPValueData, aspNetRoleKVPs["ControllerName00"].KVPValueData);
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
             retailSlnBL.CreateOrderWIP(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            //Look at the below logic
-            if (currentLoggedInUserId != createForSessionObject.AspNetUserId)
-            {
-                if (currentLoggedInUserId != "")
-                {
-
-                }
-            }
+            //Take a look at the below logic Begin
+            //if (currentLoggedInUserId != createForSessionObject.AspNetUserId)
+            //{
+            //    if (currentLoggedInUserId != "")
+            //    {
+            //    }
+            //}
+            //Take a look at the below logic End
             //actionResult = Json(new { success, processMessage, redirectUrl });
             //redirectUrl = Url.Action(actionName, controllerName);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");

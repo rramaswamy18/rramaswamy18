@@ -153,7 +153,7 @@ ORDER BY PickupLocationId
         INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, CreditLimit, CreditSale, DefaultDiscountPercent, MinOrderAmount, OrderApprovalRequired, TaxIdentNum, ShippingAndHandlingCharges, StatusId)
         SELECT DISTINCT
                @ClientId AS ClientId, CorpAcctName
-              ,CASE CorpAcctType WHEN 'Individual' THEN 100 WHEN 'Priest' THEN 700 ELSE 500 END CorpAcctTypeId, CreditDays, CreditLimit
+              ,CASE CorpAcctType WHEN 'Individual' THEN 100 ELSE 200 END CorpAcctTypeId, CreditDays, CreditLimit
               ,CASE CreditSale WHEN 0 THEN 200 ELSE 100 END AS CreditSale, DefaultDiscountPercent, MinOrderAmount
               ,CASE OrderApproval WHEN 0 THEN 200 ELSE 100 END AS OrderApproval, Tax_Num
               ,CASE SHCharges WHEN 0 THEN 200 ELSE 100 END AS SHCharges, 100 AS StatusId
@@ -229,7 +229,7 @@ UNION
         SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, CorpAcct.DefaultDiscountPercent
           FROM RetailSlnSch.CorpAcct
 	CROSS JOIN RetailSlnSch.Item
-         WHERE CorpAcctTypeId = 500
+         WHERE CorpAcctTypeId = 200
       ORDER BY CorpAcctId, ItemId
 --End Corp Acct Discount
 --

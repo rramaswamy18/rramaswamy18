@@ -11,10 +11,10 @@ namespace RetailSlnEnumerations
         [Description("Individual")]
         Individual = 100,
         [Description("Retail / Wholesale")]
-        Wholesale = 500,
+        Wholesale = 200,
         [Description("Temple / Bulk Orders")]
-        BulkOrder = 600,
+        BulkOrder = 300,
         [Description("Priest")]
-        Priest = 700,
+        Priest = 400,
     }
 }

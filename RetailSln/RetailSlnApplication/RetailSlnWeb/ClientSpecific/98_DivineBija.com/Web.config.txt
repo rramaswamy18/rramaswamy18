@@ -18,7 +18,7 @@
 		<add key="ApplicationName" value="RetailSln"></add>
 		<add key="ClientId" value="98"></add>
 		<add key="ClientName" value="DivineBija.com"></add>
-		<add key="CreditCardProcessor" value="RAZORPAYTEST"></add>
+		<add key="CreditCardProcessor" value="NUVEITEST"></add>
 		<add key="CompanyName" value="Gajaashwa Inc."></add>
 		<add key="EmailDirectoryName" value="C:\Code\rramaswamy18\RetailSln\Email\"></add>
 		<add key="EmailServiceType" value="SMTP"></add>
@@ -29,7 +29,6 @@
 	<connectionStrings>
 		<add name="DatabaseConnectionString" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.com"></add>
 		<add name="DatabaseConnectionStringLog" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBija.com"></add>
-		<add name="DatabaseConnectionString2" connectionString="DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=DivineBijaComNew"></add>
 	</connectionStrings>
 	<system.diagnostics>
 		<trace autoflush="true">

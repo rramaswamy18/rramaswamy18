@@ -18,6 +18,56 @@ namespace RetailSlnBusinessLayer
 {
     public partial class RetailSlnBL
     {
+        // GET: CategoryList
+        public CategoryListModel CategoryList(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            CategoryListModel categoryListModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ApplicationDataContext.OpenSqlConnection();
+                categoryListModel = new CategoryListModel
+                {
+                    CategoryModels = ApplicationDataContext.CategoryList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                categoryListModel = new CategoryListModel
+                {
+                    CategoryModels = null,
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseMessages = new List<string>
+                        {
+                            exception.Message,
+                            "Error while loading category(s) from database",
+                        },
+                        ResponseTypeId = ResponseTypeEnum.Error,
+                    },
+                };
+            }
+            finally
+            {
+                try
+                {
+                    ApplicationDataContext.CloseSqlConnection();
+                }
+                catch
+                {
+
+                }
+            }
+            return categoryListModel;
+        }
         // GET : OrderList
         public OrderListModel OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
