@@ -22,7 +22,7 @@
     }
     isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
     bool mobileDevice = Request.Browser.IsMobileDevice;
-    mobileDevice = true;
+    //mobileDevice = true;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -194,8 +194,8 @@
 
                             #navcontainer ul li a {
                                 color: #ffffff;
-                                font-weight: bold;
-                                padding: .2em .6em;
+                                /*font-weight: bold;*/
+                                padding: .1em .3em;
                                 text-decoration: none;
                                 /*background-color: #036;*/
                             }
@@ -217,14 +217,19 @@
                                 View Cart
                             </a>
                         </li>
+                        <li>
+                            <a href="@Url.Action("Checkout", "Home")">
+                                Checkout
+                            </a>
+                        </li>
                         <li><a href="@Url.Action("RegisterUserProf", "Home")">Register</a></li>
                         <li><a class="@(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")">Sign In</a></li>
                         <li><a class="@(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")">Logout</a></li>
-                        <li>
-                            <a href="@Url.Action("RegisterUser", "Home")">
-                                Purohit&nbsp;<img src="/Images/Purohit_1.png" style="height: 36px; padding-bottom: 6px; width: 36px;">
-                            </a>
-                        </li>
+                        @*<li>
+            <a href="@Url.Action("RegisterUser", "Home")">
+                Purohit&nbsp;<img src="/Images/Purohit_1.png" style="height: 36px; padding-bottom: 6px; width: 36px;" />
+            </a>
+        </li>*@
                     </ul>
                 </div>
             }

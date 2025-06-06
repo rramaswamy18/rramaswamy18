@@ -5,10 +5,14 @@
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
     string imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
-    int htmlElementIndex = -1, itemMasterIndex = 1, itemIndex;
+    int htmlElementIndex = -1, itemMasterIndex = 1, itemIndex = 0, itemCount = 0;
     string discountPercent;
     ItemMasterModel itemMasterModel;
     ItemDiscountModel itemDiscountModel;
+    foreach (var categoryItemMasterHierModel in Model.CategoryItemMasterHierModels)
+    {
+        itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+    }
 }
 <style>
     input[type=number]::-webkit-inner-spin-button,
@@ -44,8 +48,6 @@
         vertical-align: top;
     }
 </style>
-<br style="clear: both;" />
-<br style="clear: both;" />
 <table class="table table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
     <colgroup>
         <col style="width: 63%;" />
@@ -56,7 +58,7 @@
             @Html.DropDownListFor(m => m.ParentCategoryId, new SelectList(Model.CategoryCategoryItemMasterHierModels, "CategoryModel.CategoryId", "CategoryModel.CategoryDesc", Model.ParentCategoryId), "--- Select Category ---", new { @class = "form-control", onchange = "javascript: ParentCategoryId_onclick();", style = "font-size: 14px; width: 99%;" })
         </td>
         <td class="dataStyle1Left" style="color: #0000ff; font-size: 15px; font-weight: bold; vertical-align: middle;">
-            @Model.ParentCategoryDesc
+            @Model.ParentCategoryDesc<br /> <span style="color: #000000; font-size: 10px;">@Model.CategoryItemMasterHierModels.Count / @itemCount</span>
         </td>
     </tr>
 </table>
@@ -76,7 +78,7 @@
     @foreach (var categoryItemMasterHierModel in Model.CategoryItemMasterHierModels)
     {
         itemMasterModel = categoryItemMasterHierModel.ItemMasterModel;
-        <!--Begin #@itemMasterIndex-->
+        <!--Begin Item Master #@itemMasterIndex-->
         <tr>
             <td class="dataStyle1Right">@itemMasterIndex.</td>
             <td class="dataStyle1Center">
@@ -94,11 +96,13 @@
                 @foreach (var itemModel in itemMasterModel.ItemModels)
                 {
                     htmlElementIndex++;
+                    itemIndex++;
                     Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
                     discountPercent = itemDiscountModel == null ? "" : itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
+                    <!--Begin Item #@itemMasterIndex / @itemIndex-->
                     <table class="table table-bordered" style="width: 100%;">
                         <tr>
-                            <td colspan="3" class="dataStyle1Left" style="color: #000000; font-size: 11px; font-weight: 600;">@itemModel.ItemItemSpecsForDisplay</td>
+                            <td colspan="3" class="dataStyle1Left" style="color: #000000; font-size: 11px; font-weight: 600;" title="@(itemModel.ItemItemSpecsForDisplay + itemMasterModel.ItemMasterId + "/" + itemModel.ItemId)">@(itemIndex + ". " + itemModel.ItemItemSpecsForDisplay)</td>
                         </tr>
                         <colgroup>
                             <col style="width: 36px;" />
@@ -132,6 +136,7 @@
                             </td>
                         </tr>
                     </table>
+                    <!--End Item #@itemMasterIndex / @itemIndex-->
                 }
             </td>
             <td class="dataStyle1Left" style="text-align: center; vertical-align: top;">
@@ -140,7 +145,7 @@
                 </a>
             </td>
         </tr>
-        <!--End #@itemMasterIndex-->
+        <!--End Item Master #@itemMasterIndex-->
         itemMasterIndex++;
     }
 </table>

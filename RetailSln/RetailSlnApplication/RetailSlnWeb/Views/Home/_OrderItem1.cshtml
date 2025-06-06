@@ -1,119 +1,227 @@
 ﻿@using ArchitectureLibraryCacheData
-@using ArchitectureLibraryModels
-@using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
-@model ItemMasterModel
+@model OrderItem1Model
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
-    int index = -1, index1 = 0;
-    string discountPercent, prefixString = "", optionText;
-    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-    long? corpAcctId = ((ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel)?.CorpAcctModel.CorpAcctId;
-    Dictionary<long, ItemDiscountModel> itemDiscountModels;
+    int index = -1;
+    string discountPercent = "";
+    string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
     ItemDiscountModel itemDiscountModel;
-    if (corpAcctId == null)
-    {
-        corpAcctId = 0;
-    }
-    try
-    {
-        itemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId.Value];
-    }
-    catch
-    {
-        itemDiscountModels = new Dictionary<long, ItemDiscountModel>();
-    }
+    bool singleItem;
 }
+<script type="text/javascript">
+    var itemIds = new Array();
+    var itemSpecs = new Array();
+    var itemRates = new Array();
+    var itemDiscounts = new Array();
+</script>
 <style>
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         opacity: 1;
     }
 </style>
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="width: 99%;">
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="float: left; text-align: left; vertical-align: top;">
-        <table style="border-style: none; border-width: 0px; padding: 5px;">
-            <colgroup>
-                <col style="width: 27px;" />
-                <col style="width: 171px;" />
-                <col style="width: 54px;" />
-                <col style="width: 54px;" />
-                <col style="width: 153px;" />
-            </colgroup>
-            <tr style="background-color: #d0d0d0;">
-                <th style="padding: 5px; text-align: right;">
-                    #
-                </th>
-                <th style="padding: 5px; text-align: left;">
-                    Spec(s) (@Model.ItemModels.Count)
-                </th>
-                <th style="padding: 5px; text-align: right;">
-                    Rate
-                </th>
-                <th style="padding: 5px; text-align: right;">
-                    Disc.
-                </th>
-                <th style="padding: 5px; text-align: left;">
-                    Order
-                </th>
-            </tr>
-            @foreach (var itemModel in Model.ItemModels)
+        @if (Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        {
+            if (Model.ItemMasterModel.ItemModels.Count == 1)
             {
-                itemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
-                optionText = "";
-                discountPercent = "";
-                if (itemDiscountModel != null)
+                singleItem = true;
+            }
+            else
+            {
+                singleItem = false;
+            }
+        }
+        else
+        {
+            singleItem = true;
+        }
+        @if (singleItem)
+        {
+            <table style="border-style: none; border-width: 0px; padding: 5px; width: 99%;">
+                <colgroup>
+                    <col style="width: 27px;" />
+                    <col />
+                    <col style="width: 54px;" />
+                    <col style="width: 54px;" />
+                    <col style="width: 153px;" />
+                </colgroup>
+                <tr style="background-color: #d0d0d0;">
+                    <th style="padding: 5px; text-align: right;">
+                        #
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Spec(s) (@Model.ItemMasterModel.ItemModels.Count)
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Rate
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Disc.
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Qty
+                    </th>
+                </tr>
+                @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
                 {
-                    discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
-                }
-                else
-                {
+                    index++;
+                    Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
                     discountPercent = "";
-                }
-                if (itemModel.ItemSpecModelsForItem != null && itemModel.ItemSpecModelsForItem.Count > 0)
-                {
-                    prefixString = "";
-                    foreach (var itemItemSpecModel in itemModel.ItemSpecModelsForItem)
+                    if (itemDiscountModel != null)
                     {
-                        optionText += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
-                        prefixString = " | ";
+                        discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
                     }
+                    else
+                    {
+                        discountPercent = "";
+                    }
+                    <tr>
+                        <td style="font-size: 12px; padding: 5px; text-align: right;">
+                            @(index + 1).
+                        </td>
+                        <td style="font-size: 12px; padding: 5px; text-align: left;">
+                            @itemModel.ItemItemSpecsForDisplay
+                        </td>
+                        <td style="font-size: 12px; padding: 5px; text-align: right;">
+                            @itemModel.ItemRateFormatted
+                        </td>
+                        <td class="text-right">
+                            @discountPercent
+                        </td>
+                        <td style="padding: 5px; text-align: left;">
+                            <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" type="number" value="" />
+                            <span style="width: 9px;">&nbsp;</span>
+                            @if (@Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                            {
+                                <a href="javascript: void(0);" onclick="javascript: return addToCart2_onclick(@itemModel.ItemId, @index);" title="Enter quantity and click add to cart @Model.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" /></a>
+                            }
+                            else
+                            {
+                                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ItemMasterModel.ItemMasterId, @itemModel.ItemId, @index, null, false);" title="Enter quantity and click add to cart @Model.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" /></a>
+                            }
+                            <span id="spnMessageSuccess@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(index)" style="color: #0000ff; font-size:12px;"></span></span>
+                                <br style="clear: both;" />
+                            </span>
+                            <span id="spnMessageError@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                <span id="spnMessageErrorText@(index)" style="color: #ff0000;"></span>
+                                <br style="clear: both;" />
+                            </span>
+                        </td>
+                    </tr>
+                    index++;
                 }
+            </table>
+        }
+        else
+        {
+            <span id="itemId0" style="display: none;">(@Model.ItemMasterModel.ItemModels[0].ItemId</span>
+            <table style="border-style: none; border-width: 0px; padding: 5px; width: 99%;">
                 <tr>
-                    <td style="font-size: 12px; padding: 5px; text-align: right;">
-                        @(++index1).
+                    <td colspan="4" style="font-size: 12px; padding: 5px; text-align: right;">
+                        <select class="form-control" id="itemBundleItem" onchange="javascript: return itemBundleItem_onclick(this.selectedIndex);">
+                            <option value="">--- Select Bundle ---</option>
+                            @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
+                            {
+                                Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+                                discountPercent = "";
+                                if (itemDiscountModel != null)
+                                {
+                                    discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
+                                }
+                                else
+                                {
+                                    discountPercent = "";
+                                }
+                                <script type="text/javascript">
+                                    itemIds.push(@itemModel.ItemId.ToString());
+                                    itemSpecs.push('@itemModel.ItemItemSpecsForDisplay.ToString()');
+                                    itemRates.push('@itemModel.ItemRateFormatted.ToString()');
+                                    itemDiscounts.push('@discountPercent');
+                                </script>
+                                <option value="@itemModel.ItemId">@(itemModel.ItemItemSpecsForDisplay + ";" + itemModel.ItemRateFormatted + ";" + discountPercent)</option>
+                            }
+                        </select>
                     </td>
-                    <td style="font-size: 12px; padding: 5px; text-align: left;">
-                        @optionText
+                </tr>
+                <colgroup>
+                    <col style="width: 27px;" />
+                    <col />
+                    <col style="width: 54px;" />
+                    <col style="width: 54px;" />
+                    <col style="width: 153px;" />
+                </colgroup>
+                <tr style="background-color: #d0d0d0;">
+                    <th style="padding: 5px; text-align: right;">
+                        #
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Spec(s) (@Model.ItemMasterModel.ItemModels.Count)
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Rate
+                    </th>
+                    <th style="padding: 5px; text-align: right;">
+                        Disc.
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Qty
+                    </th>
+                </tr>
+                <tr>
+                    <td id="tdIndex" style="font-size: 12px; padding: 5px; text-align: right;">
+                        1.
                     </td>
-                    <td style="font-size: 12px; padding: 5px; text-align: right;">
-                        @itemModel.ItemRateFormatted
+                    <td id="tdItemSpec" style="font-size: 12px; padding: 5px; text-align: left;">
+                        @Model.ItemMasterModel.ItemModels[0].ItemItemSpecsForDisplay
                     </td>
-                    <td class="text-right">
+                    <td id="tdItemRate" style="font-size: 12px; padding: 5px; text-align: right;">
+                        @Model.ItemMasterModel.ItemModels[0].ItemRateFormatted
+                    </td>
+                    <td id="tdItemDiscount" class="text-right">
                         @discountPercent
                     </td>
                     <td style="padding: 5px; text-align: left;">
-                        <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1(@(index));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @Model.ImageTitle" type="number" value="" />
+                        <input class="form-control" id="orderQty0" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput1(0);" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" type="number" value="" />
                         <span style="width: 9px;">&nbsp;</span>
-                        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@Model.ItemMasterId, @itemModel.ItemId, @index, null, false);" title="Enter quantity and click add to cart @Model.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ImageTitle" /></a>
-                        <span id="spnMessageSuccess@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                        <a href="javascript: void(0);" onclick="javascript: return addToCart2_onclick('##$$itemId$$##', '##$$itemIndex$$##)';" title="Enter quantity and click add to cart @Model.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" /></a>
+                        <span id="spnMessageSuccess0" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
                             <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-                            <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(index)" style="color: #0000ff; font-size:12px;"></span></span>
+                            <span style="color: #a54000;">Added...<span id="spnMessageSuccessText0" style="color: #0000ff; font-size:12px;"></span></span>
                             <br style="clear: both;" />
                         </span>
-                        <span id="spnMessageError@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                        <span id="spnMessageError0" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
                             <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
-                            <span id="spnMessageErrorText@(index)" style="color: #ff0000;"></span>
+                            <span id="spnMessageErrorText0" style="color: #ff0000;"></span>
                             <br style="clear: both;" />
                         </span>
                     </td>
                 </tr>
-                index++;
-            }
-        </table>
+            </table>
+        }
+        <div id="divItemBundle"></div>
     </div>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="float: left; text-align: left; vertical-align: top;">
-        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ImageName" />
+        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ItemMasterModel.ImageName@imageDateTime" />
     </div>
 </div>
+<script type="text/javascript">
+    function itemBundleItem_onclick(selectedIndex) {
+        var optionValue = document.getElementById("itemBundleItem").value;
+        var selectedIndex = document.getElementById("itemBundleItem").selectedIndex;
+        document.getElementById("itemId0").value = optionValue;
+        document.getElementById("tdIndex").innerText = selectedIndex + ".";
+        document.getElementById("tdItemSpec").innerText = itemSpecs[selectedIndex - 1];
+        document.getElementById("tdItemRate").innerText = itemRates[selectedIndex - 1];
+        document.getElementById("tdItemDiscount").innerText = itemDiscounts[selectedIndex - 1];
+        btnItemBundleLoad_onclick(optionValue);
+        document.getElementById("itemBundleItem").selectedIndex = 0;
+    }
+</script>

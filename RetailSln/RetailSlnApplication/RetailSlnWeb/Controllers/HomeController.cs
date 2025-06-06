@@ -679,11 +679,11 @@ namespace RetailSlnWeb.Controllers
         // GET: RegisterUser
         [AllowAnonymous]
         [HttpGet]
-        [Route("RegisterUser")]
-        public ActionResult RegisterUser()
+        [Route("RegisterUser/{id?}")]
+        public ActionResult RegisterUser(string id)
         {
             //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserProf";
+            ViewData["ActionName"] = "RegisterUser";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -692,22 +692,22 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                RegisterUserModel registerUserModel = archLibBL.RegisterUser("700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 //long.TryParse(id, out long userTypeId);
                 //var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == userTypeId);
                 //registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
                 #region For Testing - Delete
-                //registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
-                //registerUserModel.TelephoneNumber = "9880110045";
-                //registerUserModel.LoginPassword = "Login9@9Password";
-                //registerUserModel.ConfirmLoginPassword = "Login9@9Password";
-                //registerUserModel.FirstName = "Priest First";
-                //registerUserModel.LastName = "Priest Last";
-                //registerUserModel.DemogInfoAddressModel.AddressLine1 = "123 Sri Rama Apt";
-                //registerUserModel.DemogInfoAddressModel.AddressLine2 = "Near Metro Station";
-                //registerUserModel.DemogInfoAddressModel.ZipCode = "600003";
-                //registerUserModel.DemogInfoAddressModel.CityName = "CHENNAI";
-                //registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionId = 391;
+                registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
+                registerUserModel.TelephoneNumber = "9880110009";
+                registerUserModel.LoginPassword = "Login9@9Password";
+                registerUserModel.ConfirmLoginPassword = "Login9@9Password";
+                registerUserModel.FirstName = "Priest1 First";
+                registerUserModel.LastName = "Priest1 Last";
+                registerUserModel.DemogInfoAddressModel.AddressLine1 = "123 Sri Rama Apt";
+                registerUserModel.DemogInfoAddressModel.AddressLine2 = "Near Metro Station";
+                registerUserModel.DemogInfoAddressModel.ZipCode = "600003";
+                registerUserModel.DemogInfoAddressModel.CityName = "CHENNAI";
+                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionId = 391;
                 #endregion
                 Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
                 Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
@@ -821,8 +821,8 @@ namespace RetailSlnWeb.Controllers
         // GET: RegisterUser
         [AllowAnonymous]
         [HttpGet]
-        [Route("RegisterUserProf")]
-        public ActionResult RegisterUserProf()
+        [Route("RegisterUserProf/{id?}")]
+        public ActionResult RegisterUserProf(string id)
         {
             //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "RegisterUserProf";
@@ -834,7 +834,7 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                RegisterUserModel registerUserModel = archLibBL.RegisterUser("100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 #region For Testing - Delete
                 //registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
                 //registerUserModel.TelephoneNumber = "9880110045";

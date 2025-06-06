@@ -6,10 +6,10 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class ItemBundleDataModel
+    public class OrderItem1Model
     {
-        public long ItemMasterId { set; get; }
-        public ItemBundleModel ItemBundleModel { set; get; }
+        public Dictionary<long, ItemDiscountModel> ItemDiscountModels { set; get; }
+        public ItemMasterModel ItemMasterModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

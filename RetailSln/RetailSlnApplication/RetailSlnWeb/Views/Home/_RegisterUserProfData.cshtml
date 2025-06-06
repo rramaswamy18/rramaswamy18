@@ -47,6 +47,7 @@
         </div>
     }
 }
+@Html.HiddenFor(m => m.RegisterSource)
 <div class="row" style="padding-left: @paddingLeft; text-align: left;">
     @Html.LabelFor(m => m.AspNetRoleUserTypeId, new { @class = "col-form-label", id = "lblAspNetRoleUserTypeId" })&nbsp;<span id="spnAspNetRoleUserTypeIdRequired" style="color: #0000ff; font-weight: bold;">(Required)</span>
     @if (Model.AspNetRoleModels.Count == 1)

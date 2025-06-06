@@ -94,6 +94,7 @@
 }
 @helper BuildItem(ItemMasterModel itemMasterModel, Dictionary<long, ItemDiscountModel> itemDiscountModels, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
+    string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
     ItemDiscountModel itemDiscountModel;
     if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
     {
@@ -107,20 +108,20 @@
     {
         <div style="position: relative;">
             <div style="right: 2px; position: absolute; top: 1px;">
-                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" @*href="javascript: void(0);" onclick="javascript: addToCartPopup_onclick(@itemMasterModel.ItemMasterId);"*@ style="border-style: none; padding: 3px;" title="Add to cart @itemMasterModel.ImageTitle">
+                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="border-style: none; padding: 3px;" title="Add to cart @itemMasterModel.ImageTitle">
                     <img alt="Add to cart @itemMasterModel.ItemMasterDesc" src="~/Images/CircleWithPlus.png" style="border: none; height: 36px; width: 36px;" title="Add to cart @itemMasterModel.ItemMasterDesc" />
                 </a>
             </div>
         </div>
     }
     <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
-        <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
+        <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName@imageDateTime" style="border-radius: 25px; height: auto; max-height: @imageHeight; max-width: @imageWidth; width: 100%;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
     </a>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
         <div style="position: relative;">
             <div style="bottom: 1px; right: 2px; position: absolute;">
-                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" title="@itemMasterModel.ImageTitle">Item Bundle&nbsp;</a>
+                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px; text-decoration: underline;" title="@itemMasterModel.ImageTitle">View Bundle&nbsp;</a>
             </div>
         </div>
     }
@@ -139,10 +140,6 @@
             <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
         }
     </div>
-    if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-    {
-        <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #000000; font-size: 12px; font-weight:bold; padding-right: 3px; text-decoration: underline;" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Bundle</a>
-    }
     if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
     {
         <br style="clear: both;" />
@@ -152,9 +149,7 @@
     <div style="color: #0000ff; font-family: Arial; font-size: 12px; font-weight: bold; text-align: left;">
         @if (itemMasterModel.ItemRatesForDisplay != "")
         {
-            <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" @*href="javascript: void(0);" onclick="javascript: return addToCartPopup_onclick(@itemMasterModel.ItemMasterId);"*@ style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" title="Add to cart @itemMasterModel.ItemRatesForDisplayAll">
-                @itemMasterModel.ItemRatesForDisplay
-            </a>
+            <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 14px; font-weight: bold; text-decoration: underline;" title="Add to cart @itemMasterModel.ItemRatesForDisplayAll">@itemMasterModel.ItemRatesForDisplay</a>
         }
         @if (itemMasterModel.ItemModels.Count == 1)
         {
@@ -198,11 +193,5 @@
         <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
         <span id="spnMessageErrorText@(imageIndex)" style="color: #ff0000;"></span>
     </span>
-    if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-    {
-        <br style="clear: both;" />
-        <p style="font-weight: bold;">-- OR --</p>
-        <a href="@Url.Action("ItemAMasterttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 3 })" style="color: #0000ff; font-size: 13px; font-weight:bold; text-decoration: underline;" title="View items in the bundle - @itemMasterModel.ItemMasterDesc">Order your items from bundle</a>
-    }
     @*}//else (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)*@
 }

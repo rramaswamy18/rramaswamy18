@@ -203,6 +203,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemBundleModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderItem1Model.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderItemDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterAttributesModel.cs" />
@@ -236,6 +237,8 @@
     <Compile Include="ClassCode\RetailSlnModels\SearchKeywordModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchResultModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemBundleModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />

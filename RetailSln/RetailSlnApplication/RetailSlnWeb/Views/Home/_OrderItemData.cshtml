@@ -1,11 +1,18 @@
 ﻿@using RetailSlnModels
 @model OrderItemDataModel
-@*Html.Raw(Model.OrderItemDataHtmlString)*@
-@{ 
-    StreamReader streamReader = new StreamReader(Model.OrderItemDataHtmlFileName);
-    @Html.Raw(streamReader.ReadToEnd())
-    streamReader.Close();
-}
+<script type="text/javascript">
+    console.log("9", getCurrentDateTime());
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+</script>
+<br style="clear: both;" />
+<br style="clear: both;" />
+@Html.Raw(File.ReadAllText(Server.MapPath("~/Files/OrderItem/" + Model.OrderItemDataHtmlFileName)))
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#loadingModal').modal('hide');
+        console.log("18", getCurrentDateTime());
+    });
+</script>
 <script type="text/javascript">
     function ParentCategoryId_onclick() {
         var selectedValue = document.getElementById("ParentCategoryId").value;

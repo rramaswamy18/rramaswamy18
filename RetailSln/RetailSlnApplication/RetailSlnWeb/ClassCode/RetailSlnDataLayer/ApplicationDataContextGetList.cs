@@ -73,10 +73,10 @@ namespace RetailSlnDataLayer
                 sqlStmt += "SELECT * FROM RetailSlnSch.CategoryItemMasterHier ORDER BY AspNetRoleName, ParentCategoryId, SeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                List<CategoryItemMasterHierModel> categoryModels = new List<CategoryItemMasterHierModel>();
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
                 while (sqlDataReader.Read())
                 {
-                    categoryModels.Add
+                    categoryItemMasterHierModels.Add
                     (
                         new CategoryItemMasterHierModel
                         {
@@ -92,7 +92,7 @@ namespace RetailSlnDataLayer
                 }
                 sqlDataReader.Close();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return categoryModels;
+                return categoryItemMasterHierModels;
             }
             catch (Exception exception)
             {

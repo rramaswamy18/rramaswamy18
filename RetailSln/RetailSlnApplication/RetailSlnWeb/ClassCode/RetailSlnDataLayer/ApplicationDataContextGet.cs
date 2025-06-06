@@ -309,6 +309,7 @@ namespace RetailSlnDataLayer
                                 OrderDetailWIPId = long.Parse(sqlDataReader["OrderDetailWIPId"].ToString()),
                                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                                 ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                                ItemRate = float.Parse(sqlDataReader["ItemRate"].ToString()),
                                 OrderHeaderWIPId = long.Parse(sqlDataReader["OrderHeaderWIPId"].ToString()),
                                 OrderQty = long.Parse(sqlDataReader["OrderQty"].ToString()),
                                 SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),

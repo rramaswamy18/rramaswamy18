@@ -1,7 +1,7 @@
-USE [RetailSln]
+USE [RetailSlnCom]
 GO
 --1_RetailSln_PopulateItem_DivineBija.in.sql
---Dec 20 2024, Apr 2 2024, Apr 21 2024
+--Jun 6 2025
 DECLARE @ClientId BIGINT = 3
 --
         UPDATE dbo.DivineBija_Products
