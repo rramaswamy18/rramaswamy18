@@ -102,7 +102,7 @@ function addToCart_onclick(itemMasterId, itemId, elementIdSuffix) {
         document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = errorMessage;
     }
 }
-function addToCart2_onclick(itemId, index) {
+function addToCart2_onclick(index) {
     var returnValue = true, errorMessage = "";
     var itemIdMain = document.getElementById("itemId" + index).innerText;
     var orderQtyMain = document.getElementById("orderQty" + index).value;
@@ -118,7 +118,7 @@ function addToCart2_onclick(itemId, index) {
         var maxLength = document.getElementById("orderQty" + index).getAttribute("maxlength");
         var minValue = document.getElementById("orderQty" + index).getAttribute("min");
         var maxValue = document.getElementById("orderQty" + index).getAttribute("max");
-        if ((/^\d+$/.test(itemId))) {//itemId is a number
+        if ((/^\d+$/.test(itemIdMain))) {//itemIdMain is a number
             ;
         }
         else {
@@ -126,27 +126,25 @@ function addToCart2_onclick(itemId, index) {
             returnValue = false;
         }
         if ((/^\d+$/.test(orderQtyMain)) && orderQtyMain.length <= maxLength && orderQtyMain >= minValue && orderQtyMain <= maxValue) {//Valid orderQtyMain
-            //var itemBundleId, discountPercent, itemBundleItemId, quantity, itemRateBeforeDiscount, itemRateAfterDiscount, itemTypeId, orderQty;
-            var itemBundleId, itemBundleItemId, quantity, itemTypeId, orderQty;
-            //itemBundleId = document.getElementById("itemBundleId").innerText;
-            //discountPercent = document.getElementById("discountPercent").innerText;
+            var itemBundleId, itemBundleItemId, quantity, itemTypeId;
             var jsonPostData = {};
             var shoppingCartItemBundleModels = [];
-            var shoppingCartItemBundleModel, orderQtyHtmlElement, itemId, orderQty, orderComments = "";
+            var shoppingCartItemBundleModel, orderQtyHtmlElement, itemId, orderQty, orderComments = "", orderQtyForBundleElement;
             for (var i = 0; ; i++) {
-                orderQtyHtmlElement = document.getElementById("orderQty" + i);
+                orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + i);
                 if (orderQtyHtmlElement == null) {
                     break;
                 }
                 else {
-                    orderQty = document.getElementById("orderQty" + i).value;
+                    orderQty = document.getElementById("orderQtyForBundle" + i).value;
                     itemBundleItemId = document.getElementById("itemBundleItemId" + i).innerText;
                     quantity = document.getElementById("quantity" + i).innerText;
                     itemTypeId = document.getElementById("itemTypeId" + i).innerText;
-                    if ((/^\d+$/.test(orderQty)) && orderQty.length <= document.getElementById("orderQty" + i).getAttribute("maxlength") && orderQty >= document.getElementById("orderQty" + i).getAttribute("min") && orderQty <= document.getElementById("orderQty" + i).getAttribute("max")) {
+                    orderQtyForBundleElement = document.getElementById("orderQtyForBundle" + i);
+                    if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyForBundleElement.getAttribute("maxlength") && orderQty >= orderQtyForBundleElement.getAttribute("min") && orderQty <= orderQtyForBundleElement.getAttribute("max")) {
                         itemBundleId = document.getElementById("itemBundleId" + i).innerText;
                         itemBundleItemId = document.getElementById("itemBundleItemId" + i).innerText;
-                        itemId = document.getElementById("itemId" + i).innerText;
+                        itemId = document.getElementById("itemIdForBundle" + i).innerText;
                         if (itemId.trim() === "") {
                             document.getElementById("spnMessageErrorText" + index).innerHTML = "Select valid item";
                             document.getElementById("spnMessageError" + index).style.display = "block";
@@ -206,7 +204,7 @@ function addToCart2_onclick(itemId, index) {
                     document.getElementById("orderQty" + index).value = "";
                     document.getElementById("spnMessageSuccess" + index).style.display = "block";
                     document.getElementById("spnMessageSuccessText" + index).innerHTML = orderQty;
-                    resetOrderQtyToMinQty();
+                    //resetOrderQtyToMinQty();
                 },
                 error: function (xhr, exception) {
                     $('#loadingModal').modal('hide');

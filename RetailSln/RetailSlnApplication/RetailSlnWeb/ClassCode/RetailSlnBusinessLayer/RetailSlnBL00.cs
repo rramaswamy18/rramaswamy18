@@ -42,7 +42,20 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, null, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                long.TryParse(itemIdParm, out long itemId);
+                ItemModel itemModel = RetailSlnCache.ItemModels.FirstOrDefault(x => x.ItemId == itemId);
+                float? itemRateParm;
+                List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels;
+                if (itemModel?.ItemTypeId == ItemTypeEnum.ItemBundle)
+                {
+                    itemRateParm = AddItemBundleItemsToShoppingCart(itemModel, out shoppingCartItemBundleModels, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    itemRateParm = null;
+                    shoppingCartItemBundleModels = null;
+                }
+                string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, itemRateParm, shoppingCartItemBundleModels, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return errorMessage;
             }
@@ -57,7 +70,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // GET: AddToCart
-        public string AddToCart(ref PaymentInfoModel paymentInfoModel, string itemIdParm, float? itemRateParm, string orderQtyParm, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public string AddToCart(ref PaymentInfoModel paymentInfoModel, string itemIdParm, float? itemRateParm, List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, string orderQtyParm, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -85,7 +98,7 @@ namespace RetailSlnBusinessLayer
                 }
                 if (errorMessage == "")
                 {
-                    AddItemToShoppingCart(ref paymentInfoModel, itemModel, itemRateParm, orderQty, createOrderWIP, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    AddItemToShoppingCart(ref paymentInfoModel, itemModel, itemRateParm, shoppingCartItemBundleModels, orderQty, createOrderWIP, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return errorMessage;
@@ -100,7 +113,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // POST: AddToCart
-        public void AddToCart2(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public string AddToCart2(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -112,7 +125,8 @@ namespace RetailSlnBusinessLayer
                 itemIdParm = addToCartModel.ItemId.ToString();
                 orderQtyParm = addToCartModel.OrderQty.ToString();
                 float itemRateParm = CalculateBundleOrderAmount(addToCartModel.ShoppingCartItemBundleModels, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, itemRateParm, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, itemRateParm, null, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                return errorMessage;
             }
             catch (Exception exception)
             {
@@ -1087,7 +1101,7 @@ namespace RetailSlnBusinessLayer
                     foreach (var orderDetailWIPModel in paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels)
                     {
                         paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum = orderDetailWIPModel.SeqNum;
-                        AddToCart(ref paymentInfoModel, orderDetailWIPModel.ItemId.ToString(), orderDetailWIPModel.ItemRate, orderDetailWIPModel.OrderQty.ToString(), false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        AddToCart(ref paymentInfoModel, orderDetailWIPModel.ItemId.ToString(), orderDetailWIPModel.ItemRate, null, orderDetailWIPModel.OrderQty.ToString(), false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                 }
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -1107,8 +1121,34 @@ namespace RetailSlnBusinessLayer
         #endregion
 
         #region PRIVATE
+        // PRIVATE : AddItemBundleItemsToShoppingCart
+        private float AddItemBundleItemsToShoppingCart(ItemModel itemModel, out List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            ItemBundleModel itemBundleModel = RetailSlnCache.ItemBundleModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
+            List<ItemBundleItemModel> itemBundleItemModels = itemBundleModel.ItemBundleItemModels;
+            shoppingCartItemBundleModels = new List<ShoppingCartItemBundleModel>();
+            float itemRateParm = 0;
+            foreach (var itemBundleItemModel in itemBundleModel.ItemBundleItemModels)
+            {
+                itemRateParm += itemBundleItemModel.ItemModel.ItemRate.Value;
+                shoppingCartItemBundleModels.Add
+                (
+                    new ShoppingCartItemBundleModel
+                    {
+                        ItemBundleId = itemBundleItemModel.ItemId,
+                        ItemBundleItemId = itemBundleItemModel.ItemBundleItemId,
+                        ItemId = itemBundleItemModel.ItemId,
+                        ItemTypeId = itemModel.ItemTypeId.Value,
+                        OrderAmount = itemModel.ItemRate.Value,
+                        OrderQty = 1,
+                        Quantity = itemBundleItemModel.Quantity,
+                    }
+                );
+            }
+            return itemRateParm;
+        }
         // PRIVATE : AddItemToShoppingCart
-        private void AddItemToShoppingCart(ref PaymentInfoModel paymentInfoModel, ItemModel itemModel, float? itemRateParm, long orderQty, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void AddItemToShoppingCart(ref PaymentInfoModel paymentInfoModel, ItemModel itemModel, float? itemRateParm, List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, long orderQty, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1119,17 +1159,17 @@ namespace RetailSlnBusinessLayer
                 ShoppingCartItemModel shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
                 if (shoppingCartItemModel == null)
                 {
-                    CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, itemRateParm, orderQty/*, sqlConnection*/, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, itemRateParm, shoppingCartItemBundleModels, orderQty/*, sqlConnection*/, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
                     if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createOrderWIP)
                     {
                         ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
-                        CreateOrderWIP(ref paymentInfoModel, applSessionObjectModel.CorpAcctLocationId, itemModel.ItemId.Value, itemRateParm, orderQty, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        CreateOrderWIP(ref paymentInfoModel, applSessionObjectModel.CorpAcctLocationId, itemModel.ItemId.Value, itemModel.ItemRate.Value, orderQty, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                 }
                 else
                 {
-                    CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, itemRateParm, shoppingCartItemModel.OrderQty + orderQty/*, sqlConnection*/, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, itemRateParm, shoppingCartItemBundleModels, shoppingCartItemModel.OrderQty + orderQty/*, sqlConnection*/, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (createForSessionObject != null && createOrderWIP)
                     {
                         ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
@@ -1198,7 +1238,7 @@ namespace RetailSlnBusinessLayer
                 foreach (var shoppingCartItemBundleModel in shoppingCartItemBundleModels)
                 {
                     itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItemBundleModel.ItemId);
-                    orderAmount += shoppingCartItemBundleModel.OrderQty * itemModel.ItemRate.Value;
+                    orderAmount += (shoppingCartItemBundleModel.OrderQty * itemModel.ItemRate.Value);
                 }
                 return orderAmount;
             }
@@ -1786,7 +1826,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE: CreateOrderWIP
-        private void CreateOrderWIP(ref PaymentInfoModel paymentInfoModel, long corpAcctLocationId, long itemId, float? itemRate, long orderQty, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateOrderWIP(ref PaymentInfoModel paymentInfoModel, long corpAcctLocationId, long itemId, float itemRate, long orderQty, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1812,7 +1852,7 @@ namespace RetailSlnBusinessLayer
                         {
                             ClientId = clientId,
                             ItemId = itemId,
-                            ItemRate = itemRate.Value,
+                            ItemRate = itemRate,
                             OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
                             OrderQty = orderQty,
                             SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
@@ -1903,14 +1943,20 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE : CreateShoppingCartItemModel
-        private void CreateShoppingCartItemModel(ref ShoppingCartItemModel shoppingCartItemModel, ItemModel itemModel, float? itemRateParm, long? orderQty/*, SqlConnection sqlConnection*/, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateShoppingCartItemModel(ref ShoppingCartItemModel shoppingCartItemModel, ItemModel itemModel, float? itemRateParm, List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, long? orderQty/*, SqlConnection sqlConnection*/, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
             float? itemRate, itemRateBeforeDiscount, orderAmount, orderAmountBeforeDiscount;
-            ItemDiscountModel itemDiscountModel = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId][itemModel.ItemId.Value];
+            ItemDiscountModel itemDiscountModel;
+            RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId].TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+            if (itemDiscountModel == null)
+            {
+                itemDiscountModel = new ItemDiscountModel();
+            }
+            //itemDiscountModel = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId][itemModel.ItemId.Value];
             //ItemDiscountModel itemDiscountModel = ApplicationDataContext.ItemDiscountGet(corpAcctId, itemModel.ItemId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
             itemRateBeforeDiscount = itemRateParm == null ? itemModel.ItemRate : itemRateParm;
-            itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
+            itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel?.DiscountPercent) / 100;
             if (shoppingCartItemModel == null)
             {
                 shoppingCartItemModel = new ShoppingCartItemModel

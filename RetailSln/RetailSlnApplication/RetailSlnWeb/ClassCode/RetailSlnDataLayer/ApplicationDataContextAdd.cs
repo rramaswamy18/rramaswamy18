@@ -350,6 +350,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "              (" + Environment.NewLine;
                 sqlStmt += "               ClientId" + Environment.NewLine;
                 sqlStmt += "              ,ItemId" + Environment.NewLine;
+                sqlStmt += "              ,ItemRate" + Environment.NewLine;
                 sqlStmt += "              ,OrderHeaderWIPId" + Environment.NewLine;
                 sqlStmt += "              ,OrderQty" + Environment.NewLine;
                 sqlStmt += "              ,SeqNum" + Environment.NewLine;
@@ -360,6 +361,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        SELECT " + Environment.NewLine;
                 sqlStmt += "               @ClientId" + Environment.NewLine;
                 sqlStmt += "              ,@ItemId" + Environment.NewLine;
+                sqlStmt += "              ,@ItemRate" + Environment.NewLine;
                 sqlStmt += "              ,@OrderHeaderWIPId" + Environment.NewLine;
                 sqlStmt += "              ,@OrderQty" + Environment.NewLine;
                 sqlStmt += "              ,@SeqNum" + Environment.NewLine;
@@ -370,6 +372,7 @@ namespace RetailSlnDataLayer
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
@@ -378,6 +381,7 @@ namespace RetailSlnDataLayer
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = orderDetailWIPModel.ClientId;
                 sqlCommand.Parameters["@ItemId"].Value = orderDetailWIPModel.ItemId;
+                sqlCommand.Parameters["@ItemRate"].Value = orderDetailWIPModel.ItemRate;
                 sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderDetailWIPModel.OrderHeaderWIPId;
                 sqlCommand.Parameters["@OrderQty"].Value = orderDetailWIPModel.OrderQty;
                 sqlCommand.Parameters["@SeqNum"].Value = orderDetailWIPModel.SeqNum;

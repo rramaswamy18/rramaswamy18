@@ -111,27 +111,15 @@ END
          )
     SELECT DemogInfoAddressUpload.DemogInfoAddressId, DemogInfoAddressUpload.ClientId, DemogInfoAddressUpload.AddressLine1
           ,DemogInfoAddressUpload.AddressLine2, DemogInfoAddressUpload.AddressLine3, DemogInfoAddressUpload.AddressLine4
-          ,DemogInfoCountry.DemogInfoCountryId, DemogInfoSubDivision.DemogInfoSubDivisionId, DemogInfoCounty.DemogInfoCountyId
-          ,DemogInfoCity.DemogInfoCityId, DemogInfoZip.DemogInfoZipId, DemogInfoZipPlus.DemogInfoZipPlusId, 0, 0, ''
-          ,DemogInfoCountry.CountryAbbrev,DemogInfoCountry.CountryDesc, DemogInfoSubDivision.StateAbbrev, DemogInfoCounty.CountyName
-          ,DemogInfoCity.CityName, DemogInfoZip.ZipCode, DemogInfoZipPlus.ZipPlus4
+          ,DemogInfoData.DemogInfoCountryId, DemogInfoData.DemogInfoSubDivisionId, DemogInfoData.DemogInfoCountyId
+          ,DemogInfoData.DemogInfoCityId, DemogInfoData.DemogInfoZipId, DemogInfoData.DemogInfoZipPlusId, 0, 0, ''
+          ,DemogInfoData.CountryAbbrev, DemogInfoData.CountryDesc, DemogInfoData.StateAbbrev, DemogInfoData.CountyName
+          ,DemogInfoData.CityName, DemogInfoData.ZipCode, DemogInfoData.ZipPlus4
       FROM [ArchLib].[DemogInfoAddressUpload]
-INNER JOIN [ArchLib].[DemogInfoCountry]
-        ON DemogInfoAddressUpload.CountryAbbrev = DemogInfoCountry.CountryAbbrev
-INNER JOIN [ArchLib].[DemogInfoSubDivision]
-        ON DemogInfoAddressUpload.StateAbbrev = DemogInfoSubDivision.StateAbbrev
-       AND DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId
-INNER JOIN [ArchLib].[DemogInfoCounty]
-        ON DemogInfoAddressUpload.CountyName = DemogInfoCounty.CountyName
-       AND DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId
-INNER JOIN [ArchLib].[DemogInfoCity]
-        ON DemogInfoAddressUpload.CityName = DemogInfoCity.CityName
-       AND DemogInfoCounty.DemogInfoCountyId = DemogInfoCity.DemogInfoCountyId
-INNER JOIN [ArchLib].[DemogInfoZip]
-        ON DemogInfoCity.DemogInfoCityId = DemogInfoZip.DemogInfoCityId
-       AND DemogInfoAddressUpload.ZipCode = DemogInfoZip.ZipCode
-INNER JOIN [ArchLib].[DemogInfoZipPlus]
-        ON DemogInfoZip.DemogInfoZipId = DemogInfoZipPlus.DemogInfoZipId
+INNER JOIN [ArchLib].[DemogInfoData]
+        ON DemogInfoAddressUpload.CountryAbbrev = DemogInfoData.CountryAbbrev
+	   AND DemogInfoAddressUpload.StateAbbrev = DemogInfoData.StateAbbrev
+	   AND DemogInfoAddressUpload.ZipCode = DemogInfoData.ZipCode
      WHERE DemogInfoAddressUpload.InstanceClientId = 98
   ORDER BY DemogInfoAddressUpload.DemogInfoAddressUploadId
     SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] OFF
@@ -175,27 +163,27 @@ ORDER BY PickupLocationId
 --		 WHERE CorpAcctId > 0
 ----End Update CorpAcct Upload DemogInfoAddressId
 --Begin Corp Acct Location DemogInfoAddress
-        DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 0
-        SET IDENTITY_INSERT ArchLib.DemogInfoAddress ON
-        INSERT ArchLib.DemogInfoAddress
-              (
-               DemogInfoAddressId, ClientId, AddressLine1, AddressLine2, AddressLine3, AddressLine4, AddressTypeId, BuildingTypeId, CityName, Comments
-              ,CountryAbbrev, CountryDesc, CountyName, DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId, DemogInfoZipId
-              ,DemogInfoZipPlusId, FromDate, HouseNumber, StateAbbrev, ToDate, ZipCode, ZipPlus4
-              )
-        SELECT 
-               DemogInfoAddressId, @ClientId AS ClientId, TRIM(ISNULL(AddressLine1, '')) AS AddressLine1, TRIM(AddressLine2) AS AddressLine2
-              ,TRIM(AddressLine3) AS AddressLine3, TRIM(AddressLine4) AS AddressLine4, 0 AS AddressTypeId
-              ,0 AS BuildingTypeId, CityName, NULL AS Comments, 'IND' AS CountryAbbrev, 'INDIA' AS CountryDesc, '' AS CountyName
-              ,DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId
-              ,DemogInfoZipId, DemogInfoZipId AS DemogInfoZipPlusId, '1900-01-01' AS FromDate, '' AS HouseNumber, StateAbbrev, '' AS ToDate
-              ,PINCode AS ZipCode, '' AS ZipPlus4
-          FROM DivineBija_CorpAcctUpload
-	INNER JOIN RetailSlnSch.CorpAcct
-			ON DivineBija_CorpAcctUpload.Id = CorpAcct.CorpAcctId
-         WHERE DivineBija_CorpAcctUpload.DemogInfoAddressId <> 0
-      ORDER BY DivineBija_CorpAcctUpload.DemogInfoAddressId
-        SET IDENTITY_INSERT ArchLib.DemogInfoAddress OFF
+ --       DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 0
+ --       SET IDENTITY_INSERT ArchLib.DemogInfoAddress ON
+ --       INSERT ArchLib.DemogInfoAddress
+ --             (
+ --              DemogInfoAddressId, ClientId, AddressLine1, AddressLine2, AddressLine3, AddressLine4, AddressTypeId, BuildingTypeId, CityName, Comments
+ --             ,CountryAbbrev, CountryDesc, CountyName, DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId, DemogInfoZipId
+ --             ,DemogInfoZipPlusId, FromDate, HouseNumber, StateAbbrev, ToDate, ZipCode, ZipPlus4
+ --             )
+ --       SELECT 
+ --              DemogInfoAddressId, @ClientId AS ClientId, TRIM(ISNULL(AddressLine1, '')) AS AddressLine1, TRIM(AddressLine2) AS AddressLine2
+ --             ,TRIM(AddressLine3) AS AddressLine3, TRIM(AddressLine4) AS AddressLine4, 0 AS AddressTypeId
+ --             ,0 AS BuildingTypeId, CityName, NULL AS Comments, 'IND' AS CountryAbbrev, 'INDIA' AS CountryDesc, '' AS CountyName
+ --             ,DemogInfoCityId, DemogInfoCountryId, DemogInfoCountyId, DemogInfoSubDivisionId
+ --             ,DemogInfoZipId, DemogInfoZipId AS DemogInfoZipPlusId, '1900-01-01' AS FromDate, '' AS HouseNumber, StateAbbrev, '' AS ToDate
+ --             ,PINCode AS ZipCode, '' AS ZipPlus4
+ --         FROM DivineBija_CorpAcctUpload
+	--INNER JOIN RetailSlnSch.CorpAcct
+	--		ON DivineBija_CorpAcctUpload.Id = CorpAcct.CorpAcctId
+ --        WHERE DivineBija_CorpAcctUpload.DemogInfoAddressId <> 0
+ --     ORDER BY DivineBija_CorpAcctUpload.DemogInfoAddressId
+ --       SET IDENTITY_INSERT ArchLib.DemogInfoAddress OFF
 --Begin Corp Acct Location
         TRUNCATE TABLE RetailSlnSch.CorpAcctLocation
         INSERT RetailSlnSch.CorpAcctLocation(ClientId, CorpAcctId, SeqNum, DemogInfoAddressId, LocationName, AlternateTelephoneCountryId, AlternateTelephoneNumber, PrimaryTelephoneCountryId, PrimaryTelephoneNumber, StatusId)
@@ -233,5 +221,5 @@ UNION
       ORDER BY CorpAcctId, ItemId
 --End Corp Acct Discount
 --
-DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(400)
-DELETE RetailSlnSch.PaymentModeFilter WHERE CreditSale = 200 AND PaymentModeId IN(400)
+DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(200, 300)
+DELETE RetailSlnSch.PaymentModeFilter WHERE CreditSale = 200 AND PaymentModeId IN(200, 300)
