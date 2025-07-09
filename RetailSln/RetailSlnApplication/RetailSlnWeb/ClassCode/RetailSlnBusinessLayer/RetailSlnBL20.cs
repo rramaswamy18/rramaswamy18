@@ -69,7 +69,66 @@ namespace RetailSlnBusinessLayer
             return categoryListModel;
         }
         // GET : OrderList
-        public OrderListModel OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public OrderListModel OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                if (string.IsNullOrWhiteSpace(pageNumParm) || string.IsNullOrWhiteSpace(pageSizeParm))
+                {
+                    pageNumParm = "1";
+                    pageSizeParm = "45";
+                }
+                long? corpAcctId, createdForPersonId, personId;
+                switch (sessionObjectModel.AspNetRoleName)
+                {
+                    case "DEFAULTROLE":
+                    case "BULKORDERSROLE":
+                    case "WHOLESALEROLE":
+                        corpAcctId = ((CorpAcctModel)createForessionObjectModel.ApplSessionObjectModel).CorpAcctId;
+                        personId = null;
+                        createdForPersonId = createForessionObjectModel.PersonId;
+                        break;
+                    case "APPLADMN1":
+                    case "MARKETINGROLE":
+                    case "PRIESTROLE":
+                    case "SYSTADMIN":
+                        corpAcctId = null;
+                        personId = null;
+                        createdForPersonId = null;
+                        break;
+                    default:
+                        corpAcctId = -1;
+                        personId = -1;
+                        createdForPersonId = -1;
+                        break;
+                }
+                OrderListModel orderListModel = new OrderListModel
+                {
+                    OrderListDataModels = ApplicationDataContext.OrderList(corpAcctId, personId, createdForPersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+                return orderListModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : OrderList
+        public OrderListModel ItemMasterList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;

@@ -697,17 +697,17 @@ namespace RetailSlnWeb.Controllers
                 //var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == userTypeId);
                 //registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
                 #region For Testing - Delete
-                registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
-                registerUserModel.TelephoneNumber = "9880110009";
-                registerUserModel.LoginPassword = "Login9@9Password";
-                registerUserModel.ConfirmLoginPassword = "Login9@9Password";
-                registerUserModel.FirstName = "Priest1 First";
-                registerUserModel.LastName = "Priest1 Last";
-                registerUserModel.DemogInfoAddressModel.AddressLine1 = "123 Sri Rama Apt";
-                registerUserModel.DemogInfoAddressModel.AddressLine2 = "Near Metro Station";
-                registerUserModel.DemogInfoAddressModel.ZipCode = "600003";
-                registerUserModel.DemogInfoAddressModel.CityName = "CHENNAI";
-                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionId = 391;
+                //registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
+                //registerUserModel.TelephoneNumber = "9880110009";
+                //registerUserModel.LoginPassword = "Login9@9Password";
+                //registerUserModel.ConfirmLoginPassword = "Login9@9Password";
+                //registerUserModel.FirstName = "Priest1 First";
+                //registerUserModel.LastName = "Priest1 Last";
+                //registerUserModel.DemogInfoAddressModel.AddressLine1 = "123 Sri Rama Apt";
+                //registerUserModel.DemogInfoAddressModel.AddressLine2 = "Near Metro Station";
+                //registerUserModel.DemogInfoAddressModel.ZipCode = "600003";
+                //registerUserModel.DemogInfoAddressModel.CityName = "CHENNAI";
+                //registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionId = 391;
                 #endregion
                 Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
                 Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
@@ -1350,12 +1350,12 @@ namespace RetailSlnWeb.Controllers
             Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
             if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
             {
-                aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+                aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                 aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
             }
             redirectUrl = Url.Action(aspNetRoleKVPs["ActionName00"].KVPValueData, aspNetRoleKVPs["ControllerName00"].KVPValueData);
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-            retailSlnBL.CreateOrderWIP(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //retailSlnBL.CreateOrderWIP(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             //Take a look at the below logic Begin
             //if (currentLoggedInUserId != createForSessionObject.AspNetUserId)
             //{

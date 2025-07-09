@@ -8,6 +8,9 @@ DECLARE @ClientId BIGINT = 3
            SET 
                [Central GST] = REPLACE([Central GST], '%', '')
               ,[State GST] = REPLACE([State GST], '%', '')
+              ,[Total Cost USD] = REPLACE([Total Cost USD], '$', '')
+              ,[Retail Rate USD] = REPLACE([Retail Rate USD], '$', '')
+              ,[Final Rate USD] = REPLACE([Final Rate USD], '$', '')
 --
         UPDATE dbo.DivineBija_Products
            SET 
@@ -29,12 +32,11 @@ DECLARE @ClientId BIGINT = 3
               ,ProductDesc = RTRIM(LTRIM(ProductDesc0)) + ' ' + RTRIM(LTRIM(ProductDesc1))
               ,UniqueDescription = RTRIM(LTRIM(UniqueDescription))
 --Cleanup
-        TRUNCATE TABLE RetailSlnSch.ItemBundleItem
-        DELETE RetailSlnSch.ItemBundle
+        DELETE RetailSlnSch.ItemBundle WHERE ItemBundleId > 0
         DBCC CHECKIDENT ('RetailSlnSch.ItemBundle', RESEED, 0);
-        DELETE RetailSlnSch.Item
+        DELETE RetailSlnSch.Item WHERE ItemId > 0
         DBCC CHECKIDENT ('RetailSlnSch.Item', RESEED, 0);
-        DELETE RetailSlnSch.ItemMaster
+        DELETE RetailSlnSch.ItemMaster WHERE ItemMasterId > 0
         DBCC CHECKIDENT ('RetailSlnSch.ItemMaster', RESEED, 0);
 --
 --Begin Item Master
@@ -137,11 +139,25 @@ DECLARE @ClientId BIGINT = 3
 --
 --End Item
 --Begin itemBundle
-        INSERT RetailSlnSch.ItemBundle(ClientId, ItemId, DiscountPercent)
+        INSERT RetailSlnSch.ItemBundle(ClientId, ItemId, ParentItemId, SeqNum)
+        SELECT @ClientId AS ClientId
+              ,Item.ItemId
+              ,ParentItem.ItemId AS ParentItemId
+              ,CAST(DivineBija_ItemBundleItem.[Seq Num] AS FLOAT) AS SeqNum
+          FROM dbo.DivineBija_ItemBundle
+    INNER JOIN dbo.DivineBija_ItemBundleItem
+            ON DivineBija_ItemBundle.BundleUniqueDescription = DivineBija_ItemBundleItem.BundleUniqueDescription 
+    INNER JOIN RetailSlnSch.Item AS ParentItem
+            ON DivineBija_ItemBundle.BundleUniqueDescription = ParentItem.ItemUniqueDesc
+    INNER JOIN RetailSlnSch.Item
+            ON DivineBija_ItemBundleItem.ItemUniqueDescription = Item.ItemUniqueDesc
+      ORDER BY ParentItem.ItemId
+              ,CAST(DivineBija_ItemBundleItem.[Seq Num] AS FLOAT)
+/*
         SELECT DISTINCT
                @ClientId AS ClientId
               ,Item.ItemId
-              ,DiscountPercent
+              --,DiscountPercent
           FROM dbo.DivineBija_ItemBundle
     INNER JOIN RetailSlnSch.Item
             ON DivineBija_ItemBundle.BundleUniqueDescription = Item.ItemUniqueDesc
@@ -162,6 +178,7 @@ DECLARE @ClientId BIGINT = 3
             ON DivineBija_ItemBundleItem.ItemUniqueDescription = Item.ItemUniqueDesc
       ORDER BY ItemBundle.ItemBundleId
               ,CAST(DivineBija_ItemBundleItem.[Seq Num] AS FLOAT)
+*/
 --End Item Bundle
 --Begin Item Spec
 SET NOCOUNT ON

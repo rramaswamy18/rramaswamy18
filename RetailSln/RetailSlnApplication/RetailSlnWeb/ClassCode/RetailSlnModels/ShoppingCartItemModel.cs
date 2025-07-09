@@ -9,13 +9,15 @@ namespace RetailSlnModels
 {
     public class ShoppingCartItemModel
     {
+        public long ClientId { set; get; }
+
         public DimensionUnitEnum? DimensionUnitId { set; get; }
 
         public float? HeightValue { set; get; }
 
         public string HSNCode { set; get; }
 
-        public ItemBundleModel ItemBundleModel { set; get; }
+        public string ImageName { set; get; }
 
         public float? ItemDiscountAmount { set; get; }
 
@@ -27,6 +29,8 @@ namespace RetailSlnModels
 
         public string ItemItemSpecsForDisplay { set; get; }
 
+        public string ItemMasterDesc { set; get; }
+
         public string ItemMasterDesc0 { set; get; }
 
         public string ItemMasterDesc1 { set; get; }
@@ -34,6 +38,10 @@ namespace RetailSlnModels
         public string ItemMasterDesc2 { set; get; }
 
         public string ItemMasterDesc3 { set; get; }
+
+        public long ItemMasterId { set; get; }
+
+        public string ItemIdParm { set; get; }
 
         public float? ItemRate { set; get; }
 
@@ -45,19 +53,27 @@ namespace RetailSlnModels
 
         public string ItemShortDesc { set; get; }
 
+        public ItemTypeEnum ItemTypeId { set; get; }
+
         public float? LengthValue { set; get; }
 
         public float? OrderAmount { set; get; }
 
+        public float? OrderAmountBeforeDiscount { set; get; }
+
         public string OrderAmountFormatted { set; get; }
 
-        public float? OrderAmountBeforeDiscount { set; get; }
+        public long? OrderAmountRounded { set; get; }
 
         public string OrderComments { set; get; }
 
         public OrderDetailTypeEnum OrderDetailTypeId { set; get; }
 
         public long? OrderQty { set; get; }
+
+        public string OrderQtyParm { set; get; }
+
+        public long? ParentItemId { set; get; }
 
         public string ProductCode { set; get; }
 
@@ -78,5 +94,7 @@ namespace RetailSlnModels
         public float? WidthValue { set; get; }
 
         public List<ShoppingCartItemModel> ShoppingCartItemSummarys { set; get; }
+
+        public List<ShoppingCartItemModel> ShoppingCartItemBundleModels { set; get; }
     }
 }

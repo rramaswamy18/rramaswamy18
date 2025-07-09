@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,9 +50,21 @@ namespace RetailSlnConsoleApp1
         }
         private static void TestDivineBijaResizeItemMasterImages()
         {
-            string inputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\";
-            string outputDirectoryName = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\ItemMaster\";
-            string databaseConnectionString = "DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln;";
+            string inputDirectoryName;// = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\";
+            string outputDirectoryName;// = @"C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\ItemMaster\";
+            string databaseConnectionString;// = "DATA SOURCE=.; INTEGRATED SECURITY=SSPI; INITIAL CATALOG=RetailSln;";
+
+            StreamReader streamReader = new StreamReader(@"C:\Common\Images\ConsoleApp1Parm1.txt");
+            streamReader.ReadLine();
+            inputDirectoryName = streamReader.ReadLine();
+            outputDirectoryName = streamReader.ReadLine();
+            databaseConnectionString = streamReader.ReadLine();
+            streamReader.Close();
+
+            inputDirectoryName = inputDirectoryName.Substring(inputDirectoryName.IndexOf('=') + 1);
+            outputDirectoryName = outputDirectoryName.Substring(outputDirectoryName.IndexOf('=') + 1);
+            databaseConnectionString = databaseConnectionString.Substring(databaseConnectionString.IndexOf('=') + 1);
+
             Class1 class1 = new Class1();
             class1.DivineBijaResizeItemMasterImages(databaseConnectionString, inputDirectoryName, outputDirectoryName);
         }

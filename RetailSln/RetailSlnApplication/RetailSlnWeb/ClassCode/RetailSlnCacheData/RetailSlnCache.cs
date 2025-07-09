@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace RetailSlnCacheData
 {
@@ -29,7 +30,6 @@ namespace RetailSlnCacheData
         public static List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public static List<DeliveryMethodFilterModel> DeliveryMethodFilterModels { set; get; }
         public static List<ItemBundleModel> ItemBundleModels { set; get; }
-        public static List<ItemBundleItemModel> ItemBundleItemModels { set; get; }
         public static List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemMasterModel> ItemMasterModels { set; get; }
@@ -51,8 +51,9 @@ namespace RetailSlnCacheData
         public static List<SelectListItem> DeliveryDemogInfoCountrySelectListItems { set; get; }
         public static Dictionary<long, List<SelectListItem>> DeliveryDemogInfoCountrySubDivisionSelectListItems { set; get; }
         public static Dictionary<YesNoEnum, List<CodeDataModel>> DeliveryMethodsList { set; get; }
-        public static Dictionary<YesNoEnum, List<CodeDataModel>> PaymentModesList { set; get; }
         public static List<SelectListItem> DeliveryMethodSelectListItems { set; get; }
+        public static Dictionary<YesNoEnum, List<CodeDataModel>> PaymentModesList { set; get; }
+        public static Dictionary<long, ParentItemBundleModel> ParentItemBundleModels { set; get; }
         public static List<DemogInfoAddressModel> PickupLocationDemogInfoAddressModels1 { set; get; }
         public static List<DemogInfoAddressModel> PickupLocationDemogInfoAddressModels2 { set; get; }
         #endregion
@@ -67,7 +68,6 @@ namespace RetailSlnCacheData
             CorpAcctLocationModels = retailSlnInitModel.CorpAcctLocationModels;
             DeliveryMethodFilterModels = retailSlnInitModel.DeliveryMethodFilterModels;
             ItemBundleModels = retailSlnInitModel.ItemBundleModels;
-            ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels;
             ItemDiscountModels = retailSlnInitModel.ItemDiscountModels;
             ItemModels = retailSlnInitModel.ItemModels;
             ItemMasterModels = retailSlnInitModel.ItemMasterModels;
@@ -91,6 +91,7 @@ namespace RetailSlnCacheData
             StreamReader streamReader = new StreamReader(projectDirectory + @"\BuildDateTime.txt");
             string buildDateTime = streamReader.ReadToEnd();
             streamReader.Close();
+            buildDateTime = buildDateTime.Replace("  ", " ");
             var buildDateTimes = buildDateTime.Split(' ');
             buildDateTime = buildDateTimes[0] + " " + DateTime.Parse(buildDateTimes[1]).ToString("MMM-dd-yyyy") + " " + buildDateTimes[2].Trim();
             return buildDateTime;
@@ -186,12 +187,6 @@ namespace RetailSlnCacheData
                     itemMasterModel.ItemRatesForDisplay += "...";
                     itemMasterModel.ItemRatesForDisplayAll += "...";
                 }
-                //List<CategoryItemMasterHierModel> categoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
-                //itemMasterModel.CategoryModels = new List<CategoryModel>();
-                //foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
-                //{
-                //    itemMasterModel.CategoryModels.Add(categoryItemMasterHierModel.ParentCategoryModel);
-                //}
             }
             AspNetRoleModelsPriest = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId >= 500 && x.UserTypeId <= 700);
         }
@@ -384,20 +379,100 @@ namespace RetailSlnCacheData
         }
         private static void BuildCacheModels3(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            ArchLibBL archLibBL = new ArchLibBL();
-            foreach (ItemBundleItemModel itemBundleItemModel in retailSlnInitModel.ItemBundleItemModels)
-            {
-                itemBundleItemModel.ItemModel = ItemModels.First(x => x.ItemId == itemBundleItemModel.ItemId);
-                itemBundleItemModel.ItemBundleModel = ItemBundleModels.First(x => x.ItemBundleId == itemBundleItemModel.ItemBundleId);
-            }
-            //var results = retailSlnInitModel.ItemModels.Where(a => retailSlnInitModel.ItemBundleItemModels.Where(b => b.ItemBundleId == 6 && b.ItemId == a.ItemId).Any()).ToList();
             foreach (ItemBundleModel itemBundleModel in retailSlnInitModel.ItemBundleModels)
             {
                 itemBundleModel.ItemModel = retailSlnInitModel.ItemModels.First(x => x.ItemId == itemBundleModel.ItemId);
-                itemBundleModel.DiscountPercentFormatted = (itemBundleModel.DiscountPercent / 100).ToString("0.00%");
-                itemBundleModel.ItemRateAfterDiscount = itemBundleModel.ItemModel.ItemRate.Value * (100 - itemBundleModel.DiscountPercent) / 100;
-                itemBundleModel.ItemRateAfterDiscountFormatted = itemBundleModel.ItemRateAfterDiscount.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                itemBundleModel.ItemBundleItemModels = retailSlnInitModel.ItemBundleItemModels.FindAll(x => x.ItemBundleId == itemBundleModel.ItemBundleId);
+            }
+            int i = 0;
+            long parentItemId;
+            ItemModel itemModel;
+            ShoppingCartItemModel shoppingCartItemModel;
+            ParentItemBundleModels = new Dictionary<long, ParentItemBundleModel>();
+            while (i < retailSlnInitModel.ItemBundleModels.Count)
+            {
+                parentItemId = retailSlnInitModel.ItemBundleModels[i].ParentItemId;
+                ParentItemBundleModels[parentItemId] = new ParentItemBundleModel
+                {
+                    ItemModels = new List<ItemModel>(),
+                    ParentItemId = parentItemId,
+                    ParentItemModel = retailSlnInitModel.ItemModels.First(x => x.ItemId == parentItemId),
+                    ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>(),
+                    TotalOrderAmount = 0
+                };
+                while (i < retailSlnInitModel.ItemBundleModels.Count && parentItemId == retailSlnInitModel.ItemBundleModels[i].ParentItemId)
+                {
+                    itemModel = retailSlnInitModel.ItemBundleModels[i].ItemModel;
+                    ParentItemBundleModels[parentItemId].ItemModels.Add(itemModel);
+                    ParentItemBundleModels[parentItemId].TotalOrderAmount += itemModel.ItemRate.Value;
+                    if (itemModel.ItemId == 0)
+                    {
+                        shoppingCartItemModel = new ShoppingCartItemModel
+                        {
+                            HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+                            ImageName = "",
+                            ItemDiscountAmount = 0,
+                            ItemDiscountPercent = 0,
+                            ItemDiscountPercentFormatted = "",
+                            ItemId = itemModel.ItemId,
+                            ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+                            ItemMasterDesc = itemModel.ItemMasterModel.ItemMasterDesc,
+                            ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
+                            ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
+                            ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
+                            ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
+                            ItemRate = itemModel.ItemRate,
+                            ItemRateBeforeDiscount = itemModel.ItemRate,
+                            ItemRateBeforeDiscountFormatted = itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                            ItemRateFormatted = itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                            ItemShortDesc = null,//itemModel.ItemShortDesc,
+                            OrderAmount = 0,
+                            OrderAmountBeforeDiscount = 0,
+                            OrderAmountFormatted = "",
+                            OrderQty = 1,
+                            OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                            ProductCode = "",
+                            ProductOrVolumetricWeightUnitId = WeightUnitEnum.Grams,
+                            WeightCalcUnitId = WeightUnitEnum.Grams,
+                            WeightUnitId = WeightUnitEnum.Grams,
+                            ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+                        };
+                    }
+                    else
+                    {
+                        shoppingCartItemModel = new ShoppingCartItemModel
+                        {
+                            HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+                            ImageName = itemModel.ItemMasterModel.ImageName,
+                            ItemDiscountAmount = 0,
+                            ItemDiscountPercent = 0,
+                            ItemDiscountPercentFormatted = "",
+                            ItemId = itemModel.ItemId,
+                            ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+                            ItemMasterDesc = itemModel.ItemMasterModel.ItemMasterDesc,
+                            ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
+                            ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
+                            ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
+                            ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
+                            ItemRate = itemModel.ItemRate,
+                            ItemRateBeforeDiscount = itemModel.ItemRate,
+                            ItemRateBeforeDiscountFormatted = itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                            ItemRateFormatted = itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                            ItemShortDesc = null,//itemModel.ItemShortDesc,
+                            OrderAmount = itemModel.ItemRate,
+                            OrderAmountBeforeDiscount = itemModel.ItemRate,
+                            OrderAmountFormatted = itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                            OrderQty = 1,
+                            OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                            ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+                            ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
+                            WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+                            WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+                            ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+                        };
+                    }
+                    ParentItemBundleModels[parentItemId].ShoppingCartItemBundleModels.Add(shoppingCartItemModel);
+                    i++;
+                }
             }
             string itemCatalogFilesPath = Utilities.GetServerMapPath("~/Files/OrderItem/");
             //Directory.Delete(itemCatalogFilesPath);

@@ -12,8 +12,6 @@ namespace RetailSlnModels
 
         public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
 
-        public Dictionary<long, ItemDiscountModel> ItemDiscountModels { set; get; }
-
         public long? ParentCategoryId { set; get; }
 
         public string ParentCategoryDesc { set; get; }

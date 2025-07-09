@@ -8,12 +8,6 @@
     Thanking You,
     <br />
     Sincerely,
-    @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.AuthorizedSignatureTextValue))
-    {
-        <br />
-        <span style="color: #000000; font-family: 'Lucida Handwriting'; font-size: 18px; font-weight: bold;">1. @Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
-        <span style="color: #000000; font-family: '@Model.OrderSummaryModel.AuthorizedSignatureFontFamily'; font-size: @Model.OrderSummaryModel.AuthorizedSignatureFontSize; font-weight: bold;">2. @Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
-    }
     <br />
     <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "Business", "AdminRepresentativeTitle")</span>
     <br />
@@ -21,6 +15,10 @@
     <br />
     <span style="color: #000000;">
         @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")
+        <br />
+        @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1A", "")
+        <br />
+        @ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")
         <br />
         @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", ""), @ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")
         <br />

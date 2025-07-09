@@ -14,6 +14,8 @@ namespace RetailSlnModels
         public float ItemRate { set; get; }
         public long OrderHeaderWIPId { set; get; }
         public long OrderQty { set; get; }
+        public long ParentItemId { set; get; }
         public float SeqNum { set; get; }
+        public List<OrderDetailWIPModel> ShoppingCartItemBundleModels { set; get; }
     }
 }

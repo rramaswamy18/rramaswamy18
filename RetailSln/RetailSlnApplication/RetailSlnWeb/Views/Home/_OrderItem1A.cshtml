@@ -1,0 +1,84 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderItem1Model
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    int index = 0;
+    string discountPercent, defaultValue = "''";
+}
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+</style>
+<!--Single, Regular-->
+<table style="border-style: none; border-width: 0px; padding: 5px; width: 99%;">
+    <colgroup>
+        <col style="width: 27px;" />
+        <col style="width: 36px;" />
+        <col />
+        <col style="width: 54px;" />
+        <col style="width: 54px;" />
+        <col style="width: 153px;" />
+    </colgroup>
+    <tr style="background-color: #d0d0d0;">
+        <th style="padding: 5px; text-align: right;">#</th>
+        <th style="padding: 5px; text-align: center;">Id</th>
+        <th style="padding: 5px; text-align: left;">Desc</th>
+        <th style="padding: 5px; text-align: right;">Rate</th>
+        <th style="padding: 5px; text-align: right;">Disc.</th>
+        <th style="padding: 5px; text-align: left;">Qty</th>
+    </tr>
+    @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
+    {
+        Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out ItemDiscountModel itemDiscountModel);
+        if (itemDiscountModel != null)
+        {
+            discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
+        }
+        else
+        {
+            discountPercent = "";
+        }
+        <tr>
+            <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">@(index + 1).</td>
+            <td style="font-size: 12px; padding: 5px; text-align: center; vertical-align: top;">@itemModel.ItemId</td>
+            <td style="font-size: 12px; padding: 5px; text-align: left; vertical-align: top;">
+                <span style="color: #000000; font-weight: bold;">
+                    @(Model.ItemMasterModel.ItemMasterDesc0 + " " + Model.ItemMasterModel.ItemMasterDesc1)
+                    @if (!string.IsNullOrWhiteSpace(Model.ItemMasterModel.ItemMasterDesc0 + Model.ItemMasterModel.ItemMasterDesc1))
+                    {
+                        <br style="clear: both;" />
+                        @(Model.ItemMasterModel.ItemMasterDesc2 + " " + Model.ItemMasterModel.ItemMasterDesc3)
+                    }
+                </span>
+                @if (!string.IsNullOrWhiteSpace(itemModel.ItemItemSpecsForDisplay))
+                {
+                    <br style="clear: both;" />
+                    @itemModel.ItemItemSpecsForDisplay
+                }
+            </td>
+            <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">@itemModel.ItemRateFormatted</td>
+            <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">@discountPercent</td>
+            <td style="padding: 5px; text-align: left; vertical-align: top;">
+                <input class="form-control" id="orderQty@(index)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput(this, '');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" type="number" value="" />
+                <span style="width: 9px;">&nbsp;</span>
+                <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemModel.ItemId, @index, @defaultValue, true);" title="Enter quantity and click add to cart @Model.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @Model.ItemMasterModel.ImageTitle" /></a>
+                <span id="spnMessageSuccess@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                    <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                    <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(index)" style="color: #0000ff; font-size:12px;"></span></span>
+                    <br style="clear: both;" />
+                </span>
+                <span id="spnMessageError@(index)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                    <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                    <span id="spnMessageErrorText@(index)" style="color: #ff0000;"></span>
+                    <br style="clear: both;" />
+                </span>
+            </td>
+        </tr>
+        index++;
+    }
+</table>

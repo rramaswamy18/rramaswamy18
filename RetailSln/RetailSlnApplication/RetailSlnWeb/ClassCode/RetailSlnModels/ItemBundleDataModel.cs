@@ -8,8 +8,12 @@ namespace RetailSlnModels
 {
     public class ItemBundleDataModel
     {
-        public long ItemMasterId { set; get; }
-        public ItemBundleModel ItemBundleModel { set; get; }
+        public string CurrencySymbol { set; get; }
+        //public ItemMasterModel ItemMasterModel { set; get; }
+        public ItemModel ItemModel { set; get; }
+        //public ParentItemBundleModel ParentItemBundleModel { set; get; }
+        public long ParentItemId { set; get; }
+        public List<ShoppingCartItemModel> ShoppingCartItemBundleModels { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

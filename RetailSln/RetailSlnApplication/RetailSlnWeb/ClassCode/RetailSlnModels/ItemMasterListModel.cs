@@ -10,6 +10,7 @@ namespace RetailSlnModels
     {
         public int PageNum { set; get; }
         public int RowCount { set; get; }
+        public Dictionary<long, ItemDiscountModel> ItemDiscountModels { set; get; }
         public List<ItemMasterModel> ItemMasterModels { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

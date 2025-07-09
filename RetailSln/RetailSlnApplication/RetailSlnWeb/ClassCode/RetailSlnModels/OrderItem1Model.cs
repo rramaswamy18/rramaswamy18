@@ -10,6 +10,7 @@ namespace RetailSlnModels
     {
         public Dictionary<long, ItemDiscountModel> ItemDiscountModels { set; get; }
         public ItemMasterModel ItemMasterModel { set; get; }
+        public ItemBundleDataModel ItemBundleDataModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

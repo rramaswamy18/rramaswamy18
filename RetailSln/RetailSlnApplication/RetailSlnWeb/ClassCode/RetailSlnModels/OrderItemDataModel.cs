@@ -8,6 +8,8 @@ namespace RetailSlnModels
 {
     public class OrderItemDataModel
     {
+        public Dictionary<long, ItemDiscountModel> ItemDiscountModels { set; get; }
+
         public string OrderItemDataHtmlFileName { set; get; }
 
         public string OrderItemDataHtmlString { set; get; }

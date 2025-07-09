@@ -271,50 +271,14 @@ namespace RetailSlnDataLayer
                             ItemBundleId = long.Parse(sqlDataReader["ItemBundleId"].ToString()),
                             ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                             ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                            ParentItemId = long.Parse(sqlDataReader["ParentItemId"].ToString()),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
                         }
                      );
                 }
                 sqlDataReader.Close();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return itemBundleModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
-        public static List<ItemBundleItemModel> ItemBundleItemList(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                string sqlStmt = "";
-                sqlStmt += "SELECT * FROM RetailSlnSch.ItemBundleItem ORDER BY ItemBundleItemId" + Environment.NewLine;
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                List<ItemBundleItemModel> itemBundleItemModels = new List<ItemBundleItemModel>();
-                while (sqlDataReader.Read())
-                {
-                    itemBundleItemModels.Add
-                    (
-                        new ItemBundleItemModel
-                        {
-                            ItemBundleItemId = long.Parse(sqlDataReader["ItemBundleItemId"].ToString()),
-                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
-                            ItemBundleId = long.Parse(sqlDataReader["ItemBundleId"].ToString()),
-                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
-                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
-                            Quantity = short.Parse(sqlDataReader["Quantity"].ToString()),
-                        }
-                     );
-                }
-                sqlDataReader.Close();
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return itemBundleItemModels;
             }
             catch (Exception exception)
             {
@@ -413,7 +377,7 @@ namespace RetailSlnDataLayer
             List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMaster WHERE ItemMasterStatusId = 100 ORDER BY ItemMasterId", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId", sqlConnection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 while (sqlDataReader.Read())
                 {

@@ -1,0 +1,506 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserModel
+@{
+    string divWidth;
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    try
+    {
+        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+        //Not using right now
+        if (userAgent.Contains("iphone;")) //iPhone
+        {
+            divWidth = "90%;";
+        }
+        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
+        {
+            divWidth = "63%";
+        }
+        else
+        {
+            divWidth = "45%;";
+        }
+    }
+    catch
+    {
+        divWidth = "45%;";
+    }
+    //Using this right now
+    string paddingLeft;
+    if (mobileDevice)
+    {
+        divWidth = "90%;";
+        paddingLeft = "9px;";
+    }
+    else
+    {
+        divWidth = "45%;";
+        paddingLeft = "0px;";
+    }
+    //mobileDevice = true;
+}
+<div id="divRegisterUser" class="container center" style="padding-left: @paddingLeft; width: @divWidth;">
+    <div class="row" style="text-align: left;">
+        <div class="row" style="padding-left: @paddingLeft; text-align: left;">
+            <span style="color: #0000ff; font-size: 14px; font-weight: bold; padding-right: 9px;">Read in...</span>
+            <select class="form-control" id="language" onchange="javascript: return language_onchange();" style="color: #000000; display: inline-block; font-size: 14px; font-weight: bold; width: 189px;">
+                <option value="EnglishUSA" selected="selected" style="font-weight: bold;">English (USA)</option>
+                <option value="Telugu" style="font-weight: bold;">Telugu తెలుగు</option>
+                <option value="Kannada" style="font-weight: bold;">Kannada ಕನ್ನಡ</option>
+                <option value="Tamil" style="font-weight: bold;">Tamil தமிழ்</option>
+                <option value="Hindi" style="font-weight: bold;">Hindi हिंदी</option>
+            </select>
+        </div>
+    </div>
+    <div class="row" style="text-align: left;">
+        <div class="row" style="padding-left: @paddingLeft; text-align: left;">
+            <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">register purohit</span>&nbsp;<span style="color: #0000ff; font-size: 23px; font-weight: bold;">(First time@* users*@)</span>
+        </div>
+        <form id="formRegisterUserData">
+            @Html.Partial("_RegisterUserData", Model)
+        </form>
+        <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return registerUserSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">register</button>
+        <div class="row" id="divInstructionsEnglishUSA" style="text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    Already registered, facing issues? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">Click to reset password...</a>
+                </li>
+                <li>
+                    If you are done setting up your password...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">Click to login...</a>
+                </li>
+                <li>
+                    Still facing issues?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">Click to Contact Us...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    Enter email address, password, phone#, address, answer captcha
+                </li>
+                <li>
+                    Click <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> to continue
+                </li>
+                <li>
+                    Your Master Coupon# will be emailed. Check your <span style="color: #0000ff; font-size: 15px;">Inbox</span> or <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+                </li>
+                <li>
+                    If so, move to Inbox and mark the <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+                </li>
+            </ul>
+        </div>
+        <div class="row" id="divInstructionsHindi" style="display: none; text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    पहले से पंजीकृत, समस्याओं का सामना करना पड़ रहा है? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">पासवर्ड रीसेट करने के लिए क्लिक करें...</a>
+                </li>
+                <li>
+                    यदि आपने अपना पासवर्ड सेट कर लिया है...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">लॉग इन करने के लिए क्लिक करें...</a>
+                </li>
+                <li>
+                    अभी भी समस्याओं का सामना करना पड़ रहा है?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">हमसे संपर्क करने के लिए क्लिक करें...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    ईमेल पता, पासवर्ड, फ़ोन नंबर, पता दर्ज करें, कैप्चा का उत्तर दें
+                </li>
+                <li>
+                    क्लिक <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> जारी रखने के लिए
+                </li>
+                <li>
+                    आपका मास्टर कूपन# ईमेल किया जाएगा. जाँचें अपना <span style="color: #ff0000; font-size: 15px;">Inbox</span> or <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+                </li>
+                <li>
+                    यदि ऐसा है, तो इनबॉक्स में जाएं और चिह्नित करें <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+                </li>
+            </ul>
+        </div>
+        <div class="row" id="divInstructionsKannada" style="display: none; text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಲಾಗಿದೆ, ಸಮಸ್ಯೆಗಳನ್ನು ಎದುರಿಸುತ್ತಿದೆ? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">ಪಾಸ್ವರ್ಡ್ ಮರುಹೊಂದಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ...</a>
+                </li>
+                <li>
+                    ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸುವುದನ್ನು ನೀವು ಮುಗಿಸಿದ್ದರೆ...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">ಲಾಗಿನ್ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ...</a>
+                </li>
+                <li>
+                    ಇನ್ನೂ ಸಮಸ್ಯೆಗಳನ್ನು ಎದುರಿಸುತ್ತಿದ್ದಾರೆ?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    ಇಮೇಲ್ ವಿಳಾಸ, ಪಾಸ್‌ವರ್ಡ್, ಫೋನ್ ಸಂಖ್ಯೆ, ವಿಳಾಸ, ಉತ್ತರ ಕ್ಯಾಪ್ಚಾ ನಮೂದಿಸಿ
+                </li>
+                <li>
+                    ಕ್ಲಿಕ್ ಮಾಡಿ <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> ಮುಂದುವರೆಯಲು
+                </li>
+                <li>
+                    ನಿಮ್ಮ ಮಾಸ್ಟರ್ ಕೂಪನ್ # ಅನ್ನು ಇಮೇಲ್ ಮಾಡಲಾಗುತ್ತದೆ. ನಿಮ್ಮ ಪರಿಶೀಲಿಸಿ <span style="color: #ff0000; font-size: 15px;">Inbox</span> or <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+                </li>
+                <li>
+                    ಹಾಗಿದ್ದಲ್ಲಿ, ಇನ್‌ಬಾಕ್ಸ್‌ಗೆ ಸರಿಸಿ ಮತ್ತು ಗುರುತಿಸಿ <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+                </li>
+            </ul>
+        </div>
+        <div class="row" id="divInstructionsTamil" style="display: none; text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது, சிக்கல்களை எதிர்கொள்கிறது? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">கடவுச்சொல்லை மீட்டமைக்க கிளிக் செய்யவும்...</a>
+                </li>
+                <li>
+                    உங்கள் கடவுச்சொல்லை அமைத்து முடித்திருந்தால்...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">உள்நுழைய கிளிக் செய்யவும்...</a>
+                </li>
+                <li>
+                    இன்னும் பிரச்சினைகளை எதிர்கொள்கிறது?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">எங்களைத் தொடர்புகொள்ள கிளிக் செய்யவும்...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    மின்னஞ்சல் முகவரி, கடவுச்சொல், தொலைபேசி எண், முகவரி, பதில் கேப்ட்சாவை உள்ளிடவும்
+                </li>
+                <li>
+                    கிளிக் செய்யவும் <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> தொடர
+                </li>
+                <li>
+                    உங்கள் மாஸ்டர் கூப்பன்# மின்னஞ்சலில் அனுப்பப்படும். உங்கள் சரிபார்க்கவும் <span style="color: #0000ff; font-size: 15px;">Inbox</span> or <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+                </li>
+                <li>
+                    அப்படியானால், இன்பாக்ஸுக்குச் சென்று <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+                </li>
+            </ul>
+        </div>
+        <div class="row" id="divInstructionsTelugu" style="display: none; text-align: left;">
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    ఇప్పటికే నమోదు చేయబడింది, సమస్యలను ఎదుర్కొంటోంది? <a href="@Url.Action("ResetPassword", "Home")" style="color: #ff0000; font-size: 13px; padding-left: 5px; text-decoration: underline;">పాస్‌వర్డ్‌ను రీసెట్ చేయడానికి క్లిక్ చేయండి...</a>
+                </li>
+                <li>
+                    మీరు మీ పాస్‌వర్డ్‌ను సెటప్ చేయడం పూర్తి చేస్తే...<a href="@Url.Action("LoginUserProf", "Home")" style="color: #0000ff; font-size: 13px; padding-left: 5px; text-decoration: underline;">లాగిన్ చేయడానికి క్లిక్ చేయండి...</a>
+                </li>
+                <li>
+                    ఇప్పటికీ సమస్యలను ఎదుర్కొంటున్నారు?&nbsp;
+                    <a href="@Url.Action("ContactUs", "Home")" style="color: #ff0000; font-size: 14px; text-decoration: underline;" target="_blank">మమ్మల్ని సంప్రదించడానికి క్లిక్ చేయండి...</a>
+                </li>
+            </ul>
+            <ul style="font-size: 14px; font-weight: bold; margin-left: 7px; padding-left: 5px; text-align: left;">
+                <li>
+                    ఇమెయిల్ చిరునామా, పాస్‌వర్డ్, ఫోన్ నంబర్, చిరునామా, సమాధానం కాప్చా నమోదు చేయండి
+                </li>
+                <li>
+                    క్లిక్ చేయండి <span style="color: #ff0000; font-size: 18px;">R E G I S T E R</span> కొనసాగించడానికి
+                </li>
+                <li>
+                    మీ మాస్టర్ కూపన్# ఇమెయిల్ చేయబడింది. మీ తనిఖీ <span style="color: #ff0000; font-size: 15px;">Inbox</span> or <span style="color: #ff0000; font-size: 15px;">Spam / Junk folder(s)</span>
+                </li>
+                <li>
+                    అలా అయితే, ఇన్‌బాక్స్‌కి వెళ్లి, <span style="color: #ff0000; font-size: 15px;">SENDER SAFE</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var languageCaptionsTextEnglish = new Array("User Type", "Email address", "Telephone country", "Telephone#", "First name", "Last name", "Type", "House#", "Address Line# 1", "Address Line# 2", "Address Country", "Postal Code", "City", "State", "Captcha answer", "Login Password", "Confirm Login Password");
+    var languageCaptionsTextHindi = new Array("उपयोगकर्ता का प्रकार", "मेल पता", "टेलीफोन देश", "टेलीफ़ोन#", "पहला नाम", "उपनाम", "प्रकार", "घर#", "पता पंक्ति# 1", "पता पंक्ति# 2", "पता देश", "डाक कोड", "शहर", "राज्य", "कैप्चा उत्तर", "लॉगिन पासवर्ड", "लॉगिन पासवर्ड की पुष्टि करें");
+    var languageCaptionsTextKannada = new Array("ಬಳಕೆದಾರರ ಪ್ರಕಾರ", "ಇಮೇಲ್ ವಿಳಾಸ", "ದೂರವಾಣಿ ದೇಶ", "ದೂರವಾಣಿ#", "ಮೊದಲ ಹೆಸರು", "ಕೊನೆಯ ಹೆಸರು", "ಟೈಪ್ ಮಾಡಿ", "ಮನೆ#", "ವಿಳಾಸ ಸಾಲು# 1", "ವಿಳಾಸ ಸಾಲು# 2", "ದೇಶದ ವಿಳಾಸ", "ಅಂಚೆ ಕೋಡ್", "ನಗರ", "ರಾಜ್ಯ", "ಕ್ಯಾಪ್ಚಾ ಉತ್ತರ", "ಲಾಗಿನ್ ಪಾಸ್ವರ್ಡ್", "ಲಾಗಿನ್ ಪಾಸ್ವರ್ಡ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ");
+    var languageCaptionsTextTamil = new Array("பயனர் வகை", "மின்னஞ்சல் முகவரி", "தொலைபேசி நாடு", "தொலைபேசி#", "முதல் பெயர்", "கடைசி பெயர்", "வகை", "வீடு#", "முகவரி வரி# 1", "முகவரி வரி# 2", "முகவரி நாடு", "குறியீடு", "நகரம்", "மாநிலம்", "கேப்ட்சா பதில்", "உள்நுழைவு கடவுச்சொல்", "உள்நுழைவு கடவுச்சொல்லை உறுதிப்படுத்தவும்");
+    var languageCaptionsTextTelugu = new Array("వినియోగదారు రకం", "ఇమెయిల్ చిరునామా", "టెలిఫోన్ దేశం", "టెలిఫోన్#", "మొదటి పేరు", "ఇంటిపేరు", "టైప్ చేయండి", "ఇల్లు#", "అడ్రస్ లైన్# 1", "అడ్రస్ లైన్# 2", "చిరునామా దేశం", "పోస్టల్ కోడ్", "నగరం", "రాష్ట్రం", "క్యాప్చా సమాధానం", "లాగిన్ పాస్‌వర్డ్", "లాగిన్ పాస్‌వర్డ్‌ని నిర్ధారించండి");
+
+    var languageCaptionsRequiredEnglish = new Array("(Required)", "(Required)", "(Required)", "(Required)", "(Required)", "(Required)", "", "", "(Required)", "", "", "*", "*", "*", "? (Required)", "(Required)", "(Required)");
+    var languageCaptionsRequiredHindi = new Array("(आवश्यक)", "(आवश्यक)", "(आवश्यक)", "(आवश्यक)", "(आवश्यक)", "(आवश्यक)", "", "", "(आवश्यक)", "", "", "*", "*", "*", "*", "(आवश्यक)", "(आवश्यक)");
+    var languageCaptionsRequiredKannada = new Array("(ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)", "", "", "(ಅಗತ್ಯವಿದೆ)", "", "", "*", "*", "*", "? (ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)", "(ಅಗತ್ಯವಿದೆ)");
+    var languageCaptionsRequiredTamil = new Array("(தேவை)", "(தேவை)", "(தேவை)", "(தேவை)", "(தேவை)", "(தேவை)", "", "", "(தேவை)", "", "", "*", "*", "*", "*", "(தேவை)", "(தேவை)");
+    var languageCaptionsRequiredTelugu = new Array("(అవసరం)", "(అవసరం)", "(అవసరం)", "(అవసరం)", "(అవసరం)", "(అవసరం)", "", "", "(అవసరం)", "", "", "*", "*", "*", "? (అవసరం)", "(అవసరం)", "(అవసరం)");
+
+    var languageCaptionsText = new Array(languageCaptionsTextEnglish, languageCaptionsTextTelugu, languageCaptionsTextKannada, languageCaptionsTextTamil, languageCaptionsTextHindi);
+    var languageCaptionsRequired = new Array(languageCaptionsRequiredEnglish, languageCaptionsRequiredTelugu, languageCaptionsRequiredKannada, languageCaptionsRequiredTamil, languageCaptionsRequiredHindi);
+
+    //console.log(languageCaptionsText);
+    //console.log(languageCaptionsRequired);
+
+    var languageCaptionsTextId = new Array("lblAspNetRoleUserTypeId", "lblRegisterEmailAddress", "lblRegisterTelephoneCountryId", "lblTelephoneNumber", "lblFirstName", "lblLastName", "lblBuildingTypeId", "lblHouseNumber", "lblDemogInfoAddressModel_AddressLine1", "lblDemogInfoAddressModel_AddressLine2", "lblDemogInfoAddressModel_DemogInfoCountryId", "lblDemogInfoAddressModel_ZipCode", "lblDemogInfoAddressModel_CityName", "lblDemogInfoAddressModel_DemogInfoSubDivisionId", "lblCaptchaAnswerRegisterUser", "lblLoginPassword", "lblConfirmLoginPassword");
+    var languageCaptionsRequiredId = new Array("spnAspNetRoleUserTypeIdRequired", "spnRegisterEmailAddressRequired", "spnRegisterTelephoneCountryIdRequired", "spnTelephoneNumberRequired", "spnFirstNameRequired", "spnLastNameRequired", "", "", "spnDemogInfoAddressModel_AddressLine1Required", "", "", "spnDemogInfoAddressModel_ZipCodeRequired", "spnDemogInfoAddressModel_CityNameRequired", "spnDemogInfoAddressModel_DemogInfoSubDivisionIdRequired", "spnCaptchaAnswerRegisterUserRequired", "spnLoginPasswordRequired", "spnConfirmLoginPasswordRequired");
+
+    //console.log(languageCaptionsTextId);
+    //console.log(languageCaptionsRequiredId);
+
+    language_onchange();
+    $('#DemogInfoAddressModel_ZipCode').bind('input', function () {
+        zipCodeCityName_oninput('DemogInfoAddressModel_');
+    });
+    $('#DemogInfoAddressModel_CityName').bind('input', function () {
+        zipCodeCityName_oninput('DemogInfoAddressModel_');
+    });
+    zipCodeCityName_oninput('DemogInfoAddressModel_');
+    function language_onchange() {
+        var i;
+        var languageSelectedIndex = document.getElementById("language").selectedIndex;
+        for (i = 0; i < languageCaptionsTextId.length; i++) {
+            document.getElementById(languageCaptionsTextId[i]).innerHTML = languageCaptionsText[languageSelectedIndex][i];
+            if (languageCaptionsRequiredId[i] != "") {
+                document.getElementById(languageCaptionsRequiredId[i]).innerText = languageCaptionsRequired[languageSelectedIndex][i];
+            }
+        }
+        for (i = 0; i < document.getElementById("language").options.length; i++) {
+            document.getElementById("divInstructions" + document.getElementById("language").options[i].value).style.display = "none";
+        }
+        document.getElementById("divInstructions" + document.getElementById("language").options[languageSelectedIndex].value).style.display = "block";
+    }
+    function checkPasswordStrength(password) {
+        //console.log("checkPasswordStrength", "1000");
+        password = " " + password + " ";
+        var i, j, errorMessage = "", errorMessageSpecialCharacter;
+        password = password.trim();
+        //console.log(password, password.length, "password");
+        for (i = 0; i < 5; i++) {
+            document.getElementById("passwordStrengthRemove" + i).style.display = "block";
+            document.getElementById("passwordStrengthCheck" + i).style.display = "none";
+        }
+        if (password == "" || password.length == 0) {
+            errorMessage = "Please enter password";
+            return errorMessage;
+        }
+        var validPasswordChars = new Array();
+        var upperCaseList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //Upper Case
+        var lowerCaseList = "abcdefghijklmnopqrstuvwxyz"; //Lower Case
+        var numberList = "0123456789"; //Numbers
+        var specialCharList = "!@@#$%^&*()_"; //Special Characters
+        //console.log(specialCharList, specialCharList.length);
+        for (i = 0; i < upperCaseList.length; i++) {
+            validPasswordChars.push(upperCaseList.substr(i, 1));
+        }
+        for (i = 0; i < lowerCaseList.length; i++) {
+            validPasswordChars.push(lowerCaseList.substr(i, 1));
+        }
+        for (i = 0; i < numberList.length; i++) {
+            validPasswordChars.push(numberList.substr(i, 1));
+        }
+        for (i = 0; i < specialCharList.length; i++) {
+            validPasswordChars.push(specialCharList.substr(i, 1));
+        }
+        for (i = 0; i < password.length; i++) {
+            for (j = 0; j < validPasswordChars.length; j++) {
+                if (password.substr(i, 1) === validPasswordChars[j]) {
+                    break;
+                }
+            }
+            if (j === validPasswordChars.length) {
+                errorMessage = "Invalid character in password;";
+            }
+        }
+        if (password.length >= 6) { //Length
+            document.getElementById("passwordStrengthRemove0").style.display = "none";
+            document.getElementById("passwordStrengthCheck0").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove0").style.display = "block";
+            document.getElementById("passwordStrengthCheck0").style.display = "none";
+            errorMessage += "Invalid length for password;";
+        }
+        if (new RegExp("[A-Z]").test(password)) { //Uppercase
+            document.getElementById("passwordStrengthRemove1").style.display = "none";
+            document.getElementById("passwordStrengthCheck1").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove1").style.display = "block";
+            document.getElementById("passwordStrengthCheck1").style.display = "none";
+            errorMessage += "Uppercase missing in password;";
+        }
+        if (new RegExp("[a-z]").test(password)) { //Lowercase
+            document.getElementById("passwordStrengthRemove2").style.display = "none";
+            document.getElementById("passwordStrengthCheck2").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove2").style.display = "block";
+            document.getElementById("passwordStrengthCheck2").style.display = "none";
+            errorMessage += "Lowercase missing in password;";
+        }
+        if (new RegExp("[0-9]").test(password)) { //Numbers
+            document.getElementById("passwordStrengthRemove3").style.display = "none";
+            document.getElementById("passwordStrengthCheck3").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove3").style.display = "block";
+            document.getElementById("passwordStrengthCheck3").style.display = "none";
+            errorMessage += "Number missing in password;";
+        }
+        errorMessageSpecialCharacter = "Special character missing in password;";
+        for (i = 0; i < password.length; i++) {
+            if (specialCharList.includes(password.substr(i, 1))) {
+                errorMessageSpecialCharacter = "";
+            } else {
+                ;
+            }
+        }
+        if (errorMessageSpecialCharacter === "") {
+            document.getElementById("passwordStrengthRemove4").style.display = "none";
+            document.getElementById("passwordStrengthCheck4").style.display = "block";
+        }
+        else {
+            document.getElementById("passwordStrengthRemove4").style.display = "block";
+            document.getElementById("passwordStrengthCheck4").style.display = "none";
+            errorMessage += errorMessageSpecialCharacter;
+        }
+        return errorMessage;
+    }
+    function getNewOTP_onclick() {
+        console.log("00000000", "resendOTP_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var oTPSendTypeIds, oTPSendTypeId = "", emailAddress;
+        oTPSendTypeIds = document.getElementsByName("OTPSendTypeId");
+        for (var i = 0; i < oTPSendTypeIds.length; i++) {
+            if (oTPSendTypeIds[i].checked) {
+                oTPSendTypeId = oTPSendTypeIds[i].value;
+                break;
+            }
+        }
+        if (oTPSendTypeId === "") {
+            $("#loadingModal").modal('hide');
+            document.getElementById("OTPSendTypeId-error").value = "Select valid OTP Send Type";
+            document.getElementById("OTPSendTypeId-error").innerHTML = "Select valid OTP Send Type";
+            return false;
+        }
+        emailAddress = document.getElementById("EmailAddress").value;
+        var url = "/Home/OTP/" + oTPSendTypeId + "?emailAddress=" + emailAddress;
+        $.ajax({
+            url: url,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            //data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "resendOTP_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("OTPExpiryTime").innerHTML = responseData.oTPExpiryTime;
+                }
+                else {
+                    document.getElementById("OTPExpiryTime").innerHTML = "Error";
+                }
+                //document.getElementById("formLoginUserProfData").innerHTML = responseData;
+                //alert("Login completed successfully!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log(xhr, exception);
+                alert("Error occurred - getting OTP. Please fix errors to continue???");
+            }
+        });
+    }
+    function loginPassword_onblur() {
+    }
+    function loginPassword_oninput() {
+        //console.log(document.getElementById("LoginPassword").value);
+        checkPasswordStrength(document.getElementById("LoginPassword").value);
+    }
+    function loginUserSave_onclick() {
+        console.log("00000000", "loginUserSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/LoginUserProf";
+        var postData = $("#formLoginUserProfData").serialize();
+        document.getElementById("ulErrorMessagesLogin").style.display = "none";
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "loginUserSave_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    window.location = responseData.redirectUrl;
+                }
+                else {
+                    document.getElementById("formLoginUserProfData").innerHTML = responseData.htmlString;
+                    document.getElementById("ulErrorMessagesLogin").style.display = "block";
+                }
+                //document.getElementById("formLoginUserProfData").innerHTML = responseData;
+                //alert("Login completed successfully!!!");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "loginUserSave_onclick", "ERROR???", exception, xhr);
+                document.getElementById("formLoginUserProfData").innerHTML = xhr.responseText;
+                document.getElementById("ulErrorMessagesLogin").style.display = "block";
+                alert("Login encountered errors. Please fix errors to continue???");
+            }
+        });
+    }
+    function registerUserSave_onclick() {
+        console.log("00000000", "registerUserSave_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUser";
+        var postData = $("#formRegisterUserData").serialize();
+        //document.getElementById("ulErrorMessagesRegister").style.display = "none";
+        //document.getElementById("ulSuccessMessagesRegister").style.display = "none";
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "registerUserSave_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("divRegisterUser").innerHTML = responseData.htmlString;
+                    var errorMessage = checkPasswordStrength(document.getElementById("LoginPassword").value);
+                    document.getElementById("LoginPassword-error").value = errorMessage;
+                }
+                else {
+                    document.getElementById("formRegisterUserData").innerHTML = responseData.htmlString;
+                    //    document.getElementById("ulErrorMessagesRegister").style.display = "block";
+                    //    document.getElementById("ulSuccessMessagesRegister").style.display = "none";
+                }
+                document.getElementById("divScrollIntoView").scrollIntoView();
+                console.log("00090000", "registerUserSave_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "registerUserSave_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formRegisterUserData").innerHTML = xhr.responseText;
+                //document.getElementById("ulErrorMessagesRegister").style.display = "block";
+                console.log("00090100", "registerUserSave_onclick error", "Exit");
+                //document.getElementById("divScrollIntoViewRegister").scrollIntoView();
+            }
+        });
+    }
+    function updatePasswordSave_onclick() {
+        console.log("00000000", "updatePasswordSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/UpdatePassword";
+        var postData = $("#formUpdatePasswordData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "updatePasswordSave_onclick success", responseData);
+                if (responseData.success) {
+                    window.location = responseData.redirectUrl;
+                    //document.location.assign(document.location.origin);
+                    //document.getElementById("divUpdatePasswordSuccess").innerHTML = responseData.htmlString;
+                    //window.history.pushState({}, document.title, responseData.redirectUrl);
+                }
+                else {
+                    document.getElementById("formUpdatePasswordData").innerHTML = responseData.htmlString;
+                }
+                console.log("00090000", "updatePasswordSave_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                document.getElementById("formUpdatePasswordData").innerHTML = xhr.responseText;
+            }
+        });
+    }
+</script>

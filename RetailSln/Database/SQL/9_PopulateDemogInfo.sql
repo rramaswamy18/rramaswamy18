@@ -1,5 +1,5 @@
 --0_PopulateDemogInfo
-USE [RetailSln]
+USE [RetailSlnCom]
 GO
 
      UPDATE SalesTaxRate_USAByZip

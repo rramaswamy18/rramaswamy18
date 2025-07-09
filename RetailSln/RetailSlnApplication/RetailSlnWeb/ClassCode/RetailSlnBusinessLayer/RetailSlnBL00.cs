@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using static System.Collections.Specialized.BitVector32;
 
 namespace RetailSlnBusinessLayer
@@ -32,8 +33,36 @@ namespace RetailSlnBusinessLayer
     public partial class RetailSlnBL
     {
         #region GET / POST
+        #region
+        //// GET: AddToCart
+        //public string AddToCart(ref PaymentInfoModel paymentInfoModel, string itemIdParm, string orderQtyParm, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        long.TryParse(itemIdParm, out long itemId);
+        //        //ItemModel itemModel = RetailSlnCache.ItemModels.FirstOrDefault(x => x.ItemId == itemId);
+        //        string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //        return errorMessage;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        ApplicationDataContext.CloseSqlConnection();
+        //    }
+        //}
+        #endregion
         // GET: AddToCart
-        public string AddToCart(ref PaymentInfoModel paymentInfoModel, string itemIdParm, string orderQtyParm, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public string AddToCart(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -41,21 +70,10 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                bool.TryParse(addToCartModel.DoNotBreakBundleParm, out bool doNotBreakBundle);
+                addToCartModel.DoNotBreakBundle = doNotBreakBundle;
                 ApplicationDataContext.OpenSqlConnection();
-                long.TryParse(itemIdParm, out long itemId);
-                ItemModel itemModel = RetailSlnCache.ItemModels.FirstOrDefault(x => x.ItemId == itemId);
-                float? itemRateParm;
-                List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels;
-                if (itemModel?.ItemTypeId == ItemTypeEnum.ItemBundle)
-                {
-                    itemRateParm = AddItemBundleItemsToShoppingCart(itemModel, out shoppingCartItemBundleModels, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                else
-                {
-                    itemRateParm = null;
-                    shoppingCartItemBundleModels = null;
-                }
-                string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, itemRateParm, shoppingCartItemBundleModels, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                string errorMessage = AddToCart(ref paymentInfoModel, addToCartModel, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return errorMessage;
             }
@@ -67,74 +85,6 @@ namespace RetailSlnBusinessLayer
             finally
             {
                 ApplicationDataContext.CloseSqlConnection();
-            }
-        }
-        // GET: AddToCart
-        public string AddToCart(ref PaymentInfoModel paymentInfoModel, string itemIdParm, float? itemRateParm, List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, string orderQtyParm, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            //int x = 1, y = 0, z = x / y;
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                string errorMessage = "";
-                ItemModel itemModel = null;
-                if (long.TryParse(itemIdParm, out long itemId))
-                {
-                    itemModel = RetailSlnCache.ItemModels.FirstOrDefault(x => x.ItemId == itemId);
-                    if (itemModel == null)
-                    {
-                        errorMessage += "Select valid item;";
-                    }
-                }
-                else
-                {
-                    errorMessage += "Select valid item;";
-                }
-                if (!long.TryParse(orderQtyParm, out long orderQty))
-                {
-                    errorMessage += "Enter quantity;";
-                }
-                if (errorMessage == "")
-                {
-                    AddItemToShoppingCart(ref paymentInfoModel, itemModel, itemRateParm, shoppingCartItemBundleModels, orderQty, createOrderWIP, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-                return errorMessage;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-                throw;
-            }
-            finally
-            {
-            }
-        }
-        // POST: AddToCart
-        public string AddToCart2(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            //int x = 1, y = 0, z = x / y;
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                string itemIdParm, orderQtyParm;
-                itemIdParm = addToCartModel.ItemId.ToString();
-                orderQtyParm = addToCartModel.OrderQty.ToString();
-                float itemRateParm = CalculateBundleOrderAmount(addToCartModel.ShoppingCartItemBundleModels, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, itemRateParm, null, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                return errorMessage;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-                throw;
-            }
-            finally
-            {
             }
         }
         // GET: Checkout
@@ -234,14 +184,16 @@ namespace RetailSlnBusinessLayer
             {
                 ArchLibBL archLibBL = new ArchLibBL();
                 string orderFileName = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString();
+                CodeDataModel codeDataModel;
                 if (paymentInfoModel.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
                 {
-                    paymentInfoModel.OrderSummaryModel.InvoiceType = "Tax Invoice";
+                    codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("InvoiceType", execUniqueId).First(x => x.CodeDataNameId == 900);
                 }
                 else
                 {
-                    paymentInfoModel.OrderSummaryModel.InvoiceType = "Order Form";
+                    codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("InvoiceType", execUniqueId).First(x => x.CodeDataNameId == 100);
                 }
+                paymentInfoModel.OrderSummaryModel.InvoiceType = codeDataModel.CodeDataDesc0;
                 orderFileName += "_" + (int)paymentInfoModel.OrderSummaryModel.InvoiceTypeId;
                 paymentInfoModel.OrderSummaryModel.InvoiceFileNamePdf = orderFileName + ".pdf";
                 string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
@@ -322,6 +274,7 @@ namespace RetailSlnBusinessLayer
                     CalculateDeliveryCharges(paymentInfoModel, corpAcctModel, salesTaxListModels, salesTaxCaptionIds, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 CreateShoppingCartTotals(ref paymentInfoModel, 0, "", sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                PaymentInfo4(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.ResponseObjectModel = new ResponseObjectModel
                 {
                     ResponseMessages = new List<string>(),
@@ -350,38 +303,8 @@ namespace RetailSlnBusinessLayer
             }
             return;
         }
-        // GET: ItemMasterAttributes
-        public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, long tabId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ItemMasterAttributesModel itemMasterAttributesModel = new ItemMasterAttributesModel
-                {
-                    ItemMasterId = itemMasterId,
-                    OrderItem1Model = new OrderItem1Model
-                    {
-                        ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId],
-                        ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId),
-                    },
-                    TabId = tabId,
-                };
-                return itemMasterAttributesModel;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-                throw;
-            }
-            finally
-            {
-            }
-        }
-        // GET : ItemBundleItemData
-        public ItemBundleDataModel ItemBundleData(long itemId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // GET : ItemBundleData
+        public ItemBundleDataModel ItemBundleData(long parentItemId, PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -389,11 +312,27 @@ namespace RetailSlnBusinessLayer
             ItemBundleDataModel itemBundleDataModel;
             try
             {
-                var itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId);
+                ShoppingCartItemModel shoppingCartItemModel;
+                List<ShoppingCartItemModel> shoppingCartItemBundleModels = null;
+                ItemModel itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == parentItemId);
+                if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null && paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels != null)
+                {
+                    shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == parentItemId);
+                    if (shoppingCartItemModel != null)
+                    {
+                        shoppingCartItemBundleModels = shoppingCartItemModel.ShoppingCartItemBundleModels;
+                    }
+                }
+                if (shoppingCartItemBundleModels == null)
+                {
+                    shoppingCartItemBundleModels = RetailSlnCache.ParentItemBundleModels[parentItemId].ShoppingCartItemBundleModels;
+                }
                 itemBundleDataModel = new ItemBundleDataModel
                 {
-                    ItemMasterId = itemModel.ItemMasterId,
-                    ItemBundleModel = RetailSlnCache.ItemBundleModels.FirstOrDefault(x => x.ItemId == itemId),
+                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                    ItemModel = itemModel,
+                    ParentItemId = parentItemId,
+                    ShoppingCartItemBundleModels = shoppingCartItemBundleModels,
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseMessages = new List<string>(),
@@ -410,7 +349,7 @@ namespace RetailSlnBusinessLayer
                     {
                         ResponseMessages = new List<string>
                         {
-                            "Error occurred while populating for Item " + itemId,
+                            "Error occurred while populating for Item " + parentItemId,
                             exception.Message,
                         },
                         ResponseTypeId = ResponseTypeEnum.Error,
@@ -447,7 +386,7 @@ namespace RetailSlnBusinessLayer
                 Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                 if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
                 {
-                    aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+                    aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                     aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                 }
                 if (parentCategoryId == 0)
@@ -467,6 +406,39 @@ namespace RetailSlnBusinessLayer
                     },
                 };
                 return orderItemDataModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        // GET: ItemMasterAttributes
+        public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, PaymentInfoModel paymentInfoModel, long tabId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ItemMasterModel itemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId);
+                long itemId = itemMasterModel.ItemModels[0].ItemId.Value;
+                ItemMasterAttributesModel itemMasterAttributesModel = new ItemMasterAttributesModel
+                {
+                    ItemMasterId = itemMasterId,
+                    OrderItem1Model = new OrderItem1Model
+                    {
+                        ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId],
+                        ItemMasterModel = itemMasterModel,
+                        ItemBundleDataModel = ItemBundleData(itemId, paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    },
+                    TabId = tabId,
+                };
+                return itemMasterAttributesModel;
             }
             catch (Exception exception)
             {
@@ -499,7 +471,7 @@ namespace RetailSlnBusinessLayer
                 Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                 if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
                 {
-                    aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+                    aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                     aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                 }
                 if (parentCategoryId == 0)
@@ -538,6 +510,8 @@ namespace RetailSlnBusinessLayer
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 string categoryOrItem = "Item";
+                RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+                itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
                 OrderItemModel orderItemModel = new OrderItemModel
                 {
                     AspNetRoleName = aspNetRoleName,
@@ -548,7 +522,7 @@ namespace RetailSlnBusinessLayer
                     ImageDivWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageDivWidth"),
                     ImageHeight = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageHeight"),
                     ImageWidth = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", categoryOrItem + "ImageWidth"),
-                    ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId],
+                    ItemDiscountModels = itemDiscountModels,
                     PageCount = pageCount,
                     PageNum = pageNum,
                     PageSize = pageSize,
@@ -593,13 +567,13 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
 
-                CreateOrder(paymentInfoModel, "", "", ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                CreateOrder(paymentInfoModel, "", "", "", "", ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.HideShoppingCart = true;
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
 
                 if (paymentInfoModel.OrderHeaderWIPModel != null && paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId != null && paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId != 0)
                 {
-                    DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    OrderWIPDel(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
 
                 string htmlString = "";
@@ -683,11 +657,111 @@ namespace RetailSlnBusinessLayer
 
                     AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
 
-                    CreateOrder(paymentInfoModel, razorpay_order_id, razorpay_payment_id, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CreateOrder(paymentInfoModel, "Ord #", razorpay_order_id, "Ref#:", razorpay_payment_id, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     paymentInfoModel.HideShoppingCart = true;
                     paymentInfoModel.ShoppingCartModel.Checkout = true;
-                    DeleteOrderWIP(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    OrderWIPDel(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : PaymentInfo2
+        public void PaymentInfo4(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {//Stripe
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                ShoppingCartItemModel shoppingCartItemModelBalanceDue;
+                shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+                shoppingCartItemModelBalanceDue.OrderAmountRounded = (long)(shoppingCartItemModelBalanceDue.OrderAmount * 100);
+                paymentInfoModel.ShoppingCartModel.Checkout = true;
+                string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                GetCreditCardKVPs(creditCardProcessor, out Dictionary<string, string> creditCardKVPs, out Dictionary<string, string> creditCardDataKVPs, clientId, ipAddress, execUniqueId, loggedInUserId);
+                paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
+                {
+                    CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmountRounded.ToString(),
+                    CreditCardAmountFormatted = shoppingCartItemModelBalanceDue.OrderAmountFormatted,
+                    CreditCardKVPs = creditCardKVPs,
+                    CreditCardDataKVPs = creditCardDataKVPs,
+                    CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                    CreditCardZipCode = paymentInfoModel.DeliveryAddressModel.ZipCode,
+                    EmailAddress = paymentInfoModel.OrderSummaryModel.EmailAddress,
+                    NameAsOnCard = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim(),
+                    TelephoneNumber = paymentInfoModel.DeliveryDataModel.PrimaryTelephoneNum,
+                    TelephoneNumberCode = paymentInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode,
+                    TelephoneNumberCountryId = paymentInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId,
+                    TelephoneNumberFormatted = paymentInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted,
+                };
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // POST : PaymentInfo3
+        public void PaymentInfo4Success(PaymentInfoModel paymentInfoModel, string paymentIntent_status, string paymentIntent_payment_method, string paymentIntent_id, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {//RazorpayReturn
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                paymentInfoModel.CreditCardDataModel.CreditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                paymentInfoModel.CreditCardDataModel.ProcessMessage = paymentIntent_status;
+                paymentInfoModel.CreditCardDataModel.RequestData = "";
+                string responseDataJsonString = "";
+                responseDataJsonString += "{" + Environment.NewLine;
+                responseDataJsonString += "CreditCardAmount: \"" + paymentInfoModel.CreditCardDataModel.CreditCardAmount + "\"" + Environment.NewLine;
+                responseDataJsonString += "paymentIntent_payment_method: \"" + paymentIntent_payment_method + "\"" + Environment.NewLine;
+                responseDataJsonString += "paymentIntent_id: \"" + paymentIntent_id + "\"" + Environment.NewLine;
+                responseDataJsonString += "}" + Environment.NewLine;
+                paymentInfoModel.CreditCardDataModel.ResponseData = responseDataJsonString;
+                paymentInfoModel.CreditCardDataModel.StatusNameDesc = "SUCCESS";
+                creditCardServiceBL.CreateCreditCardData(paymentInfoModel.CreditCardDataModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+
+                ShoppingCartItemModel shoppingCartItemModelAmountPaid, shoppingCartItemModelBalanceDue;//, shoppingCartItemModelTotalInvoiceAmount;
+                shoppingCartItemModelAmountPaid = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
+                shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+
+                shoppingCartItemModelAmountPaid.OrderAmount = shoppingCartItemModelBalanceDue.OrderAmount;
+                shoppingCartItemModelAmountPaid.OrderAmountFormatted = shoppingCartItemModelAmountPaid.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                shoppingCartItemModelAmountPaid.OrderComments = "Id " + paymentIntent_id + "; Method " + paymentIntent_payment_method;
+
+                shoppingCartItemModelBalanceDue.OrderAmount = 0;
+                shoppingCartItemModelBalanceDue.OrderAmountFormatted = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+
+                paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid = shoppingCartItemModelAmountPaid.OrderAmount;
+                paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaidFormatted = shoppingCartItemModelAmountPaid.OrderAmountFormatted;
+                paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = shoppingCartItemModelBalanceDue.OrderAmount;
+                paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = shoppingCartItemModelBalanceDue.OrderAmountFormatted;
+
+                AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+
+                CreateOrder(paymentInfoModel, "Id", paymentIntent_id, "Method", paymentIntent_payment_method, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                paymentInfoModel.HideShoppingCart = true;
+                paymentInfoModel.ShoppingCartModel.Checkout = true;
+                OrderWIPDel(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return;
             }
             catch (Exception exception)
@@ -752,7 +826,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // GET : SearchResult
-        public SearchResultModel SearchResult(string searchKeywordText, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public SearchResultModel SearchResult(string searchKeywordText, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -761,6 +835,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
+                long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 searchResultModel = new SearchResultModel
                 {
                     SearchKeywordText = searchKeywordText,
@@ -771,6 +846,7 @@ namespace RetailSlnBusinessLayer
                     },
                     ItemMasterListModel = new ItemMasterListModel
                     {
+                        ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId],
                         ItemMasterModels = new List<ItemMasterModel>(),
                     },
                     ResponseObjectModel = new ResponseObjectModel
@@ -817,14 +893,23 @@ namespace RetailSlnBusinessLayer
             return searchResultModel;
         }
         // GET : ShoppingCartComments
-        public void ShoppingCartComments(PaymentInfoModel paymentInfoModel, int index, string orderComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void ShoppingCartComments(PaymentInfoModel paymentInfoModel, string indexParm, string bundleIndexParm, string orderComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels[index].OrderComments = orderComments;
+                int.TryParse(indexParm, out int index);
+                int.TryParse(bundleIndexParm, out int bundleIndex);
+                if (bundleIndex == -1)
+                {
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels[index].OrderComments = orderComments;
+                }
+                else
+                {
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels[index].ShoppingCartItemBundleModels[bundleIndex].OrderComments = orderComments;
+                }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
             }
@@ -1042,6 +1127,107 @@ namespace RetailSlnBusinessLayer
             }
             return;
         }
+        #region
+        //// PUBLIC: CreateOrderWIP
+        //public void CreateOrderWIP(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //From session write to database items in shopping cart
+        //    //Clear shopping cart from session
+        //    //Load shopping cart from database into session
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        SqlConnection sqlConnection = ApplicationDataContext.SqlConnectionObject;
+        //        ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+        //        long? orderHeaderWIPId;
+        //        float maxSeqNum;
+        //        OrderHeaderWIPModel orderHeaderWIPModel;
+        //        if (paymentInfoModel?.ShoppingCartModel?.ShoppingCartItemModels?.Count > 0)
+        //        {//If Session has items add it to database - This has been added prior to logging in
+        //            //Get Max Order Header Id for the created for user
+        //            orderHeaderWIPId = ApplicationDataContext.OrderHeaderWIPMaxIdGet(createForSessionObject.PersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (orderHeaderWIPId.HasValue)
+        //            {
+        //                maxSeqNum = ApplicationDataContext.OrderDetailWIPMaxSeqNumGet(orderHeaderWIPId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                //orderHeaderWIPModel = ApplicationDataContext.OrderHeaderWIPGet(orderHeaderWIPId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //            else
+        //            {
+        //                maxSeqNum = 0;
+        //                orderHeaderWIPModel = OrderHeaderWIPModelCreate(applSessionObjectModel.CorpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                ApplicationDataContext.OrderHeaderWIPAdd(orderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                orderHeaderWIPId = orderHeaderWIPModel.OrderHeaderWIPId;
+        //            }
+        //            OrderDetailWIPModel orderDetailWIPModelTemp;
+        //            foreach (var shoppingCartItemModel in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels)
+        //            {
+        //                orderDetailWIPModelTemp = new OrderDetailWIPModel
+        //                {
+        //                    ClientId = clientId,
+        //                    ItemId = shoppingCartItemModel.ItemId.Value,
+        //                    ItemRate = shoppingCartItemModel.ItemRate.Value,
+        //                    OrderHeaderWIPId = orderHeaderWIPId.Value,
+        //                    OrderQty = shoppingCartItemModel.OrderQty.Value,
+        //                    ParentItemId = shoppingCartItemModel.ParentItemId.Value,
+        //                    SeqNum = ++maxSeqNum,
+        //                    ShoppingCartItemBundleModels = new List<OrderDetailWIPModel>(),
+        //                };
+        //                ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModelTemp, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                //if (shoppingCartItemModel.ParentItemId == 0)
+        //                //{
+        //                //}
+        //                //else
+        //                //{
+        //                //    foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
+        //                //    {
+        //                //        new OrderDetailWIPModel
+        //                //        {
+        //                //            ClientId = clientId,
+        //                //            ItemId = shoppingCartItemBundleModel.ItemId.Value,
+        //                //            ItemRate = shoppingCartItemBundleModel.ItemRate.Value,
+        //                //            OrderHeaderWIPId = orderHeaderWIPId.Value,
+        //                //            OrderQty = shoppingCartItemBundleModel.OrderQty.Value,
+        //                //            ParentItemId = shoppingCartItemModel.ItemId.Value,
+        //                //            SeqNum = ++maxSeqNum,
+        //                //            ShoppingCartItemBundleModels = null,
+        //                //        };
+        //                //        ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModelTemp, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                //    }
+        //                //}
+        //            }
+        //            paymentInfoModel.ShoppingCartModel = null;
+        //            CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        }
+        //        orderHeaderWIPId = ApplicationDataContext.OrderHeaderWIPMaxIdGet(createForSessionObject.PersonId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (orderHeaderWIPId.HasValue)
+        //        {
+        //            paymentInfoModel.OrderHeaderWIPModel = ApplicationDataContext.OrderHeaderWIPGet(orderHeaderWIPId.Value, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            foreach (var orderDetailWIPModel in paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels)
+        //            {
+        //                paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum = orderDetailWIPModel.SeqNum;
+        //                AddToCart(ref paymentInfoModel, orderDetailWIPModel.ItemId.ToString(), orderDetailWIPModel.OrderQty.ToString(), false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //        }
+        //        CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        httpSessionStateBase["PaymentInfo"] = paymentInfoModel;
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        ApplicationDataContext.CloseSqlConnection();
+        //    }
+        //}
+        #endregion
         // PUBLIC: CreateOrderWIP
         public void CreateOrderWIP(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -1073,7 +1259,7 @@ namespace RetailSlnBusinessLayer
                     else
                     {
                         maxSeqNum = 0;
-                        orderHeaderWIPModel = CreateOrderHeaderWIPModel(applSessionObjectModel.CorpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        orderHeaderWIPModel = OrderHeaderWIPModelCreate(applSessionObjectModel.CorpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                         ApplicationDataContext.OrderHeaderWIPAdd(orderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                         orderHeaderWIPId = orderHeaderWIPModel.OrderHeaderWIPId;
                     }
@@ -1087,9 +1273,32 @@ namespace RetailSlnBusinessLayer
                             ItemRate = shoppingCartItemModel.ItemRate.Value,
                             OrderHeaderWIPId = orderHeaderWIPId.Value,
                             OrderQty = shoppingCartItemModel.OrderQty.Value,
+                            ParentItemId = shoppingCartItemModel.ParentItemId.Value,
                             SeqNum = ++maxSeqNum,
+                            ShoppingCartItemBundleModels = new List<OrderDetailWIPModel>(),
                         };
                         ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModelTemp, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //if (shoppingCartItemModel.ParentItemId == 0)
+                        //{
+                        //}
+                        //else
+                        //{
+                        //    foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
+                        //    {
+                        //        new OrderDetailWIPModel
+                        //        {
+                        //            ClientId = clientId,
+                        //            ItemId = shoppingCartItemBundleModel.ItemId.Value,
+                        //            ItemRate = shoppingCartItemBundleModel.ItemRate.Value,
+                        //            OrderHeaderWIPId = orderHeaderWIPId.Value,
+                        //            OrderQty = shoppingCartItemBundleModel.OrderQty.Value,
+                        //            ParentItemId = shoppingCartItemModel.ItemId.Value,
+                        //            SeqNum = ++maxSeqNum,
+                        //            ShoppingCartItemBundleModels = null,
+                        //        };
+                        //        ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModelTemp, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //    }
+                        //}
                     }
                     paymentInfoModel.ShoppingCartModel = null;
                     CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -1101,7 +1310,12 @@ namespace RetailSlnBusinessLayer
                     foreach (var orderDetailWIPModel in paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels)
                     {
                         paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum = orderDetailWIPModel.SeqNum;
-                        AddToCart(ref paymentInfoModel, orderDetailWIPModel.ItemId.ToString(), orderDetailWIPModel.ItemRate, null, orderDetailWIPModel.OrderQty.ToString(), false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        AddToCartModel addToCartModel = new AddToCartModel
+                        {
+                            ItemIdParm = orderDetailWIPModel.ItemId.ToString(),
+                            OrderQtyParm = orderDetailWIPModel.OrderQty.ToString(),
+                        };
+                        AddToCart(ref paymentInfoModel, addToCartModel, false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                 }
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -1121,63 +1335,193 @@ namespace RetailSlnBusinessLayer
         #endregion
 
         #region PRIVATE
-        // PRIVATE : AddItemBundleItemsToShoppingCart
-        private float AddItemBundleItemsToShoppingCart(ItemModel itemModel, out List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            ItemBundleModel itemBundleModel = RetailSlnCache.ItemBundleModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
-            List<ItemBundleItemModel> itemBundleItemModels = itemBundleModel.ItemBundleItemModels;
-            shoppingCartItemBundleModels = new List<ShoppingCartItemBundleModel>();
-            float itemRateParm = 0;
-            foreach (var itemBundleItemModel in itemBundleModel.ItemBundleItemModels)
-            {
-                itemRateParm += itemBundleItemModel.ItemModel.ItemRate.Value;
-                shoppingCartItemBundleModels.Add
-                (
-                    new ShoppingCartItemBundleModel
-                    {
-                        ItemBundleId = itemBundleItemModel.ItemId,
-                        ItemBundleItemId = itemBundleItemModel.ItemBundleItemId,
-                        ItemId = itemBundleItemModel.ItemId,
-                        ItemTypeId = itemModel.ItemTypeId.Value,
-                        OrderAmount = itemModel.ItemRate.Value,
-                        OrderQty = 1,
-                        Quantity = itemBundleItemModel.Quantity,
-                    }
-                );
-            }
-            return itemRateParm;
-        }
+        #region
         // PRIVATE : AddItemToShoppingCart
-        private void AddItemToShoppingCart(ref PaymentInfoModel paymentInfoModel, ItemModel itemModel, float? itemRateParm, List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, long orderQty, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //private void AddItemToShoppingCart(ref PaymentInfoModel paymentInfoModel, ItemModel itemModel, long orderQty, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ShoppingCartItemModel shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
+        //        if (shoppingCartItemModel == null)
+        //        {
+        //            CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, orderQty, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
+        //            if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createOrderWIP)
+        //            {
+        //                ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+        //                OrderWIPAdd(ref paymentInfoModel, applSessionObjectModel.CorpAcctLocationId, itemModel, orderQty, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, shoppingCartItemModel.OrderQty + orderQty, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (createForSessionObject != null && createOrderWIP)
+        //            {
+        //                ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+        //                OrderDetailWIPUpdate(ref paymentInfoModel, itemModel.ItemId.Value, shoppingCartItemModel.OrderQty.Value, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //        }
+        //        CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
+        // PRIVATE : AddItemToShoppingCart
+        private void AddItemToShoppingCart(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ShoppingCartItemModel shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == itemModel.ItemId);
-                if (shoppingCartItemModel == null)
+                long parentItemId;
+                if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                 {
-                    CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, itemRateParm, shoppingCartItemBundleModels, orderQty/*, sqlConnection*/, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
-                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createOrderWIP)
+                    if (addToCartModel.DoNotBreakBundle)
                     {
-                        ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
-                        CreateOrderWIP(ref paymentInfoModel, applSessionObjectModel.CorpAcctLocationId, itemModel.ItemId.Value, itemModel.ItemRate.Value, orderQty, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        parentItemId = 0;
+                    }
+                    else
+                    {
+                        parentItemId = addToCartModel.ItemId;
                     }
                 }
                 else
                 {
-                    CreateShoppingCartItemModel(ref shoppingCartItemModel, itemModel, itemRateParm, shoppingCartItemBundleModels, shoppingCartItemModel.OrderQty + orderQty/*, sqlConnection*/, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (createForSessionObject != null && createOrderWIP)
+                    parentItemId = 0;
+                }
+                CreatePaymentInfoModel(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ShoppingCartItemModel shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == addToCartModel.ItemId && x.ParentItemId == parentItemId);
+                if (shoppingCartItemModel == null)
+                {
+                    CreateShoppingCartItemModel(ref shoppingCartItemModel, addToCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
+                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createOrderWIP)
                     {
-                        ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
-                        UpdateOrderDetailWIP(ref paymentInfoModel, itemModel.ItemId.Value, shoppingCartItemModel.OrderQty.Value, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+                        //OrderWIPAdd(ref paymentInfoModel, applSessionObjectModel.CorpAcctLocationId, addToCartModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                }
+                else
+                {
+                    CreateShoppingCartItemModel(ref shoppingCartItemModel, addToCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createOrderWIP)
+                    {
+                        ////ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+                        //OrderDetailWIPUpdate(ref paymentInfoModel, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                 }
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        #region
+        // PRIVATE: AddToCart
+        //private string AddToCart(ref PaymentInfoModel paymentInfoModel, string itemIdParm, string orderQtyParm, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        string errorMessage = "";
+        //        ItemModel itemModel = null;
+        //        if (long.TryParse(itemIdParm, out long itemId))
+        //        {
+        //            itemModel = RetailSlnCache.ItemModels.FirstOrDefault(x => x.ItemId == itemId);
+        //            if (itemModel == null)
+        //            {
+        //                errorMessage += "Select valid item;";
+        //            }
+        //        }
+        //        else
+        //        {
+        //            errorMessage += "Select valid item;";
+        //        }
+        //        if (!long.TryParse(orderQtyParm, out long orderQty))
+        //        {
+        //            errorMessage += "Enter quantity;";
+        //        }
+        //        if (errorMessage == "")
+        //        {
+        //            AddItemToShoppingCart(ref paymentInfoModel, itemModel, orderQty, createOrderWIP, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //        return errorMessage;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
+        // PRIVATE: AddToCart
+        private string AddToCart(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string errorMessage = "";
+                ItemModel itemModel = null;
+                if (long.TryParse(addToCartModel.ItemIdParm, out long itemId))
+                {
+                    addToCartModel.ItemId = itemId;
+                    itemModel = RetailSlnCache.ItemModels.FirstOrDefault(x => x.ItemId == addToCartModel.ItemId);
+                    if (itemModel == null)
+                    {
+                        errorMessage += "Select valid item;";
+                    }
+                    else
+                    {
+                        addToCartModel.ItemModel = itemModel;
+                    }
+                }
+                else
+                {
+                    errorMessage += "Select valid item;";
+                }
+                if (!long.TryParse(addToCartModel.OrderQtyParm, out long orderQty))
+                {
+                    errorMessage += "Enter quantity;";
+                }
+                else
+                {
+                    addToCartModel.OrderQty = orderQty;
+                }
+                if (errorMessage == "")
+                {
+                    AddItemToShoppingCart(ref paymentInfoModel, addToCartModel, createOrderWIP, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return errorMessage;
             }
             catch (Exception exception)
             {
@@ -1223,29 +1567,6 @@ namespace RetailSlnBusinessLayer
             }
             finally
             {
-            }
-        }
-        // PRIVATE : CalculateBundleOrderAmount
-        private float CalculateBundleOrderAmount(List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                float orderAmount = 0;
-                ItemModel itemModel;
-                foreach (var shoppingCartItemBundleModel in shoppingCartItemBundleModels)
-                {
-                    itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItemBundleModel.ItemId);
-                    orderAmount += (shoppingCartItemBundleModel.OrderQty * itemModel.ItemRate.Value);
-                }
-                return orderAmount;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
             }
         }
         // PRIVATE : CalculateDiscounts
@@ -1559,7 +1880,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE: CreateOrder
-        private void CreateOrder(PaymentInfoModel paymentInfoModel, string paymentOrderId, string paymentId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateOrder(PaymentInfoModel paymentInfoModel, string paymentOrderIdCaption, string paymentOrderId, string paymentIdCaption, string paymentId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1577,18 +1898,21 @@ namespace RetailSlnBusinessLayer
                 orderHeaderSummary.OrderHeaderId = orderHeader.OrderHeaderId;
                 ApplicationDataContext.OrderHeaderSummaryAdd(orderHeaderSummary, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 OrderDetail orderDetail;
-                OrderDetailItemBundle orderDetailItemBundle;
-                int seqNum = 0, seqNumBundle = 0;
-                foreach (var shoppingCartItem in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary)
+                //OrderDetailItemBundle orderDetailItemBundle;
+                float seqNum = 0;
+                foreach (var shoppingCartItem in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels)
                 {
                     orderDetail = CreateOrderDetail(orderHeaderSummary.OrderHeaderSummaryId, ++seqNum, shoppingCartItem, clientId, ipAddress, execUniqueId, loggedInUserId);
                     ApplicationDataContext.OrderDetailAdd(orderDetail, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (shoppingCartItem.ItemBundleModel != null)
+                    if (shoppingCartItem.ShoppingCartItemBundleModels != null)
                     {
-                        foreach (var itemBundleItemModel in shoppingCartItem.ItemBundleModel.ItemBundleItemModels)
+                        foreach (var shoppingCartItemBundleModel in shoppingCartItem.ShoppingCartItemBundleModels)
                         {
-                            orderDetailItemBundle = CreateOrderDetailItemBundleItem(orderDetail.OrderDetailId, shoppingCartItem.OrderQty.Value, ++seqNumBundle, shoppingCartItem.ItemBundleModel, itemBundleItemModel, clientId, ipAddress, execUniqueId, loggedInUserId);
-                            ApplicationDataContext.OrderDetailItemBundleAdd(orderDetailItemBundle, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            //orderDetail = CreateOrderDetail(orderDetail.OrderDetailId, ++seqNum, shoppingCartItemBundleModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            //ApplicationDataContext.OrderDetailItemBundleAdd(orderDetailItemBundle, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            //orderDetail = CreateOrderDetail(orderHeaderSummary.OrderHeaderSummaryId, ++seqNum, shoppingCartItem, shoppingCartItemBundleModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            orderDetail = CreateOrderDetail(orderHeaderSummary.OrderHeaderSummaryId, ++seqNum, shoppingCartItemBundleModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+                            ApplicationDataContext.OrderDetailAdd(orderDetail, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                         }
                     }
                 }
@@ -1611,9 +1935,9 @@ namespace RetailSlnBusinessLayer
                     GiftCertId = 0,
                     OrderHeaderId = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value,
                     PaymentModeId = (long)paymentInfoModel.PaymentModeModel.PaymentModeId,
-                    PaymentRefNumCaption1 = string.IsNullOrWhiteSpace(paymentId) ? "" : "Ref#:",
+                    PaymentRefNumCaption1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentIdCaption,
                     PaymentRefNumData1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentId,
-                    PaymentRefNumCaption2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : "Ord#",
+                    PaymentRefNumCaption2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderIdCaption,
                     PaymentRefNumData2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderId,
                 };
                 ApplicationDataContext.OrderPaymentAdd(paymentInfoModel.PaymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -1631,7 +1955,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE: CreateOrderDetail
-        private OrderDetail CreateOrderDetail(long orderHeaderSummaryId, int seqNum, ShoppingCartItemModel shoppingCartItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private OrderDetail CreateOrderDetail(long orderHeaderSummaryId, float seqNum, ShoppingCartItemModel shoppingCartItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1643,13 +1967,20 @@ namespace RetailSlnBusinessLayer
                 {
                     ClientId = clientId,
                     DimensionUnitId = DimensionUnitEnum.Centimeter,
+                    DiscountPercent = shoppingCartItemModel.ItemDiscountPercent == null ? 0 :shoppingCartItemModel.ItemDiscountPercent.Value,
+                    DiscountPercentOriginal = shoppingCartItemModel.ItemDiscountPercent == null ? 0 : shoppingCartItemModel.ItemDiscountPercent.Value,
                     HeightValue = shoppingCartItemModel.HeightValue == null ? 0 : shoppingCartItemModel.HeightValue.Value,
                     HSNCode = shoppingCartItemModel.HSNCode,
                     ItemDiscountAmount = shoppingCartItemModel.ItemDiscountAmount == null ? 0 : shoppingCartItemModel.ItemDiscountAmount.Value,
                     ItemId = shoppingCartItemModel.ItemId,
+                    ItemItemSpecsForDisplay = shoppingCartItemModel.ItemItemSpecsForDisplay,
+                    ItemMasterDesc0 = shoppingCartItemModel.ItemMasterDesc0,
+                    ItemMasterDesc1 = shoppingCartItemModel.ItemMasterDesc1,
+                    ItemMasterDesc2 = shoppingCartItemModel.ItemMasterDesc2,
+                    ItemMasterDesc3 = shoppingCartItemModel.ItemMasterDesc3,
                     ItemRate = shoppingCartItemModel.ItemRate == null ? 0 : shoppingCartItemModel.ItemRate.Value,
                     ItemRateBeforeDiscount = shoppingCartItemModel.ItemRateBeforeDiscount == null ? 0 : shoppingCartItemModel.ItemRateBeforeDiscount.Value,
-                    ItemShortDesc = shoppingCartItemModel.ItemShortDesc,
+                    ItemRateOriginal = shoppingCartItemModel.ItemRate == null ? 0 : shoppingCartItemModel.ItemRate.Value,
                     LengthValue = shoppingCartItemModel.LengthValue == null ? 0 : shoppingCartItemModel.LengthValue.Value,
                     OrderAmount = shoppingCartItemModel.OrderAmount == null ? 0 : shoppingCartItemModel.OrderAmount.Value,
                     OrderAmountBeforeDiscount = shoppingCartItemModel.OrderAmountBeforeDiscount == null ? 0 : shoppingCartItemModel.OrderAmountBeforeDiscount.Value,
@@ -1657,6 +1988,7 @@ namespace RetailSlnBusinessLayer
                     OrderDetailTypeId = shoppingCartItemModel.OrderDetailTypeId,
                     OrderHeaderSummaryId = orderHeaderSummaryId,
                     OrderQty = shoppingCartItemModel.OrderQty == null ? 0 : shoppingCartItemModel.OrderQty.Value,
+                    ParentItemId = shoppingCartItemModel.ParentItemId == null ? 0 : shoppingCartItemModel.ParentItemId.Value,
                     ProductCode = shoppingCartItemModel.ProductCode,
                     ProductOrVolumetricWeight = shoppingCartItemModel.ProductOrVolumetricWeight == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeight.Value,
                     ProductOrVolumetricWeightUnitId = shoppingCartItemModel.ProductOrVolumetricWeightUnitId == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeightUnitId.Value,
@@ -1666,6 +1998,7 @@ namespace RetailSlnBusinessLayer
                     WeightCalcValue = shoppingCartItemModel.WeightCalcValue == null ? 0 : shoppingCartItemModel.WeightCalcValue.Value,
                     WeightUnitId = shoppingCartItemModel.WeightUnitId == null ? 0 : shoppingCartItemModel.WeightUnitId.Value,
                     WeightValue = shoppingCartItemModel.WeightValue == null ? 0 : shoppingCartItemModel.WeightValue.Value,
+                    WidthValue = shoppingCartItemModel.WidthValue == null ? 0 : shoppingCartItemModel.WidthValue.Value,
                 };
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return orderDetail;
@@ -1679,30 +2012,63 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
-        // PRIVATE: CreateOrderDetailItemBundleItem
-        private OrderDetailItemBundle CreateOrderDetailItemBundleItem(long orderDetailId, long orderQty, int seqNum, ItemBundleModel itemBundleModel, ItemBundleItemModel itemBundleItemModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // PRIVATE: CreateOrderDetail
+        private OrderDetail CreateOrderDetail(long orderHeaderSummaryId, float seqNum, ShoppingCartItemModel shoppingCartItemModel, ShoppingCartItemModel shoppingCartItemBundleModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            float itemRate = itemBundleItemModel.ItemModel.ItemRate.Value;
-            float itemRateBeforeDiscount = itemRate * (100 - itemBundleModel.DiscountPercent) / 100;
-            float orderAmount = itemRate * orderQty;
-            float orderAmountBeforeDiscount = itemRateBeforeDiscount * orderQty;
-            OrderDetailItemBundle orderDetailItemBundle = new OrderDetailItemBundle
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
             {
-                ClientId = clientId,
-                DiscountPercent = itemBundleModel.DiscountPercent,
-                ItemBundleId = itemBundleModel.ItemBundleId,
-                ItemBundleItemId = itemBundleItemModel.ItemBundleItemId,
-                ItemId = itemBundleItemModel.ItemId,
-                ItemMasterDesc = itemBundleItemModel.ItemModel.ItemMasterModel.ItemMasterDesc,
-                ItemRate = itemRate,
-                ItemRateBeforeDiscount = itemRateBeforeDiscount,
-                OrderAmount = orderAmount,
-                OrderAmountBeforeDiscount = orderAmountBeforeDiscount,
-                OrderDetailId = orderDetailId,
-                OrderQty = orderQty,
-                SeqNum = seqNum,
-            };
-            return orderDetailItemBundle;
+                //int x = 1, y = 0, z = x / y;
+                OrderDetail orderDetail = new OrderDetail
+                {
+                    ClientId = clientId,
+                    DimensionUnitId = DimensionUnitEnum.Centimeter,
+                    DiscountPercent = shoppingCartItemModel.ItemDiscountPercent == null ? 0 : shoppingCartItemModel.ItemDiscountPercent.Value,
+                    DiscountPercentOriginal = shoppingCartItemModel.ItemDiscountPercent == null ? 0 : shoppingCartItemModel.ItemDiscountPercent.Value,
+                    HeightValue = shoppingCartItemModel.HeightValue == null ? 0 : shoppingCartItemModel.HeightValue.Value,
+                    HSNCode = shoppingCartItemModel.HSNCode,
+                    ItemDiscountAmount = shoppingCartItemModel.ItemDiscountAmount == null ? 0 : shoppingCartItemModel.ItemDiscountAmount.Value,
+                    ItemId = shoppingCartItemModel.ItemId,
+                    ItemItemSpecsForDisplay = shoppingCartItemModel.ItemItemSpecsForDisplay,
+                    ItemMasterDesc0 = shoppingCartItemModel.ItemMasterDesc0,
+                    ItemMasterDesc1 = shoppingCartItemModel.ItemMasterDesc1,
+                    ItemMasterDesc2 = shoppingCartItemModel.ItemMasterDesc2,
+                    ItemMasterDesc3 = shoppingCartItemModel.ItemMasterDesc3,
+                    ItemRate = shoppingCartItemModel.ItemRate == null ? 0 : shoppingCartItemModel.ItemRate.Value,
+                    ItemRateBeforeDiscount = shoppingCartItemModel.ItemRateBeforeDiscount == null ? 0 : shoppingCartItemModel.ItemRateBeforeDiscount.Value,
+                    ItemRateOriginal = shoppingCartItemModel.ItemRate == null ? 0 : shoppingCartItemModel.ItemRate.Value,
+                    LengthValue = shoppingCartItemModel.LengthValue == null ? 0 : shoppingCartItemModel.LengthValue.Value,
+                    OrderAmount = shoppingCartItemModel.OrderAmount == null ? 0 : shoppingCartItemModel.OrderAmount.Value,
+                    OrderAmountBeforeDiscount = shoppingCartItemModel.OrderAmountBeforeDiscount == null ? 0 : shoppingCartItemModel.OrderAmountBeforeDiscount.Value,
+                    OrderComments = shoppingCartItemModel.OrderComments,
+                    OrderDetailTypeId = shoppingCartItemModel.OrderDetailTypeId,
+                    OrderHeaderSummaryId = orderHeaderSummaryId,
+                    OrderQty = shoppingCartItemModel.OrderQty == null ? 0 : shoppingCartItemModel.OrderQty.Value,
+                    ParentItemId = shoppingCartItemModel.ParentItemId == null ? 0 : shoppingCartItemModel.ParentItemId.Value,
+                    ProductCode = shoppingCartItemModel.ProductCode,
+                    ProductOrVolumetricWeight = shoppingCartItemModel.ProductOrVolumetricWeight == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeight.Value,
+                    ProductOrVolumetricWeightUnitId = shoppingCartItemModel.ProductOrVolumetricWeightUnitId == null ? 0 : shoppingCartItemModel.ProductOrVolumetricWeightUnitId.Value,
+                    SeqNum = seqNum,
+                    VolumeValue = shoppingCartItemModel.VolumeValue == null ? 0 : shoppingCartItemModel.VolumeValue.Value,
+                    WeightCalcUnitId = shoppingCartItemModel.WeightCalcUnitId == null ? 0 : shoppingCartItemModel.WeightCalcUnitId.Value,
+                    WeightCalcValue = shoppingCartItemModel.WeightCalcValue == null ? 0 : shoppingCartItemModel.WeightCalcValue.Value,
+                    WeightUnitId = shoppingCartItemModel.WeightUnitId == null ? 0 : shoppingCartItemModel.WeightUnitId.Value,
+                    WeightValue = shoppingCartItemModel.WeightValue == null ? 0 : shoppingCartItemModel.WeightValue.Value,
+                    WidthValue = shoppingCartItemModel.WidthValue == null ? 0 : shoppingCartItemModel.WidthValue.Value,
+                };
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return orderDetail;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
         }
         // PRIVATE: CreateOrderHeader
         private OrderHeader CreateOrderHeader(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -1816,7 +2182,6 @@ namespace RetailSlnBusinessLayer
                 }
                 orderItemFileModel.CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels;
                 orderItemFileModel.CategoryItemMasterHierModels = categoryItemMasterHierModels;
-                orderItemFileModel.ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId];
                 orderItemFileModel.ParentCategoryId = null;
                 orderItemFileModel.ParentCategoryDesc = parentCategoryDesc;
                 htmlString = archLibBL.ViewToHtmlString(controller, "_OrderItemFile", orderItemFileModel);
@@ -1824,73 +2189,6 @@ namespace RetailSlnBusinessLayer
                 streamWriter.Write(htmlString);
                 streamWriter.Close();
             }
-        }
-        // PRIVATE: CreateOrderWIP
-        private void CreateOrderWIP(ref PaymentInfoModel paymentInfoModel, long corpAcctLocationId, long itemId, float itemRate, long orderQty, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                if (sessionObjectModel == null || createForSessionObject == null)
-                {
-                }
-                else
-                {
-                    if (paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId == null)
-                    {
-                        //Create Order Header WIP
-                        paymentInfoModel.OrderHeaderWIPModel = CreateOrderHeaderWIPModel(corpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        ApplicationDataContext.OrderHeaderWIPAdd(paymentInfoModel.OrderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                    OrderDetailWIPModel orderDetailWIPModel;
-                    paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.Add
-                    (
-                        orderDetailWIPModel = new OrderDetailWIPModel
-                        {
-                            ClientId = clientId,
-                            ItemId = itemId,
-                            ItemRate = itemRate,
-                            OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
-                            OrderQty = orderQty,
-                            SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
-                        }
-                    );
-                    ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-            }
-        }
-        // PRIVATE : CreateOrderHeaderWIPModel
-        private OrderHeaderWIPModel CreateOrderHeaderWIPModel(long corpAcctLocationId, InvoiceTypeEnum? invoiceTypeId, string orderDateTime, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            OrderHeaderWIPModel orderHeaderWIPModel = new OrderHeaderWIPModel
-            {
-                ClientId = clientId,
-                CorpAcctLocationId = corpAcctLocationId,
-                CreatedForPersonId = createForSessionObject.PersonId,
-                InvoiceTypeId = (long)invoiceTypeId,
-                MaxSeqNum = 0,
-                OrderDateTime = orderDateTime,
-                OrderStatusId = null,
-                PersonId = sessionObjectModel.PersonId,
-                OrderDetailWIPModels = new List<OrderDetailWIPModel>()
-            };
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return orderHeaderWIPModel;
         }
         // PRIVATE : CreatePaymentInfoModel
         private void CreatePaymentInfoModel(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -1916,13 +2214,6 @@ namespace RetailSlnBusinessLayer
                 {
                     new ShoppingCartItemModel
                     {
-                        ItemId = null,
-                        ItemRate = null,
-                        ItemRateBeforeDiscount = null,
-                        ItemShortDesc = null,
-                        OrderAmount = null,
-                        OrderAmountBeforeDiscount = null,
-                        OrderComments = null,
                         OrderQty = 1,
                         OrderDetailTypeId = OrderDetailTypeEnum.TotalOrderAmount,
                     }
@@ -1942,61 +2233,422 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
+        #region
+        //// PRIVATE : CreateShoppingCartItemModel
+        //private void CreateShoppingCartItemModel(ref ShoppingCartItemModel shoppingCartItemModel, ItemModel itemModel, long? orderQty, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //    long parentItemId;
+        //    float? itemRate, itemRateBeforeDiscount, orderAmount, orderAmountBeforeDiscount;
+        //    ItemDiscountModel itemDiscountModel;
+        //    List<ShoppingCartItemModel> shoppingCartItemBundleModels;
+        //    if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        //    {
+        //        parentItemId = itemModel.ItemId.Value;
+        //        shoppingCartItemBundleModels = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
+        //        itemRateBeforeDiscount = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].TotalOrderAmount;
+        //    }
+        //    else
+        //    {
+        //        parentItemId = 0;
+        //        shoppingCartItemBundleModels = null;
+        //        itemRateBeforeDiscount = itemModel.ItemRate;
+        //    }
+        //    RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId].TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+        //    if (itemDiscountModel == null)
+        //    {
+        //        itemDiscountModel = new ItemDiscountModel { DiscountPercent = 0 };
+        //    }
+        //    itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
+        //    if (shoppingCartItemModel == null)
+        //    {
+        //        shoppingCartItemModel = new ShoppingCartItemModel
+        //        {
+        //            HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+        //            ItemDiscountAmount = itemDiscountModel.DiscountPercent * itemRateBeforeDiscount * orderQty / 100,
+        //            ItemDiscountPercent = itemDiscountModel.DiscountPercent,
+        //            ItemDiscountPercentFormatted = itemDiscountModel.DiscountPercent.ToString("#0.00") + "%",
+        //            ItemId = itemModel.ItemId,
+        //            ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+        //            ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
+        //            ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
+        //            ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
+        //            ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
+        //            ItemRate = itemRate,
+        //            ItemRateBeforeDiscount = itemRateBeforeDiscount,
+        //            ItemRateBeforeDiscountFormatted = itemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+        //            ItemRateFormatted = itemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+        //            ItemShortDesc = null,//itemModel.ItemShortDesc,
+        //            ItemTypeId = itemModel.ItemTypeId.Value,
+        //            OrderDetailTypeId = OrderDetailTypeEnum.Item,
+        //            ParentItemId = 0,//parentItemId,
+        //            ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+        //            ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
+        //            WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+        //            WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+        //            ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+        //        };
+        //    }
+        //    orderAmountBeforeDiscount = orderQty * itemRateBeforeDiscount;
+        //    orderAmount = orderQty * itemRate;
+        //    shoppingCartItemModel.OrderQty = orderQty;
+        //    shoppingCartItemModel.OrderAmount = orderAmount;
+        //    shoppingCartItemModel.OrderAmountBeforeDiscount = orderAmountBeforeDiscount;
+        //    shoppingCartItemModel.OrderAmountFormatted = orderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //    shoppingCartItemModel.ProductOrVolumetricWeight = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
+        //    shoppingCartItemModel.WeightCalcValue = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+        //    shoppingCartItemModel.WeightValue = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+        //    shoppingCartItemModel.ShoppingCartItemBundleModels = shoppingCartItemBundleModels;
+        //    return;
+        //}
+        #endregion
         // PRIVATE : CreateShoppingCartItemModel
-        private void CreateShoppingCartItemModel(ref ShoppingCartItemModel shoppingCartItemModel, ItemModel itemModel, float? itemRateParm, List<ShoppingCartItemBundleModel> shoppingCartItemBundleModels, long? orderQty/*, SqlConnection sqlConnection*/, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateShoppingCartItemModel(ref ShoppingCartItemModel shoppingCartItemModel, AddToCartModel addToCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
+            int i;
             long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-            float? itemRate, itemRateBeforeDiscount, orderAmount, orderAmountBeforeDiscount;
+            long orderQty, orderQtyForBundle, parentItemId;
+            string orderQtyParm;
+            float? itemRate, itemRateBeforeDiscount, orderAmount, orderAmountBeforeDiscount, productOrVolumetricWeight, weightCalcValue, weightValue;
+            ItemModel itemModel = addToCartModel.ItemModel, itemModelForBundle;
             ItemDiscountModel itemDiscountModel;
+            List<ShoppingCartItemModel> shoppingCartItemBundleModelsFromCache;
+            long.TryParse(addToCartModel.OrderQtyParm, out orderQty);
+            if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+            {
+                if (addToCartModel.DoNotBreakBundle)
+                {
+                    parentItemId = 0;
+                    shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
+                    itemRateBeforeDiscount = itemModel.ItemRate;
+                }
+                else
+                {
+                    parentItemId = itemModel.ItemId.Value;
+                    shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
+                    itemRateBeforeDiscount = 0;
+                }
+            }
+            else
+            {
+                parentItemId = 0;
+                shoppingCartItemBundleModelsFromCache = null;
+                itemRateBeforeDiscount = itemModel.ItemRate;
+            }
             RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId].TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
             if (itemDiscountModel == null)
             {
-                itemDiscountModel = new ItemDiscountModel();
+                itemDiscountModel = new ItemDiscountModel { DiscountPercent = 0 };
             }
-            //itemDiscountModel = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId][itemModel.ItemId.Value];
-            //ItemDiscountModel itemDiscountModel = ApplicationDataContext.ItemDiscountGet(corpAcctId, itemModel.ItemId.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-            itemRateBeforeDiscount = itemRateParm == null ? itemModel.ItemRate : itemRateParm;
-            itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel?.DiscountPercent) / 100;
+            itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
             if (shoppingCartItemModel == null)
             {
+                productOrVolumetricWeight = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
+                weightCalcValue = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                weightValue = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
                 shoppingCartItemModel = new ShoppingCartItemModel
                 {
+                    #region
+                    ClientId = clientId,
                     HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
-                    //ItemBundleModel = itemBundleModel,
+                    ImageName = itemModel.ItemMasterModel.ImageName,
                     ItemDiscountAmount = itemDiscountModel.DiscountPercent * itemRateBeforeDiscount * orderQty / 100,
                     ItemDiscountPercent = itemDiscountModel.DiscountPercent,
                     ItemDiscountPercentFormatted = itemDiscountModel.DiscountPercent.ToString("#0.00") + "%",
                     ItemId = itemModel.ItemId,
                     ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+                    ItemMasterDesc = itemModel.ItemMasterModel.ItemMasterDesc,
                     ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
                     ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
                     ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
                     ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
-                    ItemRate = itemRate,
                     ItemRateBeforeDiscount = itemRateBeforeDiscount,
                     ItemRateBeforeDiscountFormatted = itemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
                     ItemRateFormatted = itemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                    ItemShortDesc = itemModel.ItemShortDesc,
+                    ItemShortDesc = null,//itemModel.ItemShortDesc,
+                    ItemTypeId = itemModel.ItemTypeId.Value,
                     OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                    OrderQty = orderQty,
+                    ParentItemId = parentItemId,
                     ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
                     ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
                     WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
                     WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
                     ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+                    #endregion
                 };
+                if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                {
+                    if (!addToCartModel.DoNotBreakBundle)
+                    {
+                        itemRateBeforeDiscount = 0;
+                        productOrVolumetricWeight = 0;
+                        weightCalcValue = 0;
+                        weightValue = 0;
+                    }
+                    #region
+                    shoppingCartItemModel.ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
+                    orderQtyForBundle = 1;
+                    orderQtyParm = "1";
+                    for (i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
+                    {
+                        if (!addToCartModel.DoNotBreakBundle)
+                        {
+                            long.TryParse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm, out orderQtyForBundle);
+                            orderQtyParm = addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm;
+                        }
+                        itemModelForBundle = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItemBundleModelsFromCache[i].ItemId);
+                        #region Deep Copy 
+                        shoppingCartItemModel.ShoppingCartItemBundleModels.Add
+                        (
+                            new ShoppingCartItemModel
+                            {
+                                ClientId = shoppingCartItemBundleModelsFromCache[i].ClientId,
+                                DimensionUnitId = shoppingCartItemBundleModelsFromCache[i].DimensionUnitId,
+                                HeightValue = shoppingCartItemBundleModelsFromCache[i].HeightValue,
+                                HSNCode = shoppingCartItemBundleModelsFromCache[i].HSNCode,
+                                ImageName = shoppingCartItemBundleModelsFromCache[i].ImageName,
+                                ItemDiscountAmount = 0,
+                                ItemDiscountPercent = 0,
+                                ItemDiscountPercentFormatted = "",
+                                ItemId = shoppingCartItemBundleModelsFromCache[i].ItemId,//addToCartModel.ItemId,
+                                ItemIdParm = shoppingCartItemBundleModelsFromCache[i].ItemId.ToString(),//addToCartModel.ItemIdParm,
+                                ItemItemSpecsForDisplay = shoppingCartItemBundleModelsFromCache[i].ItemItemSpecsForDisplay,
+                                ItemMasterDesc = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc,
+                                ItemMasterDesc0 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc0,
+                                ItemMasterDesc1 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc1,
+                                ItemMasterDesc2 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc2,
+                                ItemMasterDesc3 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc3,
+                                ItemRate = shoppingCartItemBundleModelsFromCache[i].ItemRate,
+                                ItemRateBeforeDiscount = shoppingCartItemBundleModelsFromCache[i].ItemRateBeforeDiscount,
+                                ItemRateBeforeDiscountFormatted = shoppingCartItemBundleModelsFromCache[i].ItemRateBeforeDiscountFormatted,
+                                ItemRateFormatted = shoppingCartItemBundleModelsFromCache[i].ItemRateFormatted,
+                                ItemShortDesc = shoppingCartItemBundleModelsFromCache[i].ItemShortDesc,
+                                ItemTypeId = shoppingCartItemBundleModelsFromCache[i].ItemTypeId,
+                                LengthValue = shoppingCartItemBundleModelsFromCache[i].LengthValue,
+                                OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle,
+                                OrderAmountBeforeDiscount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle,
+                                OrderAmountFormatted = (shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle).Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo),
+                                OrderAmountRounded = (long)(shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle * 100),
+                                OrderComments = "",
+                                OrderDetailTypeId = shoppingCartItemBundleModelsFromCache[i].OrderDetailTypeId,
+                                OrderQty = orderQtyForBundle,
+                                OrderQtyParm = orderQtyParm,
+                                ParentItemId = addToCartModel.ItemId,//shoppingCartItemBundleModelsFromCache[i].ParentItemId,
+                                ProductCode = shoppingCartItemBundleModelsFromCache[i].ProductCode,
+                                ProductOrVolumetricWeight = shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight,
+                                ProductOrVolumetricWeightUnitId = shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeightUnitId,
+                                ShoppingCartItemBundleModels = null,
+                                ShoppingCartItemSummarys = null,
+                                VolumeValue = shoppingCartItemBundleModelsFromCache[i].VolumeValue,
+                                WeightCalcUnitId = shoppingCartItemBundleModelsFromCache[i].WeightUnitId,
+                                WeightCalcValue = shoppingCartItemBundleModelsFromCache[i].WeightCalcValue,
+                                WeightUnitId = shoppingCartItemBundleModelsFromCache[i].WeightUnitId,
+                                WidthValue = shoppingCartItemBundleModelsFromCache[i].WidthValue,
+                                WeightValue = shoppingCartItemBundleModelsFromCache[i].WidthValue,
+                            }
+                        );
+                        if (!addToCartModel.DoNotBreakBundle)
+                        {
+                            itemRateBeforeDiscount += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount;
+                            productOrVolumetricWeight += orderQtyForBundle * float.Parse(itemModelForBundle.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
+                            weightCalcValue += orderQtyForBundle * float.Parse(itemModelForBundle.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                            weightValue += orderQtyForBundle * float.Parse(itemModelForBundle.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                        }
+                        #endregion
+                    }
+                    itemRate = itemRateBeforeDiscount;
+                    #endregion
+                }
             }
+            else
+            {
+                if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle && !addToCartModel.DoNotBreakBundle)
+                {
+                    itemRateBeforeDiscount = 0;
+                    productOrVolumetricWeight = 0;
+                    weightCalcValue = 0;
+                    weightValue = 0;
+                    for (i = 0; i < addToCartModel.ShoppingCartItemBundleModels.Count; i++)
+                    {
+                        long.TryParse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm, out orderQtyForBundle);
+                        itemModelForBundle = RetailSlnCache.ItemModels.First(x => x.ItemId == shoppingCartItemBundleModelsFromCache[i].ItemId);
+
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQtyParm = addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm;
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty = orderQtyForBundle;
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle;
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountBeforeDiscount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle;
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountFormatted = (shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle).Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo);
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountRounded = (long)(shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQtyForBundle * 100);
+
+                        itemRateBeforeDiscount += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount;
+                        productOrVolumetricWeight += orderQtyForBundle * float.Parse(itemModelForBundle.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
+                        weightCalcValue += orderQtyForBundle * float.Parse(itemModelForBundle.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                        weightValue += orderQtyForBundle * float.Parse(itemModelForBundle.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                    }
+                    itemRate = itemRateBeforeDiscount;
+                }
+                else
+                {
+                    orderQty = shoppingCartItemModel.OrderQty.Value + orderQty;
+                    shoppingCartItemModel.OrderQty = orderQty;
+                    productOrVolumetricWeight = shoppingCartItemModel.OrderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
+                    weightCalcValue = shoppingCartItemModel.OrderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                    weightValue = shoppingCartItemModel.OrderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+                }
+            }
+            shoppingCartItemModel.ItemRate = itemRate;
             orderAmountBeforeDiscount = orderQty * itemRateBeforeDiscount;
             orderAmount = orderQty * itemRate;
-            //orderAmount = orderAmountBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
-            shoppingCartItemModel.OrderQty = orderQty;
             shoppingCartItemModel.OrderAmount = orderAmount;
             shoppingCartItemModel.OrderAmountBeforeDiscount = orderAmountBeforeDiscount;
             shoppingCartItemModel.OrderAmountFormatted = orderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            shoppingCartItemModel.ProductOrVolumetricWeight = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
-            shoppingCartItemModel.WeightCalcValue = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
-            shoppingCartItemModel.WeightValue = orderQty * float.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+            shoppingCartItemModel.OrderAmountRounded = (long)(shoppingCartItemModel.OrderAmount * 100);
+            shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
+            shoppingCartItemModel.WeightCalcValue = weightCalcValue;
+            shoppingCartItemModel.WeightValue = weightValue;
             return;
         }
+        // PRIVATE : CreateShoppingCartItemModel
+        //private void CreateShoppingCartItemModelNew(ref ShoppingCartItemModel shoppingCartItemModel, AddToCartModel addToCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    int i;
+        //    long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //    long orderQty, parentItemId;
+        //    float? itemRate, itemRateBeforeDiscount, orderAmount, orderAmountBeforeDiscount;
+        //    ItemDiscountModel itemDiscountModel;
+        //    List<ShoppingCartItemModel> shoppingCartItemBundleModelsFromCache;
+        //    if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        //    {
+        //        parentItemId = addToCartModel.ItemModel.ItemId.Value;
+        //        shoppingCartItemModel.ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
+        //        shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[addToCartModel.ItemModel.ItemId.Value].ShoppingCartItemBundleModels;
+        //        RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId].TryGetValue(addToCartModel.ItemModel.ItemId.Value, out itemDiscountModel);
+        //        if (itemDiscountModel == null)
+        //        {
+        //            itemDiscountModel = new ItemDiscountModel { DiscountPercent = 0 };
+        //        }
+        //        itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
+        //        if (shoppingCartItemModel == null)
+        //        {
+        //            shoppingCartItemModel = new ShoppingCartItemModel
+        //            {
+        //                HSNCode = addToCartModel.ItemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+        //                ItemDiscountAmount = itemDiscountModel.DiscountPercent * itemRateBeforeDiscount * addToCartModel.OrderQty / 100,
+        //                ItemDiscountPercent = itemDiscountModel.DiscountPercent,
+        //                ItemDiscountPercentFormatted = itemDiscountModel.DiscountPercent.ToString("#0.00") + "%",
+        //                ItemId = addToCartModel.ItemModel.ItemId,
+        //                ItemItemSpecsForDisplay = addToCartModel.ItemModel.ItemItemSpecsForDisplay,
+        //                ItemMasterDesc0 = addToCartModel.ItemModel.ItemMasterModel.ItemMasterDesc0,
+        //                ItemMasterDesc1 = addToCartModel.ItemModel.ItemMasterModel.ItemMasterDesc1,
+        //                ItemMasterDesc2 = addToCartModel.ItemModel.ItemMasterModel.ItemMasterDesc2,
+        //                ItemMasterDesc3 = addToCartModel.ItemModel.ItemMasterModel.ItemMasterDesc3,
+        //                ItemRate = itemRate,
+        //                ItemRateBeforeDiscount = itemRateBeforeDiscount,
+        //                ItemRateBeforeDiscountFormatted = itemRateBeforeDiscount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+        //                ItemRateFormatted = itemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+        //                ItemShortDesc = null,//itemModel.ItemShortDesc,
+        //                ItemTypeId = addToCartModel.ItemModel.ItemTypeId.Value,
+        //                OrderDetailTypeId = OrderDetailTypeEnum.Item,
+        //                ParentItemId = parentItemId,
+        //                ProductCode = addToCartModel.ItemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+        //                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(addToCartModel.ItemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
+        //                WeightCalcUnitId = (WeightUnitEnum)int.Parse(addToCartModel.ItemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+        //                WeightUnitId = (WeightUnitEnum)int.Parse(addToCartModel.ItemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+        //                ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+        //            };
+        //        }
+        //        orderAmountBeforeDiscount = addToCartModel.OrderQty * itemRateBeforeDiscount;
+        //        orderAmount = addToCartModel.OrderQty * itemRate;
+        //        itemRateBeforeDiscount = 0;
+        //        if (shoppingCartItemModel.ShoppingCartItemBundleModels.Count == 0)
+        //        {
+        //            for (i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
+        //            {
+        //                long.TryParse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm, out orderQty);
+        //                #region Deep Copy 
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels.Add
+        //                (
+        //                    new ShoppingCartItemModel
+        //                    {
+        //                        ClientId = shoppingCartItemBundleModelsFromCache[i].ClientId,
+        //                        DimensionUnitId = shoppingCartItemBundleModelsFromCache[i].DimensionUnitId,
+        //                        HeightValue = shoppingCartItemBundleModelsFromCache[i].HeightValue,
+        //                        HSNCode = shoppingCartItemBundleModelsFromCache[i].HSNCode,
+        //                        ItemDiscountAmount = 0,
+        //                        ItemDiscountPercent = 0,
+        //                        ItemDiscountPercentFormatted = "",
+        //                        ItemId = addToCartModel.ItemId,
+        //                        ItemIdParm = addToCartModel.ItemIdParm,
+        //                        ItemItemSpecsForDisplay = shoppingCartItemBundleModelsFromCache[i].ItemItemSpecsForDisplay,
+        //                        ItemMasterDesc0 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc0,
+        //                        ItemMasterDesc1 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc1,
+        //                        ItemMasterDesc2 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc2,
+        //                        ItemMasterDesc3 = shoppingCartItemBundleModelsFromCache[i].ItemMasterDesc3,
+        //                        ItemRate = shoppingCartItemBundleModelsFromCache[i].ItemRate,
+        //                        ItemRateBeforeDiscount = shoppingCartItemBundleModelsFromCache[i].ItemRateBeforeDiscount,
+        //                        ItemRateBeforeDiscountFormatted = shoppingCartItemBundleModelsFromCache[i].ItemRateBeforeDiscountFormatted,
+        //                        ItemRateFormatted = shoppingCartItemBundleModelsFromCache[i].ItemRateFormatted,
+        //                        ItemShortDesc = shoppingCartItemBundleModelsFromCache[i].ItemShortDesc,
+        //                        ItemTypeId = shoppingCartItemBundleModelsFromCache[i].ItemTypeId,
+        //                        LengthValue = shoppingCartItemBundleModelsFromCache[i].LengthValue,
+        //                        OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty,
+        //                        OrderAmountBeforeDiscount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty,
+        //                        OrderAmountFormatted = (shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty).Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo),
+        //                        OrderAmountRounded = (long)(shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty * 100),
+        //                        OrderComments = "",
+        //                        OrderDetailTypeId = shoppingCartItemBundleModelsFromCache[i].OrderDetailTypeId,
+        //                        OrderQty = orderQty,
+        //                        OrderQtyParm = addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm,
+        //                        ParentItemId = shoppingCartItemBundleModelsFromCache[i].ParentItemId,
+        //                        ProductCode = shoppingCartItemBundleModelsFromCache[i].ProductCode,
+        //                        ProductOrVolumetricWeight = shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight,
+        //                        ProductOrVolumetricWeightUnitId = shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeightUnitId,
+        //                        ShoppingCartItemBundleModels = null,
+        //                        ShoppingCartItemSummarys = null,
+        //                        VolumeValue = shoppingCartItemBundleModelsFromCache[i].VolumeValue,
+        //                        WeightCalcUnitId = shoppingCartItemBundleModelsFromCache[i].WeightUnitId,
+        //                        WeightCalcValue = shoppingCartItemBundleModelsFromCache[i].WeightCalcValue,
+        //                        WeightUnitId = shoppingCartItemBundleModelsFromCache[i].WeightUnitId,
+        //                        WidthValue = shoppingCartItemBundleModelsFromCache[i].WidthValue,
+        //                        WeightValue = shoppingCartItemBundleModelsFromCache[i].WidthValue,
+        //                    }
+        //                );
+        //                itemRateBeforeDiscount += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount;
+        //                #endregion
+        //            }
+        //        }
+        //        else
+        //        {//Update the shopping cart
+        //            for (i = 0; i < addToCartModel.ShoppingCartItemBundleModels.Count; i++)
+        //            {
+        //                long.TryParse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm, out orderQty);
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty = orderQty;
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQtyParm = addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm;
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty;
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountBeforeDiscount = shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty;
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountFormatted = (shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty).Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo);
+        //                shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountRounded = (long)(shoppingCartItemBundleModelsFromCache[i].ItemRate * orderQty * 100);
+        //                itemRateBeforeDiscount += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        parentItemId = 0;
+        //        shoppingCartItemBundleModelsFromCache = null;
+        //        itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate;
+        //    }
+        //    shoppingCartItemModel.OrderQty = addToCartModel.OrderQty;
+        //    shoppingCartItemModel.OrderAmount = orderAmount;
+        //    shoppingCartItemModel.OrderAmountBeforeDiscount = orderAmountBeforeDiscount;
+        //    shoppingCartItemModel.OrderAmountFormatted = orderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+        //    shoppingCartItemModel.ProductOrVolumetricWeight = addToCartModel.OrderQty * float.Parse(addToCartModel.ItemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecValue);
+        //    shoppingCartItemModel.WeightCalcValue = addToCartModel.OrderQty * float.Parse(addToCartModel.ItemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+        //    shoppingCartItemModel.WeightValue = addToCartModel.OrderQty * float.Parse(addToCartModel.ItemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecValue);
+        //    shoppingCartItemModel.ShoppingCartItemBundleModels = shoppingCartItemBundleModelsFromCache;
+        //    return;
+        //}
         // PRIVATE : CreateShoppingCartSummary
         private void CreateShoppingCartTotals(ref PaymentInfoModel paymentInfoModel, float amountPaid, string amountPaidComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -2089,6 +2741,7 @@ namespace RetailSlnBusinessLayer
                 throw;
             }
         }
+        // PRIVATE : GetCreditCardKVPs
         private Dictionary<string, string> GetCreditCardKVPs(string creditCardProcessor, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             creditCardProcessor = creditCardProcessor.ToUpper();
@@ -2117,10 +2770,188 @@ namespace RetailSlnBusinessLayer
                     break;
                 default:
                     creditCardKVPs = new Dictionary<string, string>();
+                    var applicationDefaultModels = ArchLibCache.ApplicationDefaultModels.FindAll(x => x.ClientId == clientId && x.KVPKey == creditCardProcessor && x.SeqNum <= 20);
+                    foreach (var applicationDefaultModel in applicationDefaultModels)
+                    {
+                        creditCardKVPs[applicationDefaultModel.KVPSubKey] = applicationDefaultModel.KVPValue;
+                    }
                     break;
             }
 
             return creditCardKVPs;
+        }
+        // PRIVATE : GetCreditCardKVPs
+        private void GetCreditCardKVPs(string creditCardProcessor, out Dictionary<string, string> creditCardKVPs, out Dictionary<string, string> creditCardDataKVPs, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            creditCardProcessor = creditCardProcessor.ToUpper();
+            creditCardKVPs = new Dictionary<string, string>();
+            creditCardDataKVPs = new Dictionary<string, string>();
+            foreach (var applicationDefaultModel in ArchLibCache.ApplicationDefaultModels)
+            {
+                if (applicationDefaultModel.KVPKey == creditCardProcessor + "CLIENT")
+                {
+                    creditCardKVPs[applicationDefaultModel.KVPSubKey] = applicationDefaultModel.KVPValue;
+                }
+                else
+                {
+                    if (applicationDefaultModel.KVPKey == creditCardProcessor + "SERVER")
+                    {
+                        creditCardDataKVPs[applicationDefaultModel.KVPSubKey] = applicationDefaultModel.KVPValue;
+                    }
+                }
+            }
+            return;
+        }
+        #region
+        //// PRIVATE: OrderWIPAdd
+        //private void OrderWIPAdd(ref PaymentInfoModel paymentInfoModel, long corpAcctLocationId, ItemModel itemModel, long orderQty, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        if (sessionObjectModel == null || createForSessionObject == null)
+        //        {
+        //        }
+        //        else
+        //        {
+        //            if (paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId == null)
+        //            {
+        //                //Create Order Header WIP
+        //                paymentInfoModel.OrderHeaderWIPModel = OrderHeaderWIPModelCreate(corpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                ApplicationDataContext.OrderHeaderWIPAdd(paymentInfoModel.OrderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //            OrderDetailWIPModel orderDetailWIPModel;
+        //            paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.Add
+        //            (
+        //                orderDetailWIPModel = new OrderDetailWIPModel
+        //                {
+        //                    ClientId = clientId,
+        //                    ItemId = itemModel.ItemId.Value,
+        //                    ItemRate = itemModel.ItemRate.Value,
+        //                    OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
+        //                    OrderQty = orderQty,
+        //                    ParentItemId = 0,
+        //                    SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
+        //                }
+        //            );
+        //            ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            //if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        //            //{
+        //            //    foreach (var shoppingCartItemBundleModel in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.First(x => x.ItemId == itemModel.ItemId).ShoppingCartItemBundleModels)
+        //            //    {
+        //            //        orderDetailWIPModel = new OrderDetailWIPModel
+        //            //        {
+        //            //            ClientId = clientId,
+        //            //            ItemId = shoppingCartItemBundleModel.ItemId.Value,
+        //            //            ItemRate = shoppingCartItemBundleModel.ItemRate.Value,
+        //            //            OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
+        //            //            OrderQty = orderQty,
+        //            //            ParentItemId = itemModel.ItemId.Value,
+        //            //            SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
+        //            //        };
+        //            //        ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            //    }
+        //            //}
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
+        // PRIVATE: OrderWIPAdd
+        private void OrderWIPAdd(ref PaymentInfoModel paymentInfoModel, long corpAcctLocationId, AddToCartModel addToCartModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                if (sessionObjectModel == null || createForSessionObject == null)
+                {
+                }
+                else
+                {
+                    if (paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId == null)
+                    {
+                        //Create Order Header WIP
+                        paymentInfoModel.OrderHeaderWIPModel = OrderHeaderWIPModelCreate(corpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        ApplicationDataContext.OrderHeaderWIPAdd(paymentInfoModel.OrderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                    OrderDetailWIPModel orderDetailWIPModel;
+                    paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.Add
+                    (
+                        orderDetailWIPModel = new OrderDetailWIPModel
+                        {
+                            ClientId = clientId,
+                            ItemId = addToCartModel.ItemModel.ItemId.Value,
+                            ItemRate = addToCartModel.ItemModel.ItemRate.Value,
+                            OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
+                            OrderQty = addToCartModel.OrderQty,
+                            ParentItemId = 0,
+                            SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
+                        }
+                    );
+                    ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                    //{
+                    //    foreach (var shoppingCartItemBundleModel in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.First(x => x.ItemId == itemModel.ItemId).ShoppingCartItemBundleModels)
+                    //    {
+                    //        orderDetailWIPModel = new OrderDetailWIPModel
+                    //        {
+                    //            ClientId = clientId,
+                    //            ItemId = shoppingCartItemBundleModel.ItemId.Value,
+                    //            ItemRate = shoppingCartItemBundleModel.ItemRate.Value,
+                    //            OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
+                    //            OrderQty = orderQty,
+                    //            ParentItemId = itemModel.ItemId.Value,
+                    //            SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
+                    //        };
+                    //        ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //    }
+                    //}
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        // PRIVATE : OrderHeaderWIPModelCreate
+        private OrderHeaderWIPModel OrderHeaderWIPModelCreate(long corpAcctLocationId, InvoiceTypeEnum? invoiceTypeId, string orderDateTime, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            OrderHeaderWIPModel orderHeaderWIPModel = new OrderHeaderWIPModel
+            {
+                ClientId = clientId,
+                CorpAcctLocationId = corpAcctLocationId,
+                CreatedForPersonId = createForSessionObject.PersonId,
+                InvoiceTypeId = (long)invoiceTypeId,
+                MaxSeqNum = 0,
+                OrderDateTime = orderDateTime,
+                OrderStatusId = null,
+                PersonId = sessionObjectModel.PersonId,
+                OrderDetailWIPModels = new List<OrderDetailWIPModel>()
+            };
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return orderHeaderWIPModel;
         }
         // PRIVATE : OrderDetailWIPDel
         private void OrderDetailWIPDel(long orderDetailWIPId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -2143,7 +2974,56 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
-        private void DeleteOrderWIP(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, Controller controller, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        #region
+        //// PRIVATE : OrderDetailWIPUpdate
+        //private void OrderDetailWIPUpdate(ref PaymentInfoModel paymentInfoModel, long itemId, long orderQty, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        OrderDetailWIPModel orderDetailWIPModel = paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.First(x => x.ItemId == itemId);
+        //        orderDetailWIPModel.OrderQty = orderQty;
+        //        ApplicationDataContext.OrderDetailWIPUpd(orderDetailWIPModel.OrderHeaderWIPId, itemId, orderQty, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
+        // PRIVATE : OrderDetailWIPUpdate
+        private void OrderDetailWIPUpdate(ref PaymentInfoModel paymentInfoModel, ShoppingCartItemModel shoppingCartItemModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                OrderDetailWIPModel orderDetailWIPModel = paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.First(x => x.ItemId == shoppingCartItemModel.ItemId);
+                orderDetailWIPModel.OrderQty = shoppingCartItemModel.OrderQty.Value;
+                ApplicationDataContext.OrderDetailWIPUpd(orderDetailWIPModel.OrderHeaderWIPId, shoppingCartItemModel.ItemId.Value, shoppingCartItemModel.OrderQty.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        // PRIVATE : OrderWIPDel
+        private void OrderWIPDel(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, Controller controller, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -2322,32 +3202,32 @@ namespace RetailSlnBusinessLayer
                 }
             }
         }
-        // PRIVATE : UpdateDeliveryAddressInfo
-        private void UpdateOrderDetailWIP(ref PaymentInfoModel paymentInfoModel, long itemId, long orderQty, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                OrderDetailWIPModel orderDetailWIPModel = paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.First(x => x.ItemId == itemId);
-                orderDetailWIPModel.OrderQty = orderQty;
-                ApplicationDataContext.OrderDetailWIPUpd(orderDetailWIPModel.OrderHeaderWIPId, itemId, orderQty, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-            }
-        }
         #endregion
 
+        #region Commented Code
         #region
+        //// PRIVATE: CreateOrderDetailItemBundleItem
+        //private OrderDetailItemBundle CreateOrderDetailItemBundleItem(long orderDetailId, float seqNum, ShoppingCartItemModel shoppingCartItemBundleModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    OrderDetailItemBundle orderDetailItemBundle = new OrderDetailItemBundle
+        //    {
+        //        ClientId = clientId,
+        //        //DiscountPercent = itemBundleModel.DiscountPercent,
+        //        //ItemBundleId = shoppingCartItemBundleModel.ItemBundleId,
+        //        //ItemBundleItemId = shoppingCartItemBundleModel.ItemBundleItemId,
+        //        //ItemId = shoppingCartItemBundleModel.ItemId,
+        //        //ItemMasterDesc = ItemMasterDesc,
+        //        //ItemRate = itemRate,
+        //        //ItemRateBeforeDiscount = itemRateBeforeDiscount,
+        //        //OrderAmount = orderAmount,
+        //        //OrderAmountBeforeDiscount = orderAmountBeforeDiscount,
+        //        //OrderDetailId = orderDetailId,
+        //        //OrderQty = orderQty,
+        //        //SeqNum = seqNum,
+        //    };
+        //    return orderDetailItemBundle;
+        //}
+        #endregion
         #region
         //// POST: AddToCart2
         //public void AddToCart2(ref PaymentInfoModel paymentInfo1Model, ShoppingCartItemModel shoppingCartItemModelTemp, ShoppingCartBundleModel shoppingCartBundleModel, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -2501,6 +3381,33 @@ namespace RetailSlnBusinessLayer
         //    {
         //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
         //        throw;
+        //    }
+        //}
+        #endregion
+        #region
+        //// POST: AddToCart
+        //public string AddToCart2(ref PaymentInfoModel paymentInfoModel, AddToCartModel addToCartModel, bool createOrderWIP, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        string itemIdParm, orderQtyParm;
+        //        itemIdParm = addToCartModel.ItemId.ToString();
+        //        orderQtyParm = addToCartModel.OrderQty.ToString();
+        //        float itemRateParm = CalculateBundleOrderAmount(addToCartModel.ShoppingCartItemBundleModels, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        string errorMessage = AddToCart(ref paymentInfoModel, itemIdParm, itemRateParm, null, orderQtyParm, createOrderWIP, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        return errorMessage;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
         //    }
         //}
         #endregion
@@ -2799,6 +3706,74 @@ namespace RetailSlnBusinessLayer
         //            }
         //        );
         //        UpdateShoppingCart(shoppingCartModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        #endregion
+        #region
+        //// PRIVATE : AddItemBundleItemsToShoppingCart
+        //private float AddItemBundleItemsToShoppingCart(long parentItemId, out List<ShoppingCartItemModel> shoppingCartItemBundleModels, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    List<ItemModel> itemModels = RetailSlnCache.ParentItemBundleModels[parentItemId].ItemModels;
+        //    shoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
+        //    float itemRateParm = 0, itemRate, orderAmount;
+        //    ShoppingCartItemModel shoppingCartItemBundleModel;
+        //    foreach (var itemModel in itemModels)
+        //    {
+        //        itemRate = itemModel.ItemRate.Value;
+        //        orderAmount = itemRate; //Adding from main page quantity is always 1
+        //        itemRateParm += itemModel.ItemRate.Value;
+        //        shoppingCartItemBundleModel = new ShoppingCartItemModel
+        //        {
+        //            HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+        //            ItemDiscountAmount = 0,
+        //            ItemDiscountPercent = 0,
+        //            ItemDiscountPercentFormatted = "",
+        //            ItemId = itemModel.ItemId,
+        //            ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+        //            ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
+        //            ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
+        //            ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
+        //            ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
+        //            ItemRate = itemRate,
+        //            ItemRateBeforeDiscount = itemRate,
+        //            ItemRateBeforeDiscountFormatted = itemRate.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+        //            ItemRateFormatted = itemRate.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+        //            ItemShortDesc = null,//itemModel.ItemShortDesc,
+        //            OrderDetailTypeId = OrderDetailTypeEnum.Item,
+        //            ParentItemId = parentItemId,
+        //            ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
+        //            ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
+        //            WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+        //            WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+        //            ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+        //        };
+        //        shoppingCartItemBundleModels.Add(shoppingCartItemBundleModel);
+        //    }
+        //    return itemRateParm;
+        //}
+        #endregion
+        #region
+        //// PRIVATE : CalculateBundleOrderAmount
+        //private float CalculateBundleOrderAmount(List<ShoppingCartItemModel> shoppingCartItemBundleModels, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        float orderAmount = 0;
+        //        ItemModel itemModel;
+        //        foreach (var shoppingCartItemBundleModel in shoppingCartItemBundleModels)
+        //        {
+        //            itemModel = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItemBundleModel.ItemId);
+        //            orderAmount += (float)(shoppingCartItemBundleModel.OrderQty * itemModel.ItemRate.Value);
+        //        }
+        //        return orderAmount;
         //    }
         //    catch (Exception exception)
         //    {
