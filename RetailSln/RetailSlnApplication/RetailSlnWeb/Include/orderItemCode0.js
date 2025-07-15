@@ -1020,6 +1020,61 @@ function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
     this.disabled = true;
     document.getElementById("divPayment0Info").innerHTML = "";
 }
+function paymentInfo9Save_onclick() {
+    console.log("00000000", "paymentInfo9Save_onclick");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Home/PaymentInfo9";
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "html",
+        //data: postData,
+        //async: false,
+        success: function (responseData, textStatus, request) {
+            console.log("00001000", "paymentInfo9Save_onclick", responseData.success, responseData.processMessage);
+            $("#loadingModal").modal('hide');
+            document.getElementById("divPayment0Info").innerHTML = responseData.htmlString;
+            console.log("paymentInfo9Save_onclick", "00090000", "EXIT!!!");
+        },
+        error: function (xhr, exception) {
+            $("#loadingModal").modal('hide');
+            document.getElementById("divPayment0Info").innerHTML = xhr.responseText;
+            console.log("00099000", "paymentInfo9Save_onclick error", exception, xhr);
+        }
+    });
+}
+function paymentInfo9SaveProcess_onclick() {
+    console.log("00000000", "paymentInfo9SaveProcess_onclick");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Home/PaymentInfo9Process";
+    var postData = $("#formPaymentInfo9Data").serialize();
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+        //dataType: "html",
+        data: postData,
+        //async: false,
+        success: function (responseData, textStatus, request) {
+            console.log("00001000", "paymentInfo9SaveProcess_onclick");
+            $("#loadingModal").modal('hide');
+            if (responseData.success) {
+                console.log("00002000", "paymentInfo9SaveProcess_onclick");
+                window.location.href = responseData.redirectUrl;
+            }
+            else {
+                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+            }
+            console.log("00003000", "paymentInfo9SaveProcess_onclick success", responseData.processMessage);
+        },
+        error: function (xhr, exception) {
+            $("#loadingModal").modal('hide');
+            document.getElementById("divOrderProcess").innerHTML = xhr.responseText;
+            console.log("00099000", "paymentInfo1Save_onclick error", exception, xhr);
+        }
+    });
+}
 //function paymentInfo4Save_onclickNewNotWorking() {
 //    //Render the payment form template
 //    var clientSecret = 'pk_test_51PidPzRsotNg8ICvkglKsLHQB2xhgX8zEVUR2eqi6o7pSNeyPa1BlNn8W3EcyNQeLtb4bzj4yEEjtjehDo5S9Tvu006xJBd2VK';

@@ -8,6 +8,7 @@
     var clientName = ArchLibCache.ClientName;
     var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    bool brFlag = false;
 }
 <table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
     @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
@@ -16,9 +17,26 @@
             <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
                 @Model.PaymentModeModel.PaymentModeDesc
                 <br style="clear: both;" />
-                @(Model.PaymentDataModel.PaymentRefNumCaption1 + " " + Model.PaymentDataModel.PaymentRefNumData1)
-                <br style="clear: both;" />
-                @(Model.PaymentDataModel.PaymentRefNumCaption2 + " " + Model.PaymentDataModel.PaymentRefNumData2)
+                @{
+                    foreach (var paymentRefOption1 in Model.PaymentDataModel.PaymentRefOptions)
+                    {
+                        foreach (var paymentRefOption2 in paymentRefOption1.Value)
+                        {
+                            if (!string.IsNullOrWhiteSpace(paymentRefOption2.Value))
+                            {
+                                if (brFlag)
+                                {
+                                    <br style="clear: both;" />
+                                }
+                                <text>@(paymentRefOption2.Key + " " + paymentRefOption2.Value)</text>
+                                brFlag = true;
+                            }
+                        }
+                    }
+                }
+                @*@(Model.PaymentDataModel.PaymentRefNumCaption1 + " " + Model.PaymentDataModel.PaymentRefNumData1)
+                    <br style="clear: both;" />
+                    @(Model.PaymentDataModel.PaymentRefNumCaption2 + " " + Model.PaymentDataModel.PaymentRefNumData2)*@
                 <br style="clear: both;" />
                 <span style="color: #000000;">Order Created by:</span>&nbsp;@Model.OrderSummaryModel.CreatedByEmailAddress
                 <br style="clear: both;" />

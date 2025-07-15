@@ -567,7 +567,8 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontFamily = codeDataModel.CodeDataNameDesc;
                 paymentInfoModel.OrderSummaryModel.AuthorizedSignatureFontSize = codeDataModel.CodeDataDesc1;
 
-                CreateOrder(paymentInfoModel, "", "", "", "", ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                Dictionary<string, Dictionary<string, string>> paymentRefOptions = new Dictionary<string, Dictionary<string, string>>();
+                CreateOrder(paymentInfoModel, paymentRefOptions, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.HideShoppingCart = true;
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
 
@@ -603,7 +604,7 @@ namespace RetailSlnBusinessLayer
                 BuildCreditCardDataModel(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CreditCardDataModel creditCardDataModel = paymentInfoModel.CreditCardDataModel;
                 CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
-                var creditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out string processMessage, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var creditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (creditCardProcessStatus)
                 {
                     return (RazorPayResponse)creditCardResponseObject;
@@ -637,7 +638,11 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.OpenSqlConnection();
                 if (razorPayIntegration.CheckPaymentSuccess(razorpay_payment_id, razorpay_order_id, razorpay_signature))
                 {
-                    creditCardServiceBL.UpdCreditCardData(paymentInfoModel.CreditCardDataModel.CreditCardDataId, razorpay_payment_id, razorpay_order_id, razorpay_signature, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    Dictionary<string, string> processMessages = new Dictionary<string, string>();
+                    processMessages[razorpay_payment_id] = razorpay_payment_id;
+                    processMessages[razorpay_order_id] = razorpay_order_id;
+                    processMessages[razorpay_signature] = razorpay_signature;
+                    creditCardServiceBL.UpdCreditCardData(paymentInfoModel.CreditCardDataModel.CreditCardDataId, processMessages, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
 
                     ShoppingCartItemModel shoppingCartItemModelAmountPaid, shoppingCartItemModelBalanceDue;//, shoppingCartItemModelTotalInvoiceAmount;
                     shoppingCartItemModelAmountPaid = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
@@ -657,7 +662,13 @@ namespace RetailSlnBusinessLayer
 
                     AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
 
-                    CreateOrder(paymentInfoModel, "Ord #", razorpay_order_id, "Ref#:", razorpay_payment_id, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    Dictionary<string, Dictionary<string, string>> paymentRefOptions = new Dictionary<string, Dictionary<string, string>>();
+                    paymentRefOptions["PaymentRefOption1"]["Key"] = "Ord #";
+                    paymentRefOptions["PaymentRefOption1"]["Value"] = razorpay_order_id;
+                    paymentRefOptions["PaymentRefOption2"] = new Dictionary<string, string>();
+                    paymentRefOptions["PaymentRefOption2"]["Key"] = "Ref#:";
+                    paymentRefOptions["PaymentRefOption1"]["Value"] = razorpay_payment_id;
+                    CreateOrder(paymentInfoModel, paymentRefOptions, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                     paymentInfoModel.HideShoppingCart = true;
                     paymentInfoModel.ShoppingCartModel.Checkout = true;
                     OrderWIPDel(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -674,7 +685,7 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
-        // GET : PaymentInfo2
+        // GET : PaymentInfo4
         public void PaymentInfo4(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {//Stripe
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -695,6 +706,8 @@ namespace RetailSlnBusinessLayer
                     CreditCardAmountFormatted = shoppingCartItemModelBalanceDue.OrderAmountFormatted,
                     CreditCardKVPs = creditCardKVPs,
                     CreditCardDataKVPs = creditCardDataKVPs,
+                    CreditCardProcessor = creditCardProcessor,
+                    CreditCardTranType = "PURCHASE",
                     CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
                     CreditCardZipCode = paymentInfoModel.DeliveryAddressModel.ZipCode,
                     EmailAddress = paymentInfoModel.OrderSummaryModel.EmailAddress,
@@ -716,7 +729,7 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
-        // POST : PaymentInfo3
+        // POST : PaymentInfo4Success
         public void PaymentInfo4Success(PaymentInfoModel paymentInfoModel, string paymentIntent_status, string paymentIntent_payment_method, string paymentIntent_id, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {//RazorpayReturn
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -758,10 +771,106 @@ namespace RetailSlnBusinessLayer
 
                 AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
 
-                CreateOrder(paymentInfoModel, "Id", paymentIntent_id, "Method", paymentIntent_payment_method, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                Dictionary<string, Dictionary<string, string>> paymentRefOptions = new Dictionary<string, Dictionary<string, string>>();
+                paymentRefOptions["PaymentRefOption1"]["Key"] = "Id";
+                paymentRefOptions["PaymentRefOption1"]["Value"] = paymentIntent_id;
+                paymentRefOptions["PaymentRefOption2"] = new Dictionary<string, string>();
+                paymentRefOptions["PaymentRefOption2"]["Key"] = "Method";
+                paymentRefOptions["PaymentRefOption1"]["Value"] = paymentIntent_payment_method;
+
+                CreateOrder(paymentInfoModel, paymentRefOptions, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.HideShoppingCart = true;
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
                 OrderWIPDel(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : PaymentInfo9
+        public void PaymentInfo9(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {//Credit Card
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //There is nothing to be done right now
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : PaymentInfo9Process
+        public void PaymentInfo9Process(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {//Credit Card
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                CreditCardDataModel creditCardDataModel = paymentInfoModel.CreditCardDataModel;
+                creditCardDataModel.CreditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                CreditCardServiceBL creditCardServiceBL = new CreditCardServiceBL();
+                ApplicationDataContext.OpenSqlConnection();
+                var creditCardProcessStatus = creditCardServiceBL.ProcessCreditCard(creditCardDataModel, ApplicationDataContext.SqlConnectionObject, out object creditCardResponseObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                var creditCardLast4 = paymentInfoModel.CreditCardDataModel.CreditCardNumberLast4;
+                var creditCardProcessMessage = creditCardDataModel.ProcessMessage;
+                if (creditCardProcessStatus)
+                {
+                    Dictionary<string, string> processMessages = new Dictionary<string, string>();
+                    creditCardServiceBL.UpdCreditCardData(paymentInfoModel.CreditCardDataModel.CreditCardDataId, processMessages, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+
+                    ShoppingCartItemModel shoppingCartItemModelAmountPaid, shoppingCartItemModelBalanceDue;//, shoppingCartItemModelTotalInvoiceAmount;
+                    shoppingCartItemModelAmountPaid = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
+                    shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
+
+                    shoppingCartItemModelAmountPaid.OrderAmount = shoppingCartItemModelBalanceDue.OrderAmount;
+                    shoppingCartItemModelAmountPaid.OrderAmountFormatted = shoppingCartItemModelAmountPaid.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    //shoppingCartItemModelAmountPaid.OrderComments = "Ref# " + razorpay_payment_id + "; Ord# " + razorpay_order_id;//"Ord# : " + razorpay_order_id + " Ref# : " + razorpay_payment_id;
+
+                    shoppingCartItemModelBalanceDue.OrderAmount = 0;
+                    shoppingCartItemModelBalanceDue.OrderAmountFormatted = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid = shoppingCartItemModelAmountPaid.OrderAmount;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaidFormatted = shoppingCartItemModelAmountPaid.OrderAmountFormatted;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = shoppingCartItemModelBalanceDue.OrderAmount;
+                    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = shoppingCartItemModelBalanceDue.OrderAmountFormatted;
+
+                    AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+
+                    Dictionary<string, Dictionary<string, string>> paymentRefoptions = new Dictionary<string, Dictionary<string, string>>();
+                    paymentRefoptions["PaymentRefOption1"] = new Dictionary<string, string>();
+                    paymentRefoptions["PaymentRefOption1"]["Ref# : "] = creditCardDataModel.ProcessMessagesSuccess["PaymentRefNum"];
+                    paymentRefoptions["PaymentRefOption2"] = new Dictionary<string, string>();
+                    CreateOrder(paymentInfoModel, paymentRefoptions, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    paymentInfoModel.HideShoppingCart = true;
+                    paymentInfoModel.ShoppingCartModel.Checkout = true;
+                    OrderWIPDel(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, controller, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    foreach (var processMessagesFailure in creditCardDataModel.ProcessMessagesFailure)
+                    {
+                        modelStateDictionary.AddModelError(processMessagesFailure.Key, processMessagesFailure.Value);
+                    }
+                }
                 return;
             }
             catch (Exception exception)
@@ -1880,7 +1989,8 @@ namespace RetailSlnBusinessLayer
             }
         }
         // PRIVATE: CreateOrder
-        private void CreateOrder(PaymentInfoModel paymentInfoModel, string paymentOrderIdCaption, string paymentOrderId, string paymentIdCaption, string paymentId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //private void CreateOrder(PaymentInfoModel paymentInfoModel, string paymentOrderIdCaption, string paymentOrderId, string paymentIdCaption, string paymentId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void CreateOrder(PaymentInfoModel paymentInfoModel, Dictionary<string, Dictionary<string, string>> paymentRefOptions, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1935,10 +2045,11 @@ namespace RetailSlnBusinessLayer
                     GiftCertId = 0,
                     OrderHeaderId = paymentInfoModel.OrderSummaryModel.OrderHeaderId.Value,
                     PaymentModeId = (long)paymentInfoModel.PaymentModeModel.PaymentModeId,
-                    PaymentRefNumCaption1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentIdCaption,
-                    PaymentRefNumData1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentId,
-                    PaymentRefNumCaption2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderIdCaption,
-                    PaymentRefNumData2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderId,
+                    PaymentRefOptions = paymentRefOptions,
+                    //PaymentRefNumCaption1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentIdCaption,
+                    //PaymentRefNumData1 = string.IsNullOrWhiteSpace(paymentId) ? "" : paymentId,
+                    //PaymentRefNumCaption2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderIdCaption,
+                    //PaymentRefNumData2 = string.IsNullOrWhiteSpace(paymentOrderId) ? "" : paymentOrderId,
                 };
                 ApplicationDataContext.OrderPaymentAdd(paymentInfoModel.PaymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ArchLibDataContext.UpdPerson(paymentInfoModel.OrderSummaryModel.PersonId.Value, paymentInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.OrderSummaryModel.LastName, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);

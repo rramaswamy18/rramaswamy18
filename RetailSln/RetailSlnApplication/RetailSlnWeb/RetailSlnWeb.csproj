@@ -1306,6 +1306,13 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_ShoppingCartHeader1.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_ShoppingCartSummary1.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_ShoppingCart.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.txt" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Debug.txt">
+      <DependentUpon>Web.config.txt</DependentUpon>
+    </Content>
+    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt">
+      <DependentUpon>Web.config.txt</DependentUpon>
+    </Content>
     <Content Include="ClientSpecific\98_DivineBija.com\Views\_ViewStart.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_CategoryList.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_CorpAcctList.cshtml" />
@@ -1316,6 +1323,8 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_DashboardHeaderMenuHamburger.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_DashboardHeaderMenuTop.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_DashboardLayout.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemMasterList.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemMasterListData.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_OrderItem2.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_OrderItem2Backup.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_OrderItem3.cshtml" />
@@ -1366,6 +1375,7 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_PaymentInfo0Data.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_PaymentInfo3.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_PaymentInfo4.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_PaymentInfo9.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_PicGallery.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_PrivacyPolicy.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_RefundPolicy.cshtml" />
@@ -1444,13 +1454,6 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\_SignatureTemplateEmail.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\Error.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Web.config" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.txt" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Debug.txt">
-      <DependentUpon>Web.config.txt</DependentUpon>
-    </Content>
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt">
-      <DependentUpon>Web.config.txt</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -1612,6 +1615,9 @@
     <Content Include="Views\Home\_OrderItem1A.cshtml" />
     <Content Include="Views\Home\_OrderItem1C.cshtml" />
     <Content Include="Views\Home\_ItemBundleDataBackup2.cshtml" />
+    <Content Include="Views\Home\_PaymentInfo9.cshtml" />
+    <Content Include="Views\Dashboard\_ItemMasterList.cshtml" />
+    <Content Include="Views\Dashboard\_ItemMasterListData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

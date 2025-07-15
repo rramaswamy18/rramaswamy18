@@ -1,5 +1,30 @@
 ﻿//Sriramajayam
 //orderItemCode2.js
+function menuLink_onclick(url, queryString) {
+    console.log("menuLink_onclick", "00000000", "ENTER!!!", url, queryString);
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    //document.getElementById("divErrorMessage").innerHTML = "";
+    url += queryString;
+    console.log("menuLink_onclick", "00001000", "url", url, "queryString", queryString);
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        //data: jsonPostDataString,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "menuLink_onclick success", responseData.processMessage);
+            document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("menuLink_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+        }
+    });
+}
+/*
 function addEditLink_onclick(url, queryString) {
     console.log("addEditLink_onclick", "00000000", "ENTER!!!", url);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -659,3 +684,4 @@ function orderListView_onclick(orderHeaderId, invoiceTypeId) {
         }
     });
 }
+*/

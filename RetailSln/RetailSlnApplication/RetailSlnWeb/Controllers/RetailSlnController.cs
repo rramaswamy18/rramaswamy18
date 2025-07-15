@@ -1128,6 +1128,174 @@ namespace RetailSlnWeb.Controllers
             Session["PaymentInfo"] = paymentInfoModel;
             return RedirectToAction("OrderInvoice");
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult PaymentInfo9()
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+
+            PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+            try
+            {
+                retailSlnBL.PaymentInfo9(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process", "ModelStateIsValid", ModelState.IsValid.ToString());
+                if (ModelState.IsValid)
+                {
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process success");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Error while initializing credit card process BL");
+                    success = false;
+                    processMessage = "ERROR???";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Error while initializing credit card process BL");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while initializing credit card process");
+                success = false;
+                processMessage = "ERROR???";
+            }
+            htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo9", paymentInfoModel.CreditCardDataModel);
+            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            return actionResult;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult PaymentInfo9Process(CreditCardDataModel creditCardDataModel)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString, redirectUrl = "";
+
+            PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+            try
+            {
+                ModelState.Clear();
+                long.TryParse(creditCardDataModel.CreditCardNumber, out long tempLong);
+                if (tempLong > 0)
+                {
+                    if (creditCardDataModel.CreditCardNumber.Length >= 13 && creditCardDataModel.CreditCardNumber.Length <= 19)
+                    {
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("CreditCardNumber", "Invalid credit card number");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("CreditCardNumber", "Invalid credit card number");
+                }
+                long.TryParse(creditCardDataModel.CreditCardSecCode, out tempLong);
+                if (tempLong > 0)
+                {
+                    if (creditCardDataModel.CreditCardSecCode.Length >= 3 && creditCardDataModel.CreditCardSecCode.Length <= 4)
+                    {
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("CreditCardSecCode", "Invalid CVV (Sec Code)");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("CreditCardSecCode", "Invalid CVV (Sec Code)");
+                }
+                long.TryParse(creditCardDataModel.CreditCardExpMM, out tempLong);
+                if (tempLong > 0 && tempLong < 13)
+                {
+                }
+                else
+                {
+                    ModelState.AddModelError("CreditCardExpMM", "Invalid month");
+                }
+                long currentYear = DateTime.Now.Year;
+                long currentYearMonth = long.Parse(DateTime.Now.ToString("yyyyMM"));
+                long.TryParse(creditCardDataModel.CreditCardExpYear, out tempLong);
+                if (tempLong >= currentYear && tempLong < currentYear + 15)
+                {
+                    if (long.Parse(creditCardDataModel.CreditCardExpYear + creditCardDataModel.CreditCardExpMM) >= currentYearMonth)
+                    {
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("CreditCardExpMM", "Invalid month");
+                        ModelState.AddModelError("CreditCardExpYear", "Invalid year");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("CreditCardExpYear", "Invalid year");
+                }
+                if (ModelState.IsValid)
+                {
+                    paymentInfoModel.CreditCardDataModel = creditCardDataModel;
+                    retailSlnBL.PaymentInfo9Process(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process", "ModelStateIsValid", ModelState.IsValid.ToString());
+                    if (ModelState.IsValid)
+                    {
+                        success = true;
+                        processMessage = "SUCCESS!!!";
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process success");
+                        redirectUrl = Url.Action("OrderInvoice", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Error while processing credit card");
+                        success = false;
+                        processMessage = "ERROR???";
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Error while initializing credit card process BL");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Data validation failed");
+                    success = false;
+                    processMessage = "ERROR???";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model State Error(s)");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while initializing credit card process");
+                success = false;
+                processMessage = "ERROR???";
+            }
+            paymentInfoModel.CreditCardDataModel.ResponseObjectModel = new ResponseObjectModel
+            {
+                ResponseTypeId = success ? ResponseTypeEnum.Success : ResponseTypeEnum.Error,
+                ValidationSummaryMessage = success ? "" : ArchLibCache.ValidationSummaryMessageFixErrors,
+            };
+            htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo9", paymentInfoModel.CreditCardDataModel);
+            actionResult = Json(new { success, processMessage, htmlString, redirectUrl }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
         // POST: RemoveFromCart
         [AllowAnonymous]
         [HttpPost]
@@ -1164,8 +1332,8 @@ namespace RetailSlnWeb.Controllers
                 processMessage = "ERROR???";
                 htmlString = "Error while removing item from cart";
             }
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 

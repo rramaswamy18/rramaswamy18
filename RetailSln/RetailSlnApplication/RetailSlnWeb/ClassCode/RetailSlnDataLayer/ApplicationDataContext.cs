@@ -17,6 +17,13 @@ namespace RetailSlnDataLayer
             sqlConnection_ = new SqlConnection(databaseConnectionString);
             sqlConnection_.Open();
         }
+        public static SqlConnection OpenSqlConnection(bool dummy1)
+        {
+            string databaseConnectionString = Utilities.GetDatabaseConnectionString("DatabaseConnectionString");
+            SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+            sqlConnection.Open();
+            return sqlConnection;
+        }
         public static void CloseSqlConnection()
         {
             sqlConnection_.Close();
