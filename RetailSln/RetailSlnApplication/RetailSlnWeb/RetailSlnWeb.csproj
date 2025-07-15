@@ -1306,13 +1306,6 @@
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_ShoppingCartHeader1.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_ShoppingCartSummary1.cshtml" />
     <Content Include="ClientSpecific\97_DivineBija.in\Views\Shared\_ShoppingCart.cshtml" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.txt" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Debug.txt">
-      <DependentUpon>Web.config.txt</DependentUpon>
-    </Content>
-    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt">
-      <DependentUpon>Web.config.txt</DependentUpon>
-    </Content>
     <Content Include="ClientSpecific\98_DivineBija.com\Views\_ViewStart.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_CategoryList.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_CorpAcctList.cshtml" />
@@ -1454,6 +1447,13 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\_SignatureTemplateEmail.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Shared\Error.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Web.config" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.txt" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Debug.txt">
+      <DependentUpon>Web.config.txt</DependentUpon>
+    </Content>
+    <Content Include="ClientSpecific\98_DivineBija.com\Web.config.Release.txt">
+      <DependentUpon>Web.config.txt</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
