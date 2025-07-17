@@ -2448,11 +2448,10 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemBundleModelsFromCache = null;
                 itemRateBeforeDiscount = itemModel.ItemRate;
             }
-            RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId].TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
-            if (itemDiscountModel == null)
-            {
-                itemDiscountModel = new ItemDiscountModel { DiscountPercent = 0 };
-            }
+            RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> corpAcctItemDiscountModels);
+            corpAcctItemDiscountModels = corpAcctItemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
+            corpAcctItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+            itemDiscountModel = itemDiscountModel ?? new ItemDiscountModel { DiscountPercent = 0 };
             itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
             if (shoppingCartItemModel == null)
             {

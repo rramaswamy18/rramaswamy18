@@ -26,11 +26,6 @@
             @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressLine1", "")
             <br style="clear: both;" />
             @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "AddressCountryName", "")
-            @if (!string.IsNullOrWhiteSpace(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentNumber")))
-            {
-                <br style="clear: both;" />
-                @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentNumber"))
-            }
         </th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
             Invoice# @Model.OrderSummaryModel.OrderHeaderId
@@ -51,49 +46,59 @@
     <tr style="background-color: #ffffff;">
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px;"></th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top; ">
-            <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
-            <br style="clear: both;" />
-            <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
-            <br style="clear: both;" />
-            <br style="clear: both;" />
-            @Model.DeliveryMethodModel.DeliveryMethodDesc
-            @{
-                if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > 0)
-                {
-                    var pickupLocationModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId);
-                    var demogInfoAddressModel = Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels.First(x => x.DemogInfoAddressId == pickupLocationModel.LocationDemogInfoAddressId);
+            <span style="color: #ff0000; font-size: 16px;">
+                @Model.DeliveryMethodModel.DeliveryMethodDesc
+            </span>
+            @if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > 0)
+            {
+                var pickupLocationModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId);
+                var demogInfoAddressModel = Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels.First(x => x.DemogInfoAddressId == pickupLocationModel.LocationDemogInfoAddressId);
+                <br />
+                <span style="color: #000000; font-size: 16px;">
+                    @pickupLocationModel.LocationDesc
+                </span>
+                <span style="color: #000000; font-size: 14px; font-weight: normal;">
                     <br style="clear: both;" />
                     @demogInfoAddressModel.AddressLine1
-                    if (!string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine2))
+                    @if (!string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine2))
                     {
                         <br style="clear: both;" />
                         @demogInfoAddressModel.AddressLine2
                     }
                     <br style="clear: both;" />
                     @(demogInfoAddressModel.CityName + " " + demogInfoAddressModel.StateAbbrev + " " + demogInfoAddressModel.ZipCode)
-                }
+                </span>
             }
+            <br style="clear: both;" />
+            <br style="clear: both;" />
+            <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
+            <br style="clear: both;" />
+            <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
         </th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
-            <span style="color: #000000; font-weight: normal;">Customer Address</span>
+            <span style="color: #ff0000; font-size: 16px; font-weight: bold;">Customer Address</span>
             <br style="clear: both;" />
-            <span style="color: #000000; font-size: 17px; font-weight: bold;">@Model.OrderSummaryModel.UserFullName</span>
+            <span style="color: #000000; font-weight: bold;">
+                @Model.OrderSummaryModel.UserFullName
+            </span>
             <br style="clear: both;" />
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
-            {
-                @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
-                <br />
-            }
-            @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
-            {
+            <span style="color: #000000; font-weight: normal;">
+                @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
+                {
+                    @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
+                    <br />
+                }
+                @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
+                @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
+                {
+                    <br style="clear: both;" />
+                    @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
+                }
                 <br style="clear: both;" />
-                @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
-            }
-            <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.CityName + " " + Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
-            <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
+                @(Model.DeliveryDataModel.DeliveryAddressModel.CityName + " " + Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
+                <br style="clear: both;" />
+                @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
+            </span>
             @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum))
             {
                 <br style="clear: both;" />

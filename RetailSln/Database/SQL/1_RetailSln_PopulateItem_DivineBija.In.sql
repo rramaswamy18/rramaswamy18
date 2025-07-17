@@ -321,10 +321,6 @@ SET NOCOUNT OFF
 --SELECT * FROM #TEMP1
 --End Item Spec Update
 --Item Spec Update for single items
-        UPDATE RetailSlnSch.ItemSpec SET SeqNumItem = SeqNumItemMaster
-         WHERE SeqNumItem IS NULL AND SeqNumItemMaster IS NOT NULL
-           AND ItemId IN (SELECT ItemId FROM RetailSlnSch.Item WHERE ItemMasterId
-               IN (SELECT ItemMasterId FROM RetailSlnSch.Item GROUP BY ItemMasterId HAVING COUNT(*) = 1))
 --End Item Spec
 --Begin Item Spec Update SeqNumItemMaster
         UPDATE RetailSlnSch.ItemSpec
@@ -364,9 +360,8 @@ SET NOCOUNT OFF
             ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
            AND ItemSpecMaster.SpecName
                IN (
-                   DivineBija_Books.[Spec Name 1], DivineBija_Books.[Spec Name 2], DivineBija_Books.[Spec Name 2]
-                  ,DivineBija_Books.[Spec Name 3], DivineBija_Books.[Spec Name 2], DivineBija_Books.[Spec Name 4]
-                  ,DivineBija_Books.[Spec Name 5]
+                   DivineBija_Books.[Spec Name 1], DivineBija_Books.[Spec Name 2], DivineBija_Books.[Spec Name 3]
+                  ,DivineBija_Books.[Spec Name 4], DivineBija_Books.[Spec Name 5]
                   )
               ) A
         WHERE ItemSpec.ItemSpecId = A.ItemSpecId
@@ -382,7 +377,10 @@ SET NOCOUNT OFF
       GROUP BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
       ORDER BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
 --End Item Master Item Spec
-
+        UPDATE RetailSlnSch.ItemSpec SET SeqNumItem = SeqNumItemMaster
+         WHERE SeqNumItem IS NULL AND SeqNumItemMaster IS NOT NULL
+           AND ItemId IN (SELECT ItemId FROM RetailSlnSch.Item WHERE ItemMasterId
+               IN (SELECT ItemMasterId FROM RetailSlnSch.Item GROUP BY ItemMasterId HAVING COUNT(*) = 1))
 --Begin SearchList & SearchResult
 BEGIN
 TRUNCATE TABLE RetailSlnSch.SearchMetaData
