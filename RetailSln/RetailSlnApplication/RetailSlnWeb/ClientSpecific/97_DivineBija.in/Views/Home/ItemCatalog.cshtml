@@ -1,0 +1,23 @@
+﻿@using RetailSlnModels
+@model OrderItemDataModel
+@{
+    ViewBag.Title = "ItemCatalog";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
+    if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null)
+    {
+        paymentInfoModel.ShoppingCartModel.Checkout = false;
+    }
+}
+<div id="divItemCatalog" style="display: none;">
+    @Html.Partial("_OrderItemData", Model)
+</div>
+<script type="text/javascript">
+    function window_onload() {
+        $(document).ready(function () {
+            //$('#loadingModal').modal('hide');
+            //console.log("18", getCurrentDateTime());
+            document.getElementById("divItemCatalog").style.display = "block";
+        });
+    }
+</script>

@@ -1,0 +1,18 @@
+﻿@using ArchitectureLibraryModels
+@using RetailSlnModels
+@model LoginUserProfModel
+@{
+    ViewBag.Title = "LoginUserProf";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
+    if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null)
+    {
+        paymentInfoModel.ShoppingCartModel.Checkout = false;
+    }
+}
+@Html.Partial("_LoginUserProf", Model)
+<script type="text/javascript">
+    function window_onload() {
+
+    }
+</script>

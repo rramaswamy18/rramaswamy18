@@ -1,0 +1,51 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderItem1Model
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
+}
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="width: 99%;">
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="float: left; text-align: left; vertical-align: top;">
+        @if (Model.ItemMasterModel.ItemModels.Count == 1)
+        {//Single Item
+            if (Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+            {//Bundle
+                @Html.Partial("_OrderItem1C", Model)
+            }
+            else
+            {//Individual Item
+                @Html.Partial("_OrderItem1A", Model)
+            }
+        }
+        else
+        {//Dropdown
+            if (Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+            {//Bundle
+                @Html.Partial("_OrderItem1C", Model)
+            }
+            else
+            {//Individual Item
+                @Html.Partial("_OrderItem1A", Model)
+            }
+        }
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="float: left; text-align: left; vertical-align: top;">
+        <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ItemMasterModel.ImageName@imageDateTime" />
+    </div>
+</div>
+@*<script type="text/javascript">
+    function itemBundleItem_onclick(selectedIndex) {
+        var optionValue = document.getElementById("itemBundleItem").value;
+        var selectedIndex = document.getElementById("itemBundleItem").selectedIndex;
+        document.getElementById("itemId0").value = optionValue;
+        document.getElementById("tdIndex").innerText = selectedIndex + ".";
+        document.getElementById("tdItemSpec").innerText = itemSpecs[selectedIndex - 1];
+        document.getElementById("tdItemRate").innerText = itemRates[selectedIndex - 1];
+        document.getElementById("tdItemDiscount").innerText = itemDiscounts[selectedIndex - 1];
+        btnItemBundleLoad_onclick(optionValue);
+        document.getElementById("itemBundleItem").selectedIndex = 0;
+    }
+</script>*@

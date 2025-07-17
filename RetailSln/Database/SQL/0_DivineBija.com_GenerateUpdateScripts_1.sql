@@ -1,6 +1,6 @@
 USE [DivineBija.com]
 GO
---0_DivineBija.in_GenerateUpdateScripts_1.sql
+--0_DivineBija.com_GenerateUpdateScripts_1.sql
 --Apr 21 2024
 SET NOCOUNT ON
 
@@ -119,9 +119,9 @@ END
       FROM [ArchLib].[DemogInfoAddressUpload]
 INNER JOIN [ArchLib].[DemogInfoData]
         ON DemogInfoAddressUpload.CountryAbbrev = DemogInfoData.CountryAbbrev
-	   AND DemogInfoAddressUpload.CityName = DemogInfoData.CityName
-	   AND DemogInfoAddressUpload.StateAbbrev = DemogInfoData.StateAbbrev
-	   AND DemogInfoAddressUpload.ZipCode = DemogInfoData.ZipCode
+       AND DemogInfoAddressUpload.CityName = DemogInfoData.CityName
+       AND DemogInfoAddressUpload.StateAbbrev = DemogInfoData.StateAbbrev
+       AND DemogInfoAddressUpload.ZipCode = DemogInfoData.ZipCode
      WHERE DemogInfoAddressUpload.InstanceClientId = 98
   ORDER BY DemogInfoAddressUpload.DemogInfoAddressUploadId
     SET IDENTITY_INSERT [ArchLib].[DemogInfoAddress] OFF
@@ -145,7 +145,7 @@ ORDER BY PickupLocationId
               ,CASE OrderApproval WHEN 0 THEN 200 ELSE 100 END AS OrderApproval, Tax_Num
               ,CASE SHCharges WHEN 0 THEN 200 ELSE 100 END AS SHCharges, 100 AS StatusId
           FROM DivineBija_CorpAcctUpload
-		 WHERE Id = 0
+         WHERE Id = 0
       ORDER BY CorpAcctName
 --End Corp Acct
 ----Begin Update CorpAcct Upload DemogInfoAddressId
@@ -162,7 +162,7 @@ ORDER BY PickupLocationId
 --           AND DemogInfoCounty.CountyName = ''
 --        UPDATE DivineBija_CorpAcctUpload
 --           SET DemogInfoAddressId = CorpAcctId + 2
---		 WHERE CorpAcctId > 0
+--         WHERE CorpAcctId > 0
 ----End Update CorpAcct Upload DemogInfoAddressId
 --Begin Corp Acct Location DemogInfoAddress
  --       DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 0
@@ -181,8 +181,8 @@ ORDER BY PickupLocationId
  --             ,DemogInfoZipId, DemogInfoZipId AS DemogInfoZipPlusId, '1900-01-01' AS FromDate, '' AS HouseNumber, StateAbbrev, '' AS ToDate
  --             ,PINCode AS ZipCode, '' AS ZipPlus4
  --         FROM DivineBija_CorpAcctUpload
-	--INNER JOIN RetailSlnSch.CorpAcct
-	--		ON DivineBija_CorpAcctUpload.Id = CorpAcct.CorpAcctId
+    --INNER JOIN RetailSlnSch.CorpAcct
+    --        ON DivineBija_CorpAcctUpload.Id = CorpAcct.CorpAcctId
  --        WHERE DivineBija_CorpAcctUpload.DemogInfoAddressId <> 0
  --     ORDER BY DivineBija_CorpAcctUpload.DemogInfoAddressId
  --       SET IDENTITY_INSERT ArchLib.DemogInfoAddress OFF
@@ -207,8 +207,9 @@ ORDER BY PickupLocationId
       ORDER BY CorpAcct.CorpAcctId, DivineBija_CorpAcctUpload.SeqNum
 --End Corp Acct Location
 --Begin Corp Acct Discount
-        DELETE RetailSlnSch.ItemDiscount WHERE ItemDiscountId > 1
-        DBCC CHECKIDENT ('RetailSlnSch.ItemBundle', RESEED, 1);
+        --DELETE RetailSlnSch.ItemDiscount WHERE ItemDiscountId > 1
+        --DBCC CHECKIDENT ('RetailSlnSch.ItemBundle', RESEED, 1);
+        TRUNCATE TABLE RetailSlnSch.ItemDiscount
 
         INSERT RetailSlnSch.ItemDiscount(ClientId, CorpAcctId, ItemId, DiscountPercent)
         SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, DivineBija_CorpAcctItems.Discount
@@ -220,7 +221,7 @@ ORDER BY PickupLocationId
 UNION
         SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, CorpAcct.DefaultDiscountPercent
           FROM RetailSlnSch.CorpAcct
-	CROSS JOIN RetailSlnSch.Item
+    CROSS JOIN RetailSlnSch.Item
          WHERE CorpAcctTypeId = 500
       ORDER BY CorpAcctId, ItemId
 --End Corp Acct Discount

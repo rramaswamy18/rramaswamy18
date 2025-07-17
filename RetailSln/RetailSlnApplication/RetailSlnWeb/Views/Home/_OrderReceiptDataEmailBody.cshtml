@@ -1,0 +1,175 @@
+﻿@model PaymentInfoModel
+@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<table style="padding: 0px;">
+    <tr>
+        <td style="padding: 0px;">
+            <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" title="@imageTitle" />
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "BusinessName1", "")
+                        <br />
+                        @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressLine1", "")
+                        <br />
+                        @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressLine1A", "")
+                        <br />
+                        @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressLine2", "")
+                        <br />
+                        @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCityName", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressStateAbbrev", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipCode", "")&nbsp;@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressZipPlus4", "") @ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "AddressCountryName", "")
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/Phone1_Small.png" />
+                        <br />
+                        <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/SMSIcon3_Small.png" />
+                        <br />
+                        <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
+                        <br />
+                        GSTIN#: <span style="color: #000000; font-size: 12px;">@ArchitectureLibraryCacheData.ArchLibCache.GetApplicationDefault(ArchitectureLibraryCacheData.ArchLibCache.ClientId, "Business", "GSTNumber")</span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="padding: 0px;">
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 0px;">
+            <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+                <tr>
+                    <td colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        <span style="color: #000000; font-weight: bold;">Dear Valued Customer,</span>
+                        <br /><br />
+                        Please find the details of your purchase
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Order#
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.OrderHeaderId
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Balance Due
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.BalanceDue.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Delivery Method
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.DeliveryInfoDataModel.DeliveryMethodName
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Payment Mode
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.DeliveryInfoDataModel.PaymentModeName<br />
+                        @Model.DeliveryInfoDataModel.PaymentModeDesc
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Email Address
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.EmailAddress
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        User Name
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.UserFullName
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Gift Cert Last 4
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.GiftCertNumberLast4
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Gift Cert Payment Amount
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.GiftCertPaymentAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Name on card
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.CardHolderName
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Credit Card Last 4
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.CreditCardNumberLast4
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Credit Card Payment Amount
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.CreditCardPaymentAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        CC Process Status
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Model.PaymentSummaryDataModel.CreditCardProcessStatus
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        Unique Ref#
+                    </td>
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #000000; font-family: Arial; font-size: 14px; padding: 5px; text-align: left; white-space: nowrap; vertical-align: top;">
+                        @Html.Raw(Model.PaymentSummaryDataModel.CreditCardProcessMessage)
+                    </td>
+                </tr>
+            </table>
+            @if (Model.PaymentSummaryDataModel.AspNetRoleName == "GUESTROLE")
+            {
+                <table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+                    <tr>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid;  border-width: 1px; color: #ff0000; font-family: Arial; font-size: 14px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">
+                            You checked out as Guest User. A regular user has exotic features. You can register using the same email address
+                        </td>
+                    </tr>
+                </table>
+            }
+        </td>
+        <td style="padding: 0px;">
+        </td>
+    </tr>
+</table>

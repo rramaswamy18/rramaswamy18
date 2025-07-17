@@ -320,6 +320,11 @@ SET NOCOUNT ON
 SET NOCOUNT OFF
 --SELECT * FROM #TEMP1
 --End Item Spec Update
+--Item Spec Update for single items
+        UPDATE RetailSlnSch.ItemSpec SET SeqNumItem = SeqNumItemMaster
+         WHERE SeqNumItem IS NULL AND SeqNumItemMaster IS NOT NULL
+           AND ItemId IN (SELECT ItemId FROM RetailSlnSch.Item WHERE ItemMasterId
+               IN (SELECT ItemMasterId FROM RetailSlnSch.Item GROUP BY ItemMasterId HAVING COUNT(*) = 1))
 --End Item Spec
 --Begin Item Spec Update SeqNumItemMaster
         UPDATE RetailSlnSch.ItemSpec
@@ -537,3 +542,6 @@ END
          WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 --End CategoryItemMasterHier
+SELECT 'copy "' + UploadImageFileName + '" "DivineBija.InUploadedImages\"' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
+--SELECT 'copy "C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\' + UploadImageFileName + '"' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
+SELECT 'copy "DivineBija.InUploadedImages\' + UploadImageFileName + '" ItemMaster\ItemMaster' + CAST(ItemMasterId AS VARCHAR) + '.' + ImageExtension AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId

@@ -22,11 +22,6 @@
         isLoggedIn = true;
     }
     isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
-    Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-    if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
-    {
-        aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-    }
     List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
     int i;
 }
@@ -79,7 +74,7 @@
                                 <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="117" height="117" title="@imageTitle" />
                             </a>
                             <p class="company-name font-bold" style="vertical-align: top;">
-                                <span style="color: #9401d9; font-size: 22px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span><br /><span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
+                                <span style="color: #9401d9; font-size: 22px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span><br /><span style="color: #ff0000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord2", "")</span><br /><span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
                                 <br style="clear: both;" />
                             </p>
                         </div>

@@ -1,0 +1,10 @@
+﻿@using ArchitectureLibraryCacheData
+@model string
+@{
+    var demogInfoSubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == long.Parse(Model));
+    <option value="">---</option>
+    foreach (var demogInfoSubDivisionModel in demogInfoSubDivisionModels)
+    {
+        <option value="@demogInfoSubDivisionModel.DemogInfoSubDivisionId">@demogInfoSubDivisionModel.SubDivisionDesc</option>
+    }
+}

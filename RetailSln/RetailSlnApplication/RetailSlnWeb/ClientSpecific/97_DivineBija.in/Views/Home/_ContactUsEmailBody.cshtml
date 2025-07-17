@@ -1,0 +1,102 @@
+﻿@model ArchitectureLibraryModels.ContactUsModel
+@using ArchitectureLibraryCacheData
+@{
+    long clientId = ArchLibCache.ClientId;
+}
+<table>
+    <tr>
+        <td colspan="2" style="padding: 5px; text-align: left;">
+            <span style="font-weight: bold;">Hello,</span>
+            <br /><br />
+            We appreciate you contacting us. Our staff will get back to you at the earliest. Below is the information you provided
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            Type
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.ContactUsTypeId
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            First Name
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.FirstName
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            Last Name
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.LastName
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            Email Address
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.EmailAddress
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            Telephone#
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.ContactUsTelephoneNumber
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            Comments
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.CommentsRequests
+        </td>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            Id
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @Model.ContactUsId
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+            @if (Model.UserProfRegistered)
+            {
+                <span>Your email address is already <b>registered</b>. Please login and enjoy the features</span>
+            }
+            else
+            {
+                <span>We have registered your email address. Please login and enjoy the features</span>
+            }
+        </td>
+    </tr>
+    @if (!Model.UserProfRegistered)
+    {
+        <tr>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
+                Password
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; font-weight: bold; text-align: left; vertical-align: top;">
+                @Model.LoginPassword
+            </td>
+        </tr>
+    }
+    <tr>
+        <td colspan="2" style="padding: 5px; text-align: left;">
+            <span style="background-color: #deecf9;">
+                Please do not hesitate to call us at @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") if you have any questions.
+                <br /><br />
+                Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" target="_blank">Contact Us Here</a> to let us know.
+            </span>
+        </td>
+    </tr>
+</table>

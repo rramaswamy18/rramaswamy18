@@ -1,0 +1,197 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderItemModel
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+</style>
+@{
+    long clientId = ArchLibCache.ClientId;
+    string clientName = ArchLibCache.ClientName;
+    string imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    int itemSeqNum = 0, imageIndex = 0, imageCountIndex = 0;
+    ItemMasterModel itemMasterModel;
+    @BuildPaginationLinks(Model.PageCount)
+    <br style="clear: both;" />
+    <input id="selectedCategoryId" type="hidden" value="@Model.ParentCategoryId" />
+    foreach (var categoryItemMasterHierModel in Model.CategoryItemMasterHierModels)
+    {
+        itemMasterModel = categoryItemMasterHierModel.ItemMasterModel;
+        imageIndex++;
+        imageCountIndex++;
+        <div style="display: inline-block; padding: 18px; vertical-align: top; width: @Model.ImageDivWidth;">
+            @BuildItem(itemMasterModel, Model.ItemDiscountModels, ++itemSeqNum, imageIndex, Model.ImageDivWidth, Model.ImageHeight, Model.ImageWidth, clientId, clientName, Model.CategoryOrItem)
+        </div>
+        if (imageCountIndex == Model.ImageCountPerRow)
+        {
+            <br style="clear: both;" />
+            imageCountIndex = 0;
+        }//if (imageCountIndex == imageCountPerRow)
+    }
+    <br style="clear: both;" />
+    @BuildPaginationLinks(Model.PageCount)
+}
+@helper BuildPaginationLinks(long pageCount)
+{
+    if (pageCount > 1)
+    {
+        <ul class="pagination">
+            @if (Model.PageNum == 1)
+            {
+                <li class="page-item">
+                    <span class="page-link">Prev</span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryIdPagination_onclick(@(Model.PageNum - 1));" , title="Jump to page# @(Model.PageNum - 1)">
+                        Prev
+                    </a>
+                </li>
+            }
+            @for (int i = 1; i <= pageCount; i++)
+            {
+                if (i == Model.PageNum)
+                {
+                    <li class="page-item active">
+                        <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryIdPagination_onclick(@i);" , title="Jump to page# @i">
+                            @i
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryIdPagination_onclick(@i);" , title="Jump to page# @i">
+                            @i
+                        </a>
+                    </li>
+                }
+            }
+            @if (Model.PageNum == pageCount)
+            {
+                <li class="page-item">
+                    <span class="page-link">Next</span>
+                </li>
+                @*<li class="page-item">
+                        <span class="page-link">Last</span>
+                    </li>*@
+            }
+            else
+            {
+                <li class="page-item">
+                    <a alt="Page# @(Model.PageNum - 1)" class="page-link" href="javascript: void(0);" onclick="javascript: return categoryIdPagination_onclick(@(Model.PageNum + 1));" , title="Jump to page# @(Model.PageNum + 1)">
+                        Next
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+}
+@helper BuildItem(ItemMasterModel itemMasterModel, Dictionary<long, ItemDiscountModel> itemDiscountModels, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+{
+    string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
+    ItemDiscountModel itemDiscountModel;
+    if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
+    {
+        <div style="position: relative;">
+            <div style="left: 2px; position: absolute; top: 1px;">
+                <span style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px;" title="@itemMasterModel.ImageTitle">Sold Out</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="position: relative;">
+            <div style="right: 2px; position: absolute; top: 1px;">
+                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="border-style: none; padding: 3px;" title="Add to cart @itemMasterModel.ImageTitle">
+                    <img alt="Add to cart @itemMasterModel.ItemMasterDesc" src="~/Images/CircleWithPlus.png" style="border: none; height: 36px; width: 36px;" title="Add to cart @itemMasterModel.ItemMasterDesc" />
+                </a>
+            </div>
+        </div>
+    }
+    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
+        <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName@imageDateTime" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
+    </a>
+    if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+    {
+        <div style="position: relative;">
+            <div style="bottom: 1px; right: 2px; position: absolute;">
+                <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="background-color: #000000; border-style: none; color: #ffffff; font-family: Arial; font-size: 12px; font-weight: 600; padding: 3px; text-decoration: underline;" title="@itemMasterModel.ImageTitle">View Bundle&nbsp;</a>
+            </div>
+        </div>
+    }
+    <br style="clear: both;" />
+    <div style="text-align: left;">
+        <span style="color: #1d1d1d; font-family: Arial; font-size: 16px; font-style: normal; font-weight: 400; line-height: 21px;">
+            @if (itemMasterModel.ItemModels.Count == 1)
+            {
+                @(itemMasterModel.ItemModels[0].ItemRateFormatted + " - ")
+            }
+            @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
+        </span>
+        @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
+        {
+            <br style="clear: both;" />
+            <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
+        }
+    </div>
+    if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
+    {
+        <br style="clear: both;" />
+        <br style="clear: both;" />
+        <span style="color: #000000; font-size: 17px; font-weight: 900;">SOLD OUT</span>
+    }//if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
+    <div style="color: #0000ff; font-family: Arial; font-size: 12px; font-weight: bold; text-align: left;">
+        @if (itemMasterModel.ItemRatesForDisplay != "")
+        {
+            <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-size: 14px; font-weight: bold; text-decoration: underline;" title="Add to cart @itemMasterModel.ItemRatesForDisplayAll">@itemMasterModel.ItemRatesForDisplay</a>
+        }
+        @if (itemMasterModel.ItemModels.Count == 1)
+        {
+            itemDiscountModels.TryGetValue(itemMasterModel.ItemModels[0].ItemId.Value, out itemDiscountModel);
+            if (itemDiscountModel != null)
+            {
+                <span style="color: #0000ff;">Disc: @(itemDiscountModel.DiscountPercent.ToString("0.00") + "%")</span>
+            }
+        }
+    </div>
+    if (itemMasterModel.ItemModels.Count > 1)
+    {
+        <span id="spnMessageItem@(imageIndex)" style="color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold;"></span>
+        <span id="itemId@(imageIndex)" style="display: none;"></span>
+    }
+    else
+    {
+        <span id="itemId@(imageIndex)" style="display: none;">@itemMasterModel.ItemModels[0].ItemId</span>
+    }
+<div style="font-size: 12px; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">
+    <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(this, '');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 11px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
+    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold; text-decoration: underline;">
+        <img alt="Add to cart @itemMasterModel.ItemMasterDesc" src="~/Images/CircleWithPlus.png" style="height: 21px; width: 21px;" title="Add to cart @itemMasterModel.ItemMasterDesc" />
+    </a>
+    @if (itemMasterModel.ItemModels.Count > 1 || itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+    {
+        <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+    }
+    else
+    {
+        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemMasterModel.ItemModels[0].ItemId, '@(imageIndex)', '', true);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+    }
+</div>
+    <span id="spnMessageSuccess@(imageIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        <br style="clear: both;" />
+        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(imageIndex)" style="color: #0000ff; font-size:12px;"></span></span>
+    </span>
+    <span id="spnMessageError@(imageIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+        <br style="clear: both;" />
+        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+        <span id="spnMessageErrorText@(imageIndex)" style="color: #ff0000;"></span>
+    </span>
+    @*}//else (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)*@
+}

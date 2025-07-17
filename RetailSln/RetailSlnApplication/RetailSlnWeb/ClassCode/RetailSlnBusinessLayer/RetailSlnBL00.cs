@@ -427,12 +427,14 @@ namespace RetailSlnBusinessLayer
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ItemMasterModel itemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId);
                 long itemId = itemMasterModel.ItemModels[0].ItemId.Value;
+                RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+                itemDiscountModels = itemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
                 ItemMasterAttributesModel itemMasterAttributesModel = new ItemMasterAttributesModel
                 {
                     ItemMasterId = itemMasterId,
                     OrderItem1Model = new OrderItem1Model
                     {
-                        ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[corpAcctId],
+                        ItemDiscountModels = itemDiscountModels,
                         ItemMasterModel = itemMasterModel,
                         ItemBundleDataModel = ItemBundleData(itemId, paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId),
                     },

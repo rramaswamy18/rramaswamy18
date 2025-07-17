@@ -160,22 +160,32 @@ ORDER BY PickupLocationId
           FROM DivineBija_CorpAcctUpload
       ORDER BY CorpAcctName
 --End Corp Acct
-----Begin Update CorpAcct Upload DemogInfoAddressId
---        UPDATE DivineBija_CorpAcctUpload
---           SET DemogInfoCountryId = NULL, DemogInfoSubDivisionId = NULL, DemogInfoCountyId = NULL, DemogInfoCityId = NULL, DemogInfoZipId = NULL, DemogInfoAddressId = 0
---        UPDATE DivineBija_CorpAcctUpload
---           SET DemogInfoCountryId = DemogInfoCountry.DemogInfoCountryId
---              ,DivineBija_CorpAcctUpload.DemogInfoSubDivisionId = DemogInfoSubDivision.DemogInfoSubDivisionId
---          FROM ArchLib.DemogInfoCountry, ArchLib.DemogInfoSubDivision, ArchLib.DemogInfoCounty
---         WHERE DivineBija_CorpAcctUpload.CountryAbbrev = DemogInfoCountry.CountryAbbrev
---           AND DemogInfoCountry.DemogInfoCountryId = DemogInfoSubDivision.DemogInfoCountryId
---           AND DivineBija_CorpAcctUpload.StateAbbrev = DemogInfoSubDivision.StateAbbrev
---           AND DemogInfoSubDivision.DemogInfoSubDivisionId = DemogInfoCounty.DemogInfoSubDivisionId
---           AND DemogInfoCounty.CountyName = ''
---        UPDATE DivineBija_CorpAcctUpload
---           SET DemogInfoAddressId = CorpAcctId + 2
---		 WHERE CorpAcctId > 0
-----End Update CorpAcct Upload DemogInfoAddressId
+--Begin Update CorpAcct Upload DemogInfoAddressId
+        UPDATE DivineBija_CorpAcctUpload
+           SET DemogInfoCountryId = NULL, DemogInfoSubDivisionId = NULL, DemogInfoCountyId = NULL, DemogInfoCityId = NULL, DemogInfoZipId = NULL, DemogInfoAddressId = 0
+        UPDATE DivineBija_CorpAcctUpload
+           SET DivineBija_CorpAcctUpload.DemogInfoCountryId = 0
+              ,DivineBija_CorpAcctUpload.DemogInfoSubDivisionId = 0
+              ,DivineBija_CorpAcctUpload.DemogInfoCountyId = 0
+              ,DivineBija_CorpAcctUpload.DemogInfoCityId = 0
+              ,DivineBija_CorpAcctUpload.DemogInfoZipId = 0
+		 WHERE DivineBija_CorpAcctUpload.Id = 0
+        UPDATE DivineBija_CorpAcctUpload
+           SET DivineBija_CorpAcctUpload.DemogInfoCountryId = DemogInfoData.DemogInfoCountryId
+              ,DivineBija_CorpAcctUpload.DemogInfoSubDivisionId = DemogInfoData.DemogInfoSubDivisionId
+              ,DivineBija_CorpAcctUpload.DemogInfoCountyId = DemogInfoData.DemogInfoCountyId
+              ,DivineBija_CorpAcctUpload.DemogInfoCityId = DemogInfoData.DemogInfoCityId
+              ,DivineBija_CorpAcctUpload.DemogInfoZipId = DemogInfoData.DemogInfoZipId
+          FROM ArchLib.DemogInfoData
+         WHERE DivineBija_CorpAcctUpload.CountryAbbrev = DemogInfoData.CountryAbbrev
+           AND DivineBija_CorpAcctUpload.StateAbbrev = DemogInfoData.StateAbbrev
+           AND DivineBija_CorpAcctUpload.CityName = DemogInfoData.CityName
+           AND DivineBija_CorpAcctUpload.PINCode = DemogInfoData.ZipCode
+		   AND DivineBija_CorpAcctUpload.Id > 0
+        UPDATE DivineBija_CorpAcctUpload
+           SET DemogInfoAddressId = CorpAcctId + 4
+		 WHERE CorpAcctId > 0
+--End Update CorpAcct Upload DemogInfoAddressId
 --Begin Corp Acct Location DemogInfoAddress
         DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 4
         SET IDENTITY_INSERT ArchLib.DemogInfoAddress ON

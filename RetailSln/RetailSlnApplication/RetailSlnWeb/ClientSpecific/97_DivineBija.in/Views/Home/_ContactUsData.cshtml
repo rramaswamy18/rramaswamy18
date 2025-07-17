@@ -1,0 +1,32 @@
+﻿@model ArchitectureLibraryModels.ContactUsModel
+@{
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(true, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 11px; margin: 0px; padding: 0px; text-align: left;" }).ToHtmlString()))
+        </div>
+    }
+    if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }
+    //Using this right now
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    //mobileDevice = true;
+    if (mobileDevice)
+    {
+        @Html.Partial("_ContactUsData2")
+    }
+    else
+    {//2 columns
+        @Html.Partial("_ContactUsData1")
+    }
+}
