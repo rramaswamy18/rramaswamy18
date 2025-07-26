@@ -10,6 +10,6 @@ namespace RetailSlnModels
     {
         public RegisterUserModel RegisterUserModel { set; get; }
         public CouponListModel CouponListModel { set; get; }
-        public PriestListModel PriestListModel { set; get; }
+        public ReferralListModel ReferralListModel { set; get; }
     }
 }

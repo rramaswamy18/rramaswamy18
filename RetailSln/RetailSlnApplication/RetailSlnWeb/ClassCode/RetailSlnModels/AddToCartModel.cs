@@ -17,11 +17,13 @@ namespace RetailSlnModels
 
         public ItemModel ItemModel { set; get; }
 
-        public float ItemRate { set; get; }
+        //public float ItemRate { set; get; }
 
         public long OrderQty { set; get; }
 
         public string OrderQtyParm { set; get; }
+
+        public long ParentItemId { set; get; }
 
         public List<ShoppingCartItemModel> ShoppingCartItemBundleModels { set; get; }
     }

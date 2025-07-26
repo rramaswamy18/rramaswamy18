@@ -83,9 +83,9 @@ namespace RetailSlnWeb.Controllers
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                         return RedirectToAction("LoginUserProf");
                     }
-                    if (absoluteUri.ToUpper().IndexOf("PUROHIT") > -1 || id?.ToUpper().IndexOf("PUROHIT") > -1)
+                    if (absoluteUri.ToUpper().IndexOf("REFERRAL") > -1 || id?.ToUpper().IndexOf("REFERRAL") > -1)
                     {
-                        aspNetRoleName = "PRIESTROLE";
+                        aspNetRoleName = "REFERRALROLE";
                     }
                     else
                     {
@@ -103,7 +103,7 @@ namespace RetailSlnWeb.Controllers
                     case "SYSTADMIN":
                         actionResult = RedirectToAction("Index", "Dashboard");
                         break;
-                    case "PRIESTROLE":
+                    case "REFERRALROLE":
                         OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                         actionResult = View("Index", orderItemModel1);
                         break;
@@ -693,22 +693,6 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //long.TryParse(id, out long userTypeId);
-                //var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == userTypeId);
-                //registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
-                #region For Testing - Delete
-                //registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
-                //registerUserModel.TelephoneNumber = "9880110009";
-                //registerUserModel.LoginPassword = "Login9@9Password";
-                //registerUserModel.ConfirmLoginPassword = "Login9@9Password";
-                //registerUserModel.FirstName = "Priest1 First";
-                //registerUserModel.LastName = "Priest1 Last";
-                //registerUserModel.DemogInfoAddressModel.AddressLine1 = "123 Sri Rama Apt";
-                //registerUserModel.DemogInfoAddressModel.AddressLine2 = "Near Metro Station";
-                //registerUserModel.DemogInfoAddressModel.ZipCode = "600003";
-                //registerUserModel.DemogInfoAddressModel.CityName = "CHENNAI";
-                //registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionId = 391;
-                #endregion
                 Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
                 Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
                 actionResult = View("RegisterUser", registerUserModel);
@@ -769,7 +753,7 @@ namespace RetailSlnWeb.Controllers
                     success = false;
                     processMessage = "ERROR???";
                     var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
+                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
                     registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                     registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
                     if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
@@ -793,7 +777,7 @@ namespace RetailSlnWeb.Controllers
                 registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
+                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
                 registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                 registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
                 if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
@@ -835,19 +819,6 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                #region For Testing - Delete
-                //registerUserModel.DemogInfoAddressModel.BuildingTypeId = BuildingTypeEnum._;
-                //registerUserModel.TelephoneNumber = "9880110045";
-                //registerUserModel.LoginPassword = "Login9@9Password";
-                //registerUserModel.ConfirmLoginPassword = "Login9@9Password";
-                //registerUserModel.FirstName = "Priest First";
-                //registerUserModel.LastName = "Priest Last";
-                //registerUserModel.DemogInfoAddressModel.AddressLine1 = "123 Sri Rama Apt";
-                //registerUserModel.DemogInfoAddressModel.AddressLine2 = "Near Metro Station";
-                //registerUserModel.DemogInfoAddressModel.ZipCode = "600003";
-                //registerUserModel.DemogInfoAddressModel.CityName = "CHENNAI";
-                //registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionId = 391;
-                #endregion
                 Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
                 Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
                 actionResult = View("RegisterUserProf", registerUserModel);
@@ -912,7 +883,7 @@ namespace RetailSlnWeb.Controllers
                 else
                 {
                     var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
+                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
                     registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                     registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
                     if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
@@ -939,7 +910,7 @@ namespace RetailSlnWeb.Controllers
                 registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
                 archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsPriest : aspNetRoleModels;
+                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
                 registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
                 registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
                 if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)

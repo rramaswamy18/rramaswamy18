@@ -114,21 +114,21 @@ namespace RetailSlnBusinessLayer
                 CouponListModel couponListModel = new CouponListModel
                 {
                     BegEffDate = "1900-01-01",
-                    CouponNum = archLibBL.GenerateRandomKey(int.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "PriestCouponLength")), lowerCaseFlag: false, specialCharFlag: false),
-                    DiscountPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "PriestUserDiscount")),
+                    CouponNum = archLibBL.GenerateRandomKey(int.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCouponLength")), lowerCaseFlag: false, specialCharFlag: false),
+                    DiscountPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralUserDiscount")),
                     EndEffDate = "9999-12-31",
                 };
                 registerUserEmailModel.CouponListModel = couponListModel;
                 ApplicationDataContext.CouponListAdd(couponListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                PriestListModel priestListModel = new PriestListModel
+                ReferralListModel referralListModel = new ReferralListModel
                 {
-                    CommissionPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "PriestCommission")),
+                    CommissionPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCommission")),
                     CouponListId = couponListModel.CouponListId.Value,
                     DiscountPercent = couponListModel.DiscountPercent,
                     PersonId = registerUserEmailModel.RegisterUserModel.PersonId,
                 };
-                registerUserEmailModel.PriestListModel = priestListModel;
-                ApplicationDataContext.PriestListAdd(priestListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                registerUserEmailModel.ReferralListModel = referralListModel;
+                ApplicationDataContext.ReferralListAdd(referralListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
             }
             catch (Exception exception)
             {

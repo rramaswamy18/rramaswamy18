@@ -1,5 +1,54 @@
 ﻿//Sriramajayam
 //orderItemCode2.js
+function itemMasterAddEdit_onclick(itemMasterId) {
+    console.log("itemMasterAddEdit_onclick", "00000000", "ENTER!!!", url);
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    //document.getElementById("divErrorMessage").innerHTML = "";
+    var url = "/Dashboard/ItemMaster?id=" + itemMasterId;
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        //data: jsonPostDataString,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "itemMasterAddEdit_onclick success", responseData.processMessage);
+            document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("itemMasterAddEdit_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+        }
+    });
+}
+function itemMasterSave_onclick() {
+    console.log("itemMasterSave_onclick", "00000000", "ENTER!!!", url);
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Dashboard/ItemMasterData";
+    var jsonPostData = new FormData(document.getElementById("formItemMasterData"));
+    $.ajax({
+        url: url,
+        type: "POST",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: jsonPostData,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "itemMasterSave_onclick success", responseData.processMessage);
+            document.getElementById("formItemMasterData").innerHTML = responseData.htmlString;
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("itemMasterSave_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+        }
+    });
+}
 function menuLink_onclick(url, queryString) {
     console.log("menuLink_onclick", "00000000", "ENTER!!!", url, queryString);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -24,10 +73,10 @@ function menuLink_onclick(url, queryString) {
         }
     });
 }
-function orderListView_onclick(orderHeaderId, invoiceTypeId) {
-    console.log("orderListView_onclick", "00000000", "ENTER!!!");
-    var url = "/Dashboard/OrderListView";
-    url += "?id=" + orderHeaderId + "&invoiceTypeId=" + invoiceTypeId;
+function orderView_onclick(orderHeaderSummaryId) {
+    console.log("orderView_onclick", "00000000", "ENTER!!!");
+    var url = "/Dashboard/OrderView";
+    url += "?id=" + orderHeaderSummaryId;
     $.ajax({
         url: url,
         type: "GET",
@@ -36,12 +85,12 @@ function orderListView_onclick(orderHeaderId, invoiceTypeId) {
         //data: jsonPostDataString,
         success: function (responseData, textStatus, request) {
             $('#loadingModal').modal('hide');
-            console.log("00001000", "orderListView_onclick success", responseData.processMessage);
+            console.log("00001000", "orderView_onclick success", responseData.processMessage);
             document.getElementById("divDashboard").innerHTML = responseData.htmlString;
         },
         error: function (xhr, exception) {
             $('#loadingModal').modal('hide');
-            console.log("orderListView_onclick", "00099000", "ERROR???");
+            console.log("orderView_onclick", "00099000", "ERROR???");
             console.log(xhr, exception);
         }
     });

@@ -14,7 +14,7 @@ namespace RetailSlnEnumerations
         Wholesale = 200,
         [Description("Temple / Bulk Orders")]
         BulkOrder = 300,
-        [Description("Priest")]
-        Priest = 400,
+        [Description("Referral")]
+        Referral = 400,
     }
 }

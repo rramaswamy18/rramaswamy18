@@ -12,6 +12,8 @@ namespace RetailSlnModels
 
         public long ClientId { set; get; }
 
+        public bool BookFlag { set; get; }
+
         public long? CodeTypeId { set; get; }
 
         public string SpecDesc { set; get; }
@@ -26,7 +28,13 @@ namespace RetailSlnModels
 
         public bool IsMandatory { set; get; }
 
+        public bool ItemMasterFlag { set; get; }
+
+        public bool ProductFlag { set; get; }
+
         public float SeqNum { set; get; }
+
+        public CodeTypeModel CodeTypeModel { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

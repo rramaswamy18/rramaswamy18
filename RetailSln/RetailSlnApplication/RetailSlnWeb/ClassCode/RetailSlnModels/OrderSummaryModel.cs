@@ -41,6 +41,8 @@ namespace RetailSlnModels
 
         public string EmailAddress { set; get; }
 
+        public long? AdditionalCharges { set; get; }
+
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "First Name")]
         [StringLength(100, MinimumLength = 1, ErrorMessage = "First Name")]

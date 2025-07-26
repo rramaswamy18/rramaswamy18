@@ -2,6 +2,7 @@
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using RetailSlnCacheData;
 using RetailSlnDataLayer;
 using RetailSlnEnumerations;
 using RetailSlnModels;
@@ -68,6 +69,73 @@ namespace RetailSlnBusinessLayer
             }
             return categoryListModel;
         }
+        // GET : ItemMaster
+        public ItemMasterDataModel ItemMaster(string itemMasterIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                int.TryParse(itemMasterIdParm, out int itemMasterId);
+                ItemMasterDataModel itemMasterDataModel;
+                if (itemMasterId == 0)
+                {
+                    itemMasterDataModel = new ItemMasterDataModel
+                    {
+                        ItemMasterModel = new ItemMasterModel
+                        {
+                            ItemMasterId = 0,
+                            ItemMasterDesc0 = "Divine Bija",
+                            ItemTypeId = ItemTypeEnum.RegularItem,
+                            ItemMasterStatusId = YesNoEnum.Yes,
+                            //CategoryIds = new List<bool>(RetailSlnCache.CategoryModels.Count),
+                            ItemModels = new List<ItemModel>(),
+                        },
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    };
+                }
+                else
+                {
+                    itemMasterDataModel = new ItemMasterDataModel();
+                }
+                return itemMasterDataModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : ItemMaster
+        public void ItemMaster(ref ItemMasterModel itemMasterModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                itemMasterModel.UploadImageFileName = itemMasterModel.ImageNameHttpPostedFileBase.FileName;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
         // GET : ItemMasterList
         public ItemMasterListModel ItemMasterList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -121,6 +189,37 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
+        // GET : ItemMasterList
+        public ItemSpecMasterListModel ItemSpecMasterList(SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                SqlConnection sqlConnection = ApplicationDataContext.OpenSqlConnection(true);
+                ItemSpecMasterListModel itemMasterListModel = new ItemSpecMasterListModel
+                {
+                    ItemSpecMasterModels = ApplicationDataContext.ItemSpecMasterList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+                return itemMasterListModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
         // GET : OrderList
         public OrderListModel OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -148,7 +247,7 @@ namespace RetailSlnBusinessLayer
                         break;
                     case "APPLADMN1":
                     case "MARKETINGROLE":
-                    case "PRIESTROLE":
+                    case "REFERRALROLE":
                     case "SYSTADMIN":
                         corpAcctId = null;
                         personId = null;

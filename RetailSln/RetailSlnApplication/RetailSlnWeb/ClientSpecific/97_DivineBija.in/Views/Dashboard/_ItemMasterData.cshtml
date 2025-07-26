@@ -1,0 +1,125 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@model ItemMasterModel
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    List<CodeDataModel> itemTypeCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemType").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> itemStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "YesNo").CodeDataModelsCodeDataNameId;
+}
+<style>
+    #ItemMasterDesc0-error, #ItemMasterDesc1-error, #ItemMasterDesc2-error, #ItemMasterDesc3-error, #ItemTypeId-error,
+    #ImageNameHttpPostedFileBase-error, #ItemMasterStatusId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div class="center" style="width: 63%;">
+    @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            <div class="row">
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+            </div>
+        </div>
+    }
+    @if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row" id="divLoginUserProfResponseObject">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }
+</div>
+<div style="display: table; padding: 0px; width: 100%;">
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ItemMasterDesc0, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.TextBoxFor(m => m.ItemMasterDesc0, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc0), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc0, "", new { id = "ItemMasterDesc0-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ItemMasterDesc1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.TextBoxFor(m => m.ItemMasterDesc1, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc1), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc1, "", new { id = "ItemMasterDesc1-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ItemMasterDesc2, new { @class = "col-form-label" })@*&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>*@
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.TextBoxFor(m => m.ItemMasterDesc2, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc2), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc2, "", new { id = "ItemMasterDesc2-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ItemMasterDesc3, new { @class = "col-form-label" })@*&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>*@
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.TextBoxFor(m => m.ItemMasterDesc3, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc3), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc3, "", new { id = "ItemMasterDesc3-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ItemTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.DropDownListFor(m => m.ItemTypeId, new SelectList(itemTypeCodeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.ItemTypeId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 45%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemTypeId, "", new { id = "ItemTypeId-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ImageNameHttpPostedFileBase, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.TextBoxFor(m => m.ImageNameHttpPostedFileBase, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.ImageNameHttpPostedFileBase), style = "width: 63%;", type = "file" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ImageNameHttpPostedFileBase, "", new { id = "ImageNameHttpPostedFileBase-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div style="display: table-row; padding: 0px; width: 100%;">
+        <div style="display: table-cell; padding: 5px; text-align: right; vertical-align: middle; width: 36%;">
+            @Html.LabelFor(m => m.ItemMasterStatusId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+        </div>
+        <div style="display: table-cell; padding: 5px; text-align: left; vertical-align: top; width: 63%;">
+            @Html.DropDownListFor(m => m.ItemMasterStatusId, new SelectList(itemStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.ItemMasterStatusId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 45%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterStatusId, "", new { id = "ItemMasterStatusId-error" }).ToHtmlString()))
+        </div>
+    </div>
+</div>
+<table>
+    <tr>
+        <th>Sel</th>
+        <th>Category</th>
+    </tr>
+    @foreach (var categoryModel in RetailSlnCache.CategoryModels)
+    {
+        <tr>
+            <td>
+                <input type="checkbox" value="@categoryModel.CategoryId" />
+            </td>
+            <td>
+                @categoryModel.CategoryDesc
+            </td>
+        </tr>
+    }
+</table>

@@ -52,13 +52,13 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return couponListModel;
         }
-        public static PriestListModel PriestListGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static ReferralListModel ReferralListGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             SqlDataReader sqlDataReader = null;
-            PriestListModel priestListModel;
+            ReferralListModel referralListModel;
             try
             {
                 #region
@@ -66,10 +66,10 @@ namespace RetailSlnDataLayer
                 sqlStmt += "    SELECT TOP 1" + Environment.NewLine;
                 sqlStmt += "           *" + Environment.NewLine;
                 sqlStmt += "      FROM " + Environment.NewLine;
-                sqlStmt += "           RetailSlnSch.PriestList" + Environment.NewLine;
+                sqlStmt += "           RetailSlnSch.ReferralList" + Environment.NewLine;
                 sqlStmt += "INNER JOIN RetailSlnSch.CouponList" + Environment.NewLine;
-                sqlStmt += "        ON PriestList.CouponListId = CouponList.CouponListId" + Environment.NewLine;
-                sqlStmt += $"     WHERE PriestList.PersonId = {personId}" + Environment.NewLine;
+                sqlStmt += "        ON ReferralList.CouponListId = CouponList.CouponListId" + Environment.NewLine;
+                sqlStmt += $"     WHERE ReferralList.PersonId = {personId}" + Environment.NewLine;
                 sqlStmt += "   ORDER BY CouponList.BegEffDate" + Environment.NewLine;
                 sqlStmt += "           ,CouponList.CouponListId" + Environment.NewLine;
                 //sqlStmt = "           " + Environment.NewLine;
@@ -78,9 +78,9 @@ namespace RetailSlnDataLayer
                 #endregion
                 if (sqlDataReader.Read())
                 {
-                    priestListModel = new PriestListModel
+                    referralListModel = new ReferralListModel
                     {
-                        PriestListId = long.Parse(sqlDataReader["PriestListId"].ToString()),
+                        ReferralListId = long.Parse(sqlDataReader["ReferralListId"].ToString()),
                         ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
                         CommissionPercent = float.Parse(sqlDataReader["CommissionPercent"].ToString()),
                         CouponListId = long.Parse(sqlDataReader["CouponListId"].ToString()),
@@ -99,20 +99,20 @@ namespace RetailSlnDataLayer
                 }
                 else
                 {
-                    priestListModel = null;
+                    referralListModel = null;
                 }
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                priestListModel = null;
+                referralListModel = null;
             }
             finally
             {
                 sqlDataReader.Close();
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return priestListModel;
+            return referralListModel;
         }
         public static PersonExtn1Model PersonExtn1FromPersonIdGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -211,7 +211,8 @@ namespace RetailSlnDataLayer
                 {
                     try
                     {
-                        orderHeaderWIPId = long.Parse(sqlDataReader[0].ToString());
+                        long.TryParse(sqlDataReader[0].ToString(), out long orderHeaderWIPIdTemp);
+                        orderHeaderWIPId = orderHeaderWIPIdTemp == 0 ? (long?)null : orderHeaderWIPIdTemp;
                     }
                     catch
                     {

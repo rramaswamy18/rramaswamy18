@@ -13,6 +13,8 @@ namespace RetailSlnModels
 
         public DimensionUnitEnum? DimensionUnitId { set; get; }
 
+        public bool DoNotBreakBundle { set; get; }
+
         public float? HeightValue { set; get; }
 
         public string HSNCode { set; get; }
@@ -92,6 +94,8 @@ namespace RetailSlnModels
         public float? WeightValue { set; get; }
 
         public float? WidthValue { set; get; }
+
+        public ItemModel ItemModel { set; get; }
 
         public List<ShoppingCartItemModel> ShoppingCartItemSummarys { set; get; }
 

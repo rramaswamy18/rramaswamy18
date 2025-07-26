@@ -33,8 +33,6 @@ namespace RetailSlnModels
 
         public long ItemMasterId { set; get; }
 
-        public ItemMasterModel ItemMasterModel { set; get; }
-
         public string ItemName { set; get; }
 
         [Display(Name = "Item Rate")]
@@ -69,8 +67,6 @@ namespace RetailSlnModels
         [Required(ErrorMessage = "Please enter short description")]
         public string ItemShortDesc3 { set; get; }
 
-        public string ItemItemSpecsForDisplay { set; get; }
-
         [Display(Name = "Item Star#")]
         [Required(ErrorMessage = "Please enter star#")]
         public int? ItemStarCount { set; get; }
@@ -85,6 +81,8 @@ namespace RetailSlnModels
 
         public long ProductItemId { set; get; }
 
+        public float? QuantityOnHand { set; get; }
+
         public string UploadImageFileName { set; get; }
 
         //public List<CategoryModel> CategoryModels { set; get; }
@@ -97,13 +95,13 @@ namespace RetailSlnModels
 
         //public List<ItemDiscountModel> ItemDiscountModels { set; get; }
 
-        public List<ItemSpecModel> ItemSpecModels { set; get; }
+        public ItemMasterModel ItemMasterModel { set; get; }
 
-        public Dictionary<string, ItemSpecModel> ItemSpecModelsForDisplay { set; get; }
+        public string ItemItemSpecsForDisplay { set; get; }
 
-        public List<ItemSpecModel> ItemSpecModelsForItem { set; get; }
+        public string ItemItemSpecsForDisplayAll { set; get; }
 
-        //public Dictionary<string, ItemSpecModel> ItemItemSpecModelsForDisplay { set; get; }
+        public Dictionary<string, ItemItemSpecModel> ItemItemSpecModels { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

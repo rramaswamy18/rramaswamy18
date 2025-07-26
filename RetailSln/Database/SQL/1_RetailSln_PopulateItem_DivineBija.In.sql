@@ -101,7 +101,7 @@ DECLARE @ClientId BIGINT = 3
 --
         INSERT RetailSlnSch.Item
               (ClientId, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
-              ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName
+              ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, QuantityOnHand, UploadImageFileName
               )
 --Item & Item Bundle
         SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId, ItemMaster.ItemMasterId
@@ -110,7 +110,7 @@ DECLARE @ClientId BIGINT = 3
               ,Description1 AS ItemShortDesc1, Description2 AS ItemShortDesc2, Description3 AS ItemShortDesc3, 5 AS ItemStarCount
               ,CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
               ,CASE [Item Type] WHEN 'ITEMS' THEN 100 WHEN 'BUNDLE' THEN 300 END AS ItemTypeId, UniqueDescription AS ItemUniqueDesc
-              ,ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
+              ,ItemId AS ProductItemId, 0 AS QuantityOnHand, ImageFileName AS UploadImageFileName
           FROM dbo.DivineBija_Products
     INNER JOIN RetailSlnSch.ItemMaster
             ON DivineBija_Products.Description0 = ItemMaster.ItemMasterDesc0
@@ -122,14 +122,14 @@ DECLARE @ClientId BIGINT = 3
 --
         INSERT RetailSlnSch.Item
               (ClientId, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
-              ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName
+              ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, QuantityOnHand, UploadImageFileName
               )
 --Books
         SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
               ,ItemMaster.ItemMasterId, -1 AS ItemRate, -1 AS ItemRateMSRP, 0 AS ItemSeqNum
               ,ProductDesc0 AS ItemShortDesc0, ProductDesc1 AS ItemShortDesc1, '' AS ItemShortDesc2, '' AS ItemShortDesc3
               ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId
-              ,UniqueDescription AS ItemUniqueDesc, ItemId AS ProductItemId, Image1 AS UploadImageFileName
+              ,UniqueDescription AS ItemUniqueDesc, ItemId AS ProductItemId, 0 AS QuantityOnHand, Image1 AS UploadImageFileName
           FROM dbo.DivineBija_Books
     INNER JOIN RetailSlnSch.ItemMaster
             ON DivineBija_Books.ProductDesc0 = ItemMaster.ItemMasterDesc0
@@ -367,20 +367,50 @@ SET NOCOUNT OFF
         WHERE ItemSpec.ItemSpecId = A.ItemSpecId
           AND SeqNumItemMaster IS NULL
 --End Item Spec Update SeqNumItemMaster
---Begin Item Master Item Spec
-        TRUNCATE TABLE RetailSlnSch.ItemMasterItemSpec
---
-        INSERT RetailSlnSch.ItemMasterItemSpec(ClientId, ItemMasterId, ItemSpecId, SeqNumItemMaster)
-        SELECT @ClientId AS ClientId, Item.ItemMasterId, MIN(ItemSpec.ItemSpecId) AS ItemSpecId, ItemSpec.SeqNumItemMaster
-          FROM RetailSlnSch.Item INNER JOIN RetailSlnSch.ItemSpec ON Item.Itemid = ItemSpec.ItemId
-         WHERE ItemSpec.SeqNumItemMaster IS NOT NULL --AND Item.ItemMasterId <= 207
-      GROUP BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
-      ORDER BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
---End Item Master Item Spec
+----Begin Item Master Item Spec
+--        TRUNCATE TABLE RetailSlnSch.ItemMasterItemSpec
+----
+--        INSERT RetailSlnSch.ItemMasterItemSpec(ClientId, ItemMasterId, ItemSpecId, SeqNumItemMaster)
+--        SELECT @ClientId AS ClientId, Item.ItemMasterId, MIN(ItemSpec.ItemSpecId) AS ItemSpecId, ItemSpec.SeqNumItemMaster
+--          FROM RetailSlnSch.Item INNER JOIN RetailSlnSch.ItemSpec ON Item.Itemid = ItemSpec.ItemId
+--         WHERE ItemSpec.SeqNumItemMaster IS NOT NULL --AND Item.ItemMasterId <= 207
+--      GROUP BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
+--      ORDER BY Item.ItemMasterId, ItemSpec.SeqNumItemMaster
+----End Item Master Item Spec
+--Begin Update ItemSpec
         UPDATE RetailSlnSch.ItemSpec SET SeqNumItem = SeqNumItemMaster
          WHERE SeqNumItem IS NULL AND SeqNumItemMaster IS NOT NULL
            AND ItemId IN (SELECT ItemId FROM RetailSlnSch.Item WHERE ItemMasterId
                IN (SELECT ItemMasterId FROM RetailSlnSch.Item GROUP BY ItemMasterId HAVING COUNT(*) = 1))
+--End Update ItemSpec
+--Begin ItemMasterItemSpec
+            TRUNCATE TABLE RetailSlnSch.ItemMasterItemSpec
+            INSERT RetailSlnSch.ItemMasterItemSpec(ClientId, ItemMasterId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, SeqNum, SeqNumItemMaster)
+            SELECT DISTINCT
+                   ItemSpec.ClientId, Item.ItemMasterId, ItemSpec.ItemSpecMasterId, ItemSpec.ItemSpecUnitValue, ItemSpec.ItemSpecValue, ItemSpec.SeqNum, ItemSpec.SeqNumItemMaster
+              FROM RetailSlnSch.ItemSpec
+        INNER JOIN RetailSlnSch.Item
+                ON ItemSpec.ItemId = Item.ItemId
+        INNER JOIN RetailSlnSch.ItemSpecMaster
+                ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
+               AND ItemSpecMaster.ItemMasterFlag = 1
+             WHERE Item.ItemMasterId > 0
+          ORDER BY Item.ItemMasterId
+                  ,ItemSpec.ItemSpecMasterId
+--End ItemMasterItemSpec
+--Begin ItemItemSpec
+        TRUNCATE TABLE RetailSlnSch.ItemItemSpec
+            INSERT RetailSlnSch.ItemItemSpec(ClientId, ItemId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, SeqNum, SeqNumItem)
+            SELECT
+                   ItemSpec.ClientId, ItemSpec.ItemId, ItemSpec.ItemSpecMasterId, ItemSpec.ItemSpecUnitValue, ItemSpec.ItemSpecValue, ItemSpec.SeqNum, ItemSpec.SeqNumItem
+              FROM RetailSlnSch.ItemSpec
+        INNER JOIN RetailSlnSch.ItemSpecMaster
+                ON ItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
+               AND ItemSpecMaster.ProductFlag = 1
+             WHERE ItemSpec.ItemId > 0
+          ORDER BY ItemSpec.ItemId
+                  ,ItemSpec.ItemSpecMasterId
+--End ItemItemSpec
 --Begin SearchList & SearchResult
 BEGIN
 TRUNCATE TABLE RetailSlnSch.SearchMetaData

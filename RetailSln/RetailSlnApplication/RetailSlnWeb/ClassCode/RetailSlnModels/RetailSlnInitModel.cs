@@ -19,8 +19,9 @@ namespace RetailSlnModels
         public List<ItemDiscountModel> ItemDiscountModels { set; get; }
         public List<ItemMasterModel> ItemMasterModels { set; get; }
         public List<ItemModel> ItemModels { set; get; }
+        public List<ItemMasterItemSpecModel> ItemMasterItemSpecModels { set; get; }
+        public List<ItemItemSpecModel> ItemItemSpecModels { set; get; }
         public List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
-        public List<ItemSpecModel> ItemSpecModels { set; get; }
         public List<PaymentModeFilterModel> PaymentModeFilterModels { set; get; }
         public List<PickupLocationModel> PickupLocationModels { set; get; }
     }

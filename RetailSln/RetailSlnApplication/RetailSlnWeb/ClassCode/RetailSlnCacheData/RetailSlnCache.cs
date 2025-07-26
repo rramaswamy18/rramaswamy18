@@ -22,7 +22,7 @@ namespace RetailSlnCacheData
     public class RetailSlnCache
     {
         #region Properties
-        public static List<AspNetRoleModel> AspNetRoleModelsPriest { set; get; }
+        public static List<AspNetRoleModel> AspNetRoleModelsReferral { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
         public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
         public static Dictionary<long, Dictionary<long, ItemDiscountModel>> CorpAcctItemDiscountModels { set; get; }
@@ -31,10 +31,11 @@ namespace RetailSlnCacheData
         public static List<DeliveryMethodFilterModel> DeliveryMethodFilterModels { set; get; }
         public static List<ItemBundleModel> ItemBundleModels { set; get; }
         public static List<ItemDiscountModel> ItemDiscountModels { set; get; }
-        public static List<ItemModel> ItemModels { set; get; }
+        public static List<ItemItemSpecModel> ItemItemSpecModels { set; get; }
+        public static List<ItemMasterItemSpecModel> ItemMasterItemSpecModels { set; get; }
         public static List<ItemMasterModel> ItemMasterModels { set; get; }
+        public static List<ItemModel> ItemModels { set; get; }
         public static List<ItemSpecMasterModel> ItemSpecMasterModels { set; get; }
-        public static List<ItemSpecModel> ItemSpecModels { set; get; }
         public static List<PaymentModeFilterModel> PaymentModeFilterModels { set; get; }
         public static List<PickupLocationModel> PickupLocationModels { set; get; }
         #endregion
@@ -70,9 +71,10 @@ namespace RetailSlnCacheData
             ItemBundleModels = retailSlnInitModel.ItemBundleModels;
             ItemDiscountModels = retailSlnInitModel.ItemDiscountModels;
             ItemModels = retailSlnInitModel.ItemModels;
+            ItemItemSpecModels = retailSlnInitModel.ItemItemSpecModels;
+            ItemMasterItemSpecModels = retailSlnInitModel.ItemMasterItemSpecModels;
             ItemMasterModels = retailSlnInitModel.ItemMasterModels;
             ItemSpecMasterModels = retailSlnInitModel.ItemSpecMasterModels;
-            ItemSpecModels = retailSlnInitModel.ItemSpecModels;
             PaymentModeFilterModels = retailSlnInitModel.PaymentModeFilterModels;
             PickupLocationModels = retailSlnInitModel.PickupLocationModels;
 
@@ -108,12 +110,52 @@ namespace RetailSlnCacheData
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            foreach (var itemSpecModel in retailSlnInitModel.ItemSpecModels)
+            List<CodeDataModel> codeDataModels;
+            CodeDataModel codeDataModel;
+            foreach (var itemMasterItemSpecModel in retailSlnInitModel.ItemMasterItemSpecModels)
             {
-                itemSpecModel.ItemSpecMasterModel = retailSlnInitModel.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemSpecModel.ItemSpecMasterId);
+                itemMasterItemSpecModel.ItemSpecMasterModel = retailSlnInitModel.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemMasterItemSpecModel.ItemSpecMasterId);
+                itemMasterItemSpecModel.ItemSpecValueForDisplay = itemMasterItemSpecModel.ItemSpecValue;
+                if (itemMasterItemSpecModel.ItemSpecValue != "")
+                {
+                    if (itemMasterItemSpecModel.ItemSpecMasterModel.CodeTypeId != null)
+                    {
+                        try
+                        {
+                            codeDataModels = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemMasterItemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
+                            codeDataModel = codeDataModels.First(x => x.CodeDataNameId == long.Parse(itemMasterItemSpecModel.ItemSpecUnitValue));
+                            itemMasterItemSpecModel.ItemSpecValueForDisplay += " " + codeDataModel.CodeDataDesc0;
+                        }
+                        catch (Exception exception)
+                        {
+                            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception, "ItemMasterItemSpecId", itemMasterItemSpecModel.ItemMasterItemSpecId.ToString());
+                        }
+                    }
+                }
             }
-            int itemSeqNum = 0;
-            string prefixString;
+            foreach (var itemItemSpecModel in retailSlnInitModel.ItemItemSpecModels)
+            {
+                itemItemSpecModel.ItemSpecMasterModel = retailSlnInitModel.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemItemSpecModel.ItemSpecMasterId);
+                itemItemSpecModel.ItemSpecValueForDisplay = itemItemSpecModel.ItemSpecValue;
+                if (itemItemSpecModel.ItemSpecValue != "")
+                {
+                    if (itemItemSpecModel.ItemSpecMasterModel.CodeTypeId != null)
+                    {
+                        try
+                        {
+                            codeDataModels = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemItemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
+                            codeDataModel = codeDataModels.First(x => x.CodeDataNameId == long.Parse(itemItemSpecModel.ItemSpecUnitValue));
+                            itemItemSpecModel.ItemSpecValueForDisplay += " " + codeDataModel.CodeDataDesc0;
+                        }
+                        catch (Exception exception)
+                        {
+                            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception, "ItemId", itemItemSpecModel.ItemId.ToString(), "ItemItemSpecId", itemItemSpecModel.ItemItemSpecId.ToString());
+                        }
+                    }
+                }
+            }
+            int itemSeqNum = 0, itemMasterSeqNum = 0, itemModelCount;
+            string prefixString, prefixString2;
             foreach (var itemModel in retailSlnInitModel.ItemModels)
             {
                 itemSeqNum++;
@@ -130,42 +172,23 @@ namespace RetailSlnCacheData
                     itemModel.ExpectedAvailabilityFormatted = DateTime.Parse(itemModel.ExpectedAvailability).ToString("MMM-dd");
                     itemModel.ImageTitle += " Expected to be available on " + itemModel.ExpectedAvailabilityFormatted;
                 }
-                itemModel.ItemSpecModels = retailSlnInitModel.ItemSpecModels.FindAll(x => x.ItemId == itemModel.ItemId);
-                itemModel.ItemSpecModelsForItem = retailSlnInitModel.ItemSpecModels.FindAll(x => x.ItemId == itemModel.ItemId && x.SeqNumItem != null).OrderBy(y => y.SeqNumItem).ToList();
-                itemModel.ItemSpecModelsForDisplay = new Dictionary<string, ItemSpecModel>();
-                List<CodeDataModel> abc1;
-                CodeDataModel abc2;
-                foreach (var itemSpecModel in itemModel.ItemSpecModels)
-                {
-                    itemModel.ItemSpecModelsForDisplay[itemSpecModel.ItemSpecMasterModel.SpecName] = itemSpecModel;
-                    itemSpecModel.ItemSpecValueForDisplay = itemSpecModel.ItemSpecValue;
-                    if (itemSpecModel.ItemSpecValue != "")
-                    {
-                        if (itemSpecModel.ItemSpecMasterModel.CodeTypeId != null)
-                        {
-                            try
-                            {
-                                abc1 = LookupCache.GetCodeDatasForCodeTypeIdByCodeDataNameId(itemSpecModel.ItemSpecMasterModel.CodeTypeId.Value, execUniqueId);
-                                abc2 = abc1.First(x => x.CodeDataNameId == long.Parse(itemSpecModel.ItemSpecUnitValue));
-                                itemSpecModel.ItemSpecValueForDisplay += " " + abc2.CodeDataDesc0;
-                            }
-                            catch (Exception exception)
-                            {
-                                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception, "ItemId", itemSpecModel.ItemId.ToString(), "ItemSpecId", itemSpecModel.ItemSpecId.ToString());
-                            }
-                        }
-                    }
-                }
-                prefixString = string.Empty;
+                itemModel.ItemItemSpecModels = new Dictionary<string, ItemItemSpecModel>();
+                itemModel.ItemItemSpecsForDisplayAll = "";
                 itemModel.ItemItemSpecsForDisplay = "";
-                foreach (var itemItemSpecModel in itemModel.ItemSpecModelsForItem)
+                prefixString = "";
+                prefixString2 = "";
+                foreach (var itemItemSpecModel in retailSlnInitModel.ItemItemSpecModels.FindAll(x => x.ItemId == itemModel.ItemId))
                 {
-                    itemModel.ItemItemSpecsForDisplay += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                    itemModel.ItemItemSpecModels[itemItemSpecModel.ItemSpecMasterModel.SpecName] = itemItemSpecModel;
+                    itemModel.ItemItemSpecsForDisplayAll += prefixString + itemItemSpecModel.ItemSpecValueForDisplay;
+                    if (itemItemSpecModel.SeqNumItem != null)
+                    {
+                        itemModel.ItemItemSpecsForDisplay += prefixString2 + itemItemSpecModel.ItemSpecValueForDisplay;
+                        prefixString2 = " | ";
+                    }
                     prefixString = " | ";
                 }
             }
-            int itemMasterSeqNum = 0;
-            int itemModelCount;
             foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
             {
                 itemMasterSeqNum++;
@@ -173,6 +196,20 @@ namespace RetailSlnCacheData
                 itemMasterModel.ItemModels = retailSlnInitModel.ItemModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
                 itemMasterModel.ItemRatesForDisplay = "";
                 itemMasterModel.ItemRatesForDisplayAll = "";
+                prefixString = "";
+                prefixString2 = "";
+                itemMasterModel.ItemMasterItemSpecModels = new Dictionary<string, ItemMasterItemSpecModel>();
+                foreach (var itemMasterItemSpecModel in retailSlnInitModel.ItemMasterItemSpecModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId))
+                {
+                    itemMasterModel.ItemMasterItemSpecModels[itemMasterItemSpecModel.ItemSpecMasterModel.SpecName] = itemMasterItemSpecModel;
+                    itemMasterModel.ItemMasterItemSpecsForDisplayAll += prefixString + itemMasterItemSpecModel.ItemSpecValueForDisplay;
+                    if (itemMasterItemSpecModel.SeqNumItemMaster != null)
+                    {
+                        itemMasterModel.ItemMasterItemSpecsForDisplay += prefixString2 + itemMasterItemSpecModel.ItemSpecValueForDisplay;
+                        prefixString2 = " | ";
+                    }
+                    prefixString = " | ";
+                }
                 if (itemMasterModel.ItemModels.Count > 1)
                 {
                     itemMasterModel.ItemRatesForDisplay = itemMasterModel.ItemModels[0].ItemRateFormatted + "...";
@@ -188,7 +225,7 @@ namespace RetailSlnCacheData
                     itemMasterModel.ItemRatesForDisplayAll += "...";
                 }
             }
-            AspNetRoleModelsPriest = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId >= 500 && x.UserTypeId <= 700);
+            AspNetRoleModelsReferral = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId >= 500 && x.UserTypeId <= 700);
         }
         private static void BuildCacheModels1(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -408,7 +445,7 @@ namespace RetailSlnCacheData
                     {
                         shoppingCartItemModel = new ShoppingCartItemModel
                         {
-                            HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+                            HSNCode = "", //itemModel.ItemItemSpecModels["HSNCode"].ItemSpecValueForDisplay,
                             ImageName = "",
                             ItemDiscountAmount = 0,
                             ItemDiscountPercent = 0,
@@ -434,6 +471,7 @@ namespace RetailSlnCacheData
                             ProductOrVolumetricWeightUnitId = WeightUnitEnum.Grams,
                             WeightCalcUnitId = WeightUnitEnum.Grams,
                             WeightUnitId = WeightUnitEnum.Grams,
+                            ItemModel = null,
                             ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
                         };
                     }
@@ -441,7 +479,7 @@ namespace RetailSlnCacheData
                     {
                         shoppingCartItemModel = new ShoppingCartItemModel
                         {
-                            HSNCode = itemModel.ItemSpecModelsForDisplay["HSNCode"].ItemSpecValueForDisplay,
+                            HSNCode = itemModel.ItemItemSpecModels["HSNCode"].ItemSpecValueForDisplay,
                             ImageName = itemModel.ItemMasterModel.ImageName,
                             ItemDiscountAmount = 0,
                             ItemDiscountPercent = 0,
@@ -463,10 +501,11 @@ namespace RetailSlnCacheData
                             OrderAmountFormatted = itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
                             OrderQty = 1,
                             OrderDetailTypeId = OrderDetailTypeEnum.Item,
-                            ProductCode = itemModel.ItemSpecModelsForDisplay["ProductCode"].ItemSpecValueForDisplay,
-                            ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductOrVolumetricWeight").ItemSpecUnitValue),
-                            WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
-                            WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemSpecModels.First(x => x.ItemSpecMasterModel.SpecName == "ProductWeight").ItemSpecUnitValue),
+                            ProductCode = itemModel.ItemItemSpecModels["ProductCode"].ItemSpecValueForDisplay,
+                            ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecUnitValue),
+                            WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
+                            WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
+                            ItemModel = itemModel,
                             ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
                         };
                     }

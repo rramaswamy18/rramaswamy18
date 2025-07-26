@@ -52,7 +52,7 @@
                 @orderListDataModel1.OrderHeaderId
             </td>
             <td>
-                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderListEdit_onclick(@orderListDataModel1.OrderHeaderId);">Edit</a>
+                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderEdit_onclick(@orderListDataModel1.OrderHeaderId);">Edit</a>
             </td>
             <td class="text-left">
                 @orderListDataModel1.CreatedForEmailAddress
@@ -98,7 +98,7 @@
                         orderListDataModel1 = Model.OrderListDataModels[i];
                         <tr>
                             <td class="text-left">
-                                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderListView_onclick(@orderListDataModel1.OrderHeaderId, '@Convert.ToInt64(orderListDataModel1.InvoiceTypeId)')">@orderListDataModel1.InvoiceTypeId</a>
+                                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderView_onclick(@orderListDataModel1.OrderHeaderId, '@Convert.ToInt64(orderListDataModel1.InvoiceTypeId)')">@orderListDataModel1.InvoiceTypeId</a>
                             </td>
                             <td class="text-right">
                                 @orderListDataModel1.TotalOrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")

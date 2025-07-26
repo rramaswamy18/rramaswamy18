@@ -1,7 +1,7 @@
 ﻿@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
 @using RetailSlnModels
 @model ItemMasterListModel
-_ItemMasterListData
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
@@ -25,6 +25,9 @@ _ItemMasterListData
 </style>
 <table class="dataStyle table table-bordered table-condensed" style="margin-left: auto; margin-right: auto; padding: 5px; width: 90%;">
     <tr>
+        <th class="text-left" colspan="9" style="color: #a54000; font-size: 15px;"><a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterAddEdit_onclick('');">Add New</a></th>
+    </tr>
+    <tr>
         <th class="text-center" colspan="9" style="color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Item(s) List</th>
     </tr>
     <tr>
@@ -41,11 +44,11 @@ _ItemMasterListData
             Item(s)
         </th>
         @*<th>
-            Spec(s)
-        </th>
-        <th>
-            Info(s)
-        </th>*@
+                Spec(s)
+            </th>
+            <th>
+                Info(s)
+            </th>*@
         <th>
             Image
         </th>
@@ -68,21 +71,31 @@ _ItemMasterListData
                 @itemMasterModel.ItemMasterDesc2
                 <br style="clear: both;" />
                 @itemMasterModel.ItemMasterDesc3
+                <br style="clear: both;" />
+                @itemMasterModel.ItemMasterItemSpecsForDisplayAll
             </td>
             <td class="dataStyle text-left">
-                @foreach (var itemModel in itemMasterModel.ItemModels)
-                {
-                    @(itemModel.ItemShortDesc1 + " " + itemModel.ItemRate)
-                    <br />
-                }
+                <table class="table table-condensed table-responsive">
+                    @foreach (var itemModel in itemMasterModel.ItemModels)
+                    {
+                        <tr>
+                            <td class="text-left">
+                                @itemModel.ItemItemSpecsForDisplayAll
+                            </td>
+                            <td class="text-right">
+                                @itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                            </td>
+                        </tr>
+                    }
+                </table>
             </td>
             @*<td class="dataStyle text-left">
-            </td>
-            <td class="dataStyle text-left">
-                <a class="dataStyle hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterInfo_onclick(@itemMasterModel.ItemMasterId);">
-                    Info(s)
-                </a>
-            </td>*@
+                </td>
+                <td class="dataStyle text-left">
+                    <a class="dataStyle hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterInfo_onclick(@itemMasterModel.ItemMasterId);">
+                        Info(s)
+                    </a>
+                </td>*@
             <td class="dataStyle text-left">
                 <img src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 99px; width: 99px;" />
             </td>

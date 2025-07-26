@@ -15,6 +15,7 @@ namespace RetailSlnModels
         public DimensionUnitEnum DimensionUnitId { set; get; }
         public float DiscountPercent { set; get; }
         public float DiscountPercentOriginal { set; get; }
+        public bool DoNotBreakBundle { set; get; }
         public float HeightValue { set; get; }
         public string HSNCode { set; get; }
         public float ItemDiscountAmount { set; get; }

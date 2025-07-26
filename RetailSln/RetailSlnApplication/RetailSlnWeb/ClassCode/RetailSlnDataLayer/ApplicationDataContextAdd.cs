@@ -159,6 +159,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        INSERT RetailSlnSch.OrderDetail" + Environment.NewLine;
                 sqlStmt += "              (" + Environment.NewLine;
                 sqlStmt += "               ClientId" + Environment.NewLine;
+                sqlStmt += "              ,DoNotBreakBundle" + Environment.NewLine;
                 sqlStmt += "              ,DimensionUnitId" + Environment.NewLine;
                 sqlStmt += "              ,DiscountPercent" + Environment.NewLine;
                 sqlStmt += "              ,DiscountPercentOriginal" + Environment.NewLine;
@@ -198,6 +199,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        OUTPUT INSERTED.OrderDetailId" + Environment.NewLine;
                 sqlStmt += "        SELECT" + Environment.NewLine;
                 sqlStmt += "               @ClientId" + Environment.NewLine;
+                sqlStmt += "              ,@DoNotBreakBundle" + Environment.NewLine;
                 sqlStmt += "              ,@DimensionUnitId" + Environment.NewLine;
                 sqlStmt += "              ,@DiscountPercent" + Environment.NewLine;
                 sqlStmt += "              ,@DiscountPercentOriginal" + Environment.NewLine;
@@ -237,6 +239,7 @@ namespace RetailSlnDataLayer
                 #region
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
                 sqlCommand.Parameters.Add("@DimensionUnitId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@DiscountPercent", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@DiscountPercentOriginal", SqlDbType.Float);
@@ -276,6 +279,7 @@ namespace RetailSlnDataLayer
                 #endregion
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
+                sqlCommand.Parameters["@DoNotBreakBundle"].Value = orderDetail.DoNotBreakBundle;
                 sqlCommand.Parameters["@DimensionUnitId"].Value = orderDetail.DimensionUnitId;
                 sqlCommand.Parameters["@DiscountPercent"].Value = orderDetail.DiscountPercent;
                 sqlCommand.Parameters["@DiscountPercentOriginal"].Value = orderDetail.DiscountPercentOriginal;
@@ -322,95 +326,6 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        #region
-        //public static void OrderDetailItemBundleAdd(OrderDetailItemBundle orderDetailItemBundle, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 Before calling the BuildSqlCommandAspNetUserRoles()", "AspNetUserId", "");
-        //        #region
-        //        string sqlStmt = "";
-        //        sqlStmt += "        INSERT RetailSlnSch.OrderDetailItemBundle" + Environment.NewLine;
-        //        sqlStmt += "              (" + Environment.NewLine;
-        //        sqlStmt += "               ClientId" + Environment.NewLine;
-        //        sqlStmt += "              ,DiscountPercent" + Environment.NewLine;
-        //        sqlStmt += "              ,ItemBundleId" + Environment.NewLine;
-        //        sqlStmt += "              ,ItemBundleIItemId" + Environment.NewLine;
-        //        sqlStmt += "              ,ItemMasterDesc" + Environment.NewLine;
-        //        sqlStmt += "              ,ItemRate" + Environment.NewLine;
-        //        sqlStmt += "              ,ItemRateBeforeDiscount" + Environment.NewLine;
-        //        sqlStmt += "              ,OrderAmount" + Environment.NewLine;
-        //        sqlStmt += "              ,OrderAmountBeforeDiscount" + Environment.NewLine;
-        //        sqlStmt += "              ,OrderDetailId" + Environment.NewLine;
-        //        sqlStmt += "              ,OrderQty" + Environment.NewLine;
-        //        sqlStmt += "              ,SeqNum" + Environment.NewLine;
-        //        sqlStmt += "              ,AddUserId" + Environment.NewLine;
-        //        sqlStmt += "              ,UpdUserId" + Environment.NewLine;
-        //        sqlStmt += "              )" + Environment.NewLine;
-        //        sqlStmt += "        OUTPUT INSERTED.OrderDetailItemBundleId" + Environment.NewLine;
-        //        sqlStmt += "        SELECT" + Environment.NewLine;
-        //        sqlStmt += "               @ClientId" + Environment.NewLine;
-        //        sqlStmt += "              ,@DiscountPercent" + Environment.NewLine;
-        //        sqlStmt += "              ,@ItemBundleId" + Environment.NewLine;
-        //        sqlStmt += "              ,@ItemBundleIItemId" + Environment.NewLine;
-        //        sqlStmt += "              ,@ItemMasterDesc" + Environment.NewLine;
-        //        sqlStmt += "              ,@ItemRate" + Environment.NewLine;
-        //        sqlStmt += "              ,@ItemRateBeforeDiscount" + Environment.NewLine;
-        //        sqlStmt += "              ,@OrderAmount" + Environment.NewLine;
-        //        sqlStmt += "              ,@OrderAmountBeforeDiscount" + Environment.NewLine;
-        //        sqlStmt += "              ,@OrderDetailId" + Environment.NewLine;
-        //        sqlStmt += "              ,@OrderQty" + Environment.NewLine;
-        //        sqlStmt += "              ,@SeqNum" + Environment.NewLine;
-        //        sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
-        //        sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
-        //        #endregion
-        //        #region
-        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-        //        sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
-        //        sqlCommand.Parameters.Add("@DiscountPercent", SqlDbType.Float);
-        //        sqlCommand.Parameters.Add("@ItemBundleId", SqlDbType.BigInt);
-        //        sqlCommand.Parameters.Add("@ItemBundleIItemId", SqlDbType.BigInt);
-        //        sqlCommand.Parameters.Add("@ItemMasterDesc", SqlDbType.NVarChar, 512);
-        //        sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
-        //        sqlCommand.Parameters.Add("@ItemRateBeforeDiscount", SqlDbType.Float);
-        //        sqlCommand.Parameters.Add("@OrderAmount", SqlDbType.Float);
-        //        sqlCommand.Parameters.Add("@OrderAmountBeforeDiscount", SqlDbType.Float);
-        //        sqlCommand.Parameters.Add("@OrderDetailId", SqlDbType.BigInt);
-        //        sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
-        //        sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
-        //        sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
-        //        sqlCommand.Parameters.Add("@OrderDetailItemBundleId", SqlDbType.BigInt);
-        //        sqlCommand.Parameters["@OrderDetailItemBundleId"].Direction = ParameterDirection.ReturnValue;
-        //        #endregion
-        //        #region
-        //        sqlCommand.Parameters["@ClientId"].Value = clientId;
-        //        sqlCommand.Parameters["@DiscountPercent"].Value = orderDetailItemBundle.DiscountPercent;
-        //        sqlCommand.Parameters["@ItemBundleId"].Value = orderDetailItemBundle.ItemBundleId;
-        //        sqlCommand.Parameters["@ItemBundleIItemId"].Value = orderDetailItemBundle.ItemBundleItemId;
-        //        sqlCommand.Parameters["@ItemMasterDesc"].Value = orderDetailItemBundle.ItemMasterDesc;
-        //        sqlCommand.Parameters["@ItemRate"].Value = orderDetailItemBundle.ItemRate;
-        //        sqlCommand.Parameters["@ItemRateBeforeDiscount"].Value = orderDetailItemBundle.ItemRateBeforeDiscount;
-        //        sqlCommand.Parameters["@OrderAmount"].Value = orderDetailItemBundle.OrderAmount;
-        //        sqlCommand.Parameters["@OrderAmountBeforeDiscount"].Value = orderDetailItemBundle.OrderAmountBeforeDiscount;
-        //        sqlCommand.Parameters["@OrderDetailId"].Value = orderDetailItemBundle.OrderDetailId;
-        //        sqlCommand.Parameters["@OrderQty"].Value = orderDetailItemBundle.OrderQty;
-        //        sqlCommand.Parameters["@SeqNum"].Value = orderDetailItemBundle.SeqNum;
-        //        sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
-        //        #endregion
-        //        sqlCommand.ExecuteNonQuery();
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
-        //        return;
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //}
-        #endregion
         public static void OrderDetailWIPAdd(OrderDetailWIPModel orderDetailWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -423,6 +338,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        INSERT RetailSlnSch.OrderDetailWIP" + Environment.NewLine;
                 sqlStmt += "              (" + Environment.NewLine;
                 sqlStmt += "               ClientId" + Environment.NewLine;
+                sqlStmt += "              ,DoNotBreakBundle" + Environment.NewLine;
                 sqlStmt += "              ,ItemId" + Environment.NewLine;
                 sqlStmt += "              ,ItemRate" + Environment.NewLine;
                 sqlStmt += "              ,OrderHeaderWIPId" + Environment.NewLine;
@@ -435,6 +351,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        OUTPUT INSERTED.OrderDetailWIPId" + Environment.NewLine;
                 sqlStmt += "        SELECT " + Environment.NewLine;
                 sqlStmt += "               @ClientId" + Environment.NewLine;
+                sqlStmt += "              ,@DoNotBreakBundle" + Environment.NewLine;
                 sqlStmt += "              ,@ItemId" + Environment.NewLine;
                 sqlStmt += "              ,@ItemRate" + Environment.NewLine;
                 sqlStmt += "              ,@OrderHeaderWIPId" + Environment.NewLine;
@@ -447,6 +364,7 @@ namespace RetailSlnDataLayer
                 #region
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
                 sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
@@ -457,6 +375,7 @@ namespace RetailSlnDataLayer
                 #endregion
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = orderDetailWIPModel.ClientId;
+                sqlCommand.Parameters["@DoNotBreakBundle"].Value = orderDetailWIPModel.DoNotBreakBundle;
                 sqlCommand.Parameters["@ItemId"].Value = orderDetailWIPModel.ItemId;
                 sqlCommand.Parameters["@ItemRate"].Value = orderDetailWIPModel.ItemRate;
                 sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderDetailWIPModel.OrderHeaderWIPId;
@@ -793,7 +712,7 @@ namespace RetailSlnDataLayer
             sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
             sqlCommand.ExecuteNonQuery();
         }
-        public static void PriestListAdd(PriestListModel priestListModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public static void ReferralListAdd(ReferralListModel referralListModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -802,7 +721,7 @@ namespace RetailSlnDataLayer
             {
                 #region
                 string sqlStmt = "";
-                sqlStmt += "         INSERT RetailSlnSch.PriestList" + Environment.NewLine;
+                sqlStmt += "         INSERT RetailSlnSch.ReferralList" + Environment.NewLine;
                 sqlStmt += "               (" + Environment.NewLine;
                 sqlStmt += "                ClientId" + Environment.NewLine;
                 sqlStmt += "               ,CommissionPercent" + Environment.NewLine;
@@ -812,7 +731,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "               ,AddUserId" + Environment.NewLine;
                 sqlStmt += "               ,UpdUserId" + Environment.NewLine;
                 sqlStmt += "               )" + Environment.NewLine;
-                sqlStmt += "         OUTPUT INSERTED.PriestListId" + Environment.NewLine;
+                sqlStmt += "         OUTPUT INSERTED.ReferralListId" + Environment.NewLine;
                 sqlStmt += "         SELECT " + Environment.NewLine;
                 sqlStmt += "                @ClientId" + Environment.NewLine;
                 sqlStmt += "               ,@CommissionPercent" + Environment.NewLine;
@@ -833,13 +752,13 @@ namespace RetailSlnDataLayer
                 #endregion
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
-                sqlCommand.Parameters["@CommissionPercent"].Value = priestListModel.CommissionPercent;
-                sqlCommand.Parameters["@CouponListId"].Value = priestListModel.CouponListId;
-                sqlCommand.Parameters["@DiscountPercent"].Value = priestListModel.DiscountPercent;
-                sqlCommand.Parameters["@PersonId"].Value = priestListModel.PersonId;
+                sqlCommand.Parameters["@CommissionPercent"].Value = referralListModel.CommissionPercent;
+                sqlCommand.Parameters["@CouponListId"].Value = referralListModel.CouponListId;
+                sqlCommand.Parameters["@DiscountPercent"].Value = referralListModel.DiscountPercent;
+                sqlCommand.Parameters["@PersonId"].Value = referralListModel.PersonId;
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
                 #endregion
-                priestListModel.PriestListId = (long)sqlCommand.ExecuteScalar();
+                referralListModel.ReferralListId = (long)sqlCommand.ExecuteScalar();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
             }
             catch (Exception exception)

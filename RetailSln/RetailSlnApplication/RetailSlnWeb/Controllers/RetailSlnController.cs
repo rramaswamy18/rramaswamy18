@@ -714,21 +714,21 @@ namespace RetailSlnWeb.Controllers
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                string aspNetRoleName;
-                try
-                {
-                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
-                }
-                catch
-                {
-                    aspNetRoleName = "DEFAULTROLE";
-                }
-                OrderItemModel orderItemModel = retailSlnBL.OrderItem(aspNetRoleName, null, null, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Index", orderItemModel);
-                //ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                //ModelState.AddModelError("", "OrderInvoice / GET");
-                //archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                //actionResult = View("Error", responseObjectModel);
+                //string aspNetRoleName;
+                //try
+                //{
+                //    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                //}
+                //catch
+                //{
+                //    aspNetRoleName = "DEFAULTROLE";
+                //}
+                //OrderItemModel orderItemModel = retailSlnBL.OrderItem(aspNetRoleName, null, null, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //actionResult = View("Index", orderItemModel);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderInvoice / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                actionResult = View("Error", responseObjectModel);
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
@@ -1130,8 +1130,8 @@ namespace RetailSlnWeb.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public ActionResult PaymentInfo9()
+        [HttpPost]
+        public ActionResult PaymentInfo9(PaymentInfoModel paymentInfoModelPost)
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1140,17 +1140,26 @@ namespace RetailSlnWeb.Controllers
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
             bool success;
-            string processMessage, htmlString;
+            string processMessage, htmlString, htmlStringShoppingCart;
+            int shoppingCartItemsCount = 0;
+            string shoppingCartTotalAmount = "";
 
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
+            paymentInfoModelPost.OrderSummaryModel.FirstName = paymentInfoModel.OrderSummaryModel.FirstName;
+            paymentInfoModelPost.OrderSummaryModel.LastName = paymentInfoModel.OrderSummaryModel.LastName;
+            paymentInfoModel.OrderSummaryModel.AdditionalCharges = paymentInfoModelPost.OrderSummaryModel.AdditionalCharges;
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
             SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
             try
             {
+                ModelState.Clear();
                 retailSlnBL.PaymentInfo9(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process", "ModelStateIsValid", ModelState.IsValid.ToString());
                 if (ModelState.IsValid)
                 {
+                    shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count;
+                    shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
+                    htmlStringShoppingCart = archLibBL.ViewToHtmlString(this, "_ShoppingCart", paymentInfoModel);
                     success = true;
                     processMessage = "SUCCESS!!!";
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process success");
@@ -1160,6 +1169,7 @@ namespace RetailSlnWeb.Controllers
                     ModelState.AddModelError("", "Error while initializing credit card process BL");
                     success = false;
                     processMessage = "ERROR???";
+                    htmlStringShoppingCart = "";
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Error while initializing credit card process BL");
                 }
             }
@@ -1169,9 +1179,10 @@ namespace RetailSlnWeb.Controllers
                 ModelState.AddModelError("", "Error while initializing credit card process");
                 success = false;
                 processMessage = "ERROR???";
+                htmlStringShoppingCart = "";
             }
             htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo9", paymentInfoModel.CreditCardDataModel);
-            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            actionResult = Json(new { success, processMessage, htmlString, htmlStringShoppingCart, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
 

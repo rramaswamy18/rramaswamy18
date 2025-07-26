@@ -351,12 +351,12 @@
 //    console.log("addToCartPopup_onclick", "00000000", "ENTER!!!");
 //    $('#divAddToCartPopupModal' + itemMasterId).modal({ backdrop: 'static', keyboard: false });
 //}
-function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBundleParm) {
+function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBundleParm, itemBundleFlag) {
+    console.log("Ummachi", itemId, elementIdSuffix, defaultValue, doNotBreakBundleParm, itemBundleFlag);
     console.log("addToCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var orderQtyElement = document.getElementById("orderQty" + elementIdSuffix);
     var orderQty = orderQtyElement.value;
-    console.log(orderQtyElement);
     console.log("addToCart_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "defaultValue", defaultValue, "defaultValue=null", (defaultValue == null), "orderQty", orderQty, "maxlength", orderQtyElement.getAttribute("maxlength"), "min", orderQtyElement.getAttribute("min"), "max", orderQtyElement.getAttribute("max"), "maxlength", orderQty.length <= orderQtyElement.getAttribute("maxlength"), "min", orderQty <= orderQtyElement.getAttribute("min"), "max", orderQty <= orderQtyElement.getAttribute("max"));
     var returnValue = true, errorMessage = "";
     try {
@@ -376,27 +376,37 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
             jsonPostData.ItemIdParm = itemId;
             jsonPostData.OrderQtyParm = orderQty;
             jsonPostData.DoNotBreakBundleParm = doNotBreakBundleParm;
-            if (!doNotBreakBundleParm) {
+            //if (!doNotBreakBundleParm) {
+            if (itemBundleFlag) {
                 for (var i = 0; ; i++) {
                     orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + i);
                     if (orderQtyHtmlElement == null) {
                         break;
                     }
                     else {
-                        orderQty = orderQtyHtmlElement.value;
-                        if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyHtmlElement.getAttribute("maxlength") && orderQty >= orderQtyHtmlElement.getAttribute("min") && orderQty <= orderQtyHtmlElement.getAttribute("max")) {
-                            itemId = document.getElementById("itemIdForBundle" + i).innerText;
-                            if (itemId.trim() === "") {
-                                document.getElementById("spnMessageErrorForBundle" + index).style.display = "block";
-                                document.getElementById("spnMessageErrorTextForBundle" + index).innerHTML = "Select valid item";
-                                returnValue = false;
-                                break;
-                            }
-                            else {
-                                shoppingCartItemBundleModel = {};
-                                shoppingCartItemBundleModel.ItemIdParm = itemId;
-                                shoppingCartItemBundleModel.OrderQtyParm = orderQty;
-                                shoppingCartItemBundleModels.push(shoppingCartItemBundleModel);
+                        if (doNotBreakBundleParm) {
+                            orderQty = 1;
+                            shoppingCartItemBundleModel = {};
+                            shoppingCartItemBundleModel.ItemIdParm = itemId;
+                            shoppingCartItemBundleModel.OrderQtyParm = orderQty;
+                            shoppingCartItemBundleModels.push(shoppingCartItemBundleModel);
+                        }
+                        else {
+                            orderQty = orderQtyHtmlElement.value;
+                            if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyHtmlElement.getAttribute("maxlength") && orderQty >= orderQtyHtmlElement.getAttribute("min") && orderQty <= orderQtyHtmlElement.getAttribute("max")) {
+                                itemId = document.getElementById("itemIdForBundle" + i).innerText;
+                                if (itemId.trim() === "") {
+                                    document.getElementById("spnMessageErrorForBundle" + index).style.display = "block";
+                                    document.getElementById("spnMessageErrorTextForBundle" + index).innerHTML = "Select valid item";
+                                    returnValue = false;
+                                    break;
+                                }
+                                else {
+                                    shoppingCartItemBundleModel = {};
+                                    shoppingCartItemBundleModel.ItemIdParm = itemId;
+                                    shoppingCartItemBundleModel.OrderQtyParm = orderQty;
+                                    shoppingCartItemBundleModels.push(shoppingCartItemBundleModel);
+                                }
                             }
                         }
                     }
@@ -493,108 +503,6 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
         document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = errorMessage;
     }
 }
-//function addToCart_onclickBackup(itemId, elementIdSuffix) {
-//    console.log("addToCart_onclick", "00000000", "ENTER!!!");
-//    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-//    var orderQtyElement = document.getElementById("orderQty" + elementIdSuffix);
-//    var orderQty = orderQtyElement.value;
-//    console.log("addToCart_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "orderQty", orderQty);
-//    var returnValue = true, errorMessage = "";
-//    var returnValue = true, errorMessage = "";
-//    try {
-//        if ((/^\d+$/.test(itemId))) {//itemId is a number
-//            ;
-//        }
-//        else {
-//            errorMessage = "Select valid item";
-//            returnValue = false;
-//            console.log("addToCart_onclick", "00003000", returnValue, errorMessage);
-//        }
-//        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
-//        if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyElement.getAttribute("maxlength") && orderQty >= orderQtyElement.getAttribute("min") && orderQty <= orderQtyElement.getAttribute("max")) {
-//        }
-//        else {
-//            if (errorMessage != "") {
-//                errorMessage += "<br />";
-//            }
-//            errorMessage += "Enter quantity";
-//            returnValue = false;
-//        }
-//        if (returnValue) {
-//            document.getElementById("divErrorMessage").innerHTML = "";
-//            document.getElementById("spnMessageError" + elementIdSuffix).style.display = "none";
-//            document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = "";
-//            document.getElementById("spnMessageError" + elementIdSuffix).style.display = "none";
-//            document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = "";
-//            var url = "/Home/AddToCart/";
-//            $.ajax({
-//                url: url,
-//                type: "POST",
-//                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-//                dataType: "json",
-//                data: { "itemIdParm": itemId, "orderQtyParm": orderQty },
-//                async: true,
-//                success: function (responseData, textStatus, request) {
-//                    $('#loadingModal').modal('hide');
-//                    //console.log("addToCart_onclick", "00090000", "SUCCESS!!!", responseData);
-//                    console.log("addToCart_onclick", "00090000", "SUCCESS!!!");
-//                    if (responseData.success) {
-//                        shoppingCartSummary(responseData.shoppingCartItemsCount, -1, responseData.shoppingCartTotalAmount);
-//                        document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
-//                        document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
-//                        document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
-//                        document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
-//                        document.getElementById("spnMessageSuccess" + elementIdSuffix).style.display = "block";
-//                        document.getElementById("spnMessageSuccessText" + elementIdSuffix).innerHTML = orderQty;
-//                        orderQtyElement.value = "";
-//                        document.getElementById("spnMessageSuccess" + elementIdSuffix).style.display = "block";
-//                        document.getElementById("spnMessageSuccessText" + elementIdSuffix).innerHTML = orderQty;
-//                        document.getElementById("divShoppingCart").innerHTML = responseData.htmlString;
-//                    }
-//                    else {
-//                        document.getElementById("divErrorMessage").innerHTML = responseData.htmlString;
-//                        document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//                        document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = responseData.htmlString;
-//                        document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//                        document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = responseData.htmlString;
-//                    }
-//                },
-//                error: function (xhr, exception) {
-//                    $('#loadingModal').modal('hide');
-//                    console.log("addToCart_onclick", "00099100", exception, xhr);
-//                    var jsonData = JSON.parse(xhr.responseText);
-//                    document.getElementById("divErrorMessage").innerHTML = "Error occurred";
-//                    document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//                    document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = "Error occurred";
-//                    document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//                    document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = "Error occurred";
-//                }
-//            });
-//        }
-//        else {
-//            $('#loadingModal').modal('hide');
-//            document.getElementById("divErrorMessage").innerHTML = errorMessage;
-//            document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//            document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = errorMessage;
-//            document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//            document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = errorMessage;
-//            //addToCartPopup_onclick(itemMasterId);
-//            return false;
-//        }
-//    }
-//    catch (err) {
-//        console.log(err);
-//        $('#loadingModal').modal('hide');
-//        if (errorMessage === "") {
-//            errorMessage = "Error while adding to cart";
-//        }
-//        document.getElementById("divErrorMessage").innerHTML = errorMessage;
-//        document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//        document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = errorMessage;
-//        document.getElementById("spnMessageError" + elementIdSuffix).style.display = "block";
-//        document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = errorMessage;
-//    }
-//}
 function categoryId_onclick(categoryId, pageNum, categoryCount) {
     //console.log("categoryId_onclick", "00000000", "ENTER!!!", categoryId, pageNum);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -810,35 +718,6 @@ function calculateItemBundleRate(itemBundleCount, currencySymbol) {
     document.getElementById("itemBundleItemPiecesCount").innerText = itemBundleItemPiecesCount;
     console.log(currencySymbol, "itemBundleItemRate", itemBundleItemRate, "itemBundleItemPiecesCount", itemBundleItemPiecesCount);
 }
-//function orderQty_oninput1(index) {
-//    try {
-//        var orderQtyElementObject = document.getElementById("orderQty" + index);
-//        if (orderQtyElementObject.value.length > orderQtyElementObject.getAttribute("maxlength")) {
-//            orderQtyElementObject.value = orderQtyElementObject.value.substr(0, orderQtyElementObject.getAttribute("maxlength"));
-//        }
-//        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
-//        var orderQty = orderQtyElementObject.value;
-//        if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyElementObject.getAttribute("maxlength") && orderQty >= orderQtyElementObject.getAttribute("min") && orderQty <= orderQtyElementObject.getAttribute("max")) {
-//        }
-//        else {
-//            orderQtyElementObject.value = "";
-//        }
-//    }
-//    catch (err) {
-//        console.log(1, "orderQty_oninput1 ERROR???", index, err);
-//    }
-//    return false;
-//}
-//function orderQty_oninput2(orderQtyIndex, orderQtyIndexStart, orderQtyIndexFinish) {
-//    if (orderQtyIndexStart === '') {
-//        return false;
-//    }
-//    orderQtyIndexStart = parseInt(orderQtyIndexStart);
-//    orderQtyIndexFinish = parseInt(orderQtyIndexFinish);
-//    for (var i = orderQtyIndexStart; i <= orderQtyIndexFinish; i++) {
-//        document.getElementById("orderQty" + i).value = document.getElementById("quantity" + orderQtyIndex).innerText * document.getElementById("orderQty" + orderQtyIndex).value;
-//    }
-//}
 function paymentInfo1Save_onclick() {
     console.log("00000000", "paymentInfo1Save_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -947,7 +826,8 @@ function paymentInfo2Save_onclick() {
     });
 }
 function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
-    console.log(creditCardKVPKeys, creditCardKVPValues);
+    console.log("00000000", "paymentInfo4Save_onclick", "ENTER!!!");
+    console.log("00001000", "paymentInfo4Save_onclick", creditCardKVPKeys, creditCardKVPValues);
     //Render the payment form template
     var container = document.getElementById('stripe-payment-container');
     container.innerHTML = document.getElementById('stripe-form-template').innerHTML;
@@ -956,6 +836,7 @@ function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
     //In this case there is only one client key - Will loop through if there is more
     var stripe = Stripe(creditCardKVPValues);
     var elements = stripe.elements();
+    console.log("00002000", "paymentInfo4Save_onclick", elements);
 
     var style = {
         base: {
@@ -969,14 +850,18 @@ function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
 
     var cardNumber = elements.create('cardNumber', { style: style });
     cardNumber.mount('#card-number-element');
+    console.log("00002100", "paymentInfo4Save_onclick", cardNumber);
 
     var cardExpiry = elements.create('cardExpiry', { style: style });
     cardExpiry.mount('#card-expiry-element');
+    console.log("00002200", "paymentInfo4Save_onclick", cardExpiry);
 
     var cardCvc = elements.create('cardCvc', { style: style });
     cardCvc.mount('#card-cvc-element');
+    console.log("00002300", "paymentInfo4Save_onclick", cardCvc);
 
     var form = document.getElementById('payment-form');
+    console.log("00003000", "paymentInfo4Save_onclick", form);
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         checkLoggedInStatus("1", "Home", "Index");
@@ -985,10 +870,11 @@ function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
             method: 'POST',
         })
             .then(function (response) {
+                console.log("paymentInfo4Save_onclick", "00004000", response);
                 return response.json();
             })
             .then(function (paymentIntent) {
-                console.log("paymentInfo4Save_onclick", "00001000", paymentIntent);
+                console.log("paymentInfo4Save_onclick", "00005000", paymentIntent);
                 if (paymentIntent.success) {
                     stripe.confirmCardPayment(paymentIntent.clientSecret, {
                         payment_method: {
@@ -1017,24 +903,33 @@ function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
                 }
             });
     });
+    console.log("00006000", "paymentInfo4Save_onclick", form);
     this.disabled = true;
+    document.getElementById("paymentInfo4SaveButton").innerHTML = "";
     document.getElementById("divPayment0Info").innerHTML = "";
 }
 function paymentInfo9Save_onclick() {
     console.log("00000000", "paymentInfo9Save_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/PaymentInfo9";
+    var postData = $("#formPaymentInfo1Data").serialize();
     $.ajax({
         url: url,
-        type: "GET",
+        type: "POST",
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
         //dataType: "html",
-        //data: postData,
+        data: postData,
         //async: false,
         success: function (responseData, textStatus, request) {
             console.log("00001000", "paymentInfo9Save_onclick", responseData.success, responseData.processMessage);
             $("#loadingModal").modal('hide');
             document.getElementById("divPayment0Info").innerHTML = responseData.htmlString;
+            shoppingCartSummary(responseData.shoppingCartItemsCount, -1, responseData.shoppingCartTotalAmount);
+            document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
+            document.getElementById("shoppingCartTotalAmount").innerHTML = responseData.shoppingCartTotalAmount;
+            document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
+            document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
+            document.getElementById("divShoppingCart").innerHTML = responseData.htmlStringShoppingCart;
             console.log("paymentInfo9Save_onclick", "00090000", "EXIT!!!");
         },
         error: function (xhr, exception) {
@@ -1075,272 +970,6 @@ function paymentInfo9SaveProcess_onclick() {
         }
     });
 }
-//function paymentInfo4Save_onclickNewNotWorking() {
-//    //Render the payment form template
-//    var clientSecret = 'pk_test_51PidPzRsotNg8ICvkglKsLHQB2xhgX8zEVUR2eqi6o7pSNeyPa1BlNn8W3EcyNQeLtb4bzj4yEEjtjehDo5S9Tvu006xJBd2VK';
-//    var container = document.getElementById('stripe-payment-container');
-//    container.innerHTML = document.getElementById('stripe-form-template').innerHTML;
-
-//    // Stripe logic (initialize only after form is rendered)
-//    var stripe = Stripe(clientSecret);
-//    var elements = stripe.elements();
-
-//    var style = {
-//        base: {
-//            fontSize: '16px',
-//            color: '#32325d',
-//            '::placeholder': {
-//                color: '#aab7c4'
-//            }
-//        }
-//    };
-
-//    var cardNumber = elements.create('cardNumber', { style: style });
-//    cardNumber.mount('#card-number-element');
-
-//    var cardExpiry = elements.create('cardExpiry', { style: style });
-//    cardExpiry.mount('#card-expiry-element');
-
-//    var cardCvc = elements.create('cardCvc', { style: style });
-//    cardCvc.mount('#card-cvc-element');
-
-//    var form = document.getElementById('payment-form');
-//    //Begin Event Listener
-//    form.addEventListener('submit', async (event) => {
-//        event.preventDefault();
-
-//        try {
-//            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-//                payment_method: {
-//                    card: elements,
-//                    //billing_details: {
-//                    //    name: 'Customer Name', // Replace with actual customer name
-//                    //},
-//                },
-//            });
-
-//            if (error) {
-//                // Handle errors returned by Stripe.confirmCardPayment
-//                if (error.type === 'card_error') {
-//                    // Specific card-related error (e.g., declined card)
-//                    console.error('Card Error:', error.message);
-//                    document.getElementById("divErrorMessage").innerHTML = error.message;
-//                    document.getElementById("divErrorMessage2").innerHTML = error.message;
-//                } else if (error.type === 'validation_error') {
-//                    // Validation errors (e.g., missing fields)
-//                    console.error('Validation Error:', error.message);
-//                    document.getElementById("divErrorMessage").innerHTML = error.message;
-//                    document.getElementById("divErrorMessage2").innerHTML = error.message;
-//                    //displayError(error.message);
-//                } else {
-//                    // Other Stripe API errors
-//                    console.error('Stripe API Error:', error.message);
-//                    document.getElementById("divErrorMessage").innerHTML = error.message;
-//                    document.getElementById("divErrorMessage2").innerHTML = error.message;
-//                    alert('Please fix errors to continue');
-//                }
-//            } else if (paymentIntent.status === 'succeeded') {
-//                // Payment successful
-//                console.log('Payment Succeeded:', paymentIntent.id);
-//                document.getElementById("divErrorMessage").innerHTML = "";
-//                document.getElementById("divErrorMessage2").innerHTML = "";
-//                alert('Success');
-//                // Redirect or update UI as needed
-//            }
-//        } catch (err) {
-//            // Handle network errors or other unexpected errors
-//            console.error('Unexpected Error:', err);
-//            document.getElementById("divErrorMessage").innerHTML = "Unexpected error";
-//            document.getElementById("divErrorMessage2").innerHTML = "Unexpected error";
-//            //displayError('A network error occurred. Please check your internet connection and try again.');
-//        }
-//    });
-//    //End Event Listener
-//    this.disabled = true;
-//    document.getElementById("divPayment0Info").innerHTML = "";
-//}
-//function paymentInfo4Save_onclickBackup() {
-//    //Render the payment form template
-//    var container = document.getElementById('stripe-payment-container');
-//    container.innerHTML = document.getElementById('stripe-form-template').innerHTML;
-
-//    // Stripe logic (initialize only after form is rendered)
-//    var stripe = Stripe('pk_test_51PidPzRsotNg8ICvkglKsLHQB2xhgX8zEVUR2eqi6o7pSNeyPa1BlNn8W3EcyNQeLtb4bzj4yEEjtjehDo5S9Tvu006xJBd2VK');
-//    var elements = stripe.elements();
-
-//    var style = {
-//        base: {
-//            fontSize: '16px',
-//            color: '#32325d',
-//            '::placeholder': {
-//                color: '#aab7c4'
-//            }
-//        }
-//    };
-
-//    var cardNumber = elements.create('cardNumber', { style: style });
-//    cardNumber.mount('#card-number-element');
-
-//    var cardExpiry = elements.create('cardExpiry', { style: style });
-//    cardExpiry.mount('#card-expiry-element');
-
-//    var cardCvc = elements.create('cardCvc', { style: style });
-//    cardCvc.mount('#card-cvc-element');
-
-//    var form = document.getElementById('payment-form');
-//    //Here goes the event listener
-//    this.disabled = true;
-//    document.getElementById("divPayment0Info").innerHTML = "";
-//}
-//function paymentInfo4Save_onclickBackup() {
-//    console.log("00000000", "paymentInfo4Save_onclick");
-//    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-//    var url = "/Home/PaymentInfo4";
-//    $.ajax({
-//        url: url,
-//        type: "GET",
-//        contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-//        //dataType: "html",
-//        //data: postData,
-//        //async: false,
-//        success: function (responseData, textStatus, request) {
-//            console.log("00000100", "paymentInfo1Save_onclick", responseData);
-//            $("#loadingModal").modal('hide');
-//            if (responseData.success) {
-//                console.log("00000200", "paymentInfo1Save_onclick");
-//                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-//                paymentInfo4CreditCardSetup();
-//                //show();
-//                //setTimeout(function () {
-//                //    console.log("This message appears after 5 seconds. for card mount Stripe");
-//                //}, 5000); // 3000 milliseconds = 3 seconds
-//                //paymentInfo4CreditCardSetup();
-//                //document.getElementById("divShoppingCart").innerHTML = "";
-//                //document.getElementById("loggedInUserFullName").innerHTML = responseData.loggedInUserFullName;
-//                //document.getElementById("loggedInUserEmailAddress").innerHTML = responseData.loggedInUserEmailAddress;
-//                //document.getElementById("shoppingCartItemsCount").innerHTML = "";
-//                //document.getElementById("shoppingCartTotalAmount").innerHTML = "";
-//                //window.location.href = responseData.redirectUrl;
-//            }
-//            else {
-//                document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
-//            }
-//            console.log("00001000", "paymentInfo1Save_onclick success", responseData.processMessage);
-//        },
-//        error: function (xhr, exception) {
-//            $("#loadingModal").modal('hide');
-//            document.getElementById("divOrderProcess").innerHTML = xhr.responseText;
-//            console.log("00099000", "paymentInfo1Save_onclick error", exception, xhr);
-//        }
-//    });
-//}
-//function paymentInfo4CreditCardSetup() {
-//}
-//function show() {
-//    alert(2);
-//    // Render the payment form template
-//    var container = document.getElementById('stripe-payment-container');
-//    container.innerHTML = document.getElementById('stripe-form-template').innerHTML;
-//    // Stripe logic (initialize only after form is rendered)
-//    var stripe = Stripe('pk_test_51PidPzRsotNg8ICvkglKsLHQB2xhgX8zEVUR2eqi6o7pSNeyPa1BlNn8W3EcyNQeLtb4bzj4yEEjtjehDo5S9Tvu006xJBd2VK');
-//    var elements = stripe.elements();
-//    var style = {
-//        base: {
-//            fontSize: '16px',
-//            color: '#32325d',
-//            '::placeholder': {
-//                color: '#aab7c4'
-//            }
-//        }
-//    };
-//    var cardNumber = elements.create('cardNumber', { style: style });
-//    cardNumber.mount('#card-number-element');
-//    var cardExpiry = elements.create('cardExpiry', { style: style });
-//    cardExpiry.mount('#card-expiry-element');
-//    var cardCvc = elements.create('cardCvc', { style: style });
-//    cardCvc.mount('#card-cvc-element');
-//    var form = document.getElementById('payment-form');
-//    form.addEventListener('submit', function (event) {
-//        event.preventDefault();
-//        fetch('/Home/PaymentInfo4', {
-//            method: 'POST',
-//        })
-//            .then(function (response) {
-//                return response.json();
-//            })
-//            .then(function (paymentIntent) {
-//                stripe.confirmCardPayment(paymentIntent.clientSecret, {
-//                    payment_method: {
-//                        card: cardNumber,
-//                    }
-//                })
-//                    .then(function (result) {
-//                        if (result.error) {
-//                            window.location.href = '/Home/PaymentResult?status=error&message=' + encodeURIComponent(result.error.message);
-//                        } else {
-//                            if (result.paymentIntent.status === 'succeeded') {
-//                                const paymentIntent = result.paymentIntent;
-//                                window.location.href = `/Home/PaymentResult?status=success&amount=${paymentIntent.amount}&currency=${paymentIntent.currency}&paymentMethod=${paymentIntent.payment_method}&clientSecret=${paymentIntent.client_secret}`;
-//                            }
-//                        }
-//                    });
-//            });
-//    });
-//}
-//function paymentInfo4CreditCardSetupBackup() {
-//    console.log("Ummachi 0");
-//    var stripe = Stripe('pk_test_51PidPzRsotNg8ICvkglKsLHQB2xhgX8zEVUR2eqi6o7pSNeyPa1BlNn8W3EcyNQeLtb4bzj4yEEjtjehDo5S9Tvu006xJBd2VK'); // Replace with your publishable key
-//    var elements = stripe.elements();
-//    console.log("Ummachi 1", elements);
-//    var card = elements.create('card');
-//    card.mount('#card-element');
-//    card.mount('#card-number-element');
-//    card.mount('#card-expiry-element');
-//    console.log("Ummachi 2", document.getElementById("card-element"));
-//    var form = document.getElementById('payment-form');
-//    form.addEventListener('submit', function (event) {
-//        event.preventDefault();
-//        fetch('/Home/CreatePaymentIntent', {
-//            method: 'POST',
-//        })
-//            .then(function (response) {
-//                console.log("Ummachi 3");
-//                return response.json();
-//            })
-//            .then(function (paymentIntent) {
-//                stripe.confirmCardPayment(paymentIntent.clientSecret, {
-//                    payment_method: {
-//                        card: card,
-//                    }
-//                })
-//                    .then(function (result) {
-//                        console.log("Ummachi 4");
-//                        if (result.error) {
-//                            window.location.href = '/Home/PaymentResult?status=error&message=' + encodeURIComponent(result.error.message);
-//                        } else {
-//                            if (result.paymentIntent.status === 'succeeded') {
-//                                console.log("Ummachi 5");
-//                                const paymentIntent = result.paymentIntent;
-//                                window.location.href = `/Home/PaymentResult?status=success&amount=${paymentIntent.amount}&currency=${paymentIntent.currency}&paymentMethod=${paymentIntent.payment_method}&clientSecret=${paymentIntent.client_secret}`;
-//                            }
-//                        }
-//                    });
-//            });
-//    });
-//    const appearance = {
-//        theme: 'stripe',
-//        variables: {
-//            colorPrimary: '#0570de',
-//            colorBackground: '#ffffff',
-//            colorText: '#30313d',
-//            colorDanger: '#df1b41',
-//            fontFamily: 'Ideal Sans, system-ui, sans-serif',
-//            spacingUnit: '2px',
-//            borderRadius: '4px',
-//            // See all possible variables below
-//        }
-//    };
-//}
 function removeFromCart_onclick(index) {
     console.log("removeFromCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });

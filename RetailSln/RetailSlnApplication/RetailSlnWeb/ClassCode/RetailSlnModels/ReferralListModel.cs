@@ -6,9 +6,9 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class PriestListModel : AuditInfoModel
+    public class ReferralListModel : AuditInfoModel
     {
-        public long? PriestListId { set; get; }
+        public long? ReferralListId { set; get; }
         public long ClientId { set; get; }
         public float CommissionPercent { set; get; }
         public long CouponListId { set; get; }

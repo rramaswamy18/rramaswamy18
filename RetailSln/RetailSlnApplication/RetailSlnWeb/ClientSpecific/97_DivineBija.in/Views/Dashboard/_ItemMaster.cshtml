@@ -1,0 +1,30 @@
+﻿@using RetailSlnModels
+@model ItemMasterDataModel
+<div class="col-md-12" style="text-align: left;">
+    <div style="display: table; padding: 0px; width: 100%;">
+        <div style="display: table-row; padding: 0px; text-align: center; width: 100%;">
+            <div style="color: #a54000; display: table-cell; font-size: 18px; font-weight: bold; padding: 5px; text-align: center; vertical-align: middle; width: 100%;">
+                @{
+                    string addEditLabel;
+                    if (Model.ItemMasterModel.ItemMasterId == 0)
+                    {
+                        addEditLabel = "Add";
+                    }
+                    else
+                    {
+                        addEditLabel = "Edit #" + Model.ItemMasterModel.ItemMasterId;
+                    }
+                }
+                Item Master (@addEditLabel)
+            </div>
+        </div>
+        <form id="formItemMasterData">
+            @Html.Partial("_ItemMasterData", Model.ItemMasterModel)
+        </form>
+        <div style="display: table-row; padding: 0px; text-align: center; width: 100%;">
+            <div style="display: table-cell; padding: 5px; text-align: center; vertical-align: middle; width: 100%;">
+                <button class="loginRegisterbtn" id="itemMasterSave" onclick="javascript: return itemMasterSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 27%;" type="button">save</button>
+            </div>
+        </div>
+    </div>
+</div>
