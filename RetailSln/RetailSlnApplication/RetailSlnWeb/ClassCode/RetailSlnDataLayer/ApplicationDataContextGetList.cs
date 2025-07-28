@@ -2,6 +2,7 @@
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using RetailSlnCacheData;
 using RetailSlnEnumerations;
 using RetailSlnModels;
 using System;
@@ -499,46 +500,81 @@ namespace RetailSlnDataLayer
                 sqlStmt += $"               OFFSET {offSetCount} ROWS FETCH NEXT {rowCount} ROWS ONLY" + Environment.NewLine;
                 sqlStmt += ";" + Environment.NewLine;
                 sqlStmt += "        SELECT *" + Environment.NewLine;
-                sqlStmt += "          FROM RetailSlnSch.Item" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN #TEMP1" + Environment.NewLine;
-                sqlStmt += "            ON Item.ItemMasterId = #TEMP1.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "          FROM #TEMP1" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMasterItemSpec" + Environment.NewLine;
+                sqlStmt += "            ON #TEMP1.ItemMasterId = ItemMasterItemSpec.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemSpecMaster" + Environment.NewLine;
+                sqlStmt += "            ON ItemMasterItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId" + Environment.NewLine;
+                sqlStmt += "      ORDER BY ItemMasterItemSpec.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "              ,ItemMasterItemSpec.SeqNum" + Environment.NewLine;
+                sqlStmt += ";" + Environment.NewLine;
+                sqlStmt += "        SELECT *" + Environment.NewLine;
+                sqlStmt += "          FROM #TEMP1" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
+                sqlStmt += "            ON #TEMP1.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.ItemItemSpec" + Environment.NewLine;
                 sqlStmt += "            ON Item.ItemId = ItemItemSpec.ItemId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.ItemSpecMaster" + Environment.NewLine;
                 sqlStmt += "            ON ItemItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId" + Environment.NewLine;
-                sqlStmt += "     LEFT JOIN Lookup.CodeData" + Environment.NewLine;
-                sqlStmt += "            ON ItemSpecMaster.CodeTypeId = CodeData.CodeTypeId" + Environment.NewLine;
-                sqlStmt += "           AND ItemItemSpec.ItemSpecUnitValue = CodeData.CodeDataNameId" + Environment.NewLine;
-                sqlStmt += "      ORDER BY ItemItemSpec.ItemId" + Environment.NewLine;
+                sqlStmt += "      ORDER BY Item.ItemId" + Environment.NewLine;
                 sqlStmt += "              ,ItemItemSpec.SeqNum" + Environment.NewLine;
                 sqlStmt += ";" + Environment.NewLine;
                 sqlStmt += "        SELECT *" + Environment.NewLine;
-                sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN #TEMP1" + Environment.NewLine;
-                sqlStmt += "            ON ItemMaster.ItemMasterId = #TEMP1.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "          FROM #TEMP1" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "            ON #TEMP1.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
                 sqlStmt += "            ON ItemMaster.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
                 sqlStmt += "      ORDER BY ItemMaster.ItemMasterDesc" + Environment.NewLine;
                 sqlStmt += "              ,Item.ItemSeqNum" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                sqlDataReader = sqlCommand.ExecuteReader();
                 #endregion
                 #region
-                List<ItemItemSpecModel> itemItemSpecModels = new List<ItemItemSpecModel>();
+                sqlDataReader = sqlCommand.ExecuteReader();
+                List<ItemMasterItemSpecModel> itemMasterItemSpecModels = new List<ItemMasterItemSpecModel>();
+                ItemMasterItemSpecModel itemMasterItemSpecModel;
+                while (sqlDataReader.Read())
+                {
+                    itemMasterItemSpecModels.Add
+                    (
+                        itemMasterItemSpecModel = new ItemMasterItemSpecModel
+                        {
+                            ItemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString()),
+                            ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
+                            ItemSpecUnitValue = sqlDataReader["ItemSpecUnitValue"].ToString(),
+                            ItemSpecValue = sqlDataReader["ItemSpecValue"].ToString(),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            SeqNumItemMaster = sqlDataReader["SeqNumItemMaster"].ToString() == "" ? (float?)null : float.Parse(sqlDataReader["SeqNumItemMaster"].ToString()),
+                        }
+                    );
+                    itemMasterItemSpecModel.ItemSpecMasterModel = RetailSlnCache.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemMasterItemSpecModel.ItemSpecMasterId);
+                }
                 #endregion
+                #region
+                sqlDataReader.NextResult();
+                List<ItemItemSpecModel> itemItemSpecModels = new List<ItemItemSpecModel>();
+                ItemItemSpecModel itemItemSpecModel;
                 while (sqlDataReader.Read())
                 {
                     itemItemSpecModels.Add
                     (
-                        new ItemItemSpecModel
+                        itemItemSpecModel = new ItemItemSpecModel
                         {
-
+                            ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                            ItemSpecMasterId = long.Parse(sqlDataReader["ItemSpecMasterId"].ToString()),
+                            ItemSpecUnitValue = sqlDataReader["ItemSpecUnitValue"].ToString(),
+                            ItemSpecValue = sqlDataReader["ItemSpecValue"].ToString(),
+                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                            SeqNumItem = sqlDataReader["SeqNumItem"].ToString() == "" ? (float?)null : float.Parse(sqlDataReader["SeqNumItem"].ToString()),
                         }
                     );
+                    itemItemSpecModel.ItemSpecMasterModel = RetailSlnCache.ItemSpecMasterModels.First(x => x.ItemSpecMasterId == itemItemSpecModel.ItemSpecMasterId);
                 }
+                #endregion
                 #region
                 sqlDataReader.NextResult();
                 ItemMasterModel itemMasterModel;
+                ItemModel itemModel;
                 List<ItemSpecModel> itemSpecModels = new List<ItemSpecModel>();
                 bool sqlDataReaderRead = sqlDataReader.Read();
                 while (sqlDataReaderRead)
@@ -568,7 +604,7 @@ namespace RetailSlnDataLayer
                     {
                         itemMasterModel.ItemModels.Add
                         (
-                            new ItemModel
+                            itemModel = new ItemModel
                             {
                                 ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
                                 ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
@@ -589,36 +625,13 @@ namespace RetailSlnDataLayer
                                 ItemTypeId = (ItemTypeEnum)int.Parse(sqlDataReader["ItemTypeId"].ToString()),
                                 ProductItemId = long.Parse(sqlDataReader["ProductItemId"].ToString()),
                                 UploadImageFileName = sqlDataReader["UploadImageFileName"].ToString(),
+                                ItemItemSpecModels = new Dictionary<string, ItemItemSpecModel>(),
                             }
                         );
+                        sqlDataReaderRead = sqlDataReader.Read();
                     }
                 }
                 sqlDataReader.Close();
-                #endregion
-                #region
-                //sqlStmt += "        SELECT *" + Environment.NewLine;
-                //sqlStmt += "          FROM RetailSlnSch.ItemMasterItemSpec" + Environment.NewLine;
-                //sqlStmt += "    INNER JOIN #TEMP1" + Environment.NewLine;
-                //sqlStmt += "            ON ItemMasterItemSpec.ItemMasterId = #TEMP1.ItemMasterId" + Environment.NewLine;
-                //sqlStmt += "    INNER JOIN RetailSlnSch.ItemSpecMaster" + Environment.NewLine;
-                //sqlStmt += "            ON ItemMasterItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId" + Environment.NewLine;
-                //sqlStmt += "     LEFT JOIN Lookup.CodeData" + Environment.NewLine;
-                //sqlStmt += "            ON ItemSpecMaster.CodeTypeId = CodeData.CodeTypeId" + Environment.NewLine;
-                //sqlStmt += "           AND ItemSpec.ItemSpecUnitValue = CodeData.CodeDataNameId" + Environment.NewLine;
-                //sqlStmt += "      ORDER BY ItemMasterItemSpec.ItemMasterId" + Environment.NewLine;
-                //sqlStmt += "              ,ItemMasterItemSpec.SeqNum" + Environment.NewLine;
-                //sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                #endregion
-                #region
-                //sqlDataReaderRead = sqlDataReader.Read();
-                //while (sqlDataReaderRead)
-                //{
-                //    itemMasterId = long.Parse(sqlDataReader["ItemMasterId"].ToString());
-                //    while (sqlDataReaderRead && itemMasterId == long.Parse(sqlDataReader["ItemMasterId"].ToString()))
-                //    {
-                //        sqlDataReaderRead = sqlDataReader.Read();
-                //    }
-                //}
                 #endregion
                 return itemMasterModels;
             }

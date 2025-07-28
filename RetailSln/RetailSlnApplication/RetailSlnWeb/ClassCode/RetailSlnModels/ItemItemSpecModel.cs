@@ -33,6 +33,8 @@ namespace RetailSlnModels
 
         public ItemSpecMasterModel ItemSpecMasterModel { set; get; }
 
+        public CodeDataModel CodeDataModel { set; get; }
+
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

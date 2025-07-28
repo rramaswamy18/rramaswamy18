@@ -38,6 +38,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -81,119 +82,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        #region Commented Out Code
-        #region
-        //// GET: AddToCart
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public ActionResult AddToCart(string itemId, string orderQty)
-        //{
-        //    //int x = 1, y = 0, z = x / y;
-        //    ViewData["ActionName"] = "AddToCart1";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    int shoppingCartItemsCount = 0;
-        //    string shoppingCartTotalAmount = "";
-        //    try
-        //    {
-        //        PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-        //        htmlString = retailSlnBL.AddToCart(ref paymentInfoModel, itemId, orderQty, true, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["PaymentInfo"] = paymentInfoModel;
-        //        if (htmlString == "")
-        //        {
-        //            shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count;
-        //            shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCartContainer", paymentInfoModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Success");
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = "Error while adding item to cart";
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Error");
-        //        }
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = "Error while adding item to cart";
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-        //    return actionResult;
-        //}
-        #endregion
-        #region
-        // POST: AddToCart2
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public ActionResult AddToCart2(AddToCartModel addToCartModel)
-        //{
-        //    ViewData["ActionName"] = "AddToCart1";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    int shoppingCartItemsCount = 0;
-        //    string shoppingCartTotalAmount = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-        //        htmlString = retailSlnBL.AddToCart2(ref paymentInfoModel, addToCartModel, true, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["PaymentInfo"] = paymentInfoModel;
-        //        if (htmlString == "")
-        //        {
-        //            shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.Count;
-        //            shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCartContainer", paymentInfoModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Success");
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = "Error while adding item to cart";
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Error");
-        //        }
-        //        ////shoppingCartItemsCount = paymentInfoModel.ShoppingCartModel.ShoppingCartItems.Count;
-        //        //shoppingCartTotalAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = "Error while adding item to cart";
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
-        //    return actionResult;
-        //}
-        #endregion
-        #endregion
-
         // GET: Checkout
         [AllowAnonymous]
         [HttpGet]
@@ -204,6 +92,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -253,6 +142,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -339,6 +229,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             bool success;
             string processMessage, htmlString;
             ArchLibBL archLibBL = new ArchLibBL();
@@ -416,6 +307,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ArchLibBL archLibBL = new ArchLibBL();
             LoginUserProfGuestModel loginUserProfGuestModel;
@@ -451,6 +343,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ArchLibBL archLibBL = new ArchLibBL();
             bool success;
@@ -535,6 +428,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -572,59 +466,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        #region
-        //// GET : ItemCatalog
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("ItemCatalogNew")]
-        //public ActionResult ItemCatalogNew(string id)
-        //{
-        //    ViewData["ActionName"] = "ItemCatalog";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    try
-        //    {
-        //        Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
-        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
-        //        if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue("DEFAULTROLE", out parentCategoryItemMasterModels))
-        //        {
-        //            if (parentCategoryItemMasterModels.TryGetValue(100, out categoryItemMasterHierModels))
-        //            {
-        //            }
-        //            else
-        //            {
-        //                categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-        //            }
-        //        }
-        //        else
-        //        {
-        //            categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-        //        }
-        //        OrderItemFileModel orderItemFileModel = new OrderItemFileModel
-        //        {
-        //            CategoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels["DEFAULTROLE"][0],
-        //            CategoryItemMasterHierModels = categoryItemMasterHierModels,
-        //            ItemDiscountModels = RetailSlnCache.CorpAcctItemDiscountModels[0],
-        //            ParentCategoryDesc = "All Items...",
-        //            ParentCategoryId = null,
-        //        };
-        //        actionResult = View("ItemCatalog", orderItemFileModel);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ModelState.AddModelError("", "ItemCatalog / GET");
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error");
-        //    }
-        //    return actionResult;
-        //}
-        #endregion
-
         // GET : ItemCatalog
         [AllowAnonymous]
         [HttpGet]
@@ -635,6 +476,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -665,6 +507,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -699,6 +542,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -743,6 +587,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -787,51 +632,6 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        //// GET : OrderItemData
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public ActionResult OrderItemData(string id)
-        //{
-        //    ViewData["ActionName"] = "OrderItemData";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-        //        htmlString = retailSlnBL.OrderItemData(id, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        if (ModelState.IsValid)
-        //        {
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ModelState.AddModelError("", "Order Item Data / GET");
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_Error", null);
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-        //    return actionResult;
-        //}
-
-        // POST: PaymentInfo1
         [AjaxAuthorize]
         [Authorize]
         [HttpPost]
@@ -840,6 +640,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -928,6 +729,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             bool success;
             string processMessage, htmlString;
             ArchLibBL archLibBL = new ArchLibBL();
@@ -975,6 +777,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
@@ -985,83 +788,6 @@ namespace RetailSlnWeb.Controllers
             return RedirectToAction("OrderInvoice");
         }
 
-        #region Commented Code
-        //// GET: PaymentInfo4
-        //[AjaxAuthorize]
-        //[Authorize]
-        //[HttpGet]
-        ////[Route("PaymentInfo4")]
-        //public ActionResult PaymentInfo4ToBeDeprecated()
-        //{//Credit Card Payment Setup
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-        //        PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-        //        retailSlnBL.PaymentInfo4(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["PaymentInfo"] = paymentInfoModel;
-        //        success = true;
-        //        processMessage = "SUCCESS!!!";
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo4", paymentInfoModel);
-        //        //return View(paymentInfoModel);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = "Error while setting up credit card";
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-
-        //public ActionResult PaymentInfo4Backup()
-        //{//Credit Card Payment Setup
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    ActionResult actionResult;
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-        //        PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-        //        retailSlnBL.PaymentInfo4(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["PaymentInfo"] = paymentInfoModel;
-        //        success = true;
-        //        processMessage = "SUCCESS!!!";
-        //        //htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo4", paymentInfoModel);
-        //        return View(paymentInfoModel);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = "Error while setting up credit card";
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-        #endregion
-
         // POST: PaymentInfo4
         [AjaxAuthorize]
         [Authorize]
@@ -1071,6 +797,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -1119,6 +846,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
@@ -1136,6 +864,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -1193,6 +922,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -1316,6 +1046,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
@@ -1358,6 +1089,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             //ActionResult actionResult;
@@ -1391,6 +1123,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             ActionResult actionResult;
             bool success;
@@ -1416,6 +1149,7 @@ namespace RetailSlnWeb.Controllers
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
