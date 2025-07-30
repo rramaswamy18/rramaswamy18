@@ -231,6 +231,7 @@ namespace RetailSlnBusinessLayer
             {
                 ApplicationDataContext.OpenSqlConnection();
                 paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.RemoveRange(1, paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Count - 1);
+                CalculateAdditionalCharges(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateDiscounts(paymentInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CalculateTotalOrderAmount(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CorpAcctModel corpAcctModel = (((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel);
@@ -679,7 +680,7 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
                 shoppingCartItemModelBalanceDue.OrderAmountRounded = (long)(shoppingCartItemModelBalanceDue.OrderAmount * 100);
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
-                string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                 string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
                 GetCreditCardKVPs(creditCardProcessor, out Dictionary<string, string> creditCardKVPs, out Dictionary<string, string> creditCardDataKVPs, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
                 {
@@ -753,6 +754,7 @@ namespace RetailSlnBusinessLayer
                 AssignAuthorizedData(ref paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
 
                 Dictionary<string, Dictionary<string, string>> paymentRefOptions = new Dictionary<string, Dictionary<string, string>>();
+                paymentRefOptions["PaymentRefOption1"] = new Dictionary<string, string>();
                 paymentRefOptions["PaymentRefOption1"]["Key"] = "Id";
                 paymentRefOptions["PaymentRefOption1"]["Value"] = paymentIntent_id;
                 paymentRefOptions["PaymentRefOption2"] = new Dictionary<string, string>();
@@ -785,31 +787,8 @@ namespace RetailSlnBusinessLayer
             try
             {
                 //There is nothing to be done right now
-                if (paymentInfoModel.OrderSummaryModel.AdditionalCharges != null && paymentInfoModel.OrderSummaryModel.AdditionalCharges.Value > 0)
-                {
-                    ShoppingCartItemModel shoppingCartItemModelAdditionalCharges = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FirstOrDefault(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AdditionalCharges);
-                    if (shoppingCartItemModelAdditionalCharges == null)
-                    {
-                        shoppingCartItemModelAdditionalCharges = new ShoppingCartItemModel
-                        {
-                            ItemId = null,
-                            ItemRate = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
-                            ItemShortDesc = "Additional Charges",
-                            OrderComments = null,
-                            OrderQty = 1,
-                            OrderDetailTypeId = OrderDetailTypeEnum.AdditionalCharges,
-                        };
-                        int insertIndex = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FindIndex(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalInvoiceAmount);
-                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Insert(insertIndex, shoppingCartItemModelAdditionalCharges);
-                    }
-                    shoppingCartItemModelAdditionalCharges.OrderAmount = paymentInfoModel.OrderSummaryModel.AdditionalCharges;
-                    shoppingCartItemModelAdditionalCharges.OrderAmountFormatted = paymentInfoModel.OrderSummaryModel.AdditionalCharges.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-
-                    CreateShoppingCartTotals(ref paymentInfoModel, 0, "", sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-
-                    paymentInfoModel.CreditCardDataModel.CreditCardAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString();
-                    paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                }
+                paymentInfoModel.CreditCardDataModel.CreditCardAmount = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString();
+                paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 return;
             }
             catch (Exception exception)
@@ -1489,6 +1468,53 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
+        // PRIVATE : CalculateAdditionalCharges
+        private void CalculateAdditionalCharges(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                if (paymentInfoModel.OrderSummaryModel.AdditionalCharges == null)
+                {
+                    paymentInfoModel.OrderSummaryModel.AdditionalCharges = 0;
+                }
+                ShoppingCartItemModel shoppingCartItemModelAdditionalCharges = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FirstOrDefault(x => x.OrderDetailTypeId == OrderDetailTypeEnum.AdditionalCharges);
+                if (shoppingCartItemModelAdditionalCharges == null)
+                {
+                    shoppingCartItemModelAdditionalCharges = new ShoppingCartItemModel
+                    {
+                        ItemId = null,
+                        ItemRate = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount,
+                        ItemShortDesc = "Additional Charges",
+                        OrderComments = null,
+                        OrderQty = 1,
+                        OrderDetailTypeId = OrderDetailTypeEnum.AdditionalCharges,
+                    };
+                    int insertIndex = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FindIndex(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalInvoiceAmount);
+                    if (insertIndex == -1)
+                    {
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add(shoppingCartItemModelAdditionalCharges);
+                    }
+                    else
+                    {
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Insert(insertIndex, shoppingCartItemModelAdditionalCharges);
+                    }
+                }
+                shoppingCartItemModelAdditionalCharges.OrderAmount = paymentInfoModel.OrderSummaryModel.AdditionalCharges;
+                shoppingCartItemModelAdditionalCharges.OrderAmountFormatted = paymentInfoModel.OrderSummaryModel.AdditionalCharges.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                modelStateDictionary.AddModelError("", "Error while processing additional charges");
+                throw;
+            }
+            finally
+            {
+            }
+        }
         // PRIVATE : CalculateDiscounts
         private void CalculateDiscounts(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -1549,6 +1575,7 @@ namespace RetailSlnBusinessLayer
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                modelStateDictionary.AddModelError("", "Error while calculating discounts");
                 throw;
             }
             finally
@@ -1630,6 +1657,7 @@ namespace RetailSlnBusinessLayer
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                modelStateDictionary.AddModelError("", "Error while calculating delivery charges");
                 throw;
             }
             finally
@@ -1708,6 +1736,7 @@ namespace RetailSlnBusinessLayer
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                modelStateDictionary.AddModelError("", "Error while calculating sales tax");
                 throw;
             }
             finally
@@ -1755,6 +1784,7 @@ namespace RetailSlnBusinessLayer
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                modelStateDictionary.AddModelError("", "Error while calculating total order amount");
                 throw;
             }
             finally
@@ -2045,6 +2075,7 @@ namespace RetailSlnBusinessLayer
                 }
                 orderItemFileModel.CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels;
                 orderItemFileModel.CategoryItemMasterHierModels = categoryItemMasterHierModels;
+                orderItemFileModel.CurrencySymbol = RetailSlnCache.CurrencySymbol;
                 orderItemFileModel.ParentCategoryId = null;
                 orderItemFileModel.ParentCategoryDesc = parentCategoryDesc;
                 htmlString = archLibBL.ViewToHtmlString(controller, "_OrderItemFile", orderItemFileModel);
@@ -2319,7 +2350,6 @@ namespace RetailSlnBusinessLayer
                     if (shoppingCartItemModelSummaryTemp.OrderDetailTypeId == OrderDetailTypeEnum.AdditionalCharges)
                     {
                         totalInvoiceAmount += shoppingCartItemModelSummaryTemp.OrderAmount.Value;
-                        //aymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalShippingAndHandlingChargesAmount += shoppingCartItemModelSummaryTemp.OrderAmount.Value;
                     }
                 }
                 ShoppingCartItemModel shoppingCartItemModelSummary;
@@ -2335,7 +2365,7 @@ namespace RetailSlnBusinessLayer
                         }
                     );
                 }
-                totalInvoiceAmount = (int)Math.Round(totalInvoiceAmount, RetailSlnCache.RoundingDigitCount);
+                totalInvoiceAmount = (float)Math.Round(totalInvoiceAmount, RetailSlnCache.RoundingDigitCount);
                 shoppingCartItemModelSummary.OrderAmount = totalInvoiceAmount;
                 shoppingCartItemModelSummary.OrderAmountFormatted = totalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount = shoppingCartItemModelSummary.OrderAmount;

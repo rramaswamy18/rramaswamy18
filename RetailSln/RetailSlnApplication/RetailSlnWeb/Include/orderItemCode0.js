@@ -590,9 +590,11 @@ function deliveryInfoSave_onclick() {
         //async: false,
         success: function (responseData, textStatus, request) {
             $("#loadingModal").modal('hide');
+            $("#loadingModal").removeClass("in");
             console.log("00000500", "deliveryInfoSave_onclick success", responseData);
             if (responseData.success) {
                 document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                shoppingCart_onclick();
             }
             else {
                 if (responseData == '' || responseData.htmlString == "") {
@@ -676,6 +678,24 @@ function orderQty_oninput(orderQtyElementObject, defaultValue) {
         //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
         var orderQty = orderQtyElementObject.value;
         if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyElementObject.getAttribute("maxlength") && orderQty >= orderQtyElementObject.getAttribute("min") && orderQty <= orderQtyElementObject.getAttribute("max")) {
+        }
+        else {
+            orderQtyElementObject.value = defaultValue;
+        }
+    }
+    catch (err) {
+        console.log(1, "orderQty_oninput ERROR???", err);
+    }
+    return false;
+}
+function orderQty2_oninput(orderQtyElementObject, defaultValue) {
+    try {
+        if (orderQtyElementObject.value.length > orderQtyElementObject.getAttribute("maxlength")) {
+            orderQtyElementObject.value = orderQtyElementObject.value.substr(0, orderQtyElementObject.getAttribute("maxlength"));
+        }
+        //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
+        var orderQty = orderQtyElementObject.value;
+        if ((/^\d+(\.\d{1,2})?$/.test(orderQty)) && orderQty.length <= orderQtyElementObject.getAttribute("maxlength") && orderQty >= orderQtyElementObject.getAttribute("min") && orderQty <= orderQtyElementObject.getAttribute("max")) {
         }
         else {
             orderQtyElementObject.value = defaultValue;
@@ -866,8 +886,10 @@ function paymentInfo4Save_onclick(creditCardKVPKeys, creditCardKVPValues) {
         event.preventDefault();
         checkLoggedInStatus("1", "Home", "Index");
         var url = '/Home/PaymentInfo4Intent';
+        //var postData = {};
         fetch(url, {
             method: 'POST',
+            //data: postData,
         })
             .then(function (response) {
                 console.log("paymentInfo4Save_onclick", "00004000", response);
@@ -930,6 +952,7 @@ function paymentInfo9Save_onclick() {
             document.getElementById("shoppingCartItemsCount1").innerHTML = responseData.shoppingCartItemsCount;
             document.getElementById("shoppingCartTotalAmount1").innerHTML = responseData.shoppingCartTotalAmount;
             document.getElementById("divShoppingCart").innerHTML = responseData.htmlStringShoppingCart;
+            document.getElementById("paymentInfo9SaveButton").innerHTML = "";
             console.log("paymentInfo9Save_onclick", "00090000", "EXIT!!!");
         },
         error: function (xhr, exception) {

@@ -8,6 +8,8 @@ namespace RetailSlnModels
 {
     public class OrderItemFileModel
     {
+        public string CurrencySymbol { set; get; }
+
         public List<CategoryItemMasterHierModel> CategoryCategoryItemMasterHierModels { set; get; }
 
         public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }

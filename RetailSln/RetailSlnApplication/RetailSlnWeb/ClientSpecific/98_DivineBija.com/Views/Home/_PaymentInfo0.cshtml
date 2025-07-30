@@ -5,38 +5,41 @@
     <form id="formPaymentInfo1Data">
         @Html.Partial("_PaymentInfo0Data", Model)
     </form>
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        @switch (Model.PaymentModeModel.PaymentModeId)
-        {
-            case PaymentModeEnum.COD:
-            case PaymentModeEnum.CreditSale:
-                <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Complete Order</button>
-                break;
-            case PaymentModeEnum.PaymentGateway:
-                @Html.Partial("_PaymentInfo3")
-                <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Payment Gateway</button>
-                break;
-            case PaymentModeEnum.ProcessCreditCard:
-                switch (Model.CreditCardDataModel.CreditCardProcessor)
-                {
-                    case "STRIPETEST":
-                    case "STRIPEPROD":
-                        string creditCardKVPKeys = "", creditCardKVPValues = "", prefixString = "";
-                        foreach (var creditCardKVP in Model.CreditCardDataModel.CreditCardKVPs)
-                        {
-                            creditCardKVPKeys += prefixString + creditCardKVP.Key;
-                            creditCardKVPValues += prefixString + creditCardKVP.Value;
-                            prefixString = ";";
-                        }
-                        <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick('@creditCardKVPKeys', '@creditCardKVPValues');" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Process Credit Card</button>
-                        @Html.Partial("_PaymentInfo4", Model)
-                        break;
-                    default: //Credit Card Test
-                        <button class="loginRegisterbtn" id="paymentInfo9Save" onclick="javascript: return paymentInfo9Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Credit Card Test</button>
-                        break;
-                }
-                break;
-        }
-    </div>
 </div>
-@Html.Partial("_ShoppingCartContainer")
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    @switch (Model.PaymentModeModel.PaymentModeId)
+    {
+        case PaymentModeEnum.COD:
+        case PaymentModeEnum.CreditSale:
+            <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Complete Order</button>
+            break;
+        case PaymentModeEnum.PaymentGateway:
+            @Html.Partial("_PaymentInfo3")
+            <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Payment Gateway</button>
+            break;
+        case PaymentModeEnum.ProcessCreditCard:
+            switch (Model.CreditCardDataModel.CreditCardProcessor)
+            {
+                case "STRIPETEST":
+                case "STRIPEPROD":
+                    string creditCardKVPKeys = "", creditCardKVPValues = "", prefixString = "";
+                    foreach (var creditCardKVP in Model.CreditCardDataModel.CreditCardKVPs)
+                    {
+                        creditCardKVPKeys += prefixString + creditCardKVP.Key;
+                        creditCardKVPValues += prefixString + creditCardKVP.Value;
+                        prefixString = ";";
+                    }
+                    <div id="paymentInfo4SaveButton">
+                        <button class="loginRegisterbtn" id="paymentInfo4Save" onclick="javascript: return paymentInfo4Save_onclick('@creditCardKVPKeys', '@creditCardKVPValues');" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Process Credit Card</button>
+                    </div>
+                    @Html.Partial("_PaymentInfo4", Model)
+                    break;
+                default: //Credit Card Test
+                    <div id="paymentInfo9SaveButton">
+                        <button class="loginRegisterbtn" id="paymentInfo9Save" onclick="javascript: return paymentInfo9Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Credit Card Test</button>
+                    </div>
+                    break;
+            }
+            break;
+    }
+</div>

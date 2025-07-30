@@ -262,11 +262,20 @@ namespace RetailSlnWeb.Controllers
                     Session["PaymentInfo"] = paymentInfoModel;
                     if (ModelState.IsValid)
                     {
-                        success = true;
-                        processMessage = "SUCCESS!!!";
                         retailSlnBL.DeliveryInfo(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                         Session["PaymentInfo"] = paymentInfoModel;
-                        htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo0", paymentInfoModel);
+                        if (ModelState.IsValid)
+                        {
+                            success = true;
+                            processMessage = "SUCCESS!!!";
+                            htmlString = archLibBL.ViewToHtmlString(this, "_PaymentInfo0", paymentInfoModel);
+                        }
+                        else
+                        {
+                            success = false;
+                            processMessage = "ERROR???";
+                            htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfoData", paymentInfoModel);
+                        }
                     }
                     else
                     {
@@ -816,6 +825,7 @@ namespace RetailSlnWeb.Controllers
                     Amount = long.Parse(paymentInfoModel.CreditCardDataModel.CreditCardAmount),
                     Currency = paymentInfoModel.CreditCardDataModel.CurrencyCode,
                     PaymentMethodTypes = new List<string> { "card" },
+                    
                 };
                 var service = new PaymentIntentService();
                 paymentIntent = await service.CreateAsync(options);
@@ -859,7 +869,7 @@ namespace RetailSlnWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult PaymentInfo9(PaymentInfoModel paymentInfoModelPost)
+        public ActionResult PaymentInfo9()
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -874,9 +884,6 @@ namespace RetailSlnWeb.Controllers
             string shoppingCartTotalAmount = "";
 
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-            paymentInfoModelPost.OrderSummaryModel.FirstName = paymentInfoModel.OrderSummaryModel.FirstName;
-            paymentInfoModelPost.OrderSummaryModel.LastName = paymentInfoModel.OrderSummaryModel.LastName;
-            paymentInfoModel.OrderSummaryModel.AdditionalCharges = paymentInfoModelPost.OrderSummaryModel.AdditionalCharges;
             SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
             SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
             try

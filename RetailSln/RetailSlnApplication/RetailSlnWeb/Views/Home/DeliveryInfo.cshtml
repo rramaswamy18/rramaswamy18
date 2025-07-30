@@ -5,16 +5,8 @@
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 @Html.Partial("_DeliveryInfo", Model)
-@{
-    @*<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="divShoppingCart">*@
-    Model.ShoppingCartModel.Checkout = true;
-    Model.ShoppingCartModel.ShowDetail = true;
-    @Html.Partial("_ShoppingCartContainer")
-    Model.ShoppingCartModel.Checkout = false;
-    Model.ShoppingCartModel.ShowDetail = false;
-    @*</div>*@
-}
 <script type="text/javascript">
     function window_onload() {
+        shoppingCart_onclick();
     }
 </script>

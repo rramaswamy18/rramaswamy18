@@ -41,7 +41,8 @@ namespace RetailSlnModels
 
         public string EmailAddress { set; get; }
 
-        public long? AdditionalCharges { set; get; }
+        [Display(Name = "Additional Charges")]
+        public float? AdditionalCharges { set; get; }
 
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "First Name")]

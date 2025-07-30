@@ -131,7 +131,8 @@
                                 <br style="clear: both;" />
                                 @if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                                 {
-                                    <span style="color: #a54000; font-size: 16px; font-weight: bold;">Bundled Items <span style="color: #0000ff; font-size: 14px;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count))</span></span>
+                                    <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order bundle without breaking (as is)</span><br style="clear: both;" />
+                                    <span style="color: #a54000; font-size: 14px; font-weight: bold;">Bundled Items <span style="color: #ff0000; font-size: 13px;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count))</span></span>
                                 }
                             </td>
                             <td style="font-size: 12px; padding: 5px; text-align: right;">@itemModel.ItemRateFormatted</td>
@@ -167,24 +168,29 @@
                                                     <col style="width: 36px;" />
                                                     <col />
                                                     <col style="width: 54px;" />
+                                                    <col style="width: 63px;" />
+                                                    <col style="width: 54px;" />
                                                 </colgroup>
                                                 <tr style="background-color: #d0d0d0;">
                                                     <th style="padding: 5px; text-align: right;">#</th>
                                                     <th style="padding: 5px; text-align: center;">Id</th>
                                                     <th style="padding: 5px; text-align: left;">Desc</th>
-                                                    <th style="padding: 5px; text-align: right;">Rate</th>
+                                                    <th style="padding: 5px; text-align: right;">Price</th>
+                                                    <th style="padding: 5px; text-align: right;">Qty</th>
+                                                    <th style="padding: 5px; text-align: right;">Amount</th>
                                                 </tr>
-                                                @foreach (var itemBundleItem in parentItemBundleModel.ItemModels)
+                                                @*foreach (var itemBundleItem in parentItemBundleModel.ItemModels)*@
+                                                @foreach (var itemBundleItem in parentItemBundleModel.ShoppingCartItemBundleModels)
                                                 {
                                                     <tr>
                                                         <td class="text-right">@(++itemBundleItemIndex).</td>
                                                         <td class="text-center" style="color: #0000ff; font-size: 12px; font-weight: bold;">@itemBundleItem.ItemId</td>
                                                         <td class="text-left">
-                                                            @(itemBundleItem.ItemMasterModel.ItemMasterDesc0 + " " + itemBundleItem.ItemMasterModel.ItemMasterDesc1)
-                                                            @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemMasterModel.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterModel.ItemMasterDesc3))
+                                                            @(itemBundleItem.ItemMasterDesc0 + " " + itemBundleItem.ItemMasterDesc1)
+                                                            @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3))
                                                             {
                                                                 <br style="clear: both;" />
-                                                                <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemBundleItem.ItemMasterModel.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterModel.ItemMasterDesc3)</span>
+                                                                <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3)</span>
                                                             }
                                                             @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemItemSpecsForDisplay))
                                                             {
@@ -194,6 +200,21 @@
                                                         </td>
                                                         <td class="text-right">
                                                             @itemBundleItem.ItemRateFormatted
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <span id="itemIdForBundle@(itemBundleItemIndex)" style="display: none;">@itemBundleItem.ItemId</span>
+                                                            <span id="itemRateForBundle@(itemBundleItemIndex)" style="display: none;">@itemBundleItem.ItemRate.Value</span>
+                                                            <input class="form-control" id="orderQtyForBundle@(itemBundleItemIndex)" min="0" max="999" maxlength="3" name="orderQtyForBundle@(itemBundleItemIndex)" oninput="javascript: return orderQtyBundle_oninput(this, @parentItemBundleModel.ItemModels.Count, '@Model.CurrencySymbol');" style="width: 72px;" type="number" value="@itemBundleItem.OrderQty" />
+                                                            <span id="spnMessageSuccessForBundle@(itemBundleItemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                                                <br style="clear: both;" />
+                                                                <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                                                <span style="color: #a54000;">Added...<span id="spnMessageSuccessTextForBundle@(itemBundleItemIndex)" style="color: #0000ff; font-size:12px;"></span></span>
+                                                            </span>
+                                                            <span id="spnMessageErrorForBundle@(itemBundleItemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                                                <br style="clear: both;" />
+                                                                <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                                                <span id="spnMessageErrorTextForBundle@(itemBundleItemIndex)" style="color: #ff0000;"></span>
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                 }

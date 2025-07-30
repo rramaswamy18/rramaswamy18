@@ -1464,6 +1464,8 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemMasterData.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemMasterList.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemMasterListData.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemSpecMasterList.cshtml" />
+    <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_ItemSpecMasterListData.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_OrderItem2.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_OrderItem2Backup.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Dashboard\_OrderItem3.cshtml" />
@@ -1492,8 +1494,6 @@
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_DeliveryInfoData2.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_FAQs.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_ItemBundleData.cshtml" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_ItemBundleDataBackup.cshtml" />
-    <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_ItemBundleDataBackup2.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_ItemMasterAttributes.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_LoginUserProf.cshtml" />
     <Content Include="ClientSpecific\98_DivineBija.com\Views\Home\_LoginUserProfData.cshtml" />
@@ -1637,8 +1637,6 @@
     <Content Include="Views\Home\_DeliveryInfoData2.cshtml" />
     <Content Include="Views\Home\_FAQs.cshtml" />
     <Content Include="Views\Home\_ItemBundleData.cshtml" />
-    <Content Include="Views\Home\_ItemBundleDataBackup.cshtml" />
-    <Content Include="Views\Home\_ItemBundleDataBackup2.cshtml" />
     <Content Include="Views\Home\_ItemMasterAttributes.cshtml" />
     <Content Include="Views\Home\_LoginUserProf.cshtml" />
     <Content Include="Views\Home\_LoginUserProfData.cshtml" />

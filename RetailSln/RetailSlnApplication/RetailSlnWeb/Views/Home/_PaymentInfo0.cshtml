@@ -35,10 +35,11 @@
                     @Html.Partial("_PaymentInfo4", Model)
                     break;
                 default: //Credit Card Test
-                    <button class="loginRegisterbtn" id="paymentInfo9Save" onclick="javascript: return paymentInfo9Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Credit Card Test</button>
+                    <div id="paymentInfo9SaveButton">
+                        <button class="loginRegisterbtn" id="paymentInfo9Save" onclick="javascript: return paymentInfo9Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Credit Card Test</button>
+                    </div>
                     break;
             }
             break;
     }
 </div>
-@Html.Partial("_ShoppingCartContainer")
