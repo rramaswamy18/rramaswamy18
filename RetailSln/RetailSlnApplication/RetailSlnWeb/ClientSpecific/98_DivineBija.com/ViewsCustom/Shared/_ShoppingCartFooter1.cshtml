@@ -1,0 +1,64 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model PaymentInfoModel
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    bool brFlag = false;
+}
+<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
+    @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+    {
+        <tr>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
+                @Model.PaymentModeModel.PaymentModeDesc
+                <br style="clear: both;" />
+                @{
+                    foreach (var paymentRefOption1 in Model.PaymentDataModel.PaymentRefOptions)
+                    {
+                        foreach (var paymentRefOption2 in paymentRefOption1.Value)
+                        {
+                            if (!string.IsNullOrWhiteSpace(paymentRefOption2.Value))
+                            {
+                                if (brFlag)
+                                {
+                                    <br style="clear: both;" />
+                                }
+                                <text>@(paymentRefOption2.Key + " " + paymentRefOption2.Value)</text>
+                                brFlag = true;
+                            }
+                        }
+                    }
+                }
+                @*@(Model.PaymentDataModel.PaymentRefNumCaption1 + " " + Model.PaymentDataModel.PaymentRefNumData1)
+                    <br style="clear: both;" />
+                    @(Model.PaymentDataModel.PaymentRefNumCaption2 + " " + Model.PaymentDataModel.PaymentRefNumData2)*@
+                <br style="clear: both;" />
+                <span style="color: #000000;">Order Created by:</span>&nbsp;@Model.OrderSummaryModel.CreatedByEmailAddress
+                <br style="clear: both;" />
+                @if (Model.OrderApprovalModel != null)
+                {
+                    CodeDataModel codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "").First(x => x.CodeDataNameId == Model.OrderApprovalModel.ApproverSignatureTextId);
+                    <span style="color: #000000; font-family: @(codeDataModel.CodeDataNameDesc); font-size: @(codeDataModel.CodeDataDesc4); font-weight: bold;">@Model.OrderApprovalModel.ApproverSignatureTextValue</span>
+                    <br style="clear: both;" />
+                    @DateTime.Parse(Model.OrderApprovalModel.ApprovedDateTime).ToString("MMM-dd-yyyy h:mm tt")
+                    <br style="clear: both;" />
+                    @Model.OrderApprovalModel.ApproverComments
+                }
+            </th>
+        </tr>
+    }
+    <tr style="background-color: #ffffff;">
+        <th colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
+            <br style="clear: both;" />
+            <br style="clear: both;" />
+            <span style="color: #000000; font-family: @Model.OrderSummaryModel.AuthorizedSignatureFontFamily; font-size: @Model.OrderSummaryModel.AuthorizedSignatureFontSize; font-weight: bold;">@Model.OrderSummaryModel.AuthorizedSignatureTextValue</span>
+            <br style="clear: both;" />
+            <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "Business", "AdminRepresentativeTitle")<br style="clear: both;" />@DateTime.Now.ToString("MMM-dd-yyyy h:mm tt")</span>
+        </th>
+    </tr>
+</table>

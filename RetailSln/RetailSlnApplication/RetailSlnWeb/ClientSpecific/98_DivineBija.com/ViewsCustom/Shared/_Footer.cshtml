@@ -1,0 +1,131 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryMenuCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@{
+    //DivineBija - 97, 98, 99
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    string loggedInUserEmailAddress, loggedInUserFullName;
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    if (sessionObjectModel == null)
+    {
+        loggedInUserEmailAddress = "";
+        loggedInUserFullName = "";
+    }
+    else
+    {
+        loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
+        loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
+    }
+    //string whatsAppUrl = "https://api.whatsapp.com/send?phone=", copyrightYear = DateTime.Now.Year.ToString();
+    string copyrightYear = DateTime.Now.Year.ToString();
+}
+<footer class="footer-section">
+    <div class="footer-feature-section">
+        <h5>Get connected with us on social networks:</h5>
+        <div class="social-media">
+            <a href="https://www.facebook.com/divinebijain" style="text-decoration: none;" target="_blank" title="Visit us on Facebook - @imageTitle">
+                <i class="fab fa-facebook-f" style="color: #4267b2; font-size: 20px"></i>
+            </a>
+            @*<a href="#" style="text-decoration: none;" target="_blank" title="Visit us on YouTube - @imageTitle">
+                    <i class="fab fa-youtube" style="color: red; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Threads - @imageTitle">
+                    <i class="fa-brands fa-threads fab" style="color: black; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on LinkedIn - @imageTitle">
+                    <i class="fab fa-linkedin" style="color: #0077B5; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on WhatsApp - @imageTitle">
+                    <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Twitter - @imageTitle">
+                    <i class="fa-brands fa-x-twitter fab" style="color: black; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Pinterest - @imageTitle">
+                    <i class="fab fa-pinterest-p" style="color: #B7081B; font-size: 20px"></i>
+                </a>
+                <a href="#" style="text-decoration: none;" target="_blank" title="Visit us on Instagram - @imageTitle">
+                    <i class="fab fa-instagram" style="color: #C21995; font-size: 20px"></i>
+                </a>*@
+        </div>
+    </div>
+    <div class="company-details-section">
+        <div class="footer-middle-section">
+            <div class="footer-links">
+                @{
+                    var menuLayoutModels = ArchLibMenuCache.ParentMenuLayoutModels["FOOTERMENU"];
+                    int i = 0, j;
+                    while (i < menuLayoutModels.Count)
+                    {
+                        j = 0;
+                        <div class="about-link">
+                            @while (i < menuLayoutModels.Count && j < 7)
+                            {
+                                <a class="nav-link" href="@Url.Action(menuLayoutModels[i].MenuUrlAction.ActionName, menuLayoutModels[i].MenuUrlAction.ControllerName)">@menuLayoutModels[i].MenuUrlAction.LinkText</a>
+                                i++;
+                                j++;
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            <br style="clear: both;" />
+            <p><span id="loggedInUserEmailAddress" style="color: #000000;">@loggedInUserEmailAddress</span><br style="clear: both;" /><span id="loggedInUserFullName" style="color: #000000;">@loggedInUserFullName</span></p>
+        </div>
+        <div class="contact-section">
+            <p>
+                @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1", "")<br style="clear: both;" />
+                @if (ArchLibCache.GetApplicationDefault(clientId, "AddressLine1A", "") != "")
+                {
+                    @ArchLibCache.GetApplicationDefault(clientId, "AddressLine1A", "")<br style="clear: both;" />
+                }
+                @if (ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "") != "")
+                {
+                    @ArchLibCache.GetApplicationDefault(clientId, "AddressLine2", "")<br style="clear: both;" />
+                }
+                @ArchLibCache.GetApplicationDefault(clientId, "AddressCityName", "")&nbsp;@ArchLibCache.GetApplicationDefault(clientId, "AddressStateAbbrev", "")&nbsp;@ArchLibCache.GetApplicationDefault(clientId, "AddressZipCode", "")&nbsp;@ArchLibCache.GetApplicationDefault(clientId, "AddressZipPlus4", "")
+                <br style="clear: both;" />
+                @ArchLibCache.GetApplicationDefault(clientId, "AddressCountryName", "")
+            </p>
+            @*
+                    <p class="contact-number">
+                        <i class="fas fa-phone-alt" style="color: #0898DA; font-size: 17px"></i>
+                        <a href="tel: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+                    </p>
+                    <p class="contact-number">
+                        <i class="fas fa-sms" style="color: #009184; font-size: 20px"></i>
+                        <a href="sms: @ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneHref", "")" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactTextPhoneFormatted", "")</a>
+                    </p>
+                    <p class="contact-number">
+                        <i class="fab fa-whatsapp" style="color: #2EE863; font-size: 20px;"></i>
+                        <a target="_blank" href="@(whatsAppUrl + ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhone", ""))" style="text-decoration: underline;">@ArchLibCache.GetApplicationDefault(clientId, "ContactWhatsAppPhoneFormatted", "")</a>
+                    </p>
+                <br style="clear: both;" />
+                <div class="app-download-section text-left">
+                    <a href="https://play.google.com/store/apps/details?id=your.app.package" target="_blank" class="app-download-button">
+                        <img src="https://freelogopng.com/images/all_img/1664285914google-play-logo-png.png" alt="Download on Google Play" class="app-logo">
+                        <div class="app-download-text">
+                            <p class="app-get-it">Get it on</p>
+                            <p class="app-store-name">Google Play</p>
+                        </div>
+                    </a>
+                    <a href="https://apps.apple.com/app/idyourapp" target="_blank" class="app-download-button">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Mac_App_Store_logo.png/800px-Mac_App_Store_logo.png" alt="Get it on the App Store" class="app-logo">
+                        <div class="app-download-text">
+                            <p class="app-get-it">Download on the</p>
+                            <p class="app-store-name">App Store</p>
+                        </div>
+                    </a>
+                </div>
+            *@
+        </div>
+    </div>
+    <div class="copyright-section">
+        <p style="float: left;">Powered by <span class="company-highlight">Gajashwa Inc.</span> © Copyright @copyrightYear</p>
+        <p style="float: right;">@RetailSlnCache.BuildDateTime</p>
+        <br style="clear: both;" />
+    </div>
+</footer>

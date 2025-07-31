@@ -570,6 +570,5 @@ END
          WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 --End CategoryItemMasterHier
-SELECT 'copy "' + UploadImageFileName + '" "DivineBija.InUploadedImages\"' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
---SELECT 'copy "C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\' + UploadImageFileName + '"' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
-SELECT 'copy "DivineBija.InUploadedImages\' + UploadImageFileName + '" ItemMaster\ItemMaster' + CAST(ItemMasterId AS VARCHAR) + '.' + ImageExtension AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
+SELECT 'copy "C:\Common\Images\DivineBijaIn\DivineBija_20230927\UploadedImages\' + UploadImageFileName + '" DivineBija.InUploadedImages\' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster WHERE ItemMasterId > 0 ORDER BY ItemMasterId
+SELECT 'copy "DivineBija.InUploadedImages\' + UploadImageFileName + '" ItemMaster\ItemMaster' + CAST(ItemMasterId AS VARCHAR) + '.' + ImageExtension AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster WHERE ItemMasterId > 0 ORDER BY ItemMasterId

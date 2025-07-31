@@ -14,6 +14,7 @@ using RetailSlnCacheData;
 using RetailSlnDataLayer;
 using RetailSlnEnumerations;
 using RetailSlnModels;
+using RetailSlnWeb.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -25,6 +26,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.UI;
 using static System.Collections.Specialized.BitVector32;
 
@@ -349,13 +351,6 @@ namespace RetailSlnBusinessLayer
             try
             {
                 long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                string orderItemFilesPath = Utilities.GetServerMapPath("~/Files/OrderItem/");
-                DirectoryInfo directoryInfo = new DirectoryInfo(orderItemFilesPath);
-                FileInfo[] fileInfos = directoryInfo.GetFiles();
-                if (fileInfos.Length == 0 || (fileInfos.Length == 1 && fileInfos[0].FullName.IndexOf("@Temp.txt") > -1))
-                {
-                    CreateOrderItemFiles(orderItemFilesPath, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
                 var aspNetRoleName = createForSessionObject?.AspNetRoleName;
                 if (string.IsNullOrEmpty(aspNetRoleName))
                 {
@@ -372,7 +367,6 @@ namespace RetailSlnBusinessLayer
                     parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
                 }
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //string orderItemDataHtmlFileName = $@"{orderItemFilesPath}\OrderItem_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
                 string orderItemDataHtmlFileName = $@"OrderItem_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
                 RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
                 itemDiscountModels = itemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
@@ -396,6 +390,35 @@ namespace RetailSlnBusinessLayer
             finally
             {
             }
+        }
+        // GET: ItemCatalogCreate
+        public void ItemCatalogCreate(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //Directory.Delete(itemCatalogFilesPath);
+            string orderItemFilesPath = Utilities.GetServerMapPath("~/Files/OrderItem/");
+            DirectoryInfo directoryInfo = new DirectoryInfo(orderItemFilesPath);
+            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+            {
+                if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
+                {
+                    fileInfo.Delete();
+                }
+            }
+
+            // Create an instance of the controller
+            Controller controller = new BaseController(); // Replace HomeController with your controller name
+
+            // Create a controller context (optional, but good practice for some scenarios)
+            HttpContextWrapper httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "Base"); // Replace Home with your controller name
+            routeData.Values.Add("action", "Index"); // Replace StartupAction with your action name
+
+            var requestContext = new RequestContext(httpContextWrapper, routeData);
+            controller.ControllerContext = new ControllerContext(requestContext, controller);
+
+            CreateOrderItemFiles(orderItemFilesPath, null, null, controller, null, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+            return;
         }
         // GET: ItemMasterAttributes
         public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, PaymentInfoModel paymentInfoModel, long tabId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

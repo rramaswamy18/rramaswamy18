@@ -95,7 +95,7 @@ namespace RetailSlnCacheData
             streamReader.Close();
             buildDateTime = buildDateTime.Replace("  ", " ");
             var buildDateTimes = buildDateTime.Split(' ');
-            buildDateTime = buildDateTimes[0] + " " + DateTime.Parse(buildDateTimes[1]).ToString("MMM-dd-yyyy") + " " + buildDateTimes[2].Trim();
+            buildDateTime = buildDateTimes[0] + " " + DateTime.Parse(buildDateTimes[1]).ToString("MMM-dd-yyyy") + " " + buildDateTimes[2].Trim() + " " + buildDateTimes[3].Trim();
             return buildDateTime;
         }
         private static void BuildCacheModels(RetailSlnInitModel retailSlnInitModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -511,16 +511,6 @@ namespace RetailSlnCacheData
                     }
                     ParentItemBundleModels[parentItemId].ShoppingCartItemBundleModels.Add(shoppingCartItemModel);
                     i++;
-                }
-            }
-            string itemCatalogFilesPath = Utilities.GetServerMapPath("~/Files/OrderItem/");
-            //Directory.Delete(itemCatalogFilesPath);
-            DirectoryInfo directoryInfo = new DirectoryInfo(itemCatalogFilesPath);
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-            {
-                if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
-                {
-                    fileInfo.Delete();
                 }
             }
         }

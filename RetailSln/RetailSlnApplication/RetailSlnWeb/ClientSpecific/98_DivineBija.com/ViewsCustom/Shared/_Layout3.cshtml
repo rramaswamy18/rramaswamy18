@@ -1,0 +1,128 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    //DivineBija - 97, 98, 99
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleName;
+    bool isLoggedIn;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleName = "DEFAULTROLE";
+        isLoggedIn = false;
+    }
+    else
+    {
+        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+        isLoggedIn = true;
+    }
+    isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
+    //var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+    string absoluteUri = Request.Url.AbsoluteUri;
+    string homeUrl, hrefTarget;
+    if (absoluteUri.ToUpper().IndexOf("REFERRAL") > -1)
+    {
+        homeUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+        hrefTarget = "_blank";
+    }
+    else
+    {
+        homeUrl = Url.Action("Index", "Home");
+        hrefTarget = "_self";
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gajaashwa Inc." />
+    <meta name="title" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")" />
+    <meta name="description" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Description")" />
+    <meta name="keywords" content="@ArchLibCache.GetApplicationDefault(clientId, "Head", "Keywords")" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ArchLibCache.GetApplicationDefault(clientId, "Head", "Title")</title>
+    <link rel="shortcut icon" href="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Favicon.ico" />
+    @Styles.Render("~/Content/css0")
+    @Scripts.Render("~/bundles/scripts0")
+
+    <link rel="stylesheet" href="~/Include/Site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Patua+One|Open+Sans|Lato|Roboto" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    <link href="~/Include/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/Include/font-awesome/css/all.min.css" rel="stylesheet" />
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window_onload();
+        });
+        function window_onload() {
+            //$(".se-pre-con").fadeOut("slow");
+            alert("Implement window on load in your page");
+        }
+    </script>
+    <div class="body-container">
+        <header class="header-section sticky">
+            <div class=" top-bar">
+                <div class="row" style="display: flex; align-items: center; justify-content: space-between;">
+                    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="logo-section" style="float: left;">
+                            <a href="@homeUrl" class="navbar-right-link" target="@hrefTarget">
+                                <img alt="@imageTitle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" width="117" height="117" title="@imageTitle" />
+                            </a>
+                            <p class="company-name font-bold">
+                                <span style="color: #9401d9; font-size: 22px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord1", "")</span><br style="clear: both;" /><span style="color: #000000; font-size: 14px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessNameWord3", "")</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="nav navbar-nav navbar-right">
+                            <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
+                                <a href="@homeUrl" class="navbar-right-link" target="@hrefTarget">
+                                    <i class="fas fa-home"></i> <br style="clear: both;" />
+                                    Home
+                                </a>
+                            </div>
+                            <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
+                                <a class="navbar-right-link @(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" title="Login / Sign In - @imageTitle">
+                                    <i class="fas fa-user"></i>
+                                    <br style="clear: both;" />
+                                    Sign In
+                                </a>
+                            </div>
+                            <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
+                                <a class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" title="Logout - @imageTitle">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <br style="clear: both;" />
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="center main-body" style="padding: 0px; text-align: center; width: 100%;">
+            <main role="main" class="pb-3">
+                <div id="divScrollIntoView"></div>
+                @RenderBody()
+            </main>
+        </div>
+        @Html.Partial("_Footer")
+    </div>
+    @RenderSection("scripts", required: false)
+    @Html.Partial("_LoadingModal")
+</body>
+</html>
