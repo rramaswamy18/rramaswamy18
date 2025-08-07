@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "_DashboardLayout.cshtml";
+}
+<div id="divDashboard">
+</div>
+<script type="text/javascript">
+    function window_onload() {
+        menuLink_onclick('@Url.Action("OrderList", "Dashboard")', '');
+    }
+</script>

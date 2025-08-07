@@ -153,9 +153,9 @@ namespace RetailSlnBusinessLayer
                 }
                 if (pageSize == 0)
                 {
-                    pageSize = 45;
+                    pageSize = 99;
                 }
-                pageSize = 9999;
+                pageSize = 99999;
                 int offSetCount = (pageNum - 1) * pageSize;
                 ApplicationDataContext.OpenSqlConnection();
                 SqlConnection sqlConnection = ApplicationDataContext.OpenSqlConnection(true);

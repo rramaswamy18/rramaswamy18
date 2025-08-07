@@ -1,0 +1,41 @@
+﻿@using RetailSlnModels
+@model OrderItemModel
+@{
+    ViewBag.Title = "Index";
+    PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
+    if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null)
+    {
+        paymentInfoModel.ShoppingCartModel.Checkout = false;
+    }
+}
+@Html.Partial(Model.ViewName, Model)
+<script type="text/javascript">
+    function window_onload() {
+        for (var count = 0; ; count++) {
+            var menuCategoryItem = document.getElementById("menuCategory" + count);
+            if (menuCategoryItem === null) {
+                break;
+            }
+        }
+        if (count == 1) {
+            var menuCategoryItem = document.getElementById("menuCategory0");
+            menuCategoryItem.classList.add("active_feature");
+        }
+        else {
+            document.getElementById("current-active-feature").innerHTML = "@Model.ParentCategoryModel.CategoryDesc";
+            for (var i = 0; ; i++) {
+                var menuCategoryItem = document.getElementById("menuCategory" + i);
+                if (menuCategoryItem === null) {
+                    break;
+                }
+                if (menuCategoryItem.innerHTML === "@Model.ParentCategoryModel.CategoryDesc") {
+                    //console.log(menuCategoryItem.classList);
+                    menuCategoryItem.classList.add("active_feature");
+                    break;
+                }
+            }
+        }
+        shoppingCart_onclick();
+        document.getElementById("divScrollIntoView").scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+</script>

@@ -418,6 +418,16 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET : DownloadItemCatalog
+        [AllowAnonymous]
+        [HttpGet]
+        public FileResult DownloadItemCatalog()
+        {
+            string fileName = "ItemCatalog.pdf";
+            var downloadFullFileName = Server.MapPath("~/Files/ItemCatalog/") + @"\" + fileName;
+            return File(downloadFullFileName, "application/force-download", fileName);
+        }
+
         // GET : DownloadFile
         [Authorize]
         [AjaxAuthorize]
@@ -493,7 +503,7 @@ namespace RetailSlnWeb.Controllers
             {
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                OrderItemDataModel itemCatalogModel = retailSlnBL.ItemCatalog(id, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                ItemCatalogModel itemCatalogModel = retailSlnBL.ItemCatalog(id, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("ItemCatalog", itemCatalogModel);
             }
             catch (Exception exception)
@@ -505,6 +515,38 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
+
+        #region Commented Code
+        //// GET : ItemCatalog
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult ItemCatalogItem(string id)
+        //{
+        //    ViewData["ActionName"] = "ItemCatalogItem";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    try
+        //    {
+        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+        //        ItemCatalogItemFileModel itemCatalogItemModel = retailSlnBL.ItemCatalogItem(id, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("_ItemCatalogItem", itemCatalogItemModel);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ModelState.AddModelError("", "ItemCatalog / GET");
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error");
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET : ItemMasterAttributes
         [AllowAnonymous]

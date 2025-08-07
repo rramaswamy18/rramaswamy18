@@ -19,6 +19,5 @@ SELECT * FROM ArchLib.EmailRecipient
 
 SELECT * FROM RetailSlnSch.OrderApproval ORDER BY 1 DESC
 SELECT * FROM RetailSlnSch.OrderDetail ORDER BY 1 DESC
-SELECT * FROM RetailSlnSch.OrderDetailItemBundle ORDER BY 1 DESC
 SELECT * FROM RetailSlnSch.OrderDelivery ORDER BY 1 DESC
 SELECT * FROM RetailSlnSch.OrderPayment ORDER BY 1 DESC

@@ -1,0 +1,15 @@
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
+@model PaymentInfoModel
+@{
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    //mobileDevice = true;
+}
+@if (mobileDevice)
+{
+    @Html.Partial("_PaymentInfo02", Model)
+}
+else
+{
+    @Html.Partial("_PaymentInfo01", Model)
+}

@@ -343,7 +343,7 @@ namespace RetailSlnBusinessLayer
             return itemBundleDataModel;
         }
         // GET: ItemCatalog
-        public OrderItemDataModel ItemCatalog(string parentCategoryIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ItemCatalogModel ItemCatalog(string parentCategoryIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -367,20 +367,17 @@ namespace RetailSlnBusinessLayer
                     parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
                 }
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                string orderItemDataHtmlFileName = $@"OrderItem_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
-                RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
-                itemDiscountModels = itemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
-                OrderItemDataModel orderItemDataModel = new OrderItemDataModel
+                string itemCatalogHtmlDirName = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
+                string itemCatalogHtmlFileName = $@"ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+                ItemCatalogModel itemCatalogModel = new ItemCatalogModel
                 {
-                    ItemDiscountModels = itemDiscountModels,
-                    OrderItemDataHtmlFileName = orderItemDataHtmlFileName,
-                    OrderItemDataHtmlString = null,
+                    ItemCatalogHtmlFileName = itemCatalogHtmlFileName,
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseTypeId = ResponseTypeEnum.Success,
                     },
                 };
-                return orderItemDataModel;
+                return itemCatalogModel;
             }
             catch (Exception exception)
             {
@@ -391,34 +388,47 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
-        // GET: ItemCatalogCreate
-        public void ItemCatalogCreate(long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // PUBLIC: ItemCatalogCreateAll
+        public void ItemCatalogCreateAll(SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            //Directory.Delete(itemCatalogFilesPath);
-            string orderItemFilesPath = Utilities.GetServerMapPath("~/Files/OrderItem/");
-            DirectoryInfo directoryInfo = new DirectoryInfo(orderItemFilesPath);
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
             {
-                if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
+                string itemCatalogFilesPath = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
+                DirectoryInfo directoryInfo = new DirectoryInfo(itemCatalogFilesPath);
+                foreach (FileInfo fileInfo in directoryInfo.GetFiles())
                 {
-                    fileInfo.Delete();
+                    if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
+                    {
+                        fileInfo.Delete();
+                    }
                 }
+
+                // Create an instance of the controller
+                controller = new BaseController(); // Replace HomeController with your controller name
+
+                // Create a controller context (optional, but good practice for some scenarios)
+                HttpContextWrapper httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
+                var routeData = new RouteData();
+                routeData.Values.Add("controller", "Base"); // Replace Home with your controller name
+                routeData.Values.Add("action", "Index"); // Replace StartupAction with your action name
+
+                var requestContext = new RequestContext(httpContextWrapper, routeData);
+                controller.ControllerContext = new ControllerContext(requestContext, controller);
+
+                ItemCatalogCreate(itemCatalogFilesPath, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                return;
             }
-
-            // Create an instance of the controller
-            Controller controller = new BaseController(); // Replace HomeController with your controller name
-
-            // Create a controller context (optional, but good practice for some scenarios)
-            HttpContextWrapper httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
-            var routeData = new RouteData();
-            routeData.Values.Add("controller", "Base"); // Replace Home with your controller name
-            routeData.Values.Add("action", "Index"); // Replace StartupAction with your action name
-
-            var requestContext = new RequestContext(httpContextWrapper, routeData);
-            controller.ControllerContext = new ControllerContext(requestContext, controller);
-
-            CreateOrderItemFiles(orderItemFilesPath, null, null, controller, null, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-            return;
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+            }
         }
         // GET: ItemMasterAttributes
         public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, PaymentInfoModel paymentInfoModel, long tabId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -703,7 +713,7 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
                 shoppingCartItemModelBalanceDue.OrderAmountRounded = (long)(shoppingCartItemModelBalanceDue.OrderAmount * 100);
                 paymentInfoModel.ShoppingCartModel.Checkout = true;
-                 string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
                 GetCreditCardKVPs(creditCardProcessor, out Dictionary<string, string> creditCardKVPs, out Dictionary<string, string> creditCardDataKVPs, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
                 {
@@ -1941,7 +1951,7 @@ namespace RetailSlnBusinessLayer
                     ClientId = clientId,
                     DoNotBreakBundle = shoppingCartItemModel.DoNotBreakBundle,
                     DimensionUnitId = DimensionUnitEnum.Centimeter,
-                    DiscountPercent = shoppingCartItemModel.ItemDiscountPercent == null ? 0 :shoppingCartItemModel.ItemDiscountPercent.Value,
+                    DiscountPercent = shoppingCartItemModel.ItemDiscountPercent == null ? 0 : shoppingCartItemModel.ItemDiscountPercent.Value,
                     DiscountPercentOriginal = shoppingCartItemModel.ItemDiscountPercent == null ? 0 : shoppingCartItemModel.ItemDiscountPercent.Value,
                     HeightValue = shoppingCartItemModel.HeightValue == null ? 0 : shoppingCartItemModel.HeightValue.Value,
                     HSNCode = shoppingCartItemModel.HSNCode,
@@ -2019,8 +2029,8 @@ namespace RetailSlnBusinessLayer
             };
             return orderHeaderSummary;
         }
-        // PRIVATE: CreateOrderItemFiles
-        private void CreateOrderItemFiles(string orderItemFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // PRIVATE: ItemCatalogAndItemCatalogItemCreate
+        private void ItemCatalogCreate(string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -2029,17 +2039,15 @@ namespace RetailSlnBusinessLayer
             {
                 long corpAcctId;
                 string aspNetRoleName;
-                ArchLibBL archLibBL = new ArchLibBL();
                 List<CodeDataModel> corpAcctTypes = LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 204);
                 CodeDataModel corpAcctType;
-                OrderItemFileModel orderItemFileModel = new OrderItemFileModel();
                 Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs;
                 foreach (var corpAcctModel in RetailSlnCache.CorpAcctModels)
                 {
                     if (corpAcctModel.CorpAcctId == 0)
                     {
-                        CreateOrderItemFiles("APPLADMN1", corpAcctModel.CorpAcctId.Value, orderItemFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        CreateOrderItemFiles("DEFAULTROLE", corpAcctModel.CorpAcctId.Value, orderItemFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        ItemCatalogItemCreate("APPLADMN1", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        ItemCatalogItemCreate("DEFAULTROLE", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     else
                     {
@@ -2052,7 +2060,7 @@ namespace RetailSlnBusinessLayer
                             aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
                         }
                         corpAcctId = corpAcctModel.CorpAcctId.Value;
-                        CreateOrderItemFiles(aspNetRoleName, corpAcctId, orderItemFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        ItemCatalogItemCreate(aspNetRoleName, corpAcctId, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                 }
                 return;
@@ -2066,45 +2074,105 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
-        // PRIVATE: CreateOrderItemFiles
-        private void CreateOrderItemFiles(string aspNetRoleName, long corpAcctId, string orderItemFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // PRIVATE: ItemCatalogItemCreate
+        private void ItemCatalogItemCreate(string aspNetRoleName, long corpAcctId, string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
-            long parentCategoryId;
-            string htmlString, parentCategoryDesc;
-            ArchLibBL archLibBL = new ArchLibBL();
-            Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
-            List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels;
-            List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
-            StreamWriter streamWriter;
-            OrderItemFileModel orderItemFileModel = new OrderItemFileModel();
-            categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
-            foreach (var categoryCategoryItemMasterHierModel in categoryCategoryItemMasterHierModels)
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
             {
-                parentCategoryId = categoryCategoryItemMasterHierModel.CategoryModel.CategoryId.Value;
-                parentCategoryDesc = categoryCategoryItemMasterHierModel.CategoryModel.CategoryDesc;
-                if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
+                long parentCategoryId, itemCount;
+                string htmlFileName, htmlString, parentCategoryDesc, pDFFullFileName;
+                Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
+                ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel();
+                List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+                StreamWriter streamWriter;
+                ArchLibBL archLibBL = new ArchLibBL();
+                PDFUtility pDFUtility = new PDFUtility();
+                foreach (var categoryCategoryItemMasterHierModel in categoryCategoryItemMasterHierModels)
                 {
-                    if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
+                    parentCategoryId = categoryCategoryItemMasterHierModel.CategoryModel.CategoryId.Value;
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+                    parentCategoryDesc = categoryCategoryItemMasterHierModel.CategoryModel.CategoryDesc;
+                    if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
                     {
+                        if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
+                        {
+                        }
+                        else
+                        {
+                            categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+                        }
                     }
                     else
                     {
                         categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
                     }
+                    RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+                    itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
+                    itemCount = 0;
+                    foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+                    {
+                        itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+                    }
+                    itemCatalogFileModel = new ItemCatalogFileModel
+                    {
+                        CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+                        CategoryItemMasterHierModels = categoryItemMasterHierModels,
+                        CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                        ItemDiscountModels = itemDiscountModels,
+                        ItemMasterCount = categoryItemMasterHierModels.Count,
+                        ItemCount = itemCount,
+                        ParentCategoryDesc = parentCategoryDesc,
+                        ParentCategoryId = null,
+                        PDFFlag = false,
+                    };
+                    htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+                    htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFile", itemCatalogFileModel);
+                    streamWriter = new StreamWriter(htmlFileName);
+                    streamWriter.Write(htmlString);
+                    streamWriter.Close();
+                    if (aspNetRoleName == "DEFAULTROLE" && corpAcctId == 0 && parentCategoryId == 100)
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Pdf Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+                        itemCatalogFileModel = new ItemCatalogFileModel
+                        {
+                            CategoryCategoryItemMasterHierModels = null,
+                            CategoryItemMasterHierModels = categoryItemMasterHierModels,
+                            CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                            ItemDiscountModels = null,
+                            ItemMasterCount = categoryItemMasterHierModels.Count,
+                            ItemCount = itemCount,
+                            ParentCategoryDesc = parentCategoryDesc,
+                            ParentCategoryId = null,
+                            PDFFlag = true,
+                        };
+                        htmlString = archLibBL.ViewToHtmlString(controller, "ItemCatalogPdf", itemCatalogFileModel);
+                        //htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}_pdf.html";
+                        //streamWriter = new StreamWriter(htmlFileName);
+                        //streamWriter.Write(htmlString);
+                        //streamWriter.Close();
+                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
+                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
+                        //pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
+                        //streamWriter = new StreamWriter(htmlFileName);
+                        //streamWriter.Write(htmlString);
+                        //streamWriter.Close();
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Pdf End");
+                    }
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: End");
                 }
-                else
-                {
-                    categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-                }
-                orderItemFileModel.CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels;
-                orderItemFileModel.CategoryItemMasterHierModels = categoryItemMasterHierModels;
-                orderItemFileModel.CurrencySymbol = RetailSlnCache.CurrencySymbol;
-                orderItemFileModel.ParentCategoryId = null;
-                orderItemFileModel.ParentCategoryDesc = parentCategoryDesc;
-                htmlString = archLibBL.ViewToHtmlString(controller, "_OrderItemFile", orderItemFileModel);
-                streamWriter = new StreamWriter(orderItemFilesPath + $@"\OrderItem_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html");
-                streamWriter.Write(htmlString);
-                streamWriter.Close();
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
             }
         }
         // PRIVATE : CreatePaymentInfoModel

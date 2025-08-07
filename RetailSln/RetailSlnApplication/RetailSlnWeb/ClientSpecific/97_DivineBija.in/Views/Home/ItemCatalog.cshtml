@@ -1,5 +1,5 @@
 ﻿@using RetailSlnModels
-@model OrderItemDataModel
+@model ItemCatalogModel
 @{
     ViewBag.Title = "ItemCatalog";
     Layout = "~/Views/Shared/_Layout2.cshtml";
@@ -10,13 +10,11 @@
     }
 }
 <div id="divItemCatalog" style="display: none;">
-    @Html.Partial("_OrderItemData", Model)
+    @Html.Partial("_ItemCatalog", Model)
 </div>
 <script type="text/javascript">
     function window_onload() {
         $(document).ready(function () {
-            //$('#loadingModal').modal('hide');
-            //console.log("18", getCurrentDateTime());
             document.getElementById("divItemCatalog").style.display = "block";
         });
     }

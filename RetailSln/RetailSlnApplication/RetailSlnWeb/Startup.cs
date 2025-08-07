@@ -24,7 +24,7 @@ namespace RetailSlnWeb
         {
             long clientId = long.Parse(Utilities.GetApplicationValue("ClientId"));
             RetailSlnBL retailSlnBL = new RetailSlnBL();
-            retailSlnBL.ItemCatalogCreate(clientId, "", "WebStartup", "");
+            retailSlnBL.ItemCatalogCreateAll(null, null, null, null, null, clientId, "", "WebStartup", "");
             /*
             // Create an instance of the controller
             Controller controller = new BaseController(); // Replace HomeController with your controller name

@@ -1,0 +1,61 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model PaymentInfoModel
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+}
+<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
+    <colgroup>
+        <col style="width: 27px;" />
+        <col />
+        <col style="width: 63px;" />
+    </colgroup>
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: center; vertical-align: top;">#</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">Description</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">Amount</th>
+    </tr>
+    @{
+        int index = 0;
+        foreach (var shoppingCartItemModelSummary in Model.ShoppingCartModel.ShoppingCartItemModelsSummary)
+        {
+            if (shoppingCartItemModelSummary.OrderDetailTypeId != OrderDetailTypeEnum.DoNotShow)
+            {
+                index++;
+                <tr>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: center; vertical-align: top;">@(index + ".")</th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: left; vertical-align: top;">
+                        @shoppingCartItemModelSummary.ItemShortDesc
+                        @if (shoppingCartItemModelSummary.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount)
+                        {
+                            <br />
+                            @("Total Weight : " + Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " " + Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRoundedUnit)
+                        }
+                    </th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: right; vertical-align: top;">
+                        @shoppingCartItemModelSummary.OrderAmountFormatted
+                    </th>
+                </tr>
+            }
+            if (Model.OrderSummaryModel.InvoiceTypeId != InvoiceTypeEnum.FinalInvoice)
+            {
+                break;
+            }
+        }
+    }
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;"></th>
+        <th colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
+            @if (string.IsNullOrWhiteSpace(Model.DeliveryDataModel?.DeliveryInstructions))
+            {
+                <br />
+            }
+            @Html.Raw(Model.DeliveryDataModel?.DeliveryInstructions?.Replace(Environment.NewLine, "<br />"))
+        </th>
+    </tr>
+</table>

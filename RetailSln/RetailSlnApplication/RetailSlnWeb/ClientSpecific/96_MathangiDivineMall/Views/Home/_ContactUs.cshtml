@@ -1,0 +1,88 @@
+﻿@model ArchitectureLibraryModels.ContactUsModel
+@{
+    string divWidth, buttonWidth;
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    try
+    {
+        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+        //Not using right now
+        if (userAgent.Contains("iphone;")) //iPhone
+        {
+            divWidth = "100%";
+        }
+        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
+        {
+            divWidth = "63%";
+        }
+        else
+        {
+            divWidth = "45%";
+        }
+    }
+    catch
+    {
+        divWidth = "45%";
+    }
+    //Using this right now
+    if (mobileDevice)
+    {
+        divWidth = "90%";
+        buttonWidth = "95%";
+    }
+    else
+    {
+        divWidth = "54%";
+        buttonWidth = "95%";
+    }
+    //mobileDevice = true;
+}
+<div class="center container" id="divContactUs" style="width: @divWidth;">
+    <div class="row" style="text-align: left;">
+        <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">contact us</span>
+    </div>
+    <form id="formContactUsData">
+        @Html.Partial("_ContactUsData")
+    </form>
+    <div class="row" style="text-align: left;">
+        <button class="loginRegisterbtn" id="contactUsSave" onclick="javascript: return contactUsSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: @buttonWidth;" type="button">submit</button>
+    </div>
+    @if (mobileDevice)
+    {
+        @Html.Partial("_ContactUsInfo2")
+    }
+    else
+    {
+        @Html.Partial("_ContactUsInfo1")
+    }
+</div>
+<script type="text/javascript">
+    //document.getElementById("divContactUsScrollIntoView").scrollIntoView();
+    function contactUsSave_onclick() {
+        console.log("00000000", "contactUsSave_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/ContactUs";
+        var postData = $("#formContactUsData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "contactUsSave_onclick success", responseData.processMessage);
+                document.getElementById("formContactUsData").innerHTML = responseData.htmlString;
+                //document.getElementById("divContactUsScrollIntoView").scrollIntoView();
+                console.log("00090000", "registerUserSave_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "contactUsSave_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formContactUsData").innerHTML = xhr.responseText;
+                console.log("00090100", "formContactUsData error", "Exit");
+                //document.getElementById("divContactUsScrollIntoView").scrollIntoView();
+            }
+        });
+    }
+</script>

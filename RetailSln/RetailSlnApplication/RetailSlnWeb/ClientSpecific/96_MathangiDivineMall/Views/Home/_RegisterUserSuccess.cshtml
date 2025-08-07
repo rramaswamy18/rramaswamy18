@@ -1,0 +1,72 @@
+﻿@using RetailSlnModels
+@model RegisterUserEmailModel
+<table class="table table-bordered" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <colgroup>
+        <col style="width: 45%;" />
+        <col style="width: 55%;" />
+    </colgroup>
+    <tr>
+        <th colspan="2" class="text-center">
+            Your email has been successfully registered and assigned the role of @Model.RegisterUserModel.UserTypeDesc
+        </th>
+    </tr>
+    <tr>
+        <th class="text-right" style="vertical-align: top;">
+            Email Address
+        </th>
+        <td class="text-left" style="vertical-align: top;">
+            @Model.RegisterUserModel.RegisterEmailAddress
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="vertical-align: top;">
+            Telephone#
+        </th>
+        <td class="text-left" style="vertical-align: top;">
+            @("+" + Model.RegisterUserModel.TelephoneDemogInfoCountryModel?.TelephoneCode + " " + Model.RegisterUserModel.TelephoneNumber)
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="vertical-align: top;">
+            First Name
+        </th>
+        <td class="text-left" style="vertical-align: top;">
+            @Model.RegisterUserModel.FirstName
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="vertical-align: top;">
+            Last Name
+        </th>
+        <td class="text-left" style="vertical-align: top;">
+            @Model.RegisterUserModel.LastName
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="vertical-align: top;">
+            Address
+        </th>
+        <td class="text-left" style="vertical-align: top;">
+            @Model.RegisterUserModel.DemogInfoAddressModel.AddressLine1
+            <br />
+            @Model.RegisterUserModel.DemogInfoAddressModel.AddressLine2
+            <br />
+            @Model.RegisterUserModel.DemogInfoAddressModel.CityName
+            <br />
+            @(Model.RegisterUserModel.DemogInfoAddressModel.SubDivisionDesc + " " + Model.RegisterUserModel.DemogInfoAddressModel.ZipCode)
+        </td>
+    </tr>
+    <tr>
+        <th class="text-right" style="vertical-align: top;">
+            Main Coupon#
+        </th>
+        <td class="text-left" style="vertical-align: top;">
+            @Model.CouponListModel.CouponNum
+        </td>
+    </tr>
+    <tr>
+        <th colspan="2" class="text-left" style="vertical-align: top;">
+            Please share the coupon# with your customers. Request them to apply the coupon at time of purchase. You will receive @(Model.ReferralListModel.CommissionPercent + "%") referral on the order amount.
+        </th>
+    </tr>
+</table>
