@@ -287,31 +287,23 @@ namespace RetailSlnBusinessLayer
             ItemBundleDataModel itemBundleDataModel;
             try
             {
-                ShoppingCartItemModel shoppingCartItemModel;
-                List<ShoppingCartItemModel> shoppingCartItemBundleModels = null;
                 ItemModel itemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == parentItemId);
+                ParentItemBundleModel parentItemBundleModel;
                 if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                 {
-                    if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null && paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels != null)
-                    {
-                        shoppingCartItemModel = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == parentItemId);
-                        if (shoppingCartItemModel != null)
-                        {
-                            shoppingCartItemBundleModels = shoppingCartItemModel.ShoppingCartItemBundleModels;
-                        }
-                    }
-                    if (shoppingCartItemBundleModels == null)
-                    {
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Bundle", "parentItemId", parentItemId.ToString());
-                        shoppingCartItemBundleModels = RetailSlnCache.ParentItemBundleModels[parentItemId].ShoppingCartItemBundleModels;
-                    }
+                    parentItemBundleModel = RetailSlnCache.ParentItemBundleModels[parentItemId];
+                }
+                else
+                {
+                    parentItemBundleModel = null;
                 }
                 itemBundleDataModel = new ItemBundleDataModel
                 {
                     CurrencySymbol = RetailSlnCache.CurrencySymbol,
-                    ItemModel = itemModel,
-                    ParentItemId = parentItemId,
-                    ShoppingCartItemBundleModels = shoppingCartItemBundleModels,
+                    //ItemModel = itemModel,
+                    ParentItemBundleModel = parentItemBundleModel,
+                    //ParentItemId = parentItemId,
+                    //ShoppingCartItemBundleModels = shoppingCartItemBundleModels,
                     ResponseObjectModel = new ResponseObjectModel
                     {
                         ResponseMessages = new List<string>(),
@@ -2154,9 +2146,9 @@ namespace RetailSlnBusinessLayer
                         //streamWriter = new StreamWriter(htmlFileName);
                         //streamWriter.Write(htmlString);
                         //streamWriter.Close();
-                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
-                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
-                        //pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
+                        pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
+                        pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
+                        pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
                         //streamWriter = new StreamWriter(htmlFileName);
                         //streamWriter.Write(htmlString);
                         //streamWriter.Close();

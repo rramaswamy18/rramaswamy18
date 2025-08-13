@@ -712,7 +712,7 @@ function orderQtyBundle_oninput(orderQtyElementObject, itemBundleCount, currency
             orderQtyElementObject.value = orderQtyElementObject.value.substr(0, orderQtyElementObject.getAttribute("maxlength"));
         }
         //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
-        var orderQty = orderQtyElementObject.value;
+        var orderQty = orderQtyElementObject.value.trim();
         if ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyElementObject.getAttribute("maxlength") && orderQty >= orderQtyElementObject.getAttribute("min") && orderQty <= orderQtyElementObject.getAttribute("max")) {
             calculateItemBundleRate(itemBundleCount, currencySymbol);
         }
@@ -725,10 +725,40 @@ function orderQtyBundle_oninput(orderQtyElementObject, itemBundleCount, currency
     }
     return false;
 }
+function orderQtyBundleSetQty_onclick(itemBundleCount, currencySymbol) {
+    var orderQtyBundleTempObject = document.getElementById("orderQtyBundleTemp");
+    var orderQtyForBundleTemp;
+    try {
+        orderQtyForBundleTemp = parseInt(orderQtyBundleTempObject.value);
+        console.log(9, orderQtyForBundleTemp);
+        if (Number.isNaN(orderQtyForBundleTemp)) {
+            orderQtyForBundleTemp = "";
+        }
+    }
+    catch (err) {
+        orderQtyForBundleTemp = "";
+    }
+    console.log(9.9, orderQtyForBundleTemp);
+    if (orderQtyBundleTempObject.value.trim() === "" || ((/^\d+$/.test(orderQtyForBundleTemp)) && orderQtyBundleTempObject.value.length <= orderQtyBundleTempObject.getAttribute("maxlength") && orderQtyForBundleTemp >= orderQtyBundleTempObject.getAttribute("min") && orderQtyForBundleTemp <= orderQtyBundleTempObject.getAttribute("max"))) {
+        for (var i = 0; i < itemBundleCount; i++) {
+            document.getElementById("orderQtyForBundle" + i).value = orderQtyForBundleTemp;
+        }
+        calculateItemBundleRate(itemBundleCount, currencySymbol);
+    }
+    else {
+    }
+    return false;
+}
 function calculateItemBundleRate(itemBundleCount, currencySymbol) {
-    var itemBundleItemRate = 0, itemBundleItemPiecesCount = 0, itemAmountForBundle, orderQtyForBundle = 0;
+    var itemBundleItemRate = 0, itemBundleItemPiecesCount = 0, itemAmountForBundle, orderQtyForBundle = 0, orderQtyForBundleObject;
     for (var i = 0; i < itemBundleCount; i++) {
-        orderQtyForBundle = parseInt(document.getElementById("orderQtyForBundle" + i).value);
+        orderQtyForBundleObject = document.getElementById("orderQtyForBundle" + i);
+        orderQtyForBundle = parseInt(orderQtyForBundleObject.value);
+        if ((/^\d+$/.test(orderQtyForBundle)) && orderQtyForBundleObject.value.length <= orderQtyForBundleObject.getAttribute("maxlength") && orderQtyForBundle >= orderQtyForBundleObject.getAttribute("min") && orderQtyForBundle <= orderQtyForBundleObject.getAttribute("max")) {
+        }
+        else {
+            orderQtyForBundle = 0;
+        }
         itemAmountForBundle = document.getElementById("itemRateForBundle" + i).innerText * orderQtyForBundle;
         itemBundleItemPiecesCount += orderQtyForBundle;
         document.getElementById("itemAmountForBundle" + i).innerHTML = currencySymbol + itemAmountForBundle.toFixed(2);

@@ -137,14 +137,13 @@
                     <th style="padding: 5px; text-align: right;">Disc.</th>
                     <th style="padding: 5px; text-align: left;">Qty</th>
                 </tr>
-
                     @foreach (var itemModel in itemMasterModel.ItemModels)
                     {
                         itemIndex++;
                         RetailSlnCache.ParentItemBundleModels.TryGetValue(itemModel.ItemId.Value, out parentItemBundleModel);
                         <!--Begin Item #@itemMasterIndex / @itemIndex-->
                 <tr>
-                    <td style="font-size: 12px; padding: 5px; text-align: right;">@(itemIndex + 1).</td>
+                    <td style="font-size: 12px; padding: 5px; text-align: right;">@itemIndex.</td>
                     <td style="color: #0000ff; font-size: 12px; font-weight: bold; padding: 5px; text-align: center;">
                         <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="font-weight: bold; text-decoration: underline;">
                             @itemModel.ItemId
