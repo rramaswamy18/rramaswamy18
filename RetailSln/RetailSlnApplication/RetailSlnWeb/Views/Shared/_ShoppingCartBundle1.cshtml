@@ -1,33 +1,36 @@
-﻿@using RetailSlnCacheData
-@using RetailSlnEnumerations
+﻿@using RetailSlnEnumerations
 @using RetailSlnModels
 @model PaymentInfoModel
 @{
+    bool headingFlag = true;
     int index = 0, bundleIndex;
 }
-@if (Model.ShoppingCartModel.Checkout)
-{
 <table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
     <colgroup>
         <col style="width: 9px;" />
         <col style="width: 18px;" />
         <col />
+        <col style="width: 54px;" />
         <col style="width: 36px;" />
-        <col style="width: 27px;" />
-        <col style="width: 36px;" />
+        <col style="width: 72px;" />
     </colgroup>
-    <tr>
-        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">#</th>
-        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Id</th>
-        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Description</th>
-        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Rate</th>
-        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Qty</th>
-    </tr>
     @foreach (var shoppingCartItem in Model.ShoppingCartModel.ShoppingCartItemModels)
     {
         index++;
         if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
         {
+            if (headingFlag)
+            {
+                headingFlag = false;
+                <tr>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">#</th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Id</th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Description</th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Rate</th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Qty</th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Amt</th>
+                </tr>
+            }
             bundleIndex = 0;
             foreach (var shoppingCartItemBundleModel in shoppingCartItem.ShoppingCartItemBundleModels)
             {
@@ -64,15 +67,16 @@
                         }
                     </td>
                     <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
-                        @shoppingCartItemBundleModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                        @shoppingCartItemBundleModel.ItemRateFormatted
                     </td>
                     <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
-                        @(shoppingCartItemBundleModel.OrderQty * shoppingCartItem.OrderQty)
+                        @shoppingCartItemBundleModel.OrderQty
                     </td>
-
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                        @shoppingCartItemBundleModel.OrderAmountFormatted
+                    </td>
                 </tr>
             }
         }
     }
 </table>
-}

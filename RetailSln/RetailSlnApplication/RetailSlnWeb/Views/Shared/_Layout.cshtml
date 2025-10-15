@@ -9,20 +9,21 @@
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int mainCategoryCount = 4;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-    string aspNetRoleName;
+    string aspNetRoleNameProxy;
     bool isLoggedIn;
     if (sessionObjectModel == null)
     {
-        aspNetRoleName = "DEFAULTROLE";
+        aspNetRoleNameProxy = "DEFAULTROLE";
         isLoggedIn = false;
     }
     else
     {
-        aspNetRoleName = sessionObjectModel.AspNetRoleName;
+        aspNetRoleNameProxy = sessionObjectModel.AspNetRoleNameProxy;
         isLoggedIn = true;
     }
+    Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
     isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
-    List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+    List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleNameProxy][0];
     int i;
 }
 <!DOCTYPE html>

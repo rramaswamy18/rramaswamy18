@@ -1,0 +1,123 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserOTPModel
+@{
+    string divWidth;
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    try
+    {
+        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+        //Not using right now
+        if (userAgent.Contains("iphone;")) //iPhone
+        {
+            divWidth = "90%;";
+        }
+        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
+        {
+            divWidth = "63%";
+        }
+        else
+        {
+            divWidth = "45%;";
+        }
+    }
+    catch
+    {
+        divWidth = "45%;";
+    }
+    //Using this right now
+    string paddingLeft;
+    if (mobileDevice)
+    {
+        divWidth = "90%;";
+        paddingLeft = "9px;";
+    }
+    else
+    {
+        divWidth = "45%;";
+        paddingLeft = "0px;";
+    }
+    //mobileDevice = true;
+}
+<div id="divRegisterUserOTP" class="container center" style="padding-left: @paddingLeft; width: @divWidth;">
+    <div class="row" style="text-align: left;">
+        <div class="row" style="padding-left: @paddingLeft; text-align: left;">
+            <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">register</span>&nbsp;<span style="color: #0000ff; font-size: 23px; font-weight: bold;">(First time@* users*@)</span>
+        </div>
+        <form id="formRegisterUserOTPData">
+            @Html.Partial("_RegisterUserOTPData", Model)
+        </form>
+        <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return getOTP_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">get otp</button>
+        <form id="formOTPResponseData">
+            @Html.Partial("_OTPResponseData", Model.OTPResponseModel)
+        </form>
+        <button class="loginRegisterbtn" id="registerUserSave" onclick="javascript: return getOTP_onclick();" style="letter-spacing: 9px; text-transform: uppercase; width: 90%;" type="button">confirm otp</button>
+    </div>
+</div>
+<script type="text/javascript">
+    function getOTP_onclick() {
+        console.log("00000000", "getOTP_onclick");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUserOTP/";
+        var jsonPostData = $("#formRegisterUserOTPData").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: jsonPostData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "getOTP_onclick success", responseData.processMessage);
+                document.getElementById("formRegisterUserOTPData").innerHTML = responseData.htmlString;
+                alert(responseData.processMessage);
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "getOTP_onclick", xhr, exception);
+                document.getElementById("formRegisterUserOTPData").innerHTML = responseData.htmlString;
+                alert("Error occurred???");
+            }
+        });
+    }
+    function registerUserSave_onclick() {
+        console.log("00000000", "registerUserSave_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUser";
+        var postData = $("#formRegisterUserData").serialize();
+        //document.getElementById("ulErrorMessagesRegister").style.display = "none";
+        //document.getElementById("ulSuccessMessagesRegister").style.display = "none";
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "registerUserSave_onclick success", responseData.processMessage);
+                if (responseData.success) {
+                    document.getElementById("divRegisterUser").innerHTML = responseData.htmlString;
+                    var errorMessage = checkPasswordStrength(document.getElementById("LoginPassword").value);
+                    document.getElementById("LoginPassword-error").value = errorMessage;
+                }
+                else {
+                    document.getElementById("formRegisterUserData").innerHTML = responseData.htmlString;
+                    //    document.getElementById("ulErrorMessagesRegister").style.display = "block";
+                    //    document.getElementById("ulSuccessMessagesRegister").style.display = "none";
+                }
+                document.getElementById("divScrollIntoView").scrollIntoView();
+                console.log("00090000", "registerUserSave_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "registerUserSave_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formRegisterUserData").innerHTML = xhr.responseText;
+                //document.getElementById("ulErrorMessagesRegister").style.display = "block";
+                console.log("00090100", "registerUserSave_onclick error", "Exit");
+                //document.getElementById("divScrollIntoViewRegister").scrollIntoView();
+            }
+        });
+    }
+</script>

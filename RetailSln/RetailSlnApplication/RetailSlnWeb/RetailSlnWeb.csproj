@@ -255,6 +255,7 @@
     <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchResultModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ShoppingCartBundleModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
@@ -362,23 +363,29 @@
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\FestivalLists\FestivalList9.png" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\Image_000_main.png" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster1.jpg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster10.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster10.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster11.jpeg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster12.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster13.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster14.jpeg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster15.jpeg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster16.jpeg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster17.jpeg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster18.jpeg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster2.jpg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster3.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster15.jpg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster16.jpg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster17.jpg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster18.jpg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster19.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster2.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster20.jpg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster21.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster22.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster23.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster24.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster3.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster4.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster5.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster6.jpg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster7.jpeg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster7.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster8.jpeg" />
-    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster9.jpg" />
+    <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\ItemMaster\ItemMaster9.jpeg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\PaymentQRCode_1.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images\PaymentQRCode_1_Original.jpg" />
     <Content Include="ClientSpecific\96_MathangiDivineMall\Documents\Images_Original\DivineBijaBanner.jpg" />
@@ -1930,7 +1937,6 @@
     <Content Include="Views\Home\_RegisterUserEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfBackup.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfData.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
@@ -2025,6 +2031,11 @@
     <Content Include="Views\Home\_ItemCatalog.cshtml" />
     <Content Include="Views\Base\_ItemCatalogFile.cshtml" />
     <Content Include="Views\Base\ItemCatalogPdf.cshtml" />
+    <Content Include="Views\Shared\_ShoppingCartBundle2.cshtml" />
+    <Content Include="Views\Home\RegisterUserOTP.cshtml" />
+    <Content Include="Views\Home\_RegisterUserOTP.cshtml" />
+    <Content Include="Views\Home\_RegisterUserOTPData.cshtml" />
+    <Content Include="Views\Home\_OTPResponseData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,49 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserOTPModel
+<style>
+    #EmailAddress-error, #OTPModel_EmailAddress-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+@{
+    bool mobileDevice = Request.Browser.IsMobileDevice;
+    string paddingLeft;
+    if (mobileDevice)
+    {
+        paddingLeft = "9px;";
+    }
+    else
+    {
+        paddingLeft = "0px;";
+    }
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            @if (mobileDevice)
+            {
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "font-size: 12px;" }).ToHtmlString()))
+            }
+            else
+            {
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 12px;" }).ToHtmlString()))
+            }
+        </div>
+    }
+}
+@Html.HiddenFor(m => m.AspNetRoleUserTypeId)
+@Html.HiddenFor(m => m.OTPModel.OTPSendTypeId)
+@Html.HiddenFor(m => m.RegisterSource)
+<div class="row" style="padding-left: @paddingLeft; text-align: left;">
+    @Html.LabelFor(m => m.OTPModel.EmailAddress, new { @class = "col-form-label", id = "lblEmailAddress" })&nbsp;<span id="spnEmailAddressRequired" style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.OTPModel.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPModel.EmailAddress), style = "width: 86%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPModel.EmailAddress, "", new { id = "OTPModel_EmailAddress-error" }).ToHtmlString()))
+</div>

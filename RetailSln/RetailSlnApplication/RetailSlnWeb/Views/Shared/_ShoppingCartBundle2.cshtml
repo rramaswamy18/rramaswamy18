@@ -1,0 +1,69 @@
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
+@model ShoppingCartBundleModel
+@{
+    int bundleIndex = 0;
+}
+<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
+    <colgroup>
+        <col style="width: 9px;" />
+        <col style="width: 18px;" />
+        <col />
+        <col style="width: 54px;" />
+        <col style="width: 36px;" />
+        <col style="width: 72px;" />
+    </colgroup>
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">#</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Id</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Description</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Rate</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Qty</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Amt</th>
+    </tr>
+    @foreach (var shoppingCartItemBundleModel in Model.ShoppingCartItemModel.ShoppingCartItemBundleModels)
+    {
+        bundleIndex++;
+        <tr>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(Model.Index + "." + bundleIndex + ".")</th>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">
+                @shoppingCartItemBundleModel.ItemId
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                @(shoppingCartItemBundleModel.ItemMasterDesc0 + " " + shoppingCartItemBundleModel.ItemMasterDesc1)
+                @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemMasterDesc2 + " " + shoppingCartItemBundleModel.ItemMasterDesc3))
+                {
+                    <br style="clear: both;" />
+                    <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(Model.ShoppingCartItemModel.ItemMasterDesc2 + " " + Model.ShoppingCartItemModel.ItemMasterDesc3)</span>
+                }
+                @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemItemSpecsForDisplay))
+                {
+                    <br style="clear: both;" />
+                    <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItemBundleModel.ItemItemSpecsForDisplay</span>
+                }
+                <br style="clear: both;" />
+                @("HSN : " + shoppingCartItemBundleModel.HSNCode)
+                <br style="clear: both;" />
+                @("Prod Code : " + shoppingCartItemBundleModel.ProductCode)
+                <br style="clear: both;" />
+                @if (Model.Checkout)
+                {
+                    @Html.DisplayFor(m => shoppingCartItemBundleModel.OrderComments)
+                }
+                else
+                {
+                    @Html.TextBoxFor(m => shoppingCartItemBundleModel.OrderComments, new { id = "orderComments" + (Model.Index - 1) + "_" + (bundleIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onblur = "javascript: return orderComments_onchange(" + (Model.Index - 1) + ", " + (bundleIndex - 1) + ");", onchange = "javascript: return orderComments_onchange(" + (Model.Index - 1) + ", " + (bundleIndex - 1) + ");" })
+                }
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
+                @shoppingCartItemBundleModel.ItemRateFormatted
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                @shoppingCartItemBundleModel.OrderQty
+            </td>
+            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                @shoppingCartItemBundleModel.OrderAmountFormatted
+            </td>
+        </tr>
+    }
+</table>

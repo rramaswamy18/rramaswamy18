@@ -50,7 +50,7 @@
 <div style="overflow-x: auto; width: 100%;">
     @{
         Model.ShoppingCartModel.Checkout = true;
-        Model.ShoppingCartModel.ShowDetail = true;
+        Model.ShoppingCartModel.ShowDetail = false;
         @Html.Partial("_ShoppingCartHeader1", Model)
         @Html.Partial("_ShoppingCartData1", Model)
         @Html.Partial("_ShoppingCartSummary1", Model)

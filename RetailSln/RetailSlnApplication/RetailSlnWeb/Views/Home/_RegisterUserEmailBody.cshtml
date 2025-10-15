@@ -14,41 +14,37 @@
             <br /><br />
             Welcome to <span style="color: #000000; font-weight: bold;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</span> family
             <br /><br />
-                  <div>
-                      You are assigned the role of <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.RegisterUserModel.UserTypeDesc</span>
-                      @if (!string.IsNullOrWhiteSpace(Model.CouponListModel?.CouponNum))
-                      {
-                          <span style="color: #000000;">
-                              <br />
-                              Your master coupon number is <span style="color: #000000; font-weight: bold;">@Model.CouponListModel.CouponNum</span>
-                              <br />
-                              Please share the coupon number with your customer(s)
-                              <br />
-                              Your customer needs to appy the coupon at time of purchase
-                              <br />
-                              When the customer applies the coupon, the referral is  @(Model.ReferralListModel.CommissionPercent + "%") of the order amount.
-                              <br />
-                              The discount amount will be reflected in the invoice
-                              <br />
-                              This referral is as at time of registration and is subject to change
-                              <br />
-                              Referral amount will be paid periodically
-                          </span>
-                      }
-                      <br /><br />
-                      You have successfully setup the password. Please <a href="@baseUrl/@Url.Action("LoginUserProf", "Home")">click here</a> to login 
-                      <br /><br />
-                      Please <a href="@baseUrl/@Url.Action("ResetPassword", "Home")">click here</a> to reset password
-                      <br />
-                      If you are unable to access the above, copy and paste the below Url in your browser...
-                      @baseUrl/@Url.Action("ResetPassword", "Home")
-                  </div>
+            <div>
+                You are assigned the role of <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.RegisterUserModel.UserTypeDesc</span>
+                @if (!string.IsNullOrWhiteSpace(Model.CouponListModel?.CouponNum))
+                {
+                    <span style="color: #000000;">
+                        <br />
+                        Your master coupon number is <span style="color: #000000; font-weight: bold;">@Model.CouponListModel.CouponNum</span>
+                        <br />
+                        Please share the coupon number with your customer(s)
+                        <br />
+                        Your customer needs to appy the coupon at time of purchase
+                        <br />
+                        When the customer applies the coupon, the referral is  @(Model.ReferralListModel.CommissionPercent + "%") of the order amount.
+                        <br />
+                        The discount amount will be reflected in the invoice
+                        <br />
+                        This referral is as at time of registration and is subject to change
+                        <br />
+                        Referral amount will be paid periodically
+                    </span>
+                }
+                <br /><br />
+                You have successfully setup the password. Please <a href="@baseUrl/@Url.Action("LoginUserProf", "Home")">click here</a> to login
+                <br /><br />
+                Please <a href="@baseUrl/@Url.Action("ResetPassword", "Home")">click here</a> to reset password
+                <br />
+                If you are unable to access the above, copy and paste the below Url in your browser...
+                @baseUrl/@Url.Action("ResetPassword", "Home")
+            </div>
             <br /><br />
-            <table class="table table-bordered" style="width: 63%;">
-                <colgroup>
-                    <col style="width: 45%;" />
-                    <col style="width: 55%;" />
-                </colgroup>
+            <table>
                 <tr>
                     <th style="text-align: right; vertical-align: top;">
                         Email Address
@@ -96,6 +92,7 @@
                     </td>
                 </tr>
             </table>
+            <br /><br />
             <span style="background-color: #deecf9;">
                 Please do not hesitate to call us at @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "") if you have any questions.
                 <br /><br />

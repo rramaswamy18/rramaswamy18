@@ -154,6 +154,8 @@ namespace RetailSlnWeb.Controllers
                 ModelState.Clear();
                 TryValidateModel(loginUserProfModel);
                 SessionObjectModel sessionObject = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObject.AspNetRoleName];
+                sessionObject.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                 if (ModelState.IsValid)
                 {
                     ApplSessionObjectModel applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);

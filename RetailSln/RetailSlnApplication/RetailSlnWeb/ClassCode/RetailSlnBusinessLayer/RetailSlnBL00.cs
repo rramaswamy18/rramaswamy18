@@ -343,24 +343,19 @@ namespace RetailSlnBusinessLayer
             try
             {
                 long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                var aspNetRoleName = createForSessionObject?.AspNetRoleName;
-                if (string.IsNullOrEmpty(aspNetRoleName))
+                var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+                if (string.IsNullOrEmpty(aspNetRoleNameProxy))
                 {
-                    aspNetRoleName = "DEFAULTROLE";
+                    aspNetRoleNameProxy = "DEFAULTROLE";
                 }
-                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
-                {
-                    aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                    aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                }
+                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
                 if (parentCategoryId == 0)
                 {
                     parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
                 }
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 string itemCatalogHtmlDirName = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
-                string itemCatalogHtmlFileName = $@"ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+                string itemCatalogHtmlFileName = $@"ItemCatalog_{aspNetRoleNameProxy}_{corpAcctId}_{parentCategoryId}.html";
                 ItemCatalogModel itemCatalogModel = new ItemCatalogModel
                 {
                     ItemCatalogHtmlFileName = itemCatalogHtmlFileName,
@@ -458,7 +453,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // GET: OrderItem
-        public OrderItemModel OrderItem(string aspNetRoleName, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public OrderItemModel OrderItem(string aspNetRoleNameProxy, string parentCategoryIdParm, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -471,17 +466,12 @@ namespace RetailSlnBusinessLayer
                 int.TryParse(pageSizeParm, out int pageSize);
                 pageNum = pageNum == 0 ? 1 : pageNum;
                 pageSize = pageSize == 0 ? 45 : pageSize;
-                aspNetRoleName = sessionObjectModel?.AspNetRoleName;
-                if (string.IsNullOrEmpty(aspNetRoleName))
+                aspNetRoleNameProxy = sessionObjectModel?.AspNetRoleNameProxy;
+                if (string.IsNullOrEmpty(aspNetRoleNameProxy))
                 {
-                    aspNetRoleName = "DEFAULTROLE";
+                    aspNetRoleNameProxy = "DEFAULTROLE";
                 }
-                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
-                {
-                    aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                    aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                }
+                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
                 if (parentCategoryId == 0)
                 {
                     parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
@@ -491,7 +481,7 @@ namespace RetailSlnBusinessLayer
                 httpSessionStateBase["LastVisitedPageNum"] = pageNum;
                 Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
                 List<CategoryItemMasterHierModel> itemMasterModels;
-                if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
+                if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleNameProxy, out parentCategoryItemMasterModels))
                 {
                     if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out itemMasterModels))
                     {
@@ -506,7 +496,7 @@ namespace RetailSlnBusinessLayer
                 {
                     itemMasterModels = new List<CategoryItemMasterHierModel>();
                 }
-                long totalRowCount = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleName][parentCategoryId].Count;
+                long totalRowCount = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleNameProxy][parentCategoryId].Count;
                 long pageCount = totalRowCount / pageSize;
                 if (totalRowCount % pageSize != 0)
                 {
@@ -522,7 +512,7 @@ namespace RetailSlnBusinessLayer
                 itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
                 OrderItemModel orderItemModel = new OrderItemModel
                 {
-                    AspNetRoleName = aspNetRoleName,
+                    AspNetRoleName = aspNetRoleNameProxy,
                     CategoryOrItem = categoryOrItem,
                     CorpAcctid = corpAcctId,
                     CategoryItemMasterHierModels = itemMasterModels,
@@ -1420,6 +1410,20 @@ namespace RetailSlnBusinessLayer
                         addToCartModel.ItemModel = itemModel;
                         if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                         {
+                            int orderQtyBundleCount = 0;
+                            int orderQtyBundle;
+                            foreach (var shoppingCartItemBundleModel in addToCartModel.ShoppingCartItemBundleModels)
+                            {
+                                int.TryParse(shoppingCartItemBundleModel.OrderQtyParm, out orderQtyBundle);
+                                if (orderQtyBundle != 0)
+                                {
+                                    orderQtyBundleCount++;
+                                }
+                            }
+                            if (orderQtyBundleCount == 0)
+                            {
+                                errorMessage += "Enter quantity for bundle item(s)";
+                            }
                             addToCartModel.ParentItemId = itemId;
                         }
                         else
@@ -2075,7 +2079,7 @@ namespace RetailSlnBusinessLayer
             try
             {
                 long parentCategoryId, itemCount;
-                string htmlFileName, htmlString, parentCategoryDesc, pDFFullFileName;
+                string htmlFileName, htmlString, parentCategoryDesc;//, pDFFullFileName;
                 Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
                 ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel();
                 List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
@@ -2142,16 +2146,9 @@ namespace RetailSlnBusinessLayer
                             PDFFlag = true,
                         };
                         htmlString = archLibBL.ViewToHtmlString(controller, "ItemCatalogPdf", itemCatalogFileModel);
-                        //htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}_pdf.html";
-                        //streamWriter = new StreamWriter(htmlFileName);
-                        //streamWriter.Write(htmlString);
-                        //streamWriter.Close();
-                        pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
-                        pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
-                        pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
-                        //streamWriter = new StreamWriter(htmlFileName);
-                        //streamWriter.Write(htmlString);
-                        //streamWriter.Close();
+                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
+                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
+                        //pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Pdf End");
                     }
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: End");
@@ -2214,189 +2211,198 @@ namespace RetailSlnBusinessLayer
         private void CreateShoppingCartItemModel(ref ShoppingCartItemModel shoppingCartItemModel, AddToCartModel addToCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             int i;
-            long orderQty, orderQtyForBundle;
+            long /*orderQty, */corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
             float itemRate, itemRateBeforeDiscount, productOrVolumetricWeight, weightCalcValue, weightValue;
-            string orderQtyParm, orderQtyForBundleParm;
+            //string orderQtyParm;
             ItemModel itemModel = addToCartModel.ItemModel;
             List<ShoppingCartItemModel> shoppingCartItemBundleModelsFromCache;
-            long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
             RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> corpAcctItemDiscountModels);
             corpAcctItemDiscountModels = corpAcctItemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
             corpAcctItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out ItemDiscountModel itemDiscountModel);
             itemDiscountModel = itemDiscountModel ?? new ItemDiscountModel { DiscountPercent = 0 };
             if (shoppingCartItemModel == null)
             {
-                if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                shoppingCartItemModel = CreateShoppingCartItemModelObject(addToCartModel, itemModel, itemDiscountModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (addToCartModel.DoNotBreakBundle)
                 {
-                    if (addToCartModel.DoNotBreakBundle)
+                    itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate.Value;
+                    productOrVolumetricWeight = addToCartModel.OrderQty * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                    weightCalcValue = addToCartModel.OrderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    weightValue = addToCartModel.OrderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                     {
-                        itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate.Value;
-                        orderQty = addToCartModel.OrderQty;
-                        orderQtyParm = addToCartModel.OrderQtyParm;
-                        productOrVolumetricWeight = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
-                        weightCalcValue = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                        weightValue = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                    }
-                    else
-                    {
-                        itemRateBeforeDiscount = 0;
-                        productOrVolumetricWeight = 0;
-                        weightCalcValue = 0;
-                        weightValue = 0;
-                        orderQty = 1;
-                        orderQtyParm = "1";
+                        shoppingCartItemModel.ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
                         shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
                         for (i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
                         {
-                            addToCartModel.ShoppingCartItemBundleModels[i].OrderQty = long.Parse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm);
-                            itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * addToCartModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
-                            productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
-                            weightCalcValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                            weightValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                            addToCartModel.ShoppingCartItemBundleModels[i].OrderQty = 1;
+                            addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm = "1";
+                            shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, itemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
                         }
                     }
                 }
                 else
                 {
-                    itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate.Value;
-                    orderQty = addToCartModel.OrderQty;
-                    orderQtyParm = addToCartModel.OrderQtyParm;
-                    productOrVolumetricWeight = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
-                    weightCalcValue = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                    weightValue = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                }
-                itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
-                shoppingCartItemModel = new ShoppingCartItemModel
-                {
-                    #region
-                    ClientId = clientId,
-                    DoNotBreakBundle = addToCartModel.DoNotBreakBundle,
-                    HSNCode = itemModel.ItemItemSpecModels["HSNCode"].ItemSpecValueForDisplay,
-                    ImageName = itemModel.ItemMasterModel.ImageName,
-                    ItemDiscountAmount = itemDiscountModel.DiscountPercent * itemRateBeforeDiscount * orderQty / 100,
-                    ItemDiscountPercent = itemDiscountModel.DiscountPercent,
-                    ItemDiscountPercentFormatted = itemDiscountModel.DiscountPercent.ToString("#0.00") + "%",
-                    ItemId = itemModel.ItemId,
-                    ItemIdParm = addToCartModel.ItemIdParm,
-                    ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
-                    ItemMasterDesc = itemModel.ItemMasterModel.ItemMasterDesc,
-                    ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
-                    ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
-                    ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
-                    ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
-                    ItemRate = itemRate,
-                    ItemRateBeforeDiscount = itemRateBeforeDiscount,
-                    ItemRateBeforeDiscountFormatted = itemRateBeforeDiscount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                    ItemRateFormatted = itemRate.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                    ItemShortDesc = null,
-                    ItemTypeId = itemModel.ItemTypeId.Value,
-                    OrderAmount = null,
-                    OrderAmountBeforeDiscount = null,
-                    OrderDetailTypeId = OrderDetailTypeEnum.Item,
-                    OrderQty = orderQty,
-                    OrderQtyParm = orderQtyParm,
-                    ParentItemId = addToCartModel.ParentItemId,
-                    ProductCode = itemModel.ItemItemSpecModels["ProductCode"].ItemSpecValueForDisplay,
-                    ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecUnitValue),
-                    WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
-                    WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
-                    ShoppingCartItemBundleModels = null,
-                    ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
-                    #endregion
-                };
-                if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-                {
-                    shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
-                    shoppingCartItemModel.ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
-                    for (i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
-                    {
-                        orderQtyForBundleParm = addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm;
-                        orderQtyForBundle = long.Parse(orderQtyForBundleParm);
-                        shoppingCartItemModel.ShoppingCartItemBundleModels.Add
-                        (
-                            new ShoppingCartItemModel
-                            {
-                                #region
-                                ClientId = clientId,
-                                DoNotBreakBundle = addToCartModel.DoNotBreakBundle,
-                                HSNCode = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemItemSpecModels["HSNCode"].ItemSpecValueForDisplay,
-                                ImageName = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ImageName,
-                                ItemDiscountAmount = null,
-                                ItemDiscountPercent = null,
-                                ItemDiscountPercentFormatted = null,
-                                ItemId = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemId,
-                                ItemIdParm = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemId.ToString(),
-                                ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
-                                ItemMasterDesc = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc,
-                                ItemMasterDesc0 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc0,
-                                ItemMasterDesc1 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc1,
-                                ItemMasterDesc2 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc2,
-                                ItemMasterDesc3 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc3,
-                                ItemRate = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemRate,
-                                ItemRateBeforeDiscount = null,
-                                ItemRateBeforeDiscountFormatted = null,
-                                ItemRateFormatted = itemRate.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
-                                ItemShortDesc = null,
-                                ItemTypeId = itemModel.ItemTypeId.Value,
-                                OrderAmount = itemRate * orderQtyForBundle * orderQty,
-                                OrderAmountBeforeDiscount = null,
-                                OrderDetailTypeId = OrderDetailTypeEnum.Item,
-                                OrderQty = orderQtyForBundle,
-                                OrderQtyParm = orderQtyForBundleParm,
-                                ParentItemId = addToCartModel.ParentItemId,
-                                ProductCode = itemModel.ItemItemSpecModels["ProductCode"].ItemSpecValueForDisplay,
-                                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecUnitValue),
-                                WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
-                                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
-                                ShoppingCartItemBundleModels = null,
-                                ShoppingCartItemSummarys = null,
-                                #endregion
-                            }
-                        );
-                    }
-                }
-            }
-            else
-            {
-                if (addToCartModel.DoNotBreakBundle)
-                {
-                    itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate.Value;
-                    shoppingCartItemModel.OrderQty += addToCartModel.OrderQty;
-                    shoppingCartItemModel.OrderQtyParm = shoppingCartItemModel.OrderQty.ToString();
-                    orderQty = shoppingCartItemModel.OrderQty.Value;
-                    productOrVolumetricWeight = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
-                    weightCalcValue = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                    weightValue = orderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                }
-                else
-                {
-                    orderQty = 1;
-                    orderQtyParm = "1";
                     itemRateBeforeDiscount = 0;
                     productOrVolumetricWeight = 0;
                     weightCalcValue = 0;
                     weightValue = 0;
+                    shoppingCartItemModel.ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
                     shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
-                    for (i = 0; i < addToCartModel.ShoppingCartItemBundleModels.Count; i++)
+                    for (i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
                     {
                         addToCartModel.ShoppingCartItemBundleModels[i].OrderQty = long.Parse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm);
                         itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * addToCartModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
                         productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
                         weightCalcValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                         weightValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                        shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, itemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
                     }
                 }
                 itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
                 shoppingCartItemModel.ItemRate = itemRate;
-                shoppingCartItemModel.ItemRateBeforeDiscount = itemRateBeforeDiscount;
+                shoppingCartItemModel.ItemRateFormatted = shoppingCartItemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                shoppingCartItemModel.OrderAmount = itemRate * addToCartModel.OrderQty;
+                shoppingCartItemModel.OrderAmountBeforeDiscount = itemRateBeforeDiscount * addToCartModel.OrderQty;
+                shoppingCartItemModel.OrderAmountFormatted = shoppingCartItemModel.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                shoppingCartItemModel.OrderAmountRounded = (long)(shoppingCartItemModel.OrderAmount * 100);
+                shoppingCartItemModel.OrderQty = addToCartModel.OrderQty;
+                shoppingCartItemModel.OrderQtyParm = addToCartModel.OrderQtyParm;
+                shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
+                shoppingCartItemModel.WeightCalcValue = weightCalcValue;
+                shoppingCartItemModel.WeightValue = weightValue;
             }
-            shoppingCartItemModel.OrderAmount = itemRate * orderQty;
-            shoppingCartItemModel.OrderAmountBeforeDiscount = itemRateBeforeDiscount * orderQty;
-            shoppingCartItemModel.OrderAmountFormatted = shoppingCartItemModel.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-            shoppingCartItemModel.OrderAmountRounded = (long)(shoppingCartItemModel.OrderAmount * 100);
-            shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
-            shoppingCartItemModel.WeightCalcValue = weightCalcValue;
-            shoppingCartItemModel.WeightValue = weightValue;
+            else
+            {
+                #region
+                if (addToCartModel.DoNotBreakBundle)
+                {
+                    itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate.Value;
+                    shoppingCartItemModel.OrderQty += addToCartModel.OrderQty;
+                    shoppingCartItemModel.OrderQtyParm = shoppingCartItemModel.OrderQty.ToString();
+                    productOrVolumetricWeight = shoppingCartItemModel.OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                    weightCalcValue = shoppingCartItemModel.OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    weightValue = shoppingCartItemModel.OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                }
+                else
+                {
+                    itemRateBeforeDiscount = 0;
+                    productOrVolumetricWeight = 0;
+                    weightCalcValue = 0;
+                    weightValue = 0;
+                    shoppingCartItemModel.OrderQty = 1;
+                    shoppingCartItemModel.OrderQtyParm = "1";
+                    shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[itemModel.ItemId.Value].ShoppingCartItemBundleModels;
+                    for (i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
+                    {
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty += long.Parse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm);
+                        shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty;
+                        itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
+                        productOrVolumetricWeight += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                        weightCalcValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                        weightValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    }
+                }
+                itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
+                shoppingCartItemModel.ItemRate = itemRate;
+                shoppingCartItemModel.ItemRateFormatted = shoppingCartItemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                shoppingCartItemModel.OrderAmount = itemRate * shoppingCartItemModel.OrderQty;
+                shoppingCartItemModel.OrderAmountBeforeDiscount = itemRateBeforeDiscount * shoppingCartItemModel.OrderQty;
+                shoppingCartItemModel.OrderAmountFormatted = shoppingCartItemModel.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                shoppingCartItemModel.OrderAmountRounded = (long)(shoppingCartItemModel.OrderAmount * 100);
+                shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
+                shoppingCartItemModel.WeightCalcValue = weightCalcValue;
+                shoppingCartItemModel.WeightValue = weightValue;
+                #endregion
+            }
+        }
+        // PRIVATE : CreateShoppingCartItemModelObject
+        private ShoppingCartItemModel CreateShoppingCartItemModelObject(AddToCartModel addToCartModel, ItemModel itemModel, ItemDiscountModel itemDiscountModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            var shoppingCartItemModel = new ShoppingCartItemModel
+            {
+                #region
+                ClientId = clientId,
+                DoNotBreakBundle = addToCartModel.DoNotBreakBundle,
+                HSNCode = itemModel.ItemItemSpecModels["HSNCode"].ItemSpecValueForDisplay,
+                ImageName = itemModel.ItemMasterModel.ImageName,
+                ItemDiscountAmount = null,//itemDiscountModel.DiscountPercent * itemRateBeforeDiscount * orderQty / 100,
+                ItemDiscountPercent = itemDiscountModel.DiscountPercent,
+                ItemDiscountPercentFormatted = itemDiscountModel.DiscountPercent.ToString("#0.00") + "%",
+                ItemId = itemModel.ItemId,
+                ItemIdParm = addToCartModel.ItemIdParm,
+                ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+                ItemMasterDesc = itemModel.ItemMasterModel.ItemMasterDesc,
+                ItemMasterDesc0 = itemModel.ItemMasterModel.ItemMasterDesc0,
+                ItemMasterDesc1 = itemModel.ItemMasterModel.ItemMasterDesc1,
+                ItemMasterDesc2 = itemModel.ItemMasterModel.ItemMasterDesc2,
+                ItemMasterDesc3 = itemModel.ItemMasterModel.ItemMasterDesc3,
+                ItemRate = null,//itemRate,
+                ItemRateBeforeDiscount = null,//itemRateBeforeDiscount,
+                ItemRateBeforeDiscountFormatted = null,//itemRateBeforeDiscount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                ItemRateFormatted = null,//itemRate.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                ItemShortDesc = null,
+                ItemTypeId = itemModel.ItemTypeId.Value,
+                OrderAmount = null,
+                OrderAmountBeforeDiscount = null,
+                OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                OrderQty = null,//orderQty,
+                OrderQtyParm = null,//orderQtyParm,
+                ParentItemId = addToCartModel.ParentItemId,
+                ProductCode = itemModel.ItemItemSpecModels["ProductCode"].ItemSpecValueForDisplay,
+                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecUnitValue),
+                WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
+                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
+                ShoppingCartItemBundleModels = null,
+                ShoppingCartItemSummarys = new List<ShoppingCartItemModel>(),
+                #endregion
+            };
+            return shoppingCartItemModel;
+        }
+        // PRIVATE : CreateShoppingCartItemBundleModelObject
+        private ShoppingCartItemModel CreateShoppingCartItemBundleModelObject(int i, AddToCartModel addToCartModel, List<ShoppingCartItemModel> shoppingCartItemBundleModelsFromCache, ItemModel itemModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            float orderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate.Value * addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value;
+            var shoppingCartItemBundleModel = new ShoppingCartItemModel
+            {
+                #region
+                ClientId = clientId,
+                DoNotBreakBundle = addToCartModel.DoNotBreakBundle,
+                HSNCode = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemItemSpecModels["HSNCode"].ItemSpecValueForDisplay,
+                ImageName = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ImageName,
+                ItemDiscountAmount = null,
+                ItemDiscountPercent = null,
+                ItemDiscountPercentFormatted = null,
+                ItemId = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemId,
+                ItemIdParm = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemId.ToString(),
+                ItemItemSpecsForDisplay = itemModel.ItemItemSpecsForDisplay,
+                ItemMasterDesc = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc,
+                ItemMasterDesc0 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc0,
+                ItemMasterDesc1 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc1,
+                ItemMasterDesc2 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc2,
+                ItemMasterDesc3 = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemMasterModel.ItemMasterDesc3,
+                ItemRate = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemRate,
+                ItemRateBeforeDiscount = null,
+                ItemRateBeforeDiscountFormatted = null,
+                ItemRateFormatted = shoppingCartItemBundleModelsFromCache[i].ItemModel.ItemRateFormatted,
+                ItemShortDesc = null,
+                ItemTypeId = itemModel.ItemTypeId.Value,
+                OrderAmount = orderAmount,
+                OrderAmountBeforeDiscount = null,
+                OrderAmountFormatted = orderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""),
+                OrderDetailTypeId = OrderDetailTypeEnum.Item,
+                OrderQty = addToCartModel.ShoppingCartItemBundleModels[i].OrderQty,
+                OrderQtyParm = addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm,
+                ParentItemId = addToCartModel.ParentItemId,
+                ProductCode = itemModel.ItemItemSpecModels["ProductCode"].ItemSpecValueForDisplay,
+                ProductOrVolumetricWeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecUnitValue),
+                WeightCalcUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
+                WeightUnitId = (WeightUnitEnum)int.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecUnitValue),
+                ShoppingCartItemBundleModels = null,
+                ShoppingCartItemSummarys = null,
+                #endregion
+            };
+            return shoppingCartItemBundleModel;
         }
         // PRIVATE : CreateShoppingCartTotals
         private void CreateShoppingCartTotals(ref PaymentInfoModel paymentInfoModel, float amountPaid, string amountPaidComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -2453,6 +2459,7 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModelSummary.OrderAmountFormatted = totalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount = shoppingCartItemModelSummary.OrderAmount;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmountFormatted = shoppingCartItemModelSummary.OrderAmountFormatted;
+
                 shoppingCartItemModelSummary = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FirstOrDefault(x => x.OrderDetailTypeId == OrderDetailTypeEnum.TotalAmountPaid);
                 if (shoppingCartItemModelSummary == null)
                 {
@@ -2468,6 +2475,7 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModelSummary.OrderAmount = amountPaid;
                 shoppingCartItemModelSummary.OrderAmountFormatted = amountPaid.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 shoppingCartItemModelSummary.OrderComments = amountPaidComments;
+
                 shoppingCartItemModelSummary = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FirstOrDefault(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
                 if (shoppingCartItemModelSummary == null)
                 {
@@ -2482,9 +2490,28 @@ namespace RetailSlnBusinessLayer
                 }
                 shoppingCartItemModelSummary.OrderAmount = totalInvoiceAmount - amountPaid;
                 shoppingCartItemModelSummary.OrderAmountFormatted = (totalInvoiceAmount - amountPaid).ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                if (totalDiscountAmount > 0)
+                {
+                    shoppingCartItemModelSummary = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.FirstOrDefault(x => x.OrderDetailTypeId == OrderDetailTypeEnum.DiscountAmount);
+                    if (shoppingCartItemModelSummary == null)
+                    {
+                        paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.Add
+                        (
+                            shoppingCartItemModelSummary = new ShoppingCartItemModel
+                            {
+                                ItemShortDesc = LookupCache.CodeDataModels.First(x => x.CodeTypeId == 213 && x.CodeDataNameId == (int)OrderDetailTypeEnum.DiscountAmount).CodeDataDesc0,
+                                OrderDetailTypeId = OrderDetailTypeEnum.TotalInvoiceAmount,
+                            }
+                        );
+                    }
+                    shoppingCartItemModelSummary.OrderAmount = totalDiscountAmount;
+                    shoppingCartItemModelSummary.OrderAmountFormatted = totalDiscountAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                }
+
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDue = totalInvoiceAmount - amountPaid;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted = (totalInvoiceAmount - amountPaid).ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalInvoiceAmount = totalInvoiceAmount;
+                paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalDiscountAmount = totalDiscountAmount;
                 paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalAmountPaid = amountPaid;
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }

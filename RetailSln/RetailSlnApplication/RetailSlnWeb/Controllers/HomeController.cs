@@ -13,7 +13,10 @@ using RetailSlnWeb.ClassCode;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -37,6 +40,10 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult Index(string id)
         {
+            if (id == "CODEGEN01")
+            {
+                CreateClassDefns();
+            }
             //int x = 1, y = 0, z = x / y;
             //Session.Timeout = 2;
             ViewData["ActionName"] = "Index";
@@ -69,7 +76,7 @@ namespace RetailSlnWeb.Controllers
                     pageNumParm = null;
                 }
                 Session["LastVisitedPageNum"] = pageNumParm;
-                string aspNetRoleName;
+                string aspNetRoleNameProxy;
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
                 if (sessionObjectModel == null)
@@ -84,32 +91,33 @@ namespace RetailSlnWeb.Controllers
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                         return RedirectToAction("LoginUserProf");
                     }
-                    if (absoluteUri.ToUpper().IndexOf("REFERRAL") > -1 || id?.ToUpper().IndexOf("REFERRAL") > -1)
-                    {
-                        aspNetRoleName = "REFERRALROLE";
-                    }
-                    else
-                    {
-                        aspNetRoleName = "DEFAULTROLE";
-                    }
+                    aspNetRoleNameProxy = "DEFAULTROLE";
+                    //if (absoluteUri.ToUpper().IndexOf("REFERRAL") > -1 || id?.ToUpper().IndexOf("REFERRAL") > -1)
+                    //{
+                    //    aspNetRoleName = "REFERRALROLE";
+                    //}
+                    //else
+                    //{
+                    //    aspNetRoleName = "DEFAULTROLE";
+                    //}
                 }
                 else
                 {
-                    aspNetRoleName = sessionObjectModel.AspNetRoleName;
+                    aspNetRoleNameProxy = sessionObjectModel.AspNetRoleNameProxy;
                 }
-                switch (aspNetRoleName)
+                switch (aspNetRoleNameProxy)
                 {
                     case "APPLADMN1":
-                    case "MARKETINGROLE":
-                    case "SYSTADMIN":
+                    //case "MARKETINGROLE":
+                    //case "SYSTADMIN":
                         actionResult = RedirectToAction("Index", "Dashboard");
                         break;
-                    case "REFERRALROLE":
-                        OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        actionResult = View("Index", orderItemModel1);
-                        break;
+                    //case "REFERRALROLE":
+                    //    OrderItemModel orderItemModel1 = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //    actionResult = View("Index", orderItemModel1);
+                    //    break;
                     default:
-                        OrderItemModel orderItemModel = retailSlnBL.OrderItem(aspNetRoleName, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        OrderItemModel orderItemModel = retailSlnBL.OrderItem(aspNetRoleNameProxy, parentCategoryIdParm, pageNumParm, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                         actionResult = View("Index", orderItemModel);
                         break;
                 }
@@ -125,6 +133,384 @@ namespace RetailSlnWeb.Controllers
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
+        }
+
+        private void CreateClassDefns()
+        {
+            string directoryName = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Domain\";
+            string directoryName2 = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Infrastructure\Configurations\";
+            string directoryName3 = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Infrastructure\DbContexts\";
+            string table_Schema, table_Name;
+            StreamWriter streamWriter, streamWriter2, streamWriter3;
+            SqlConnection sqlConnection = new SqlConnection("DATA SOURCE = .; INTEGRATED SECURITY = SSPI; INITIAL CATALOG = ArchLib");
+            sqlConnection.Open();
+            SqlConnection sqlConnection2 = new SqlConnection("DATA SOURCE = .; INTEGRATED SECURITY = SSPI; INITIAL CATALOG = ArchLib");
+            sqlConnection2.Open();
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME NOT IN('sysdiagrams') AND COLUMN_NAME NOT IN(TABLE_NAME + 'Id', 'Id', 'ClientId', 'AddUserId', 'AddUserName', 'AddDateTime', 'UpdUserId', '', 'UpdUserName', 'UpdDateTime') ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION", sqlConnection);
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            bool sqlDataReaderRead = sqlDataReader.Read();
+            streamWriter3 = new StreamWriter(directoryName3 + "ArchLibDbContext.cs");
+            CreateDbContextHeader(streamWriter3);
+            while (sqlDataReaderRead)
+            {
+                table_Schema = sqlDataReader["TABLE_SCHEMA"].ToString();
+                table_Name = sqlDataReader["TABLE_NAME"].ToString();
+                streamWriter = new StreamWriter(directoryName + table_Schema + @"\" + table_Name + ".cs");
+                streamWriter2 = new StreamWriter(directoryName2 + table_Schema + @"\" + table_Name + "Configuration.cs");
+                CreateClassDefnHeader(streamWriter, table_Schema, table_Name);
+                CreateClassConfigHeader(streamWriter2, table_Schema, table_Name);
+                streamWriter3.Write($"        public DbSet<{table_Name}> {table_Name}s {{ get; set; }}{Environment.NewLine}");
+                while (sqlDataReaderRead && table_Schema == sqlDataReader["TABLE_SCHEMA"].ToString() && table_Name == sqlDataReader["TABLE_NAME"].ToString())
+                {
+                    CreateClassDefnProperty(streamWriter, sqlDataReader);
+                    CreateClassConfigProperty(streamWriter2, sqlDataReader);
+                    sqlDataReaderRead = sqlDataReader.Read();
+                }
+                CreateClassConfigComputedColumn(streamWriter2, sqlConnection2, table_Schema, table_Name);
+                CreateClassConfigUniqueConstraint(streamWriter2, sqlConnection2, table_Schema, table_Name);
+                CreateForeignKey(streamWriter, table_Schema, table_Name, sqlConnection2);
+
+                streamWriter2.Write("        }" + Environment.NewLine);
+                streamWriter2.Write("    }" + Environment.NewLine);
+                streamWriter2.Write("}" + Environment.NewLine);
+                streamWriter2.Close();
+
+                streamWriter.Write("    }" + Environment.NewLine);
+                streamWriter.Write("}" + Environment.NewLine);
+                streamWriter.Close();
+            }
+
+            streamWriter3.Write($"{Environment.NewLine}");
+            streamWriter3.Write($"        protected override void OnModelCreating(ModelBuilder modelBuilder){Environment.NewLine}");
+            streamWriter3.Write($"        {{{Environment.NewLine}");
+            streamWriter3.Write($"            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchLibDbContext).Assembly);{Environment.NewLine}");
+            streamWriter3.Write($"            base.OnModelCreating(modelBuilder);{Environment.NewLine}");
+            streamWriter3.Write($"        }}{Environment.NewLine}");
+            streamWriter3.Write($"{Environment.NewLine}");
+            streamWriter3.Write($"        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder){Environment.NewLine}");
+            streamWriter3.Write($"        {{{Environment.NewLine}");
+            streamWriter3.Write($"            configurationBuilder.Conventions.Add(_ => new DefaultSuserNameConvention());{Environment.NewLine}");
+            streamWriter3.Write($"        }}{Environment.NewLine}");
+            streamWriter3.Write($"    }}{Environment.NewLine}");
+            streamWriter3.Write($"}}{Environment.NewLine}");
+            streamWriter3.Close();
+
+            sqlDataReader.Close();
+            sqlConnection2.Close();
+            sqlConnection.Close();
+        }
+
+        private void CreateClassDefnHeader(StreamWriter streamWriter, string table_Schema, string table_Name)
+        {
+            streamWriter.Write($"using ArchLib.Domain.Common;{Environment.NewLine}");
+            streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
+            streamWriter.Write($"using System.ComponentModel.DataAnnotations.Schema;{Environment.NewLine}");
+            streamWriter.Write($"using System.ComponentModel.DataAnnotations;{Environment.NewLine}");
+            streamWriter.Write($"using System.Linq;{Environment.NewLine}");
+            streamWriter.Write($"using System.Text;{Environment.NewLine}");
+            streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
+            streamWriter.Write($"{Environment.NewLine}");
+            streamWriter.Write($"namespace ArchLib.Domain.{table_Schema}{Environment.NewLine}");
+            streamWriter.Write($"{{{Environment.NewLine}");
+            streamWriter.Write($"    public class {table_Name} : BaseEntity{Environment.NewLine}");
+            streamWriter.Write($"    {{{Environment.NewLine}");
+        }
+
+        private void CreateClassConfigHeader(StreamWriter streamWriter, string table_Schema, string table_Name)
+        {
+            streamWriter.Write($"using ArchLib.Domain.{table_Schema};{Environment.NewLine}");
+            streamWriter.Write($"using ArchLib.Enums;{Environment.NewLine}");
+            streamWriter.Write($"using Microsoft.EntityFrameworkCore;{Environment.NewLine}");
+            streamWriter.Write($"using Microsoft.EntityFrameworkCore.Metadata.Builders;{Environment.NewLine}");
+            streamWriter.Write($"using System;{Environment.NewLine}");
+            streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
+            streamWriter.Write($"using System.Linq;{Environment.NewLine}");
+            streamWriter.Write($"using System.Text;{Environment.NewLine}");
+            streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
+            streamWriter.Write($"namespace ArchLib.Domain.{table_Schema}{Environment.NewLine}");
+            streamWriter.Write($"{{{Environment.NewLine}");
+            streamWriter.Write($"    public class {table_Name}Configuration : IEntityTypeConfiguration<{table_Name}>{Environment.NewLine}");
+            streamWriter.Write($"    {{{Environment.NewLine}");
+            streamWriter.Write($"        public void Configure(EntityTypeBuilder<{table_Name}> entityTypeBuilder){Environment.NewLine}");
+            streamWriter.Write($"        {{{Environment.NewLine}");
+            streamWriter.Write($"            entityTypeBuilder.ToTable(\"{table_Name}\", SchemaType.{table_Schema}.ToString());{Environment.NewLine}");
+            streamWriter.Write($"{Environment.NewLine}");
+            //streamWriter.Write($"            //Primary Key{Environment.NewLine}");
+            //streamWriter.Write($"            entityTypeBuilder.HasKey(e => e.Id){Environment.NewLine}");
+            //streamWriter.Write($"                .HasName(\"{table_Name}_PK\");{Environment.NewLine}");
+            //streamWriter.Write($"{Environment.NewLine}");
+        }
+
+        private void CreateDbContextHeader(StreamWriter streamWriter)
+        {
+            streamWriter.Write($"using ArchLib.Domain.ArchLib;{Environment.NewLine}");
+            streamWriter.Write($"using ArchLib.Infrastructure.Configurations;{Environment.NewLine}");
+            streamWriter.Write($"using Microsoft.EntityFrameworkCore;{Environment.NewLine}");
+            streamWriter.Write($"using System;{Environment.NewLine}");
+            streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
+            streamWriter.Write($"using System.Linq;{Environment.NewLine}");
+            streamWriter.Write($"using System.Text;{Environment.NewLine}");
+            streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
+            streamWriter.Write($"{Environment.NewLine}");
+            streamWriter.Write($"namespace ArchLib.Infrastructure.DbContexts{Environment.NewLine}");
+            streamWriter.Write($"{{{Environment.NewLine}");
+            streamWriter.Write($"    public class ArchLibDbContext : DbContext{Environment.NewLine}");
+            streamWriter.Write($"    {{{Environment.NewLine}");
+            streamWriter.Write($"        public ArchLibDbContext(DbContextOptions<ArchLibDbContext> options) : base(options){Environment.NewLine}");
+            streamWriter.Write($"        {{{Environment.NewLine}");
+            streamWriter.Write($"{Environment.NewLine}");
+            streamWriter.Write($"        }}{Environment.NewLine}");
+        }
+
+        private void CreateClassDefnProperty(StreamWriter streamWriter, SqlDataReader sqlDataReader)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            string dataAnnotation, dataType, dataTypeComments, defaultValue;
+            dataTypeComments = sqlDataReader["DATA_TYPE"].ToString();
+            switch (sqlDataReader["DATA_TYPE"].ToString().ToUpper())
+            {
+                case "BIGINT":
+                    dataType = "long";
+                    defaultValue = "";
+                    break;
+                case "BIT":
+                    dataType = "bool";
+                    defaultValue = "";
+                    break;
+                case "DATE":
+                case "DATETIME":
+                case "DATETIME2":
+                    dataType = "DateTime";
+                    defaultValue = "";
+                    break;
+                case "NUMERIC":
+                    dataType = "decimal";
+                    defaultValue = "";
+                    dataTypeComments += "(" + sqlDataReader["NUMERIC_PRECISION"].ToString() + ", " + sqlDataReader["NUMERIC_SCALE"].ToString() + ")";
+                    break;
+                case "FLOAT":
+                    dataType = "float";
+                    defaultValue = "";
+                    break;
+                case "INT": 
+                    dataType = "int";
+                    defaultValue = "";
+                    break;
+                case "NVARCHAR":
+                case "VARCHAR":
+                    dataType = "string";
+                    dataTypeComments += "(" + sqlDataReader["CHARACTER_MAXIMUM_LENGTH"].ToString() + ")";
+                    if (sqlDataReader["IS_NULLABLE"].ToString() == "YES")
+                    {
+                        defaultValue = "";
+                    }
+                    else
+                    {
+                        defaultValue = " = default!;";
+                    }
+                    break;
+                case "SMALLINT":
+                    dataType = "short";
+                    defaultValue = "";
+                    break;
+                case "VARBINARY":
+                    dataType = "byte[]";
+                    defaultValue = "";
+                    break;
+                default:
+                    dataType = "xyz";
+                    defaultValue = "";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000xyz", "Table", sqlDataReader["TABLE_NAME"].ToString(), "Column", sqlDataReader["COLUMN_NAME"].ToString(), "Type", sqlDataReader["DATA_TYPE"].ToString());
+                    break;
+            }
+            if (sqlDataReader["IS_NULLABLE"].ToString() == "YES")
+            {
+                dataType += "?";
+                dataTypeComments += " NULL";
+                dataAnnotation = "[Column(TypeName = \"" + dataTypeComments + "\")]";
+            }
+            else
+            {
+                dataTypeComments += " NOT NULL";
+                dataAnnotation = "[Required, Column(TypeName = \"" + dataTypeComments + "\")]";
+            }
+            streamWriter.Write($"        {dataAnnotation}{Environment.NewLine}");
+            streamWriter.Write($"        public {dataType} {sqlDataReader["COLUMN_NAME"].ToString()} {{ get; set; }}{defaultValue} //{dataTypeComments}{Environment.NewLine}");
+        }
+
+        private void CreateClassConfigProperty(StreamWriter streamWriter, SqlDataReader sqlDataReader)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        }
+
+        private void CreateClassConfigComputedColumn(StreamWriter streamWriter, SqlConnection sqlConnection, string table_Schema, string table_Name)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            string sqlStmt = "";
+            //sqlStmt += "" + Environment.NewLine;
+            sqlStmt += $"        SELECT" + Environment.NewLine;
+            sqlStmt += $"               SCHEMA_NAME(obj.schema_id) AS SchemaName" + Environment.NewLine;
+            sqlStmt += $"              ,obj.name AS TableName" + Environment.NewLine;
+            sqlStmt += $"              ,col.name AS ColumnName" + Environment.NewLine;
+            sqlStmt += $"              ,col.definition AS ComputedColumnFormula" + Environment.NewLine;
+            sqlStmt += $"              ,col.is_persisted AS IsPersisted" + Environment.NewLine;
+            sqlStmt += $"          FROM" + Environment.NewLine;
+            sqlStmt += $"               sys.computed_columns AS col" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN" + Environment.NewLine;
+            sqlStmt += $"               sys.objects AS obj ON col.object_id = obj.object_id" + Environment.NewLine;
+            sqlStmt += $"         WHERE SCHEMA_NAME(obj.schema_id) = '{table_Schema}'" + Environment.NewLine;
+            sqlStmt += $"           AND obj.name = '{table_Name}'" + Environment.NewLine;
+            sqlStmt += $"      ORDER BY" + Environment.NewLine;
+            sqlStmt += $"               obj.name" + Environment.NewLine;
+            sqlStmt += $"              ,col.name" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            while (sqlDataReader.Read())
+            {
+                streamWriter.Write($"            entityTypeBuilder.Property(p => p.{sqlDataReader["ColumnName"].ToString()}){Environment.NewLine}");
+                streamWriter.Write($"                .HasComputedColumnSql(\"{sqlDataReader["ComputedColumnFormula"].ToString()}\");{Environment.NewLine}"); // SQL expression
+            }
+            sqlDataReader.Close();
+        }
+
+        private void CreateClassConfigUniqueConstraint(StreamWriter streamWriter, SqlConnection sqlConnection, string table_Schema, string table_Name)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            #region
+            string sqlStmt = "";
+            sqlStmt += $"        SELECT " + Environment.NewLine;
+            sqlStmt += $"               sys.schemas.name AS table_schema" + Environment.NewLine;
+            sqlStmt += $"              ,sys.tables.name AS table_name" + Environment.NewLine;
+            sqlStmt += $"              ,sys.indexes.name" + Environment.NewLine;
+            sqlStmt += $"              ,sys.indexes.is_primary_key" + Environment.NewLine;
+            sqlStmt += $"              ,sys.indexes.index_id" + Environment.NewLine;
+            sqlStmt += $"              ,sys.indexes.type_desc" + Environment.NewLine;
+            sqlStmt += $"              ,OBJECT_NAME(index_columns.object_id) AS TableName" + Environment.NewLine;
+            sqlStmt += $"              ,COL_NAME(index_columns.object_id, index_columns.column_id) AS ColumnName" + Environment.NewLine;
+            sqlStmt += $"              ,index_columns.key_ordinal" + Environment.NewLine;
+            sqlStmt += $"              ,sys.indexes.is_unique_constraint" + Environment.NewLine;
+            sqlStmt += $"          FROM sys.indexes" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN sys.tables" + Environment.NewLine;
+            sqlStmt += $"            ON sys.indexes.object_id = sys.tables.object_id" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN sys.schemas" + Environment.NewLine;
+            sqlStmt += $"            ON sys.tables.schema_id = sys.schemas.schema_id" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN sys.index_columns" + Environment.NewLine;
+            sqlStmt += $"            ON sys.indexes.object_id = index_columns.object_id" + Environment.NewLine;
+            sqlStmt += $"           AND sys.indexes.index_id = index_columns.index_id" + Environment.NewLine;
+            sqlStmt += $"         WHERE sys.schemas.name = '{table_Schema}'" + Environment.NewLine;
+            sqlStmt += $"           AND sys.tables.name = '{table_Name}'" + Environment.NewLine;
+            sqlStmt += $"      ORDER BY sys.indexes.name" + Environment.NewLine;
+            sqlStmt += $"              ,index_columns.key_ordinal" + Environment.NewLine;
+            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            #endregion
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            bool sqlDataReaderRead = sqlDataReader.Read();
+            bool is_primary_key, is_unique_constraint;
+            string index_name, index_columns, prefixString, type_desc;
+            while (sqlDataReaderRead)
+            {
+                index_name = sqlDataReader["name"].ToString();
+                is_primary_key = bool.Parse(sqlDataReader["is_primary_key"].ToString());
+                is_unique_constraint = bool.Parse(sqlDataReader["is_unique_constraint"].ToString());
+                type_desc = sqlDataReader["type_desc"].ToString();
+                index_columns = "";
+                prefixString = "";
+                while (sqlDataReaderRead && index_name == sqlDataReader["name"].ToString())
+                {
+                    index_columns += prefixString + "e." + sqlDataReader["ColumnName"].ToString();
+                    prefixString = ", ";
+                    sqlDataReaderRead = sqlDataReader.Read();
+                }
+                streamWriter.Write($"{Environment.NewLine}");
+                if (is_primary_key)
+                {
+                    streamWriter.Write($"            //{index_name} ({type_desc}) Primary Key{Environment.NewLine}");
+                    streamWriter.Write($"            entityTypeBuilder.HasKey(e => new {{ {index_columns} }}){Environment.NewLine}");
+                    streamWriter.Write($"                   .HasName(\"{index_name}\");{Environment.NewLine}");
+                }
+                else
+                {
+                    streamWriter.Write($"            //{index_name} ({type_desc}) Index{Environment.NewLine}");
+                    streamWriter.Write($"            entityTypeBuilder.HasIndex(e => new {{ {index_columns} }}){Environment.NewLine}");
+                    if (is_unique_constraint)
+                    {
+                        streamWriter.Write($"                   .IsUnique(){Environment.NewLine}");
+                    }
+                    if (type_desc == "CLUSTERED")
+                    {
+                        streamWriter.Write($"                   .IsClustered(){Environment.NewLine}");
+                    }
+                    streamWriter.Write($"                   .HasDatabaseName(\"{index_name}\");{Environment.NewLine}");
+                }
+                //streamWriter.Write($"            //{index_comments}{Environment.NewLine}");
+                //streamWriter.Write($"            //{index_columns}{Environment.NewLine}");
+            }
+            sqlDataReader.Close();
+        }
+
+        private void CreateForeignKey(StreamWriter streamWriter, string table_Schema, string table_Name, SqlConnection sqlConnection)
+        {
+            string sqlStmt = "";
+            SqlCommand sqlCommand;
+            SqlDataReader sqlDataReader;
+            int index;
+            #region
+            sqlStmt += $"        SELECT" + Environment.NewLine;
+            sqlStmt += $"               KCU1.TABLE_SCHEMA AS ReferencingSchema" + Environment.NewLine;
+            sqlStmt += $"              ,KCU1.TABLE_NAME AS ReferencingTableName" + Environment.NewLine;
+            sqlStmt += $"              ,KCU1.COLUMN_NAME AS ReferencingColumnName" + Environment.NewLine;
+            sqlStmt += $"              ,KCU2.TABLE_SCHEMA AS ReferencedSchema" + Environment.NewLine;
+            sqlStmt += $"              ,KCU2.TABLE_NAME AS ReferencedTableName" + Environment.NewLine;
+            sqlStmt += $"              ,KCU2.COLUMN_NAME AS ReferencedColumnName" + Environment.NewLine;
+            sqlStmt += $"              ,RC.CONSTRAINT_NAME AS ForeignKeyName" + Environment.NewLine;
+            sqlStmt += $"          FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 ON RC.CONSTRAINT_NAME = KCU1.CONSTRAINT_NAME" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2 ON RC.UNIQUE_CONSTRAINT_NAME = KCU2.CONSTRAINT_NAME" + Environment.NewLine;
+            sqlStmt += $"         WHERE" + Environment.NewLine;
+            sqlStmt += $"               KCU2.TABLE_SCHEMA = '{table_Schema}'" + Environment.NewLine;
+            sqlStmt += $"           AND KCU2.TABLE_NAME = '{table_Name}'" + Environment.NewLine;
+            sqlStmt += $"      ORDER BY ReferencedSchema, ReferencedTableName, ReferencingSchema, ReferencingTableName" + Environment.NewLine;
+            sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlDataReader = sqlCommand.ExecuteReader();
+            #endregion
+            index = -1;
+            while (sqlDataReader.Read())
+            {
+                index++;
+                streamWriter.Write($"        public List<{sqlDataReader["ReferencingTableName"].ToString()}>? {sqlDataReader["ReferencingTableName"].ToString()}s{index} {{ get; set; }}{Environment.NewLine}");
+            }
+            sqlDataReader.Close();
+            //TODO - Reverse of above
+            #region
+            sqlStmt += $"        SELECT" + Environment.NewLine;
+            sqlStmt += $"               KCU1.TABLE_SCHEMA AS ReferencingSchema" + Environment.NewLine;
+            sqlStmt += $"              ,KCU1.TABLE_NAME AS ReferencingTableName" + Environment.NewLine;
+            sqlStmt += $"              ,KCU1.COLUMN_NAME AS ReferencingColumnName" + Environment.NewLine;
+            sqlStmt += $"              ,KCU2.TABLE_SCHEMA AS ReferencedSchema" + Environment.NewLine;
+            sqlStmt += $"              ,KCU2.TABLE_NAME AS ReferencedTableName" + Environment.NewLine;
+            sqlStmt += $"              ,KCU2.COLUMN_NAME AS ReferencedColumnName" + Environment.NewLine;
+            sqlStmt += $"              ,RC.CONSTRAINT_NAME AS ForeignKeyName" + Environment.NewLine;
+            sqlStmt += $"          FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 ON RC.CONSTRAINT_NAME = KCU1.CONSTRAINT_NAME" + Environment.NewLine;
+            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2 ON RC.UNIQUE_CONSTRAINT_NAME = KCU2.CONSTRAINT_NAME" + Environment.NewLine;
+            sqlStmt += $"         WHERE" + Environment.NewLine;
+            sqlStmt += $"               KCU1.TABLE_SCHEMA = '{table_Schema}'" + Environment.NewLine;
+            sqlStmt += $"           AND KCU1.TABLE_NAME = '{table_Name}'" + Environment.NewLine;
+            sqlStmt += $"      ORDER BY ReferencedSchema, ReferencedTableName, ReferencingSchema, ReferencingTableName" + Environment.NewLine;
+            sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+            sqlDataReader = sqlCommand.ExecuteReader();
+            #endregion
+            index = -1;
+            while (sqlDataReader.Read())
+            {
+                index++;
+                streamWriter.Write($"        public {sqlDataReader["ReferencedTableName"].ToString()}? {sqlDataReader["ReferencedTableName"].ToString()}s{index} {{ get; set; }}{Environment.NewLine}");
+            }
+            sqlDataReader.Close();
         }
 
         // GET: AboutUs
@@ -494,6 +880,8 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(loginUserProfModel);
                 string currentLoggedInUserId = loggedInUserId;
                 SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                 if (ModelState.IsValid)
                 {
                     var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
@@ -537,74 +925,76 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: OTP
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult OTP(string id, string emailAddress)
-        {
-            ViewData["ActionName"] = "OTP";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            bool success;
-            string processMessage, htmlString;
-            string oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration;
-            try
-            {
-                OTPSendTypeEnum oTPSendTypeId;
-                try
-                {
-                    ModelState.Clear();
-                    oTPSendTypeId = (OTPSendTypeEnum)long.Parse(id);
-                    OTPModel oTPModel = archLibBL.OTP(id, emailAddress, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    success = ModelState.IsValid;
-                    if (success)
-                    {
-                        processMessage = "SUCCESS!!!";
-                        htmlString = "OTP generated successfully";
-                        oTPExpiryDate = oTPModel.OTPExpiryDate;
-                        oTPExpiryTime = oTPModel.OTPExpiryTime;
-                        oTPExpiryDuration = oTPModel.OTPExpiryDuration.ToString();
-                    }
-                    else
-                    {
-                        processMessage = "ERROR???";
-                        htmlString = "Error occurred while generating OTP";
-                        oTPExpiryDate = "Error";
-                        oTPExpiryTime = "Error";
-                        oTPExpiryDuration = "Error";
-                    }
-                }
-                catch (Exception exception)
-                {
-                    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                    success = false;
-                    processMessage = "ERROR???";
-                    htmlString = "Error while generating OTP";
-                    oTPExpiryDate = "Error";
-                    oTPExpiryTime = "Error";
-                    oTPExpiryDuration = "Error";
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = "Error while generating OTP";
-                oTPExpiryDate = "";
-                oTPExpiryTime = "";
-                oTPExpiryDuration = "";
-            }
-            actionResult = Json(new { success, processMessage, htmlString, oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration }, JsonRequestBehavior.AllowGet);
-            //Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
-            return actionResult;
-            //string url = "/Home/Forbidden";
-            //return JavaScript(string.Format("window.open('{0}', '_blank', 'left=100,top=100,width=500,height=500,toolbar=no,resizable=no,scrollable=yes');", url));
-        }
+        #region Commented Code
+        //// GET: OTP
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public ActionResult OTP(string id, string emailAddress)
+        //{
+        //    ViewData["ActionName"] = "OTP";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    string oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration;
+        //    try
+        //    {
+        //        OTPSendTypeEnum oTPSendTypeId;
+        //        try
+        //        {
+        //            ModelState.Clear();
+        //            oTPSendTypeId = (OTPSendTypeEnum)long.Parse(id);
+        //            OTPModel oTPModel = archLibBL.OTP(id, emailAddress, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            success = ModelState.IsValid;
+        //            if (success)
+        //            {
+        //                processMessage = "SUCCESS!!!";
+        //                htmlString = "OTP generated successfully";
+        //                oTPExpiryDate = oTPModel.OTPExpiryDate;
+        //                oTPExpiryTime = oTPModel.OTPExpiryTime;
+        //                oTPExpiryDuration = oTPModel.OTPExpiryDuration.ToString();
+        //            }
+        //            else
+        //            {
+        //                processMessage = "ERROR???";
+        //                htmlString = "Error occurred while generating OTP";
+        //                oTPExpiryDate = "Error";
+        //                oTPExpiryTime = "Error";
+        //                oTPExpiryDuration = "Error";
+        //            }
+        //        }
+        //        catch (Exception exception)
+        //        {
+        //            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            htmlString = "Error while generating OTP";
+        //            oTPExpiryDate = "Error";
+        //            oTPExpiryTime = "Error";
+        //            oTPExpiryDuration = "Error";
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = "Error while generating OTP";
+        //        oTPExpiryDate = "";
+        //        oTPExpiryTime = "";
+        //        oTPExpiryDuration = "";
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString, oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration }, JsonRequestBehavior.AllowGet);
+        //    //Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+        //    return actionResult;
+        //    //string url = "/Home/Forbidden";
+        //    //return JavaScript(string.Format("window.open('{0}', '_blank', 'left=100,top=100,width=500,height=500,toolbar=no,resizable=no,scrollable=yes');", url));
+        //}
+        #endregion
 
         // GET: PicGallery
         [AllowAnonymous]
@@ -689,6 +1079,87 @@ namespace RetailSlnWeb.Controllers
                 ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
                 actionResult = View("Error", responseObjectModel);
             }
+            return actionResult;
+        }
+
+        // GET: RegisterUserOTP
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("RegisterUserOTP/{id?}")]
+        public ActionResult RegisterUserOTP(string id)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "RegisterUserOTP";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                RegisterUserOTPModel registerUserOTPModer = archLibBL.RegisterUserOTP(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("RegisterUserOTP", registerUserOTPModer);
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = View("Error", responseObjectModel);
+            }
+            return actionResult;
+        }
+
+        // GET: RegisterUserOTP
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult RegisterUserOTP(RegisterUserOTPModel registerUserOTPModel)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "RegisterUserOTP";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                int x = 1, y = 0, z = x / y;
+                ModelState.Clear();
+                TryValidateModel(registerUserOTPModel);
+                TryValidateModel(registerUserOTPModel.OTPModel, "OTPModel");
+                if (ModelState.IsValid)
+                {
+                    success = true;
+                    processMessage = "SUCCESS!!!";
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Model State Success");
+                    //RegisterUserOTPModel registerUserOTPModel = archLibBL.RegisterUserOTP(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    success = false;
+                    processMessage = "ERROR???";
+                    registerUserOTPModel.OTPResponseModel = new OTPResponseModel();
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model State Errors");
+                }
+                //actionResult = View("RegisterUserOTP", registerUserOTPModel);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                processMessage = "ERROR???";
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                //actionResult = View("Error", responseObjectModel);
+            }
+            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserOTPData", registerUserOTPModel);
+            actionResult = Json(new { success, processMessage, htmlString });
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 
@@ -894,6 +1365,8 @@ namespace RetailSlnWeb.Controllers
                         LoginPassword = registerUserModel.LoginPassword,
                     };
                     SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+                    sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                     redirectUrl = LoginUserProfProcess(sessionObjectModel.AspNetUserId, sessionObjectModel);
                     success = true;
                     processMessage = "SUCCESS!!!";
@@ -1344,14 +1817,8 @@ namespace RetailSlnWeb.Controllers
             var ctx = Request.GetOwinContext();
             var authManager = ctx.Authentication;
             authManager.SignIn(identity);
-            string aspNetRoleName, redirectUrl;
-            aspNetRoleName = sessionObjectModel.AspNetRoleName;
-            Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-            if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
-            {
-                aspNetRoleName = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-            }
+            string redirectUrl;
+            Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleNameProxy];
             redirectUrl = Url.Action(aspNetRoleKVPs["ActionName00"].KVPValueData, aspNetRoleKVPs["ControllerName00"].KVPValueData);
             PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
             //retailSlnBL.CreateOrderWIP(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
