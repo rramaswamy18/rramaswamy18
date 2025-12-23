@@ -17,7 +17,7 @@ namespace RetailSlnBusinessLayer
 {
     public partial class RetailSlnBL
     {
-        public ApplSessionObjectModel LoginUserProf(long personId, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ApplSessionObjectModel LoginUserProf(long personId, string aspNetRoleName, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ArchitectureLibraryException.ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -26,6 +26,13 @@ namespace RetailSlnBusinessLayer
             {
                 ApplicationDataContext.OpenSqlConnection();
                 PersonExtn1Model personExtn1Model = ApplicationDataContext.PersonExtn1FromPersonIdGet(personId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (personExtn1Model == null && aspNetRoleName == "GUESTROLE")
+                {
+                    personExtn1Model = new PersonExtn1Model
+                    {
+                        CorpAcctId = 0,
+                    };
+                }
                 ApplSessionObjectModel applSessionObjectModel = new ApplSessionObjectModel
                 {
                     CorpAcctModel = RetailSlnCache.CorpAcctModels.First(x => x.CorpAcctId == personExtn1Model.CorpAcctId),

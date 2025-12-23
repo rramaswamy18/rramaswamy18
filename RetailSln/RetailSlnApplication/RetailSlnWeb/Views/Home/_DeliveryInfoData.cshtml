@@ -1,51 +1,441 @@
-﻿@using RetailSlnModels
-@model PaymentInfoModel
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryEnumerations
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@model DeliveryInfoModel
+<style>
+    .container {
+        align-items: stretch; /* Ensures columns stretch to the height of the tallest column */
+        display: flex; /* Enables Flexbox for the container */
+        flex-wrap: wrap; /* Allows columns to wrap to the next line on smaller screens */
+        gap: 9px; /* Adds space between columns */
+        width: 99%;
+    }
+
+    .column {
+        flex: 1; /* Allows columns to grow and shrink proportionally */
+        min-width: 153px; /* Minimum width before wrapping to the next line */
+        background-color: #f0f0f0; /* Example background color */
+        padding: 9px; /* Example padding */
+        box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+        display: flex; /* Enables Flexbox for individual columns */
+        flex-direction: column; /* Stacks content within the column vertically */
+        /*justify-content: center;*/ /* Vertically centers content within each column */
+    }
+
+    /* Media query for smaller screens (e.g., mobile) */
+    @@media (max-width: 630px) {
+        .column {
+            flex-basis: 100%; /* Columns take full width on smaller screens */
+        }
+    }
+</style>
 <style>
     #OrderSummaryModel_FirstName-error, #OrderSummaryModel_LastName-error, #CouponPaymentModel_CouponNumber-error,
     #DeliveryAddressModel_AddressLine1-error, #DeliveryAddressModel_AddressLine2-error,
     #DeliveryAddressModel_BuildingTypeId-error, #DeliveryAddressModel_CityName-error, #DeliveryAddressModel_ZipCode-error,
     #DeliveryAddressModel_DemogInfoSubDivisionId-error, #DeliveryAddressModel_HouseNumber-error,
-    #DeliveryDataModel_DeliveryInstructions-error, #PaymentModeModel_PaymentModeId-error,
+    #DeliveryDataModel_DeliveryInstructions-error, #DeliveryAddressModel_BuildingTypeId-error,
+    #DeliveryDataModel_AlternateTelephoneDemogInfoCountryId-error, #GiftCertPaymentModel_GiftCertNumber-error,
+    #GiftCertPaymentModel_GiftCertKey-error, #DeliveryAddressModel_DemogInfoCountryId-error,
     #DeliveryMethodModel_DeliveryMethodIdPickupLocationId-error, #DeliveryDataModel_PrimaryTelephoneNum-error,
-    #DeliveryDataModel_AlternateTelephoneNum-error, #DeliveryDataModel_PrimaryTelephoneDemogInfoCountryId-error {
+    #DeliveryDataModel_AlternateTelephoneNum-error, #DeliveryDataModel_PrimaryTelephoneDemogInfoCountryId-error,
+    #OrderSummaryModel_AdditionalCharges-error, #PaymentModeModel_PaymentModeId-error, #OrderSummaryModel_EmailAddress-error {
         color: #ff0000;
         display: block;
         font-size: 12px;
         font-weight: bold;
     }
 </style>
-<div class="col-md-12" style="text-align: left;">
-    @{
-        if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
-        {
-            <div class="row validationSummaryMessage" style="padding-left: 27px;">
-                @Model.ResponseObjectModel.ValidationSummaryMessage
-            </div>
-        }
+@{
+    #region
+    SessionObjectModel sessionObject = (SessionObjectModel)Session["SessionObject"];
+    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+    var username = sessionObject.TelephoneCountryId + "_" + sessionObject.PhoneNumber;
+    var createForUsername = createForSessionObject.TelephoneCountryId + "_" + createForSessionObject.PhoneNumber;
+    var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
+    //Model.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId = createForSessionObject.TelephoneCountryId;
+    //Model.DeliveryDataModel.PrimaryTelephoneNum = createForSessionObject.PhoneNumber;
+    var demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.FirstOrDefault(x => x.DemogInfoCountryId == Model.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId);
+    var primaryTelephoneFormatted = "+" + demogInfoCountryModel.TelephoneCode.Value.ToString() + " " + long.Parse(Model.DeliveryDataModel.PrimaryTelephoneNum).ToString(demogInfoCountryModel.TelephoneFormat);
+    Model.DeliveryDataModel.PrimaryTelephoneFormatted = primaryTelephoneFormatted;
+    //Model.DeliveryAddressModel.BuildingTypeId = Model.DeliveryAddressModel.BuildingTypeId ?? BuildingTypeEnum._;
+    //Model.DeliveryAddressModel.DemogInfoCountryId = Model.DeliveryAddressModel.DemogInfoCountryId ?? RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
+    //Model.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
+    Model.DeliveryAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+    Model.DeliveryAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
+    Model.DeliveryAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
+    Model.PaymentModeModel.PaymentModes = RetailSlnCache.PaymentModesList[applSessionObjectModel.CorpAcctModel.CreditSale.Value];
+    Model.DeliveryMethodModel.DeliveryMethods = RetailSlnCache.DeliveryMethodsList[applSessionObjectModel.CorpAcctModel.CreditSale.Value];
+    Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PickupLocationDemogInfoAddressModels2 : RetailSlnCache.PickupLocationDemogInfoAddressModels1;
+    int i, fromIndex, toIndex;
+    if (applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes)
+    {
+        fromIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count - 1;
+        toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count;
+    }
+    else
+    {
+        fromIndex = 0;
+        toIndex = RetailSlnCache.DeliveryMethodSelectListItems.Count - 1;
+    }
+    Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems = new List<SelectListItem>();
+    for (i = fromIndex; i < toIndex; i++)
+    {
+        Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Add(RetailSlnCache.DeliveryMethodSelectListItems[i]);
+    }
+    bool messageFlag = false;
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        messageFlag = true;
+    }
+    else
+    {
         if (!ViewData.ModelState.IsValid)
         {
-            <div class="row" style="padding-left: 27px;">
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
-            </div>
-        }
-        if (Model != null && Model.ResponseObjectModel != null)
-        {
-            <div class="row" style="padding-left: 27px;">
-                @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-            </div>
-        }
-        bool mobileDevice = Request.Browser.IsMobileDevice;
-        //mobileDevice = true;
-        if (mobileDevice)
-        {
-            @Html.Partial("_DeliveryInfoData2", Model)
+            messageFlag = true;
         }
         else
         {
-            @Html.Partial("_DeliveryInfoData1", Model)
+            if (Model != null && Model.ResponseObjectModel != null && Model.ResponseObjectModel.ResponseMessages.Count > 0)
+            {
+                messageFlag = true;
+            }
         }
     }
+    #endregion
+}
+@Html.HiddenFor(m => m.OrderSummaryModel.EmailExists)
+@Html.HiddenFor(m => m.OrderSummaryModel.InvoiceTypeId)
+@Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId)
+@Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneNum)
+@Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted)
+@if (createForSessionObject.AspNetRoleName == "GUESTROLE")
+{
+    <div class="container">
+        <div class="column" style="color: #a54000; font-size: 14px; font-weight: bold; width: 90%;">
+            You are checking out as Guest. Feel free to register and be part of our family
+        </div>
+    </div>
+}
+@if (messageFlag)
+{
+    <div class="container">
+        <div class="column" style="width: 90%;">
+            @{
+                if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+                {
+                    <div class="row validationSummaryMessage" style="padding-left: 27px;">
+                        @Model.ResponseObjectModel.ValidationSummaryMessage
+                    </div>
+                }
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row" style="padding-left: 27px;">
+                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+                    </div>
+                }
+                if (Model != null && Model.ResponseObjectModel != null)
+                {
+                    <div class="row" style="padding-left: 27px;">
+                        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+<div class="container">
+    <div class="column">
+        @if (Model.OrderSummaryModel.EmailExists)
+        {
+            <div class="row" style="padding-left: 9px; text-align: left;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="text-align: left; vertical-align: top; width: 45%; word-break: break-all;">
+                            @Html.LabelFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted, new { @class = "col-form-label" })
+                            <br />
+                            <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@primaryTelephoneFormatted</span>
+                        </td>
+                        <td style="text-align: left; vertical-align: top;; width: 50%; word-break: break-all;">
+                            @if (Model.OrderSummaryModel.EmailExists)
+                            {
+                                @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })
+                                <br />
+                                <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@Model.OrderSummaryModel.EmailAddress</span>
+                                @Html.HiddenFor(m => m.OrderSummaryModel.EmailAddress)
+                            }
+                            else
+                            {
+                                @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })<span style="color: #0000ff; font-weight: bold;">&nbsp;(Required)</span>
+                                @Html.TextAreaFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "form-control", maxlength = "256", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.EmailAddress), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter email address" })
+                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.EmailAddress, "", new { id = "OrderSummaryModel_EmailAddress-error" }).ToHtmlString()))
+                            }
+                        </td>
+                        <td style="text-align: left; width: 50%;">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="row" style="padding-left: 9px; text-align: left;">
+                @Html.LabelFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted, new { @class = "col-form-label" })
+                <br />
+                <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@primaryTelephoneFormatted</span>
+            </div>
+            <div class="row" style="padding-left: 9px; text-align: left;">
+                @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })<span style="color: #0000ff; font-weight: bold;">&nbsp;(Required)</span>
+                @Html.TextAreaFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "form-control", maxlength = "256", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.EmailAddress), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter email address" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.EmailAddress, "", new { id = "OrderSummaryModel_EmailAddress-error" }).ToHtmlString()))
+            </div>
+        }
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            <div style="display: table-cell; padding: 0px; width: 45%;">
+                @Html.LabelFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "col-form-label" })
+                @Html.TextBoxFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "form-control validate", maxlength = "5", min = "1", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.AdditionalCharges), oninput = "javascript: return orderQty2_oninput(this, '');", style = "width: 54%;", title = "Enter additional charges, if any" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.AdditionalCharges, "", new { id = "OrderSummaryModel_AdditionalCharges-error" }).ToHtmlString()))
+            </div>
+            <div style="display: table-cell; padding: 0px; text-align: left; width: 50%;">
+                @Html.LabelFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "col-form-label" })
+                @Html.TextBoxFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "form-control validate", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.CouponPaymentModel.CouponNumber), style = "width: 99%;", title = "Enter coupon#, if any and if applicable" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CouponPaymentModel.CouponNumber, "", new { id = "CouponPaymentModel_CouponNumber-error" }).ToHtmlString()))
+            </div>
+            <div style="display: table-cell; padding: 0px; text-align: left; width: 5%;">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.OrderSummaryModel.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextAreaFor(m => m.OrderSummaryModel.FirstName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.FirstName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter first name" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.FirstName, "", new { id = "OrderSummaryModel_FirstName-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.OrderSummaryModel.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter last name" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.LastName, "", new { id = "OrderSummaryModel_LastName-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.GiftCertPaymentModel.GiftCertNumber, new { @class = "col-form-label" })
+            <div>
+                @Html.TextBoxFor(m => m.GiftCertPaymentModel.GiftCertNumber, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertPaymentModel.GiftCertNumber), style = "float: left; width: 79%;", title = "Enter gift cert#, if any", type = "password" })
+                <span style="float: left; padding-left: 3px;">&nbsp;</span>
+                <button class="btn btn-primary" id="giftCertNumber" onmouseout="javascript: return showHideForHide('GiftCertNumber', 'password');" onmouseover="javascript: return showHideForShow('GiftCertPaymentModel_GiftCertNumber', 'text');" type="button" style="float: left; padding-left  : 18px; width: 50px;">
+                    <span class="fa fa-eye-slash icon"></span>
+                </button>
+            </div>
+            @Html.Raw(HttpUtility.HtmlDecode("<br />" + Html.ValidationMessageFor(m => m.GiftCertPaymentModel.GiftCertNumber, "", new { id = "GiftCertPaymentModel_GiftCertNumber-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.GiftCertPaymentModel.GiftCertKey, new { @class = "col-form-label" })
+            <div>
+                @Html.TextBoxFor(m => m.GiftCertPaymentModel.GiftCertKey, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.GiftCertPaymentModel.GiftCertKey), style = "float: left; width: 79%;", title = "Enter gift cert key", type = "password" })
+                <span style="float: left; padding-left: 3px;">&nbsp;</span>
+                <button class="btn btn-primary" id="giftCertKey" onmouseout="javascript: return showHideForHide('GiftCertPaymentModel_GiftCertKey', 'password');" onmouseover="javascript: return showHideForShow('GiftCertPaymentModel_GiftCertKey', 'text');" type="button" style="float: left; padding-left: 18px; width: 50px;">
+                    <span class="fa fa-eye-slash icon"></span>
+                </button>
+            </div>
+            @Html.Raw(HttpUtility.HtmlDecode("<br />" + Html.ValidationMessageFor(m => m.GiftCertPaymentModel.GiftCertKey, "", new { id = "GiftCertPaymentModel_GiftCertKey-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div class="column">
+        @{
+            if (string.IsNullOrWhiteSpace(Model.CompleteOrderModel.ApproverSignatureTextValue))
+            {
+                Model.CompleteOrderModel.ApproverSignatureTextValue = (Model.OrderSummaryModel.FirstName + " " + Model.OrderSummaryModel.LastName).Trim();
+            }
+            if (username != createForUsername)
+            {
+                Model.CompleteOrderModel.ApprovalRequired = true;
+                var codeDataModels = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SignatureText", "");
+                <div class="row" style="padding-left: 9px; text-align: left;">
+                    @Html.LabelFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+                    @Html.TextAreaFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", oninput = "javascript: ApproverSignatureTextValue_oninput2('CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);", placeholder = @Html.DisplayNameFor(m => m.CompleteOrderModel.ApproverSignatureTextValue), style = "font-size; 25px; height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter your signature" })
+                    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CompleteOrderModel.ApproverSignatureTextValue, "", new { id = "CompleteOrderModel_ApproverSignatureTextValue-error" }).ToHtmlString()))
+                </div>
+                <div class="row" style="padding-left: 9px; text-align: left;">
+                    @Html.LabelFor(m => m.CompleteOrderModel.ApproverSignatureTextId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+                    <select class="form-control" id="CompleteOrderModel_ApproverSignatureTextId" name="CompleteOrderModel.ApproverSignatureTextId" onchange="javascript: ApproverSignatureTextValue_oninput2('CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');" style="width: 90%;">
+                        <option value="" style="font-family: Arial;">--- Select Signature ---</option>
+                        @foreach (var codeDataModel in codeDataModels)
+                        {
+                            if (codeDataModel.CodeDataNameId > 0)
+                            {
+                                <option style="font-family: @(codeDataModel.CodeDataDesc0); font-size: @(codeDataModel.CodeDataDesc1); font-weight: bold;" value="@codeDataModel.CodeDataNameId">@Model.CompleteOrderModel.ApproverSignatureTextValue</option>
+                            }
+                        }
+                    </select>
+                    <span id="CompleteOrderModel_ApproverSignatureTextValue_Selected" style="color: #000000;">@Model.CompleteOrderModel.ApproverSignatureTextValue</span>
+                </div>
+            }
+            else
+            {
+                Model.CompleteOrderModel.ApprovalRequired = false;
+                Model.CompleteOrderModel.ApproverSignatureTextId = 0;
+                @Html.HiddenFor(m => m.CompleteOrderModel.ApproverSignatureTextId)
+                @Html.HiddenFor(m => m.CompleteOrderModel.ApproverSignatureTextValue)
+            }
+            @Html.HiddenFor(m => m.CompleteOrderModel.ApprovalRequired)
+        }
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.PaymentModeModel.PaymentModeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @if (Model.PaymentModeModel.PaymentModes.Count == 1)
+            {
+                @Html.DropDownListFor(m => m.PaymentModeModel.PaymentModeId, new SelectList(Model.PaymentModeModel.PaymentModes, "CodeDataNameId", "CodeDataDesc0", Model.PaymentModeModel.PaymentModeId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select payment method" })
+            }
+            else
+            {
+                @Html.DropDownListFor(m => m.PaymentModeModel.PaymentModeId, new SelectList(Model.PaymentModeModel.PaymentModes, "CodeDataNameId", "CodeDataDesc0", Model.PaymentModeModel.PaymentModeId), "--- Select Payment ---", new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select payment method" })
+            }
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.PaymentModeModel.PaymentModeId, "", new { id = "PaymentModeModel_PaymentModeId-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @if (Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Count == 1)
+            {
+                @Html.DropDownListFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new SelectList(Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems, "Value", "Text", Model.DeliveryMethodModel.DeliveryMethodId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select delivery method" })
+            }
+            else
+            {
+                @Html.DropDownListFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, new SelectList(Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems, "Value", "Text", Model.DeliveryMethodModel.DeliveryMethodId), "--- Select Delivery ---", new { @class = "form-control", onchange = "javascript: return deliveryMethodIdPickupLocationId_onchange(this);", style = "font-size: 13px; width: 95%;", title = "Select delivery method" })
+            }
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryMethodModel.DeliveryMethodIdPickupLocationId, "", new { id = "DeliveryMethodModel_DeliveryMethodIdPickupLocationId-error" }).ToHtmlString()))
+            @{
+                int startIndex;
+                string styleDisplay;
+                if (Model.DeliveryMethodModel.DeliveryMethodPickupLocationSelectListItems.Count == 1)
+                {
+                    startIndex = 0;
+                    styleDisplay = "block";
+                }
+                else
+                {
+                    startIndex = 1;
+                    styleDisplay = "none";
+                }
+                DemogInfoAddressModel demogInfoAddressModel = null;
+                if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > -1)
+                {
+                    demogInfoAddressModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId).DemogInfoAddressModel;
+                }
+                foreach (var pickupLocationDemogInfoAddressModel in Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels)
+                {
+                    if (pickupLocationDemogInfoAddressModel.DemogInfoAddressId < 1)
+                    {
+                        <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                            We will deliver at at the specified address
+                            <br />
+                            <span style="color: #ff0000; font-size: 12px; font-weight: bold;">Shipping & Handling charges apply</span>
+                        </div>
+                    }
+                    else
+                    {
+                        if (demogInfoAddressModel != null && demogInfoAddressModel.DemogInfoAddressId == pickupLocationDemogInfoAddressModel.DemogInfoAddressId)
+                        {
+                            styleDisplay = "block";
+                        }
+                        <div id="divPickupLocationAddress@(startIndex)" style="display: @(styleDisplay);">
+                            <span style="color: #0000ff; font-size: 12px; font-weight: bold;">Pickup from...</span><span style="color: #ff0000; font-size: 12px; font-weight: bold; padding-left: 9px;">No Shipping & Handling charges</span>
+                            <br />
+                            @RetailSlnCache.PickupLocationModels[startIndex - 1].LocationDesc
+                            <br />
+                            @pickupLocationDemogInfoAddressModel.AddressLine1
+                            <br />
+                            @if (!string.IsNullOrEmpty(pickupLocationDemogInfoAddressModel.AddressLine2))
+                            {
+                                @pickupLocationDemogInfoAddressModel.AddressLine2<br />
+                            }
+                            @(pickupLocationDemogInfoAddressModel.CityName + " " + pickupLocationDemogInfoAddressModel.StateAbbrev + " " + pickupLocationDemogInfoAddressModel.ZipCode)
+                        </div>
+                        styleDisplay = "none";
+                    }
+                    startIndex++;
+                }
+            }
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId, new { @class = "col-form-label" })
+            @Html.DropDownListFor(m => m.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId, new SelectList(DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId), "---", new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select country for alt phone" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId, "", new { id = "DeliveryDataModel_AlternateTelephoneDemogInfoCountryId-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryDataModel.AlternateTelephoneNum, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.DeliveryDataModel.AlternateTelephoneNum, new { @class = "form-control validate", placeholder = @Html.DisplayNameFor(m => m.DeliveryDataModel.AlternateTelephoneNum), style = "width: 95%;", title = "Enter alt phone" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.AlternateTelephoneNum, "", new { id = "DeliveryDataModel_AlternateTelephoneNum-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryAddressModel.DemogInfoCountryId, "Delivery " + Html.DisplayNameFor(m => m.DeliveryAddressModel.DemogInfoCountryId), new { @class = "col-form-label" })
+            @if (Model.DeliveryAddressModel.DemogInfoCountrySelectListItems.Count > 1)
+            {
+                @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(Model.DeliveryAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), "---", new { @class = "form-control", onchange = "javascript: demogInfoCountry_onchage(this);", style = "font-size: 13px; width: 95%;", title = "Select country for delivery" })
+            }
+            else
+            {
+                @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoCountryId, new SelectList(Model.DeliveryAddressModel.DemogInfoCountrySelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoCountryId), null, new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select country for delivery address" })
+            }
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.DemogInfoCountryId, "", new { id = "DeliveryAddressModel_DemogInfoCountryId-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            <div style="float: left; padding: 0px; width: 50%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.BuildingTypeId, new { @class = "col-form-label" })
+                @Html.DropDownListFor(m => m.DeliveryAddressModel.BuildingTypeId, new SelectList(Model.DeliveryAddressModel.BuildingTypeSelectListItems, "Value", "Text", Model.DeliveryAddressModel.BuildingTypeId), "---", new { @class = "form-control", style = "font-size: 13px; width: 85%;", title = "Select building type for delivery address" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.BuildingTypeId, "", new { id = "DeliveryAddressModel_BuildingTypeId-error" }).ToHtmlString()))
+            </div>
+            <div style="float: left; padding: 0px; width: 50%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.HouseNumber, new { @class = "col-form-label" })
+                @Html.TextBoxFor(m => m.DeliveryAddressModel.HouseNumber, new { @class = "form-control validate", maxlength = "50", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.HouseNumber), style = "width: 90%;", title = "Enter house# delivery address, if any" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.HouseNumber, "", new { id = "DeliveryAddressModel_HouseNumber-error" }).ToHtmlString()))
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
+            @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onblur = "", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 1 for delivery" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.AddressLine1, "", new { id = "DeliveryAddressModel_AddressLine1-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "col-form-label" })
+            @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 2 for delivery, if any" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.AddressLine2, "", new { id = "DeliveryAddressModel_AddressLine2-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            <div style="display: table-cell; padding: 0px; width: 28%;">
+                <input id="cityNameZipCodeDataListIds" type="hidden" />
+                @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoCityId)
+                @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipId)
+                @Html.HiddenFor(m => m.DeliveryAddressModel.DemogInfoZipPlusId)
+                @Html.LabelFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "col-form-label", style = "font-size: 12px;" })<span style="color: #0000ff; font-size: 12px; font-weight: bold;">*</span>
+                @Html.TextBoxFor(m => m.DeliveryAddressModel.ZipCode, new { @class = "form-control validate", list = "zipCodeDataList", maxlength = "50", onblur = "javascript: return zipCode_onblur('DeliveryAddressModel_');", oninput = "javascript: return zipCode_oninput('DeliveryAddressModel_');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.ZipCode), style = "width: 91%;", title = "Enter postal code for delivery address" })
+                <i class="fa fa-check" id="zipCodeSuccess" style="color: #00d000; display: none; font-size: 12px;"></i>
+                <i class="fa fa-remove" id="zipCodeFailure" style="color: #ff0000; display: none; font-size: 12px;"></i>
+                <datalist id="zipCodeDataList">
+                </datalist>
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.ZipCode, "", new { id = "DeliveryAddressModel_ZipCode-error" }).ToHtmlString()))
+            </div>
+            <div style="display: table-cell; padding: 0px; width: 36%;">
+                @Html.LabelFor(m => m.DeliveryAddressModel.CityName, new { @class = "col-form-label", style = "font-size: 12px;" })<span style="color: #0000ff; font-size: 10px; font-weight: bold;">*</span>
+                @Html.TextBoxFor(m => m.DeliveryAddressModel.CityName, new { @class = "form-control validate", list = "cityNameDataList", maxlength = 250, onblur = "javascript: return cityName_onblur('DeliveryAddressModel_');", oninput = "javascript: return cityName_oninput('DeliveryAddressModel_');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.CityName), style = "width: 91%;", title = "Enter city for delivery address" })
+                <i class="fa fa-check" id="cityNameSuccess" style="color: #00d000; display: none; padding-left: 1px;"></i>
+                <i class="fa fa-remove" id="cityNameFailure" style="color: #ff0000; display: none; padding-left: 1px;"></i>
+                <datalist id="cityNameDataList">
+                </datalist>
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.CityName, "", new { id = "DeliveryAddressModel_CityName-error" }).ToHtmlString()))
+            </div>
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryAddressModel.DemogInfoSubDivisionId, new { @class = "col-form-label", style = "font-size: 12px;" })<span style="color: #0000ff; font-size: 12px; font-weight: bold;">*</span>
+            @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoSubDivisionId, new SelectList(Model.DeliveryAddressModel.DemogInfoSubDivisionSelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoSubDivisionId), "---", new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select state for delivery address" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.DemogInfoSubDivisionId, "", new { id = "DeliveryAddressModel_DemogInfoSubDivisionId-error" }).ToHtmlString()))
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "col-form-label" })
+            @Html.TextAreaFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(m => m.DeliveryDataModel.DeliveryInstructions) + " (if any...)", rows = "5", style = "width: 95%;", title = "Enter instructions for delivery, if any" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.DeliveryInstructions, "", new { id = "DeliveryDataModel_DeliveryInstructions-error" }).ToHtmlString()))
+        </div>
+    </div>
 </div>
-<div class="row" style="text-align: center;">
-    <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 54%;" type="button">Process</button>
-</div>
+<br style="clear: both;" />

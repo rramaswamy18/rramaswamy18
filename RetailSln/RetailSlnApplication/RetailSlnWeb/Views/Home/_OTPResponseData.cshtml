@@ -1,46 +1,59 @@
 ﻿@using ArchitectureLibraryModels
 @model OTPResponseModel
 <style>
-    #OTPCode-error {
+    #OTPCode-error, #EmailAddress-error {
         color: #ff0000;
         display: block;
         font-size: 12px;
         font-weight: bold;
     }
 </style>
+@Html.HiddenFor(m => m.AspNetUserId)
+@Html.HiddenFor(m => m.OTPDataId)
+@Html.HiddenFor(m => m.TelephoneCountryId)
+@Html.HiddenFor(m => m.TelephoneNumber)
+@Html.HiddenFor(m => m.TelephoneNumberFormatted)
 @{
-    bool mobileDevice = Request.Browser.IsMobileDevice;
-    string paddingLeft;
-    if (mobileDevice)
-    {
-        paddingLeft = "9px;";
-    }
-    else
-    {
-        paddingLeft = "0px;";
-    }
     if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
     {
-        <div class="row validationSummaryMessage">
+        <div class="box validationSummaryMessage">
             @Model.ResponseObjectModel.ValidationSummaryMessage
         </div>
     }
     if (!ViewData.ModelState.IsValid)
     {
-        <div class="row">
-            @if (mobileDevice)
-            {
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "font-size: 12px;" }).ToHtmlString()))
-            }
-            else
-            {
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 12px;" }).ToHtmlString()))
-            }
+        <div class="box">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 12px;" }).ToHtmlString()))
         </div>
     }
 }
-<div class="row" style="padding-left: @paddingLeft; text-align: left;">
-    @Html.LabelFor(m => m.OTPCode, new { @class = "col-form-label", id = "lblOTPCode" })&nbsp;<span id="spnOTPCode" style="color: #0000ff; font-weight: bold;">(Required)</span>
-    @Html.TextBoxFor(m => m.OTPCode, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPCode), style = "width: 86%;" })
-    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPCode, "", new { id = "OTPCode-error" }).ToHtmlString()))
+<div class="box">
+    @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })
+    <span style="color: #0000ff; font-size: 15px; font-weight: bold; padding-left: 18px;">@Model.TelephoneNumberFormatted</span>
 </div>
+<div class="box">
+    @Html.LabelFor(m => m.OTPCode, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.OTPCode, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPCode), style = "width: 81%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPCode, "", new { id = "OTPCode-error", style = "width: 81%;" }).ToHtmlString()))
+</div>
+@Html.HiddenFor(m => m.EmailAddressExists)
+@Html.HiddenFor(m => m.EmailAddressRequired)
+@if (Model.EmailAddressRequired)
+{
+    if (!Model.EmailAddressExists)
+    {
+        <div class="box">
+            @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 86%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error" }).ToHtmlString()))
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(m => m.EmailAddress)
+    }
+}
+else
+{
+    @Html.HiddenFor(m => m.EmailAddress)
+}

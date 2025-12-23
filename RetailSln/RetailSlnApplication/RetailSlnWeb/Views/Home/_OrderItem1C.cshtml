@@ -26,11 +26,56 @@
         <col style="width: 54px;" />
         <col style="width: 153px;" />
     </colgroup>
+    @*
+        @if (Model.ItemMasterModel.ItemModels.Count > 1)
+        {
+            <tr>
+                <td></td>
+                <td colspan="4" style="margin-left: auto; margin-right: auto;">
+                    <select class="form-control" id="itemBundleItem" onchange="javascript: return itemBundleItem_onclick(this.selectedIndex, @Model.ItemMasterModel.ItemModels.Count);">
+                        <option value="">--- Select Item ---</option>
+                        @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
+                        {
+                            Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+                            discountPercent = "";
+                            if (itemDiscountModel != null)
+                            {
+                                discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
+                            }
+                            else
+                            {
+                                discountPercent = "";
+                            }
+                            <option value="@itemModel.ItemId">@(itemModel.ItemMasterModel.ItemMasterDesc + ";" + itemModel.ItemItemSpecsForDisplay + ";" + itemModel.ItemRateFormatted + ";" + discountPercent)</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+        }
+    *@
+    <tr>
+        <th></th>
+        <th colspan="5" style="padding: 5px; text-align: left;">
+            <span style="color: #ff0000; font-size: 16px;">Order bundle without breaking (as is)</span>
+            <span style="color: #a54000; font-size: 14px;">Bundled item(s)</span>
+            <span style="color: #0000ff; font-size: 15px;">@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count</span>
+            <span style="color: #a54000; font-size: 14px;">items</span>
+        </th>
+    </tr>
+    <tr style="background-color: #d0d0d0;">
+        <th style="padding: 5px; text-align: right;">#</th>
+        <th style="padding: 5px; text-align: center;">Id</th>
+        <th style="padding: 5px; text-align: left;">Desc</th>
+        <th style="padding: 5px; text-align: right;">Rate</th>
+        <th style="padding: 5px; text-align: right;">Disc.</th>
+        <th style="padding: 5px; text-align: left;">Qty</th>
+    </tr>
     @if (Model.ItemMasterModel.ItemModels.Count > 1)
     {
         <tr>
-            <td></td>
-            <td colspan="4" style="margin-left: auto; margin-right: auto;">
+            <th style="padding: 5px;"></th>
+            <th style="padding: 5px;"></th>
+            <td style="padding: 5px;">
                 <select class="form-control" id="itemBundleItem" onchange="javascript: return itemBundleItem_onclick(this.selectedIndex, @Model.ItemMasterModel.ItemModels.Count);">
                     <option value="">--- Select Item ---</option>
                     @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
@@ -49,25 +94,10 @@
                     }
                 </select>
             </td>
+            <td colspan="4" style="padding: 5px;">
+            </td>
         </tr>
     }
-    <tr>
-        <th></th>
-        <th colspan="5" style="padding: 5px; text-align: left;">
-            <span style="color: #ff0000; font-size: 16px;">Order this bundle as is without breaking.</span>
-            <span style="color: #a54000; font-size: 14px;">This bundle has</span>
-            <span style="color: #0000ff; font-size: 15px;">@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count</span>
-            <span style="color: #a54000; font-size: 14px;">items</span>
-        </th>
-    </tr>
-    <tr style="background-color: #d0d0d0;">
-        <th style="padding: 5px; text-align: right;">#</th>
-        <th style="padding: 5px; text-align: center;">Id</th>
-        <th style="padding: 5px; text-align: left;">Desc</th>
-        <th style="padding: 5px; text-align: right;">Rate</th>
-        <th style="padding: 5px; text-align: right;">Disc.</th>
-        <th style="padding: 5px; text-align: left;">Qty</th>
-    </tr>
     @{
         <!--Without breaking-->
         foreach (var itemModel in Model.ItemMasterModel.ItemModels)
@@ -127,6 +157,30 @@
                         </span>
                     </span>
                 }
+                @*
+                    <!--Dropdown-->
+                    if (Model.ItemMasterModel.ItemModels.Count > 1)
+                    {
+                        <select class="form-control" id="itemBundleItem" onchange="javascript: return itemBundleItem_onclick(this.selectedIndex, @Model.ItemMasterModel.ItemModels.Count);">
+                            <option value="">--- Select Item ---</option>
+                            @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
+                            {
+                                Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
+                                discountPercent = "";
+                                if (itemDiscountModel != null)
+                                {
+                                    discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
+                                }
+                                else
+                                {
+                                    discountPercent = "";
+                                }
+                                <option value="@itemModel.ItemId">@(itemModel.ItemMasterModel.ItemMasterDesc + ";" + itemModel.ItemItemSpecsForDisplay + ";" + itemModel.ItemRateFormatted + ";" + discountPercent)</option>
+                            }
+                        </select>
+                    }
+                    <span style="color: #0000ff;">Ummachi Kapathu</span>
+                *@
             }
         </td>
         <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">

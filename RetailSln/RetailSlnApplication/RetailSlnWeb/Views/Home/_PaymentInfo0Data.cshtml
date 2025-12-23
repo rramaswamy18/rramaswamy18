@@ -1,15 +1,267 @@
-﻿@using RetailSlnEnumerations
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryEnumerations
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @model PaymentInfoModel
+<style>
+    .container {
+        align-items: stretch; /* Ensures columns stretch to the height of the tallest column */
+        display: flex; /* Enables Flexbox for the container */
+        flex-wrap: wrap; /* Allows columns to wrap to the next line on smaller screens */
+        gap: 9px; /* Adds space between columns */
+        width: 81%;
+    }
+
+    .column {
+        background-color: #f0f0f0; /* Example background color */
+        box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+        display: flex; /* Enables Flexbox for individual columns */
+        flex: 1; /* Allows columns to grow and shrink proportionally */
+        flex-direction: column; /* Stacks content within the column vertically */
+        justify-content: left;
+        /*justify-content: center;*/ /* Vertically centers content within each column */
+        min-width: 153px; /* Minimum width before wrapping to the next line */
+        padding: 9px; /* Example padding */
+    }
+
+    /* Media query for smaller screens (e.g., mobile) */
+    @@media (max-width: 630px) {
+        .column {
+            flex-basis: 100%; /* Columns take full width on smaller screens */
+        }
+    }
+</style>
+<style>
+    #PaymentAmount-error, #ApproverSignatureTextValue-error, #ApproverSignatureTextId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
 @{
-    bool mobileDevice = Request.Browser.IsMobileDevice;
-    //mobileDevice = true;
+    #region
+    SessionObjectModel sessionObject = (SessionObjectModel)Session["SessionObject"];
+    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+    //var username = sessionObject.TelephoneCountryId + "_" + sessionObject.PhoneNumber;
+    //var createForUsername = createForSessionObject.TelephoneCountryId + "_" + createForSessionObject.PhoneNumber;
+    var demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.FirstOrDefault(x => x.DemogInfoCountryId == Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId);
+    string alternateTelephoneFormatted = "";
+    if (long.TryParse(Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneNum, out long tempLong))
+    {
+        alternateTelephoneFormatted = "+" + demogInfoCountryModel.TelephoneCode.Value.ToString() + " " + long.Parse(Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneNum).ToString(demogInfoCountryModel.TelephoneFormat);
+    }
+    try
+    {
+        int indexOf1 = Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';');
+        string deliveryMethodId = Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(0, indexOf1);
+        Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodId = (DeliveryMethodEnum)long.Parse(deliveryMethodId);
+        var codeDataModel = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "DeliveryMethod").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodId);
+        Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc = codeDataModel.CodeDataDesc0;
+        Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc1 = codeDataModel.CodeDataDesc2;
+        var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
+        //var corpAcctLocationModel = applSessionObjectModel.CorpAcctModel.CorpAcctLocationModels.First(x => x.CorpAcctLocationId == applSessionObjectModel.CorpAcctLocationId);
+        if (Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
+        {
+            int indexOf2 = Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';', indexOf1 + 1);
+            string pickupLocationId = Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(indexOf1 + 1, indexOf2 - indexOf1 - 1);
+            Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId = long.Parse(pickupLocationId);
+            Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PickupLocationDemogInfoAddressModels2 : RetailSlnCache.PickupLocationDemogInfoAddressModels1;
+        }
+        else
+        {
+            Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId = 0;
+        }
+    }
+    catch
+    {
+        Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId = null;
+        Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodId = null;
+        Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId = null;
+    }
+    if (Model.DeliveryInfoModel.PaymentModeModel.PaymentModeId == null)
+    {
+        Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc = "";
+        Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc1 = "";
+    }
+    else
+    {
+        var codeDataModel = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId.First(y => y.CodeDataNameId == (int)Model.DeliveryInfoModel.PaymentModeModel.PaymentModeId);
+        if (codeDataModel != null)
+        {
+            Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc = codeDataModel.CodeDataDesc0;
+            Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc1 = codeDataModel.CodeDataDesc2;
+        }
+        else
+        {
+            Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc = "";
+            Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc1 = "";
+        }
+    }
+    bool messageFlag = false;
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        messageFlag = true;
+    }
+    else
+    {
+        if (!ViewData.ModelState.IsValid)
+        {
+            messageFlag = true;
+        }
+        else
+        {
+            if (Model != null && Model.ResponseObjectModel != null && Model.ResponseObjectModel.ResponseMessages.Count > 0)
+            {
+                messageFlag = true;
+            }
+        }
+    }
+    #endregion
 }
-@if (mobileDevice)
+@if (createForSessionObject.AspNetRoleName == "GUESTROLE")
 {
-    @Html.Partial("_PaymentInfo02", Model)
+    <div class="container">
+        <div class="column" style="color: #a54000; font-size: 14px; font-weight: bold; width: 90%;">
+            You are checking out as Guest. Feel free to register and be part of our family
+        </div>
+    </div>
 }
-else
+@if (messageFlag)
 {
-    @Html.Partial("_PaymentInfo01", Model)
+    <div class="container">
+        <div class="column" style="width: 90%;">
+            @{
+                if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+                {
+                    <div class="row validationSummaryMessage" style="padding-left: 27px;">
+                        @Model.ResponseObjectModel.ValidationSummaryMessage
+                    </div>
+                }
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row" style="padding-left: 27px;">
+                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+                    </div>
+                }
+                if (Model != null && Model.ResponseObjectModel != null)
+                {
+                    <div class="row" style="padding-left: 27px;">
+                        @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                    </div>
+                }
+            }
+        </div>
+    </div>
 }
+<div class="container">
+    <div class="column">
+        <table>
+            <colgroup>
+                <col style="width: 36%;" />
+                <col style="width: 63%;" />
+            </colgroup>
+            <tr>
+                <th style="color: #0000ff; text-align: left; vertical-align: top;">
+                    Delivery Address:
+                </th>
+                <th style="text-align: left; vertical-align: top;">
+                    @(Model.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + Model.DeliveryInfoModel.OrderSummaryModel.LastName)
+                    <br />
+                    @Model.DeliveryInfoModel.DeliveryAddressModel.AddressLine1
+                    <br />
+                    @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryAddressModel.AddressLine2))
+                    {
+                        @Model.DeliveryInfoModel.DeliveryAddressModel.AddressLine2
+                        <br />
+                    }
+                    @Model.DeliveryInfoModel.DeliveryAddressModel.CityName
+                    <br />
+                    @(@Model.DeliveryInfoModel.DeliveryAddressModel.ZipCode + " " + Model.DeliveryInfoModel.DeliveryAddressModel.StateAbbrev)
+                    <br />
+                    @Model.DeliveryInfoModel.DeliveryAddressModel.CountryDesc
+                </th>
+            </tr>
+            <tr>
+                <th style="color: #0000ff; text-align: left; vertical-align: top;">
+                    Primary Tel:
+                </th>
+                <th style="text-align: left; vertical-align: top;">
+                    @Model.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted
+                </th>
+            </tr>
+            <tr>
+                <th style="color: #0000ff; text-align: left; vertical-align: top;">
+                    Alternate Tel:
+                </th>
+                <th style="text-align: left; vertical-align: top;">
+                    @alternateTelephoneFormatted
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div class="column">
+        <table>
+            <colgroup>
+                <col style="width: 36%;" />
+                <col style="width: 63%;" />
+            </colgroup>
+            <tr>
+                <th style="color: #0000ff; text-align: left; vertical-align: top;">
+                    Delivery Method:
+                </th>
+                <th style="text-align: left; vertical-align: top;">
+                    @Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc
+                    @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc1))
+                    {
+                        <br />
+                        <span style="color: #ff0000;">@Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc1</span>
+                    }
+                    @if (Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId > 0)
+                    {
+                        var pickupLocationModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId);
+                        var demogInfoAddressModel = pickupLocationModel.DemogInfoAddressModel;
+                        <span style="color: #000000;">
+                            <br />
+                            @pickupLocationModel.LocationDesc
+                            <br />
+                            @demogInfoAddressModel.AddressLine1
+                            @if (!string.IsNullOrEmpty(demogInfoAddressModel.AddressLine2))
+                            {
+                                <br />
+                                @demogInfoAddressModel.AddressLine2
+                            }
+                            <br />
+                            @(demogInfoAddressModel.CityName + " " + demogInfoAddressModel.StateAbbrev + " " + demogInfoAddressModel.ZipCode)
+                        </span>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th style="color: #0000ff; text-align: left; vertical-align: top;">
+                    Payment Mode:
+                </th>
+                <th style="text-align: left; vertical-align: top;">
+                    @Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc
+                    <br />
+                    <span style="color: #ff0000;">@Model.DeliveryInfoModel.PaymentModeModel.PaymentModeDesc1</span>
+                </th>
+            </tr>
+            <tr>
+                <th style="color: #0000ff; text-align: left; vertical-align: top;">
+                    Email Address:
+                </th>
+                <th style="text-align: left; vertical-align: top;">
+                    @Model.DeliveryInfoModel.OrderSummaryModel.EmailAddress
+                </th>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="container">
+    <div class="column" style="color: #000000; font-size: 13px; font-weight: bold; text-align: left; width: 90%;">
+        @Model.DeliveryInfoModel.DeliveryDataModel.DeliveryInstructions
+    </div>
+</div>

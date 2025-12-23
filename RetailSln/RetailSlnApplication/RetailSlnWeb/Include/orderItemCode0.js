@@ -238,6 +238,7 @@ function deliveryInfoSave_onclick() {
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/DeliveryInfo";
     var postData = $("#formDeliveryInfoData").serialize();
+    console.log("00000100", "deliveryInfoSave_onclick", postData);
     $.ajax({
         url: url,
         type: "POST",
@@ -345,21 +346,22 @@ function orderQty_oninput(orderQtyElementObject, defaultValue) {
     }
     return false;
 }
-function orderQty2_oninput(orderQtyElementObject, defaultValue) {
+function orderQty2_oninput(inputElementObject, defaultValue) {
     try {
-        if (orderQtyElementObject.value.length > orderQtyElementObject.getAttribute("maxlength")) {
-            orderQtyElementObject.value = orderQtyElementObject.value.substr(0, orderQtyElementObject.getAttribute("maxlength"));
+        if (inputElementObject.value.length > inputElementObject.getAttribute("maxlength")) {
+            inputElementObject.value = inputElementObject.value.substr(0, inputElementObject.getAttribute("maxlength"));
         }
         //Test if the input is 1. numeric 2. not exceed maxlength 3. between min and max values
-        var orderQty = orderQtyElementObject.value;
-        if ((/^\d+(\.\d{1,2})?$/.test(orderQty)) && orderQty.length <= orderQtyElementObject.getAttribute("maxlength") && orderQty >= orderQtyElementObject.getAttribute("min") && orderQty <= orderQtyElementObject.getAttribute("max")) {
+        var inputElementObjectvalue = inputElementObject.value;
+        if ((/^\d+$/.test(inputElementObjectvalue)) && inputElementObjectvalue.length <= inputElementObject.getAttribute("maxlength") && inputElementObjectvalue >= inputElementObject.getAttribute("min")) {
         }
         else {
-            orderQtyElementObject.value = defaultValue;
+            inputElementObject.value = defaultValue;
+            console.log(9, "orderQty2_oninput", inputElementObjectvalue, "Invalid");
         }
     }
     catch (err) {
-        console.log(1, "orderQty_oninput ERROR???", err);
+        console.log(1, "orderQty2_oninput ERROR???", err);
     }
     return false;
 }
@@ -426,11 +428,31 @@ function calculateItemBundleRate(itemBundleCount, currencySymbol) {
     document.getElementById("itemBundleItemPiecesCount").innerText = itemBundleItemPiecesCount;
     console.log(currencySymbol, "itemBundleItemRate", itemBundleItemRate, "itemBundleItemPiecesCount", itemBundleItemPiecesCount);
 }
+function resetItemBundleRate(itemBundleCount, currencySymbol) {
+    var itemBundleItemRate = 0, itemBundleItemPiecesCount = 0, itemAmountForBundle, orderQtyForBundle = 0;//, orderQtyForBundleObject;
+    for (var i = 0; i < itemBundleCount; i++) {
+        orderQtyForBundleObject = document.getElementById("orderQtyForBundle" + i);
+        //orderQtyForBundle = parseInt(orderQtyForBundleObject.value);
+        //if ((/^\d+$/.test(orderQtyForBundle)) && orderQtyForBundleObject.value.length <= orderQtyForBundleObject.getAttribute("maxlength") && orderQtyForBundle >= orderQtyForBundleObject.getAttribute("min") && orderQtyForBundle <= orderQtyForBundleObject.getAttribute("max")) {
+        //}
+        //else {
+        //    orderQtyForBundle = 0;
+        //}
+        orderQtyForBundle = 0;
+        itemAmountForBundle = document.getElementById("itemRateForBundle" + i).innerText * orderQtyForBundle;
+        itemBundleItemPiecesCount += orderQtyForBundle;
+        document.getElementById("itemAmountForBundle" + i).innerHTML = currencySymbol + itemAmountForBundle.toFixed(2);
+        itemBundleItemRate += itemAmountForBundle;
+    }
+    document.getElementById("itemBundleItemRate").innerText = currencySymbol + itemBundleItemRate.toFixed(2);
+    document.getElementById("itemBundleItemPiecesCount").innerText = itemBundleItemPiecesCount;
+    console.log(currencySymbol, "itemBundleItemRate", itemBundleItemRate, "itemBundleItemPiecesCount", itemBundleItemPiecesCount);
+}
 function paymentInfo1Save_onclick() {
     console.log("00000000", "paymentInfo1Save_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/PaymentInfo1";
-    var postData = $("#formPaymentInfo1Data").serialize();
+    var postData = $("#formPaymentInfo0Data").serialize();
     $.ajax({
         url: url,
         type: "POST",
@@ -519,7 +541,7 @@ function paymentInfo2Save_onclick() {
             else {
                 console.log("paymentInfo2Save_onclick", "00090900", "ERROR???");
                 console.log(responseData);
-                document.getElementById("formPaymentInfo1Data").innerHTML = responseData.htmlString;
+                document.getElementById("formPaymentInfo0Data").innerHTML = responseData.htmlString;
                 alert("Error occurred in Payment Gateway call");
             }
             console.log("00001000", "paymentInfo2Save_onclick success", responseData.processMessage);
@@ -622,7 +644,7 @@ function paymentInfo9Save_onclick() {
     console.log("00000000", "paymentInfo9Save_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var url = "/Home/PaymentInfo9";
-    var postData = $("#formPaymentInfo1Data").serialize();
+    var postData = $("#formPaymentInfo0Data").serialize();
     $.ajax({
         url: url,
         type: "POST",
@@ -650,10 +672,10 @@ function paymentInfo9Save_onclick() {
         }
     });
 }
-function paymentInfo9SaveProcess_onclick() {
-    console.log("00000000", "paymentInfo9SaveProcess_onclick");
+function paymentInfo10Save_onclick() {
+    console.log("00000000", "paymentInfo10Save_onclick");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    var url = "/Home/PaymentInfo9Process";
+    var url = "/Home/PaymentInfo10";
     var postData = $("#formPaymentInfo9Data").serialize();
     $.ajax({
         url: url,
@@ -663,21 +685,21 @@ function paymentInfo9SaveProcess_onclick() {
         data: postData,
         //async: false,
         success: function (responseData, textStatus, request) {
-            console.log("00001000", "paymentInfo9SaveProcess_onclick");
+            console.log("00001000", "paymentInfo10Save_onclick");
             $("#loadingModal").modal('hide');
             if (responseData.success) {
-                console.log("00002000", "paymentInfo9SaveProcess_onclick");
+                console.log("00002000", "paymentInfo10Save_onclick");
                 window.location.href = responseData.redirectUrl;
             }
             else {
                 document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
             }
-            console.log("00003000", "paymentInfo9SaveProcess_onclick success", responseData.processMessage);
+            console.log("00003000", "paymentInfo10Save_onclick success", responseData.processMessage);
         },
         error: function (xhr, exception) {
             $("#loadingModal").modal('hide');
             document.getElementById("divOrderProcess").innerHTML = xhr.responseText;
-            console.log("00099000", "paymentInfo1Save_onclick error", exception, xhr);
+            console.log("00099000", "paymentInfo10Save_onclick error", exception, xhr);
         }
     });
 }
@@ -805,4 +827,26 @@ function checkLoggedInStatus(idParm, controller, action) {
                 window.location = "/" + controller + "/" + action;
             }
         });
+}
+function ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
+    document.getElementById(approverSignatureTextValueSelectedElementId).innerText = document.getElementById(approverSignatureTextValueElementId).value;
+    var i = document.getElementById(approverSignatureTextIdElementId).selectedIndex;
+    try {
+        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontFamily = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontFamily;
+        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontSize = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontSize;
+        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontWeight = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontWeight;
+        for (i = 1; i < document.getElementById(approverSignatureTextIdElementId).options.length; i++) {
+            document.getElementById(approverSignatureTextIdElementId).options[i].innerText = document.getElementById(approverSignatureTextValueElementId).value;
+        }
+    }
+    catch (err) {
+        console.log(27, err);
+    }
+    return false;
+}
+function OrderSummaryModel_FirstName_LastName_oninput(firstNameElementId, lastNameElementId, approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
+    if (document.getElementById(approverSignatureTextValueElementId).value.trim() == "") {
+        document.getElementById(approverSignatureTextValueElementId).value = (document.getElementById(firstNameElementId).value + " " + document.getElementById(lastNameElementId).value).trim();
+        ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId);
+    }
 }

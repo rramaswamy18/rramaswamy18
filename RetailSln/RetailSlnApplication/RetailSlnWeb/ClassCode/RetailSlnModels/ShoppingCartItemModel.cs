@@ -95,6 +95,8 @@ namespace RetailSlnModels
 
         public float? WidthValue { set; get; }
 
+        public long ShoppingCartWIPId { set; get; }
+
         public ItemModel ItemModel { set; get; }
 
         public List<ShoppingCartItemModel> ShoppingCartItemSummarys { set; get; }

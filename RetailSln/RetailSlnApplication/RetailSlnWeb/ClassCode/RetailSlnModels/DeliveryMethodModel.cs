@@ -17,7 +17,7 @@ namespace RetailSlnModels
         //[Required(ErrorMessage = "Select Delivery Method")]
         public DeliveryMethodEnum? DeliveryMethodId { set; get; }
         [Display(Name = "Delivery...")]
-        [Required(ErrorMessage = "Select Delivery...")]
+        [Required(ErrorMessage = "Select delivery")]
         public string DeliveryMethodIdPickupLocationId { set; get; }
         public string DeliveryMethodName { set; get; }
         public List<CodeDataModel> DeliveryMethods { set; get; }

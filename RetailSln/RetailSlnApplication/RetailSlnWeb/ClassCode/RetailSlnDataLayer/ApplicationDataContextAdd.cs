@@ -326,72 +326,72 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void OrderDetailWIPAdd(OrderDetailWIPModel orderDetailWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                #region
-                string sqlStmt = "";
-                sqlStmt += "        INSERT RetailSlnSch.OrderDetailWIP" + Environment.NewLine;
-                sqlStmt += "              (" + Environment.NewLine;
-                sqlStmt += "               ClientId" + Environment.NewLine;
-                sqlStmt += "              ,DoNotBreakBundle" + Environment.NewLine;
-                sqlStmt += "              ,ItemId" + Environment.NewLine;
-                sqlStmt += "              ,ItemRate" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderWIPId" + Environment.NewLine;
-                sqlStmt += "              ,OrderQty" + Environment.NewLine;
-                sqlStmt += "              ,ParentItemId" + Environment.NewLine;
-                sqlStmt += "              ,SeqNum" + Environment.NewLine;
-                sqlStmt += "              ,AddUserId" + Environment.NewLine;
-                sqlStmt += "              ,UpdUserId" + Environment.NewLine;
-                sqlStmt += "              )" + Environment.NewLine;
-                sqlStmt += "        OUTPUT INSERTED.OrderDetailWIPId" + Environment.NewLine;
-                sqlStmt += "        SELECT " + Environment.NewLine;
-                sqlStmt += "               @ClientId" + Environment.NewLine;
-                sqlStmt += "              ,@DoNotBreakBundle" + Environment.NewLine;
-                sqlStmt += "              ,@ItemId" + Environment.NewLine;
-                sqlStmt += "              ,@ItemRate" + Environment.NewLine;
-                sqlStmt += "              ,@OrderHeaderWIPId" + Environment.NewLine;
-                sqlStmt += "              ,@OrderQty" + Environment.NewLine;
-                sqlStmt += "              ,@ParentItemId" + Environment.NewLine;
-                sqlStmt += "              ,@SeqNum" + Environment.NewLine;
-                sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
-                sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
-                #endregion
-                #region
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
-                sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
-                sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@ParentItemId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
-                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
-                #endregion
-                #region
-                sqlCommand.Parameters["@ClientId"].Value = orderDetailWIPModel.ClientId;
-                sqlCommand.Parameters["@DoNotBreakBundle"].Value = orderDetailWIPModel.DoNotBreakBundle;
-                sqlCommand.Parameters["@ItemId"].Value = orderDetailWIPModel.ItemId;
-                sqlCommand.Parameters["@ItemRate"].Value = orderDetailWIPModel.ItemRate;
-                sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderDetailWIPModel.OrderHeaderWIPId;
-                sqlCommand.Parameters["@OrderQty"].Value = orderDetailWIPModel.OrderQty;
-                sqlCommand.Parameters["@ParentItemId"].Value = orderDetailWIPModel.ParentItemId;
-                sqlCommand.Parameters["@SeqNum"].Value = orderDetailWIPModel.SeqNum;
-                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
-                #endregion
-                orderDetailWIPModel.OrderDetailWIPId = (long)sqlCommand.ExecuteScalar();
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static void OrderDetailWIPAdd(OrderDetailWIPModel orderDetailWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        #region
+        //        string sqlStmt = "";
+        //        sqlStmt += "        INSERT RetailSlnSch.OrderDetailWIP" + Environment.NewLine;
+        //        sqlStmt += "              (" + Environment.NewLine;
+        //        sqlStmt += "               ClientId" + Environment.NewLine;
+        //        sqlStmt += "              ,DoNotBreakBundle" + Environment.NewLine;
+        //        sqlStmt += "              ,ItemId" + Environment.NewLine;
+        //        sqlStmt += "              ,ItemRate" + Environment.NewLine;
+        //        sqlStmt += "              ,OrderHeaderWIPId" + Environment.NewLine;
+        //        sqlStmt += "              ,OrderQty" + Environment.NewLine;
+        //        sqlStmt += "              ,ParentItemId" + Environment.NewLine;
+        //        sqlStmt += "              ,SeqNum" + Environment.NewLine;
+        //        sqlStmt += "              ,AddUserId" + Environment.NewLine;
+        //        sqlStmt += "              ,UpdUserId" + Environment.NewLine;
+        //        sqlStmt += "              )" + Environment.NewLine;
+        //        sqlStmt += "        OUTPUT INSERTED.OrderDetailWIPId" + Environment.NewLine;
+        //        sqlStmt += "        SELECT " + Environment.NewLine;
+        //        sqlStmt += "               @ClientId" + Environment.NewLine;
+        //        sqlStmt += "              ,@DoNotBreakBundle" + Environment.NewLine;
+        //        sqlStmt += "              ,@ItemId" + Environment.NewLine;
+        //        sqlStmt += "              ,@ItemRate" + Environment.NewLine;
+        //        sqlStmt += "              ,@OrderHeaderWIPId" + Environment.NewLine;
+        //        sqlStmt += "              ,@OrderQty" + Environment.NewLine;
+        //        sqlStmt += "              ,@ParentItemId" + Environment.NewLine;
+        //        sqlStmt += "              ,@SeqNum" + Environment.NewLine;
+        //        sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+        //        sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+        //        #endregion
+        //        #region
+        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //        sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
+        //        sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@ItemRate", SqlDbType.Float);
+        //        sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@ParentItemId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@SeqNum", SqlDbType.Float);
+        //        sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+        //        #endregion
+        //        #region
+        //        sqlCommand.Parameters["@ClientId"].Value = orderDetailWIPModel.ClientId;
+        //        sqlCommand.Parameters["@DoNotBreakBundle"].Value = orderDetailWIPModel.DoNotBreakBundle;
+        //        sqlCommand.Parameters["@ItemId"].Value = orderDetailWIPModel.ItemId;
+        //        sqlCommand.Parameters["@ItemRate"].Value = orderDetailWIPModel.ItemRate;
+        //        sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderDetailWIPModel.OrderHeaderWIPId;
+        //        sqlCommand.Parameters["@OrderQty"].Value = orderDetailWIPModel.OrderQty;
+        //        sqlCommand.Parameters["@ParentItemId"].Value = orderDetailWIPModel.ParentItemId;
+        //        sqlCommand.Parameters["@SeqNum"].Value = orderDetailWIPModel.SeqNum;
+        //        sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        //        #endregion
+        //        orderDetailWIPModel.OrderDetailWIPId = (long)sqlCommand.ExecuteScalar();
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         public static void OrderDetailWIPUpd(long orderHeaderWIPId, long itemId, long orderQty, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -571,68 +571,68 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
-        public static void OrderHeaderWIPAdd(OrderHeaderWIPModel orderHeaderWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                #region
-                string sqlStmt = "";
-                sqlStmt += "        INSERT RetailSlnSch.OrderHeaderWIP" + Environment.NewLine;
-                sqlStmt += "              (" + Environment.NewLine;
-                sqlStmt += "               ClientId" + Environment.NewLine;
-                sqlStmt += "              ,CorpAcctLocationId" + Environment.NewLine;
-                sqlStmt += "              ,CreatedForPersonId" + Environment.NewLine;
-                sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
-                sqlStmt += "              ,OrderDateTime" + Environment.NewLine;
-                sqlStmt += "              ,OrderStatusId" + Environment.NewLine;
-                sqlStmt += "              ,PersonId" + Environment.NewLine;
-                sqlStmt += "              ,AddUserId" + Environment.NewLine;
-                sqlStmt += "              ,UpdUserId" + Environment.NewLine;
-                sqlStmt += "              )" + Environment.NewLine;
-                sqlStmt += "        OUTPUT INSERTED.OrderHeaderWIPId" + Environment.NewLine;
-                sqlStmt += "        SELECT " + Environment.NewLine;
-                sqlStmt += "               @ClientId" + Environment.NewLine;
-                sqlStmt += "              ,@CorpAcctLocationId" + Environment.NewLine;
-                sqlStmt += "              ,@CreatedForPersonId" + Environment.NewLine;
-                sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
-                sqlStmt += "              ,@OrderDateTime" + Environment.NewLine;
-                sqlStmt += "              ,@OrderStatusId" + Environment.NewLine;
-                sqlStmt += "              ,@PersonId" + Environment.NewLine;
-                sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
-                sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
-                #endregion
-                #region
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@CorpAcctLocationId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.NVarChar, 21);
-                sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
-                #endregion
-                #region
-                sqlCommand.Parameters["@ClientId"].Value = orderHeaderWIPModel.ClientId;
-                sqlCommand.Parameters["@CorpAcctLocationId"].Value = orderHeaderWIPModel.CorpAcctLocationId;
-                sqlCommand.Parameters["@CreatedForPersonId"].Value = orderHeaderWIPModel.CreatedForPersonId;
-                sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeaderWIPModel.InvoiceTypeId;
-                sqlCommand.Parameters["@OrderDateTime"].Value = orderHeaderWIPModel.OrderDateTime;//string.IsNullOrWhiteSpace(orderHeaderWIPModel.OrderDateTime) ? (object)DBNull.Value : orderHeaderWIPModel.OrderDateTime;
-                sqlCommand.Parameters["@OrderStatusId"].Value = orderHeaderWIPModel.OrderStatusId == null ? (object)DBNull.Value : orderHeaderWIPModel.OrderStatusId;
-                sqlCommand.Parameters["@PersonId"].Value = orderHeaderWIPModel.PersonId;
-                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
-                #endregion
-                orderHeaderWIPModel.OrderHeaderWIPId = (long)sqlCommand.ExecuteScalar();
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static void OrderHeaderWIPAdd(OrderHeaderWIPModel orderHeaderWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        #region
+        //        string sqlStmt = "";
+        //        sqlStmt += "        INSERT RetailSlnSch.OrderHeaderWIP" + Environment.NewLine;
+        //        sqlStmt += "              (" + Environment.NewLine;
+        //        sqlStmt += "               ClientId" + Environment.NewLine;
+        //        sqlStmt += "              ,CorpAcctLocationId" + Environment.NewLine;
+        //        sqlStmt += "              ,CreatedForPersonId" + Environment.NewLine;
+        //        sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
+        //        sqlStmt += "              ,OrderDateTime" + Environment.NewLine;
+        //        sqlStmt += "              ,OrderStatusId" + Environment.NewLine;
+        //        sqlStmt += "              ,PersonId" + Environment.NewLine;
+        //        sqlStmt += "              ,AddUserId" + Environment.NewLine;
+        //        sqlStmt += "              ,UpdUserId" + Environment.NewLine;
+        //        sqlStmt += "              )" + Environment.NewLine;
+        //        sqlStmt += "        OUTPUT INSERTED.OrderHeaderWIPId" + Environment.NewLine;
+        //        sqlStmt += "        SELECT " + Environment.NewLine;
+        //        sqlStmt += "               @ClientId" + Environment.NewLine;
+        //        sqlStmt += "              ,@CorpAcctLocationId" + Environment.NewLine;
+        //        sqlStmt += "              ,@CreatedForPersonId" + Environment.NewLine;
+        //        sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
+        //        sqlStmt += "              ,@OrderDateTime" + Environment.NewLine;
+        //        sqlStmt += "              ,@OrderStatusId" + Environment.NewLine;
+        //        sqlStmt += "              ,@PersonId" + Environment.NewLine;
+        //        sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+        //        sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
+        //        #endregion
+        //        #region
+        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //        sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@CorpAcctLocationId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@OrderDateTime", SqlDbType.NVarChar, 21);
+        //        sqlCommand.Parameters.Add("@OrderStatusId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+        //        #endregion
+        //        #region
+        //        sqlCommand.Parameters["@ClientId"].Value = orderHeaderWIPModel.ClientId;
+        //        sqlCommand.Parameters["@CorpAcctLocationId"].Value = orderHeaderWIPModel.CorpAcctLocationId;
+        //        sqlCommand.Parameters["@CreatedForPersonId"].Value = orderHeaderWIPModel.CreatedForPersonId;
+        //        sqlCommand.Parameters["@InvoiceTypeId"].Value = orderHeaderWIPModel.InvoiceTypeId;
+        //        sqlCommand.Parameters["@OrderDateTime"].Value = orderHeaderWIPModel.OrderDateTime;//string.IsNullOrWhiteSpace(orderHeaderWIPModel.OrderDateTime) ? (object)DBNull.Value : orderHeaderWIPModel.OrderDateTime;
+        //        sqlCommand.Parameters["@OrderStatusId"].Value = orderHeaderWIPModel.OrderStatusId == null ? (object)DBNull.Value : orderHeaderWIPModel.OrderStatusId;
+        //        sqlCommand.Parameters["@PersonId"].Value = orderHeaderWIPModel.PersonId;
+        //        sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        //        #endregion
+        //        orderHeaderWIPModel.OrderHeaderWIPId = (long)sqlCommand.ExecuteScalar();
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
         public static void OrderPaymentAdd(PaymentDataModel paymentDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -759,6 +759,81 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
                 #endregion
                 referralListModel.ReferralListId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static void ShoppingCartWIPAdd(ShoppingCartWIPModel shoppingCartWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "         INSERT RetailSlnSch.ShoppingCartWIP" + Environment.NewLine;
+                sqlStmt += "               (" + Environment.NewLine;
+                sqlStmt += "                ClientId" + Environment.NewLine;
+                //sqlStmt += "               ,BundleItemSeqNum" + Environment.NewLine;
+                sqlStmt += "               ,CorpAcctLocationId" + Environment.NewLine;
+                sqlStmt += "               ,CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "               ,DoNotBreakBundle" + Environment.NewLine;
+                sqlStmt += "               ,ItemId" + Environment.NewLine;
+                sqlStmt += "               ,ItemSeqNum" + Environment.NewLine;
+                sqlStmt += "               ,OrderQty" + Environment.NewLine;
+                sqlStmt += "               ,ParentItemId" + Environment.NewLine;
+                sqlStmt += "               ,PersonId" + Environment.NewLine;
+                sqlStmt += "               ,AddUserId" + Environment.NewLine;
+                sqlStmt += "               ,UpdUserId" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "         OUTPUT INSERTED.ShoppingCartWIPId" + Environment.NewLine;
+                sqlStmt += "         SELECT " + Environment.NewLine;
+                sqlStmt += "                @ClientId" + Environment.NewLine;
+                //sqlStmt += "               ,@BundleItemSeqNum" + Environment.NewLine;
+                sqlStmt += "               ,@CorpAcctLocationId" + Environment.NewLine;
+                sqlStmt += "               ,@CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "               ,@DoNotBreakBundle" + Environment.NewLine;
+                sqlStmt += "               ,@ItemId" + Environment.NewLine;
+                sqlStmt += "               ,@ItemSeqNum" + Environment.NewLine;
+                sqlStmt += "               ,@OrderQty" + Environment.NewLine;
+                sqlStmt += "               ,@ParentItemId" + Environment.NewLine;
+                sqlStmt += "               ,@PersonId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                #endregion
+                #region
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                //sqlCommand.Parameters.Add("@BundleItemSeqNum", SqlDbType.Float);
+                sqlCommand.Parameters.Add("@CorpAcctLocationId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
+                sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@ItemSeqNum", SqlDbType.Float);
+                sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@ParentItemId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+                #endregion
+                #region
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
+                //sqlCommand.Parameters["@BundleItemSeqNum"].Value = shoppingCartWIPModel.BundleItemSeqNum;
+                sqlCommand.Parameters["@CorpAcctLocationId"].Value = shoppingCartWIPModel.CorpAcctLocationId;
+                sqlCommand.Parameters["@CreatedForPersonId"].Value = shoppingCartWIPModel.CreatedForPersonId;
+                sqlCommand.Parameters["@DoNotBreakBundle"].Value = shoppingCartWIPModel.DoNotBreakBundle;
+                sqlCommand.Parameters["@ItemId"].Value = shoppingCartWIPModel.ItemId;
+                sqlCommand.Parameters["@OrderQty"].Value = shoppingCartWIPModel.OrderQty;
+                sqlCommand.Parameters["@ParentItemId"].Value = shoppingCartWIPModel.ParentItemId;
+                sqlCommand.Parameters["@PersonId"].Value = shoppingCartWIPModel.PersonId;
+                sqlCommand.Parameters["@ItemSeqNum"].Value = shoppingCartWIPModel.ItemSeqNum;
+                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+                #endregion
+                shoppingCartWIPModel.ShoppingCartWIPId = (long)sqlCommand.ExecuteScalar();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
             }
             catch (Exception exception)

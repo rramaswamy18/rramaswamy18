@@ -48,7 +48,7 @@
             Telephone#
         </td>
         <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
-            @Model.ContactUsTelephoneNumber
+            @Model.ContactUsTelephoneNumberFormatted
         </td>
     </tr>
     <tr>
@@ -67,29 +67,6 @@
             @Model.ContactUsId
         </td>
     </tr>
-    <tr>
-        <td colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
-            @if (Model.UserProfRegistered)
-            {
-                <span>Your email address is already <b>registered</b>. Please login and enjoy the features</span>
-            }
-            else
-            {
-                <span>We have registered your email address. Please login and enjoy the features</span>
-            }
-        </td>
-    </tr>
-    @if (!Model.UserProfRegistered)
-    {
-        <tr>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">
-                Password
-            </td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; font-weight: bold; text-align: left; vertical-align: top;">
-                @Model.LoginPassword
-            </td>
-        </tr>
-    }
     <tr>
         <td colspan="2" style="padding: 5px; text-align: left;">
             <span style="background-color: #deecf9;">

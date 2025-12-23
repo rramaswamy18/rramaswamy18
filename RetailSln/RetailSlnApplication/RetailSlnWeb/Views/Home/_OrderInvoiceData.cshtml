@@ -52,8 +52,8 @@
         Model.ShoppingCartModel.Checkout = true;
         Model.ShoppingCartModel.ShowDetail = true;
         @Html.Partial("_ShoppingCartHeader1", Model)
-        @Html.Partial("_ShoppingCartData1", Model)
-        @Html.Partial("_ShoppingCartSummary1", Model)
+        @Html.Partial("_ShoppingCartData1", Model.ShoppingCartModel)
+        @Html.Partial("_ShoppingCartSummary1", Model.ShoppingCartModel)
         @Html.Partial("_ShoppingCartFooter1", Model)
         @Html.Partial("_ShoppingCartBundle1", Model)
         Model.ShoppingCartModel.Checkout = false;

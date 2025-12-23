@@ -1,0 +1,63 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@model OTPRequestModel
+<style>
+    #CaptchaAnswer-error, #EmailAddress-error, #OTPSendTypeId-error, #TelephoneCountryId-error, #TelephoneNumber-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+@{
+    var oTPSendTypes = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("OTPSendType", "");
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="box validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="box">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 12px;" }).ToHtmlString()))
+        </div>
+    }
+}
+@Html.HiddenFor(m => m.DefaultDemogInfoCountryId)
+<div class="box">
+    @Html.LabelFor(m => m.OTPSendTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    <br style="clear: both;" />
+    @for (int i = 1; i < oTPSendTypes.Count; i++)
+    {
+        <label class="radio-inline" style="font-weight: bold;">
+            @if (Model.OTPSendTypeId != null && (long)Model.OTPSendTypeId == oTPSendTypes[i].CodeDataNameId)
+            {
+                <input checked="checked" id="OTPSendTypeId@(i - 1)" name="OTPSendTypeId" type="radio" value="@oTPSendTypes[i].CodeDataNameId" />@oTPSendTypes[i].CodeDataDesc0
+            }
+            else
+            {
+                <input id="OTPSendTypeId@(i - 1)" name="OTPSendTypeId" type="radio" value="@oTPSendTypes[i].CodeDataNameId" />@oTPSendTypes[i].CodeDataDesc0
+            }
+        </label>
+    }
+    <label class="radio-inline" style="padding-left: 45px; font-weight: bold;">
+        <input id="OTPSendTypeIdClear" name="OTPSendTypeIdClear" onclick="OTPSendTypeIdClear_clear();" type="radio" /><span style="color: #ff0000; font-weight: bold;">Clear Selections</span>
+    </label>
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPSendTypeId, "", new { id = "OTPSendTypeId-error", style = "width: 81%;" }).ToHtmlString()))
+</div>
+<div class="box">
+    @Html.LabelFor(m => m.TelephoneCountryId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.DropDownListFor(m => m.TelephoneCountryId, new SelectList(ArchitectureLibraryCacheData.DemogInfoCache.DemogInfoCountrySelectListItemsName, "Value", "Text", Model.TelephoneCountryId), "---", new { @class = "form-control", style = "font-size: 14px; width: 81%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneCountryId, "", new { id = "TelephoneCountryId-error", style = "width: 81%;" }).ToHtmlString()))
+</div>
+<div class="box">
+    @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.TelephoneNumber, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.TelephoneNumber), style = "width: 81%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.TelephoneNumber, "", new { id = "TelephoneNumber-error", style = "width: 81%;" }).ToHtmlString()))
+</div>
+<div class="box">
+    @Html.LabelFor(m => m.CaptchaAnswer, new { @class = "col-form-label" })&nbsp;- Sum of <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumber0</span> & <span style="color: #ff0000; font-weight: bold;">@Model.CaptchaNumber1</span><span style="color: #0000ff; font-weight: bold;">? (Required)</span>
+    @Html.TextBoxFor(m => m.CaptchaAnswer, null, new { @class = "form-control", placeholder = @Model.CaptchaNumber0 + " + " + @Model.CaptchaNumber1 + " =?", style = "width: 81%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CaptchaAnswer, "", new { id = "CaptchaAnswer-error", style = "width: 81%;" }).ToHtmlString()))
+</div>

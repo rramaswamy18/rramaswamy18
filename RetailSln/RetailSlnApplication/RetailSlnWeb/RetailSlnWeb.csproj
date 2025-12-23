@@ -207,6 +207,7 @@
     <Compile Include="ClassCode\RetailSlnModels\CouponListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CouponPaymentModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\DeliveryInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryMethodFilterModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryMethodModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DiscountDtlModel.cs" />
@@ -221,6 +222,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemItemSpecModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterListModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderInvoiceModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderItem1Model.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemDiscountModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterAttributesModel.cs" />
@@ -232,10 +234,8 @@
     <Compile Include="ClassCode\RetailSlnModels\OrderApprovalModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetail.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderDetailItemBundle.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\OrderDetailWIPModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeader.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderHeaderSummary.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\OrderHeaderWIPModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderListDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderListModel.cs" />
@@ -259,6 +259,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ShoppingCartWIPModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -1893,21 +1894,12 @@
     <Content Include="Views\GeneralUtility\_DemongInfoStates.cshtml" />
     <Content Include="Views\Home\_AboutUs.cshtml" />
     <Content Include="Views\Home\_Checkout.cshtml" />
-    <Content Include="Views\Home\_CheckoutGuest.cshtml" />
-    <Content Include="Views\Home\_CheckoutGuestData.cshtml" />
     <Content Include="Views\Home\_ContactUs.cshtml" />
     <Content Include="Views\Home\_ContactUsData.cshtml" />
-    <Content Include="Views\Home\_ContactUsData1.cshtml" />
-    <Content Include="Views\Home\_ContactUsData2.cshtml" />
     <Content Include="Views\Home\_ContactUsEmailBody.cshtml" />
     <Content Include="Views\Home\_ContactUsEmailSubject.cshtml" />
-    <Content Include="Views\Home\_ContactUsInfo1.cshtml" />
-    <Content Include="Views\Home\_ContactUsInfo2.cshtml" />
     <Content Include="Views\Home\_CookiePolicy.cshtml" />
-    <Content Include="Views\Home\_DeliveryInfo.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoData.cshtml" />
-    <Content Include="Views\Home\_DeliveryInfoData1.cshtml" />
-    <Content Include="Views\Home\_DeliveryInfoData2.cshtml" />
     <Content Include="Views\Home\_FAQs.cshtml" />
     <Content Include="Views\Home\_ItemBundleData.cshtml" />
     <Content Include="Views\Home\_ItemMasterAttributes.cshtml" />
@@ -1923,9 +1915,6 @@
     <Content Include="Views\Home\_OTPEmailBody.cshtml" />
     <Content Include="Views\Home\_OTPEmailSubject.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0.cshtml" />
-    <Content Include="Views\Home\_PaymentInfo01.cshtml" />
-    <Content Include="Views\Home\_PaymentInfo02.cshtml" />
-    <Content Include="Views\Home\_PaymentInfo0Data.cshtml" />
     <Content Include="Views\Home\_PaymentInfo3.cshtml" />
     <Content Include="Views\Home\_PaymentInfo4.cshtml" />
     <Content Include="Views\Home\_PaymentInfo9.cshtml" />
@@ -1937,7 +1926,6 @@
     <Content Include="Views\Home\_RegisterUserEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfData.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserSuccess.cshtml" />
@@ -1963,10 +1951,8 @@
     <Content Include="Views\Home\_UserProfileEmailSubject.cshtml" />
     <Content Include="Views\Home\AboutUs.cshtml" />
     <Content Include="Views\Home\Checkout.cshtml" />
-    <Content Include="Views\Home\CheckoutGuest.cshtml" />
     <Content Include="Views\Home\ContactUs.cshtml" />
     <Content Include="Views\Home\CookiePolicy.cshtml" />
-    <Content Include="Views\Home\DeliveryInfo.cshtml" />
     <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\ItemCatalog.cshtml" />
@@ -2036,6 +2022,17 @@
     <Content Include="Views\Home\_RegisterUserOTP.cshtml" />
     <Content Include="Views\Home\_RegisterUserOTPData.cshtml" />
     <Content Include="Views\Home\_OTPResponseData.cshtml" />
+    <Content Include="Views\Home\_OTPRequestData.cshtml" />
+    <Content Include="Views\Home\_OTPRequest.cshtml" />
+    <Content Include="Views\Home\_OTPResponse.cshtml" />
+    <Content Include="Views\Home\_OTPRequestEmailBody.cshtml" />
+    <Content Include="Views\Home\_OTPRequestEmailSubject.cshtml" />
+    <Content Include="Views\Home\_OTPResponseEmailSubject.cshtml" />
+    <Content Include="Views\Home\_OTPResponseEmailBody.cshtml" />
+    <Content Include="Views\Home\_DeliveryInfo.cshtml" />
+    <Content Include="Views\Home\_PaymentInfo0Data.cshtml" />
+    <Content Include="Views\Home\_ContactUsInfo.cshtml" />
+    <Content Include="Views\Home\DeliveryInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

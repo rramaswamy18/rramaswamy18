@@ -8,8 +8,9 @@ namespace RetailSlnModels
 {
     public class CheckoutModel
     {
-        public LoginUserProfModel LoginUserProfModel { set; get; }
-        public PaymentInfoModel PaymentInfoModel { set; get; }
+        //public LoginUserProfModel LoginUserProfModel { set; get; }
+        public OTPRequestModel OTPRequestModel { set; get; }
+        //public PaymentInfoModel PaymentInfoModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

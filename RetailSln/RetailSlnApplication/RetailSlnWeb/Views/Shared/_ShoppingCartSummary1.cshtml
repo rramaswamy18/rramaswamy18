@@ -2,7 +2,7 @@
 @using ArchitectureLibraryModels
 @using RetailSlnEnumerations
 @using RetailSlnModels
-@model PaymentInfoModel
+@model ShoppingCartModel
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
@@ -22,7 +22,7 @@
     </tr>
     @{
         int index = 0;
-        foreach (var shoppingCartItemModelSummary in Model.ShoppingCartModel.ShoppingCartItemModelsSummary)
+        foreach (var shoppingCartItemModelSummary in Model.ShoppingCartItemModelsSummary)
         {
             if (shoppingCartItemModelSummary.OrderDetailTypeId != OrderDetailTypeEnum.DoNotShow)
             {
@@ -34,7 +34,7 @@
                         @if (shoppingCartItemModelSummary.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount)
                         {
                             <br />
-                            @("Total Weight : " + Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " " + Model.ShoppingCartModel.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRoundedUnit)
+                            @("Total Weight : " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRoundedUnit)
                         }
                     </th>
                     <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: right; vertical-align: top;">
@@ -42,20 +42,14 @@
                     </th>
                 </tr>
             }
-            if (Model.OrderSummaryModel.InvoiceTypeId != InvoiceTypeEnum.FinalInvoice)
-            {
-                break;
-            }
         }
     }
-    <tr>
-        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;"></th>
-        <th colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
-            @if (string.IsNullOrWhiteSpace(Model.DeliveryDataModel?.DeliveryInstructions))
-            {
-                <br />
-            }
-            @Html.Raw(Model.DeliveryDataModel?.DeliveryInstructions?.Replace(Environment.NewLine, "<br />"))
-        </th>
-    </tr>
+    @*
+        <tr>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;"></th>
+            <th colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
+                Delivery Instructions
+            </th>
+        </tr>
+    *@
 </table>

@@ -7,6 +7,7 @@
     var clientName = ArchLibCache.ClientName;
     var baseUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "");
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    //Model.DeliveryInfoModel.OrderSummaryModel.UserFullName = (Model.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + Model.DeliveryInfoModel.OrderSummaryModel.LastName).Trim();
 }
 <table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
     <colgroup>
@@ -19,7 +20,7 @@
             <img src="@baseUrl/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/Image_000.webp" alt="@imageTitle" style="height: 97px; width: 97px;" title="@imageTitle" />
         </th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
-            <span style="color: #000000; font-size: 18px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">@Model.OrderSummaryModel.InvoiceType</span>
+            <span style="color: #000000; font-size: 18px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">@Model.DeliveryInfoModel.OrderSummaryModel.InvoiceType</span>
             <br style="clear: both;" />
             <span style="color: #000000; font-size: 18px; font-weight: bold;">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "NameOnInvoice")</span>
             <br style="clear: both;" />
@@ -33,18 +34,18 @@
             }
         </th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
-            Invoice# @Model.OrderSummaryModel.OrderHeaderId
+            Invoice# @Model.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId
             <br style="clear: both;" />
-            Date @DateTime.Parse(Model.OrderHeaderWIPModel.OrderDateTime).ToString("MMM-dd-yyyy")
+            Date @DateTime.Parse(Model.DeliveryInfoModel.OrderSummaryModel.OrderDateTime).ToString("MMM-dd-yyyy")
             <br style="clear: both;" />
-            <a href="mailto: @Model.OrderSummaryModel.EmailAddress" style="text-decoration: underline;">@Model.OrderSummaryModel.EmailAddress</a>
+            <a href="mailto: @Model.DeliveryInfoModel.OrderSummaryModel.EmailAddress" style="text-decoration: underline;">@Model.DeliveryInfoModel.OrderSummaryModel.EmailAddress</a>
             <br style="clear: both;" />
-            Ph. <a href="tel: @("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryDataModel.PrimaryTelephoneNum)</a>
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.AlternateTelephoneNum))
+            Ph. <a href="tel: @("+" + Model.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode + " " + Model.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@Model.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted</a>
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneNum))
             {
                 <br style="clear: both;" />
                 <span style="color: #000000;">Ph.</span>
-                <a href="tel: @("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryDataModel.AlternateTelephoneNum)</a>
+                <a href="tel: @("+" + Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneNum)" style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank">@("+" + Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneTelephoneCode + " " + Model.DeliveryInfoModel.DeliveryDataModel.AlternateTelephoneNum)</a>
             }
         </th>
     </tr>
@@ -56,12 +57,12 @@
             <a style="color: #0000ff; font-size: 14px; font-weight: bold; text-decoration: underline;" target="_blank" href="https://api.whatsapp.com/send?phone=@(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhone", ""))">@ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "ContactWhatsAppPhoneFormatted", "")</a>&nbsp;<img src="@baseUrl/Images/WhatsApp1_Small.png" />
             <br style="clear: both;" />
             <br style="clear: both;" />
-            @Model.DeliveryMethodModel.DeliveryMethodDesc
+            @Model.DeliveryInfoModel.DeliveryMethodModel.DeliveryMethodDesc
             @{
-                if (Model.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryMethodModel.PickupLocationId > 0)
+                if (Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId != null && Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId > 0)
                 {
-                    var pickupLocationModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryMethodModel.PickupLocationId);
-                    var demogInfoAddressModel = Model.DeliveryMethodModel.PickupLocationDemogInfoAddressModels.First(x => x.DemogInfoAddressId == pickupLocationModel.LocationDemogInfoAddressId);
+                    var pickupLocationModel = RetailSlnCache.PickupLocationModels.First(x => x.PickupLocationId == Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationId);
+                    var demogInfoAddressModel = Model.DeliveryInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels.First(x => x.DemogInfoAddressId == pickupLocationModel.LocationDemogInfoAddressId);
                     <br style="clear: both;" />
                     @demogInfoAddressModel.AddressLine1
                     if (!string.IsNullOrWhiteSpace(demogInfoAddressModel.AddressLine2))
@@ -77,27 +78,27 @@
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
             <span style="color: #000000; font-weight: normal;">Customer Address</span>
             <br style="clear: both;" />
-            <span style="color: #000000; font-size: 17px; font-weight: bold;">@Model.OrderSummaryModel.UserFullName</span>
+            <span style="color: #000000; font-size: 17px; font-weight: bold;">@(Model.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + Model.DeliveryInfoModel.OrderSummaryModel.LastName).Trim()</span>
             <br style="clear: both;" />
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryAddressModel.AddressName))
+            @*if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryAddressModel.AddressName))
             {
-                @Html.DisplayFor(m => m.DeliveryAddressModel.AddressName)
+                @Html.DisplayFor(m => m.DeliveryInfoModel.DeliveryAddressModel.AddressName)
                 <br />
-            }
-            @(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
-            @if (!string.IsNullOrWhiteSpace(Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
+            }*@
+            @(Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
             {
                 <br style="clear: both;" />
-                @Model.DeliveryDataModel.DeliveryAddressModel.AddressLine2
+                @Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.AddressLine2
             }
             <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.CityName + " " + Model.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryDataModel.DeliveryAddressModel.ZipCode)
+            @(Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.CityName + " " + Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.StateAbbrev + " " + Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.ZipCode)
             <br style="clear: both;" />
-            @(Model.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
-            @if (!string.IsNullOrWhiteSpace(Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum))
+            @(Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.CountryDesc + " - " + Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.CountryAbbrev)
+            @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.OrderSummaryModel.CorpAcctModel.TaxIdentNum))
             {
                 <br style="clear: both;" />
-                @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
+                @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.DeliveryInfoModel.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
             }
         </th>
     </tr>

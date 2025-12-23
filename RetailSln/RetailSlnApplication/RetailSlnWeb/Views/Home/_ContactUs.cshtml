@@ -1,59 +1,48 @@
-﻿@model ArchitectureLibraryModels.ContactUsModel
-@{
-    string divWidth, buttonWidth;
-    bool mobileDevice = Request.Browser.IsMobileDevice;
-    try
-    {
-        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
-        //Not using right now
-        if (userAgent.Contains("iphone;")) //iPhone
-        {
-            divWidth = "100%";
+﻿@using ArchitectureLibraryModels
+@model ContactUsModel
+<style>
+    .container {
+        align-items: stretch; /* Ensures columns stretch to the height of the tallest column */
+        display: flex; /* Enables Flexbox for the container */
+        flex-wrap: wrap; /* Allows columns to wrap to the next line on smaller screens */
+        gap: 9px; /* Adds space between columns */
+        width: 81%;
+    }
+
+    .column {
+        flex: 1; /* Allows columns to grow and shrink proportionally */
+        min-width: 153px; /* Minimum width before wrapping to the next line */
+        background-color: #ffffff; /* Example background color f0f0f0*/
+        padding: 9px; /* Example padding */
+        box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+        display: flex; /* Enables Flexbox for individual columns */
+        flex-direction: column; /* Stacks content within the column vertically */
+        /*justify-content: center;*/ /* Vertically centers content within each column */
+    }
+
+    /* Media query for smaller screens (e.g., mobile) */
+    @@media (max-width: 630px) {
+        .container {
+            width: 99%;
         }
-        else if (userAgent.Contains("ipad;") || userAgent.Contains("macintosh;"))
-        {
-            divWidth = "63%";
+        .column {
+            flex-basis: 100%; /* Columns take full width on smaller screens */
         }
-        else
-        {
-            divWidth = "45%";
+        #contactUsInfoTitle {
+            display: none;
         }
     }
-    catch
-    {
-        divWidth = "45%";
-    }
-    //Using this right now
-    if (mobileDevice)
-    {
-        divWidth = "90%";
-        buttonWidth = "95%";
-    }
-    else
-    {
-        divWidth = "54%";
-        buttonWidth = "95%";
-    }
-    //mobileDevice = true;
-}
-<div class="center container" id="divContactUs" style="width: @divWidth;">
-    <div class="row" style="text-align: left;">
-        <span style="color: #000000; font-size: 23px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">contact us</span>
+</style>
+<div class="container">
+    <div class="column">
+        <form id="formContactUsData">
+            @Html.Partial("_ContactUsData", Model)
+        </form>
+        <button class="loginRegisterbtn" id="contactUsSave" onclick="javascript: return contactUsSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">submit</button>
     </div>
-    <form id="formContactUsData">
-        @Html.Partial("_ContactUsData")
-    </form>
-    <div class="row" style="text-align: left;">
-        <button class="loginRegisterbtn" id="contactUsSave" onclick="javascript: return contactUsSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: @buttonWidth;" type="button">submit</button>
+    <div class="column">
+        @Html.Partial("_ContactUsInfo")
     </div>
-    @if (mobileDevice)
-    {
-        @Html.Partial("_ContactUsInfo2")
-    }
-    else
-    {
-        @Html.Partial("_ContactUsInfo1")
-    }
 </div>
 <script type="text/javascript">
     //document.getElementById("divContactUsScrollIntoView").scrollIntoView();
@@ -74,7 +63,7 @@
                 console.log("00001000", "contactUsSave_onclick success", responseData.processMessage);
                 document.getElementById("formContactUsData").innerHTML = responseData.htmlString;
                 //document.getElementById("divContactUsScrollIntoView").scrollIntoView();
-                console.log("00090000", "registerUserSave_onclick success", "Exit");
+                console.log("00090000", "contactUsSave_onclick success", "Exit");
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');

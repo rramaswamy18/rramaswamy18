@@ -7,16 +7,16 @@
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
-    string loggedInUserEmailAddress, loggedInUserFullName;
+    string loggedInUserEmailAddressTelephoneNumberFormatted, loggedInUserFullName;
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     if (sessionObjectModel == null)
     {
-        loggedInUserEmailAddress = "";
+        loggedInUserEmailAddressTelephoneNumberFormatted = "";
         loggedInUserFullName = "";
     }
     else
     {
-        loggedInUserEmailAddress = sessionObjectModel.EmailAddress;
+        loggedInUserEmailAddressTelephoneNumberFormatted = sessionObjectModel.TelephoneNumberFormatted + " / " + sessionObjectModel.EmailAddress;
         loggedInUserFullName = sessionObjectModel.FirstName + " " + sessionObjectModel.LastName;
     }
     //string whatsAppUrl = "https://api.whatsapp.com/send?phone=", copyrightYear = DateTime.Now.Year.ToString();
@@ -73,7 +73,7 @@
                 }
             </div>
             <br style="clear: both;" />
-            <p><span id="loggedInUserEmailAddress" style="color: #000000;">@loggedInUserEmailAddress</span><br style="clear: both;" /><span id="loggedInUserFullName" style="color: #000000;">@loggedInUserFullName</span></p>
+            <p><span id="loggedInUserTelephoneNumberFormatted" style="color: #000000; font-size: 13px;">@loggedInUserEmailAddressTelephoneNumberFormatted</span><br style="clear: both;" /><span id="loggedInUserFullName" style="color: #000000;">@loggedInUserFullName</span></p>
         </div>
         <div class="contact-section">
             <p>

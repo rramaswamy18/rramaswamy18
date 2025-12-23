@@ -2,20 +2,29 @@
 @using RetailSlnModels
 @model PaymentInfoModel
 <div id="divPayment0Info">
-    <form id="formPaymentInfo1Data">
+    <form id="formPaymentInfo0Data">
         @Html.Partial("_PaymentInfo0Data", Model)
     </form>
 </div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    @switch (Model.PaymentModeModel.PaymentModeId)
+    @switch (Model.DeliveryInfoModel.PaymentModeModel.PaymentModeId)
     {
         case PaymentModeEnum.COD:
         case PaymentModeEnum.CreditSale:
             <button class="loginRegisterbtn" id="paymentInfo1Save" onclick="javascript: return paymentInfo1Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Complete Order</button>
             break;
         case PaymentModeEnum.PaymentGateway:
-            @Html.Partial("_PaymentInfo3")
-            <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Payment Gateway</button>
+            if (Model.CreditCardDataModel.CreditCardProcessor == "TESTMODE")
+            {
+                <div id="paymentInfo9SaveButton">
+                    <button class="loginRegisterbtn" id="paymentInfo9Save" onclick="javascript: return paymentInfo9Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Credit Card Test</button>
+                </div>
+            }
+            else
+            {
+                @Html.Partial("_PaymentInfo3")
+                <button class="loginRegisterbtn" id="paymentInfo2Save" onclick="javascript: return paymentInfo2Save_onclick();" style="font-size: 20px; font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 63%;" type="button">Payment Gateway</button>
+            }
             break;
         case PaymentModeEnum.ProcessCreditCard:
             switch (Model.CreditCardDataModel.CreditCardProcessor)

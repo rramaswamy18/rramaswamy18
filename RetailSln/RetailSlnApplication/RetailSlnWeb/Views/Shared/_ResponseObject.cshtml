@@ -8,6 +8,10 @@
         {
             Model.ColumnCount = 1;
         }
+        if (Model.FontSize == 0)
+        {
+            Model.FontSize = 12;
+        }
         string textColor, textAlign, listStyleType;
         textColor = Model.TextColor;
         if (string.IsNullOrWhiteSpace(textColor))
@@ -40,7 +44,7 @@
             listStyleType = "decimal";
         }
         int i;
-        <ul style="color: @textColor; column-count: @Model.ColumnCount; display: inline-block; font-weight: bold; list-style-type: @listStyleType;">
+        <ul style="color: @textColor; column-count: @Model.ColumnCount; display: inline-block; font-size: @(Model.FontSize + "px"); font-weight: bold; list-style-type: @listStyleType;">
             @for (i = 0; i < Model.ResponseMessages.Count; i++)
             {
                 <li style="list-style-type: decimal; padding-right: 5px; text-align: @textAlign;">

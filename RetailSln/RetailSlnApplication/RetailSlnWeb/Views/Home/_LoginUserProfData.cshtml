@@ -20,12 +20,6 @@
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors" }).ToHtmlString()))
         </div>
     }
-    @*if (Model != null && Model.ResponseObjectModel != null)
-        {
-            <div class="row" id="divLoginUserProfResponseObject">
-                @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
-            </div>
-        }*@
     bool mobileDevice = Request.Browser.IsMobileDevice;
     string paddingLeft;
     if (mobileDevice)

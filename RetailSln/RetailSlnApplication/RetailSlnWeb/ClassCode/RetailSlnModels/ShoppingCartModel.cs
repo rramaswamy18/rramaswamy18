@@ -10,6 +10,7 @@ namespace RetailSlnModels
     public class ShoppingCartModel
     {
         public bool Checkout { set; get; }
+        public float ShoppingCartWIPSeqNum { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartItemModels { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartItemModelsSummary { set; get; }
         public ShoppingCartSummaryModel ShoppingCartSummaryModel { set; get; }

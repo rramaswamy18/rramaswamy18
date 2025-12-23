@@ -1,16 +1,16 @@
 ﻿@using RetailSlnCacheData
 @using RetailSlnModels
 @{
-    var paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-    paymentInfoModel = paymentInfoModel ?? new PaymentInfoModel();
-    paymentInfoModel.ShoppingCartModel = paymentInfoModel.ShoppingCartModel ?? new ShoppingCartModel { ShowDetail = false, ShoppingCartItemModels = new List<ShoppingCartItemModel>() };
-    paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel = paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel { TotalItemsCount = 0, TotalOrderAmount = 0, TotalOrderAmountFormatted = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""), };
-    Session["PaymentInfo"] = paymentInfoModel;
+    var shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
+    shoppingCartModel = shoppingCartModel ?? new ShoppingCartModel();
+    shoppingCartModel = shoppingCartModel ?? new ShoppingCartModel { ShowDetail = false, ShoppingCartItemModels = new List<ShoppingCartItemModel>() };
+    shoppingCartModel.ShoppingCartSummaryModel = shoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel { TotalItemsCount = 0, TotalOrderAmount = 0, TotalOrderAmountFormatted = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""), };
+    Session["ShoppingCart"] = shoppingCartModel;
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="divShoppingCart">
-    @Html.Partial("_ShoppingCart", paymentInfoModel)
+    @Html.Partial("_ShoppingCart", shoppingCartModel)
 </div>
 <script type="text/javascript">
-    shoppingCartSummary("@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount", "@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount", "@paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted");
+    shoppingCartSummary("@shoppingCartModel.ShoppingCartSummaryModel.TotalItemsCount", "@shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmount", "@shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted");
     document.getElementById("divScrollIntoView").scrollIntoView({ behavior: 'smooth', block: 'center' });
 </script>

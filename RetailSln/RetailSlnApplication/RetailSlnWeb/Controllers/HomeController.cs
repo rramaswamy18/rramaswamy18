@@ -40,10 +40,12 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult Index(string id)
         {
-            if (id == "CODEGEN01")
-            {
-                CreateClassDefns();
-            }
+            #region CodeGen Commented out
+            //if (id == "CODEGEN01")
+            //{
+            //    CreateClassDefns();
+            //}
+            #endregion
             //int x = 1, y = 0, z = x / y;
             //Session.Timeout = 2;
             ViewData["ActionName"] = "Index";
@@ -135,383 +137,385 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        private void CreateClassDefns()
-        {
-            string directoryName = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Domain\";
-            string directoryName2 = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Infrastructure\Configurations\";
-            string directoryName3 = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Infrastructure\DbContexts\";
-            string table_Schema, table_Name;
-            StreamWriter streamWriter, streamWriter2, streamWriter3;
-            SqlConnection sqlConnection = new SqlConnection("DATA SOURCE = .; INTEGRATED SECURITY = SSPI; INITIAL CATALOG = ArchLib");
-            sqlConnection.Open();
-            SqlConnection sqlConnection2 = new SqlConnection("DATA SOURCE = .; INTEGRATED SECURITY = SSPI; INITIAL CATALOG = ArchLib");
-            sqlConnection2.Open();
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME NOT IN('sysdiagrams') AND COLUMN_NAME NOT IN(TABLE_NAME + 'Id', 'Id', 'ClientId', 'AddUserId', 'AddUserName', 'AddDateTime', 'UpdUserId', '', 'UpdUserName', 'UpdDateTime') ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION", sqlConnection);
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            bool sqlDataReaderRead = sqlDataReader.Read();
-            streamWriter3 = new StreamWriter(directoryName3 + "ArchLibDbContext.cs");
-            CreateDbContextHeader(streamWriter3);
-            while (sqlDataReaderRead)
-            {
-                table_Schema = sqlDataReader["TABLE_SCHEMA"].ToString();
-                table_Name = sqlDataReader["TABLE_NAME"].ToString();
-                streamWriter = new StreamWriter(directoryName + table_Schema + @"\" + table_Name + ".cs");
-                streamWriter2 = new StreamWriter(directoryName2 + table_Schema + @"\" + table_Name + "Configuration.cs");
-                CreateClassDefnHeader(streamWriter, table_Schema, table_Name);
-                CreateClassConfigHeader(streamWriter2, table_Schema, table_Name);
-                streamWriter3.Write($"        public DbSet<{table_Name}> {table_Name}s {{ get; set; }}{Environment.NewLine}");
-                while (sqlDataReaderRead && table_Schema == sqlDataReader["TABLE_SCHEMA"].ToString() && table_Name == sqlDataReader["TABLE_NAME"].ToString())
-                {
-                    CreateClassDefnProperty(streamWriter, sqlDataReader);
-                    CreateClassConfigProperty(streamWriter2, sqlDataReader);
-                    sqlDataReaderRead = sqlDataReader.Read();
-                }
-                CreateClassConfigComputedColumn(streamWriter2, sqlConnection2, table_Schema, table_Name);
-                CreateClassConfigUniqueConstraint(streamWriter2, sqlConnection2, table_Schema, table_Name);
-                CreateForeignKey(streamWriter, table_Schema, table_Name, sqlConnection2);
+        #region CodeGen Commented out
+        //private void CreateClassDefns()
+        //{
+        //    string directoryName = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Domain\";
+        //    string directoryName2 = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Infrastructure\Configurations\";
+        //    string directoryName3 = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Infrastructure\DbContexts\";
+        //    string table_Schema, table_Name;
+        //    StreamWriter streamWriter, streamWriter2, streamWriter3;
+        //    SqlConnection sqlConnection = new SqlConnection("DATA SOURCE = .; INTEGRATED SECURITY = SSPI; INITIAL CATALOG = ArchLib");
+        //    sqlConnection.Open();
+        //    SqlConnection sqlConnection2 = new SqlConnection("DATA SOURCE = .; INTEGRATED SECURITY = SSPI; INITIAL CATALOG = ArchLib");
+        //    sqlConnection2.Open();
+        //    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME NOT IN('sysdiagrams') AND COLUMN_NAME NOT IN(TABLE_NAME + 'Id', 'Id', 'ClientId', 'AddUserId', 'AddUserName', 'AddDateTime', 'UpdUserId', '', 'UpdUserName', 'UpdDateTime') ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION", sqlConnection);
+        //    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //    bool sqlDataReaderRead = sqlDataReader.Read();
+        //    streamWriter3 = new StreamWriter(directoryName3 + "ArchLibDbContext.cs");
+        //    CreateDbContextHeader(streamWriter3);
+        //    while (sqlDataReaderRead)
+        //    {
+        //        table_Schema = sqlDataReader["TABLE_SCHEMA"].ToString();
+        //        table_Name = sqlDataReader["TABLE_NAME"].ToString();
+        //        streamWriter = new StreamWriter(directoryName + table_Schema + @"\" + table_Name + ".cs");
+        //        streamWriter2 = new StreamWriter(directoryName2 + table_Schema + @"\" + table_Name + "Configuration.cs");
+        //        CreateClassDefnHeader(streamWriter, table_Schema, table_Name);
+        //        CreateClassConfigHeader(streamWriter2, table_Schema, table_Name);
+        //        streamWriter3.Write($"        public DbSet<{table_Name}> {table_Name}s {{ get; set; }}{Environment.NewLine}");
+        //        while (sqlDataReaderRead && table_Schema == sqlDataReader["TABLE_SCHEMA"].ToString() && table_Name == sqlDataReader["TABLE_NAME"].ToString())
+        //        {
+        //            CreateClassDefnProperty(streamWriter, sqlDataReader);
+        //            CreateClassConfigProperty(streamWriter2, sqlDataReader);
+        //            sqlDataReaderRead = sqlDataReader.Read();
+        //        }
+        //        CreateClassConfigComputedColumn(streamWriter2, sqlConnection2, table_Schema, table_Name);
+        //        CreateClassConfigUniqueConstraint(streamWriter2, sqlConnection2, table_Schema, table_Name);
+        //        CreateForeignKey(streamWriter, table_Schema, table_Name, sqlConnection2);
 
-                streamWriter2.Write("        }" + Environment.NewLine);
-                streamWriter2.Write("    }" + Environment.NewLine);
-                streamWriter2.Write("}" + Environment.NewLine);
-                streamWriter2.Close();
+        //        streamWriter2.Write("        }" + Environment.NewLine);
+        //        streamWriter2.Write("    }" + Environment.NewLine);
+        //        streamWriter2.Write("}" + Environment.NewLine);
+        //        streamWriter2.Close();
 
-                streamWriter.Write("    }" + Environment.NewLine);
-                streamWriter.Write("}" + Environment.NewLine);
-                streamWriter.Close();
-            }
+        //        streamWriter.Write("    }" + Environment.NewLine);
+        //        streamWriter.Write("}" + Environment.NewLine);
+        //        streamWriter.Close();
+        //    }
 
-            streamWriter3.Write($"{Environment.NewLine}");
-            streamWriter3.Write($"        protected override void OnModelCreating(ModelBuilder modelBuilder){Environment.NewLine}");
-            streamWriter3.Write($"        {{{Environment.NewLine}");
-            streamWriter3.Write($"            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchLibDbContext).Assembly);{Environment.NewLine}");
-            streamWriter3.Write($"            base.OnModelCreating(modelBuilder);{Environment.NewLine}");
-            streamWriter3.Write($"        }}{Environment.NewLine}");
-            streamWriter3.Write($"{Environment.NewLine}");
-            streamWriter3.Write($"        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder){Environment.NewLine}");
-            streamWriter3.Write($"        {{{Environment.NewLine}");
-            streamWriter3.Write($"            configurationBuilder.Conventions.Add(_ => new DefaultSuserNameConvention());{Environment.NewLine}");
-            streamWriter3.Write($"        }}{Environment.NewLine}");
-            streamWriter3.Write($"    }}{Environment.NewLine}");
-            streamWriter3.Write($"}}{Environment.NewLine}");
-            streamWriter3.Close();
+        //    streamWriter3.Write($"{Environment.NewLine}");
+        //    streamWriter3.Write($"        protected override void OnModelCreating(ModelBuilder modelBuilder){Environment.NewLine}");
+        //    streamWriter3.Write($"        {{{Environment.NewLine}");
+        //    streamWriter3.Write($"            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchLibDbContext).Assembly);{Environment.NewLine}");
+        //    streamWriter3.Write($"            base.OnModelCreating(modelBuilder);{Environment.NewLine}");
+        //    streamWriter3.Write($"        }}{Environment.NewLine}");
+        //    streamWriter3.Write($"{Environment.NewLine}");
+        //    streamWriter3.Write($"        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder){Environment.NewLine}");
+        //    streamWriter3.Write($"        {{{Environment.NewLine}");
+        //    streamWriter3.Write($"            configurationBuilder.Conventions.Add(_ => new DefaultSuserNameConvention());{Environment.NewLine}");
+        //    streamWriter3.Write($"        }}{Environment.NewLine}");
+        //    streamWriter3.Write($"    }}{Environment.NewLine}");
+        //    streamWriter3.Write($"}}{Environment.NewLine}");
+        //    streamWriter3.Close();
 
-            sqlDataReader.Close();
-            sqlConnection2.Close();
-            sqlConnection.Close();
-        }
+        //    sqlDataReader.Close();
+        //    sqlConnection2.Close();
+        //    sqlConnection.Close();
+        //}
 
-        private void CreateClassDefnHeader(StreamWriter streamWriter, string table_Schema, string table_Name)
-        {
-            streamWriter.Write($"using ArchLib.Domain.Common;{Environment.NewLine}");
-            streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
-            streamWriter.Write($"using System.ComponentModel.DataAnnotations.Schema;{Environment.NewLine}");
-            streamWriter.Write($"using System.ComponentModel.DataAnnotations;{Environment.NewLine}");
-            streamWriter.Write($"using System.Linq;{Environment.NewLine}");
-            streamWriter.Write($"using System.Text;{Environment.NewLine}");
-            streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
-            streamWriter.Write($"{Environment.NewLine}");
-            streamWriter.Write($"namespace ArchLib.Domain.{table_Schema}{Environment.NewLine}");
-            streamWriter.Write($"{{{Environment.NewLine}");
-            streamWriter.Write($"    public class {table_Name} : BaseEntity{Environment.NewLine}");
-            streamWriter.Write($"    {{{Environment.NewLine}");
-        }
+        //private void CreateClassDefnHeader(StreamWriter streamWriter, string table_Schema, string table_Name)
+        //{
+        //    streamWriter.Write($"using ArchLib.Domain.Common;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.ComponentModel.DataAnnotations.Schema;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.ComponentModel.DataAnnotations;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Linq;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Text;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
+        //    streamWriter.Write($"{Environment.NewLine}");
+        //    streamWriter.Write($"namespace ArchLib.Domain.{table_Schema}{Environment.NewLine}");
+        //    streamWriter.Write($"{{{Environment.NewLine}");
+        //    streamWriter.Write($"    public class {table_Name} : BaseEntity{Environment.NewLine}");
+        //    streamWriter.Write($"    {{{Environment.NewLine}");
+        //}
 
-        private void CreateClassConfigHeader(StreamWriter streamWriter, string table_Schema, string table_Name)
-        {
-            streamWriter.Write($"using ArchLib.Domain.{table_Schema};{Environment.NewLine}");
-            streamWriter.Write($"using ArchLib.Enums;{Environment.NewLine}");
-            streamWriter.Write($"using Microsoft.EntityFrameworkCore;{Environment.NewLine}");
-            streamWriter.Write($"using Microsoft.EntityFrameworkCore.Metadata.Builders;{Environment.NewLine}");
-            streamWriter.Write($"using System;{Environment.NewLine}");
-            streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
-            streamWriter.Write($"using System.Linq;{Environment.NewLine}");
-            streamWriter.Write($"using System.Text;{Environment.NewLine}");
-            streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
-            streamWriter.Write($"namespace ArchLib.Domain.{table_Schema}{Environment.NewLine}");
-            streamWriter.Write($"{{{Environment.NewLine}");
-            streamWriter.Write($"    public class {table_Name}Configuration : IEntityTypeConfiguration<{table_Name}>{Environment.NewLine}");
-            streamWriter.Write($"    {{{Environment.NewLine}");
-            streamWriter.Write($"        public void Configure(EntityTypeBuilder<{table_Name}> entityTypeBuilder){Environment.NewLine}");
-            streamWriter.Write($"        {{{Environment.NewLine}");
-            streamWriter.Write($"            entityTypeBuilder.ToTable(\"{table_Name}\", SchemaType.{table_Schema}.ToString());{Environment.NewLine}");
-            streamWriter.Write($"{Environment.NewLine}");
-            //streamWriter.Write($"            //Primary Key{Environment.NewLine}");
-            //streamWriter.Write($"            entityTypeBuilder.HasKey(e => e.Id){Environment.NewLine}");
-            //streamWriter.Write($"                .HasName(\"{table_Name}_PK\");{Environment.NewLine}");
-            //streamWriter.Write($"{Environment.NewLine}");
-        }
+        //private void CreateClassConfigHeader(StreamWriter streamWriter, string table_Schema, string table_Name)
+        //{
+        //    streamWriter.Write($"using ArchLib.Domain.{table_Schema};{Environment.NewLine}");
+        //    streamWriter.Write($"using ArchLib.Enums;{Environment.NewLine}");
+        //    streamWriter.Write($"using Microsoft.EntityFrameworkCore;{Environment.NewLine}");
+        //    streamWriter.Write($"using Microsoft.EntityFrameworkCore.Metadata.Builders;{Environment.NewLine}");
+        //    streamWriter.Write($"using System;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Linq;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Text;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
+        //    streamWriter.Write($"namespace ArchLib.Domain.{table_Schema}{Environment.NewLine}");
+        //    streamWriter.Write($"{{{Environment.NewLine}");
+        //    streamWriter.Write($"    public class {table_Name}Configuration : IEntityTypeConfiguration<{table_Name}>{Environment.NewLine}");
+        //    streamWriter.Write($"    {{{Environment.NewLine}");
+        //    streamWriter.Write($"        public void Configure(EntityTypeBuilder<{table_Name}> entityTypeBuilder){Environment.NewLine}");
+        //    streamWriter.Write($"        {{{Environment.NewLine}");
+        //    streamWriter.Write($"            entityTypeBuilder.ToTable(\"{table_Name}\", SchemaType.{table_Schema}.ToString());{Environment.NewLine}");
+        //    streamWriter.Write($"{Environment.NewLine}");
+        //    //streamWriter.Write($"            //Primary Key{Environment.NewLine}");
+        //    //streamWriter.Write($"            entityTypeBuilder.HasKey(e => e.Id){Environment.NewLine}");
+        //    //streamWriter.Write($"                .HasName(\"{table_Name}_PK\");{Environment.NewLine}");
+        //    //streamWriter.Write($"{Environment.NewLine}");
+        //}
 
-        private void CreateDbContextHeader(StreamWriter streamWriter)
-        {
-            streamWriter.Write($"using ArchLib.Domain.ArchLib;{Environment.NewLine}");
-            streamWriter.Write($"using ArchLib.Infrastructure.Configurations;{Environment.NewLine}");
-            streamWriter.Write($"using Microsoft.EntityFrameworkCore;{Environment.NewLine}");
-            streamWriter.Write($"using System;{Environment.NewLine}");
-            streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
-            streamWriter.Write($"using System.Linq;{Environment.NewLine}");
-            streamWriter.Write($"using System.Text;{Environment.NewLine}");
-            streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
-            streamWriter.Write($"{Environment.NewLine}");
-            streamWriter.Write($"namespace ArchLib.Infrastructure.DbContexts{Environment.NewLine}");
-            streamWriter.Write($"{{{Environment.NewLine}");
-            streamWriter.Write($"    public class ArchLibDbContext : DbContext{Environment.NewLine}");
-            streamWriter.Write($"    {{{Environment.NewLine}");
-            streamWriter.Write($"        public ArchLibDbContext(DbContextOptions<ArchLibDbContext> options) : base(options){Environment.NewLine}");
-            streamWriter.Write($"        {{{Environment.NewLine}");
-            streamWriter.Write($"{Environment.NewLine}");
-            streamWriter.Write($"        }}{Environment.NewLine}");
-        }
+        //private void CreateDbContextHeader(StreamWriter streamWriter)
+        //{
+        //    streamWriter.Write($"using ArchLib.Domain.ArchLib;{Environment.NewLine}");
+        //    streamWriter.Write($"using ArchLib.Infrastructure.Configurations;{Environment.NewLine}");
+        //    streamWriter.Write($"using Microsoft.EntityFrameworkCore;{Environment.NewLine}");
+        //    streamWriter.Write($"using System;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Collections.Generic;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Linq;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Text;{Environment.NewLine}");
+        //    streamWriter.Write($"using System.Threading.Tasks;{Environment.NewLine}");
+        //    streamWriter.Write($"{Environment.NewLine}");
+        //    streamWriter.Write($"namespace ArchLib.Infrastructure.DbContexts{Environment.NewLine}");
+        //    streamWriter.Write($"{{{Environment.NewLine}");
+        //    streamWriter.Write($"    public class ArchLibDbContext : DbContext{Environment.NewLine}");
+        //    streamWriter.Write($"    {{{Environment.NewLine}");
+        //    streamWriter.Write($"        public ArchLibDbContext(DbContextOptions<ArchLibDbContext> options) : base(options){Environment.NewLine}");
+        //    streamWriter.Write($"        {{{Environment.NewLine}");
+        //    streamWriter.Write($"{Environment.NewLine}");
+        //    streamWriter.Write($"        }}{Environment.NewLine}");
+        //}
 
-        private void CreateClassDefnProperty(StreamWriter streamWriter, SqlDataReader sqlDataReader)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            string dataAnnotation, dataType, dataTypeComments, defaultValue;
-            dataTypeComments = sqlDataReader["DATA_TYPE"].ToString();
-            switch (sqlDataReader["DATA_TYPE"].ToString().ToUpper())
-            {
-                case "BIGINT":
-                    dataType = "long";
-                    defaultValue = "";
-                    break;
-                case "BIT":
-                    dataType = "bool";
-                    defaultValue = "";
-                    break;
-                case "DATE":
-                case "DATETIME":
-                case "DATETIME2":
-                    dataType = "DateTime";
-                    defaultValue = "";
-                    break;
-                case "NUMERIC":
-                    dataType = "decimal";
-                    defaultValue = "";
-                    dataTypeComments += "(" + sqlDataReader["NUMERIC_PRECISION"].ToString() + ", " + sqlDataReader["NUMERIC_SCALE"].ToString() + ")";
-                    break;
-                case "FLOAT":
-                    dataType = "float";
-                    defaultValue = "";
-                    break;
-                case "INT": 
-                    dataType = "int";
-                    defaultValue = "";
-                    break;
-                case "NVARCHAR":
-                case "VARCHAR":
-                    dataType = "string";
-                    dataTypeComments += "(" + sqlDataReader["CHARACTER_MAXIMUM_LENGTH"].ToString() + ")";
-                    if (sqlDataReader["IS_NULLABLE"].ToString() == "YES")
-                    {
-                        defaultValue = "";
-                    }
-                    else
-                    {
-                        defaultValue = " = default!;";
-                    }
-                    break;
-                case "SMALLINT":
-                    dataType = "short";
-                    defaultValue = "";
-                    break;
-                case "VARBINARY":
-                    dataType = "byte[]";
-                    defaultValue = "";
-                    break;
-                default:
-                    dataType = "xyz";
-                    defaultValue = "";
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000xyz", "Table", sqlDataReader["TABLE_NAME"].ToString(), "Column", sqlDataReader["COLUMN_NAME"].ToString(), "Type", sqlDataReader["DATA_TYPE"].ToString());
-                    break;
-            }
-            if (sqlDataReader["IS_NULLABLE"].ToString() == "YES")
-            {
-                dataType += "?";
-                dataTypeComments += " NULL";
-                dataAnnotation = "[Column(TypeName = \"" + dataTypeComments + "\")]";
-            }
-            else
-            {
-                dataTypeComments += " NOT NULL";
-                dataAnnotation = "[Required, Column(TypeName = \"" + dataTypeComments + "\")]";
-            }
-            streamWriter.Write($"        {dataAnnotation}{Environment.NewLine}");
-            streamWriter.Write($"        public {dataType} {sqlDataReader["COLUMN_NAME"].ToString()} {{ get; set; }}{defaultValue} //{dataTypeComments}{Environment.NewLine}");
-        }
+        //private void CreateClassDefnProperty(StreamWriter streamWriter, SqlDataReader sqlDataReader)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    string dataAnnotation, dataType, dataTypeComments, defaultValue;
+        //    dataTypeComments = sqlDataReader["DATA_TYPE"].ToString();
+        //    switch (sqlDataReader["DATA_TYPE"].ToString().ToUpper())
+        //    {
+        //        case "BIGINT":
+        //            dataType = "long";
+        //            defaultValue = "";
+        //            break;
+        //        case "BIT":
+        //            dataType = "bool";
+        //            defaultValue = "";
+        //            break;
+        //        case "DATE":
+        //        case "DATETIME":
+        //        case "DATETIME2":
+        //            dataType = "DateTime";
+        //            defaultValue = "";
+        //            break;
+        //        case "NUMERIC":
+        //            dataType = "decimal";
+        //            defaultValue = "";
+        //            dataTypeComments += "(" + sqlDataReader["NUMERIC_PRECISION"].ToString() + ", " + sqlDataReader["NUMERIC_SCALE"].ToString() + ")";
+        //            break;
+        //        case "FLOAT":
+        //            dataType = "float";
+        //            defaultValue = "";
+        //            break;
+        //        case "INT": 
+        //            dataType = "int";
+        //            defaultValue = "";
+        //            break;
+        //        case "NVARCHAR":
+        //        case "VARCHAR":
+        //            dataType = "string";
+        //            dataTypeComments += "(" + sqlDataReader["CHARACTER_MAXIMUM_LENGTH"].ToString() + ")";
+        //            if (sqlDataReader["IS_NULLABLE"].ToString() == "YES")
+        //            {
+        //                defaultValue = "";
+        //            }
+        //            else
+        //            {
+        //                defaultValue = " = default!;";
+        //            }
+        //            break;
+        //        case "SMALLINT":
+        //            dataType = "short";
+        //            defaultValue = "";
+        //            break;
+        //        case "VARBINARY":
+        //            dataType = "byte[]";
+        //            defaultValue = "";
+        //            break;
+        //        default:
+        //            dataType = "xyz";
+        //            defaultValue = "";
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000xyz", "Table", sqlDataReader["TABLE_NAME"].ToString(), "Column", sqlDataReader["COLUMN_NAME"].ToString(), "Type", sqlDataReader["DATA_TYPE"].ToString());
+        //            break;
+        //    }
+        //    if (sqlDataReader["IS_NULLABLE"].ToString() == "YES")
+        //    {
+        //        dataType += "?";
+        //        dataTypeComments += " NULL";
+        //        dataAnnotation = "[Column(TypeName = \"" + dataTypeComments + "\")]";
+        //    }
+        //    else
+        //    {
+        //        dataTypeComments += " NOT NULL";
+        //        dataAnnotation = "[Required, Column(TypeName = \"" + dataTypeComments + "\")]";
+        //    }
+        //    streamWriter.Write($"        {dataAnnotation}{Environment.NewLine}");
+        //    streamWriter.Write($"        public {dataType} {sqlDataReader["COLUMN_NAME"].ToString()} {{ get; set; }}{defaultValue} //{dataTypeComments}{Environment.NewLine}");
+        //}
 
-        private void CreateClassConfigProperty(StreamWriter streamWriter, SqlDataReader sqlDataReader)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        }
+        //private void CreateClassConfigProperty(StreamWriter streamWriter, SqlDataReader sqlDataReader)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //}
 
-        private void CreateClassConfigComputedColumn(StreamWriter streamWriter, SqlConnection sqlConnection, string table_Schema, string table_Name)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            string sqlStmt = "";
-            //sqlStmt += "" + Environment.NewLine;
-            sqlStmt += $"        SELECT" + Environment.NewLine;
-            sqlStmt += $"               SCHEMA_NAME(obj.schema_id) AS SchemaName" + Environment.NewLine;
-            sqlStmt += $"              ,obj.name AS TableName" + Environment.NewLine;
-            sqlStmt += $"              ,col.name AS ColumnName" + Environment.NewLine;
-            sqlStmt += $"              ,col.definition AS ComputedColumnFormula" + Environment.NewLine;
-            sqlStmt += $"              ,col.is_persisted AS IsPersisted" + Environment.NewLine;
-            sqlStmt += $"          FROM" + Environment.NewLine;
-            sqlStmt += $"               sys.computed_columns AS col" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN" + Environment.NewLine;
-            sqlStmt += $"               sys.objects AS obj ON col.object_id = obj.object_id" + Environment.NewLine;
-            sqlStmt += $"         WHERE SCHEMA_NAME(obj.schema_id) = '{table_Schema}'" + Environment.NewLine;
-            sqlStmt += $"           AND obj.name = '{table_Name}'" + Environment.NewLine;
-            sqlStmt += $"      ORDER BY" + Environment.NewLine;
-            sqlStmt += $"               obj.name" + Environment.NewLine;
-            sqlStmt += $"              ,col.name" + Environment.NewLine;
-            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            while (sqlDataReader.Read())
-            {
-                streamWriter.Write($"            entityTypeBuilder.Property(p => p.{sqlDataReader["ColumnName"].ToString()}){Environment.NewLine}");
-                streamWriter.Write($"                .HasComputedColumnSql(\"{sqlDataReader["ComputedColumnFormula"].ToString()}\");{Environment.NewLine}"); // SQL expression
-            }
-            sqlDataReader.Close();
-        }
+        //private void CreateClassConfigComputedColumn(StreamWriter streamWriter, SqlConnection sqlConnection, string table_Schema, string table_Name)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    string sqlStmt = "";
+        //    //sqlStmt += "" + Environment.NewLine;
+        //    sqlStmt += $"        SELECT" + Environment.NewLine;
+        //    sqlStmt += $"               SCHEMA_NAME(obj.schema_id) AS SchemaName" + Environment.NewLine;
+        //    sqlStmt += $"              ,obj.name AS TableName" + Environment.NewLine;
+        //    sqlStmt += $"              ,col.name AS ColumnName" + Environment.NewLine;
+        //    sqlStmt += $"              ,col.definition AS ComputedColumnFormula" + Environment.NewLine;
+        //    sqlStmt += $"              ,col.is_persisted AS IsPersisted" + Environment.NewLine;
+        //    sqlStmt += $"          FROM" + Environment.NewLine;
+        //    sqlStmt += $"               sys.computed_columns AS col" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN" + Environment.NewLine;
+        //    sqlStmt += $"               sys.objects AS obj ON col.object_id = obj.object_id" + Environment.NewLine;
+        //    sqlStmt += $"         WHERE SCHEMA_NAME(obj.schema_id) = '{table_Schema}'" + Environment.NewLine;
+        //    sqlStmt += $"           AND obj.name = '{table_Name}'" + Environment.NewLine;
+        //    sqlStmt += $"      ORDER BY" + Environment.NewLine;
+        //    sqlStmt += $"               obj.name" + Environment.NewLine;
+        //    sqlStmt += $"              ,col.name" + Environment.NewLine;
+        //    SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //    while (sqlDataReader.Read())
+        //    {
+        //        streamWriter.Write($"            entityTypeBuilder.Property(p => p.{sqlDataReader["ColumnName"].ToString()}){Environment.NewLine}");
+        //        streamWriter.Write($"                .HasComputedColumnSql(\"{sqlDataReader["ComputedColumnFormula"].ToString()}\");{Environment.NewLine}"); // SQL expression
+        //    }
+        //    sqlDataReader.Close();
+        //}
 
-        private void CreateClassConfigUniqueConstraint(StreamWriter streamWriter, SqlConnection sqlConnection, string table_Schema, string table_Name)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            #region
-            string sqlStmt = "";
-            sqlStmt += $"        SELECT " + Environment.NewLine;
-            sqlStmt += $"               sys.schemas.name AS table_schema" + Environment.NewLine;
-            sqlStmt += $"              ,sys.tables.name AS table_name" + Environment.NewLine;
-            sqlStmt += $"              ,sys.indexes.name" + Environment.NewLine;
-            sqlStmt += $"              ,sys.indexes.is_primary_key" + Environment.NewLine;
-            sqlStmt += $"              ,sys.indexes.index_id" + Environment.NewLine;
-            sqlStmt += $"              ,sys.indexes.type_desc" + Environment.NewLine;
-            sqlStmt += $"              ,OBJECT_NAME(index_columns.object_id) AS TableName" + Environment.NewLine;
-            sqlStmt += $"              ,COL_NAME(index_columns.object_id, index_columns.column_id) AS ColumnName" + Environment.NewLine;
-            sqlStmt += $"              ,index_columns.key_ordinal" + Environment.NewLine;
-            sqlStmt += $"              ,sys.indexes.is_unique_constraint" + Environment.NewLine;
-            sqlStmt += $"          FROM sys.indexes" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN sys.tables" + Environment.NewLine;
-            sqlStmt += $"            ON sys.indexes.object_id = sys.tables.object_id" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN sys.schemas" + Environment.NewLine;
-            sqlStmt += $"            ON sys.tables.schema_id = sys.schemas.schema_id" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN sys.index_columns" + Environment.NewLine;
-            sqlStmt += $"            ON sys.indexes.object_id = index_columns.object_id" + Environment.NewLine;
-            sqlStmt += $"           AND sys.indexes.index_id = index_columns.index_id" + Environment.NewLine;
-            sqlStmt += $"         WHERE sys.schemas.name = '{table_Schema}'" + Environment.NewLine;
-            sqlStmt += $"           AND sys.tables.name = '{table_Name}'" + Environment.NewLine;
-            sqlStmt += $"      ORDER BY sys.indexes.name" + Environment.NewLine;
-            sqlStmt += $"              ,index_columns.key_ordinal" + Environment.NewLine;
-            SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-            #endregion
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            bool sqlDataReaderRead = sqlDataReader.Read();
-            bool is_primary_key, is_unique_constraint;
-            string index_name, index_columns, prefixString, type_desc;
-            while (sqlDataReaderRead)
-            {
-                index_name = sqlDataReader["name"].ToString();
-                is_primary_key = bool.Parse(sqlDataReader["is_primary_key"].ToString());
-                is_unique_constraint = bool.Parse(sqlDataReader["is_unique_constraint"].ToString());
-                type_desc = sqlDataReader["type_desc"].ToString();
-                index_columns = "";
-                prefixString = "";
-                while (sqlDataReaderRead && index_name == sqlDataReader["name"].ToString())
-                {
-                    index_columns += prefixString + "e." + sqlDataReader["ColumnName"].ToString();
-                    prefixString = ", ";
-                    sqlDataReaderRead = sqlDataReader.Read();
-                }
-                streamWriter.Write($"{Environment.NewLine}");
-                if (is_primary_key)
-                {
-                    streamWriter.Write($"            //{index_name} ({type_desc}) Primary Key{Environment.NewLine}");
-                    streamWriter.Write($"            entityTypeBuilder.HasKey(e => new {{ {index_columns} }}){Environment.NewLine}");
-                    streamWriter.Write($"                   .HasName(\"{index_name}\");{Environment.NewLine}");
-                }
-                else
-                {
-                    streamWriter.Write($"            //{index_name} ({type_desc}) Index{Environment.NewLine}");
-                    streamWriter.Write($"            entityTypeBuilder.HasIndex(e => new {{ {index_columns} }}){Environment.NewLine}");
-                    if (is_unique_constraint)
-                    {
-                        streamWriter.Write($"                   .IsUnique(){Environment.NewLine}");
-                    }
-                    if (type_desc == "CLUSTERED")
-                    {
-                        streamWriter.Write($"                   .IsClustered(){Environment.NewLine}");
-                    }
-                    streamWriter.Write($"                   .HasDatabaseName(\"{index_name}\");{Environment.NewLine}");
-                }
-                //streamWriter.Write($"            //{index_comments}{Environment.NewLine}");
-                //streamWriter.Write($"            //{index_columns}{Environment.NewLine}");
-            }
-            sqlDataReader.Close();
-        }
+        //private void CreateClassConfigUniqueConstraint(StreamWriter streamWriter, SqlConnection sqlConnection, string table_Schema, string table_Name)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    #region
+        //    string sqlStmt = "";
+        //    sqlStmt += $"        SELECT " + Environment.NewLine;
+        //    sqlStmt += $"               sys.schemas.name AS table_schema" + Environment.NewLine;
+        //    sqlStmt += $"              ,sys.tables.name AS table_name" + Environment.NewLine;
+        //    sqlStmt += $"              ,sys.indexes.name" + Environment.NewLine;
+        //    sqlStmt += $"              ,sys.indexes.is_primary_key" + Environment.NewLine;
+        //    sqlStmt += $"              ,sys.indexes.index_id" + Environment.NewLine;
+        //    sqlStmt += $"              ,sys.indexes.type_desc" + Environment.NewLine;
+        //    sqlStmt += $"              ,OBJECT_NAME(index_columns.object_id) AS TableName" + Environment.NewLine;
+        //    sqlStmt += $"              ,COL_NAME(index_columns.object_id, index_columns.column_id) AS ColumnName" + Environment.NewLine;
+        //    sqlStmt += $"              ,index_columns.key_ordinal" + Environment.NewLine;
+        //    sqlStmt += $"              ,sys.indexes.is_unique_constraint" + Environment.NewLine;
+        //    sqlStmt += $"          FROM sys.indexes" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN sys.tables" + Environment.NewLine;
+        //    sqlStmt += $"            ON sys.indexes.object_id = sys.tables.object_id" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN sys.schemas" + Environment.NewLine;
+        //    sqlStmt += $"            ON sys.tables.schema_id = sys.schemas.schema_id" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN sys.index_columns" + Environment.NewLine;
+        //    sqlStmt += $"            ON sys.indexes.object_id = index_columns.object_id" + Environment.NewLine;
+        //    sqlStmt += $"           AND sys.indexes.index_id = index_columns.index_id" + Environment.NewLine;
+        //    sqlStmt += $"         WHERE sys.schemas.name = '{table_Schema}'" + Environment.NewLine;
+        //    sqlStmt += $"           AND sys.tables.name = '{table_Name}'" + Environment.NewLine;
+        //    sqlStmt += $"      ORDER BY sys.indexes.name" + Environment.NewLine;
+        //    sqlStmt += $"              ,index_columns.key_ordinal" + Environment.NewLine;
+        //    SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //    #endregion
+        //    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //    bool sqlDataReaderRead = sqlDataReader.Read();
+        //    bool is_primary_key, is_unique_constraint;
+        //    string index_name, index_columns, prefixString, type_desc;
+        //    while (sqlDataReaderRead)
+        //    {
+        //        index_name = sqlDataReader["name"].ToString();
+        //        is_primary_key = bool.Parse(sqlDataReader["is_primary_key"].ToString());
+        //        is_unique_constraint = bool.Parse(sqlDataReader["is_unique_constraint"].ToString());
+        //        type_desc = sqlDataReader["type_desc"].ToString();
+        //        index_columns = "";
+        //        prefixString = "";
+        //        while (sqlDataReaderRead && index_name == sqlDataReader["name"].ToString())
+        //        {
+        //            index_columns += prefixString + "e." + sqlDataReader["ColumnName"].ToString();
+        //            prefixString = ", ";
+        //            sqlDataReaderRead = sqlDataReader.Read();
+        //        }
+        //        streamWriter.Write($"{Environment.NewLine}");
+        //        if (is_primary_key)
+        //        {
+        //            streamWriter.Write($"            //{index_name} ({type_desc}) Primary Key{Environment.NewLine}");
+        //            streamWriter.Write($"            entityTypeBuilder.HasKey(e => new {{ {index_columns} }}){Environment.NewLine}");
+        //            streamWriter.Write($"                   .HasName(\"{index_name}\");{Environment.NewLine}");
+        //        }
+        //        else
+        //        {
+        //            streamWriter.Write($"            //{index_name} ({type_desc}) Index{Environment.NewLine}");
+        //            streamWriter.Write($"            entityTypeBuilder.HasIndex(e => new {{ {index_columns} }}){Environment.NewLine}");
+        //            if (is_unique_constraint)
+        //            {
+        //                streamWriter.Write($"                   .IsUnique(){Environment.NewLine}");
+        //            }
+        //            if (type_desc == "CLUSTERED")
+        //            {
+        //                streamWriter.Write($"                   .IsClustered(){Environment.NewLine}");
+        //            }
+        //            streamWriter.Write($"                   .HasDatabaseName(\"{index_name}\");{Environment.NewLine}");
+        //        }
+        //        //streamWriter.Write($"            //{index_comments}{Environment.NewLine}");
+        //        //streamWriter.Write($"            //{index_columns}{Environment.NewLine}");
+        //    }
+        //    sqlDataReader.Close();
+        //}
 
-        private void CreateForeignKey(StreamWriter streamWriter, string table_Schema, string table_Name, SqlConnection sqlConnection)
-        {
-            string sqlStmt = "";
-            SqlCommand sqlCommand;
-            SqlDataReader sqlDataReader;
-            int index;
-            #region
-            sqlStmt += $"        SELECT" + Environment.NewLine;
-            sqlStmt += $"               KCU1.TABLE_SCHEMA AS ReferencingSchema" + Environment.NewLine;
-            sqlStmt += $"              ,KCU1.TABLE_NAME AS ReferencingTableName" + Environment.NewLine;
-            sqlStmt += $"              ,KCU1.COLUMN_NAME AS ReferencingColumnName" + Environment.NewLine;
-            sqlStmt += $"              ,KCU2.TABLE_SCHEMA AS ReferencedSchema" + Environment.NewLine;
-            sqlStmt += $"              ,KCU2.TABLE_NAME AS ReferencedTableName" + Environment.NewLine;
-            sqlStmt += $"              ,KCU2.COLUMN_NAME AS ReferencedColumnName" + Environment.NewLine;
-            sqlStmt += $"              ,RC.CONSTRAINT_NAME AS ForeignKeyName" + Environment.NewLine;
-            sqlStmt += $"          FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 ON RC.CONSTRAINT_NAME = KCU1.CONSTRAINT_NAME" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2 ON RC.UNIQUE_CONSTRAINT_NAME = KCU2.CONSTRAINT_NAME" + Environment.NewLine;
-            sqlStmt += $"         WHERE" + Environment.NewLine;
-            sqlStmt += $"               KCU2.TABLE_SCHEMA = '{table_Schema}'" + Environment.NewLine;
-            sqlStmt += $"           AND KCU2.TABLE_NAME = '{table_Name}'" + Environment.NewLine;
-            sqlStmt += $"      ORDER BY ReferencedSchema, ReferencedTableName, ReferencingSchema, ReferencingTableName" + Environment.NewLine;
-            sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-            sqlDataReader = sqlCommand.ExecuteReader();
-            #endregion
-            index = -1;
-            while (sqlDataReader.Read())
-            {
-                index++;
-                streamWriter.Write($"        public List<{sqlDataReader["ReferencingTableName"].ToString()}>? {sqlDataReader["ReferencingTableName"].ToString()}s{index} {{ get; set; }}{Environment.NewLine}");
-            }
-            sqlDataReader.Close();
-            //TODO - Reverse of above
-            #region
-            sqlStmt += $"        SELECT" + Environment.NewLine;
-            sqlStmt += $"               KCU1.TABLE_SCHEMA AS ReferencingSchema" + Environment.NewLine;
-            sqlStmt += $"              ,KCU1.TABLE_NAME AS ReferencingTableName" + Environment.NewLine;
-            sqlStmt += $"              ,KCU1.COLUMN_NAME AS ReferencingColumnName" + Environment.NewLine;
-            sqlStmt += $"              ,KCU2.TABLE_SCHEMA AS ReferencedSchema" + Environment.NewLine;
-            sqlStmt += $"              ,KCU2.TABLE_NAME AS ReferencedTableName" + Environment.NewLine;
-            sqlStmt += $"              ,KCU2.COLUMN_NAME AS ReferencedColumnName" + Environment.NewLine;
-            sqlStmt += $"              ,RC.CONSTRAINT_NAME AS ForeignKeyName" + Environment.NewLine;
-            sqlStmt += $"          FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 ON RC.CONSTRAINT_NAME = KCU1.CONSTRAINT_NAME" + Environment.NewLine;
-            sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2 ON RC.UNIQUE_CONSTRAINT_NAME = KCU2.CONSTRAINT_NAME" + Environment.NewLine;
-            sqlStmt += $"         WHERE" + Environment.NewLine;
-            sqlStmt += $"               KCU1.TABLE_SCHEMA = '{table_Schema}'" + Environment.NewLine;
-            sqlStmt += $"           AND KCU1.TABLE_NAME = '{table_Name}'" + Environment.NewLine;
-            sqlStmt += $"      ORDER BY ReferencedSchema, ReferencedTableName, ReferencingSchema, ReferencingTableName" + Environment.NewLine;
-            sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-            sqlDataReader = sqlCommand.ExecuteReader();
-            #endregion
-            index = -1;
-            while (sqlDataReader.Read())
-            {
-                index++;
-                streamWriter.Write($"        public {sqlDataReader["ReferencedTableName"].ToString()}? {sqlDataReader["ReferencedTableName"].ToString()}s{index} {{ get; set; }}{Environment.NewLine}");
-            }
-            sqlDataReader.Close();
-        }
+        //private void CreateForeignKey(StreamWriter streamWriter, string table_Schema, string table_Name, SqlConnection sqlConnection)
+        //{
+        //    string sqlStmt = "";
+        //    SqlCommand sqlCommand;
+        //    SqlDataReader sqlDataReader;
+        //    int index;
+        //    #region
+        //    sqlStmt += $"        SELECT" + Environment.NewLine;
+        //    sqlStmt += $"               KCU1.TABLE_SCHEMA AS ReferencingSchema" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU1.TABLE_NAME AS ReferencingTableName" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU1.COLUMN_NAME AS ReferencingColumnName" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU2.TABLE_SCHEMA AS ReferencedSchema" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU2.TABLE_NAME AS ReferencedTableName" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU2.COLUMN_NAME AS ReferencedColumnName" + Environment.NewLine;
+        //    sqlStmt += $"              ,RC.CONSTRAINT_NAME AS ForeignKeyName" + Environment.NewLine;
+        //    sqlStmt += $"          FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 ON RC.CONSTRAINT_NAME = KCU1.CONSTRAINT_NAME" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2 ON RC.UNIQUE_CONSTRAINT_NAME = KCU2.CONSTRAINT_NAME" + Environment.NewLine;
+        //    sqlStmt += $"         WHERE" + Environment.NewLine;
+        //    sqlStmt += $"               KCU2.TABLE_SCHEMA = '{table_Schema}'" + Environment.NewLine;
+        //    sqlStmt += $"           AND KCU2.TABLE_NAME = '{table_Name}'" + Environment.NewLine;
+        //    sqlStmt += $"      ORDER BY ReferencedSchema, ReferencedTableName, ReferencingSchema, ReferencingTableName" + Environment.NewLine;
+        //    sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //    sqlDataReader = sqlCommand.ExecuteReader();
+        //    #endregion
+        //    index = -1;
+        //    while (sqlDataReader.Read())
+        //    {
+        //        index++;
+        //        streamWriter.Write($"        public List<{sqlDataReader["ReferencingTableName"].ToString()}>? {sqlDataReader["ReferencingTableName"].ToString()}s{index} {{ get; set; }}{Environment.NewLine}");
+        //    }
+        //    sqlDataReader.Close();
+        //    //TODO - Reverse of above
+        //    #region
+        //    sqlStmt += $"        SELECT" + Environment.NewLine;
+        //    sqlStmt += $"               KCU1.TABLE_SCHEMA AS ReferencingSchema" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU1.TABLE_NAME AS ReferencingTableName" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU1.COLUMN_NAME AS ReferencingColumnName" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU2.TABLE_SCHEMA AS ReferencedSchema" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU2.TABLE_NAME AS ReferencedTableName" + Environment.NewLine;
+        //    sqlStmt += $"              ,KCU2.COLUMN_NAME AS ReferencedColumnName" + Environment.NewLine;
+        //    sqlStmt += $"              ,RC.CONSTRAINT_NAME AS ForeignKeyName" + Environment.NewLine;
+        //    sqlStmt += $"          FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 ON RC.CONSTRAINT_NAME = KCU1.CONSTRAINT_NAME" + Environment.NewLine;
+        //    sqlStmt += $"    INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2 ON RC.UNIQUE_CONSTRAINT_NAME = KCU2.CONSTRAINT_NAME" + Environment.NewLine;
+        //    sqlStmt += $"         WHERE" + Environment.NewLine;
+        //    sqlStmt += $"               KCU1.TABLE_SCHEMA = '{table_Schema}'" + Environment.NewLine;
+        //    sqlStmt += $"           AND KCU1.TABLE_NAME = '{table_Name}'" + Environment.NewLine;
+        //    sqlStmt += $"      ORDER BY ReferencedSchema, ReferencedTableName, ReferencingSchema, ReferencingTableName" + Environment.NewLine;
+        //    sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //    sqlDataReader = sqlCommand.ExecuteReader();
+        //    #endregion
+        //    index = -1;
+        //    while (sqlDataReader.Read())
+        //    {
+        //        index++;
+        //        streamWriter.Write($"        public {sqlDataReader["ReferencedTableName"].ToString()}? {sqlDataReader["ReferencedTableName"].ToString()}s{index} {{ get; set; }}{Environment.NewLine}");
+        //    }
+        //    sqlDataReader.Close();
+        //}
+        #endregion
 
         // GET: AboutUs
         [AllowAnonymous]
@@ -833,6 +837,7 @@ namespace RetailSlnWeb.Controllers
         [Route("LoginUserProf")]
         public ActionResult LoginUserProf()
         {
+            //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "LoginUserProf";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -842,11 +847,9 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             try
             {
-                LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
-                loginUserProfModel.CaptchaAnswerLogin = null;
-                loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
-                loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
+                //int x = 1, y = 0, z = x / y;
+                LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                loginUserProfModel.OTPRequestModel.RequestType = "Login";
                 actionResult = View("LoginUserProf", loginUserProfModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -859,11 +862,72 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // POST: LoginUserProf
-        [AllowAnonymous]
+        // POST: LoginUserProfOTPRequest
         [HttpPost]
-        public ActionResult LoginUserProf(LoginUserProfModel loginUserProfModel)
+        public ActionResult LoginUserProfOTPRequest(OTPRequestModel oTPRequestModel)
         {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "LoginUserProfOTPRequest";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            bool success;
+            string processMessage, htmlString;
+            OTPResponseModel oTPResponseModel = null;
+            //int x = 1, y = 0, z = x / y;
+            try
+            {
+                ModelState.Clear();
+                TryValidateModel(oTPRequestModel);
+                if (ModelState.IsValid)
+                {
+                    //oTPResponseModel = archLibBL.LoginUserProfOTPRequest(ref oTPRequestModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    oTPResponseModel.RequestType = "Login";
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error during OTP setup");
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+            }
+            if (ModelState.IsValid)
+            {
+                success = true;
+                processMessage = "SUCCESS!!!";
+            }
+            else
+            {
+                success = false;
+                processMessage = "ERROR???";
+            }
+            if (success)
+            {
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
+            }
+            else
+            {
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+                oTPRequestModel.CaptchaAnswer = null;
+                oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
+                oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+            }
+            actionResult = Json(new { success, processMessage, htmlString });
+            return actionResult;
+        }
+
+        // POST: LoginUserProfOTPResponse
+        [HttpPost]
+        public ActionResult LoginUserProfOTPResponse(OTPResponseModel oTPResponseModel)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "LoginUserProfOTPResponse";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -872,60 +936,132 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             bool success;
-            string processMessage, htmlString;
+            string processMessage, htmlString = "";
             try
             {
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
-                TryValidateModel(loginUserProfModel);
-                string currentLoggedInUserId = loggedInUserId;
-                SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
-                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+                TryValidateModel(oTPResponseModel);
                 if (ModelState.IsValid)
                 {
-                    var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    actionResult = Json(new { success, processMessage, redirectUrl });
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    //SessionObjectModel sessionObjectModel = archLibBL.LoginUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                        if (sessionObjectModel.NewUser)
+                        {
+                            retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        }
+                        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+                        sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+                        string currentLoggedInUserId = loggedInUserId;
+                        htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
+                        success = true;
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    }
+                    else
+                    {
+                        success = false;
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                    }
                 }
                 else
                 {
-                    loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                    };
                     success = false;
-                    processMessage = "ERROR???";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
-                    actionResult = Json(new { success, processMessage, htmlString });
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
-                loginUserProfModel.CaptchaAnswerLogin = null;
-                loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
-                loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+                success = false;
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+                ModelState.AddModelError("", "Error during OTP setup");
+            }
+            if (success)
+            {
+                processMessage = "SUCCESS!!!";
+                actionResult = Json(new { success, processMessage, htmlString });
+            }
+            else
+            {
+                oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
                 {
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                 };
-                htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
-                success = false;
                 processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
                 actionResult = Json(new { success, processMessage, htmlString });
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
             }
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 
         #region Commented Code
+        //// POST: LoginUserProf
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult LoginUserProf(LoginUserProfModel loginUserProfModel)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(loginUserProfModel);
+        //        string currentLoggedInUserId = loggedInUserId;
+        //        SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //        sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //        if (ModelState.IsValid)
+        //        {
+        //            var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
+        //            success = true;
+        //            processMessage = "SUCCESS!!!";
+        //            actionResult = Json(new { success, processMessage, redirectUrl });
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //        }
+        //        else
+        //        {
+        //            loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //            };
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
+        //            actionResult = Json(new { success, processMessage, htmlString });
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
+        //        loginUserProfModel.CaptchaAnswerLogin = null;
+        //        loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
+        //        loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //    }
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    return actionResult;
+        //}
         //// GET: OTP
         //[AllowAnonymous]
         //[HttpGet]
@@ -1082,217 +1218,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: RegisterUserOTP
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("RegisterUserOTP/{id?}")]
-        public ActionResult RegisterUserOTP(string id)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserOTP";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                RegisterUserOTPModel registerUserOTPModer = archLibBL.RegisterUserOTP(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("RegisterUserOTP", registerUserOTPModer);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
-        // GET: RegisterUserOTP
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult RegisterUserOTP(RegisterUserOTPModel registerUserOTPModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserOTP";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                int x = 1, y = 0, z = x / y;
-                ModelState.Clear();
-                TryValidateModel(registerUserOTPModel);
-                TryValidateModel(registerUserOTPModel.OTPModel, "OTPModel");
-                if (ModelState.IsValid)
-                {
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Model State Success");
-                    //RegisterUserOTPModel registerUserOTPModel = archLibBL.RegisterUserOTP(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                else
-                {
-                    success = false;
-                    processMessage = "ERROR???";
-                    registerUserOTPModel.OTPResponseModel = new OTPResponseModel();
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model State Errors");
-                }
-                //actionResult = View("RegisterUserOTP", registerUserOTPModel);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                processMessage = "ERROR???";
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                //actionResult = View("Error", responseObjectModel);
-            }
-            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserOTPData", registerUserOTPModel);
-            actionResult = Json(new { success, processMessage, htmlString });
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
-
-        // GET: RegisterUser
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("RegisterUser/{id?}")]
-        public ActionResult RegisterUser(string id)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUser";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
-                Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
-                actionResult = View("RegisterUser", registerUserModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
-        // POST: RegisterUser
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult RegisterUser(RegisterUserModel registerUserModel)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ModelState.Clear();
-                TryValidateModel(registerUserModel);
-                TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
-                archLibBL.RegisterUser(ref registerUserModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (ModelState.IsValid)
-                {
-                    if (!registerUserModel.RedirectToUpdatePassword)
-                    {
-                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                    RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
-                    {
-                        RegisterUserModel = registerUserModel,
-                    };
-                    retailSlnBL.RegisterUserExtn1(registerUserEmailModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    string registerUserEmailBodyHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailBody", registerUserEmailModel);
-                    string registerUserEmailSubjectHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailSubject", registerUserEmailModel);
-                    string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
-                    registerUserEmailBodyHtml += signatureHtml;
-                    archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserSuccess", registerUserEmailModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-                }
-                else
-                {
-                    success = false;
-                    processMessage = "ERROR???";
-                    var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-                    registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                    registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-                    if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-                    {
-                        registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-                    }
-                    else
-                    {
-                        registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-                    }
-                    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
-                registerUserModel.CaptchaAnswerRegisterUser = null;
-                registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
-                registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-                registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-                if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-                {
-                    registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-                }
-                else
-                {
-                    registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-                }
-                registerUserModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-            }
-            actionResult = Json(new { success, processMessage, htmlString });
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
-
-        // GET: RegisterUser
-        [AllowAnonymous]
+        // GET: RegisterUserProf
         [HttpGet]
         [Route("RegisterUserProf/{id?}")]
         public ActionResult RegisterUserProf(string id)
@@ -1308,10 +1234,10 @@ namespace RetailSlnWeb.Controllers
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
-                Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
-                actionResult = View("RegisterUserProf", registerUserModel);
+                id = "100"; //This action will be used for regular register - There will be no source
+;               RegisterUserProfModel registerUserProfModel = archLibBL.RegisterUserProf("", id, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                registerUserProfModel.OTPRequestModel.RequestType = "Register";
+                actionResult = View("RegisterUserProf", registerUserProfModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -1323,155 +1249,12 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // POST: RegisterUser
-        [AllowAnonymous]
+        // POST: RegisterUserProfOTPRequest
         [HttpPost]
-        public ActionResult RegisterUserProf(RegisterUserModel registerUserModel)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString, redirectUrl;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ModelState.Clear();
-                TryValidateModel(registerUserModel);
-                TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
-                archLibBL.RegisterUser(ref registerUserModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (ModelState.IsValid)
-                {
-                    if (!registerUserModel.RedirectToUpdatePassword)
-                    {
-                        retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                    RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
-                    {
-                        RegisterUserModel = registerUserModel,
-                    };
-                    string registerUserEmailBodyHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailBody", registerUserEmailModel);
-                    string registerUserEmailSubjectHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailSubject", registerUserEmailModel);
-                    string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
-                    registerUserEmailBodyHtml += signatureHtml;
-                    archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    LoginUserProfModel loginUserProfModel = new LoginUserProfModel
-                    {
-                        LoginEmailAddress = registerUserModel.RegisterEmailAddress,
-                        LoginPassword = registerUserModel.LoginPassword,
-                    };
-                    SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
-                    sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                    redirectUrl = LoginUserProfProcess(sessionObjectModel.AspNetUserId, sessionObjectModel);
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    htmlString = "";
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-                }
-                else
-                {
-                    var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                    registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-                    registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                    registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-                    if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-                    {
-                        registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-                    }
-                    else
-                    {
-                        registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-                    }
-                    success = false;
-                    processMessage = "ERROR???";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserModel);
-                    redirectUrl = "";
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
-                registerUserModel.CaptchaAnswerRegisterUser = null;
-                registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
-                registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-                registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-                registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-                if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-                {
-                    registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-                }
-                else
-                {
-                    registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-                }
-                registerUserModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
-                redirectUrl = "";
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-            }
-            actionResult = Json(new { success, processMessage, htmlString, redirectUrl });
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("ResetPassword")]
-        public ActionResult ResetPassword(string id)
+        public ActionResult RegisterUserProfOTPRequest(OTPRequestModel oTPRequestModel)
         {
             //int x = 1, y = 0, z = x / y;
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                ViewData["ActionName"] = "RESETPASSWORD";
-            }
-            else
-            {
-                ViewData["ActionName"] = id.ToUpper();
-            }
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ResetPasswordModel resetPasswordModel = archLibBL.ResetPassword(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("ResetPassword", resetPasswordModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "Reset Password GET");
-                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
-        // POST: ResetPassword
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult ResetPassword(ResetPasswordModel resetPasswordModel)
-        {
+            ViewData["ActionName"] = "RegisterUserProfOTPRequest";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -1480,57 +1263,575 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             bool success;
             string processMessage, htmlString;
+            OTPResponseModel oTPResponseModel = null;
+            //int x = 1, y = 0, z = x / y;
             try
             {
-                //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
-                TryValidateModel(resetPasswordModel);
-                UpdatePasswordModel updatePasswordModel = archLibBL.ResetPassword(ref resetPasswordModel, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                TryValidateModel(oTPRequestModel);
                 if (ModelState.IsValid)
                 {
-                    success = true;
-                    processMessage = "SUCCESS!!!";
-                    //UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(resetPasswordModel.ResetPasswordEmailAddress, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, resetPasswordModel.OTPCreatedDateTime, resetPasswordModel.OTPExpiryDateTime, resetPasswordModel.OTPExpiryDuration, resetPasswordModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    //updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
-                    //{
-                    //    BuildingTypeId = BuildingTypeEnum._,
-                    //    BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
-                    //    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                    //    DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
-                    //    DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
-                    //};
-                    htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePassword", updatePasswordModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "REGISTERUSERPROF", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    oTPResponseModel.RequestType = "Register";
                 }
-                else
-                {
-                    success = false;
-                    processMessage = "ERROR???";
-                    htmlString = archLibBL.ViewToHtmlString(this, "_ResetPasswordData", resetPasswordModel);
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberResetPassword0", "CaptchaNumberResetPassword1");
-                resetPasswordModel.CaptchaAnswerResetPassword = null;
-                resetPasswordModel.CaptchaNumberResetPassword0 = Session["CaptchaNumberResetPassword0"].ToString();
-                resetPasswordModel.CaptchaNumberResetPassword1 = Session["CaptchaNumberResetPassword1"].ToString();
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                resetPasswordModel.ResponseObjectModel = new ResponseObjectModel
+                ModelState.AddModelError("", "Error during OTP setup");
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+            }
+            if (ModelState.IsValid)
+            {
+                success = true;
+                processMessage = "SUCCESS!!!";
+            }
+            else
+            {
+                success = false;
+                processMessage = "ERROR???";
+            }
+            if (success)
+            {
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
+            }
+            else
+            {
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+                oTPRequestModel.CaptchaAnswer = null;
+                oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
+                oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+            }
+            actionResult = Json(new { success, processMessage, htmlString });
+            return actionResult;
+        }
+
+        // POST: RegisterUserProfOTPResponse
+        [HttpPost]
+        public ActionResult RegisterUserProfOTPResponse(OTPResponseModel oTPResponseModel)
+        {
+            //int x = 1, y = 0, z = x / y;
+            ViewData["ActionName"] = "RegisterUserProfOTPResponse";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+            ActionResult actionResult;
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            bool success;
+            string processMessage, htmlString = "";
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ModelState.Clear();
+                TryValidateModel(oTPResponseModel);
+                if (ModelState.IsValid)
+                {
+                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                        if (sessionObjectModel.NewUser)
+                        {
+                            retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        }
+                        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+                        sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+                        string currentLoggedInUserId = loggedInUserId;
+                        htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
+                        success = true;
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+                    }
+                    else
+                    {
+                        success = false;
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+                    }
+                }
+                else
+                {
+                    success = false;
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                success = false;
+                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+                ModelState.AddModelError("", "Error during OTP setup");
+            }
+            if (success)
+            {
+                processMessage = "SUCCESS!!!";
+                actionResult = Json(new { success, processMessage, htmlString });
+            }
+            else
+            {
+                oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
                 {
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                 };
-                success = false;
                 processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_ResetPasswordData", resetPasswordModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
+                actionResult = Json(new { success, processMessage, htmlString });
             }
-            actionResult = Json(new { success, processMessage, htmlString });
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
+
+        #region Commented Out Code
+        //// GET: RegisterUserOTP
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("RegisterUserOTP/{id?}")]
+        //public ActionResult RegisterUserOTP(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserOTP";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        RegisterUserOTPModel registerUserOTPModer = archLibBL.RegisterUserOTP(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("RegisterUserOTP", registerUserOTPModer);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+
+        //// GET: RegisterUserOTP
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult RegisterUserOTP(RegisterUserOTPModel registerUserOTPModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserOTP";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(registerUserOTPModel);
+        //        TryValidateModel(registerUserOTPModel.OTPModel, "OTPModel");
+        //        if (ModelState.IsValid)
+        //        {
+        //            success = true;
+        //            processMessage = "SUCCESS!!!";
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Model State Success");
+        //            //RegisterUserOTPModel registerUserOTPModel = archLibBL.RegisterUserOTP(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        }
+        //        else
+        //        {
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            registerUserOTPModel.OTPResponseModel = new OTPResponseModel();
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model State Errors");
+        //        }
+        //        //actionResult = View("RegisterUserOTP", registerUserOTPModel);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        //actionResult = View("Error", responseObjectModel);
+        //    }
+        //    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserOTPData", registerUserOTPModel);
+        //    actionResult = Json(new { success, processMessage, htmlString });
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    return actionResult;
+        //}
+
+        //// GET: RegisterUser
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("RegisterUser/{id?}")]
+        //public ActionResult RegisterUser(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUser";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
+        //        Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
+        //        actionResult = View("RegisterUser", registerUserModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+
+        //// POST: RegisterUser
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult RegisterUser(RegisterUserModel registerUserModel)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(registerUserModel);
+        //        TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
+        //        archLibBL.RegisterUser(ref registerUserModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (ModelState.IsValid)
+        //        {
+        //            if (!registerUserModel.RedirectToUpdatePassword)
+        //            {
+        //                retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //            RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
+        //            {
+        //                RegisterUserModel = registerUserModel,
+        //            };
+        //            retailSlnBL.RegisterUserExtn1(registerUserEmailModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            string registerUserEmailBodyHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailBody", registerUserEmailModel);
+        //            string registerUserEmailSubjectHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailSubject", registerUserEmailModel);
+        //            string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
+        //            registerUserEmailBodyHtml += signatureHtml;
+        //            archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            success = true;
+        //            processMessage = "SUCCESS!!!";
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserSuccess", registerUserEmailModel);
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //        }
+        //        else
+        //        {
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
+        //            registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
+        //            registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //            registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
+        //            if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
+        //            {
+        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
+        //            }
+        //            else
+        //            {
+        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
+        //            }
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
+        //        registerUserModel.CaptchaAnswerRegisterUser = null;
+        //        registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
+        //        registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
+        //        registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
+        //        registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //        registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
+        //        if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
+        //        {
+        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
+        //        }
+        //        else
+        //        {
+        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
+        //        }
+        //        registerUserModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString });
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    return actionResult;
+        //}
+
+        //// GET: RegisterUser
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("RegisterUserProf/{id?}")]
+        //public ActionResult RegisterUserProf(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserProf";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
+        //        Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
+        //        actionResult = View("RegisterUserProf", registerUserModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+
+        //// POST: RegisterUser
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult RegisterUserProf(RegisterUserModel registerUserModel)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    bool success;
+        //    string processMessage, htmlString, redirectUrl;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(registerUserModel);
+        //        TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
+        //        archLibBL.RegisterUser(ref registerUserModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (ModelState.IsValid)
+        //        {
+        //            if (!registerUserModel.RedirectToUpdatePassword)
+        //            {
+        //                retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //            RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
+        //            {
+        //                RegisterUserModel = registerUserModel,
+        //            };
+        //            string registerUserEmailBodyHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailBody", registerUserEmailModel);
+        //            string registerUserEmailSubjectHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailSubject", registerUserEmailModel);
+        //            string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
+        //            registerUserEmailBodyHtml += signatureHtml;
+        //            archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            LoginUserProfModel loginUserProfModel = new LoginUserProfModel
+        //            {
+        //                LoginEmailAddress = registerUserModel.RegisterEmailAddress,
+        //                LoginPassword = registerUserModel.LoginPassword,
+        //            };
+        //            SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //            sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //            redirectUrl = LoginUserProfProcess(sessionObjectModel.AspNetUserId, sessionObjectModel);
+        //            success = true;
+        //            processMessage = "SUCCESS!!!";
+        //            htmlString = "";
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //        }
+        //        else
+        //        {
+        //            var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
+        //            registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
+        //            registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //            registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
+        //            if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
+        //            {
+        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
+        //            }
+        //            else
+        //            {
+        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
+        //            }
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserModel);
+        //            redirectUrl = "";
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
+        //        registerUserModel.CaptchaAnswerRegisterUser = null;
+        //        registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
+        //        registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
+        //        registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
+        //        registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //        registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
+        //        if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
+        //        {
+        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
+        //        }
+        //        else
+        //        {
+        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
+        //        }
+        //        registerUserModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
+        //        redirectUrl = "";
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString, redirectUrl });
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    return actionResult;
+        //}
+
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("ResetPassword")]
+        //public ActionResult ResetPassword(string id)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    if (string.IsNullOrWhiteSpace(id))
+        //    {
+        //        ViewData["ActionName"] = "RESETPASSWORD";
+        //    }
+        //    else
+        //    {
+        //        ViewData["ActionName"] = id.ToUpper();
+        //    }
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ResetPasswordModel resetPasswordModel = archLibBL.ResetPassword(Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("ResetPassword", resetPasswordModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ModelState.AddModelError("", "Reset Password GET");
+        //        archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+
+        //// POST: ResetPassword
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult ResetPassword(ResetPasswordModel resetPasswordModel)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(resetPasswordModel);
+        //        UpdatePasswordModel updatePasswordModel = archLibBL.ResetPassword(ref resetPasswordModel, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (ModelState.IsValid)
+        //        {
+        //            success = true;
+        //            processMessage = "SUCCESS!!!";
+        //            //UpdatePasswordModel updatePasswordModel = archLibBL.UpdatePassword(resetPasswordModel.ResetPasswordEmailAddress, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, resetPasswordModel.OTPCreatedDateTime, resetPasswordModel.OTPExpiryDateTime, resetPasswordModel.OTPExpiryDuration, resetPasswordModel.OTPSendTypeId, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            //updatePasswordModel.DemogInfoAddressModel = new DemogInfoAddressModel
+        //            //{
+        //            //    BuildingTypeId = BuildingTypeEnum._,
+        //            //    BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"],
+        //            //    DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
+        //            //    DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems,
+        //            //    DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId],
+        //            //};
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePassword", updatePasswordModel);
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //        }
+        //        else
+        //        {
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_ResetPasswordData", resetPasswordModel);
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberResetPassword0", "CaptchaNumberResetPassword1");
+        //        resetPasswordModel.CaptchaAnswerResetPassword = null;
+        //        resetPasswordModel.CaptchaNumberResetPassword0 = Session["CaptchaNumberResetPassword0"].ToString();
+        //        resetPasswordModel.CaptchaNumberResetPassword1 = Session["CaptchaNumberResetPassword1"].ToString();
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        resetPasswordModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_ResetPasswordData", resetPasswordModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString });
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET: ResetPasswordContactUs
         [AllowAnonymous]
@@ -1662,96 +1963,98 @@ namespace RetailSlnWeb.Controllers
             return RedirectToAction("LoginUserProf");
         }
 
-        // POST: UpdatePassword
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult UpdatePassword(UpdatePasswordModel updatePasswordModel)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString;
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ModelState.Clear();
-                TryValidateModel(updatePasswordModel);
-                TryValidateModel(updatePasswordModel.DemogInfoAddressModel, "DemogInfoAddressModel");
-                string currentLoggedInUserId = loggedInUserId;
-                archLibBL.UpdatePassword(ref updatePasswordModel, false, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (ModelState.IsValid)
-                {
-                    LoginUserProfModel loginUserProfModel = new LoginUserProfModel
-                    {
-                        LoginEmailAddress = updatePasswordModel.EmailAddress,
-                        LoginPassword = updatePasswordModel.LoginPassword,
-                    };
-                    SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (ModelState.IsValid)
-                    {
-                        var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
-                        success = true;
-                        processMessage = "SUCCESS!!!";
-                        actionResult = Json(new { success, processMessage, redirectUrl });
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-                    }
-                    else
-                    {
-                        success = false;
-                        processMessage = "ERROR???";
-                        var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
-                        updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                        updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-                        updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
-                        archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-                        actionResult = Json(new { success, processMessage, htmlString });
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                    }
-                }
-                else
-                {
-                    success = false;
-                    processMessage = "ERROR???";
-                    var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
-                    updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                    updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-                    updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
-                    archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-                    actionResult = Json(new { success, processMessage, htmlString });
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
-                updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-                updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
-                updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
-                updatePasswordModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
-                htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-                success = false;
-                processMessage = "ERROR???";
-                actionResult = Json(new { success, processMessage, htmlString });
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-            }
-            //htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            return actionResult;
-        }
+        #region Commented Out Code
+        //// POST: UpdatePassword
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ActionResult UpdatePassword(UpdatePasswordModel updatePasswordModel)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(updatePasswordModel);
+        //        TryValidateModel(updatePasswordModel.DemogInfoAddressModel, "DemogInfoAddressModel");
+        //        string currentLoggedInUserId = loggedInUserId;
+        //        archLibBL.UpdatePassword(ref updatePasswordModel, false, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (ModelState.IsValid)
+        //        {
+        //            LoginUserProfModel loginUserProfModel = new LoginUserProfModel
+        //            {
+        //                LoginEmailAddress = updatePasswordModel.EmailAddress,
+        //                LoginPassword = updatePasswordModel.LoginPassword,
+        //            };
+        //            SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (ModelState.IsValid)
+        //            {
+        //                var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
+        //                success = true;
+        //                processMessage = "SUCCESS!!!";
+        //                actionResult = Json(new { success, processMessage, redirectUrl });
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //            }
+        //            else
+        //            {
+        //                success = false;
+        //                processMessage = "ERROR???";
+        //                var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
+        //                updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //                updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
+        //                updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
+        //                archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
+        //                actionResult = Json(new { success, processMessage, htmlString });
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            success = false;
+        //            processMessage = "ERROR???";
+        //            var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
+        //            updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //            updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
+        //            updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
+        //            archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
+        //            actionResult = Json(new { success, processMessage, htmlString });
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
+        //        updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
+        //        updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
+        //        updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
+        //        updatePasswordModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //    }
+        //    //htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET: UserProfile
         [Authorize]
@@ -1795,10 +2098,10 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ApplSessionObjectModel applSessionObjectModel;
-            applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            applSessionObjectModel = retailSlnBL.LoginUserProf(sessionObjectModel.PersonId, sessionObjectModel.AspNetRoleName, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             sessionObjectModel.ApplSessionObjectModel = applSessionObjectModel;
             SessionObjectModel createForSessionObject = archLibBL.CopySessionObject(sessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            applSessionObjectModel = retailSlnBL.LoginUserProf(createForSessionObject.PersonId, createForSessionObject.AspNetRoleName, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             createForSessionObject.ApplSessionObjectModel = applSessionObjectModel;
             Session["SessionObject"] = sessionObjectModel;
             Session["CreateForSessionObject"] = createForSessionObject;
@@ -1820,8 +2123,11 @@ namespace RetailSlnWeb.Controllers
             string redirectUrl;
             Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleNameProxy];
             redirectUrl = Url.Action(aspNetRoleKVPs["ActionName00"].KVPValueData, aspNetRoleKVPs["ControllerName00"].KVPValueData);
-            PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-            //retailSlnBL.CreateOrderWIP(ref paymentInfoModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
+            if (createForSessionObject.AspNetRoleName != "GUESTROLE")
+            {
+                retailSlnBL.ShoppingCartWIPCreate(shoppingCartModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            }
             //Take a look at the below logic Begin
             //if (currentLoggedInUserId != createForSessionObject.AspNetUserId)
             //{

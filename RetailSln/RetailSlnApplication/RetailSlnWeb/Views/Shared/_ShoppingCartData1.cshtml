@@ -1,13 +1,13 @@
 ﻿@using RetailSlnEnumerations
 @using RetailSlnModels
-@model PaymentInfoModel
+@model ShoppingCartModel
 @{
     int index = 0;
-    ShoppingCartBundleModel shoppingCartBundleModel = new ShoppingCartBundleModel { Checkout = Model.ShoppingCartModel.Checkout };
+    ShoppingCartBundleModel shoppingCartBundleModel = new ShoppingCartBundleModel { Checkout = Model.Checkout };
 }
 <table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
     <colgroup>
-        @if (!Model.ShoppingCartModel.Checkout)
+        @if (!Model.Checkout)
         {
             <col style="width: 27px;" />
         }
@@ -19,7 +19,7 @@
         <col style="width: 81px;" />
     </colgroup>
     <tr>
-        @if (!Model.ShoppingCartModel.Checkout)
+        @if (!Model.Checkout)
         {
             <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
         }
@@ -29,17 +29,17 @@
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Rate</th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Qty</th>
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Amount</th>
-        @if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice && Model.ShoppingCartModel.ShowDetail)
+        @*if (Model.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice && Model.ShowDetail)
         {
             <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">Other</th>
-        }
+        }*@
     </tr>
     @{
-        foreach (var shoppingCartItem in Model.ShoppingCartModel.ShoppingCartItemModels)
+        foreach (var shoppingCartItem in Model.ShoppingCartItemModels)
         {
             index++;
             <tr>
-                @if (!Model.ShoppingCartModel.Checkout)
+                @if (!Model.Checkout)
                 {
                     <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;"><a href="javascript: void(0);" onclick="javascript: return removeFromCart_onclick(@(index - 1));"><img alt="" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart #@(index)" /></a></td>
                 }
@@ -60,16 +60,17 @@
                         <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItem.ItemItemSpecsForDisplay</span>
                     }
                     <br />
-                    HSN :&nbsp;shoppingCartItem.HSNCode&nbsp;Prod Code :&nbsp;shoppingCartItem.ProductCode
+                    HSN :&nbsp;@shoppingCartItem.HSNCode&nbsp;Prod Code :&nbsp;@shoppingCartItem.ProductCode
                     <br style="clear: both;" />
                     MSRP&nbsp;@shoppingCartItem.ItemRateBeforeDiscountFormatted&nbsp;Disc&nbsp;@shoppingCartItem.ItemDiscountPercentFormatted
                     @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
                     {
                         @shoppingCartItemSummary.ItemShortDesc
                         <span>&nbsp;</span>
-                        @shoppingCartItem.ItemRateFormatted
+                        @shoppingCartItemSummary.ItemRateFormatted
                         <span>&nbsp;</span>
-                        @shoppingCartItem.OrderAmountFormatted
+                        @shoppingCartItemSummary.OrderAmountFormatted
+                        <span>&nbsp;</span>
                     }
                 </td>
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
@@ -81,47 +82,8 @@
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
                     @shoppingCartItem.OrderAmountFormatted
                 </td>
-                @*if (Model.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice && Model.ShoppingCartModel.ShowDetail)
-                {
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
-                        <table>
-                            <tr>
-                                <th>Desc</th>
-                                <th>Rate</th>
-                                <th>Amt</th>
-                            </tr>
-                            @if (shoppingCartItem.ItemDiscountPercent > 0)
-                            {
-                                <tr>
-                                    <td colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
-                                        MSRP<br />
-                                        @shoppingCartItem.ItemRateBeforeDiscountFormatted
-                                    </td>
-                                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
-                                        Disc.<br />
-                                        @shoppingCartItem.ItemDiscountPercentFormatted
-                                    </td>
-                                </tr>
-                            }
-                            @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
-                            {
-                                <tr>
-                                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
-                                        @shoppingCartItemSummary.ItemShortDesc
-                                    </th>
-                                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
-                                        @shoppingCartItemSummary.ItemRateFormatted
-                                    </th>
-                                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
-                                        @shoppingCartItemSummary.OrderAmountFormatted
-                                    </th>
-                                </tr>
-                            }
-                        </table>
-                    </td>
-                }*@
             </tr>
-            if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle && !Model.ShoppingCartModel.Checkout)
+            if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle && !Model.Checkout)
             {
                 shoppingCartBundleModel.Index = index;
                 shoppingCartBundleModel.ShoppingCartItemModel = shoppingCartItem;
