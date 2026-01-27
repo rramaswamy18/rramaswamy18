@@ -159,19 +159,10 @@
                             <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@primaryTelephoneFormatted</span>
                         </td>
                         <td style="text-align: left; vertical-align: top;; width: 50%; word-break: break-all;">
-                            @if (Model.OrderSummaryModel.EmailExists)
-                            {
-                                @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })
-                                <br />
-                                <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@Model.OrderSummaryModel.EmailAddress</span>
-                                @Html.HiddenFor(m => m.OrderSummaryModel.EmailAddress)
-                            }
-                            else
-                            {
-                                @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })<span style="color: #0000ff; font-weight: bold;">&nbsp;(Required)</span>
-                                @Html.TextAreaFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "form-control", maxlength = "256", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.EmailAddress), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter email address" })
-                                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.EmailAddress, "", new { id = "OrderSummaryModel_EmailAddress-error" }).ToHtmlString()))
-                            }
+                            @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })
+                            <br />
+                            <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@Model.OrderSummaryModel.EmailAddress</span>
+                            @Html.HiddenFor(m => m.OrderSummaryModel.EmailAddress)
                         </td>
                         <td style="text-align: left; width: 50%;">
                             &nbsp;
@@ -196,12 +187,14 @@
         <div class="row" style="padding-left: 9px; text-align: left;">
             <div style="display: table-cell; padding: 0px; width: 45%;">
                 @Html.LabelFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "col-form-label" })
-                @Html.TextBoxFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "form-control validate", maxlength = "5", min = "1", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.AdditionalCharges), oninput = "javascript: return orderQty2_oninput(this, '');", style = "width: 54%;", title = "Enter additional charges, if any" })
+                @*@Html.TextBoxFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "form-control validate", maxlength = "5", min = "1", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.AdditionalCharges), oninput = "javascript: return orderQty2_oninput(this, '');", style = "width: 54%;", title = "Enter additional charges, if any" })*@
+                @Html.TextAreaFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "form-control", maxlength = "5", min = "1", onfocus = "javascript: this.select();", oninput = "javascript: return orderQty2_oninput(this, '');", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.AdditionalCharges), style = "height: 32px; overflow: hidden; resize: none; width: 54%;", title = "Addtl. Chgs" })
                 @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.AdditionalCharges, "", new { id = "OrderSummaryModel_AdditionalCharges-error" }).ToHtmlString()))
             </div>
             <div style="display: table-cell; padding: 0px; text-align: left; width: 50%;">
                 @Html.LabelFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "col-form-label" })
-                @Html.TextBoxFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "form-control validate", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.CouponPaymentModel.CouponNumber), style = "width: 99%;", title = "Enter coupon#, if any and if applicable" })
+                @*@Html.TextBoxFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "form-control validate", maxlength = "100", placeholder = @Html.DisplayNameFor(m => m.CouponPaymentModel.CouponNumber), style = "width: 99%;", title = "Enter coupon#, if any and if applicable" })*@
+                @Html.TextAreaFor(m => m.CouponPaymentModel.CouponNumber, new { @class = "form-control validate", maxlength = "50", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.CouponPaymentModel.CouponNumber), style = "height: 32px; overflow: hidden; resize: none; width: 81%;", title = "Coupon#" })
                 @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.CouponPaymentModel.CouponNumber, "", new { id = "CouponPaymentModel_CouponNumber-error" }).ToHtmlString()))
             </div>
             <div style="display: table-cell; padding: 0px; text-align: left; width: 5%;">
@@ -394,12 +387,12 @@
     <div class="column">
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
-            @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onblur = "", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 1 for delivery" })
+            @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onfocus = "javascript: this.select();", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 1 for delivery" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.AddressLine1, "", new { id = "DeliveryAddressModel_AddressLine1-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "col-form-label" })
-            @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 2 for delivery, if any" })
+            @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine2, new { @class = "form-control", maxlength = "250", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine2), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 2 for delivery, if any" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.AddressLine2, "", new { id = "DeliveryAddressModel_AddressLine2-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">

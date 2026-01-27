@@ -52,7 +52,6 @@ function itemMasterSave_onclick() {
 function menuLink_onclick(url, queryString) {
     console.log("menuLink_onclick", "00000000", "ENTER!!!", url, queryString);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    //document.getElementById("divErrorMessage").innerHTML = "";
     url += queryString;
     console.log("menuLink_onclick", "00001000", "url", url, "queryString", queryString);
     $.ajax({
@@ -63,8 +62,8 @@ function menuLink_onclick(url, queryString) {
         //data: jsonPostDataString,
         success: function (responseData, textStatus, request) {
             $('#loadingModal').modal('hide');
-            console.log("00001000", "menuLink_onclick success", responseData.processMessage);
-            document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            console.log("00001000", "menuLink_onclick SUCCESS!!!", textStatus, request);
+            document.getElementById("divDashboard").innerHTML = responseData;
         },
         error: function (xhr, exception) {
             $('#loadingModal').modal('hide');
@@ -72,6 +71,16 @@ function menuLink_onclick(url, queryString) {
             console.log(xhr, exception);
         }
     });
+}
+function itemCatalogSearch_oninput() {
+    var stringToBeSearched = document.getElementById("itemCatalogSearch").value;
+    console.log(9, stringToBeSearched);
+    const regExp = new RegExp(stringToBeSearched, 'gi');
+    const matchStringArray = document.getElementById("divDashboard").innerText.matchAll(regExp) || [];
+    const indexes = Array.from(matchStringArray, match => match.index);
+    console.log(9.9, "stringToBeSearched", stringToBeSearched, "indexes", indexes);
+    console.log(document.getElementById("divDashboard").innerText.substring(indexes[0], indexes[0] + stringToBeSearched.length));
+    console.log(document.getElementById("divDashboard").innerText.substring(indexes[1], indexes[1] + stringToBeSearched.length));
 }
 function orderView_onclick(orderHeaderSummaryId) {
     console.log("orderView_onclick", "00000000", "ENTER!!!");
@@ -95,6 +104,48 @@ function orderView_onclick(orderHeaderSummaryId) {
         }
     });
 }
+/*
+
+const animalsMixedCase = ['Frog', 'Monkey', 'Gorilla', 'Lion', 'Tiger'];
+const searchTermCaseInsensitive = 'OG';
+
+const matchingAnimalsCaseInsensitive = animalsMixedCase.filter(animal =>
+  animal.toLowerCase().includes(searchTermCaseInsensitive.toLowerCase())
+);
+
+console.log(matchingAnimalsCaseInsensitive);
+// Output: ["Frog"]
+
+https://www.google.com/search?q=how+to+jump+to+a+specific+index++in+web+page+javascript&sca_esv=8770e74ec2be9912&ei=8fVmaZW2C-WFw8cPzem20QU&ved=0ahUKEwjV8p3y9ImSAxXlwvACHc20LVoQ4dUDCBE&uact=5&oq=how+to+jump+to+a+specific+index++in+web+page+javascript&gs_lp=Egxnd3Mtd2l6LXNlcnAiN2hvdyB0byBqdW1wIHRvIGEgc3BlY2lmaWMgaW5kZXggIGluIHdlYiBwYWdlIGphdmFzY3JpcHQyCBAAGKIEGIkFMgUQABjvBTIFEAAY7wUyCBAAGIAEGKIESPWXAVDvIViWlgFwAngBkAEAmAHGAaABpySqAQQwLjI4uAEDyAEA-AEBmAIQoALUEsICChAAGLADGNYEGEfCAgoQIRigARjDBBgKwgIEECEYCsICCBAhGKABGMMEmAMAiAYBkAYIkgcGMi4xMy4xoAfNd7IHBjAuMTMuMbgHzRLCBwYxLjE0LjHIBxqACAA&sclient=gws-wiz-serp
+while ((match = regex.exec(mainString)) !== null) {
+    indexes.push(match.index);
+}
+function countOccurrencesRegex(mainStr, subStr) {
+  // The 'g' flag is for global search; 'i' is for case-insensitive (optional)
+  const regex = new RegExp(subStr, 'g'); 
+  // match() returns an array of matches, or null if no matches are found.
+
+  // The '|| []' ensures we get an empty array instead of null, allowing us to safely use .length.
+
+  const matches = mainStr.match(regex) || [];
+  return matches.length;
+}
+
+const text = "Hello world, hello JavaScript, hello again.";
+const count = countOccurrencesRegex(text, "hello");
+console.log(count); // Output: 2 (case-sensitive)
+
+// For case-insensitive search, add the 'i' flag:
+function countOccurrencesCaseInsensitive(mainStr, subStr) {
+  const regex = new RegExp(subStr, 'gi');
+
+  const matches = mainStr.match(regex) || [];
+  return matches.length;
+}
+
+const countInsensitive = countOccurrencesCaseInsensitive(text, "hello");
+console.log(countInsensitive); // Output: 3
+*/
 /*
 function addEditLink_onclick(url, queryString) {
     console.log("addEditLink_onclick", "00000000", "ENTER!!!", url);

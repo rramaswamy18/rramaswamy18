@@ -1,11 +1,12 @@
-﻿@model CategoryListModel
-@using ArchitectureLibraryCacheData
+﻿@using ArchitectureLibraryCacheData
 @using RetailSlnModels
+@model SearchResultModel
 @{
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int index = 0;
+    CategoryModel categoryModel;
 }
 <table class="table table-bordered table-condensed table-hover table-responsive" style="margin-left: auto; margin-right: auto; width: 63%;">
     <tr>
@@ -22,9 +23,10 @@
             Image
         </th>
     </tr>
-    @foreach (var categoryModel in Model.CategoryModels)
+    @foreach (var categoryCategoryItemMasterHierModel in Model.CategoryCategoryItemMasterHierModels)
     {
         index++;
+        categoryModel = categoryCategoryItemMasterHierModel.CategoryModel;
         <tr>
             <td>
                 @index

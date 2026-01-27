@@ -49,8 +49,8 @@
 </head>
 <body>
     @*
-      <script src="https://js.stripe.com/v3/"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     *@
     <script type="text/javascript">
         $(document).ready(function () {
@@ -62,6 +62,7 @@
         }
     </script>
     <script src="~/Include/orderItemCode0.js" type="text/javascript"></script>
+    <div id="divScrollIntoView"></div>
     <div class="body-container">
         <header class="header-section sticky">
             <div class=" top-bar">
@@ -141,7 +142,6 @@
         </header>
         <div class="center main-body" style="padding: 0px; text-align: center; width: 100%;">
             <main role="main" class="pb-3">
-                <div id="divScrollIntoView"></div>
                 <div id="divOrderProcess">
                     @RenderBody()
                 </div>

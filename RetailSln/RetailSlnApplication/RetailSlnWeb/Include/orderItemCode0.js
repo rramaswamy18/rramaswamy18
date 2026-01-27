@@ -5,7 +5,7 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     var orderQtyElement = document.getElementById("orderQty" + elementIdSuffix);
     var orderQty = orderQtyElement.value, orderQtyBundleCount;
-    console.log("addToCart_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "defaultValue", defaultValue, "defaultValue=null", (defaultValue == null), "orderQty", orderQty, "maxlength", orderQtyElement.getAttribute("maxlength"), "min", orderQtyElement.getAttribute("min"), "max", orderQtyElement.getAttribute("max"), "maxlength", orderQty.length <= orderQtyElement.getAttribute("maxlength"), "min", orderQty <= orderQtyElement.getAttribute("min"), "max", orderQty <= orderQtyElement.getAttribute("max"));
+    console.log("addToCart_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "defaultValue", defaultValue, "doNotBreakBundleParm", doNotBreakBundleParm, "itemBundleFlag", itemBundleFlag, "defaultValue==null", (defaultValue == null), "orderQty", orderQty, "maxlength", orderQtyElement.getAttribute("maxlength"), "min", orderQtyElement.getAttribute("min"), "max", orderQtyElement.getAttribute("max"), "maxlength", orderQty.length <= orderQtyElement.getAttribute("maxlength"), "min", orderQty <= orderQtyElement.getAttribute("min"), "max", orderQty <= orderQtyElement.getAttribute("max"));
     var returnValue = true, errorMessage = "";
     try {
         if ((/^\d+$/.test(itemId))) {//itemId is a number
@@ -28,7 +28,8 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
             if (itemBundleFlag) {
                 orderQtyBundleCount = 0;
                 for (var i = 0; ; i++) {
-                    orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + i);
+                    orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + "_" + jsonPostData.ItemIdParm + "_" + i);
+                    console.log("Ummachi", "orderQtyForBundle" + "_" + jsonPostData.ItemIdParm + "_" + i, orderQtyHtmlElement == null);
                     if (orderQtyHtmlElement == null) {
                         break;
                     }
@@ -44,10 +45,10 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
                         else {
                             orderQty = orderQtyHtmlElement.value.trim();
                             if (orderQty === "" || ((/^\d+$/.test(orderQty)) && orderQty.length <= orderQtyHtmlElement.getAttribute("maxlength") && orderQty >= orderQtyHtmlElement.getAttribute("min") && orderQty <= orderQtyHtmlElement.getAttribute("max"))) {
-                                itemId = document.getElementById("itemIdForBundle" + i).innerText;
+                                itemId = document.getElementById("itemIdForBundle" + "_" + jsonPostData.ItemIdParm + "_" + i).innerText;
                                 if (itemId.trim() === "") {
-                                    document.getElementById("spnMessageErrorForBundle" + index).style.display = "block";
-                                    document.getElementById("spnMessageErrorTextForBundle" + index).innerHTML = "Select valid item";
+                                    document.getElementById("spnMessageErrorForBundle" + "_" + jsonPostData.ItemIdParm + "_" + index).style.display = "block";
+                                    document.getElementById("spnMessageErrorTextForBundle" + "_" + jsonPostData.ItemIdParm + "_" + index).innerHTML = "Select valid item";
                                     returnValue = false;
                                     break;
                                 }
@@ -99,8 +100,8 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
                 async: true,
                 success: function (responseData, textStatus, request) {
                     $('#loadingModal').modal('hide');
-                    console.log("addToCart_onclick", "00090000", "SUCCESS!!!", responseData);
-                    //console.log("addToCart_onclick", "00090000", "SUCCESS!!!");
+                    //console.log("addToCart_onclick", "00090000", "SUCCESS!!!", responseData);
+                    console.log("addToCart_onclick", "00090000", "SUCCESS!!!");
                     if (responseData.success) {
                         shoppingCartSummary(responseData.shoppingCartItemsCount, -1, responseData.shoppingCartTotalAmount);
                         document.getElementById("shoppingCartItemsCount").innerHTML = responseData.shoppingCartItemsCount;
@@ -112,7 +113,7 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
                         orderQtyElement.value = defaultValue;
                         if (itemBundleFlag) {
                             for (var j = 0; ; j++) {
-                                orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + j);
+                                orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + "_" + jsonPostData.ItemIdParm + "_" + j);
                                 if (orderQtyHtmlElement == null) {
                                     break;
                                 }
@@ -365,7 +366,9 @@ function orderQty2_oninput(inputElementObject, defaultValue) {
     }
     return false;
 }
-function orderQtyBundle_oninput(orderQtyElementObject, itemBundleCount, currencySymbol) {
+function orderQtyBundle_oninput(itemId, orderQtyElementObject, elementIdSuffix, itemBundleCount, currencySymbol) {
+    console.log("orderQtyBundle_oninput", "00000000", "ENTER!!!");
+    console.log("orderQtyBundle_oninput", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "itemBundleCount", itemBundleCount, "currencySymbol", currencySymbol);
     try {
         if (orderQtyElementObject.value.length > orderQtyElementObject.getAttribute("maxlength")) {
             orderQtyElementObject.value = orderQtyElementObject.value.substr(0, orderQtyElementObject.getAttribute("maxlength"));
@@ -378,19 +381,21 @@ function orderQtyBundle_oninput(orderQtyElementObject, itemBundleCount, currency
         else {
             orderQtyElementObject.value = '';
         }
-        calculateItemBundleRate(itemBundleCount, currencySymbol);
+        calculateItemBundleRate(itemId, elementIdSuffix, itemBundleCount, currencySymbol);
     }
     catch (err) {
         console.log(1, "orderQty_oninput ERROR???", err);
     }
     return false;
 }
-function orderQtyBundleSetQty_onclick(itemBundleCount, currencySymbol) {
-    var orderQtyBundleTempObject = document.getElementById("orderQtyBundleTemp");
+function orderQtyBundleSetQty_onclick(itemId, elementIdSuffix, itemBundleCount, currencySymbol) {
+    console.log("orderQtyBundleSetQty_onclick", "00000000", "ENTER!!!");
+    console.log("orderQtyBundleSetQty_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "itemBundleCount", itemBundleCount, "currencySymbol", currencySymbol);
+    var orderQtyBundleSetQtyObject = document.getElementById("orderQtyBundleSetQty" + elementIdSuffix);
     var orderQtyForBundleTemp;
     try {
-        orderQtyForBundleTemp = parseInt(orderQtyBundleTempObject.value);
-        console.log(9, orderQtyForBundleTemp);
+        orderQtyForBundleTemp = parseInt(orderQtyBundleSetQtyObject.value);
+        console.log("orderQtyBundleSetQty_onclick", "00002000", "itemId", itemId, "itemBundleCount", itemBundleCount, "currencySymbo", currencySymbol, "orderQtyForBundleTemp", orderQtyForBundleTemp);
         if (Number.isNaN(orderQtyForBundleTemp)) {
             orderQtyForBundleTemp = "";
         }
@@ -398,40 +403,47 @@ function orderQtyBundleSetQty_onclick(itemBundleCount, currencySymbol) {
     catch (err) {
         orderQtyForBundleTemp = "";
     }
-    console.log(9.9, orderQtyForBundleTemp);
-    if (orderQtyBundleTempObject.value.trim() === "" || ((/^\d+$/.test(orderQtyForBundleTemp)) && orderQtyBundleTempObject.value.length <= orderQtyBundleTempObject.getAttribute("maxlength") && orderQtyForBundleTemp >= orderQtyBundleTempObject.getAttribute("min") && orderQtyForBundleTemp <= orderQtyBundleTempObject.getAttribute("max"))) {
+    console.log("orderQtyBundleSetQty_onclick", "00003000", "itemId", itemId, "itemBundleCount", itemBundleCount, "currencySymbo", currencySymbol, "orderQtyForBundleTemp", orderQtyForBundleTemp);
+    if (orderQtyBundleSetQtyObject.value.trim() === "" || ((/^\d+$/.test(orderQtyForBundleTemp)) && orderQtyBundleSetQtyObject.value.length <= orderQtyBundleSetQtyObject.getAttribute("maxlength") && orderQtyForBundleTemp >= orderQtyBundleSetQtyObject.getAttribute("min") && orderQtyForBundleTemp <= orderQtyBundleSetQtyObject.getAttribute("max"))) {
         for (var i = 0; i < itemBundleCount; i++) {
-            document.getElementById("orderQtyForBundle" + i).value = orderQtyForBundleTemp;
+            document.getElementById("orderQtyForBundle_" + itemId + "_" + i).value = orderQtyForBundleTemp;
         }
-        calculateItemBundleRate(itemBundleCount, currencySymbol);
+        calculateItemBundleRate(itemId, elementIdSuffix, itemBundleCount, currencySymbol);
+        orderQtyBundleSetQtyObject.value = "";
     }
     else {
     }
     return false;
 }
-function calculateItemBundleRate(itemBundleCount, currencySymbol) {
+function calculateItemBundleRate(itemId, elementIdSuffix, itemBundleCount, currencySymbol) {
+    console.log("calculateItemBundleRate", "00000000", "ENTER!!!");
+    console.log("calculateItemBundleRate", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "itemBundleCount", itemBundleCount, "currencySymbol", currencySymbol);
     var itemBundleItemRate = 0, itemBundleItemPiecesCount = 0, itemAmountForBundle, orderQtyForBundle = 0, orderQtyForBundleObject;
     for (var i = 0; i < itemBundleCount; i++) {
-        orderQtyForBundleObject = document.getElementById("orderQtyForBundle" + i);
+        orderQtyForBundleObject = document.getElementById("orderQtyForBundle_" + itemId + "_" + i);
+        //console.log("calculateItemBundleRate", "00001500", "orderQtyForBundle_" + itemId + "_" + i, orderQtyForBundleObject == null);
         orderQtyForBundle = parseInt(orderQtyForBundleObject.value);
         if ((/^\d+$/.test(orderQtyForBundle)) && orderQtyForBundleObject.value.length <= orderQtyForBundleObject.getAttribute("maxlength") && orderQtyForBundle >= orderQtyForBundleObject.getAttribute("min") && orderQtyForBundle <= orderQtyForBundleObject.getAttribute("max")) {
         }
         else {
             orderQtyForBundle = 0;
         }
-        itemAmountForBundle = document.getElementById("itemRateForBundle" + i).innerText * orderQtyForBundle;
+        itemAmountForBundle = document.getElementById("itemRateForBundle" + "_" + itemId + "_" + i).innerText * orderQtyForBundle;
         itemBundleItemPiecesCount += orderQtyForBundle;
-        document.getElementById("itemAmountForBundle" + i).innerHTML = currencySymbol + itemAmountForBundle.toFixed(2);
+        document.getElementById("itemAmountForBundle" + "_" + itemId + "_" + i).innerHTML = currencySymbol + itemAmountForBundle.toFixed(2);
         itemBundleItemRate += itemAmountForBundle;
     }
-    document.getElementById("itemBundleItemRate").innerText = currencySymbol + itemBundleItemRate.toFixed(2);
-    document.getElementById("itemBundleItemPiecesCount").innerText = itemBundleItemPiecesCount;
-    console.log(currencySymbol, "itemBundleItemRate", itemBundleItemRate, "itemBundleItemPiecesCount", itemBundleItemPiecesCount);
+    console.log("itemBundleItemRate" + elementIdSuffix);
+    document.getElementById("itemBundleItemRate" + elementIdSuffix).innerText = currencySymbol + itemBundleItemRate.toFixed(2);
+    document.getElementById("itemBundleItemPiecesCount" + elementIdSuffix).innerText = itemBundleItemPiecesCount;
+    console.log("calculateItemBundleRate", "00003000", "calculateItemBundleRate", "00002000", "currencySymbol", currencySymbol, "itemBundleItemRate", itemBundleItemRate, "itemBundleItemPiecesCount", itemBundleItemPiecesCount);
 }
-function resetItemBundleRate(itemBundleCount, currencySymbol) {
+function resetItemBundleRate(itemId, elementIdSuffix, itemBundleCount, currencySymbol) {
+    console.log("resetItemBundleRate", "00000000", "ENTER!!!");
+    console.log("resetItemBundleRate", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "itemBundleCount", itemBundleCount, "currencySymbol", currencySymbol);
     var itemBundleItemRate = 0, itemBundleItemPiecesCount = 0, itemAmountForBundle, orderQtyForBundle = 0;//, orderQtyForBundleObject;
     for (var i = 0; i < itemBundleCount; i++) {
-        orderQtyForBundleObject = document.getElementById("orderQtyForBundle" + i);
+        orderQtyForBundleObject = document.getElementById("orderQtyForBundle" + "_" + itemId + "_" + i);
         //orderQtyForBundle = parseInt(orderQtyForBundleObject.value);
         //if ((/^\d+$/.test(orderQtyForBundle)) && orderQtyForBundleObject.value.length <= orderQtyForBundleObject.getAttribute("maxlength") && orderQtyForBundle >= orderQtyForBundleObject.getAttribute("min") && orderQtyForBundle <= orderQtyForBundleObject.getAttribute("max")) {
         //}
@@ -439,9 +451,9 @@ function resetItemBundleRate(itemBundleCount, currencySymbol) {
         //    orderQtyForBundle = 0;
         //}
         orderQtyForBundle = 0;
-        itemAmountForBundle = document.getElementById("itemRateForBundle" + i).innerText * orderQtyForBundle;
+        itemAmountForBundle = document.getElementById("itemRateForBundle" + "_" + itemId + "_" + i).innerText * orderQtyForBundle;
         itemBundleItemPiecesCount += orderQtyForBundle;
-        document.getElementById("itemAmountForBundle" + i).innerHTML = currencySymbol + itemAmountForBundle.toFixed(2);
+        document.getElementById("itemAmountForBundle" + "_" + itemId + "_" + i).innerHTML = currencySymbol + itemAmountForBundle.toFixed(2);
         itemBundleItemRate += itemAmountForBundle;
     }
     document.getElementById("itemBundleItemRate").innerText = currencySymbol + itemBundleItemRate.toFixed(2);

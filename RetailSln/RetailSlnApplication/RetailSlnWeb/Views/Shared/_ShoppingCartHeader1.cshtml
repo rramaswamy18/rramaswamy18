@@ -78,7 +78,7 @@
         <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top;">
             <span style="color: #000000; font-weight: normal;">Customer Address</span>
             <br style="clear: both;" />
-            <span style="color: #000000; font-size: 17px; font-weight: bold;">@(Model.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + Model.DeliveryInfoModel.OrderSummaryModel.LastName).Trim()</span>
+            <span style="color: #000000; font-size: 17px; font-weight: bold;">@((Model.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + Model.DeliveryInfoModel.OrderSummaryModel.LastName).Trim())</span>
             <br style="clear: both;" />
             @*if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryAddressModel.AddressName))
             {

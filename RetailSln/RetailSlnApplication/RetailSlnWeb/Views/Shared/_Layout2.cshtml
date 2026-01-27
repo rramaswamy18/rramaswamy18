@@ -79,6 +79,7 @@
         }
     </script>
     <script src="~/Include/orderItemCode0.js" type="text/javascript"></script>
+    <div id="divScrollIntoView"></div>
     <div class="body-container">
         <header class="header-section sticky">
             @if (!mobileDevice)
@@ -234,7 +235,6 @@
         </header>
         <div class="center main-body" style="padding: 0px; text-align: center; width: 100%;">
             <main role="main" class="pb-3">
-                <div id="divScrollIntoView"></div>
                 <div id="divOrderProcess">
                     @RenderBody()
                 </div>

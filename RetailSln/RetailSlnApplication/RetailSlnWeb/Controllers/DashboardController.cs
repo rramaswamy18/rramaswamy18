@@ -273,7 +273,7 @@ namespace RetailSlnWeb.Controllers
 
         // GET: OrderItem
         [HttpGet]
-        public ActionResult OrderItem(string id, string pageNum, string rowCount)
+        public ActionResult OrderItem()
         {
             ViewData["ActionName"] = "OrderItem";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
@@ -282,19 +282,13 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
             try
             {
                 //int x = 1, y = 0, z = x / y;
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                string aspNetRoleName;
-                aspNetRoleName = sessionObjectModel.AspNetRoleName;
-                var orderCategoryItemModel = retailSlnBL.OrderItem(aspNetRoleName, id, pageNum, "45", sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                success = true;
-                processMessage = "SUCCESS!!!";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderItem2", orderCategoryItemModel);
+                ItemCatalogModel itemCatalogModei = null;//retailSlnBL.ItemCatalog("100", "APPLADMN1", 0, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = PartialView("_ItemCatalog", itemCatalogModei);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -303,11 +297,8 @@ namespace RetailSlnWeb.Controllers
                 ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
                 ModelState.AddModelError("", "OrderItem / GET");
                 archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = PartialView("_Error", responseObjectModel);
             }
-            actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }
 
@@ -322,18 +313,15 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
+            //bool success;
+            //string processMessage, htmlString;
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                success = true;
-                processMessage = "SUCCESS!!!";
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
                 OrderListModel orderListModel = retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderList", orderListModel);
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                actionResult = PartialView("_OrderList", orderListModel);
             }
             catch (ApplicationException applicationException)
             {
@@ -345,10 +333,7 @@ namespace RetailSlnWeb.Controllers
                 ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
                 ModelState.AddModelError("", "OrderList / GET");
                 archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                actionResult = PartialView("_Error", responseObjectModel);
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;

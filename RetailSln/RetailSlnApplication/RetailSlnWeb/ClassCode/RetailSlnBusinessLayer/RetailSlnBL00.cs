@@ -15,8 +15,10 @@ using RetailSlnDataLayer;
 using RetailSlnEnumerations;
 using RetailSlnModels;
 using RetailSlnWeb.Controllers;
+using Stripe.Climate;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
 using System.IO;
@@ -24,11 +26,13 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Web;
 //using System.Web.Http.ExceptionHandling;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 //using static System.Collections.Specialized.BitVector32;
 
 namespace RetailSlnBusinessLayer
@@ -199,87 +203,103 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                PaymentInfoModel paymentInfoModel = new PaymentInfoModel
+                if (!deliveryInfoModel.OrderSummaryModel.EmailExists)
                 {
-                    DeliveryInfoModel = deliveryInfoModel,
-                };
-                foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
-                {
-                    shoppingCartItemModel.ShoppingCartItemSummarys = new List<ShoppingCartItemModel>();
+                    var aspNetuserModel = ArchLibDataContext.AspNetUserFromEmailGet(deliveryInfoModel.OrderSummaryModel.EmailAddress, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (aspNetuserModel != null)
+                    {
+                        modelStateDictionary.AddModelError("OrderSummaryModel.EmailAddress", "Invalid Phone, Email combination");
+                    }
                 }
-                UpdateDeliveryAddressInfo(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                shoppingCartModel.ShoppingCartItemModelsSummary.RemoveRange(1, shoppingCartModel.ShoppingCartItemModelsSummary.Count - 1);
-                CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                CalculateAdditionalCharges(shoppingCartModel, deliveryInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                CalculateDiscounts(shoppingCartModel, deliveryInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
-                CorpAcctModel corpAcctModel = (((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel);
-                List<SalesTaxListModel> salesTaxListModels = GetSalesTaxListModels(deliveryInfoModel.DeliveryAddressModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                List<CodeDataModel> salesTaxCaptionIds = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SalesTaxType", "");
-                CalculateSalesTax(shoppingCartModel, deliveryInfoModel, salesTaxListModels, salesTaxCaptionIds, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                try
+                PaymentInfoModel paymentInfoModel;
+                if (modelStateDictionary.IsValid)
                 {
-                    int indexOf1 = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';');
-                    string deliveryMethodId = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(0, indexOf1);
-                    deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId = (DeliveryMethodEnum)long.Parse(deliveryMethodId);
+                    paymentInfoModel = new PaymentInfoModel
+                    {
+                        DeliveryInfoModel = deliveryInfoModel,
+                    };
+                    foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
+                    {
+                        shoppingCartItemModel.ShoppingCartItemSummarys = new List<ShoppingCartItemModel>();
+                    }
+                    UpdateDeliveryAddressInfo(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    shoppingCartModel.ShoppingCartItemModelsSummary.RemoveRange(1, shoppingCartModel.ShoppingCartItemModelsSummary.Count - 1);
+                    CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CalculateAdditionalCharges(shoppingCartModel, deliveryInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    CalculateDiscounts(shoppingCartModel, deliveryInfoModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
+                    CorpAcctModel corpAcctModel = (((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel);
+                    List<SalesTaxListModel> salesTaxListModels = GetSalesTaxListModels(deliveryInfoModel.DeliveryAddressModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    List<CodeDataModel> salesTaxCaptionIds = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameId("SalesTaxType", "");
+                    CalculateSalesTax(shoppingCartModel, deliveryInfoModel, salesTaxListModels, salesTaxCaptionIds, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    try
+                    {
+                        int indexOf1 = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';');
+                        string deliveryMethodId = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(0, indexOf1);
+                        deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId = (DeliveryMethodEnum)long.Parse(deliveryMethodId);
+                        if (deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
+                        {
+                            int indexOf2 = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';', indexOf1 + 1);
+                            string pickupLocationId = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(indexOf1 + 1, indexOf2 - indexOf1 - 1);
+                            deliveryInfoModel.DeliveryMethodModel.PickupLocationId = long.Parse(pickupLocationId);
+                            deliveryInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PickupLocationDemogInfoAddressModels2 : RetailSlnCache.PickupLocationDemogInfoAddressModels1;
+                        }
+                        else
+                        {
+                            deliveryInfoModel.DeliveryMethodModel.PickupLocationId = 0;
+                        }
+                    }
+                    catch
+                    {
+                        deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId = null;
+                        deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId = null;
+                        deliveryInfoModel.DeliveryMethodModel.PickupLocationId = null;
+                    }
                     if (deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
                     {
-                        int indexOf2 = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.IndexOf(';', indexOf1 + 1);
-                        string pickupLocationId = deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId.Substring(indexOf1 + 1, indexOf2 - indexOf1 - 1);
-                        deliveryInfoModel.DeliveryMethodModel.PickupLocationId = long.Parse(pickupLocationId);
-                        deliveryInfoModel.DeliveryMethodModel.PickupLocationDemogInfoAddressModels = applSessionObjectModel.CorpAcctModel.CreditSale == YesNoEnum.Yes ? RetailSlnCache.PickupLocationDemogInfoAddressModels2 : RetailSlnCache.PickupLocationDemogInfoAddressModels1;
+                        ;
                     }
                     else
                     {
-                        deliveryInfoModel.DeliveryMethodModel.PickupLocationId = 0;
+                        CalculateDeliveryCharges(shoppingCartModel, deliveryInfoModel, corpAcctModel, salesTaxListModels, salesTaxCaptionIds, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
+                    ShoppingCartItemModel shoppingCartItemModelBalanceDue = CalculateTotalInvoiceAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
+                    GetCreditCardKVPs(creditCardProcessor, out Dictionary<string, string> creditCardKVPs, out Dictionary<string, string> creditCardDataKVPs, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    shoppingCartModel.Checkout = true;
+                    paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
+                    {
+                        CreditCardKVPs = creditCardKVPs,
+                        CreditCardDataKVPs = creditCardDataKVPs,
+                        CreditCardProcessor = creditCardProcessor,
+                        CreditCardTranType = "PURCHASE",
+                        CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
+                        CreditCardZipCode = deliveryInfoModel.DeliveryAddressModel.ZipCode,
+                        EmailAddress = deliveryInfoModel.OrderSummaryModel.EmailAddress,
+                        NameAsOnCard = (deliveryInfoModel.OrderSummaryModel.FirstName + " " + deliveryInfoModel.OrderSummaryModel.LastName).Trim(),
+                        TelephoneNumber = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum,
+                        TelephoneNumberCode = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode,
+                        TelephoneNumberCountryId = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId,
+                        TelephoneNumberFormatted = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted,
+                    };
+                    //INR round up to int
+                    if (paymentInfoModel.CreditCardDataModel.CurrencyCode == "INR")
+                    {
+                        shoppingCartItemModelBalanceDue.OrderAmountRounded = (long)Math.Ceiling(shoppingCartItemModelBalanceDue.OrderAmount.Value);
+                        paymentInfoModel.CreditCardDataModel.CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString("0.00");
+                        paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted =
+                            shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    }
+                    else
+                    {
+                        paymentInfoModel.CreditCardDataModel.CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString();
+                        paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted =
+                            shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                     }
                 }
-                catch
-                {
-                    deliveryInfoModel.DeliveryMethodModel.DeliveryMethodIdPickupLocationId = null;
-                    deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId = null;
-                    deliveryInfoModel.DeliveryMethodModel.PickupLocationId = null;
-                }
-                if (deliveryInfoModel.DeliveryMethodModel.DeliveryMethodId == DeliveryMethodEnum.PickupFromStore)
-                {
-                    ;
-                }
                 else
                 {
-                    CalculateDeliveryCharges(shoppingCartModel, deliveryInfoModel, corpAcctModel, salesTaxListModels, salesTaxCaptionIds, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
-                ShoppingCartItemModel shoppingCartItemModelBalanceDue = CalculateTotalInvoiceAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                string creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
-                GetCreditCardKVPs(creditCardProcessor, out Dictionary<string, string> creditCardKVPs, out Dictionary<string, string> creditCardDataKVPs, clientId, ipAddress, execUniqueId, loggedInUserId);
-                shoppingCartModel.Checkout = true;
-                paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
-                {
-                    CreditCardKVPs = creditCardKVPs,
-                    CreditCardDataKVPs = creditCardDataKVPs,
-                    CreditCardProcessor = creditCardProcessor,
-                    CreditCardTranType = "PURCHASE",
-                    CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
-                    CreditCardZipCode = deliveryInfoModel.DeliveryAddressModel.ZipCode,
-                    EmailAddress = deliveryInfoModel.OrderSummaryModel.EmailAddress,
-                    NameAsOnCard = (deliveryInfoModel.OrderSummaryModel.FirstName + " " + deliveryInfoModel.OrderSummaryModel.LastName).Trim(),
-                    TelephoneNumber = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum,
-                    TelephoneNumberCode = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode,
-                    TelephoneNumberCountryId = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId,
-                    TelephoneNumberFormatted = deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneFormatted,
-                };
-                //INR round up to int
-                if (paymentInfoModel.CreditCardDataModel.CurrencyCode == "INR")
-                {
-                    shoppingCartItemModelBalanceDue.OrderAmountRounded = (long)Math.Ceiling(shoppingCartItemModelBalanceDue.OrderAmount.Value);
-                    paymentInfoModel.CreditCardDataModel.CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString("0.00");
-                    paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted =
-                        shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                }
-                else
-                {
-                    paymentInfoModel.CreditCardDataModel.CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString();
-                    paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted =
-                        shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    paymentInfoModel = null;
                 }
                 return paymentInfoModel;
             }
@@ -340,7 +360,7 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                float itemSeqNum;
+                //float itemSeqNum;
                 CreateShoppingCartModel(ref shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ShoppingCartItemModel shoppingCartItemModel = shoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == addToCartModel.ItemId && x.ParentItemId == addToCartModel.ParentItemId && x.DoNotBreakBundle == addToCartModel.DoNotBreakBundle);
                 if (shoppingCartItemModel == null)
@@ -349,19 +369,19 @@ namespace RetailSlnBusinessLayer
                     shoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
                     if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createShoppingCartWIP)
                     {
-                        ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
-                        itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
-                        ShoppingCartWIPAdd(addToCartModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
+                        //ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+                        //itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
+                        //ShoppingCartWIPAdd(addToCartModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
                     }
                 }
                 else
                 {
                     CreateShoppingCartItemModel(ref shoppingCartItemModel, addToCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createShoppingCartWIP)
-                    {
-                        ShoppingCartWIPUpd(addToCartModel.DoNotBreakBundle, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
+                    //if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createShoppingCartWIP)
+                    //{
+                    //    ShoppingCartWIPUpd(addToCartModel.DoNotBreakBundle, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //}
                 }
                 CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -1341,8 +1361,10 @@ namespace RetailSlnBusinessLayer
             }
             return itemBundleDataModel;
         }
+
+        #region New code Restored from GitHub
         // GET: ItemCatalog
-        public ItemCatalogModel ItemCatalog(string parentCategoryIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public ItemCatalogModel ItemCatalogData(string parentCategoryIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -1399,19 +1421,15 @@ namespace RetailSlnBusinessLayer
                         fileInfo.Delete();
                     }
                 }
-
                 // Create an instance of the controller
                 controller = new BaseController(); // Replace HomeController with your controller name
-
                 // Create a controller context (optional, but good practice for some scenarios)
                 HttpContextWrapper httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
                 var routeData = new RouteData();
                 routeData.Values.Add("controller", "Base"); // Replace Home with your controller name
                 routeData.Values.Add("action", "Index"); // Replace StartupAction with your action name
-
                 var requestContext = new RequestContext(httpContextWrapper, routeData);
                 controller.ControllerContext = new ControllerContext(requestContext, controller);
-
                 ItemCatalogCreate(itemCatalogFilesPath, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 return;
             }
@@ -1424,6 +1442,513 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
+        // PRIVATE: ItemCatalogCreate
+        private void ItemCatalogCreate(string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string aspNetRoleName;
+            long corpAcctId;
+            List<CodeDataModel> corpAcctTypes = LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 204);
+            CodeDataModel corpAcctType;
+            Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs;
+            foreach (var corpAcctModel in RetailSlnCache.CorpAcctModels)
+            {
+                if (corpAcctModel.CorpAcctId == 0)
+                {
+                    ItemCatalogItemCreate("APPLADMN1", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ItemCatalogItemCreate("DEFAULTROLE", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                else
+                {
+                    corpAcctType = corpAcctTypes.First(x => x.CodeDataNameId == (int)corpAcctModel.CorpAcctTypeId);
+                    aspNetRoleName = corpAcctType.CodeDataDesc1;
+                    aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                    if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
+                    {
+                        aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+                        aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+                    }
+                    corpAcctId = corpAcctModel.CorpAcctId.Value;
+                    ItemCatalogItemCreate(aspNetRoleName, corpAcctId, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+            }
+        }
+        // PRIVATE: ItemCatalogItemCreate
+        private void ItemCatalogItemCreate(string aspNetRoleName, long corpAcctId, string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long parentCategoryId, itemCount;
+                string htmlFileName, htmlString, parentCategoryDesc;//, pDFFullFileName;
+                Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
+                ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel();
+                List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+                StreamWriter streamWriter;
+                ArchLibBL archLibBL = new ArchLibBL();
+                PDFUtility pDFUtility = new PDFUtility();
+                foreach (var categoryCategoryItemMasterHierModel in categoryCategoryItemMasterHierModels)
+                {
+                    parentCategoryId = categoryCategoryItemMasterHierModel.CategoryModel.CategoryId.Value;
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+                    parentCategoryDesc = categoryCategoryItemMasterHierModel.CategoryModel.CategoryDesc;
+                    if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
+                    {
+                        if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
+                        {
+                        }
+                        else
+                        {
+                            categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+                        }
+                    }
+                    else
+                    {
+                        categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+                    }
+                    RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+                    itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
+                    itemCount = 0;
+                    foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+                    {
+                        itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+                    }
+                    itemCatalogFileModel = new ItemCatalogFileModel
+                    {
+                        CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+                        CategoryItemMasterHierModels = categoryItemMasterHierModels,
+                        CatalogMessage = "Viewing all items in the catalog",
+                        CatalogMessageForeColor = "#a54000",
+                        CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                        ItemDiscountModels = itemDiscountModels,
+                        ItemCount = itemCount,
+                        ItemMasterCount = categoryItemMasterHierModels.Count,
+                        ItemMasterCountTotal = -1,
+                        ParentCategoryDesc = parentCategoryDesc,
+                        ParentCategoryId = parentCategoryId,
+                        SearchFlag = false,
+                        //PDFFlag = false,
+                    };
+                    htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+                    htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFile", itemCatalogFileModel);
+                    streamWriter = new StreamWriter(htmlFileName);
+                    streamWriter.Write(htmlString);
+                    streamWriter.Close();
+                    if (aspNetRoleName == "DEFAULTROLE" && corpAcctId == 0 && parentCategoryId == 100)
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Pdf Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+                        itemCatalogFileModel = new ItemCatalogFileModel
+                        {
+                            CategoryCategoryItemMasterHierModels = null,
+                            CategoryItemMasterHierModels = categoryItemMasterHierModels,
+                            CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                            ItemDiscountModels = itemDiscountModels,
+                            //ItemMasterCount = categoryItemMasterHierModels.Count,
+                            //ItemCount = itemCount,
+                            //ParentCategoryDesc = parentCategoryDesc,
+                            //ParentCategoryId = null,
+                        };
+                        htmlString = archLibBL.ViewToHtmlString(controller, "ItemCatalogPdf", itemCatalogFileModel);
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Pdf End");
+                    }
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: End");
+                }
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        #endregion
+        #region Commented out code Delete it later
+        //// PRIVATE: ItemCatalogCreateBackup
+        //private void ItemCatalogCreateBackup(string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long corpAcctId;
+        //        string aspNetRoleName;
+        //        List<CodeDataModel> corpAcctTypes = LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 204);
+        //        CodeDataModel corpAcctType;
+        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs;
+        //        foreach (var corpAcctModel in RetailSlnCache.CorpAcctModels)
+        //        {
+        //            if (corpAcctModel.CorpAcctId == 0)
+        //            {
+        //                ItemCatalogItemCreateBackup("APPLADMN1", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                ItemCatalogItemCreateBackup("DEFAULTROLE", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //            else
+        //            {
+        //                corpAcctType = corpAcctTypes.First(x => x.CodeDataNameId == (int)corpAcctModel.CorpAcctTypeId);
+        //                aspNetRoleName = corpAcctType.CodeDataDesc1;
+        //                aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //                if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
+        //                {
+        //                    aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+        //                    aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //                }
+        //                corpAcctId = corpAcctModel.CorpAcctId.Value;
+        //                ItemCatalogItemCreateBackup(aspNetRoleName, corpAcctId, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //        }
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        //// PRIVATE: ItemCatalogItemCreateBackup
+        //private void ItemCatalogItemCreateBackup(string aspNetRoleName, long corpAcctId, string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long parentCategoryId, itemCount;
+        //        string htmlFileName, htmlString, parentCategoryDesc;//, pDFFullFileName;
+        //        Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
+        //        ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel();
+        //        List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+        //        StreamWriter streamWriter;
+        //        ArchLibBL archLibBL = new ArchLibBL();
+        //        PDFUtility pDFUtility = new PDFUtility();
+        //        foreach (var categoryCategoryItemMasterHierModel in categoryCategoryItemMasterHierModels)
+        //        {
+        //            parentCategoryId = categoryCategoryItemMasterHierModel.CategoryModel.CategoryId.Value;
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+        //            parentCategoryDesc = categoryCategoryItemMasterHierModel.CategoryModel.CategoryDesc;
+        //            if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
+        //            {
+        //                if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
+        //                {
+        //                }
+        //                else
+        //                {
+        //                    categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+        //            }
+        //            RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+        //            itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
+        //            itemCount = 0;
+        //            foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+        //            {
+        //                itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+        //            }
+        //            itemCatalogFileModel = new ItemCatalogFileModel
+        //            {
+        //                CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+        //                CategoryItemMasterHierModels = categoryItemMasterHierModels,
+        //                CurrencySymbol = RetailSlnCache.CurrencySymbol,
+        //                ItemDiscountModels = itemDiscountModels,
+        //                ItemMasterCount = categoryItemMasterHierModels.Count,
+        //                ItemCount = itemCount,
+        //                ParentCategoryDesc = parentCategoryDesc,
+        //                ParentCategoryId = null,
+        //                //PDFFlag = false,
+        //            };
+        //            htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+        //            htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFile", itemCatalogFileModel);
+        //            streamWriter = new StreamWriter(htmlFileName);
+        //            streamWriter.Write(htmlString);
+        //            streamWriter.Close();
+        //            if (aspNetRoleName == "DEFAULTROLE" && corpAcctId == 0 && parentCategoryId == 100)
+        //            {
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Pdf Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+        //                itemCatalogFileModel = new ItemCatalogFileModel
+        //                {
+        //                    CategoryCategoryItemMasterHierModels = null,
+        //                    CategoryItemMasterHierModels = categoryItemMasterHierModels,
+        //                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
+        //                    ItemDiscountModels = null,
+        //                    ItemMasterCount = categoryItemMasterHierModels.Count,
+        //                    ItemCount = itemCount,
+        //                    ParentCategoryDesc = parentCategoryDesc,
+        //                    ParentCategoryId = null,
+        //                    //PDFFlag = true,
+        //                };
+        //                htmlString = archLibBL.ViewToHtmlString(controller, "ItemCatalogPdf", itemCatalogFileModel);
+        //                //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
+        //                //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
+        //                //pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Pdf End");
+        //            }
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: End");
+        //        }
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
+        #region Commented Out Code Real Time Processing
+        //// GET: ItemCatalog
+        //public void ItemCatalog(SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //For now there is nothing to be done
+        //    //I think the category List should be passed from here
+        //    //Rather than all work being done in CSHTML
+        //    return;
+        //}
+        //// GET: ItemCatalogNewData
+        //public ItemCatalogModel ItemCatalogData(string parentCategoryIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+        //        if (aspNetRoleNameProxy == null)
+        //        {
+        //            aspNetRoleNameProxy = "DEFAULTROLE";
+        //        }
+        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleNameProxy][0];
+        //        Dictionary<long, List<CategoryItemMasterHierModel>> aspNetRoleParentCategoryItemMasterModels = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleNameProxy];
+        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels = aspNetRoleParentCategoryItemMasterModels[parentCategoryId];
+        //        int pageSize = 45;
+        //        int itemMasterCount = categoryItemMasterHierModels.Where(x => x.ItemMasterModel != null).ToList().Count;
+        //        int pageCount = (int)Math.Ceiling((double)itemMasterCount / pageSize);
+        //        int itemCount = 0;
+        //        foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+        //        {
+        //            itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+        //        }
+        //        var parentCategoryDesc = RetailSlnCache.CategoryModels.First(x => x.CategoryId == parentCategoryId).CategoryDesc;
+        //        ItemCatalogModel itemCatalogModel = new ItemCatalogModel
+        //        {
+        //            CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+        //            ItemCount = itemCount,
+        //            ItemMasterCount = itemMasterCount,
+        //            PageCount = pageCount,
+        //            PageSize = pageSize,
+        //            ParentCategoryDesc = parentCategoryDesc,
+        //            ParentCategoryId = parentCategoryId,
+        //        };
+        //        return itemCatalogModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        //// GET: ItemCatalogNewDetail
+        //public void ItemCatalogDetail(ItemCatalogModel itemCatalogModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+        //        if (aspNetRoleNameProxy == null)
+        //        {
+        //            aspNetRoleNameProxy = "DEFAULTROLE";
+        //        }
+        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
+        //        long parentCategoryId = itemCatalogModel.ParentCategoryId;
+        //        long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+        //        itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
+        //        Dictionary<long, List<CategoryItemMasterHierModel>> aspNetRoleParentCategoryItemMasterModels = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleNameProxy];
+        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels = aspNetRoleParentCategoryItemMasterModels[parentCategoryId];
+        //        int pageSize = itemCatalogModel.PageSize;
+        //        int pageNum = itemCatalogModel.PageNum;
+        //        itemCatalogModel.CategoryItemMasterHierModels = categoryItemMasterHierModels.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+        //        itemCatalogModel.CurrencySymbol = RetailSlnCache.CurrencySymbol;
+        //        itemCatalogModel.ItemDiscountModels = itemDiscountModels;
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000", "ParentCategoryId", itemCatalogModel.ParentCategoryId.ToString(), "PageNum", itemCatalogModel.PageNum.ToString(), "PageSize", itemCatalogModel.PageSize.ToString(), "ItemMasterCount", itemCatalogModel.ItemMasterCount.ToString(), "ItemCount", itemCatalogModel.ItemCount.ToString());
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
+        #region Commented out code Old One Batch Processing
+        //// GET: ItemCatalog
+        //public ItemCatalogModel ItemCatalog(string parentCategoryIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+        //        if (string.IsNullOrEmpty(aspNetRoleNameProxy))
+        //        {
+        //            aspNetRoleNameProxy = "DEFAULTROLE";
+        //        }
+        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
+        //        if (parentCategoryId == 0)
+        //        {
+        //            parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
+        //        }
+        //        long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        string itemCatalogHtmlDirName = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
+        //        string itemCatalogHtmlFileName = $@"ItemCatalog_{aspNetRoleNameProxy}_{corpAcctId}_{parentCategoryId}.html";
+        //        ItemCatalogModel itemCatalogModel = new ItemCatalogModel
+        //        {
+        //            ItemCatalogHtmlFileName = itemCatalogHtmlFileName,
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //        };
+        //        return itemCatalogModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        //// GET: ItemCatalog
+        //public ItemCatalogModel ItemCatalog(string parentCategoryIdParm, string aspNetRoleNameProxy, long corpAcctId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+        //        string itemCatalogHtmlDirName = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
+        //        string itemCatalogHtmlFileName = $@"ItemCatalog_A_{aspNetRoleNameProxy}_{corpAcctId}_{parentCategoryId}.html";
+        //        ItemCatalogModel itemCatalogModel = new ItemCatalogModel
+        //        {
+        //            ItemCatalogHtmlFileName = itemCatalogHtmlFileName,
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //        };
+        //        return itemCatalogModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        //// GET: ItemCatalog
+        //public ItemCatalogModel ItemCatalogNewData(PaginationModel paginationModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        string aspNetRoleName = "";
+        //        long /*corpAcctId, */parentCategoryId = 100;
+        //        List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+        //        var aspNetRoleParentCategoryItemMasterModels = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleName];
+        //        var categoryItemMasterHierModels = aspNetRoleParentCategoryItemMasterModels[parentCategoryId];
+
+        //        ItemCatalogModel itemCatalogModel = new ItemCatalogModel
+        //        {
+        //            ResponseObjectModel = new ResponseObjectModel
+        //            {
+        //                ResponseTypeId = ResponseTypeEnum.Success,
+        //            },
+        //        };
+        //        return itemCatalogModel;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        //// PUBLIC: ItemCatalogCreateAll
+        //public void ItemCatalogCreateAll(SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    #region Comment it out - Do Not Delete
+        //    //string methodName = MethodBase.GetCurrentMethod().Name;
+        //    //ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    //exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    //try
+        //    //{
+        //    //    string itemCatalogFilesPath = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
+        //    //    DirectoryInfo directoryInfo = new DirectoryInfo(itemCatalogFilesPath);
+        //    //    foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+        //    //    {
+        //    //        if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
+        //    //        {
+        //    //            fileInfo.Delete();
+        //    //        }
+        //    //    }
+        //    //    // Create an instance of the controller
+        //    //    controller = new BaseController(); // Replace HomeController with your controller name
+        //    //    // Create a controller context (optional, but good practice for some scenarios)
+        //    //    HttpContextWrapper httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
+        //    //    var routeData = new RouteData();
+        //    //    routeData.Values.Add("controller", "Base"); // Replace Home with your controller name
+        //    //    routeData.Values.Add("action", "Index"); // Replace StartupAction with your action name
+        //    //    var requestContext = new RequestContext(httpContextWrapper, routeData);
+        //    //    controller.ControllerContext = new ControllerContext(requestContext, controller);
+        //    //    ItemCatalogCreate(itemCatalogFilesPath, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //    //    return;
+        //    //}
+        //    //catch (Exception exception)
+        //    //{
+        //    //    exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+        //    //    throw;
+        //    //}
+        //    //finally
+        //    //{
+        //    //}
+        //    #endregion
+        //}
+        #endregion
         // GET: ItemMasterAttributes
         public ItemMasterAttributesModel ItemMasterAttributes(long itemMasterId, PaymentInfoModel paymentInfoModel, long tabId, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -1503,6 +2028,7 @@ namespace RetailSlnBusinessLayer
                 {
                     itemMasterModels = new List<CategoryItemMasterHierModel>();
                 }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000", "aspNetRoleNameProxy", aspNetRoleNameProxy, "parentCategoryId", parentCategoryId.ToString());
                 long totalRowCount = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleNameProxy][parentCategoryId].Count;
                 long pageCount = totalRowCount / pageSize;
                 if (totalRowCount % pageSize != 0)
@@ -1996,10 +2522,10 @@ namespace RetailSlnBusinessLayer
                 {
                     if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && shoppingCartModel.ShoppingCartItemModels.Count > 0)
                     {
-                        ApplicationDataContext.OpenSqlConnection();
-                        var sqlStmtDel = BuildShoppingCartWIPDelIds(shoppingCartModel.ShoppingCartItemModels[removeFromIndex], sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId);
-                        ApplicationDataContext.ShoppingCartWIPDel(sqlStmtDel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        ApplicationDataContext.CloseSqlConnection();
+                        //ApplicationDataContext.OpenSqlConnection();
+                        //var sqlStmtDel = BuildShoppingCartWIPDelIds(shoppingCartModel.ShoppingCartItemModels[removeFromIndex], sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId);
+                        //ApplicationDataContext.ShoppingCartWIPDel(sqlStmtDel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //ApplicationDataContext.CloseSqlConnection();
                     }
                     shoppingCartModel.ShoppingCartItemModels.RemoveAt(removeFromIndex);
                     CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -2022,74 +2548,309 @@ namespace RetailSlnBusinessLayer
             }
         }
         #endregion
-        // GET : SearchResult
-        public SearchResultModel SearchResult(string searchKeywordText, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // GET / POST : SearchResult & SearchResultItemMaster
+        public SearchResultModel SearchResult(string searchKeywordText, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            SearchResultModel searchResultModel;
             try
             {
-                ApplicationDataContext.OpenSqlConnection();
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
                 itemDiscountModels = itemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
-                searchResultModel = new SearchResultModel
+                var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+                if (string.IsNullOrEmpty(aspNetRoleNameProxy))
                 {
-                    SearchKeywordText = searchKeywordText,
-                    SearchMetaDataModels = ApplicationDataContext.SearchMetaDatasGet(searchKeywordText, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
-                    CategoryListModel = new CategoryListModel
-                    {
-                        CategoryModels = new List<CategoryModel>(),
-                    },
-                    ItemMasterListModel = new ItemMasterListModel
-                    {
-                        ItemDiscountModels = itemDiscountModels,
-                        ItemMasterModels = new List<ItemMasterModel>(),
-                    },
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseTypeId = ResponseTypeEnum.Success,
-                    },
-                };
-                foreach (var searchMetaDataModel in searchResultModel.SearchMetaDataModels)
-                {
-                    if (searchMetaDataModel.EntityTypeNameDesc == "CATEGORY")
-                    {
-                        searchResultModel.CategoryListModel.CategoryModels.Add(RetailSlnCache.CategoryModels.First(x => x.CategoryId == searchMetaDataModel.EntityId));
-                    }
-                    else
-                    {
-                        searchResultModel.ItemMasterListModel.ItemMasterModels.Add(RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == searchMetaDataModel.EntityId));
-                    }
+                    aspNetRoleNameProxy = "DEFAULTROLE";
                 }
-                //List<long> searchIds = new List<long> { 0, 9, 18 };
-                //List<ItemModel> searchItems = RetailSlnCache.ItemModels.Where(x => searchIds.Contains(x.ItemId.Value)).ToList();
+                int.TryParse(pageNumParm, out int pageNum);
+                if (pageNum <= 0) pageNum = 1;
+                int.TryParse(pageSizeParm, out int pageSize);
+                if (pageSize <= 0) pageSize = 45;
+                #region
+                string sqlStmt = "";
+                sqlStmt += "        SELECT COUNT(*) AS ItemMasterCountTotal" + Environment.NewLine;
+                sqlStmt += "          FROM" + Environment.NewLine;
+                sqlStmt += "              (" + Environment.NewLine;
+                sqlStmt += "        SELECT" + Environment.NewLine;
+                sqlStmt += "               DISTINCT CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
+                sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT" + Environment.NewLine;
+                sqlStmt += "               DISTINCT CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
+                sqlStmt += "            ON ItemMaster.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemItemSpec" + Environment.NewLine;
+                sqlStmt += "            ON Item.ItemId = ItemItemSpec.ItemId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND(" + Environment.NewLine;
+                sqlStmt += "                ItemMaster.ItemMasterDesc0 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc1 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  Item.ItemShortDesc LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemItemSpec.ItemSpecValueWithUnit LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "           ) A" + Environment.NewLine;
+                sqlStmt += "--" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
+                sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
+                sqlStmt += "            ON ItemMaster.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemItemSpec" + Environment.NewLine;
+                sqlStmt += "            ON Item.ItemId = ItemItemSpec.ItemId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND(" + Environment.NewLine;
+                sqlStmt += "                ItemMaster.ItemMasterDesc0 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc1 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  Item.ItemShortDesc LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemItemSpec.ItemSpecValueWithUnit LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               SeqNum" + Environment.NewLine;
+                sqlStmt += "        OFFSET @OffSetRowCount ROWS" + Environment.NewLine;
+                sqlStmt += "    FETCH NEXT @FetchNextRowCount ROWS ONLY" + Environment.NewLine;
+                sqlStmt += "--" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.CategoryId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'CATEGORY'" + Environment.NewLine;
+                sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               Category.CategoryId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.Category" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "            ON Category.CategoryId = CategoryItemMasterHier.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE CategoryDesc LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                ApplicationDataContext.OpenSqlConnection();
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, ApplicationDataContext.SqlConnectionObject);
+                sqlCommand.Parameters.Add("@AspNetRoleName", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters.Add("@OffSetRowCount", SqlDbType.Int);
+                sqlCommand.Parameters.Add("@FetchNextRowCount", SqlDbType.Int);
+                sqlCommand.Parameters.Add("@SearchKeywordText", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters["@AspNetRoleName"].Value = aspNetRoleNameProxy;
+                sqlCommand.Parameters["@SearchKeywordText"].Value = searchKeywordText;
+                sqlCommand.Parameters["@OffSetRowCount"].Value = (pageNum - 1) * pageSize;
+                sqlCommand.Parameters["@FetchNextRowCount"].Value = pageSize;
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                #endregion
+                sqlDataReader.Read();
+                long itemMasterCountTotal = long.Parse(sqlDataReader["ItemMasterCountTotal"].ToString());
+                sqlDataReader.NextResult();
+                List<long> itemMasterIds = new List<long>();
+                while (sqlDataReader.Read())
+                {
+                    itemMasterIds.Add(long.Parse(sqlDataReader["ItemMasterId"].ToString()));
+                }
+                sqlDataReader.NextResult();
+                List<long> categoryIds = new List<long>();
+                while (sqlDataReader.Read())
+                {
+                    categoryIds.Add(long.Parse(sqlDataReader["CategoryId"].ToString()));
+                }
+                sqlDataReader.Close();
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+                List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels;
+                categoryItemMasterHierModels = RetailSlnCache.CategoryItemMasterHierModels.Where(x => x.AspNetRoleName == aspNetRoleNameProxy && x.ItemMasterId != null && itemMasterIds.Contains(x.ItemMasterId.Value)).OrderBy(x => x.SeqNum).ToList();//.ThenBy(x => x.CategoryId).OrderBy(x => x.SeqNum).ToList();
+                categoryCategoryItemMasterHierModels = RetailSlnCache.CategoryItemMasterHierModels.Where(x => x.AspNetRoleName == aspNetRoleNameProxy && x.CategoryId != null && categoryIds.Contains(x.CategoryId.Value)).OrderBy(x => x.SeqNum).ThenBy(x => x.CategoryId).ToList();
+                long itemMasterCountFrom = (pageNum - 1) * pageSize + 1;
+                long itemMasterCountTo = pageNum * pageSize;
+                if (itemMasterCountTo > itemMasterCountTotal) itemMasterCountTo = itemMasterCountTotal;
+                SearchResultModel searchResultModel = new SearchResultModel
+                {
+                    CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+                    CategoryCountTotal = categoryIds.Count,
+                    CategoryItemMasterHierModels = categoryItemMasterHierModels,
+                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                    ItemDiscountModels = itemDiscountModels,
+                    ItemMasterCountFrom = itemMasterCountFrom,
+                    ItemMasterCountTo = itemMasterCountTo,
+                    ItemMasterCountTotal = itemMasterCountTotal,
+                    PageNum = pageNum,
+                    TotalPageCount = (itemMasterCountTotal + pageSize - 1) / pageSize,
+                    SearchKeywordText = searchKeywordText,
+                };
+                return searchResultModel;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                searchResultModel = new SearchResultModel
-                {
-                    SearchKeywordText = searchKeywordText,
-                    ResponseObjectModel = new ResponseObjectModel
-                    {
-                        ResponseMessages = new List<string>
-                        {
-                            "Error while searching " + searchKeywordText,
-                            exception.Message,
-                        },
-                        ResponseTypeId = ResponseTypeEnum.Error,
-                        ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                    }
-                };
+                throw;
             }
             finally
             {
                 ApplicationDataContext.CloseSqlConnection();
             }
-            return searchResultModel;
+        }
+        // POST : SearchText
+        public ItemCatalogFileModel SearchText(string parentCategoryIdParm, string searchText, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
+                int.TryParse(pageNumParm, out int pageNum);
+                if (pageNum <= 0) pageNum = 1;
+                int.TryParse(pageSizeParm, out int pageSize);
+                if (pageSize <= 0) pageSize = 45;
+                var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+                if (string.IsNullOrEmpty(aspNetRoleNameProxy))
+                {
+                    aspNetRoleNameProxy = "DEFAULTROLE";
+                }
+                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
+                if (parentCategoryId == 0)
+                {
+                    parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
+                }
+                #region
+                string sqlStmt = "", sqlStmtWhere = "";
+                sqlStmtWhere += "          FROM RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmtWhere += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmtWhere += "            ON CategoryItemMasterHier.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
+                sqlStmtWhere += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
+                sqlStmtWhere += "            ON ItemMaster.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
+                sqlStmtWhere += "    INNER JOIN RetailSlnSch.ItemItemSpec" + Environment.NewLine;
+                sqlStmtWhere += "            ON Item.ItemId = ItemItemSpec.ItemId" + Environment.NewLine;
+                sqlStmtWhere += "         WHERE " + Environment.NewLine;
+                sqlStmtWhere += "               CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmtWhere += "           AND CategoryItemMasterHier.ParentCategoryId = @ParentCategoryId" + Environment.NewLine;
+                sqlStmtWhere += "           AND (" + Environment.NewLine;
+                sqlStmtWhere += "                ItemMaster.ItemMasterDesc0 LIKE '%' + @SearchText + '%'" + Environment.NewLine;
+                sqlStmtWhere += "            OR  ItemMaster.ItemMasterDesc1 LIKE '%' + @SearchText + '%'" + Environment.NewLine;
+                sqlStmtWhere += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchText + '%'" + Environment.NewLine;
+                sqlStmtWhere += "            OR  Item.ItemShortDesc LIKE '%' + @SearchText + '%'" + Environment.NewLine;
+                sqlStmtWhere += "            OR  ItemItemSpec.ItemSpecValueWithUnit LIKE '%' + @SearchText + '%'" + Environment.NewLine;
+                sqlStmtWhere += "               " + Environment.NewLine;
+                sqlStmtWhere += "               )" + Environment.NewLine;
+                sqlStmt += "        SELECT COUNT(DISTINCT CategoryItemMasterHier.ItemMasterId) AS ItemMasterCountTotal" + Environment.NewLine;
+                sqlStmt += sqlStmtWhere;
+                sqlStmt += "        SELECT DISTINCT " + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += sqlStmtWhere;
+                sqlStmt += "      ORDER BY CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "               OFFSET @OffSetRowCount ROWS" + Environment.NewLine;
+                sqlStmt += "               FETCH NEXT @FetchNextRowCount ROWS ONLY" + Environment.NewLine;
+                ApplicationDataContext.OpenSqlConnection();
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, ApplicationDataContext.SqlConnectionObject);
+                sqlCommand.Parameters.Add("@AspNetRoleName", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters.Add("@ParentCategoryId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@OffSetRowCount", SqlDbType.Int);
+                sqlCommand.Parameters.Add("@FetchNextRowCount", SqlDbType.Int);
+                sqlCommand.Parameters.Add("@SearchText", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters["@AspNetRoleName"].Value = aspNetRoleNameProxy;
+                sqlCommand.Parameters["@ParentCategoryId"].Value = parentCategoryId;
+                sqlCommand.Parameters["@SearchText"].Value = searchText;
+                sqlCommand.Parameters["@OffSetRowCount"].Value = (pageNum - 1) * pageSize;
+                sqlCommand.Parameters["@FetchNextRowCount"].Value = pageSize;
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                #endregion
+                long itemMasterCount = 0, itemMasterCountTotal;
+                sqlDataReader.Read();
+                itemMasterCountTotal = long.Parse(sqlDataReader["ItemMasterCountTotal"].ToString());
+                sqlDataReader.NextResult();
+                List<long> itemMasterIds = new List<long>();
+                while (sqlDataReader.Read())
+                {
+                    itemMasterCount++;
+                    itemMasterIds.Add(long.Parse(sqlDataReader["ItemMasterId"].ToString()));
+                }
+                sqlDataReader.Close();
+                Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
+                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+                if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleNameProxy, out parentCategoryItemMasterModels))
+                {
+                    if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
+                    {
+                        //categoryItemMasterHierModels = categoryItemMasterHierModels.Where(x => itemMasterIds.Contains(x.ItemMasterModel.ItemMasterId)).Skip((pageNum - 1) * pageSize).Take(pageSize).OrderBy(x => x.ItemMasterId).ToList();
+                        categoryItemMasterHierModels = categoryItemMasterHierModels.FindAll(x => itemMasterIds.Contains(x.ItemMasterModel.ItemMasterId));
+                    }
+                    else
+                    {
+                        categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+                    }
+                }
+                else
+                {
+                    categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+                }
+                long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+                long itemMasterCountFrom = (pageNum - 1) * pageSize + 1;
+                long itemMasterCountTo = pageNum * pageSize;
+                if (itemMasterCountTo > itemMasterCountTotal) itemMasterCountTo = itemMasterCountTotal;
+                ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel
+                {
+                    CatalogMessage = "Search results for this catalog",
+                    CatalogMessageForeColor = "#ff0000",
+                    CategoryItemMasterHierModels = categoryItemMasterHierModels,
+                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                    ItemDiscountModels = itemDiscountModels,
+                    ItemMasterCount = itemMasterCount,
+                    ItemMasterCountFrom = itemMasterCountFrom,
+                    ItemMasterCountTo = itemMasterCountTo,
+                    ItemMasterCountTotal = itemMasterCountTotal,
+                    PageNum = pageNum,
+                    TotalPageCount = (itemMasterCountTotal + pageSize - 1) / pageSize,
+                    SearchFlag = true,
+                };
+                return itemCatalogFileModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
         }
         // GET : ShoppingCartComments
         public void ShoppingCartComments(PaymentInfoModel paymentInfoModel, string indexParm, string bundleIndexParm, string orderComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -2119,10 +2880,9 @@ namespace RetailSlnBusinessLayer
             }
         }
         #endregion
-
         #region PUBLIC
         // PUBLIC: CreateShoppingCartWIP
-        public void ShoppingCartWIPCreate(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public void ShoppingCartWIPCreateSave(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -2145,10 +2905,10 @@ namespace RetailSlnBusinessLayer
                     //This might avoid duplicates
                     ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
                     float itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
-                    foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
-                    {
-                        ShoppingCartWIPAdd(shoppingCartItemModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
+                    //foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
+                    //{
+                    //    ShoppingCartWIPAdd(shoppingCartItemModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    //}
                     shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
                 }
                 //AddToCartModel addToCartModel = new AddToCartModel();
@@ -2823,7 +3583,8 @@ namespace RetailSlnBusinessLayer
                 {
                     if (!paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailExists)
                     {//Create new user
-                        archLibBL.CreateNewUser(paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId.Value, paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName, paymentInfoModel.DeliveryInfoModel.DeliveryAddressModel.DemogInfoAddressId, "DEFAULTROLE", UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        AspNetUserModel aspNetUserModel = archLibBL.CreateNewUser(paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId.Value, paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName, paymentInfoModel.DeliveryInfoModel.DeliveryAddressModel.DemogInfoAddressId, "GUESTROLE", UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        RegisterUserProfPersonExtn1(aspNetUserModel.PersonModel.PersonId.Value, 0, sqlConnection, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                 }
                 CorpAcctModel corpAcctModel = ((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel;
@@ -2885,10 +3646,13 @@ namespace RetailSlnBusinessLayer
                     StatusId = GenericStatusEnum.Active,
                 };
                 //ArchLibDataContext.UpdPerson(createForSessionObject.PersonId, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ArchLibDataContext.UpdPerson(personModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (createForSessionObject.AspNetRoleName != "GUESTROLE")
+                {
+                    ArchLibDataContext.UpdPerson(personModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
                 CreateInvoice(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                var sqlStmtDel = BuildShoppingCartWIPDelIds(paymentInfoModel.ShoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId);
-                ApplicationDataContext.ShoppingCartWIPDel(sqlStmtDel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //var sqlStmtDel = BuildShoppingCartWIPDelIds(paymentInfoModel.ShoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId);
+                //ApplicationDataContext.ShoppingCartWIPDel(sqlStmtDel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 createForSessionObject.FirstName = personModel.FirstName;
                 createForSessionObject.DemogInfoAddressModel.DemogInfoAddressId = personModel.HomeDemogInfoAddressId.Value;
                 createForSessionObject.DemogInfoAddressModel.AddressLine1 = paymentInfoModel.DeliveryInfoModel.DeliveryAddressModel.AddressLine1;
@@ -3012,145 +3776,211 @@ namespace RetailSlnBusinessLayer
             return orderHeaderSummary;
         }
         #endregion
-        // PRIVATE: ItemCatalogAndItemCatalogItemCreate
-        private void ItemCatalogCreate(string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                long corpAcctId;
-                string aspNetRoleName;
-                List<CodeDataModel> corpAcctTypes = LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 204);
-                CodeDataModel corpAcctType;
-                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs;
-                foreach (var corpAcctModel in RetailSlnCache.CorpAcctModels)
-                {
-                    if (corpAcctModel.CorpAcctId == 0)
-                    {
-                        ItemCatalogItemCreate("APPLADMN1", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        ItemCatalogItemCreate("DEFAULTROLE", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                    else
-                    {
-                        corpAcctType = corpAcctTypes.First(x => x.CodeDataNameId == (int)corpAcctModel.CorpAcctTypeId);
-                        aspNetRoleName = corpAcctType.CodeDataDesc1;
-                        aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                        if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
-                        {
-                            aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
-                            aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
-                        }
-                        corpAcctId = corpAcctModel.CorpAcctId.Value;
-                        ItemCatalogItemCreate(aspNetRoleName, corpAcctId, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                }
-                return;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-            }
-        }
-        // PRIVATE: ItemCatalogItemCreate
-        private void ItemCatalogItemCreate(string aspNetRoleName, long corpAcctId, string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                long parentCategoryId, itemCount;
-                string htmlFileName, htmlString, parentCategoryDesc;//, pDFFullFileName;
-                Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
-                ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel();
-                List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
-                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
-                StreamWriter streamWriter;
-                ArchLibBL archLibBL = new ArchLibBL();
-                PDFUtility pDFUtility = new PDFUtility();
-                foreach (var categoryCategoryItemMasterHierModel in categoryCategoryItemMasterHierModels)
-                {
-                    parentCategoryId = categoryCategoryItemMasterHierModel.CategoryModel.CategoryId.Value;
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
-                    parentCategoryDesc = categoryCategoryItemMasterHierModel.CategoryModel.CategoryDesc;
-                    if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
-                    {
-                        if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
-                        {
-                        }
-                        else
-                        {
-                            categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-                        }
-                    }
-                    else
-                    {
-                        categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-                    }
-                    RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
-                    itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
-                    itemCount = 0;
-                    foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
-                    {
-                        itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
-                    }
-                    itemCatalogFileModel = new ItemCatalogFileModel
-                    {
-                        CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
-                        CategoryItemMasterHierModels = categoryItemMasterHierModels,
-                        CurrencySymbol = RetailSlnCache.CurrencySymbol,
-                        ItemDiscountModels = itemDiscountModels,
-                        ItemMasterCount = categoryItemMasterHierModels.Count,
-                        ItemCount = itemCount,
-                        ParentCategoryDesc = parentCategoryDesc,
-                        ParentCategoryId = null,
-                        PDFFlag = false,
-                    };
-                    htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
-                    htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFile", itemCatalogFileModel);
-                    streamWriter = new StreamWriter(htmlFileName);
-                    streamWriter.Write(htmlString);
-                    streamWriter.Close();
-                    if (aspNetRoleName == "DEFAULTROLE" && corpAcctId == 0 && parentCategoryId == 100)
-                    {
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Pdf Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
-                        itemCatalogFileModel = new ItemCatalogFileModel
-                        {
-                            CategoryCategoryItemMasterHierModels = null,
-                            CategoryItemMasterHierModels = categoryItemMasterHierModels,
-                            CurrencySymbol = RetailSlnCache.CurrencySymbol,
-                            ItemDiscountModels = null,
-                            ItemMasterCount = categoryItemMasterHierModels.Count,
-                            ItemCount = itemCount,
-                            ParentCategoryDesc = parentCategoryDesc,
-                            ParentCategoryId = null,
-                            PDFFlag = true,
-                        };
-                        htmlString = archLibBL.ViewToHtmlString(controller, "ItemCatalogPdf", itemCatalogFileModel);
-                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.pdf";
-                        //pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
-                        //pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Pdf End");
-                    }
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: End");
-                }
-                return;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-            }
-        }
+        #region Commenting Code for now - Need this after fixing
+        //// PRIVATE: ItemCatalogAndItemCatalogItemCreate
+        //private void ItemCatalogCreate(string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        #region Delete this later while uncommenting the below
+        //        //ItemCatalogItemCreate("DEFAULTROLE", 0, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        #endregion
+        //        #region Comment it for now - uncomment later
+        //        long corpAcctId;
+        //        string aspNetRoleName;
+        //        List<CodeDataModel> corpAcctTypes = LookupCache.CodeDataModels.FindAll(x => x.CodeTypeId == 204);
+        //        CodeDataModel corpAcctType;
+        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs;
+        //        aspNetRoleName = "APPLADMN1";
+        //        //ItemCatalogItemCreate_A(aspNetRoleName, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        foreach (var corpAcctModel in RetailSlnCache.CorpAcctModels)
+        //        {
+        //            corpAcctId = corpAcctModel.CorpAcctId.Value;
+        //            if (corpAcctId == 0)
+        //            {
+        //                //ItemCatalogItemCreate("APPLADMN1", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                //ItemCatalogItemCreate("DEFAULTROLE", corpAcctModel.CorpAcctId.Value, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //            else
+        //            {
+        //                corpAcctType = corpAcctTypes.First(x => x.CodeDataNameId == (int)corpAcctModel.CorpAcctTypeId);
+        //                aspNetRoleName = corpAcctType.CodeDataDesc1;
+        //                aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //                if (aspNetRoleName != aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData)
+        //                {
+        //                    aspNetRoleName = aspNetRoleKVPs[aspNetRoleName].KVPValueData;
+        //                    aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleName];
+        //                }
+        //                //ItemCatalogItemCreate(aspNetRoleName, corpAcctId, itemCatalogFilesPath, sessionObjectModel, createForSessionObjectModel, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            }
+        //        }
+        //        #endregion
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        //// PRIVATE: ItemCatalogItemCreate
+        //private void ItemCatalogItemCreate_A(string aspNetRoleName, string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    long corpAcctId, parentCategoryId = 100;
+        //    List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+        //    var aspNetRoleParentCategoryItemMasterModels = RetailSlnCache.AspNetRoleParentCategoryItemMasterModels[aspNetRoleName];
+        //    var categoryItemMasterHierModels = aspNetRoleParentCategoryItemMasterModels[parentCategoryId];
+        //    ItemCatalogFileModel itemCatalogFileModel;
+        //    long itemCount;
+        //    string htmlFileName, htmlString;
+        //    StreamWriter streamWriter;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    foreach (var corpAcctModel in RetailSlnCache.CorpAcctModels)
+        //    {
+        //        itemCount = 0;
+        //        foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+        //        {
+        //            itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+        //        }
+        //        corpAcctId = corpAcctModel.CorpAcctId.Value;
+        //        RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+        //        itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
+        //        itemCatalogFileModel = new ItemCatalogFileModel
+        //        {
+        //            CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+        //            CategoryItemMasterHierModels = categoryItemMasterHierModels,
+        //            CurrencySymbol = RetailSlnCache.CurrencySymbol,
+        //            ItemDiscountModels = itemDiscountModels,
+        //            ItemMasterCount = categoryItemMasterHierModels.Count,
+        //            ItemCount = itemCount,
+        //            ParentCategoryDesc = "All Item(s)",
+        //            ParentCategoryId = null,
+        //            PdfFlag = false,
+        //        };
+        //        htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_A_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+        //        htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFileSearch", itemCatalogFileModel);
+        //        streamWriter = new StreamWriter(htmlFileName);
+        //        streamWriter.Write(htmlString);
+        //        streamWriter.Close();
+        //    }
+        //}
+        //// PRIVATE: ItemCatalogItemCreate
+        //private void ItemCatalogItemCreate(string aspNetRoleName, long corpAcctId, string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        long parentCategoryId, itemCount;
+        //        string htmlFileName, htmlString, parentCategoryDesc;//, pDFFullFileName;
+        //        Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
+        //        ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel();
+        //        List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+        //        List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
+        //        StreamWriter streamWriter;
+        //        ArchLibBL archLibBL = new ArchLibBL();
+        //        PDFUtility pDFUtility = new PDFUtility();
+        //        foreach (var categoryCategoryItemMasterHierModel in categoryCategoryItemMasterHierModels)
+        //        {
+        //            parentCategoryId = categoryCategoryItemMasterHierModel.CategoryModel.CategoryId.Value;
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+        //            parentCategoryDesc = categoryCategoryItemMasterHierModel.CategoryModel.CategoryDesc;
+        //            if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleName, out parentCategoryItemMasterModels))
+        //            {
+        //                if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
+        //                {
+        //                }
+        //                else
+        //                {
+        //                    categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
+        //            }
+        //            RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+        //            itemDiscountModels = itemDiscountModels == null ? new Dictionary<long, ItemDiscountModel>() : itemDiscountModels;
+        //            itemCount = 0;
+        //            foreach (var categoryItemMasterHierModel in categoryItemMasterHierModels)
+        //            {
+        //                itemCount += categoryItemMasterHierModel.ItemMasterModel.ItemModels.Count;
+        //            }
+        //            itemCatalogFileModel = new ItemCatalogFileModel
+        //            {
+        //                CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+        //                CategoryItemMasterHierModels = categoryItemMasterHierModels,
+        //                CurrencySymbol = RetailSlnCache.CurrencySymbol,
+        //                ItemDiscountModels = itemDiscountModels,
+        //                ItemMasterCount = categoryItemMasterHierModels.Count,
+        //                ItemCount = itemCount,
+        //                ParentCategoryDesc = parentCategoryDesc,
+        //                ParentCategoryId = null,
+        //                PdfFlag = false,
+        //            };
+        //            htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
+        //            htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFile", itemCatalogFileModel);
+        //            streamWriter = new StreamWriter(htmlFileName);
+        //            streamWriter.Write(htmlString);
+        //            streamWriter.Close();
+        //            //if (aspNetRoleName == "APPLADMN1" && parentCategoryId == 100)
+        //            //{
+        //            //    htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}_A.html";
+        //            //    htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFileSearch", itemCatalogFileModel);
+        //            //    streamWriter = new StreamWriter(htmlFileName);
+        //            //    streamWriter.Write(htmlString);
+        //            //    streamWriter.Close();
+        //            //}
+        //            if (aspNetRoleName == "DEFAULTROLE" && corpAcctId == 0 && parentCategoryId == 100)
+        //            {
+        //                //exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Html Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Pdf Begin", "AspNetRoleName", aspNetRoleName, "CorpAcctId", corpAcctId.ToString(), "ParentCategoryId", parentCategoryId.ToString());
+        //                itemCatalogFileModel = new ItemCatalogFileModel
+        //                {
+        //                    CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
+        //                    CategoryItemMasterHierModels = categoryItemMasterHierModels,
+        //                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
+        //                    ItemDiscountModels = null,
+        //                    ItemMasterCount = categoryItemMasterHierModels.Count,
+        //                    ItemCount = itemCount,
+        //                    ParentCategoryDesc = parentCategoryDesc,
+        //                    ParentCategoryId = null,
+        //                    PdfFlag = true,
+        //                };
+        //                //htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}_A.html";
+        //                //htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFileData", itemCatalogFileModel);
+        //                //streamWriter = new StreamWriter(htmlFileName);
+        //                //streamWriter.Write(htmlString);
+        //                //streamWriter.Close();
+        //                //exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Html End");
+        //                //itemCatalogFileModel.ItemDiscountModels = null;
+        //                //itemCatalogFileModel.PdfFlag = true;
+        //                htmlString = archLibBL.ViewToHtmlString(controller, "ItemCatalogPdf", itemCatalogFileModel);
+        //                var pDFFullFileName = itemCatalogFilesPath + $@"\ItemCatalog.pdf";
+        //                pDFUtility.GeneratePDFFromHtmlString(htmlString, pDFFullFileName);
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Pdf End");
+        //            }
+        //            //exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00005000 :: End");
+        //        }
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
+        #endregion
         #region Commenting Code for now - Need this after fixing
         //// PRIVATE : CreatePaymentInfoModel
         //private void CreatePaymentInfoModel(ref PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -3242,7 +4072,7 @@ namespace RetailSlnBusinessLayer
                     {
                         addToCartModel.ShoppingCartItemBundleModels[i].OrderQty = long.Parse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm);
                         itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * addToCartModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
-                        productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                        productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight.Value;
                         weightCalcValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                         weightValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                         shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, itemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
@@ -3260,8 +4090,8 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModel.OrderQty = addToCartModel.OrderQty;
                 shoppingCartItemModel.OrderQtyParm = addToCartModel.OrderQtyParm;
                 shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
-                shoppingCartItemModel.WeightCalcValue = weightCalcValue;
-                shoppingCartItemModel.WeightValue = weightValue;
+                shoppingCartItemModel.WeightCalcValue = 0;//weightCalcValue;
+                shoppingCartItemModel.WeightValue = 0;//weightValue;
             }
             else
             {
@@ -3290,7 +4120,7 @@ namespace RetailSlnBusinessLayer
                         shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty;
                         shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountFormatted = shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                         itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
-                        productOrVolumetricWeight += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                        productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight.Value;
                         weightCalcValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                         weightValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                     }
@@ -3303,8 +4133,8 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModel.OrderAmountFormatted = shoppingCartItemModel.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                 shoppingCartItemModel.OrderAmountRounded = (long)(shoppingCartItemModel.OrderAmount * 100);
                 shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
-                shoppingCartItemModel.WeightCalcValue = weightCalcValue;
-                shoppingCartItemModel.WeightValue = weightValue;
+                shoppingCartItemModel.WeightCalcValue = 0;//weightCalcValue;
+                shoppingCartItemModel.WeightValue = 0;//weightValue;
                 #endregion
             }
         }

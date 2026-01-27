@@ -1,0 +1,39 @@
+﻿@using RetailSlnModels
+@model ItemCatalogModel
+@{
+    ViewBag.Title = "ItemCatalogData";
+}
+@Html.HiddenFor(m => m.PageCount)
+@Html.HiddenFor(m => m.PageSize)
+<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <colgroup>
+        <col style="width: 63%;" />
+        <col style="width: 36%;" />
+    </colgroup>
+    <tr>
+        <td class="dataStyle1Left">
+            @Html.DropDownList("ParentCategoryIdList", new SelectList(Model.CategoryCategoryItemMasterHierModels, "CategoryModel.CategoryId", "CategoryModel.CategoryDesc", null), "--- Select Catalog ---", new { @class = "form-control", onchange = "javascript: ParentCategoryId_onclick();", style = "font-size: 14px; width: 99%;" })
+        </td>
+        <td class="dataStyle1Left" style="font-weight: bold; vertical-align: middle;">
+            <span style="color: #0000ff;">@Model.ParentCategoryDesc</span>
+            <span style="color: #ff0000; padding-left: 9px;">@Model.ItemMasterCount</span>
+            <span style="color: #000000; padding-left: 1px;">/</span>
+            <span style="color: #a54000; padding-left: 1px;">@Model.ItemCount</span>
+        </td>
+    </tr>
+</table>
+<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
+    <colgroup>
+        <col style="width: 36px;" />
+        <col style="width: 45px;" />
+        <col />
+        <col style="width: 108px;" />
+    </colgroup>
+    <tr>
+        <th class="dataStyle1Right">#</th>
+        <th class="dataStyle1Center">Item#</th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tbody id="divItemCatalogDetail"></tbody>
+</table>

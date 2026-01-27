@@ -9,8 +9,6 @@ namespace RetailSlnModels
     public class ItemCatalogModel
     {
         public string ItemCatalogHtmlFileName { set; get; }
-
         public ResponseObjectModel ResponseObjectModel { set; get; }
-
     }
 }

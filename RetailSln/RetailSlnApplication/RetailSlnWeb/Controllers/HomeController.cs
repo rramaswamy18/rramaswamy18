@@ -2126,7 +2126,7 @@ namespace RetailSlnWeb.Controllers
             ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
             if (createForSessionObject.AspNetRoleName != "GUESTROLE")
             {
-                retailSlnBL.ShoppingCartWIPCreate(shoppingCartModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //retailSlnBL.ShoppingCartWIPCreate(shoppingCartModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
             }
             //Take a look at the below logic Begin
             //if (currentLoggedInUserId != createForSessionObject.AspNetUserId)

@@ -1,10 +1,36 @@
 ﻿@using RetailSlnModels
 @model SearchResultModel
-<table style="margin-left: auto; margin-right: auto; width: 81%;">
-    <tr>
-        <th class="text-left"><span style="color: #ff0000; padding-right: 9px;">Search results for</span>@Model.SearchKeywordText<span style="color: #a54000; padding-left: 9px; padding-right: 9px;">Items#</span> @Model.ItemMasterListModel.ItemMasterModels.Count<span style="color: #0000ff; padding-left: 9px; padding-right: 9px;">Categories#</span>@Model.CategoryListModel.CategoryModels.Count</th>
-    </tr>
-</table>
-@Html.Partial("_SearchResultItemMaster", Model.ItemMasterListModel)
-<br />
-@Html.Partial("_SearchResultCategory", Model.CategoryListModel)
+<div id="divSearchResultItemMaster" style="margin: 0px;"></div>
+<script type="text/javascript">
+    document.getElementById("searchTerm").value = "@Model.SearchKeywordText";
+    searchResult_onclick(1);
+    function searchResult_onclick(pageNum) {
+        console.log("searchResult_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "@Url.Action("SearchResultItemMaster", "Home")";
+        var searchText = document.getElementById("searchTerm").value;
+        var jsonPostData =
+        {
+            "searchText": searchText,
+            "pageNum": pageNum,
+        };
+        $.ajax({
+            url: url,
+            type: "POST",
+            //async: false,
+            //contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            data: jsonPostData,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                document.getElementById("divSearchResultItemMaster").innerHTML = responseData;
+                console.log("searchResult_onclick", "00001000", "SUCCESS!!!", textStatus);
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("searchResult_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+            }
+        });
+    }
+</script>

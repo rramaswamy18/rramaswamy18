@@ -1,8 +1,50 @@
-﻿@model RetailSlnModels.SearchResultModel
+﻿@using RetailSlnModels
+@model SearchResultModel
 @{
     ViewBag.Title = "SearchResult";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+
+    .dataStyle1Left {
+        font-family: Arial;
+        font-size: 13px;
+        font-style: normal;
+        padding: 5px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .dataStyle1Center {
+        font-family: Arial;
+        font-size: 13px;
+        font-style: normal;
+        padding: 5px;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .dataStyle1Right {
+        font-family: Arial;
+        font-size: 13px;
+        font-style: normal;
+        padding: 5px;
+        text-align: right;
+        vertical-align: top;
+    }
+
+    .hrefStyle {
+        color: #ff0000;
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
 @Html.Partial("_SearchResult", Model)
 <script type="text/javascript">
     function window_onload() {

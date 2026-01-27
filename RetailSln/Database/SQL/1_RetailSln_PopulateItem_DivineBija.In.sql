@@ -565,5 +565,19 @@ END
          WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 --End CategoryItemMasterHier
+--Begin Language in Books
+INSERT RetailSlnSch.ItemItemSpec(ClientId, ItemId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, SeqNum, SeqNumItem)
+SELECT 3 ClientId, ItemId, 28 AS ItemSpecMasterId, '' AS ItemSpecUnitValue, [Language] ItemSpecValue, 28 AS SeqNum, 28 AS SeqNumItem FROM DivineBija_Books ORDER BY ItemId
+--End Language in Books
+--Begin Update ItemSpecValueWithUnit in ItemItemSpec
+UPDATE RetailSlnSch.ItemItemSpec SET ItemSpecValueWithUnit = NULL
+UPDATE RetailSlnSch.ItemItemSpec SET ItemSpecValueWithUnit = ItemItemSpec.ItemSpecValue + ' ' + CodeData.CodeDataDesc0
+FROM RetailSlnSch.ItemItemSpec
+INNER JOIN RetailSlnSch.ItemSpecMaster
+ON ItemItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
+INNER JOIN Lookup.CodeData
+ON ItemSpecMaster.CodeTypeId = CodeData.CodeTypeId AND ItemItemSpec.ItemSpecUnitValue = CodeData.CodeDataNameId
+UPDATE RetailSlnSch.ItemItemSpec SET ItemSpecValueWithUnit = ItemSpecValue WHERE ItemSpecValueWithUnit IS NULL
+--End Update ItemSpecValueWithUnit in ItemItemSpec
 SELECT 'copy "C:\Common\Images\DivineBijaIn\DivineBija_20230927\UploadedImages\' + UploadImageFileName + '" DivineBija.InUploadedImages\' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster WHERE ItemMasterId > 0 ORDER BY ItemMasterId
 SELECT 'copy "DivineBija.InUploadedImages\' + UploadImageFileName + '" ItemMaster\ItemMaster' + CAST(ItemMasterId AS VARCHAR) + '.' + ImageExtension AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster WHERE ItemMasterId > 0 ORDER BY ItemMasterId
