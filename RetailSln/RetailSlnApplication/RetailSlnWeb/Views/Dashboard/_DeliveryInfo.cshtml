@@ -1,0 +1,12 @@
+﻿@using RetailSlnModels
+@model DeliveryInfoModel
+<h2 class="text-center mb-4" style="color: #a54000; font-size: 24px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+    Delivery&nbsp;&nbsp;Info
+</h2>
+<form id="formDeliveryInfoData">
+    @Html.Partial("_DeliveryInfoData", Model)
+</form>
+<div class="row" style="text-align: center;">
+    <button class="loginRegisterbtn" id="deliveryInfoSave" onclick="javascript: return deliveryInfoSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 54%;" type="button">Process</button>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>

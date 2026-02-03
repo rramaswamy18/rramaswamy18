@@ -1,0 +1,12 @@
+﻿@using RetailSlnModels
+@model DeliveryInfoModel
+@{
+    ViewBag.Title = "DeliveryInfo";
+    Layout = "_DashboardLayout.cshtml";
+}
+@Html.Partial("_DeliveryInfo", Model)
+<script type="text/javascript">
+    function window_onload() {
+        shoppingCart_onclick();
+    }
+</script>

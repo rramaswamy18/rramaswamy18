@@ -84,6 +84,7 @@ namespace RetailSlnWeb.Controllers
                 if (sessionObjectModel == null)
                 {
                     string absoluteUri = Request.Url.AbsoluteUri;
+                    //Move this to the database or config when we get there
                     if (
                         absoluteUri.ToUpper().IndexOf("BULKORDER") > -1 || id?.ToUpper().IndexOf("BULKORDER") > -1 ||
                         absoluteUri.ToUpper().IndexOf("MARKETING") > -1 || id?.ToUpper().IndexOf("MARKETING") > -1 ||
@@ -94,14 +95,6 @@ namespace RetailSlnWeb.Controllers
                         return RedirectToAction("LoginUserProf");
                     }
                     aspNetRoleNameProxy = "DEFAULTROLE";
-                    //if (absoluteUri.ToUpper().IndexOf("REFERRAL") > -1 || id?.ToUpper().IndexOf("REFERRAL") > -1)
-                    //{
-                    //    aspNetRoleName = "REFERRALROLE";
-                    //}
-                    //else
-                    //{
-                    //    aspNetRoleName = "DEFAULTROLE";
-                    //}
                 }
                 else
                 {
@@ -110,8 +103,6 @@ namespace RetailSlnWeb.Controllers
                 switch (aspNetRoleNameProxy)
                 {
                     case "APPLADMN1":
-                    //case "MARKETINGROLE":
-                    //case "SYSTADMIN":
                         actionResult = RedirectToAction("Index", "Dashboard");
                         break;
                     //case "REFERRALROLE":
@@ -884,8 +875,8 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(oTPRequestModel);
                 if (ModelState.IsValid)
                 {
-                    //oTPResponseModel = archLibBL.LoginUserProfOTPRequest(ref oTPRequestModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     oTPResponseModel.RequestType = "Login";
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -956,6 +947,9 @@ namespace RetailSlnWeb.Controllers
                         sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                         string currentLoggedInUserId = loggedInUserId;
                         htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
+                        //Reset the last visited - User can be different
+                        Session["LastVisitedParentCategoryId"] = null;
+                        Session["LastVisitedPageNum"] = null;
                         success = true;
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                     }
@@ -1271,7 +1265,8 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(oTPRequestModel);
                 if (ModelState.IsValid)
                 {
-                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "REGISTERUSERPROF", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "REGISTERUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     oTPResponseModel.RequestType = "Register";
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -2124,10 +2119,10 @@ namespace RetailSlnWeb.Controllers
             Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleNameProxy];
             redirectUrl = Url.Action(aspNetRoleKVPs["ActionName00"].KVPValueData, aspNetRoleKVPs["ControllerName00"].KVPValueData);
             ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
-            if (createForSessionObject.AspNetRoleName != "GUESTROLE")
-            {
-                //retailSlnBL.ShoppingCartWIPCreate(shoppingCartModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            }
+            //if (createForSessionObject.AspNetRoleName != "GUESTROLE")
+            //{
+            ////retailSlnBL.ShoppingCartWIPCreate(shoppingCartModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //}
             //Take a look at the below logic Begin
             //if (currentLoggedInUserId != createForSessionObject.AspNetUserId)
             //{

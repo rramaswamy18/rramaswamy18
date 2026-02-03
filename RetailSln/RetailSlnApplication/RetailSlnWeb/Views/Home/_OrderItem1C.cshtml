@@ -54,12 +54,11 @@
         }
     *@
     <tr>
-        <th></th>
-        <th colspan="5" style="padding: 5px; text-align: left;">
-            <span style="color: #ff0000; font-size: 16px;">Order bundle without breaking (as is)</span>
-            <span style="color: #a54000; font-size: 14px;">Bundled item(s)</span>
-            <span style="color: #0000ff; font-size: 15px;">@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count</span>
-            <span style="color: #a54000; font-size: 14px;">items</span>
+        <th colspan="6" style="padding: 5px; text-align: left;">
+            <span style="color: #0000ff; font-size: 13px;">Order bundle without breaking&nbsp;</span>
+            @*<span style="color: #a54000; font-size: 14px;">Bundled item(s)</span>*@
+            <span style="color: #a54000; font-size: 13px;">(#@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count Items)</span>
+            @*<span style="color: #a54000; font-size: 14px;">items</span>*@
         </th>
     </tr>
     <tr style="background-color: #d0d0d0;">
@@ -157,30 +156,12 @@
                         </span>
                     </span>
                 }
-                @*
-                    <!--Dropdown-->
-                    if (Model.ItemMasterModel.ItemModels.Count > 1)
-                    {
-                        <select class="form-control" id="itemBundleItem" onchange="javascript: return itemBundleItem_onclick(this.selectedIndex, @Model.ItemMasterModel.ItemModels.Count);">
-                            <option value="">--- Select Item ---</option>
-                            @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
-                            {
-                                Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
-                                discountPercent = "";
-                                if (itemDiscountModel != null)
-                                {
-                                    discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
-                                }
-                                else
-                                {
-                                    discountPercent = "";
-                                }
-                                <option value="@itemModel.ItemId">@(itemModel.ItemMasterModel.ItemMasterDesc + ";" + itemModel.ItemItemSpecsForDisplay + ";" + itemModel.ItemRateFormatted + ";" + discountPercent)</option>
-                            }
-                        </select>
-                    }
-                    <span style="color: #0000ff;">Ummachi Kapathu</span>
-                *@
+                if (index == 0)
+                {
+                    <br style="clear: both;" />
+                }
+                <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order bundle without breaking&nbsp;</span>
+                <span style="color: #a54000; font-size: 13px; font-weight: bold;">(#@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count Items)</span>
             }
         </td>
         <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">

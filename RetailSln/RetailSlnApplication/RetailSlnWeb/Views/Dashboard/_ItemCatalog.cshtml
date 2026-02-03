@@ -1,3 +1,88 @@
-﻿@using RetailSlnModels
-@model ItemCatalogModel
-@Html.Raw(File.ReadAllText(Server.MapPath("~/Files/ItemCatalog/" + Model.ItemCatalogHtmlFileName)))
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    #region Backend Code
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+    var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+    if (aspNetRoleNameProxy == null)
+    {
+        aspNetRoleNameProxy = "APPLADMN1";
+    }
+    Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
+    var parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
+    long? corpAcctId = ((ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel)?.CorpAcctModel.CorpAcctId;
+    if (corpAcctId == null)
+    {
+        corpAcctId = 0;
+    }
+    List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleNameProxy][0];
+    var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
+    #endregion
+}
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+
+    .dataStyle1Left {
+        font-family: Arial;
+        font-size: 13px;
+        font-style: normal;
+        padding: 5px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .dataStyle1Center {
+        font-family: Arial;
+        font-size: 13px;
+        font-style: normal;
+        padding: 5px;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .dataStyle1Right {
+        font-family: Arial;
+        font-size: 13px;
+        font-style: normal;
+        padding: 5px;
+        text-align: right;
+        vertical-align: top;
+    }
+
+    .hrefStyle {
+        color: #ff0000;
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<table class="table table-bordered table-condensed table-responsive" style="border: none !important; margin-bottom: 0px; margin-left: auto; margin-right: auto; padding: 0px; width: 81%;">
+    <tr>
+        <th class="dataStyle1Left" style="border: none !important; vertical-align: middle;">
+            @Html.DropDownList("parentCategoryId", new SelectList(categoryCategoryItemMasterHierModels, "CategoryModel.CategoryId", "CategoryModel.CategoryDesc", null), "--- Select Catalog ---", new { @class = "form-control", onchange = "javascript: parentCategoryId_onclick();", style = "float: left; font-size: 14px; font-weight: normal; width: 54%;", title = "Select category to view the catalog" })
+            <span id="spnParentCategoryId" style="display: none;"></span>
+            <span id="spnParentCategoryDesc" style="color: #0000ff; float: left; font-size: 18px; font-weight: bold; padding-left: 9px; padding-top: 3px;"></span>
+            <span id="spnItemMasterCount" style="color: #ff0000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 8px;"></span>
+            <span style="color: #000000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 8px;">/</span>
+            <span id="spnItemCount" style="color: #a54000; float: left; font-size: 15px; font-weight: bold; padding-left: 5px; padding-top: 8px;"></span>
+        </th>
+        <th class="dataStyle1Left" style="border: none !important; vertical-align: middle;">
+            <input class="form-control" id="txtSearchText" name="txtSearchText" placeholder="Search inside catalog..." style="float: left; font-weight: normal; width: 63%;" type="text" title="Search in this page..." />
+            <input id="btnSearchText" name="btnSearchText" onclick="javascript: btnSearchText_onclick(1);" style="background-color: #ffffff; border-style: none; color: #000000; float: left; font-weight: bold; padding-left: 9px; padding-top: 9px; text-decoration: underline;" type="button" value="Search" />
+        </th>
+    </tr>
+</table>
+<div class="container">
+    <div class="column" style="color: #a54000; font-size: 14px; font-weight: bold; width: 90%;">
+        You are creating order for @(createForSessionObject.PhoneNumber + " " + applSessionObjectModel.CorpAcctModel.CorpAcctName)
+    </div>
+</div>
+<div id="divItemCatalogData" style="padding: 0px;">
+</div>

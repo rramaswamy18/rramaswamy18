@@ -406,57 +406,41 @@ SET NOCOUNT OFF
           ORDER BY ItemSpecWork.ItemId
                   ,ItemSpecWork.ItemSpecMasterId
 --End ItemItemSpec
+--
 --Begin SearchList & SearchResult
-BEGIN
+--DECLARE @ClientId INT = 3
 TRUNCATE TABLE RetailSlnSch.SearchMetaData
+TRUNCATE TABLE RetailSlnSch.SearchKeywordSynonym
 TRUNCATE TABLE RetailSlnSch.SearchKeyword
---
-DECLARE @EntityId BIGINT, @SearchCharIndex BIGINT, @SearchKeywords NVARCHAR(MAX), @SearchKeywordText NVARCHAR(512)
-DECLARE @SearchKeywordId BIGINT, @EntityTypeNameDesc NVARCHAR(50)
---
-DECLARE SearchKeywordMetaDataCursor CURSOR FOR
-SELECT Id AS EntityId, 'CATEGORY' AS EntityTypeNameDesc, [Search Keywords] FROM dbo.DivineBija_Categories WHERE Active = 1 AND [Search Keywords] <> ''
+
+--SearchKeyword
+INSERT RetailSlnSch.SearchKeyword(ClientId, SearchKeywordText)
+SELECT DISTINCT @ClientId AS ClientId, LOWER(MainSearchKeyword) AS SearchKeywordText FROM DivineBija_SearchKeyword WHERE ISNULL(MainSearchKeyword, '') <> '' ORDER BY 1
+--SearchMetaData
+DROP TABLE IF EXISTS #TEMPA
+SELECT DISTINCT SearchKeyword.ClientId, SearchKeyword.SearchKeywordId, 'ITEMMASTER' AS EntityTypeNameDesc, Item.ItemMasterId AS EntityId
+  INTO #TEMPA
+FROM DivineBija_SearchKeyword
+INNER JOIN RetailSlnSch.SearchKeyword ON DivineBija_SearchKeyword.MainSearchKeyword = SearchKeyword.SearchKeywordText
+INNER JOIN RetailSlnSch.Item ON DivineBija_SearchKeyword.UniqueDescription = Item.ItemUniqueDesc
+WHERE DivineBija_SearchKeyword.KeywordType = 'ITEM' AND ISNULL(MainSearchKeyword, '') <> ''
 UNION
-SELECT ItemMaster.ItemMasterId AS EntityId, 'ITEMMASTER' AS EntityTypeNameDesc, [Search Keywords]
-FROM dbo.DivineBija_Products INNER JOIN RetailSlnSch.ItemMaster ON DivineBija_Products.Id = ItemMaster.ProductItemId
-WHERE [Search Keywords] <> ''
-UNION
-SELECT ItemMaster.ItemMasterId AS EntityId, 'ITEMMASTER' AS EntityTypeNameDesc, [Search Keywords]
-FROM dbo.DivineBija_Books INNER JOIN RetailSlnSch.ItemMaster ON DivineBija_Books.Id = ItemMaster.ProductItemId
-WHERE [Search Keywords] <> ''
-ORDER BY EntityTypeNameDesc, Id
-
-OPEN SearchKeywordMetaDataCursor
-
-FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
-    WHILE @SearchCharIndex > 0
-    BEGIN
-        SET @SearchKeywordText = SUBSTRING(@SearchKeywords, 1, @SearchCharIndex - 1)
-        SET @SearchKeywords = SUBSTRING(@SearchKeywords, @SearchCharIndex + 1, LEN(@SearchKeywords))
-        SET @SearchKeywordId = NULL
-        SELECT @SearchKeywordId = SearchKeyword.SearchKeywordId FROM RetailSlnSch.SearchKeyword WHERE SearchKeyword.SearchKeywordText = @SearchKeywordText
-        IF @SearchKeywordId IS NULL
-        BEGIN
-            INSERT RetailSlnSch.SearchKeyword(ClientId, SearchKeywordText)
-            SELECT @ClientId AS ClientId, LOWER(@SearchKeywordText)
-            SET @SearchKeywordId = @@IDENTITY
-        END
-        INSERT RetailSlnSch.SearchMetaData(ClientId, SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
-        SELECT @ClientId AS ClientId, @SearchKeywordId AS SearchKeywordId, @EntityTypeNameDesc AS EntityTypeNameDesc, @EntityId AS EntityId, 1 AS SeqNum
-        SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
-    END
-    FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
-END
-
-CLOSE SearchKeywordMetaDataCursor
-DEALLOCATE SearchKeywordMetaDataCursor
-END
+SELECT DISTINCT SearchKeyword.ClientId, SearchKeyword.SearchKeywordId, 'CATEGORY' AS EntityTypeNameDesc, Category.CategoryId AS EntityId
+FROM DivineBija_SearchKeyword
+INNER JOIN RetailSlnSch.SearchKeyword ON DivineBija_SearchKeyword.MainSearchKeyword = SearchKeyword.SearchKeywordText
+INNER JOIN RetailSlnSch.Category ON DivineBija_SearchKeyword.UniqueDescription = Category.CategoryNameDesc
+WHERE DivineBija_SearchKeyword.KeywordType = 'CATEGORY' AND ISNULL(MainSearchKeyword, '') <> ''
+INSERT RetailSlnSch.SearchMetaData(ClientId, SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
+SELECT *, ROW_NUMBER() OVER(PARTITION BY EntityTypeNameDesc, SearchKeywordId ORDER BY EntityTypeNameDesc, SearchKeywordId)
+FROM #TEMPA
+--SearchKeywordSynonym
+INSERT RetailSlnSch.SearchKeywordSynonym(SearchKeywordId, SearchKeywordSynonymText)
+SELECT DISTINCT SearchKeyword.SearchKeywordId, DivineBija_SearchKeywordSynonym.MainSearchKeywordSynonym
+FROM DivineBija_SearchKeywordSynonym
+INNER JOIN RetailSlnSch.SearchKeyword ON DivineBija_SearchKeywordSynonym.MainSearchKeyword = SearchKeyword.SearchKeywordText
+ORDER BY 1, 2
 --End SearchList & SearchResult
-
+--
 --Begin ItemInfo
         TRUNCATE TABLE RetailSlnSch.ItemInfo
         INSERT RetailSlnSch.ItemInfo(ClientId, ItemId, ItemInfoLabelText, ItemInfoText, SeqNum)

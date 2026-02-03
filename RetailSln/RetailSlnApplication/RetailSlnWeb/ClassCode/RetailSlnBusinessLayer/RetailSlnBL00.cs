@@ -1380,7 +1380,7 @@ namespace RetailSlnBusinessLayer
                 Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
                 if (parentCategoryId == 0)
                 {
-                    parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
+                    parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
                 }
                 long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 string itemCatalogHtmlDirName = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
@@ -1822,7 +1822,7 @@ namespace RetailSlnBusinessLayer
         //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
         //        if (parentCategoryId == 0)
         //        {
-        //            parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
+        //            parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
         //        }
         //        long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
         //        string itemCatalogHtmlDirName = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
@@ -2580,10 +2580,15 @@ namespace RetailSlnBusinessLayer
                 sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
                 sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "     LEFT JOIN RetailSlnSch.SearchKeywordSynonym" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchKeywordSynonym.SearchKeywordId" + Environment.NewLine;
                 sqlStmt += "         WHERE" + Environment.NewLine;
                 sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
                 sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
-                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "           AND(" + Environment.NewLine;
+                sqlStmt += "               SearchKeywordSynonym.SearchKeywordSynonymText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "              )" + Environment.NewLine;
                 sqlStmt += "UNION" + Environment.NewLine;
                 sqlStmt += "        SELECT" + Environment.NewLine;
                 sqlStmt += "               DISTINCT CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
@@ -2602,8 +2607,8 @@ namespace RetailSlnBusinessLayer
                 sqlStmt += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
                 sqlStmt += "            OR  Item.ItemShortDesc LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
                 sqlStmt += "            OR  ItemItemSpec.ItemSpecValueWithUnit LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
-                sqlStmt += "               )" + Environment.NewLine;
-                sqlStmt += "           ) A" + Environment.NewLine;
+                sqlStmt += "              )" + Environment.NewLine;
+                sqlStmt += "              ) A" + Environment.NewLine;
                 sqlStmt += "--" + Environment.NewLine;
                 sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
                 sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
@@ -2613,10 +2618,16 @@ namespace RetailSlnBusinessLayer
                 sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
                 sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "     LEFT JOIN RetailSlnSch.SearchKeywordSynonym" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchKeywordSynonym.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "           AND(" + Environment.NewLine;
+                sqlStmt += "               SearchKeywordSynonym.SearchKeywordSynonymText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "              )" + Environment.NewLine;
                 sqlStmt += "         WHERE" + Environment.NewLine;
                 sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
                 sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
-                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "           AND SearchKeywordSynonym.SearchKeywordSynonymText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
                 sqlStmt += "UNION" + Environment.NewLine;
                 sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
                 sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
@@ -2648,12 +2659,14 @@ namespace RetailSlnBusinessLayer
                 sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
                 sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchKeywordSynonym" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchKeywordSynonym.SearchKeywordId" + Environment.NewLine;
                 sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
                 sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.CategoryId" + Environment.NewLine;
                 sqlStmt += "         WHERE" + Environment.NewLine;
                 sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'CATEGORY'" + Environment.NewLine;
                 sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
-                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "           AND SearchKeywordSynonym.SearchKeywordSynonymText LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
                 sqlStmt += "UNION" + Environment.NewLine;
                 sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
                 sqlStmt += "               Category.CategoryId" + Environment.NewLine;
@@ -2665,6 +2678,8 @@ namespace RetailSlnBusinessLayer
                 sqlStmt += "           AND CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
                 sqlStmt += "      ORDER BY" + Environment.NewLine;
                 sqlStmt += "               CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                #endregion
+                #region
                 ApplicationDataContext.OpenSqlConnection();
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, ApplicationDataContext.SqlConnectionObject);
                 sqlCommand.Parameters.Add("@AspNetRoleName", SqlDbType.NVarChar, 50);
@@ -2746,7 +2761,7 @@ namespace RetailSlnBusinessLayer
                 Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
                 if (parentCategoryId == 0)
                 {
-                    parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
+                    parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
                 }
                 #region
                 string sqlStmt = "", sqlStmtWhere = "";

@@ -1,0 +1,158 @@
+﻿@using RetailSlnModels
+@model SearchKeywordListModel
+@{
+    int index = 0;
+}
+<style>
+    .dataStyle1Left {
+        font-family: Arial;
+        font-size: 12px;
+        padding: 5px;
+        text-align: left;
+    }
+
+    .dataStyle1Right {
+        font-family: Arial;
+        font-size: 12px;
+        padding: 5px;
+        text-align: right;
+    }
+
+    .dataStyle1Center {
+        font-family: Arial;
+        font-size: 12px;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .hrefStyle {
+        color: #0000ff;
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 72%;">
+    <colgroup>
+        <col style="width: 27px;" />
+        <col style="width: 27px;" />
+        <col style="width: 63px;" />
+        <col />
+        <col style="width: 162px;" />
+    </colgroup>
+    <tr>
+        <th>#</th>
+        <th>Id</th>
+        <th>Keyword</th>
+        <th>Category / Item</th>
+        <th>Synonym</th>
+    </tr>
+    @foreach (var searchKeywordModel in Model.SearchKeywordModels)
+    {
+        index++;
+        <tr>
+            <td class="dataStyle1Right">
+                @(index + ".")
+            </td>
+            <td class="dataStyle1Center">
+                @searchKeywordModel.SearchKeywordId
+            </td>
+            <td class="dataStyle1Left">
+                @searchKeywordModel.SearchKeywordText
+            </td>
+            <td class="dataStyle1Left">
+                @if (searchKeywordModel.CategoryCount == 0)
+                {
+                    <span style="color: #000000; font-weight: bold;">No Category(s)</span>
+                }
+                else
+                {
+                    <table class="table table-bordered table-condensed table-responsive">
+                        <colgroup>
+                            <col style="width: 27px;" />
+                            <col />
+                        </colgroup>
+                        <tr>
+                            <th>Id</th>
+                            <th>Category Desc</th>
+                        </tr>
+                        @foreach (var searchMetaDataModel in searchKeywordModel.SearchMetaDataModels)
+                        {
+                            if (searchMetaDataModel.EntityTypeNameDesc == "CATEGORY")
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="hidden" value="@searchMetaDataModel.SearchMetaDataId" />
+                                        @searchMetaDataModel.EntityId
+                                    </td>
+                                    <td>
+                                        @searchMetaDataModel.CategoryModel.CategoryDesc
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                }
+                <table class="table table-bordered table-condensed table-responsive">
+                    <colgroup>
+                        <col style="width: 27px;" />
+                        <col />
+                    </colgroup>
+                    <tr>
+                        <th>Id</th>
+                        <th>Item Desc</th>
+                    </tr>
+                    @foreach (var searchMetaDataModel in searchKeywordModel.SearchMetaDataModels)
+                    {
+                        if (searchMetaDataModel.EntityTypeNameDesc == "ITEMMASTER")
+                        {
+                            <tr>
+                                <td>
+                                    <input type="hidden" value="@searchMetaDataModel.SearchMetaDataId" />
+                                    @searchMetaDataModel.EntityId
+                                </td>
+                                <td>
+                                    @(searchMetaDataModel.ItemMasterModel.ItemMasterDesc0 + " " + searchMetaDataModel.ItemMasterModel.ItemMasterDesc1)
+                                    @if (!string.IsNullOrWhiteSpace(searchMetaDataModel.ItemMasterModel.ItemMasterDesc2))
+                                    {
+                                        <br />
+                                        <span style="color: #000000; font-weight: bold;">@searchMetaDataModel.ItemMasterModel.ItemMasterDesc2</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(searchMetaDataModel.ItemMasterModel.ItemMasterDesc3))
+                                    {
+                                        <br />
+                                        <span style="color: #000000; font-weight: bold;">@searchMetaDataModel.ItemMasterModel.ItemMasterDesc3</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </td>
+            <td class="dataStyle1Left">
+                <table class="table table-bordered table-condensed table-responsive">
+                    <colgroup>
+                        <col style="width: 27px;" />
+                        <col />
+                    </colgroup>
+                    <tr>
+                        <th>Id</th>
+                        <th>Synonym</th>
+                    </tr>
+                    @foreach (var searchKeywordSynonymModel in searchKeywordModel.SearchKeywordSynonymModels)
+                    {
+                        <tr>
+                            <td>
+                                @searchKeywordSynonymModel.SearchKeywordSynonymId
+                            </td>
+                            <td>
+                                @searchKeywordSynonymModel.SearchKeywordSynonymText
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    }
+</table>

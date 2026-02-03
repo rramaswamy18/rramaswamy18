@@ -1017,5 +1017,196 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static List<SearchKeywordModel> SearchKeywordList(SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                bool sqlDataReaderRead;
+                string sqlStmt;
+                List<SearchKeywordModel> searchKeywordModels = new List<SearchKeywordModel>();
+                SearchKeywordModel searchKeywordModel = null;
+                SqlCommand sqlCommand;
+                SqlDataReader sqlDataReader;
+                #region SearchKeyword SqlStmt
+                sqlStmt = "";
+                sqlStmt += "        SELECT " + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                #endregion
+                #region SearchKeyword SqlDataReader
+                sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    searchKeywordModels.Add
+                    (
+                        searchKeywordModel = new SearchKeywordModel
+                        {
+                            SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                            ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                            CategoryCount = 0,
+                            ItemMasterCount = 0,
+                            SearchKeywordText = sqlDataReader["SearchKeywordText"].ToString(),
+                            SearchMetaDataModels = new List<SearchMetaDataModel>(),
+                            SearchKeywordSynonymModels = new List<SearchKeywordSynonymModel>(),
+                        }
+                    );
+                }
+                sqlDataReader.Close();
+                #endregion
+                #region SearchMetaData SqlStmt
+                sqlStmt = "";
+                sqlStmt += "        SELECT " + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SearchMetaDataId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SeqNum" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc0" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc1" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc2" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc3" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = ItemMaster.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "         WHERE " + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT " + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SearchMetaDataId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityId" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.SeqNum" + Environment.NewLine;
+                sqlStmt += "              ,Category.CategoryDesc" + Environment.NewLine;
+                sqlStmt += "              ,''" + Environment.NewLine;
+                sqlStmt += "              ,''" + Environment.NewLine;
+                sqlStmt += "              ,''" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.Category" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = Category.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE " + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'CATEGORY'" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchMetaData.EntityTypeNameDesc" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc0" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc1" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc2" + Environment.NewLine;
+                sqlStmt += "              ,ItemMaster.ItemMasterDesc3" + Environment.NewLine;
+                #endregion
+                #region SearchMetaData SqlDataReader
+                sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                sqlDataReaderRead = sqlDataReader.Read();
+                while (sqlDataReaderRead)
+                {
+                    searchKeywordModel = searchKeywordModels.First(x => x.SearchKeywordId == long.Parse(sqlDataReader["SearchKeywordId"].ToString()));
+                    searchKeywordModel.CategoryCount = 0;
+                    searchKeywordModel.ItemMasterCount = 0;
+                    while (sqlDataReaderRead && searchKeywordModel.SearchKeywordId == long.Parse(sqlDataReader["SearchKeywordId"].ToString()))
+                    {
+                        if (sqlDataReader["EntityTypeNameDesc"].ToString() == "CATEGORY")
+                        {
+                            searchKeywordModel.CategoryCount++;
+                        }
+                        else
+                        {
+                            searchKeywordModel.ItemMasterCount++;
+                        }
+                        searchKeywordModel.SearchMetaDataModels.Add
+                        (
+                            new SearchMetaDataModel
+                            {
+                                SearchMetaDataId = long.Parse(sqlDataReader["SearchMetaDataId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                                EntityId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                                EntityTypeNameDesc = sqlDataReader["EntityTypeNameDesc"].ToString(),
+                                SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+                                CategoryModel = sqlDataReader["EntityTypeNameDesc"].ToString() == "CATEGORY" ?
+                                new CategoryModel
+                                {
+                                    CategoryId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                                    CategoryDesc = sqlDataReader["ItemMasterDesc0"].ToString(),
+                                } : null,
+                                ItemMasterModel = sqlDataReader["EntityTypeNameDesc"].ToString() == "ITEMMASTER" ?
+                                new ItemMasterModel
+                                {
+                                    ItemMasterId = long.Parse(sqlDataReader["EntityId"].ToString()),
+                                    ItemMasterDesc0 = sqlDataReader["ItemMasterDesc0"].ToString(),
+                                    ItemMasterDesc1 = sqlDataReader["ItemMasterDesc1"].ToString(),
+                                    ItemMasterDesc2 = sqlDataReader["ItemMasterDesc2"].ToString(),
+                                } : null,
+                            }
+                        );
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+                #endregion
+                #region SearchKeywordSynonym SqlStmt
+                sqlStmt = "";
+                sqlStmt += "        SELECT " + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.ClientId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeywordSynonym.SearchKeywordSynonymId" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeywordSynonym.SearchKeywordSynonymText" + Environment.NewLine;
+                sqlStmt += "          FROM " + Environment.NewLine;
+                sqlStmt += "               RetailSlnSch.SearchKeyword" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.SearchKeywordSynonym" + Environment.NewLine;
+                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchKeywordSynonym.SearchKeywordId" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               SearchKeyword.SearchKeywordText" + Environment.NewLine;
+                sqlStmt += "              ,SearchKeywordSynonym.SearchKeywordSynonymText" + Environment.NewLine;
+                #endregion
+                #region SearchKeywordSynonym SqlDataReader
+                sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                sqlDataReaderRead = sqlDataReader.Read();
+                while (sqlDataReaderRead)
+                {
+                    searchKeywordModel = searchKeywordModels.First(x => x.SearchKeywordId == long.Parse(sqlDataReader["SearchKeywordId"].ToString()));
+                    while (sqlDataReaderRead && searchKeywordModel.SearchKeywordId == long.Parse(sqlDataReader["SearchKeywordId"].ToString()))
+                    {
+                        searchKeywordModel.SearchKeywordSynonymModels.Add
+                        (
+                            new SearchKeywordSynonymModel
+                            {
+                                SearchKeywordSynonymId = long.Parse(sqlDataReader["SearchKeywordSynonymId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+                                SearchKeywordSynonymText = sqlDataReader["SearchKeywordSynonymText"].ToString(),
+                            }
+                        );
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+                #endregion
+                return searchKeywordModels;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
     }
 }

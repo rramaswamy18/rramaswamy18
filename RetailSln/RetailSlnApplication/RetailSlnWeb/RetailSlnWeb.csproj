@@ -266,6 +266,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterItemSpecModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemItemSpecModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchKeywordListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderInvoiceModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderItem1Model.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RetailSlnInitModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchKeywordModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchKeywordSynonymModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchResultModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AddToCartModel.cs" />
@@ -305,6 +307,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartWIPModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\UserProfListModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -1944,7 +1947,6 @@
     <Content Include="Views\Home\_ContactUsEmailBody.cshtml" />
     <Content Include="Views\Home\_ContactUsEmailSubject.cshtml" />
     <Content Include="Views\Home\_CookiePolicy.cshtml" />
-    <Content Include="Views\Home\_DeliveryInfoData.cshtml" />
     <Content Include="Views\Home\_FAQs.cshtml" />
     <Content Include="Views\Home\_ItemBundleData.cshtml" />
     <Content Include="Views\Home\_ItemMasterAttributes.cshtml" />
@@ -2048,11 +2050,6 @@
     <Content Include="Views\Dashboard\_ItemMasterData.cshtml" />
     <Content Include="Views\Dashboard\_ItemMasterList.cshtml" />
     <Content Include="Views\Dashboard\_ItemMasterListData.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem2.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem2Backup.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem3.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem3Backup.cshtml" />
-    <Content Include="Views\Dashboard\_OrderItem3Old.cshtml" />
     <Content Include="Views\Dashboard\_OrderList.cshtml" />
     <Content Include="Views\Dashboard\_OrderListData.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
@@ -2071,7 +2068,6 @@
     <Content Include="Views\Home\_OTPRequestEmailSubject.cshtml" />
     <Content Include="Views\Home\_OTPResponseEmailSubject.cshtml" />
     <Content Include="Views\Home\_OTPResponseEmailBody.cshtml" />
-    <Content Include="Views\Home\_DeliveryInfo.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0Data.cshtml" />
     <Content Include="Views\Home\_ContactUsInfo.cshtml" />
     <Content Include="Views\Home\DeliveryInfo.cshtml" />
@@ -2082,7 +2078,14 @@
     <Content Include="Views\Home\_ItemCatalogData.cshtml" />
     <Content Include="Views\Shared\_ItemCatalogFile.cshtml" />
     <Content Include="Views\Shared\_ItemCatalogFileData.cshtml" />
-    <Content Include="Views\Home\_SearchResult - Copy.cshtml" />
+    <Content Include="Views\Dashboard\_SearchKeywordList.cshtml" />
+    <Content Include="Views\Dashboard\_ItemCatalogData.cshtml" />
+    <Content Include="Views\Dashboard\DeliveryInfo.cshtml" />
+    <Content Include="Views\Home\_DeliveryInfo.cshtml" />
+    <Content Include="Views\Home\_DeliveryInfoData.cshtml" />
+    <Content Include="Views\Dashboard\_DeliveryInfo.cshtml" />
+    <Content Include="Views\Dashboard\_DeliveryInfoData.cshtml" />
+    <Content Include="Views\Dashboard\_UserList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

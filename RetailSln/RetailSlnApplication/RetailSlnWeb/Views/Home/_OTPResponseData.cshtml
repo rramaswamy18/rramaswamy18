@@ -43,6 +43,8 @@
     if (!Model.EmailAddressExists)
     {
         <div class="box">
+            <span style="color: #ff0000; font-size: 12px; font-weight: bold;">First time... - enter your email address</span>
+            <br />
             @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
             @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 86%;" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error" }).ToHtmlString()))

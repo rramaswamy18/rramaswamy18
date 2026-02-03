@@ -160,7 +160,8 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(oTPRequestModel);
                 if (ModelState.IsValid)
                 {
-                    oTPResponseModel = archLibBL.CheckoutOTPRequest(ref oTPRequestModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+                    oTPResponseModel = archLibBL.CheckoutOTPRequest(ref oTPRequestModel, "CHECKOUT", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -1288,15 +1289,16 @@ namespace RetailSlnWeb.Controllers
             ActionResult actionResult;
             try
             {
-                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                SearchResultModel itemCatalogFileModel = retailSlnBL.SearchResult(id, null, null, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = PartialView("SearchResult", itemCatalogFileModel);
+                SearchResultModel searchResultModel = new SearchResultModel
+                {
+                    SearchKeywordText = id,
+                };
+                actionResult = View(searchResultModel);
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                actionResult = PartialView("Error");
+                actionResult = View("Error");
             }
             return actionResult;
         }

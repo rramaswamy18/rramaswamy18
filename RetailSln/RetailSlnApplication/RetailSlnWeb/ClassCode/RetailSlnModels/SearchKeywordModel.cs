@@ -10,6 +10,9 @@ namespace RetailSlnModels
         public long SearchKeywordId { set; get; }
         public long ClientId { set; get; }
         public string SearchKeywordText { set; get; }
+        public long CategoryCount { set; get; }
+        public long ItemMasterCount { set; get; }
         public List<SearchMetaDataModel> SearchMetaDataModels { set; get; }
+        public List<SearchKeywordSynonymModel> SearchKeywordSynonymModels { set; get; }
     }
 }

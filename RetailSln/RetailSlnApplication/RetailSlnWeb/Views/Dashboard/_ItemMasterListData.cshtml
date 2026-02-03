@@ -9,31 +9,25 @@
     int itemMasterndex = 0, itemIndex;
 }
 <style>
-    .dataStyle1 {
-        font-family: Arial;
-        font-size: 12px;
-        padding: 5px;
-    }
-
-    .dataStyle1 {
+    .dataStyle1Left {
         font-family: Arial;
         font-size: 12px;
         padding: 5px;
         text-align: left;
     }
 
-    .dataStyle2 {
-        font-family: Arial;
-        font-size: 12px;
-        padding: 5px;
-        text-align: center;
-    }
-
-    .dataStyle3 {
+    .dataStyle1Right {
         font-family: Arial;
         font-size: 12px;
         padding: 5px;
         text-align: right;
+    }
+
+    .dataStyle1Center {
+        font-family: Arial;
+        font-size: 12px;
+        padding: 5px;
+        text-align: center;
     }
 
     .hrefStyle {
@@ -44,12 +38,47 @@
         text-decoration: underline;
     }
 </style>
-<table class="dataStyle table table-bordered table-condensed" style="margin-left: auto; margin-right: auto; padding: 5px; width: 90%;">
+<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; padding: 5px; width: 90%;">
     <tr>
-        <th class="text-left" colspan="9" style="color: #a54000; font-size: 15px;"><a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterAddEdit_onclick('');">Add New</a></th>
+        <th class="dataStyle1Left" colspan="9" style="color: #a54000; font-size: 15px;"><a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterAddEdit_onclick('');">Add New</a></th>
     </tr>
     <tr>
-        <th class="text-center" colspan="9" style="color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Item(s) List</th>
+        <th class="dataStyle1Center" colspan="9" style="color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Item(s) List</th>
+    </tr>
+    <tr>
+        <td class="dataStyle1Center" colspan="9">
+            <ul class="pagination" style="margin: 0px;">
+                <li class="page-item">
+                    <a alt="Page# -1" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(-1);" , title="Jump to page# -1">
+                        Prev
+                    </a>
+                </li>
+                @for (int i = 1; i <= Model.PaginationModel.TotalPageCount; i++)
+                {
+                    if (i == Model.PaginationModel.PageNum)
+                    {
+                        <li class="page-item active">
+                            <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(@i);" , title="Jump to page# @i">
+                                @i
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(@i);" , title="Jump to page# @i">
+                                @i
+                            </a>
+                        </li>
+                    }
+                }
+                <li class="page-item">
+                    <a alt="Page# -1" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(-1);" , title="Jump to page# -1">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </td>
     </tr>
     <tr>
         <th>
@@ -59,10 +88,9 @@
             Id
         </th>
         <th>
-            Master Desc
+            Desc
         </th>
         <th>
-            Item(s)
         </th>
         <th>
             Image
@@ -73,29 +101,35 @@
         itemMasterndex++;
         itemIndex = 0;
         <tr>
-            <td class="dataStyle3">
+            <td class="dataStyle1Center">
                 @(itemMasterndex).
             </td>
-            <td class="dataStyle3">
+            <td class="dataStyle1Center">
                 @itemMasterModel.ItemMasterId
             </td>
-            <td class="dataStyle1">
+            <td class="dataStyle1Left">
                 @itemMasterModel.ItemMasterDesc0
                 <br style="clear: both;" />
                 @itemMasterModel.ItemMasterDesc1
-                <br style="clear: both;" />
-                @itemMasterModel.ItemMasterDesc2
-                <br style="clear: both;" />
-                @itemMasterModel.ItemMasterDesc3
+                @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2))
+                {
+                    <br style="clear: both;" />
+                    @itemMasterModel.ItemMasterDesc2
+                }
+                @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc3))
+                {
+                    <br style="clear: both;" />
+                    @itemMasterModel.ItemMasterDesc3
+                }
                 <br style="clear: both;" />
                 @itemMasterModel.ItemMasterItemSpecsForDisplayAll
-            </td>
-            <td class="dataStyle1">
-                <table class="dataStyle table table-condensed table-responsive">
+                <table class="table table-bordered table-condensed table-responsive">
                     <colgroup>
                         <col style="width: 27px;" />
                         <col style="width: 27px;" />
+                        <col style="width: 54px;" />
                         <col />
+                        <col style="width: 54px;" />
                         <col style="width: 54px;" />
                     </colgroup>
                     @foreach (var itemModel in itemMasterModel.ItemModels)
@@ -108,17 +142,32 @@
                             <td class="dataStyle2">
                                 @itemModel.ItemId
                             </td>
-                            <td class="text-left">
+                            <td class="dataStyle1Left">
+                                @itemModel.ItemForSaleId
+                            </td>
+                            <td class="dataStyle1Left">
                                 @itemModel.ItemItemSpecsForDisplay
                             </td>
-                            <td class="text-right">
+                            <td class="dataStyle1Right">
                                 @itemModel.ItemRate.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                            </td>
+                            <td class="dataStyle1Right">
+                                @itemModel.ItemRateMSRP.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
                             </td>
                         </tr>
                     }
                 </table>
             </td>
-            <td class="dataStyle1">
+            <td class="dataStyle1Left">
+                Status : @itemMasterModel.ItemMasterStatusId
+                <br />
+                Type : @itemMasterModel.ItemTypeId
+                <br />
+                <select class="dataStyle1Left form-control">
+                    <option>--Category(s)--</option>
+                </select>
+            </td>
+            <td class="dataStyle1Left">
                 <img src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 99px; width: 99px;" />
             </td>
         </tr>

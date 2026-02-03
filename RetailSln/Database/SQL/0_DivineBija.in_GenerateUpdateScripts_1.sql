@@ -169,7 +169,7 @@ ORDER BY PickupLocationId
               ,DivineBija_CorpAcctUpload.DemogInfoCountyId = 0
               ,DivineBija_CorpAcctUpload.DemogInfoCityId = 0
               ,DivineBija_CorpAcctUpload.DemogInfoZipId = 0
-		 WHERE DivineBija_CorpAcctUpload.Id = 0
+         WHERE DivineBija_CorpAcctUpload.Id = 0
         UPDATE DivineBija_CorpAcctUpload
            SET DivineBija_CorpAcctUpload.DemogInfoCountryId = DemogInfoData.DemogInfoCountryId
               ,DivineBija_CorpAcctUpload.DemogInfoSubDivisionId = DemogInfoData.DemogInfoSubDivisionId
@@ -181,10 +181,10 @@ ORDER BY PickupLocationId
            AND DivineBija_CorpAcctUpload.StateAbbrev = DemogInfoData.StateAbbrev
            AND DivineBija_CorpAcctUpload.CityName = DemogInfoData.CityName
            AND DivineBija_CorpAcctUpload.PINCode = DemogInfoData.ZipCode
-		   AND DivineBija_CorpAcctUpload.Id > 0
+           AND DivineBija_CorpAcctUpload.Id > 0
         UPDATE DivineBija_CorpAcctUpload
            SET DemogInfoAddressId = CorpAcctId + 4
-		 WHERE CorpAcctId > 0
+         WHERE CorpAcctId > 0
 --End Update CorpAcct Upload DemogInfoAddressId
 --Begin Corp Acct Location DemogInfoAddress
         DELETE ArchLib.DemogInfoAddress WHERE DemogInfoAddressId > 4
@@ -238,10 +238,43 @@ ORDER BY PickupLocationId
 UNION
         SELECT @ClientId AS ClientId, CorpAcct.CorpAcctId, Item.ItemId, CorpAcct.DefaultDiscountPercent
           FROM RetailSlnSch.CorpAcct
-	CROSS JOIN RetailSlnSch.Item
+    CROSS JOIN RetailSlnSch.Item
          WHERE CorpAcctTypeId = 200
       ORDER BY CorpAcctId, ItemId
 --End Corp Acct Discount
+-- Delete
+--DECLARE @ClientId VARCHAR(5) = '97'
+TRUNCATE TABLE RetailSlnSch.PersonExtn1
+DELETE ArchLib.Person WHERE PersonId > 0
+DELETE ArchLib.AspNetUserRole
+DELETE ArchLib.AspNetUser WHERE AspNetUserId <> ''
+-- ArchLib.AspNetUser
+INSERT ArchLib.AspNetUser(AspNetUserId, ClientId, AccessFailedCount, AspNetRoleUserTypeId, EmailConfirmed, FirstName, LastName, LockoutEnabled
+      ,NickNameFirst, NickNameLast, PhoneNumber, PhoneNumberConfirmed, RegisterSource, TelephoneCountryId, TwoFactorEnabled, UserName, UserTypeId
+	  ,UserStatusId, HomeDemogInfoAddressId)
+SELECT DISTINCT AspNetUserId, 97 ClientId, 0 AccessFailedCount, 500 AspNetRoleUserTypeId, 0 EmailConfirmed, '' FirstName, '' LastName
+      ,0 LockoutEnabled, '' NickNameFirst, '' NickNameLast, DivineBija_CorpAcctUpload.PrimaryPhone PhoneNumber, 0 PhoneNumberConfirmed
+      ,'' RegisterSource, 106 TelephoneCountryId, 0 TwoFactorEnabled, '106_' + CAST(DivineBija_CorpAcctUpload.PrimaryPhone AS NVARCHAR) UserName
+      ,500 UserTypeId, 100 UserStatusId, 0 HomeDemogInfoAddressId
+FROM DivineBija_CorpAcctUpload WHERE DivineBija_CorpAcctUpload.PrimaryPhone IS NOT NULL
+-- ArchLib.Person
+SET IDENTITY_INSERT ArchLib.Person ON
+INSERT ArchLib.Person(PersonId, ClientId, AspNetUserId, ElectronicSignatureConsentAccepted, FirstName, LastName, NicknameFirst, NicknameLast, SalutationId, SuffixId, StatusId)
+SELECT Id, 97, AspNetUserId, 0 ElectronicSignatureConsentAccepted, '' FirstName, '' LastName, '' NicknameFirst, '' NicknameLast, 100 SalutationId, 100 SuffixId, 100 StatusId
+FROM DivineBija_CorpAcctUpload WHERE DivineBija_CorpAcctUpload.PrimaryPhone IS NOT NULL
+SET IDENTITY_INSERT ArchLib.Person OFF
+-- ArchLib.AspNetUserRole
+INSERT ArchLib.AspNetUserRole(AspNetUserRoleId, AspNetRoleId, AspNetUserId)
+SELECT AspNetUserId AspNetUserRoleId, 'WholesaleRole' AspNetRoleId, AspNetUserId
+FROM DivineBija_CorpAcctUpload WHERE DivineBija_CorpAcctUpload.PrimaryPhone IS NOT NULL
+ORDER BY AspNetUserId
+-- RetailSlnSch.PersonExtn1
+INSERT RetailSlnSch.PersonExtn1(ClientId, PersonId, CorpAcctId, CorpAcctLocationId)
+SELECT @ClientId ClientId, PersonId, CorpAcct.CorpAcctId, CorpAcctLocationId
+FROM RetailSlnSch.CorpAcct INNER JOIN DivineBija_CorpAcctUpload ON CorpAcct.CorpAcctName = DivineBija_CorpAcctUpload.CorpAcctName
+INNER JOIN ArchLib.Person ON DivineBija_CorpAcctUpload.AspNetUserId = Person.AspNetUserId
+INNER JOIN RetailSlnSch.CorpAcctLocation ON CorpAcct.CorpAcctId = CorpAcctLocation.CorpAcctId
+WHERE DivineBija_CorpAcctUpload.Id > 0
 --
 DELETE Lookup.CodeData WHERE CodeTypeId = 212 AND CodeDataNameId IN(400)
 DELETE RetailSlnSch.PaymentModeFilter WHERE CreditSale = 200 AND PaymentModeId IN(400)

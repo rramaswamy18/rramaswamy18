@@ -19,7 +19,7 @@
         aspNetRoleNameProxy = "DEFAULTROLE";
     }
     Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
-    var parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId01"].KVPValueData);
+    var parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
     long? corpAcctId = ((ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel)?.CorpAcctModel.CorpAcctId;
     if (corpAcctId == null)
     {
@@ -88,8 +88,6 @@
 <div id="divItemCatalogData" style="padding: 0px;">
 </div>
 <script type="text/javascript">
-    //var dOMElementIds;
-    //var searchDOMElements, searchDOMElementIndex;
     function window_onload() {
         ParentCategoryId_onclick();
     }
