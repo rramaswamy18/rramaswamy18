@@ -4,24 +4,4 @@
 @{
     long clientId = ArchLibCache.ClientId;
 }
-<span style="font-weight: bold;">Dear Valued Customer,</span>
-<br />
-<br />
-OTP is&nbsp;&nbsp;<span style="color: #0000ff; font-size: 18px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">@Model.OTPCode</span>
-<br />
-OTP will expire in @Model.OTPDuration minutes
-<br />
-OTP will expire at @(Model.OTPExpiryDate + " " + Model.OTPExpiryTime)
-<br />
-OTP created at @(Model.OTPCreatedDate + " " + Model.OTPCreatedTime)
-<br />
-You requested your OTP to be sent as @Model.OTPSendTypeId.ToString()
-<br />
-You requested OTP from @Model.TelephoneNumberFormatted
-<br />
-<br />
-<span style="background-color: #deecf9;">
-    If you did not intend to do this or have any questions, please contact our support @ArchLibCache.GetApplicationDefault(clientId, "ContactPhoneFormatted", "")
-    <br /><br />
-    Alternatively <a href="@ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "" )/@Url.Action(ArchLibCache.GetApplicationDefault(0, "ContactUsAction", "" ), ArchLibCache.GetApplicationDefault(0, "ContactUsController", "" ))" target="_blank">Contact Us Here</a> to let us know.
-</span>
+@(ArchLibCache.GetApplicationDefault(clientId, "BusinessNameAbbrev", "") + " OTP " + Model.OTPCode + " expires in " + Model.OTPDuration + " minutes at " + Model.OTPExpiryDate + " " + Model.OTPExpiryTime)

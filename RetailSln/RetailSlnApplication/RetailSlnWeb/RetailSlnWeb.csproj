@@ -306,6 +306,7 @@
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartSummaryModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ShoppingCartWIPHdrModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ShoppingCartWIPModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\UserProfListModel.cs" />
     <Compile Include="ClassCode\WebUtilities.cs" />
@@ -2074,8 +2075,6 @@
     <Content Include="Views\Dashboard\_ItemCatalog.cshtml" />
     <Content Include="Views\Base\ItemCatalogPdf.cshtml" />
     <Content Include="Views\Home\ItemCatalog.cshtml" />
-    <Content Include="Views\Home\_ItemCatalogDetail.cshtml" />
-    <Content Include="Views\Home\_ItemCatalogData.cshtml" />
     <Content Include="Views\Shared\_ItemCatalogFile.cshtml" />
     <Content Include="Views\Shared\_ItemCatalogFileData.cshtml" />
     <Content Include="Views\Dashboard\_SearchKeywordList.cshtml" />

@@ -74,7 +74,7 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
                 }
             }
             jsonPostData.ShoppingCartItemBundleModels = shoppingCartItemBundleModels;
-            console.log(9, jsonPostData);
+            //console.log(9, jsonPostData);
         }
         else {
             if (errorMessage != "") {
@@ -297,16 +297,17 @@ function orderComments_onchange(index, bundleIndex) {
         var url = "/Home/ShoppingCartComments";
         $.ajax({
             url: url,
-            type: "GET",
+            type: "POST",
             //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
+            //contentType: "application/json; charset=utf-8",
+            dataType: "text",
             data: { "index": index, "bundleIndex": bundleIndex, "orderComments": orderComments },
             async: true,
             success: function (responseData, textStatus, request) {
                 $('#loadingModal').modal('hide');
-                console.log("orderComments_onchange", "00090000", "SUCCESS!!!", responseData.success);
-                if (responseData.success) {
+                var responseDataJson = JSON.parse(responseData);
+                console.log("orderComments_onchange", "00090000", "SUCCESS!!!", responseData, responseDataJson);
+                if (responseDataJson.success) {
 
                 }
                 else {
@@ -317,6 +318,51 @@ function orderComments_onchange(index, bundleIndex) {
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
                 console.log("orderComments_onchange", "00099000", "ERROR???", exception, xhr);
+                var jsonData = JSON.parse(xhr.responseText);
+                document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
+            }
+        });
+    }
+    catch (err) {
+        $('#loadingModal').modal('hide');
+        console.log("orderComments_onchange", "00099000", "ERROR???", err);
+        document.getElementById("divErrorMessage").innerHTML = "Error while updating comments";
+    }
+    return false;
+}
+function shoppingCartOrderQty_oninput(index, bundleIndex) {
+    console.log("shoppingCartOrderQty_oninput", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    document.getElementById("divErrorMessage").innerHTML = "";
+    console.log("shoppingCartOrderQty_oninput", "00001000", index, bundleIndex);
+    try {
+        var indexTemp = index;
+        if (bundleIndex != -1) {
+            index = index + "_" + bundleIndex;
+        }
+        var orderQty = document.getElementById("shoppingCartOrderQty" + index).value;
+        document.getElementById("shoppingCartOrderQty" + index).value = "";
+        var url = "/Home/ShoppingCartQty";
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "text",
+            data: { "index": indexTemp, "bundleIndex": bundleIndex, "orderQty": orderQty },
+            async: true,
+            success: function (responseData, textStatus, request) {
+                $('#loadingModal').modal('hide');
+                console.log("shoppingCartOrderQty_oninput", "00002000", index, bundleIndex, orderQty);
+                document.getElementById("divShoppingCart").innerHTML = responseData;
+                document.getElementById("shoppingCartItemsCount").innerHTML = document.getElementById("shoppingCartItemsCount").innerText;
+                document.getElementById("shoppingCartTotalAmount").innerHTML = document.getElementById("shoppingCartTotalAmountWork").innerText;
+                document.getElementById("shoppingCartItemsCount1").innerHTML = document.getElementById("shoppingCartItemsCount").innerText;
+                document.getElementById("shoppingCartTotalAmount1").innerHTML = document.getElementById("shoppingCartTotalAmountWork").innerText;
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("shoppingCartOrderQty_oninput", "00099000", "ERROR???", exception, xhr);
                 var jsonData = JSON.parse(xhr.responseText);
                 document.getElementById("divErrorMessage").innerHTML = jsonData.errorMessage;
             }
@@ -840,25 +886,25 @@ function checkLoggedInStatus(idParm, controller, action) {
             }
         });
 }
-function ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
-    document.getElementById(approverSignatureTextValueSelectedElementId).innerText = document.getElementById(approverSignatureTextValueElementId).value;
-    var i = document.getElementById(approverSignatureTextIdElementId).selectedIndex;
-    try {
-        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontFamily = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontFamily;
-        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontSize = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontSize;
-        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontWeight = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontWeight;
-        for (i = 1; i < document.getElementById(approverSignatureTextIdElementId).options.length; i++) {
-            document.getElementById(approverSignatureTextIdElementId).options[i].innerText = document.getElementById(approverSignatureTextValueElementId).value;
-        }
-    }
-    catch (err) {
-        console.log(27, err);
-    }
-    return false;
-}
-function OrderSummaryModel_FirstName_LastName_oninput(firstNameElementId, lastNameElementId, approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
-    if (document.getElementById(approverSignatureTextValueElementId).value.trim() == "") {
-        document.getElementById(approverSignatureTextValueElementId).value = (document.getElementById(firstNameElementId).value + " " + document.getElementById(lastNameElementId).value).trim();
-        ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId);
-    }
-}
+//function ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
+//    document.getElementById(approverSignatureTextValueSelectedElementId).innerText = document.getElementById(approverSignatureTextValueElementId).value;
+//    var i = document.getElementById(approverSignatureTextIdElementId).selectedIndex;
+//    try {
+//        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontFamily = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontFamily;
+//        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontSize = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontSize;
+//        document.getElementById(approverSignatureTextValueSelectedElementId).style.fontWeight = document.getElementById(approverSignatureTextIdElementId).options[i].style.fontWeight;
+//        for (i = 1; i < document.getElementById(approverSignatureTextIdElementId).options.length; i++) {
+//            document.getElementById(approverSignatureTextIdElementId).options[i].innerText = document.getElementById(approverSignatureTextValueElementId).value;
+//        }
+//    }
+//    catch (err) {
+//        console.log(27, err);
+//    }
+//    return false;
+//}
+//function OrderSummaryModel_FirstName_LastName_oninput(firstNameElementId, lastNameElementId, approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
+//    if (document.getElementById(approverSignatureTextValueElementId).value.trim() == "") {
+//        document.getElementById(approverSignatureTextValueElementId).value = (document.getElementById(firstNameElementId).value + " " + document.getElementById(lastNameElementId).value).trim();
+//        ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId);
+//    }
+//}

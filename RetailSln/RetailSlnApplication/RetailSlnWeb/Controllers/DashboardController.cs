@@ -490,43 +490,45 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // POST: SearchText
-        [HttpPost]
-        public ActionResult SearchText(string parentCategoryId, string searchText, string pageNum, string pageSize)
-        {
-            ViewData["ActionName"] = "SearchText";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            ActionResult actionResult;
-            try
-            {
-                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-                SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                ItemCatalogFileModel itemCatalogFileModel = retailSlnBL.SearchText(parentCategoryId, searchText, pageNum, pageSize, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (string.IsNullOrWhiteSpace(searchText))
-                {
-                    ItemCatalogModel itemCatalogModei = retailSlnBL.ItemCatalogData(parentCategoryId, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    actionResult = PartialView("_ItemCatalogData", itemCatalogModei);
-                }
-                else
-                {
-                    actionResult = PartialView("_ItemCatalogFile", itemCatalogFileModel);
-                }
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                //success = false;
-                //processMessage = "ERROR???";
-                //htmlString = "Error while searching " + id;
-                actionResult = PartialView("_Error");
-            }
-            return actionResult;
-        }
+        #region Commented Code
+        //// POST: SearchText
+        //[HttpPost]
+        //public ActionResult SearchText(string parentCategoryId, string searchText, string pageNum, string pageSize)
+        //{
+        //    ViewData["ActionName"] = "SearchText";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    ActionResult actionResult;
+        //    try
+        //    {
+        //        SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+        //        SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+        //        ItemCatalogFileModel itemCatalogFileModel = retailSlnBL.SearchText(parentCategoryId, searchText, pageNum, pageSize, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        if (string.IsNullOrWhiteSpace(searchText))
+        //        {
+        //            ItemCatalogModel itemCatalogModei = retailSlnBL.ItemCatalogData(parentCategoryId, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            actionResult = PartialView("_ItemCatalogData", itemCatalogModei);
+        //        }
+        //        else
+        //        {
+        //            actionResult = PartialView("_ItemCatalogFile", itemCatalogFileModel);
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        //success = false;
+        //        //processMessage = "ERROR???";
+        //        //htmlString = "Error while searching " + id;
+        //        actionResult = PartialView("_Error");
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
 
         // GET : UserList
         public ActionResult UserList(string gpageNum, string rowCount)

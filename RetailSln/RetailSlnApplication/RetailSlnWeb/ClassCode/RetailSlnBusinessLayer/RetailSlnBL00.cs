@@ -9,7 +9,6 @@ using ArchitectureLibraryModels;
 using ArchitectureLibraryPDFLibrary;
 using ArchitectureLibraryShippingLibrary;
 using ArchitectureLibraryUtility;
-using Newtonsoft.Json.Linq;
 using RetailSlnCacheData;
 using RetailSlnDataLayer;
 using RetailSlnEnumerations;
@@ -28,12 +27,10 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Web;
-//using System.Web.Http.ExceptionHandling;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-//using static System.Collections.Specialized.BitVector32;
 
 namespace RetailSlnBusinessLayer
 {
@@ -154,36 +151,33 @@ namespace RetailSlnBusinessLayer
                             ResponseTypeId = ResponseTypeEnum.Info,
                         },
                     };
-                    if (createForSessionObject.AspNetRoleName != "GUESTROLE")
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.FirstName))
                     {
-                        if (string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.FirstName))
-                        {
-                            deliveryInfoModel.OrderSummaryModel.FirstName = createForSessionObject?.FirstName;
-                        }
-                        if (string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.LastName))
-                        {
-                            deliveryInfoModel.OrderSummaryModel.LastName = createForSessionObject?.LastName;
-                        }
-                        if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.AddressLine1))
-                        {
-                            deliveryInfoModel.DeliveryAddressModel.AddressLine1 = createForSessionObject?.DemogInfoAddressModel?.AddressLine1;
-                        }
-                        if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.AddressLine2))
-                        {
-                            deliveryInfoModel.DeliveryAddressModel.AddressLine2 = createForSessionObject?.DemogInfoAddressModel?.AddressLine2;
-                        }
-                        if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.CityName))
-                        {
-                            deliveryInfoModel.DeliveryAddressModel.CityName = createForSessionObject?.DemogInfoAddressModel?.CityName;
-                        }
-                        if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.ZipCode))
-                        {
-                            deliveryInfoModel.DeliveryAddressModel.ZipCode = createForSessionObject?.DemogInfoAddressModel?.ZipCode;
-                        }
-                        if (deliveryInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
-                        {
-                            deliveryInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId = createForSessionObject?.DemogInfoAddressModel?.DemogInfoSubDivisionId;
-                        }
+                        deliveryInfoModel.OrderSummaryModel.FirstName = createForSessionObject?.FirstName;
+                    }
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.LastName))
+                    {
+                        deliveryInfoModel.OrderSummaryModel.LastName = createForSessionObject?.LastName;
+                    }
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.AddressLine1))
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.AddressLine1 = createForSessionObject?.DemogInfoAddressModel?.AddressLine1;
+                    }
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.AddressLine2))
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.AddressLine2 = createForSessionObject?.DemogInfoAddressModel?.AddressLine2;
+                    }
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.CityName))
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.CityName = createForSessionObject?.DemogInfoAddressModel?.CityName;
+                    }
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.ZipCode))
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.ZipCode = createForSessionObject?.DemogInfoAddressModel?.ZipCode;
+                    }
+                    if (deliveryInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId == null)
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.DemogInfoSubDivisionId = createForSessionObject?.DemogInfoAddressModel?.DemogInfoSubDivisionId;
                     }
                 }
                 return deliveryInfoModel;
@@ -360,28 +354,28 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                //float itemSeqNum;
+                float itemSeqNum;
                 CreateShoppingCartModel(ref shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ShoppingCartItemModel shoppingCartItemModel = shoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == addToCartModel.ItemId && x.ParentItemId == addToCartModel.ParentItemId && x.DoNotBreakBundle == addToCartModel.DoNotBreakBundle);
                 if (shoppingCartItemModel == null)
                 {
                     CreateShoppingCartItemModel(ref shoppingCartItemModel, addToCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     shoppingCartModel.ShoppingCartItemModels.Add(shoppingCartItemModel);
-                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createShoppingCartWIP)
+                    if (createForSessionObject != null && createShoppingCartWIP)
                     {
-                        //ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
-                        //itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
-                        //ShoppingCartWIPAdd(addToCartModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        //shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
+                        ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+                        itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
+                        ShoppingCartWIPAdd(addToCartModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartModel, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
                     }
                 }
                 else
                 {
                     CreateShoppingCartItemModel(ref shoppingCartItemModel, addToCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    //if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && createShoppingCartWIP)
-                    //{
-                    //    ShoppingCartWIPUpd(addToCartModel.DoNotBreakBundle, shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    //}
+                    if (createForSessionObject != null && createShoppingCartWIP)
+                    {
+                        ShoppingCartWIPUpd(shoppingCartItemModel, sqlConnection, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    }
                 }
                 CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -1519,7 +1513,6 @@ namespace RetailSlnBusinessLayer
                     {
                         CategoryCategoryItemMasterHierModels = categoryCategoryItemMasterHierModels,
                         CategoryItemMasterHierModels = categoryItemMasterHierModels,
-                        CatalogMessage = "Viewing all items in the catalog",
                         CatalogMessageForeColor = "#a54000",
                         CurrencySymbol = RetailSlnCache.CurrencySymbol,
                         ItemDiscountModels = itemDiscountModels,
@@ -1528,8 +1521,6 @@ namespace RetailSlnBusinessLayer
                         ItemMasterCountTotal = -1,
                         ParentCategoryDesc = parentCategoryDesc,
                         ParentCategoryId = parentCategoryId,
-                        SearchFlag = false,
-                        //PDFFlag = false,
                     };
                     htmlFileName = itemCatalogFilesPath + $@"\ItemCatalog_{aspNetRoleName}_{corpAcctId}_{parentCategoryId}.html";
                     htmlString = archLibBL.ViewToHtmlString(controller, "_ItemCatalogFile", itemCatalogFileModel);
@@ -2520,12 +2511,9 @@ namespace RetailSlnBusinessLayer
             {
                 if (removeFromIndex > -1 && removeFromIndex < shoppingCartModel.ShoppingCartItemModels.Count)
                 {
-                    if (createForSessionObject != null && createForSessionObject.AspNetRoleName != "GUESTROLE" && shoppingCartModel.ShoppingCartItemModels.Count > 0)
+                    if (createForSessionObject != null && shoppingCartModel.ShoppingCartItemModels.Count > 0)
                     {
-                        //ApplicationDataContext.OpenSqlConnection();
-                        //var sqlStmtDel = BuildShoppingCartWIPDelIds(shoppingCartModel.ShoppingCartItemModels[removeFromIndex], sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId);
-                        //ApplicationDataContext.ShoppingCartWIPDel(sqlStmtDel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        //ApplicationDataContext.CloseSqlConnection();
+                        ShoppingCartWIPDel(shoppingCartModel.ShoppingCartWIPHdrModel.ShoppingCartWIPHdrId, shoppingCartModel.ShoppingCartItemModels[removeFromIndex], sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                     }
                     shoppingCartModel.ShoppingCartItemModels.RemoveAt(removeFromIndex);
                     CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
@@ -2740,135 +2728,8 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
-        // POST : SearchText
-        public ItemCatalogFileModel SearchText(string parentCategoryIdParm, string searchText, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                long.TryParse(parentCategoryIdParm, out long parentCategoryId);
-                int.TryParse(pageNumParm, out int pageNum);
-                if (pageNum <= 0) pageNum = 1;
-                int.TryParse(pageSizeParm, out int pageSize);
-                if (pageSize <= 0) pageSize = 45;
-                var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
-                if (string.IsNullOrEmpty(aspNetRoleNameProxy))
-                {
-                    aspNetRoleNameProxy = "DEFAULTROLE";
-                }
-                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
-                if (parentCategoryId == 0)
-                {
-                    parentCategoryId = long.Parse(aspNetRoleKVPs["ParentCategoryId00"].KVPValueData);
-                }
-                #region
-                string sqlStmt = "", sqlStmtWhere = "";
-                sqlStmtWhere += "          FROM RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
-                sqlStmtWhere += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
-                sqlStmtWhere += "            ON CategoryItemMasterHier.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
-                sqlStmtWhere += "    INNER JOIN RetailSlnSch.Item" + Environment.NewLine;
-                sqlStmtWhere += "            ON ItemMaster.ItemMasterId = Item.ItemMasterId" + Environment.NewLine;
-                sqlStmtWhere += "    INNER JOIN RetailSlnSch.ItemItemSpec" + Environment.NewLine;
-                sqlStmtWhere += "            ON Item.ItemId = ItemItemSpec.ItemId" + Environment.NewLine;
-                sqlStmtWhere += "         WHERE " + Environment.NewLine;
-                sqlStmtWhere += "               CategoryItemMasterHier.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
-                sqlStmtWhere += "           AND CategoryItemMasterHier.ParentCategoryId = @ParentCategoryId" + Environment.NewLine;
-                sqlStmtWhere += "           AND (" + Environment.NewLine;
-                sqlStmtWhere += "                ItemMaster.ItemMasterDesc0 LIKE '%' + @SearchText + '%'" + Environment.NewLine;
-                sqlStmtWhere += "            OR  ItemMaster.ItemMasterDesc1 LIKE '%' + @SearchText + '%'" + Environment.NewLine;
-                sqlStmtWhere += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchText + '%'" + Environment.NewLine;
-                sqlStmtWhere += "            OR  Item.ItemShortDesc LIKE '%' + @SearchText + '%'" + Environment.NewLine;
-                sqlStmtWhere += "            OR  ItemItemSpec.ItemSpecValueWithUnit LIKE '%' + @SearchText + '%'" + Environment.NewLine;
-                sqlStmtWhere += "               " + Environment.NewLine;
-                sqlStmtWhere += "               )" + Environment.NewLine;
-                sqlStmt += "        SELECT COUNT(DISTINCT CategoryItemMasterHier.ItemMasterId) AS ItemMasterCountTotal" + Environment.NewLine;
-                sqlStmt += sqlStmtWhere;
-                sqlStmt += "        SELECT DISTINCT " + Environment.NewLine;
-                sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
-                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
-                sqlStmt += sqlStmtWhere;
-                sqlStmt += "      ORDER BY CategoryItemMasterHier.SeqNum" + Environment.NewLine;
-                sqlStmt += "               OFFSET @OffSetRowCount ROWS" + Environment.NewLine;
-                sqlStmt += "               FETCH NEXT @FetchNextRowCount ROWS ONLY" + Environment.NewLine;
-                ApplicationDataContext.OpenSqlConnection();
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, ApplicationDataContext.SqlConnectionObject);
-                sqlCommand.Parameters.Add("@AspNetRoleName", SqlDbType.NVarChar, 50);
-                sqlCommand.Parameters.Add("@ParentCategoryId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@OffSetRowCount", SqlDbType.Int);
-                sqlCommand.Parameters.Add("@FetchNextRowCount", SqlDbType.Int);
-                sqlCommand.Parameters.Add("@SearchText", SqlDbType.NVarChar, 50);
-                sqlCommand.Parameters["@AspNetRoleName"].Value = aspNetRoleNameProxy;
-                sqlCommand.Parameters["@ParentCategoryId"].Value = parentCategoryId;
-                sqlCommand.Parameters["@SearchText"].Value = searchText;
-                sqlCommand.Parameters["@OffSetRowCount"].Value = (pageNum - 1) * pageSize;
-                sqlCommand.Parameters["@FetchNextRowCount"].Value = pageSize;
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                #endregion
-                long itemMasterCount = 0, itemMasterCountTotal;
-                sqlDataReader.Read();
-                itemMasterCountTotal = long.Parse(sqlDataReader["ItemMasterCountTotal"].ToString());
-                sqlDataReader.NextResult();
-                List<long> itemMasterIds = new List<long>();
-                while (sqlDataReader.Read())
-                {
-                    itemMasterCount++;
-                    itemMasterIds.Add(long.Parse(sqlDataReader["ItemMasterId"].ToString()));
-                }
-                sqlDataReader.Close();
-                Dictionary<long, List<CategoryItemMasterHierModel>> parentCategoryItemMasterModels;
-                List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
-                if (RetailSlnCache.AspNetRoleParentCategoryItemMasterModels.TryGetValue(aspNetRoleNameProxy, out parentCategoryItemMasterModels))
-                {
-                    if (parentCategoryItemMasterModels.TryGetValue(parentCategoryId, out categoryItemMasterHierModels))
-                    {
-                        //categoryItemMasterHierModels = categoryItemMasterHierModels.Where(x => itemMasterIds.Contains(x.ItemMasterModel.ItemMasterId)).Skip((pageNum - 1) * pageSize).Take(pageSize).OrderBy(x => x.ItemMasterId).ToList();
-                        categoryItemMasterHierModels = categoryItemMasterHierModels.FindAll(x => itemMasterIds.Contains(x.ItemMasterModel.ItemMasterId));
-                    }
-                    else
-                    {
-                        categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-                    }
-                }
-                else
-                {
-                    categoryItemMasterHierModels = new List<CategoryItemMasterHierModel>();
-                }
-                long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
-                long itemMasterCountFrom = (pageNum - 1) * pageSize + 1;
-                long itemMasterCountTo = pageNum * pageSize;
-                if (itemMasterCountTo > itemMasterCountTotal) itemMasterCountTo = itemMasterCountTotal;
-                ItemCatalogFileModel itemCatalogFileModel = new ItemCatalogFileModel
-                {
-                    CatalogMessage = "Search results for this catalog",
-                    CatalogMessageForeColor = "#ff0000",
-                    CategoryItemMasterHierModels = categoryItemMasterHierModels,
-                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
-                    ItemDiscountModels = itemDiscountModels,
-                    ItemMasterCount = itemMasterCount,
-                    ItemMasterCountFrom = itemMasterCountFrom,
-                    ItemMasterCountTo = itemMasterCountTo,
-                    ItemMasterCountTotal = itemMasterCountTotal,
-                    PageNum = pageNum,
-                    TotalPageCount = (itemMasterCountTotal + pageSize - 1) / pageSize,
-                    SearchFlag = true,
-                };
-                return itemCatalogFileModel;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-                ApplicationDataContext.CloseSqlConnection();
-            }
-        }
-        // GET : ShoppingCartComments
-        public void ShoppingCartComments(PaymentInfoModel paymentInfoModel, string indexParm, string bundleIndexParm, string orderComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // POST : ShoppingCartComments
+        public void ShoppingCartComments(ShoppingCartModel shoppingCartModel, string indexParm, string bundleIndexParm, string orderComments, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -2879,12 +2740,74 @@ namespace RetailSlnBusinessLayer
                 int.TryParse(bundleIndexParm, out int bundleIndex);
                 if (bundleIndex == -1)
                 {
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels[index].OrderComments = orderComments;
+                    shoppingCartModel.ShoppingCartItemModels[index].OrderComments = orderComments;
                 }
                 else
                 {
-                    paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels[index].ShoppingCartItemBundleModels[bundleIndex].OrderComments = orderComments;
+                    shoppingCartModel.ShoppingCartItemModels[index].ShoppingCartItemBundleModels[bundleIndex].OrderComments = orderComments;
                 }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                return;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+        }
+        // GET : ShoppingCartQty
+        public void ShoppingCartQty(ShoppingCartModel shoppingCartModel, string indexParm, string bundleIndexParm, string orderQtyParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                int.TryParse(indexParm, out int index);
+                int.TryParse(bundleIndexParm, out int bundleIndex);
+                long.TryParse(orderQtyParm, out long orderQty);
+                ShoppingCartItemModel shoppingCartItemModel = shoppingCartModel.ShoppingCartItemModels[index];
+                float itemRateBeforeDiscount, productOrVolumetricWeight, weightCalcValue, weightValue, itemRate;
+                if (bundleIndex == -1)
+                {//Single Item not Bundle
+                    shoppingCartItemModel.OrderQty = orderQty;
+                    itemRateBeforeDiscount = shoppingCartItemModel.ItemRate.Value;
+                    shoppingCartItemModel.OrderQtyParm = shoppingCartItemModel.OrderQty.ToString();
+                    productOrVolumetricWeight = shoppingCartItemModel.OrderQty.Value * shoppingCartItemModel.ProductOrVolumetricWeightUnit.Value;//float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                    weightCalcValue = shoppingCartItemModel.OrderQty.Value * shoppingCartItemModel.WeightCalcValueUnit.Value;// float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    weightValue = shoppingCartItemModel.OrderQty.Value * shoppingCartItemModel.WeightValueUnit.Value;// float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+
+                    itemRate = shoppingCartItemModel.ItemRate.Value;
+                    shoppingCartItemModel.OrderAmount = itemRate * shoppingCartItemModel.OrderQty;
+                    shoppingCartItemModel.OrderAmountBeforeDiscount = itemRateBeforeDiscount * shoppingCartItemModel.OrderQty;
+                    shoppingCartItemModel.OrderAmountFormatted = shoppingCartItemModel.OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    shoppingCartItemModel.OrderAmountRounded = (long)(shoppingCartItemModel.OrderAmount * 100);
+                    shoppingCartItemModel.ProductOrVolumetricWeight = productOrVolumetricWeight;
+                    shoppingCartItemModel.WeightCalcValue = 0;//weightCalcValue;
+                    shoppingCartItemModel.WeightValue = 0;//weightValue;
+                }
+                else
+                {
+                    shoppingCartModel.ShoppingCartItemModels[index].ShoppingCartItemBundleModels[bundleIndex].OrderQty = orderQty;
+                    //itemRateBeforeDiscount = 0;
+                    //productOrVolumetricWeight = 0;
+                    //weightCalcValue = 0;
+                    //weightValue = 0;
+                    //shoppingCartItemModel.OrderQty = 1;
+                    //shoppingCartItemModel.OrderQtyParm = "1";
+                    //shoppingCartItemBundleModelsFromCache = RetailSlnCache.ParentItemBundleModels[shoppingCartItemModel.ItemId.Value].ShoppingCartItemBundleModels;
+                    //for (int i = 0; i < shoppingCartItemBundleModelsFromCache.Count; i++)
+                    //{
+                    //    //shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty += long.Parse(addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm);
+                    //    shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty;
+                    //    shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountFormatted = shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
+                    //    itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
+                    //    productOrVolumetricWeight += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight.Value;
+                    //    weightCalcValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    //    weightValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    //}
+                }
+                CalculateTotalOrderAmount(shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
             }
@@ -2896,57 +2819,57 @@ namespace RetailSlnBusinessLayer
         }
         #endregion
         #region PUBLIC
-        // PUBLIC: CreateShoppingCartWIP
-        public void ShoppingCartWIPCreateSave(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                /*
-                1. If Shopping Cart has items insert into table
-                2. Above is coming - logging in after adding to cart
-                3. Probably delete existing items in the table
-                4. If Shoppig Cart has no items
-                5. Get items from table
-                6. Add it to cart
-                */
-                ApplicationDataContext.OpenSqlConnection();
-                if (shoppingCartModel?.ShoppingCartItemModels?.Count > 0)
-                {
-                    //Do we need to delete all items in the table prior to insert
-                    //This might avoid duplicates
-                    ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
-                    float itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
-                    //foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
-                    //{
-                    //    ShoppingCartWIPAdd(shoppingCartItemModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    //}
-                    shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
-                }
-                //AddToCartModel addToCartModel = new AddToCartModel();
-                //foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
-                //{
-                //    addToCartModel.ItemIdParm = shoppingCartItemModel.ItemIdParm;
-                //    addToCartModel.OrderQtyParm = shoppingCartItemModel.OrderQtyParm;
-                //    addToCartModel.DoNotBreakBundleParm = shoppingCartItemModel.DoNotBreakBundle.ToString();
-                //    AddToCart(ref shoppingCartModel, addToCartModel, false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //}
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-                //ApplicationDataContext.CloseSqlConnection();
-            }
-        }
+
         #region Commented Out Code
-        //// PUBLIC: BuildPaymentInfoFromDeliveryInfoPost
+        //// PUBLIC: ShoppingCartWIPCreateSave
+        //public void ShoppingCartWIPCreateSave(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        /*
+        //        1. If Shopping Cart has items insert into table
+        //        2. Above is coming - logging in after adding to cart
+        //        3. Probably delete existing items in the table
+        //        4. If Shoppig Cart has no items
+        //        5. Get items from table
+        //        6. Add it to cart
+        //        */
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        if (shoppingCartModel?.ShoppingCartItemModels?.Count > 0)
+        //        {
+        //            //Do we need to delete all items in the table prior to insert
+        //            //This might avoid duplicates
+        //            ApplSessionObjectModel applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject?.ApplSessionObjectModel;
+        //            float itemSeqNum = shoppingCartModel.ShoppingCartWIPSeqNum;
+        //            //foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
+        //            //{
+        //            //    ShoppingCartWIPAdd(shoppingCartItemModel.DoNotBreakBundle, applSessionObjectModel.CorpAcctLocationId, ref itemSeqNum, shoppingCartItemModel, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            //}
+        //            shoppingCartModel.ShoppingCartWIPSeqNum = itemSeqNum;
+        //        }
+        //        //AddToCartModel addToCartModel = new AddToCartModel();
+        //        //foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
+        //        //{
+        //        //    addToCartModel.ItemIdParm = shoppingCartItemModel.ItemIdParm;
+        //        //    addToCartModel.OrderQtyParm = shoppingCartItemModel.OrderQtyParm;
+        //        //    addToCartModel.DoNotBreakBundleParm = shoppingCartItemModel.DoNotBreakBundle.ToString();
+        //        //    AddToCart(ref shoppingCartModel, addToCartModel, false, ApplicationDataContext.SqlConnectionObject, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        //}
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        //ApplicationDataContext.CloseSqlConnection();
+        //    }
+        //}        //// PUBLIC: BuildPaymentInfoFromDeliveryInfoPost
         //public void BuildPaymentInfoFromDeliveryInfoPost(ref PaymentInfoModel paymentInfoModel, PaymentInfoModel paymentInfoModelTemp, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         //{
         //    if (sessionObjectModel == null || createForSessionObject == null || paymentInfoModelTemp == null)
@@ -3426,77 +3349,6 @@ namespace RetailSlnBusinessLayer
         //    }
         //}
         #endregion
-        #region Commenting Code for now - Need this after fixing
-        // PRIVATE: BuildShoppingCartWIPDelIds
-        private string BuildShoppingCartWIPDelIds(ShoppingCartItemModel shoppingCartItemModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId)
-        {
-            string sqlStmtDel = "";
-            sqlStmtDel += shoppingCartItemModel.ShoppingCartWIPId;
-            if (shoppingCartItemModel.ShoppingCartItemBundleModels != null)
-            {
-                foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
-                {
-                    sqlStmtDel += ", " + shoppingCartItemBundleModel.ShoppingCartWIPId;
-                }
-            }
-            return sqlStmtDel;
-        }
-        // PRIVATE: BuildShoppingCartWIPDelIds
-        private string BuildShoppingCartWIPDelIds(ShoppingCartModel shoppingCartModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId)
-        {
-            string sqlStmtDel = "", prefixString = "";
-            foreach (var shoppingCartItemModel in shoppingCartModel.ShoppingCartItemModels)
-            {
-                sqlStmtDel += prefixString + shoppingCartItemModel.ShoppingCartWIPId;
-                prefixString = ", ";
-                if (shoppingCartItemModel.ShoppingCartItemBundleModels != null)
-                {
-                    foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
-                    {
-                        sqlStmtDel += ", " + shoppingCartItemBundleModel.ShoppingCartWIPId;
-                    }
-                }
-            }
-            return sqlStmtDel;
-        }
-        //// PRIVATE : BuildCreditCardDataModel
-        //private void BuildCreditCardDataModel(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        var creditCardProcessor = Utilities.GetApplicationValue("CreditCardProcessor");
-        //        ShoppingCartItemModel shoppingCartItemModelBalanceDue = paymentInfoModel.ShoppingCartModel.ShoppingCartItemModelsSummary.First(x => x.OrderDetailTypeId == OrderDetailTypeEnum.BalanceDue);
-        //        paymentInfoModel.CreditCardDataModel = new CreditCardDataModel
-        //        {
-        //            CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString("0.00"),
-        //            CreditCardExpMM = null,
-        //            CreditCardExpYear = null,
-        //            CreditCardKVPs = GetCreditCardKVPs(creditCardProcessor, clientId, ipAddress, execUniqueId, loggedInUserId),
-        //            CreditCardNumber = null,
-        //            CreditCardProcessor = creditCardProcessor,
-        //            CreditCardSecCode = null,
-        //            CreditCardTranType = "PAYMENT",
-        //            CurrencyCode = ArchLibCache.GetApplicationDefault(clientId, "Currency", "CurrencyAbbreviation"),
-        //            EmailAddress = paymentInfoModel.OrderSummaryModel.EmailAddress,
-        //            NameAsOnCard = (paymentInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.OrderSummaryModel.LastName).Trim(),
-        //            TelephoneNumber = paymentInfoModel.OrderSummaryModel.TelephoneNumber,
-        //        };
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //        return;
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        // PRIVATE: CreateInvoice
         private void CreateInvoice(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //If it is not Final Invoice - create invoice as Html and Pdf file and email
@@ -3790,7 +3642,6 @@ namespace RetailSlnBusinessLayer
             };
             return orderHeaderSummary;
         }
-        #endregion
         #region Commenting Code for now - Need this after fixing
         //// PRIVATE: ItemCatalogAndItemCatalogItemCreate
         //private void ItemCatalogCreate(string itemCatalogFilesPath, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
@@ -4059,10 +3910,14 @@ namespace RetailSlnBusinessLayer
                 shoppingCartItemModel = CreateShoppingCartItemModelObject(addToCartModel, itemModel, itemDiscountModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 if (addToCartModel.DoNotBreakBundle)
                 {
+                    shoppingCartItemModel.ProductOrVolumetricWeightUnit = float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                    shoppingCartItemModel.WeightCalcValueUnit = float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                    shoppingCartItemModel.WeightValueUnit = float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+
                     itemRateBeforeDiscount = addToCartModel.ItemModel.ItemRate.Value;
-                    productOrVolumetricWeight = addToCartModel.OrderQty * float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
-                    weightCalcValue = addToCartModel.OrderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                    weightValue = addToCartModel.OrderQty * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    productOrVolumetricWeight = addToCartModel.OrderQty * shoppingCartItemModel.ProductOrVolumetricWeightUnit.Value;//float.Parse(itemModel.ItemItemSpecModels["ProductOrVolumetricWeight"].ItemSpecValue);
+                    weightCalcValue = addToCartModel.OrderQty * shoppingCartItemModel.WeightCalcValueUnit.Value;//float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
+                    weightValue = addToCartModel.OrderQty * shoppingCartItemModel.WeightValueUnit.Value;// float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                     if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                     {
                         shoppingCartItemModel.ShoppingCartItemBundleModels = new List<ShoppingCartItemModel>();
@@ -4071,7 +3926,7 @@ namespace RetailSlnBusinessLayer
                         {
                             addToCartModel.ShoppingCartItemBundleModels[i].OrderQty = 1;
                             addToCartModel.ShoppingCartItemBundleModels[i].OrderQtyParm = "1";
-                            shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, itemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
+                            shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, shoppingCartItemBundleModelsFromCache[i].ItemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
                         }
                     }
                 }
@@ -4090,7 +3945,7 @@ namespace RetailSlnBusinessLayer
                         productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight.Value;
                         weightCalcValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                         weightValue += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
-                        shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, itemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
+                        shoppingCartItemModel.ShoppingCartItemBundleModels.Add(CreateShoppingCartItemBundleModelObject(i, addToCartModel, shoppingCartItemBundleModelsFromCache, shoppingCartItemBundleModelsFromCache[i].ItemModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId));
                     }
                 }
                 itemRate = itemRateBeforeDiscount * (100 - itemDiscountModel.DiscountPercent) / 100;
@@ -4135,7 +3990,7 @@ namespace RetailSlnBusinessLayer
                         shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount = shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty;
                         shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmountFormatted = shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderAmount.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
                         itemRateBeforeDiscount += (shoppingCartItemBundleModelsFromCache[i].ItemRate * shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty).Value;
-                        productOrVolumetricWeight += addToCartModel.ShoppingCartItemBundleModels[i].OrderQty.Value * shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight.Value;
+                        productOrVolumetricWeight += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * shoppingCartItemBundleModelsFromCache[i].ProductOrVolumetricWeight.Value;
                         weightCalcValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                         weightValue += shoppingCartItemModel.ShoppingCartItemBundleModels[i].OrderQty.Value * float.Parse(itemModel.ItemItemSpecModels["ProductWeight"].ItemSpecValue);
                     }
@@ -4425,7 +4280,7 @@ namespace RetailSlnBusinessLayer
             return;
         }
         // PRIVATE: OrderWIPAdd
-        private void ShoppingCartWIPAdd(bool doNotBreakBundle, long corpAcctLocationId, ref float itemSeqNum, ShoppingCartItemModel shoppingCartItemModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        private void ShoppingCartWIPAdd(bool doNotBreakBundle, long corpAcctLocationId, ref float itemSeqNum, ShoppingCartModel shoppingCartModel, ShoppingCartItemModel shoppingCartItemModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -4433,50 +4288,53 @@ namespace RetailSlnBusinessLayer
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                if (sessionObjectModel == null || createForSessionObject == null)
+                if (shoppingCartModel.ShoppingCartWIPHdrModel == null)
                 {
-                }
-                else
-                {
-                    ShoppingCartWIPModel shoppingCartWIPModel;
-                    //float bundleItemSeqNum = 0;
-                    shoppingCartWIPModel = new ShoppingCartWIPModel
+                    ShoppingCartWIPHdrModel shoppingCartWIPHdrModel = new ShoppingCartWIPHdrModel
                     {
                         ClientId = clientId,
-                        //BundleItemSeqNum = 0,
                         CorpAcctLocationId = corpAcctLocationId,
                         CreatedForPersonId = createForSessionObject.PersonId,
-                        DoNotBreakBundle = doNotBreakBundle,
-                        ItemId = shoppingCartItemModel.ItemId.Value,
-                        OrderQty = shoppingCartItemModel.OrderQty.Value,
-                        ParentItemId = shoppingCartItemModel.ParentItemId.Value,
                         PersonId = sessionObjectModel.PersonId,
-                        ItemSeqNum = ++itemSeqNum,
+                        SeqNum = 0,
                     };
-                    ApplicationDataContext.ShoppingCartWIPAdd(shoppingCartWIPModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    shoppingCartItemModel.ShoppingCartWIPId = shoppingCartWIPModel.ShoppingCartWIPId.Value;
-                    if (shoppingCartItemModel.ShoppingCartItemBundleModels != null && shoppingCartItemModel.ShoppingCartItemBundleModels.Count > 0)
+                    ApplicationDataContext.ShoppingCartWIPHdrAdd(shoppingCartWIPHdrModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    shoppingCartModel.ShoppingCartWIPHdrModel = shoppingCartWIPHdrModel;
+                }
+                ShoppingCartWIPModel shoppingCartWIPModel;
+                shoppingCartWIPModel = new ShoppingCartWIPModel
+                {
+                    ClientId = clientId,
+                    DoNotBreakBundle = doNotBreakBundle,
+                    ItemId = shoppingCartItemModel.ItemId.Value,
+                    ItemSeqNum = ++itemSeqNum,
+                    OrderComments = shoppingCartItemModel.OrderComments,
+                    OrderQty = shoppingCartItemModel.OrderQty.Value,
+                    ParentItemId = shoppingCartItemModel.ParentItemId.Value,
+                    ShoppingCartWIPHdrId = shoppingCartModel.ShoppingCartWIPHdrModel.ShoppingCartWIPHdrId,
+                };
+                ApplicationDataContext.ShoppingCartWIPAdd(shoppingCartWIPModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                shoppingCartItemModel.ShoppingCartWIPId = shoppingCartWIPModel.ShoppingCartWIPId.Value;
+                if (shoppingCartItemModel.ShoppingCartItemBundleModels != null && shoppingCartItemModel.ShoppingCartItemBundleModels.Count > 0)
+                {
+                    foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
                     {
-                        foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
+                        shoppingCartWIPModel = new ShoppingCartWIPModel
                         {
-                            shoppingCartWIPModel = new ShoppingCartWIPModel
-                            {
-                                ClientId = clientId,
-                                //BundleItemSeqNum = ++bundleItemSeqNum,
-                                CorpAcctLocationId = corpAcctLocationId,
-                                CreatedForPersonId = createForSessionObject.PersonId,
-                                DoNotBreakBundle = doNotBreakBundle,
-                                ItemId = shoppingCartItemBundleModel.ItemId.Value,
-                                OrderQty = shoppingCartItemBundleModel.OrderQty.Value,
-                                ParentItemId = shoppingCartItemBundleModel.ParentItemId.Value,
-                                PersonId = sessionObjectModel.PersonId,
-                                ItemSeqNum = ++itemSeqNum,
-                            };
-                            ApplicationDataContext.ShoppingCartWIPAdd(shoppingCartWIPModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                            shoppingCartItemBundleModel.ShoppingCartWIPId = shoppingCartWIPModel.ShoppingCartWIPId.Value;
-                        }
+                            ClientId = clientId,
+                            DoNotBreakBundle = doNotBreakBundle,
+                            ItemId = shoppingCartItemBundleModel.ItemId.Value,
+                            OrderComments = shoppingCartItemBundleModel.OrderComments,
+                            OrderQty = shoppingCartItemBundleModel.OrderQty.Value,
+                            ParentItemId = shoppingCartItemBundleModel.ParentItemId.Value,
+                            ItemSeqNum = ++itemSeqNum,
+                            ShoppingCartWIPHdrId = shoppingCartModel.ShoppingCartWIPHdrModel.ShoppingCartWIPHdrId,
+                        };
+                        ApplicationDataContext.ShoppingCartWIPAdd(shoppingCartWIPModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        shoppingCartItemBundleModel.ShoppingCartWIPId = shoppingCartWIPModel.ShoppingCartWIPId.Value;
                     }
                 }
+                shoppingCartModel.ShoppingCartWIPHdrModel.SeqNum = itemSeqNum;
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -4488,8 +4346,8 @@ namespace RetailSlnBusinessLayer
             {
             }
         }
-        // PRIVATE: OrderWIPAdd
-        private void ShoppingCartWIPUpd(bool doNotBreakBundle, ShoppingCartItemModel shoppingCartItemModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        // PRIVATE: ShoppingCartWIPBuildDelIds
+        private void ShoppingCartWIPDel(long shoppingCartWIPHdrId, ShoppingCartItemModel shoppingCartItemModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -4497,22 +4355,37 @@ namespace RetailSlnBusinessLayer
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                if (sessionObjectModel == null || createForSessionObject == null)
+                ApplicationDataContext.OpenSqlConnection();
+                if (shoppingCartItemModel.ItemTypeId == ItemTypeEnum.ItemBundle && shoppingCartItemModel.DoNotBreakBundle)
                 {
+                    ApplicationDataContext.ShoppingCartWIPDel(shoppingCartWIPHdrId, shoppingCartItemModel.ParentItemId.Value, shoppingCartItemModel.DoNotBreakBundle, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 else
                 {
-                    string sqlStmtBundle = "";
-                    sqlStmtBundle += $"      SELECT {shoppingCartItemModel.ShoppingCartWIPId} AS ShoppingCartWIPId, {shoppingCartItemModel.OrderQty} AS OrderQty" + Environment.NewLine;
-                    if (shoppingCartItemModel.ShoppingCartItemBundleModels != null && shoppingCartItemModel.ShoppingCartItemBundleModels.Count > 0)
-                    {
-                        foreach (var shoppingCartItemBundleModel in shoppingCartItemModel.ShoppingCartItemBundleModels)
-                        {
-                            sqlStmtBundle += $"UNION SELECT {shoppingCartItemBundleModel.ShoppingCartWIPId} AS ShoppingCartWIPId, {shoppingCartItemBundleModel.OrderQty} AS OrderQty" + Environment.NewLine;
-                        }
-                    }
-                    ApplicationDataContext.ShoppingCartWIPUpd(sqlStmtBundle, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    ApplicationDataContext.ShoppingCartWIPDel(shoppingCartItemModel.ShoppingCartWIPId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // PRIVATE: ShoppingCartWIPUpd
+        private void ShoppingCartWIPUpd(ShoppingCartItemModel shoppingCartItemModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ApplicationDataContext.OpenSqlConnection();
+                ApplicationDataContext.ShoppingCartWIPUpd(shoppingCartItemModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -4522,161 +4395,9 @@ namespace RetailSlnBusinessLayer
             }
             finally
             {
+                ApplicationDataContext.CloseSqlConnection();
             }
         }
-        #region Commenting Code for now - Need this after fixing
-        //// PRIVATE: OrderWIPAdd
-        //private void OrderWIPAdd(ref PaymentInfoModel paymentInfoModel, long corpAcctLocationId, AddToCartModel addToCartModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        if (sessionObjectModel == null || createForSessionObject == null)
-        //        {
-        //        }
-        //        else
-        //        {
-        //            if (paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId == null)
-        //            {
-        //                //Create Order Header WIP
-        //                paymentInfoModel.OrderHeaderWIPModel = OrderHeaderWIPModelCreate(corpAcctLocationId, paymentInfoModel.OrderSummaryModel.InvoiceTypeId, paymentInfoModel.OrderSummaryModel.OrderDateTime, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                ApplicationDataContext.OrderHeaderWIPAdd(paymentInfoModel.OrderHeaderWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            }
-        //            OrderDetailWIPModel orderDetailWIPModel;
-        //            paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.Add
-        //            (
-        //                orderDetailWIPModel = new OrderDetailWIPModel
-        //                {
-        //                    ClientId = clientId,
-        //                    DoNotBreakBundle = addToCartModel.DoNotBreakBundle,
-        //                    ItemId = addToCartModel.ItemModel.ItemId.Value,
-        //                    ItemRate = addToCartModel.ItemModel.ItemRate.Value,
-        //                    OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
-        //                    OrderQty = addToCartModel.OrderQty,
-        //                    ParentItemId = addToCartModel.ParentItemId,
-        //                    SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
-        //                }
-        //            );
-        //            ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            if (addToCartModel.ItemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-        //            {
-        //                foreach (var shoppingCartItemBundleModel in paymentInfoModel.ShoppingCartModel.ShoppingCartItemModels.First(x => x.ItemId == addToCartModel.ItemModel.ItemId).ShoppingCartItemBundleModels)
-        //                {
-        //                    orderDetailWIPModel = new OrderDetailWIPModel
-        //                    {
-        //                        ClientId = clientId,
-        //                        DoNotBreakBundle = addToCartModel.DoNotBreakBundle,
-        //                        ItemId = shoppingCartItemBundleModel.ItemId.Value,
-        //                        ItemRate = shoppingCartItemBundleModel.ItemRate.Value,
-        //                        OrderHeaderWIPId = paymentInfoModel.OrderHeaderWIPModel.OrderHeaderWIPId.Value,
-        //                        OrderQty = shoppingCartItemBundleModel.OrderQty.Value,
-        //                        ParentItemId = addToCartModel.ParentItemId,
-        //                        SeqNum = ++paymentInfoModel.OrderHeaderWIPModel.MaxSeqNum,
-        //                    };
-        //                    ApplicationDataContext.OrderDetailWIPAdd(orderDetailWIPModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                }
-        //            }
-        //        }
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        //// PRIVATE : OrderHeaderWIPModelCreate
-        //private OrderHeaderWIPModel OrderHeaderWIPModelCreate(long corpAcctLocationId, InvoiceTypeEnum? invoiceTypeId, string orderDateTime, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    OrderHeaderWIPModel orderHeaderWIPModel = new OrderHeaderWIPModel
-        //    {
-        //        ClientId = clientId,
-        //        CorpAcctLocationId = corpAcctLocationId,
-        //        CreatedForPersonId = createForSessionObject.PersonId,
-        //        InvoiceTypeId = (long)invoiceTypeId,
-        //        MaxSeqNum = 0,
-        //        OrderDateTime = orderDateTime,
-        //        OrderStatusId = null,
-        //        PersonId = sessionObjectModel.PersonId,
-        //        OrderDetailWIPModels = new List<OrderDetailWIPModel>()
-        //    };
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return orderHeaderWIPModel;
-        //}
-        //// PRIVATE : OrderDetailWIPDel
-        //private void OrderDetailWIPDel(long orderDetailWIPId, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        ApplicationDataContext.OrderDetailWIPDel(orderDetailWIPId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        //// PRIVATE : OrderDetailWIPUpdate
-        //private void OrderDetailWIPUpdate(ref PaymentInfoModel paymentInfoModel, ShoppingCartItemModel shoppingCartItemModel, SqlConnection sqlConnection, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        OrderDetailWIPModel orderDetailWIPModel = paymentInfoModel.OrderHeaderWIPModel.OrderDetailWIPModels.First(x => x.ItemId == shoppingCartItemModel.ItemId);
-        //        orderDetailWIPModel.OrderQty = shoppingCartItemModel.OrderQty.Value;
-        //        ApplicationDataContext.OrderDetailWIPUpd(orderDetailWIPModel.OrderHeaderWIPId, shoppingCartItemModel.ItemId.Value, shoppingCartItemModel.OrderQty.Value, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        //// PRIVATE : OrderWIPDel
-        //private void OrderWIPDel(PaymentInfoModel paymentInfoModel, SqlConnection sqlConnection, Controller controller, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name;
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    try
-        //    {
-        //        ApplicationDataContext.OrderDetailWIPsDelete(sessionObjectModel.PersonId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        ApplicationDataContext.OrderHeaderWIPDelete(sessionObjectModel.PersonId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //    }
-        //}
-        #endregion
         //PRIVATE : GetCorpAcctId
         private long GetCorpAcctId(Controller controller, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {

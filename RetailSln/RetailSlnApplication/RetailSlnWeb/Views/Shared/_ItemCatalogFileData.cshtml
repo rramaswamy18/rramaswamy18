@@ -110,16 +110,30 @@
                             itemBundleItemIndex = -1;
                             itemIndex++;
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td colspan="5" style="border: none;">
+                                <td style="font-size: 12px; padding: 5px; text-align: right;">@itemIndexSeqNum.</td>
+                                <td style="color: #0000ff; font-size: 12px; font-weight: bold; padding: 5px; text-align: center;">
+                                    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="font-weight: bold; text-decoration: underline;">
+                                        @itemModel.ItemId
+                                    </a>
+                                </td>
+                                <td colspan="7">
+                                    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #000000; font-weight: bold; text-decoration: underline;">
+                                        @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
+                                    </a>
+                                    @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
+                                    {
+                                        <br style="clear: both;" />
+                                        <span style="color: #1d1d1d; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
+                                    }
+                                    <br />
+                                    @itemModel.ItemItemSpecsForDisplay
                                     <table>
                                         <tr>
                                             <td>
                                                 <span style="color: #ff0000; font-size: 12px; font-weight: bold;">Customize bundle below and click add to cart</span>
                                             </td>
                                             <td style="padding-left: 9px; text-align: right;">
-                                                <span id="itemBundleItemPiecesCount@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold;">0</span>
+                                                <span id="itemBundleItemPiecesCount@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold;">0</span><span style="color: #000000; font-size: 13px; font-weight: bold; padding-left: 3px;">pieces</span>
                                             </td>
                                             <td style="padding-left: 9px; text-align: right;">
                                                 <span id="itemBundleItemRate@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: middle;">@(Model.CurrencySymbol + "0.00")</span>
@@ -127,20 +141,13 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <span style="color: #0000ff; font-size: 12px; font-weight: bold;">1. Set quantity for individual items below</span>
+                                                <span style="color: #0000ff; font-size: 12px; font-weight: bold;">Set quantity for individual items below</span>
                                             </td>
                                             <td style="padding-left: 9px; vertical-align: middle;">
-                                                <input class="form-control" id="orderQtyBundleSetQty@(itemIndex)" inputmode="numeric" max="999" maxlength="3" min="0" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; font-size: 12px; font-weight: 900; width: 63px;" title="Divine Bija Ganapati Homa Kit / Navagraha Homa Kit Divine Bija India Pvt Ltd | A story of motivation, passion and unconditional commitment" type="number" value="" />
+                                                <input class="form-control" id="orderQtyBundleSetQty@(itemIndex)" inputmode="numeric" max="999" maxlength="3" min="0" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; font-size: 12px; font-weight: 900; width: 63px;" title="@(itemMasterModel.ImageTitle + " " + itemModel.ItemItemSpecsForDisplay)" type="number" value="" />
                                             </td>
                                             <td style="padding-left: 9px; vertical-align: middle;">
                                                 <button class="btn btn-primary" onclick="javascript: return orderQtyBundleSetQty_onclick(@parentItemBundleModel.ParentItemId, @itemIndex, @parentItemBundleModel.ShoppingCartItemBundleModels.Count, '@Model.CurrencySymbol');" style="font-weight: bold;">Set Qty</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span style="color: #a54000; font-size: 12px; font-weight: bold;">2. Adjust quantity for below items</span>
-                                                <br style="clear: both;" />
-                                                <span style="color: #ff0000; font-size: 12px; font-weight: bold;">3. Click add to cart...</span>
                                             </td>
                                             <td style="padding-left: 9px;">
                                                 <input id="itemId@(itemIndex)" type="hidden" value="@itemModel.ItemId" />
@@ -172,6 +179,7 @@
                                                 <col />
                                                 <col style="width: 54px;" />
                                                 <col style="width: 63px;" />
+                                                <col style="width: 63px;" />
                                                 <col style="width: 54px;" />
                                             </colgroup>
                                             <tr style="background-color: #d0d0d0;">
@@ -180,6 +188,7 @@
                                                 <th style="padding: 5px; text-align: left;">Desc</th>
                                                 <th style="padding: 5px; text-align: right;">Price</th>
                                                 <th style="padding: 5px; text-align: right;">Qty</th>
+                                                <th style="padding: 5px; text-align: right;"></th>
                                                 <th style="padding: 5px; text-align: right;">Amount</th>
                                             </tr>
                                             @foreach (var itemBundleItem in parentItemBundleModel.ShoppingCartItemBundleModels)
@@ -218,6 +227,9 @@
                                                             <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
                                                             <span id="spnMessageErrorTextForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="color: #ff0000;"></span>
                                                         </span>
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemModel.ItemId, @itemIndex, '1', false, @itemBundleFlag.ToString().ToLower()); resetItemBundleRate(@parentItemBundleModel.ParentItemId, '', @parentItemBundleModel.ShoppingCartItemBundleModels.Count, '@Model.CurrencySymbol');" title="Enter quantity and click add to cart @itemModel.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ItemMasterModel.ImageTitle" /></a>
                                                     </td>
                                                     <td id="itemAmountForBundle@("_" + parentItemBundleModel.ParentItemModel.ItemId + "_" + itemBundleItemIndex)" class="text-right">
                                                     </td>

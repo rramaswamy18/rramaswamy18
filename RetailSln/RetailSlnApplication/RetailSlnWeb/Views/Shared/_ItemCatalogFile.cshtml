@@ -2,55 +2,6 @@
 @model ItemCatalogFileModel
 <table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
     <tr>
-        <th colspan="4" class="dataStyle1Center">
-            <span style="color: @Model.CatalogMessageForeColor; font-size: 16px; font-weight: bold;">@Model.CatalogMessage</span>
-            @if (Model.SearchFlag)
-            {
-                <span style="color: #000000; font-size: 13px; font-weight: bold;">@("Viewing " + Model.ItemMasterCountFrom + " - " + Model.ItemMasterCountTo + " of " + Model.ItemMasterCountTotal)</span>
-            }
-            <br style="clear: both;" />
-            @{
-                if (Model.TotalPageCount > 1)
-                {
-                    long prevPageNum = Model.PageNum - 1, nextPageNum = Model.PageNum + 1;
-                    if (prevPageNum < 1) { prevPageNum = 1; }
-                    if (nextPageNum > Model.TotalPageCount) { nextPageNum = Model.TotalPageCount; }
-                    <ul class="pagination" style="margin: 0px;">
-                        <li class="page-item">
-                            <a alt="Page# @prevPageNum" class="page-link" href="javascript: void(0);" onclick="javascript: return btnSearchText_onclick(@prevPageNum);" , title="Jump to page# @prevPageNum">
-                                Prev
-                            </a>
-                        </li>
-                        @for (int i = 1; i <= Model.TotalPageCount; i++)
-                        {
-                            if (i == Model.PageNum)
-                            {
-                                <li class="page-item active">
-                                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return btnSearchText_onclick(@i);" , title="Jump to page# @i">
-                                        @i
-                                    </a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item">
-                                    <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return btnSearchText_onclick(@i);" , title="Jump to page# @i">
-                                        @i
-                                    </a>
-                                </li>
-                            }
-                        }
-                        <li class="page-item">
-                            <a alt="Page# @nextPageNum" class="page-link" href="javascript: void(0);" onclick="javascript: return btnSearchText_onclick(@nextPageNum);" , title="Jump to page# @nextPageNum">
-                                Next
-                            </a>
-                        </li>
-                    </ul>
-                }
-            }
-        </th>
-    </tr>
-    <tr>
         <th class="dataStyle1Right">#</th>
         <th class="dataStyle1Center">Item#</th>
         <th></th>

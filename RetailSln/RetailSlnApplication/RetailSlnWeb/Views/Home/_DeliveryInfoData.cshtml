@@ -3,6 +3,7 @@
 @using ArchitectureLibraryModels
 @using RetailSlnCacheData
 @using RetailSlnModels
+@using System.Data.SqlClient
 @model DeliveryInfoModel
 <style>
     .container {
@@ -55,14 +56,9 @@
     var username = sessionObject.TelephoneCountryId + "_" + sessionObject.PhoneNumber;
     var createForUsername = createForSessionObject.TelephoneCountryId + "_" + createForSessionObject.PhoneNumber;
     var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
-    //Model.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId = createForSessionObject.TelephoneCountryId;
-    //Model.DeliveryDataModel.PrimaryTelephoneNum = createForSessionObject.PhoneNumber;
     var demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.FirstOrDefault(x => x.DemogInfoCountryId == Model.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId);
     var primaryTelephoneFormatted = "+" + demogInfoCountryModel.TelephoneCode.Value.ToString() + " " + long.Parse(Model.DeliveryDataModel.PrimaryTelephoneNum).ToString(demogInfoCountryModel.TelephoneFormat);
     Model.DeliveryDataModel.PrimaryTelephoneFormatted = primaryTelephoneFormatted;
-    //Model.DeliveryAddressModel.BuildingTypeId = Model.DeliveryAddressModel.BuildingTypeId ?? BuildingTypeEnum._;
-    //Model.DeliveryAddressModel.DemogInfoCountryId = Model.DeliveryAddressModel.DemogInfoCountryId ?? RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
-    //Model.DeliveryDataModel.AlternateTelephoneDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId;
     Model.DeliveryAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
     Model.DeliveryAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
     Model.DeliveryAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
@@ -104,6 +100,57 @@
             }
         }
     }
+    //Get Prior Addresses
+    #region
+    var createForPersonId = createForSessionObject == null ? -1 : createForSessionObject.PersonId;
+    string sqlStmt = "";
+    sqlStmt += $"        SELECT " + Environment.NewLine;
+    sqlStmt += $"               DemogInfoAddress.AddressLine1" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.AddressLine2" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.CityName" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.DemogInfoSubDivisionId" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.StateAbbrev" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.ZipCode" + Environment.NewLine;
+    sqlStmt += $"              ,MAX(DemogInfoAddress.DemogInfoAddressId) AS DemogInfoAddressId" + Environment.NewLine;
+    sqlStmt += $"          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+    sqlStmt += $"    INNER JOIN RetailSlnSch.OrderDelivery" + Environment.NewLine;
+    sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderDelivery.OrderHeaderId" + Environment.NewLine;
+    sqlStmt += $"    INNER JOIN ArchLib.DemogInfoAddress" + Environment.NewLine;
+    sqlStmt += $"            ON OrderDelivery.DeliveryAddressId = DemogInfoAddress.DemogInfoAddressId" + Environment.NewLine;
+    sqlStmt += $"         WHERE OrderHeader.CreatedForPersonId = {createForPersonId}" + Environment.NewLine;
+    sqlStmt += $"      GROUP BY " + Environment.NewLine;
+    sqlStmt += $"               DemogInfoAddress.AddressLine1" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.AddressLine2" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.CityName" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.DemogInfoSubDivisionId" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.StateAbbrev" + Environment.NewLine;
+    sqlStmt += $"              ,DemogInfoAddress.ZipCode" + Environment.NewLine;
+    sqlStmt += $"      ORDER BY " + Environment.NewLine;
+    sqlStmt += $"               DemogInfoAddressId DESC" + Environment.NewLine;
+    #endregion
+    RetailSlnDataLayer.ApplicationDataContext.OpenSqlConnection();
+    SqlConnection sqlConnection = RetailSlnDataLayer.ApplicationDataContext.SqlConnectionObject;
+    SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+    List<DemogInfoAddressModel> demogInfoAddressModels = new List<DemogInfoAddressModel>();
+    while (sqlDataReader.Read())
+    {
+        demogInfoAddressModels.Add
+        (
+            new DemogInfoAddressModel
+            {
+                DemogInfoAddressId = long.Parse(sqlDataReader["DemogInfoAddressId"].ToString()),
+                DemogInfoSubDivisionId = long.Parse(sqlDataReader["DemogInfoSubDivisionId"].ToString()),
+                AddressLine1 = sqlDataReader["AddressLine1"].ToString(),
+                AddressLine2 = sqlDataReader["AddressLine2"].ToString(),
+                CityName = sqlDataReader["CityName"].ToString(),
+                StateAbbrev = sqlDataReader["StateAbbrev"].ToString(),
+                ZipCode = sqlDataReader["ZipCode"].ToString(),
+            }
+        );
+    }
+    sqlDataReader.Close();
+    sqlConnection.Close();
     #endregion
 }
 @Html.HiddenFor(m => m.OrderSummaryModel.EmailExists)
@@ -111,14 +158,6 @@
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneNum)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted)
-@if (createForSessionObject.AspNetRoleName == "GUESTROLE")
-{
-    <div class="container">
-        <div class="column" style="color: #a54000; font-size: 14px; font-weight: bold; width: 90%;">
-            You are checking out as Guest. Feel free to register and be part of our family
-        </div>
-    </div>
-}
 @if (messageFlag)
 {
     <div class="container">
@@ -385,6 +424,15 @@
         </div>
     </div>
     <div class="column">
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            <select class="form-control" style="width: 95%;">
+                <option value="">-- Previous Address(s) --</option>
+                @foreach (var demogInfoAddressModel1 in demogInfoAddressModels)
+                {
+                    <option value="@(demogInfoAddressModel1.DemogInfoAddressId + ";" + demogInfoAddressModel1.DemogInfoSubDivisionId)">@(demogInfoAddressModel1.AddressLine1 + ";" + demogInfoAddressModel1.AddressLine2 + ";" + demogInfoAddressModel1.CityName + ";" + demogInfoAddressModel1.StateAbbrev + ";" + demogInfoAddressModel1.ZipCode)</option>
+                }
+            </select>
+        </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
             @Html.TextAreaFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "form-control", maxlength = "250", onfocus = "javascript: this.select();", onchange = "javascript: return replaceEnter(this, '');", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.AddressLine1), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter address line 1 for delivery" })

@@ -10,7 +10,7 @@
         <col style="width: 18px;" />
         <col />
         <col style="width: 54px;" />
-        <col style="width: 36px;" />
+        <col style="width: 81px;" />
         <col style="width: 72px;" />
     </colgroup>
     <tr>
@@ -58,9 +58,18 @@
             <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
                 @shoppingCartItemBundleModel.ItemRateFormatted
             </td>
-            <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
-                @shoppingCartItemBundleModel.OrderQty
-            </td>
+            @if (Model.ShoppingCartItemModel.DoNotBreakBundle)
+            {
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                    @shoppingCartItemBundleModel.OrderQty
+                </td>
+            }
+            else
+            {
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                    <input class="form-control" id="shoppingCartOrderQty@((Model.Index - 1) + "_" + (bundleIndex - 1))" oninput="javascript: return shoppingCartOrderQty_oninput(@(Model.Index - 1), @(bundleIndex - 1));" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; font-size: 12px; font-weight: bold; width: 90%;" type="number" value="@shoppingCartItemBundleModel.OrderQty" />
+                </td>
+            }
             <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
                 @shoppingCartItemBundleModel.OrderAmountFormatted
             </td>

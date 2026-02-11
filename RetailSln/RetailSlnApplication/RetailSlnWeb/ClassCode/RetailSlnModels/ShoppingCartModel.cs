@@ -14,6 +14,7 @@ namespace RetailSlnModels
         public List<ShoppingCartItemModel> ShoppingCartItemModels { set; get; }
         public List<ShoppingCartItemModel> ShoppingCartItemModelsSummary { set; get; }
         public ShoppingCartSummaryModel ShoppingCartSummaryModel { set; get; }
+        public ShoppingCartWIPHdrModel ShoppingCartWIPHdrModel { set; get; }
         public bool ShowDetail { set; get; }
         public ResponseObjectModel ResponseObjectModel { get; set; }
     }

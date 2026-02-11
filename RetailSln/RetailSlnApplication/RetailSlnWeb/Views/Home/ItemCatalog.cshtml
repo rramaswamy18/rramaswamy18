@@ -79,10 +79,6 @@
             <span style="color: #000000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 8px;">/</span>
             <span id="spnItemCount" style="color: #a54000; float: left; font-size: 15px; font-weight: bold; padding-left: 5px; padding-top: 8px;"></span>
         </th>
-        <th class="dataStyle1Left" style="border: none !important; vertical-align: middle;">
-            <input class="form-control" id="txtSearchText" name="txtSearchText" placeholder="Search inside catalog..." style="float: left; font-weight: normal; width: 63%;" type="text" title="Search in this page..." />
-            <input id="btnSearchText" name="btnSearchText" onclick="javascript: btnSearchText_onclick(1);" style="background-color: #ffffff; border-style: none; color: #000000; float: left; font-weight: bold; padding-left: 9px; padding-top: 9px; text-decoration: underline;" type="button" value="Search" />
-        </th>
     </tr>
 </table>
 <div id="divItemCatalogData" style="padding: 0px;">
@@ -119,37 +115,6 @@
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
                 console.log("ParentCategoryId_onclick", "00099000", "ERROR???");
-                console.log(xhr, exception);
-            }
-        });
-    }
-    function btnSearchText_onclick(pageNum) {
-        console.log("btnSearchText_onclick", "00000000", "ENTER!!!");
-        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        var url = "@Url.Action("SearchText", "Home")";
-        var searchText = document.getElementById("txtSearchText").value;
-        var parentCategoryId = document.getElementById("spnParentCategoryId").innerText;
-        var jsonPostData =
-        {
-            "parentCategoryId": parentCategoryId,
-            "searchText": searchText,
-            "pageNum": pageNum,
-        };
-        $.ajax({
-            url: url,
-            type: "POST",
-            //async: false,
-            //contentType: "application/json; charset=utf-8",
-            dataType: "text",
-            data: jsonPostData,
-            success: function (responseData, textStatus, request) {
-                $('#loadingModal').modal('hide');
-                document.getElementById("divItemCatalogData").innerHTML = responseData;
-                console.log("btnSearchText_onclick", "00001000", "SUCCESS!!!", textStatus);
-            },
-            error: function (xhr, exception) {
-                $('#loadingModal').modal('hide');
-                console.log("btnSearchText_onclick", "00099000", "ERROR???");
                 console.log(xhr, exception);
             }
         });

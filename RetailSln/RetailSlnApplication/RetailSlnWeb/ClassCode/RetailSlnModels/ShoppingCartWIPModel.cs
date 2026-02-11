@@ -10,14 +10,12 @@ namespace RetailSlnModels
     {
         public long? ShoppingCartWIPId { set; get; }
         public long ClientId { set; get; }
-        //public float BundleItemSeqNum { set; get; }
-        public long CorpAcctLocationId { set; get; }
-        public long CreatedForPersonId { set; get; }
         public bool DoNotBreakBundle { set; get; }
         public long ItemId { set; get; }
+        public float ItemSeqNum { set; get; }
+        public string OrderComments { set; get; }
         public long OrderQty { set; get; }
         public long ParentItemId { set; get; }
-        public long PersonId { set; get; }
-        public float ItemSeqNum { set; get; }
+        public long ShoppingCartWIPHdrId { set; get; }
     }
 }

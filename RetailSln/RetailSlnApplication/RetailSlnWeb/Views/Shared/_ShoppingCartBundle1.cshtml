@@ -2,7 +2,7 @@
 @using RetailSlnModels
 @model PaymentInfoModel
 @{
-    bool headingFlag = true;
+    bool headingFlag = true, bundleItemOutput;
     int index = 0, bundleIndex;
 }
 <table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
@@ -34,48 +34,50 @@
             bundleIndex = 0;
             foreach (var shoppingCartItemBundleModel in shoppingCartItem.ShoppingCartItemBundleModels)
             {
-                bundleIndex++;
-                <tr>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(index + "." + bundleIndex + ".")</th>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">
-                        @shoppingCartItemBundleModel.ItemId
-                    </td>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
-                        @(shoppingCartItemBundleModel.ItemMasterDesc0 + " " + shoppingCartItemBundleModel.ItemMasterDesc1)
-                        @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemMasterDesc2 + " " + shoppingCartItemBundleModel.ItemMasterDesc3))
-                        {
+                bundleItemOutput = !Model.ShoppingCartModel.Checkout || shoppingCartItemBundleModel.OrderQty != 0;
+                if (bundleItemOutput)
+                {
+                    bundleIndex++;
+                    <tr>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(index + "." + bundleIndex + ".")</th>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">
+                            @shoppingCartItemBundleModel.ItemId
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                            @(shoppingCartItemBundleModel.ItemMasterDesc0 + " " + shoppingCartItemBundleModel.ItemMasterDesc1)
+                            @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemMasterDesc2 + " " + shoppingCartItemBundleModel.ItemMasterDesc3))
+                            {
+                                <br style="clear: both;" />
+                                <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3)</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemItemSpecsForDisplay))
+                            {
+                                <br style="clear: both;" />
+                                <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItemBundleModel.ItemItemSpecsForDisplay</span>
+                            }
                             <br style="clear: both;" />
-                            <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3)</span>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemItemSpecsForDisplay))
-                        {
+                            @("HSN : " + shoppingCartItemBundleModel.HSNCode)&nbsp;@("Prod Code : " + shoppingCartItemBundleModel.ProductCode)
                             <br style="clear: both;" />
-                            <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItemBundleModel.ItemItemSpecsForDisplay</span>
-                        }
-                        <br style="clear: both;" />
-                        @("HSN : " + shoppingCartItemBundleModel.HSNCode)
-                        <br style="clear: both;" />
-                        @("Prod Code : " + shoppingCartItemBundleModel.ProductCode)
-                        <br style="clear: both;" />
-                        @if (Model.ShoppingCartModel.Checkout)
-                        {
-                            @Html.DisplayFor(m => shoppingCartItemBundleModel.OrderComments)
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(m => shoppingCartItemBundleModel.OrderComments, new { id = "orderComments" + (index - 1) + "_" + (bundleIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onblur = "javascript: return orderComments_onchange(" + (index - 1) + ", " + (bundleIndex - 1) + ");", onchange = "javascript: return orderComments_onchange(" + (index - 1) + ", " + (bundleIndex - 1) + ");" })
-                        }
-                    </td>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
-                        @shoppingCartItemBundleModel.ItemRateFormatted
-                    </td>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
-                        @shoppingCartItemBundleModel.OrderQty
-                    </td>
-                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
-                        @shoppingCartItemBundleModel.OrderAmountFormatted
-                    </td>
-                </tr>
+                            @if (Model.ShoppingCartModel.Checkout)
+                            {
+                                @Html.DisplayFor(m => shoppingCartItemBundleModel.OrderComments)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => shoppingCartItemBundleModel.OrderComments, new { id = "orderComments" + (index - 1) + "_" + (bundleIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onblur = "javascript: return orderComments_onchange(" + (index - 1) + ", " + (bundleIndex - 1) + ");", onchange = "javascript: return orderComments_onchange(" + (index - 1) + ", " + (bundleIndex - 1) + ");" })
+                            }
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
+                            @shoppingCartItemBundleModel.ItemRateFormatted
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                            @shoppingCartItemBundleModel.OrderQty
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                            @shoppingCartItemBundleModel.OrderAmountFormatted
+                        </td>
+                    </tr>
+                }
             }
         }
     }

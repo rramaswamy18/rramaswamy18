@@ -876,8 +876,11 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    oTPResponseModel.RequestType = "Login";
+                    oTPResponseModel = archLibBL.LoginUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (oTPResponseModel != null)
+                    {
+                        oTPResponseModel.RequestType = "Login";
+                    }
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -935,8 +938,9 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(oTPResponseModel);
                 if (ModelState.IsValid)
                 {
+                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
                     //SessionObjectModel sessionObjectModel = archLibBL.LoginUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
                         if (sessionObjectModel.NewUser)
@@ -1325,7 +1329,8 @@ namespace RetailSlnWeb.Controllers
                 TryValidateModel(oTPResponseModel);
                 if (ModelState.IsValid)
                 {
-                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
                         if (sessionObjectModel.NewUser)

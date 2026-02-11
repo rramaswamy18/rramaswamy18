@@ -258,12 +258,15 @@
                     if (responseData.success) {
                         var itemBundleCount, currencySymbol = "@RetailSlnCache.CurrencySymbol";
                         for (var i = 0; ; i++) {
+                            //console.log("Ummachi 1", "i", i, "itemBundleCount", itemBundleCount);
                             if (document.getElementById("itemIdForBundle" + i) == null) {
                                 itemBundleCount = i;
+                                //console.log("Ummachi 2", "i", i, "itemBundleCount", itemBundleCount);
                                 break;
                             }
                         }
-                        calculateItemBundleRate(itemId, itemBundleCount, currencySymbol);
+                        //console.log("Ummachi 3", "i", i, "itemBundleCount", itemBundleCount);
+                        calculateItemBundleRate(itemId, "", itemBundleCount, currencySymbol);
                     }
                     else {
                         alert("Error occurred");

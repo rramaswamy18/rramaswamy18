@@ -81,6 +81,8 @@ namespace RetailSlnModels
 
         public float? ProductOrVolumetricWeight { set; get; }
 
+        public float? ProductOrVolumetricWeightUnit { set; get; }
+
         public WeightUnitEnum? ProductOrVolumetricWeightUnitId { set; get; }
 
         public float? VolumeValue { set; get; }
@@ -89,9 +91,13 @@ namespace RetailSlnModels
 
         public float? WeightCalcValue { set; get; }
 
+        public float? WeightCalcValueUnit { set; get; }
+
         public WeightUnitEnum? WeightUnitId { set; get; }
 
         public float? WeightValue { set; get; }
+
+        public float? WeightValueUnit { set; get; }
 
         public float? WidthValue { set; get; }
 

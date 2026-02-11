@@ -10,8 +10,6 @@ namespace RetailSlnModels
     {
         public string BannerImageUrl { set; get; }
 
-        public string CatalogMessage { set; get; }
-
         public string CatalogMessageForeColor { set; get; }
 
         public List<CategoryItemMasterHierModel> CategoryCategoryItemMasterHierModels { set; get; }
@@ -39,8 +37,6 @@ namespace RetailSlnModels
         public long? ParentCategoryId { set; get; }
 
         public bool PdfFlag { set; get; }
-
-        public bool SearchFlag { set; get; }
 
         public long TotalPageCount { set; get; }
 

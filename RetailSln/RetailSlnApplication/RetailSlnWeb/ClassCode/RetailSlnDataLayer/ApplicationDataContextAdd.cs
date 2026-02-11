@@ -779,29 +779,84 @@ namespace RetailSlnDataLayer
                 sqlStmt += "         INSERT RetailSlnSch.ShoppingCartWIP" + Environment.NewLine;
                 sqlStmt += "               (" + Environment.NewLine;
                 sqlStmt += "                ClientId" + Environment.NewLine;
-                //sqlStmt += "               ,BundleItemSeqNum" + Environment.NewLine;
-                sqlStmt += "               ,CorpAcctLocationId" + Environment.NewLine;
-                sqlStmt += "               ,CreatedForPersonId" + Environment.NewLine;
                 sqlStmt += "               ,DoNotBreakBundle" + Environment.NewLine;
                 sqlStmt += "               ,ItemId" + Environment.NewLine;
                 sqlStmt += "               ,ItemSeqNum" + Environment.NewLine;
+                sqlStmt += "               ,OrderComments" + Environment.NewLine;
                 sqlStmt += "               ,OrderQty" + Environment.NewLine;
                 sqlStmt += "               ,ParentItemId" + Environment.NewLine;
-                sqlStmt += "               ,PersonId" + Environment.NewLine;
+                sqlStmt += "               ,ShoppingCartWIPHdrId" + Environment.NewLine;
                 sqlStmt += "               ,AddUserId" + Environment.NewLine;
                 sqlStmt += "               ,UpdUserId" + Environment.NewLine;
                 sqlStmt += "               )" + Environment.NewLine;
                 sqlStmt += "         OUTPUT INSERTED.ShoppingCartWIPId" + Environment.NewLine;
                 sqlStmt += "         SELECT " + Environment.NewLine;
                 sqlStmt += "                @ClientId" + Environment.NewLine;
-                //sqlStmt += "               ,@BundleItemSeqNum" + Environment.NewLine;
-                sqlStmt += "               ,@CorpAcctLocationId" + Environment.NewLine;
-                sqlStmt += "               ,@CreatedForPersonId" + Environment.NewLine;
                 sqlStmt += "               ,@DoNotBreakBundle" + Environment.NewLine;
                 sqlStmt += "               ,@ItemId" + Environment.NewLine;
                 sqlStmt += "               ,@ItemSeqNum" + Environment.NewLine;
+                sqlStmt += "               ,@OrderComments" + Environment.NewLine;
                 sqlStmt += "               ,@OrderQty" + Environment.NewLine;
                 sqlStmt += "               ,@ParentItemId" + Environment.NewLine;
+                sqlStmt += "               ,@ShoppingCartWIPHdrId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
+                #endregion
+                #region
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
+                sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@ItemSeqNum", SqlDbType.Float);
+                sqlCommand.Parameters.Add("@OrderComments", SqlDbType.NVarChar, 256);
+                sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@ParentItemId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@ShoppingCartWIPHdrId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+                #endregion
+                #region
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
+                sqlCommand.Parameters["@DoNotBreakBundle"].Value = shoppingCartWIPModel.DoNotBreakBundle;
+                sqlCommand.Parameters["@ItemId"].Value = shoppingCartWIPModel.ItemId;
+                sqlCommand.Parameters["@ItemSeqNum"].Value = shoppingCartWIPModel.ItemSeqNum;
+                sqlCommand.Parameters["@OrderComments"].Value = string.IsNullOrWhiteSpace(shoppingCartWIPModel.OrderComments) ? (object)DBNull.Value : shoppingCartWIPModel.OrderComments;
+                sqlCommand.Parameters["@OrderQty"].Value = shoppingCartWIPModel.OrderQty;
+                sqlCommand.Parameters["@ParentItemId"].Value = shoppingCartWIPModel.ParentItemId;
+                sqlCommand.Parameters["@ShoppingCartWIPHdrId"].Value = shoppingCartWIPModel.ShoppingCartWIPHdrId;
+                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+                #endregion
+                shoppingCartWIPModel.ShoppingCartWIPId = (long)sqlCommand.ExecuteScalar();
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        public static void ShoppingCartWIPHdrAdd(ShoppingCartWIPHdrModel shoppingCartWIPHdrModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += "         INSERT RetailSlnSch.ShoppingCartWIPHdr" + Environment.NewLine;
+                sqlStmt += "               (" + Environment.NewLine;
+                sqlStmt += "                ClientId" + Environment.NewLine;
+                sqlStmt += "               ,CorpAcctLocationId" + Environment.NewLine;
+                sqlStmt += "               ,CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += "               ,PersonId" + Environment.NewLine;
+                sqlStmt += "               ,AddUserId" + Environment.NewLine;
+                sqlStmt += "               ,UpdUserId" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "         OUTPUT INSERTED.ShoppingCartWIPHdrId" + Environment.NewLine;
+                sqlStmt += "         SELECT " + Environment.NewLine;
+                sqlStmt += "                @ClientId" + Environment.NewLine;
+                sqlStmt += "               ,@CorpAcctLocationId" + Environment.NewLine;
+                sqlStmt += "               ,@CreatedForPersonId" + Environment.NewLine;
                 sqlStmt += "               ,@PersonId" + Environment.NewLine;
                 sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
                 sqlStmt += "               ,@LoggedInUserId" + Environment.NewLine;
@@ -809,31 +864,19 @@ namespace RetailSlnDataLayer
                 #region
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
-                //sqlCommand.Parameters.Add("@BundleItemSeqNum", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@CorpAcctLocationId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@CreatedForPersonId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@DoNotBreakBundle", SqlDbType.Bit);
-                sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@ItemSeqNum", SqlDbType.Float);
-                sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@ParentItemId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
                 #endregion
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
-                //sqlCommand.Parameters["@BundleItemSeqNum"].Value = shoppingCartWIPModel.BundleItemSeqNum;
-                sqlCommand.Parameters["@CorpAcctLocationId"].Value = shoppingCartWIPModel.CorpAcctLocationId;
-                sqlCommand.Parameters["@CreatedForPersonId"].Value = shoppingCartWIPModel.CreatedForPersonId;
-                sqlCommand.Parameters["@DoNotBreakBundle"].Value = shoppingCartWIPModel.DoNotBreakBundle;
-                sqlCommand.Parameters["@ItemId"].Value = shoppingCartWIPModel.ItemId;
-                sqlCommand.Parameters["@OrderQty"].Value = shoppingCartWIPModel.OrderQty;
-                sqlCommand.Parameters["@ParentItemId"].Value = shoppingCartWIPModel.ParentItemId;
-                sqlCommand.Parameters["@PersonId"].Value = shoppingCartWIPModel.PersonId;
-                sqlCommand.Parameters["@ItemSeqNum"].Value = shoppingCartWIPModel.ItemSeqNum;
+                sqlCommand.Parameters["@CorpAcctLocationId"].Value = shoppingCartWIPHdrModel.CorpAcctLocationId;
+                sqlCommand.Parameters["@CreatedForPersonId"].Value = shoppingCartWIPHdrModel.CreatedForPersonId;
+                sqlCommand.Parameters["@PersonId"].Value = shoppingCartWIPHdrModel.PersonId;
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
                 #endregion
-                shoppingCartWIPModel.ShoppingCartWIPId = (long)sqlCommand.ExecuteScalar();
+                shoppingCartWIPHdrModel.ShoppingCartWIPHdrId = (long)sqlCommand.ExecuteScalar();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");
             }
             catch (Exception exception)
