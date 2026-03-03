@@ -286,6 +286,7 @@ namespace RetailSlnBusinessLayer
                     }
                     else
                     {
+                        shoppingCartItemModelBalanceDue.OrderAmountRounded = (long)Math.Ceiling(shoppingCartItemModelBalanceDue.OrderAmount.Value);
                         paymentInfoModel.CreditCardDataModel.CreditCardAmount = shoppingCartItemModelBalanceDue.OrderAmount.Value.ToString();
                         paymentInfoModel.CreditCardDataModel.CreditCardAmountFormatted =
                             shoppingCartItemModelBalanceDue.OrderAmountRounded.Value.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
@@ -354,7 +355,7 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
-                float itemSeqNum;
+                //float itemSeqNum;
                 CreateShoppingCartModel(ref shoppingCartModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ShoppingCartItemModel shoppingCartItemModel = shoppingCartModel.ShoppingCartItemModels.FirstOrDefault(x => x.ItemId == addToCartModel.ItemId && x.ParentItemId == addToCartModel.ParentItemId && x.DoNotBreakBundle == addToCartModel.DoNotBreakBundle);
                 if (shoppingCartItemModel == null)

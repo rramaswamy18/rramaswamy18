@@ -26,41 +26,6 @@
         <col style="width: 54px;" />
         <col style="width: 153px;" />
     </colgroup>
-    @*
-        @if (Model.ItemMasterModel.ItemModels.Count > 1)
-        {
-            <tr>
-                <td></td>
-                <td colspan="4" style="margin-left: auto; margin-right: auto;">
-                    <select class="form-control" id="itemBundleItem" onchange="javascript: return itemBundleItem_onclick(this.selectedIndex, @Model.ItemMasterModel.ItemModels.Count);">
-                        <option value="">--- Select Item ---</option>
-                        @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
-                        {
-                            Model.ItemDiscountModels.TryGetValue(itemModel.ItemId.Value, out itemDiscountModel);
-                            discountPercent = "";
-                            if (itemDiscountModel != null)
-                            {
-                                discountPercent = itemDiscountModel.DiscountPercent.ToString("0.00") + "%";
-                            }
-                            else
-                            {
-                                discountPercent = "";
-                            }
-                            <option value="@itemModel.ItemId">@(itemModel.ItemMasterModel.ItemMasterDesc + ";" + itemModel.ItemItemSpecsForDisplay + ";" + itemModel.ItemRateFormatted + ";" + discountPercent)</option>
-                        }
-                    </select>
-                </td>
-            </tr>
-        }
-    *@
-    <tr>
-        <th colspan="6" style="padding: 5px; text-align: left;">
-            <span style="color: #0000ff; font-size: 13px;">Order bundle without breaking&nbsp;</span>
-            @*<span style="color: #a54000; font-size: 14px;">Bundled item(s)</span>*@
-            <span style="color: #a54000; font-size: 13px;">(#@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count Items)</span>
-            @*<span style="color: #a54000; font-size: 14px;">items</span>*@
-        </th>
-    </tr>
     <tr style="background-color: #d0d0d0;">
         <th style="padding: 5px; text-align: right;">#</th>
         <th style="padding: 5px; text-align: center;">Id</th>
@@ -135,6 +100,9 @@
             }
         </td>
         <td style="font-size: 12px; padding: 5px; text-align: left; vertical-align: top;">
+            <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order all items in bundle without breaking&nbsp;</span>
+            <span style="color: #a54000; font-size: 13px; font-weight: bold;">(#@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count Items)</span>
+            <br style="clear: both;" />
             @{
                 index = -1;
                 foreach (var itemModel in Model.ItemMasterModel.ItemModels)
@@ -160,8 +128,6 @@
                 {
                     <br style="clear: both;" />
                 }
-                <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order bundle without breaking&nbsp;</span>
-                <span style="color: #a54000; font-size: 13px; font-weight: bold;">(#@Model.ItemBundleDataModel.ParentItemBundleModel.ShoppingCartItemBundleModels.Count Items)</span>
             }
         </td>
         <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">

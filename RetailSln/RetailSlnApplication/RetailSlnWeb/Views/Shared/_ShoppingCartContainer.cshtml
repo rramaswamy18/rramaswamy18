@@ -4,6 +4,7 @@
     var shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
     shoppingCartModel = shoppingCartModel ?? new ShoppingCartModel();
     shoppingCartModel = shoppingCartModel ?? new ShoppingCartModel { ShowDetail = false, ShoppingCartItemModels = new List<ShoppingCartItemModel>() };
+    shoppingCartModel.ShoppingCartItemModels = shoppingCartModel.ShoppingCartItemModels ?? new List<ShoppingCartItemModel>();
     shoppingCartModel.ShoppingCartSummaryModel = shoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel { TotalItemsCount = 0, TotalOrderAmount = 0, TotalOrderAmountFormatted = 0f.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", ""), };
     Session["ShoppingCart"] = shoppingCartModel;
 }

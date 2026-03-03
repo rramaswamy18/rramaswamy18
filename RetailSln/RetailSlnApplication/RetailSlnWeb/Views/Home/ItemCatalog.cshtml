@@ -6,11 +6,6 @@
     ViewBag.Title = "ItemCatalog";
     Layout = "~/Views/Shared/_Layout2.cshtml";
     #region Backend Code
-    PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
-    if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null)
-    {
-        paymentInfoModel.ShoppingCartModel.Checkout = false;
-    }
     SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
     SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
     var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;

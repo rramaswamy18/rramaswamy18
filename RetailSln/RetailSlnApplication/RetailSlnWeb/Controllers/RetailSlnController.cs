@@ -120,7 +120,7 @@ namespace RetailSlnWeb.Controllers
                     {
                         DeliveryInfoModel deliveryInfoModel = retailSlnBL.Checkout(sessionObject, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                         shoppingCartModel.Checkout = true;
-                        Session["ShoppingCart"] = checkoutModel;
+                        Session["ShoppingCart"] = shoppingCartModel;
                         Session["DeliveryInfo"] = deliveryInfoModel;
                         actionResult = View("DeliveryInfo", deliveryInfoModel);
                     }

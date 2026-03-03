@@ -211,7 +211,7 @@ function zipCode_onblur(htmlFieldPrefix) {
                 for (i = 0; i < responseData.length; i++) {
                     if (responseData[i].ZipCode == zipCodeData) {
                         var selectObject = document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId");
-                        for (j = 0; i < selectObject.options.length; j++) {
+                        for (j = 0; j < selectObject.options.length; j++) {
                             if (selectObject.options[j].text == responseData[i].SubDivisionDesc) {
                                 selectObject.selectedIndex = j;
                                 document.getElementById("zipCodeSuccess").style.display = "block";
@@ -269,7 +269,7 @@ function cityName_onblur(htmlFieldPrefix) {
                     }
                     if (responseData[i].CityName == cityNameData && responseData[i].ZipCode == zipCodeData) {
                         var selectObject = document.getElementById(htmlFieldPrefix + "DemogInfoSubDivisionId");
-                        for (j = 0; i < selectObject.options.length; j++) {
+                        for (j = 0; j < selectObject.options.length; j++) {
                             if (selectObject.options[j].text == responseData[i].SubDivisionDesc) {
                                 selectObject.selectedIndex = j;
                                 document.getElementById("zipCodeSuccess").style.display = "block";

@@ -3,9 +3,10 @@
 function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBundleParm, itemBundleFlag) {
     console.log("addToCart_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    console.log("addToCart_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "defaultValue", defaultValue, "doNotBreakBundleParm", doNotBreakBundleParm, "itemBundleFlag", itemBundleFlag);
     var orderQtyElement = document.getElementById("orderQty" + elementIdSuffix);
     var orderQty = orderQtyElement.value, orderQtyBundleCount;
-    console.log("addToCart_onclick", "00001000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "defaultValue", defaultValue, "doNotBreakBundleParm", doNotBreakBundleParm, "itemBundleFlag", itemBundleFlag, "defaultValue==null", (defaultValue == null), "orderQty", orderQty, "maxlength", orderQtyElement.getAttribute("maxlength"), "min", orderQtyElement.getAttribute("min"), "max", orderQtyElement.getAttribute("max"), "maxlength", orderQty.length <= orderQtyElement.getAttribute("maxlength"), "min", orderQty <= orderQtyElement.getAttribute("min"), "max", orderQty <= orderQtyElement.getAttribute("max"));
+    console.log("addToCart_onclick", "00002000", "itemId", itemId, "elementIdSuffix", elementIdSuffix, "defaultValue", defaultValue, "doNotBreakBundleParm", doNotBreakBundleParm, "itemBundleFlag", itemBundleFlag, "defaultValue==null", (defaultValue == null), "orderQty", orderQty, "maxlength", orderQtyElement.getAttribute("maxlength"), "min", orderQtyElement.getAttribute("min"), "max", orderQtyElement.getAttribute("max"), "maxlength", orderQty.length <= orderQtyElement.getAttribute("maxlength"), "min", orderQty <= orderQtyElement.getAttribute("min"), "max", orderQty <= orderQtyElement.getAttribute("max"));
     var returnValue = true, errorMessage = "";
     try {
         if ((/^\d+$/.test(itemId))) {//itemId is a number
@@ -85,6 +86,7 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
             returnValue = false;
         }
         if (returnValue) {
+            console.log("Kadavul jsonPostData", jsonPostData);
             document.getElementById("divErrorMessage").innerHTML = "";
             document.getElementById("spnMessageError" + elementIdSuffix).style.display = "none";
             document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = "";
