@@ -16,26 +16,26 @@
         text-decoration: underline;
     }
 </style>
-<table class="table table-responsive" style="height: 450px; margin-left: auto; margin-right: auto; width: 90%;">
+<table style="margin-left: auto; margin-right: auto; padding: 5px; table-layout: auto; width: auto;">
     <tr>
         <th class="text-center" colspan="9" style="color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Order(s) List</th>
     </tr>
     <tr>
-        <th>
+        <th style="padding: 5px;">
             #
         </th>
-        <th>
+        <th style="padding: 5px;">
             Id
         </th>
-        <th>
+        <th style="padding: 5px;">
         </th>
-        <th>
+        <th style="padding: 5px;">
             Created For
         </th>
-        <th>
+        <th style="padding: 5px;">
             Created Date Time
         </th>
-        <th>
+        <th style="padding: 5px;">
         </th>
     </tr>
     @{
@@ -44,89 +44,88 @@
         while (i < Model.OrderListDataModels.Count)
         {
             orderListDataModel1 = Model.OrderListDataModels[i];
-        <tr>
-            <td class="text-right">
-                @(++index).
-            </td>
-            <td class="text-right">
-                @orderListDataModel1.OrderHeaderId
-            </td>
-            <td>
-                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderEdit_onclick(@orderListDataModel1.OrderHeaderId);">Edit</a>
-            </td>
-            <td class="text-left">
-                @orderListDataModel1.CreatedForEmailAddress
-                <br />
-                @orderListDataModel1.CreatedForFirstName
-                <br />
-                @orderListDataModel1.CreatedForLastName
-            </td>
-            <td class="text-center">
-                @orderListDataModel1.OrderDateTime
-            </td>
-            <td class="text-left">
-                <table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 100%;">
-                    <tr>
-                        <th></th>
-                        <th>
-                            Type
-                        </th>
-                        <th>
-                            Order Amt
-                        </th>
-                        <th>
-                            Tax Amt
-                        </th>
-                        <th>
-                            S&H
-                        </th>
-                        <th>
-                            Inv Amt
-                        </th>
-                        <th>
-                            Paid
-                        </th>
-                        <th>
-                            Balance
-                        </th>
-                        <th>
-                            Status
-                        </th>
-                    </tr>
-                    @while (i < Model.OrderListDataModels.Count && orderListDataModel1.OrderHeaderId == Model.OrderListDataModels[i].OrderHeaderId)
-                    {
-                        orderListDataModel1 = Model.OrderListDataModels[i];
+            <tr>
+                <td class="text-right" style="padding: 5px;">
+                    @(++index).
+                </td>
+                <td class="text-right" style="padding: 5px;">
+                    @orderListDataModel1.OrderHeaderId
+                </td>
+                <td style="padding: 5px;">
+                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderEdit_onclick(@orderListDataModel1.OrderHeaderId);">Edit</a>
+                </td>
+                <td class="text-left" style="padding: 5px;">
+                    @orderListDataModel1.CreatedForEmailAddress
+                    <br />
+                    @orderListDataModel1.CreatedForFirstName
+                    <br />
+                    @orderListDataModel1.CreatedForLastName
+                </td>
+                <td class="text-center" style="padding: 5px;">
+                    @orderListDataModel1.OrderDateTime
+                </td>
+                <td class="text-left" style="padding: 5px;">
+                    <table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 100%;">
                         <tr>
-                            <td class="text-left">
-                                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderView_onclick(@orderListDataModel1.OrderHeaderId, '@Convert.ToInt64(orderListDataModel1.InvoiceTypeId)')">@orderListDataModel1.InvoiceTypeId</a>
-                            </td>
-                            <td class="text-right">
-                                @orderListDataModel1.TotalOrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                            </td>
-                            <td class="text-right">
-                                @orderListDataModel1.TotalTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                            </td>
-                            <td class="text-right">
-                                @orderListDataModel1.ShippingAndHandlingCharges.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                            </td>
-                            <td class="text-right">
-                                @orderListDataModel1.TotalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                            </td>
-                            <td class="text-right">
-                                @orderListDataModel1.TotalAmountPaid.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                            </td>
-                            <td class="text-right">
-                                @orderListDataModel1.BalanceDue.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                            </td>
-                            <td class="text-left">
-                                @orderListDataModel1.OrderStatusId
-                            </td>
+                            <th style="padding: 5px;">
+                                Type
+                            </th>
+                            <th style="padding: 5px;">
+                                Order Amt
+                            </th>
+                            <th style="padding: 5px;">
+                                Tax Amt
+                            </th>
+                            <th style="padding: 5px;">
+                                S&H
+                            </th>
+                            <th style="padding: 5px;">
+                                Inv Amt
+                            </th>
+                            <th style="padding: 5px;">
+                                Paid
+                            </th>
+                            <th style="padding: 5px;">
+                                Balance
+                            </th>
+                            <th style="padding: 5px;">
+                                Status
+                            </th>
                         </tr>
-                        i++;
-                    }
-                </table>
-            </td>
-        </tr>
+                        @while (i < Model.OrderListDataModels.Count && orderListDataModel1.OrderHeaderId == Model.OrderListDataModels[i].OrderHeaderId)
+                        {
+                            orderListDataModel1 = Model.OrderListDataModels[i];
+                            <tr>
+                                <td class="text-left" style="padding: 5px;">
+                                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderView_onclick(@orderListDataModel1.OrderHeaderId, '@Convert.ToInt64(orderListDataModel1.InvoiceTypeId)')">@orderListDataModel1.InvoiceTypeId</a>
+                                </td>
+                                <td class="text-right" style="padding: 5px;">
+                                    @orderListDataModel1.TotalOrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-right" style="padding: 5px;">
+                                    @orderListDataModel1.TotalTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-right" style="padding: 5px;">
+                                    @orderListDataModel1.ShippingAndHandlingCharges.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-right" style="padding: 5px;">
+                                    @orderListDataModel1.TotalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-right" style="padding: 5px;">
+                                    @orderListDataModel1.TotalAmountPaid.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-right" style="padding: 5px;">
+                                    @orderListDataModel1.BalanceDue.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+                                </td>
+                                <td class="text-left" style="padding: 5px;">
+                                    @orderListDataModel1.OrderStatusId
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </table>
+                </td>
+            </tr>
         }
     }
 </table>

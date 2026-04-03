@@ -1,0 +1,91 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserRequestModel
+<style>
+    .box {
+        flex: 1;
+    }
+
+    .box2 {
+        display: block;
+    }
+
+    .container {
+        /*this is your main container that holds the two columns*/
+        display: flex;
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .container__col-1 {
+        /*this is your first column set to 50% width of the parent container*/
+        width: 45%;
+    }
+
+    .container__col-2 {
+        /*this is your second column set to 50% width of the parent container*/
+        padding-left: 27px;
+        width: 55%;
+    }
+
+    @@media(max-width:600px) {
+
+        .box {
+        }
+
+        .box2 {
+            display: none;
+        }
+
+        .container {
+            flex-direction: column;
+        }
+        /*now your first column will take the full width of the parent*/
+        /*container which will push the second column below it*/
+        .container__col-1 {
+            width: 100%;
+        }
+
+        .container__col-2 {
+            padding-left: 0px;
+            width: 100%;
+        }
+    }
+</style>
+<div class="container">
+    <div class="container__col-1">
+        <form id="formRegisterUserRequest">
+            @Html.Partial("_RegisterUserRequestData", Model)
+        </form>
+        <button class="loginRegisterbtn" id="oTPRequestSave" onclick="javascript: return registerUserOTPRequestSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 81%;" type="button">get&nbsp;&nbsp;otp</button>
+    </div>
+    <div class="container__col-2">
+        <div class="box2">
+            <h3>&nbsp;</h3>
+        </div>
+        <div class="box">
+            <ul style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; padding-left: 18px;">
+                <li>
+                    You will receive your OTP in your WhatsApp
+                </li>
+                <li>
+                    Select the country of you telephone#
+                </li>
+                <li>
+                    Enter your telephone number
+                </li>
+                <li>
+                    Enter captcha answer
+                </li>
+                <li>
+                    Click "Get OTP" button
+                </li>
+                <li style="list-style: none;">
+                    <br />
+                </li>
+                <li style="color: #ff0000;">
+                    If this is your first time - please register to continue
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

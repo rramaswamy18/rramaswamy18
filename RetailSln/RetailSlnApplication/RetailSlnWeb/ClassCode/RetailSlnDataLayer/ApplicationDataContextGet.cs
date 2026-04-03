@@ -3,6 +3,7 @@ using ArchitectureLibraryUtility;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -196,6 +197,89 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        public static ShoppingCartWIPHdrModel ShoppingCartWIPHdrGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                string sqlStmt = "";
+                #region
+                sqlStmt += "        SELECT *" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.ShoppingCartWIPHdr" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ShoppingCartWIP" + Environment.NewLine;
+                sqlStmt += "            ON ShoppingCartWIPHdr.ShoppingCartWIPHdrId = ShoppingCartWIP.ShoppingCartWIPHdrId" + Environment.NewLine;
+                sqlStmt += "         WHERE ShoppingCartWIPHdr.CreatedForPersonId = @PersonId" + Environment.NewLine;
+                sqlStmt += "      ORDER BY ShoppingCartWIP.ShoppingCartWIPId" + Environment.NewLine;
+                #endregion
+                #region
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlCommand.Parameters.Add("@PersonId", SqlDbType.BigInt);
+                sqlCommand.Parameters["@PersonId"].Value = personId;
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                #endregion
+                ShoppingCartWIPHdrModel shoppingCartWIPHdrModel = null;
+                #region
+                bool sqlDataReaderRead = sqlDataReader.Read();
+                while (sqlDataReaderRead)
+                {
+                    shoppingCartWIPHdrModel = new ShoppingCartWIPHdrModel
+                    {
+                        ShoppingCartWIPHdrId = long.Parse(sqlDataReader["ShoppingCartWIPHdrId"].ToString()),
+                        ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                        CorpAcctLocationId = long.Parse(sqlDataReader["CorpAcctLocationId"].ToString()),
+                        CreatedForPersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                        PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                        SeqNum = 0,
+                        ShoppingCartWIPModels = new List<ShoppingCartWIPModel>(),
+                    };
+                    while (sqlDataReaderRead && shoppingCartWIPHdrModel.ShoppingCartWIPHdrId == long.Parse(sqlDataReader["ShoppingCartWIPHdrId"].ToString()))
+                    {
+                        shoppingCartWIPHdrModel.ShoppingCartWIPModels.Add
+                        (
+                            new ShoppingCartWIPModel
+                            {
+                                ShoppingCartWIPId = long.Parse(sqlDataReader["ShoppingCartWIPId"].ToString()),
+                                ClientId = long.Parse(sqlDataReader["ClientId"].ToString()),
+                                DoNotBreakBundle = bool.Parse(sqlDataReader["DoNotBreakBundle"].ToString()),
+                                ItemId = long.Parse(sqlDataReader["ItemId"].ToString()),
+                                ItemSeqNum = float.Parse(sqlDataReader["ItemSeqNum"].ToString()),
+                                OrderComments = sqlDataReader["OrderComments"].ToString(),
+                                OrderQty = long.Parse(sqlDataReader["OrderQty"].ToString()),
+                                ParentItemId = long.Parse(sqlDataReader["ParentItemId"].ToString()),
+                                ShoppingCartWIPHdrId = long.Parse(sqlDataReader["ShoppingCartWIPHdrId"].ToString()),
+                            }
+                        );
+                        sqlDataReaderRead = sqlDataReader.Read();
+                    }
+                }
+                sqlDataReader.Close();
+                if (shoppingCartWIPHdrModel == null)
+                {
+                    shoppingCartWIPHdrModel = new ShoppingCartWIPHdrModel
+                    {
+                        ShoppingCartWIPModels = new List<ShoppingCartWIPModel>(),
+                    };
+                }
+                else
+                {
+                    if (shoppingCartWIPHdrModel.ShoppingCartWIPModels == null)
+                    {
+                        shoppingCartWIPHdrModel.ShoppingCartWIPModels = new List<ShoppingCartWIPModel>();
+                    }
+                }
+                #endregion
+
+                return shoppingCartWIPHdrModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+        }
+        #region
         //public static long? OrderHeaderWIPMaxIdGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         //{
         //    string methodName = MethodBase.GetCurrentMethod().Name;
@@ -328,62 +412,63 @@ namespace RetailSlnDataLayer
         //    }
         //    return orderHeaderWIPModel;
         //}
-        public static List<SearchMetaDataModel> SearchMetaDatasGet(string searchKeywordText, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                #region
-                string sqlStmt = "";
-                sqlStmt += "        SELECT DISTINCT SearchMetaData.EntityTypeNameDesc, SearchMetaData.EntityId, SearchMetaData.SeqNum" + Environment.NewLine;
-                sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
-                sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
-                sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
-                sqlStmt += "UNION" + Environment.NewLine;
-                sqlStmt += "        SELECT DISTINCT 'ITEMMASTER' AS EntityTypeNameDesc, ItemMaster.ItemMasterId, ItemMaster.ItemMasterId AS SeqNum" + Environment.NewLine;
-                sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
-                sqlStmt += "         WHERE ItemMasterDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
-                sqlStmt += "UNION" + Environment.NewLine;
-                sqlStmt += "        SELECT DISTINCT 'CATEGORY' AS EntityTypeNameDesc, Category.CategoryId, Category.CategoryId AS SeqNum" + Environment.NewLine;
-                sqlStmt += "          FROM RetailSlnSch.Category" + Environment.NewLine;
-                sqlStmt += "         WHERE CategoryDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
-                sqlStmt += "      ORDER BY" + Environment.NewLine;
-                sqlStmt += "               EntityTypeNameDesc" + Environment.NewLine;
-                sqlStmt += "              ,SeqNum" + Environment.NewLine;
-                #endregion
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                List<SearchMetaDataModel> searchMetaDataModels = new List<SearchMetaDataModel>();
-                SearchMetaDataModel searchMetaDataModel;
-                while (sqlDataReader.Read())
-                {
-                    searchMetaDataModels.Add
-                    (
-                        searchMetaDataModel = new SearchMetaDataModel
-                        {
-                            //SearchMetaDataModelId = long.Parse(sqlDataReader["SearchMetaDataId"].ToString()),
-                            //SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
-                            EntityTypeNameDesc = sqlDataReader["EntityTypeNameDesc"].ToString(),
-                            EntityId = long.Parse(sqlDataReader["EntityId"].ToString()),
-                            SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
-                            SearchKeywordModel = new SearchKeywordModel
-                            {
-                                //SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
-                                //SearchKeywordText = sqlDataReader["SearchKeywordText"].ToString(),
-                            },
-                        }
-                    );
-                }
-                return searchMetaDataModels;
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static List<SearchMetaDataModel> SearchMetaDatasGet(string searchKeywordText, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        #region
+        //        string sqlStmt = "";
+        //        sqlStmt += "        SELECT DISTINCT SearchMetaData.EntityTypeNameDesc, SearchMetaData.EntityId, SearchMetaData.SeqNum" + Environment.NewLine;
+        //        sqlStmt += "          FROM RetailSlnSch.SearchKeyword" + Environment.NewLine;
+        //        sqlStmt += "    INNER JOIN RetailSlnSch.SearchMetaData" + Environment.NewLine;
+        //        sqlStmt += "            ON SearchKeyword.SearchKeywordId = SearchMetaData.SearchKeywordId" + Environment.NewLine;
+        //        sqlStmt += "           AND SearchKeyword.SearchKeywordText LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+        //        sqlStmt += "UNION" + Environment.NewLine;
+        //        sqlStmt += "        SELECT DISTINCT 'ITEMMASTER' AS EntityTypeNameDesc, ItemMaster.ItemMasterId, ItemMaster.ItemMasterId AS SeqNum" + Environment.NewLine;
+        //        sqlStmt += "          FROM RetailSlnSch.ItemMaster" + Environment.NewLine;
+        //        sqlStmt += "         WHERE ItemMasterDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+        //        sqlStmt += "UNION" + Environment.NewLine;
+        //        sqlStmt += "        SELECT DISTINCT 'CATEGORY' AS EntityTypeNameDesc, Category.CategoryId, Category.CategoryId AS SeqNum" + Environment.NewLine;
+        //        sqlStmt += "          FROM RetailSlnSch.Category" + Environment.NewLine;
+        //        sqlStmt += "         WHERE CategoryDesc LIKE '%" + searchKeywordText + "%'" + Environment.NewLine;
+        //        sqlStmt += "      ORDER BY" + Environment.NewLine;
+        //        sqlStmt += "               EntityTypeNameDesc" + Environment.NewLine;
+        //        sqlStmt += "              ,SeqNum" + Environment.NewLine;
+        //        #endregion
+        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+        //        List<SearchMetaDataModel> searchMetaDataModels = new List<SearchMetaDataModel>();
+        //        SearchMetaDataModel searchMetaDataModel;
+        //        while (sqlDataReader.Read())
+        //        {
+        //            searchMetaDataModels.Add
+        //            (
+        //                searchMetaDataModel = new SearchMetaDataModel
+        //                {
+        //                    //SearchMetaDataModelId = long.Parse(sqlDataReader["SearchMetaDataId"].ToString()),
+        //                    //SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+        //                    EntityTypeNameDesc = sqlDataReader["EntityTypeNameDesc"].ToString(),
+        //                    EntityId = long.Parse(sqlDataReader["EntityId"].ToString()),
+        //                    SeqNum = float.Parse(sqlDataReader["SeqNum"].ToString()),
+        //                    SearchKeywordModel = new SearchKeywordModel
+        //                    {
+        //                        //SearchKeywordId = long.Parse(sqlDataReader["SearchKeywordId"].ToString()),
+        //                        //SearchKeywordText = sqlDataReader["SearchKeywordText"].ToString(),
+        //                    },
+        //                }
+        //            );
+        //        }
+        //        return searchMetaDataModels;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        #endregion
     }
 }

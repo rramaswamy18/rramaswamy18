@@ -1,7 +1,66 @@
 ﻿@using RetailSlnModels
 @model ItemCatalogFileModel
-<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; width: 81%;">
-    <tr>
+<style>
+    .catalogStyle {
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0px;
+        width: 81%;
+    }
+
+    .itemImageStyle {
+        height: 180px;
+        width: 180px;
+    }
+
+    .itemTableStyle {
+        vertical-align: top;
+        width: 100%;
+    }
+
+    .itemBundleTableStyle {
+        margin-top: 0px;
+        padding-top: 0px;
+        vertical-align: top;
+        width: 100%;
+    }
+
+    @@media screen and (max-width: 600px) {
+        .catalogStyle {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 600px;
+            padding: 0px;
+            width: 99%;
+        }
+
+        .itemImageStyle {
+            height: 81px;
+            width: 54px;
+        }
+
+        .itemTableStyle {
+            vertical-align: top;
+            width: 100%;
+        }
+
+        .itemBundleTableStyle {
+            margin-top: 0px;
+            padding-top: 0px;
+            vertical-align: top;
+            width: 100%;
+        }
+    }
+
+    .theadthStyle {
+        position: sticky;
+        top: 0; /* Sticks the header to the top of the container */
+        background-color: #d0d0d0; /*#f1f1f1;*/ /* Add a background color so content doesn't show through */
+        z-index: 1; /* Ensures the header is above the table body content */
+    }
+</style>
+<table class="catalogStyle">
+    <tr style="background-color: #d0d0d0;">
         <th class="dataStyle1Right">#</th>
         <th class="dataStyle1Center">Item#</th>
         <th></th>

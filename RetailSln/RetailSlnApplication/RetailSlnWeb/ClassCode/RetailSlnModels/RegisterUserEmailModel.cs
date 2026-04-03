@@ -8,7 +8,7 @@ namespace RetailSlnModels
 {
     public class RegisterUserEmailModel
     {
-        public RegisterUserModel RegisterUserModel { set; get; }
+        public RegisterUserResponseModel RegisterUserResponseModel { set; get; }
         public CouponListModel CouponListModel { set; get; }
         public ReferralListModel ReferralListModel { set; get; }
     }

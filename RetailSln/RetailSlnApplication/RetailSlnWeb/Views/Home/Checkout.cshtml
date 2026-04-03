@@ -2,7 +2,7 @@
 @model CheckoutModel
 @{
     ViewBag.Title = "Checkout";
-    Layout = "~/Views/Shared/_Layout2.cshtml";
+    Layout = "~/Views/Shared/_Layout3.cshtml";
     PaymentInfoModel paymentInfoModel = (PaymentInfoModel)Session["PaymentInfo"];
     if (paymentInfoModel != null && paymentInfoModel.ShoppingCartModel != null)
     {

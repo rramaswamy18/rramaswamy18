@@ -1,55 +1,270 @@
-﻿@using RetailSlnModels
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
 @model ShoppingCartModel
 @{
     var shoppingCartAvailable = Model != null && Model.ShoppingCartSummaryModel != null && Model.ShoppingCartSummaryModel.TotalOrderAmount > 0 && Model.ShoppingCartItemModels != null && Model.ShoppingCartItemModels.Count > 0;
+    int itemIndex = 0, itemBundleIndex;
+    ShoppingCartBundleModel shoppingCartBundleModel = new ShoppingCartBundleModel { Checkout = Model.Checkout };
 }
-<div class="col-md-12" style="overflow-x: auto;">
-    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
-        <div>
-            <a href="javascript: void(0);" id="hrfBackToTop" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
-                Back to top
-            </a>
-        </div>
-        @if (shoppingCartAvailable)
+<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; table-layout: auto; width: auto;">
+    <colgroup>
+        @if (!Model.Checkout)
         {
-            <div>
-                <a href="@Url.Action("Checkout", "Home")" id="hrfBackToTop" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
-                    Checkout
-                </a>
-            </div>
+            <col />
         }
-    </div>
+        <col />
+        <col />
+        <col style="width: 72%;" />
+        <col />
+        <col />
+        <col />
+    </colgroup>
+    @if (!Model.Checkout)
+    {
+        <tr>
+            <td colspan="3" style="text-align: left;">
+                <a href="javascript: void(0);" id="hrfBackToTop" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                    Top&#11014;@*&#129145;*@
+                </a>
+            </td>
+            <td colspan="4" style="text-align: right;">
+                @if (shoppingCartAvailable)
+                {
+                    <a href="@Url.Action("Checkout", "Home")" id="hrfBackToTop" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                        Checkout
+                    </a>
+                }
+            </td>
+        </tr>
+    }
     @if (!shoppingCartAvailable)
     {
-        <h3 style="color: #ff9900; font-size: 27px; font-weight: bold;">
-            Your&nbsp;shopping&nbsp;cart&nbsp;is&nbsp;empty
-        </h3>
+        <tr>
+            <td colspan="7">
+                <h3 style="color: #ff9900; font-size: 27px; font-weight: bold;">
+                    Your&nbsp;shopping&nbsp;cart&nbsp;is&nbsp;empty
+                </h3>
+            </td>
+        </tr>
     }
     else
     {
-        <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
-            @Html.Partial("_ShoppingCartData1", Model)
-        </div>
-        <br style="clear: both;" />
-        <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
-            @Html.Partial("_ShoppingCartSummary1", Model)
-        </div>
-    }
-    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: auto; margin-right: auto; width: 90%;">
-        @if (shoppingCartAvailable)
+        <tr>
+            @if (!Model.Checkout)
+            {
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+            }
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: center; vertical-align: top;">#</th>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: center; vertical-align: top;">Item#</th>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">Item Desc</th>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Rate</th>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Qty</th>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Amount</th>
+        </tr>
+        foreach (var shoppingCartItem in Model.ShoppingCartItemModels)
         {
-            <div>
-                <a href="javascript: void(0);" id="hrfBackToTop2" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
-                    Back to top
-                </a>
-            </div>
-            <div>
-                <a href="@Url.Action("Checkout", "Home")" id="hrfBackToTop" style="font-size: 24px; font-weight: bold; text-decoration: underline;" tabindex="-1">
-                    Checkout
-                </a>
-            </div>
+            itemIndex++;
+            <tr>
+                @if (!Model.Checkout)
+                {
+                    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;"><a href="javascript: void(0);" onclick="javascript: return removeFromCart_onclick(@(itemIndex - 1));"><img alt="" src="~/Images/Delete.jpg" title="Click to remove the item from shopping cart #@(itemIndex - 1)" /></a></td>
+                }
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(itemIndex + ".")</th>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">
+                    @shoppingCartItem.ItemId
+                </td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                    @(shoppingCartItem.ItemMasterDesc0 + " " + shoppingCartItem.ItemMasterDesc1)
+                    @if (!string.IsNullOrWhiteSpace(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3))
+                    {
+                        <br style="clear: both;" />
+                        <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3)</span>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(shoppingCartItem.ItemItemSpecsForDisplay))
+                    {
+                        <br style="clear: both;" />
+                        <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItem.ItemItemSpecsForDisplay</span>
+                    }
+                    <br />
+                    HSN :&nbsp;@shoppingCartItem.HSNCode&nbsp;Prod Code :&nbsp;@shoppingCartItem.ProductCode
+                    <br style="clear: both;" />
+                    MSRP&nbsp;@shoppingCartItem.ItemRateBeforeDiscountFormatted&nbsp;Disc&nbsp;@shoppingCartItem.ItemDiscountPercentFormatted&nbsp;
+                    @if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
+                    {
+                        if (shoppingCartItem.DoNotBreakBundle)
+                        {
+                            <a href="javascript: void(0);" id="shoppinCartBundleViewEditLink@(itemIndex)" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(itemIndex)').scrollIntoView();">View items in bundle #</a>
+                        }
+                        else
+                        {
+                            <a href="javascript: void(0);" id="shoppinCartBundleViewEditLink@(itemIndex)" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(itemIndex)').scrollIntoView();">Edit quantity for items in bundle #</a>
+                        }
+                    }
+                    <br style="clear: both;" />
+                    @if (Model.Checkout)
+                    {
+                        @Html.DisplayFor(m => shoppingCartItem.OrderComments)
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => shoppingCartItem.OrderComments, new { id = "orderComments" + (itemIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onchange = "javascript: return orderComments_onchange(" + (itemIndex - 1) + ", -1);" })
+                    }
+                    @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
+                    {
+                        @shoppingCartItemSummary.ItemShortDesc
+                        <span>&nbsp;</span>
+                        @shoppingCartItemSummary.ItemRateFormatted
+                        <span>&nbsp;</span>
+                        @shoppingCartItemSummary.OrderAmountFormatted
+                        <span>&nbsp;</span>
+                    }
+                </td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
+                    @shoppingCartItem.ItemRateFormatted
+                </td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                    @if (Model.Checkout)
+                    {
+                        @shoppingCartItem.OrderQty
+                    }
+                    else
+                    {
+                        @*
+                            if (shoppingCartItem.DoNotBreakBundle)
+                            {
+                                <input class="form-control" id="shoppingCartOrderQty@(itemIndex - 1)" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; font-size: 12px; font-weight: bold; width: 90%;" title="Change quantity and click add to cart" type="number" value="@shoppingCartItem.OrderQty" />
+                                <a href="javascript: void(0);" onclick="javascript: return shoppingCartOrderQty_oninput(@(itemIndex - 1), -1);"><img alt="Change quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Change quantity and click add to cart" /></a>
+                            }
+                            else
+                            {
+                                @shoppingCartItem.OrderQty
+                            }
+                        *@
+                        @shoppingCartItem.OrderQty
+                    }
+                </td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                    @shoppingCartItem.OrderAmountFormatted
+                </td>
+            </tr>
         }
-    </div>
-</div>
+        <tr>
+            @if (!Model.Checkout)
+            {
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+            }
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+            <th colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">Desc</th>
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Amount</th>
+        </tr>
+        itemIndex = 0;
+        foreach (var shoppingCartItemModelSummary in Model.ShoppingCartItemModelsSummary)
+        {
+            if (shoppingCartItemModelSummary.OrderDetailTypeId != OrderDetailTypeEnum.DoNotShow)
+            {
+                itemIndex++;
+                <tr>
+                    @if (!Model.Checkout)
+                    {
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+                    }
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: center; vertical-align: top;">@(itemIndex + ".")</th>
+                    <th colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: left; vertical-align: top;">
+                        @shoppingCartItemModelSummary.ItemShortDesc
+                        @if (shoppingCartItemModelSummary.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount)
+                        {
+                            <br />
+                            @("Total Weight : " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRoundedUnit)
+                        }
+                    </th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: right; vertical-align: top;">
+                        @shoppingCartItemModelSummary.OrderAmountFormatted
+                    </th>
+                </tr>
+            }
+        }
+        itemIndex = 0;
+        foreach (var shoppingCartItem in Model.ShoppingCartItemModels)
+        {
+            itemIndex++;
+            itemBundleIndex = 0;
+            if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
+            {
+                <tr id="shoppinCartBundleViewEdit@(itemIndex)">
+                    @if (!Model.Checkout)
+                    {
+                        <td></td>
+                    }
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(itemIndex + ".")</th>
+                    <td colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                        @(shoppingCartItem.ItemMasterDesc0 + " " + shoppingCartItem.ItemMasterDesc1)
+                        @if (!string.IsNullOrWhiteSpace(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3))
+                        {
+                            <br style="clear: both;" />
+                            <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3)</span>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(shoppingCartItem.ItemItemSpecsForDisplay))
+                        {
+                            <br style="clear: both;" />
+                            <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItem.ItemItemSpecsForDisplay</span>
+                        }
+                    </td>
+                    <td colspan="3" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                        <a href="javascript: void(0);" id="shoppinCartBundleViewEdit@(itemIndex)" onclick="javascript: return document.getElementById('shoppinCartBundleViewEditLink@(itemIndex)').scrollIntoView();" style="font-size: 15px; font-weight: bold; text-decoration: underline;" tabindex="-1">
+                            Back to...&#11014;@*&#129145;*@
+                        </a>
+                    </td>
+                </tr>
+                foreach (var shoppingCartItemBundleModel in shoppingCartItem.ShoppingCartItemBundleModels)
+                {
+                    itemBundleIndex++;
+                    <tr>
+                        @if (!Model.Checkout)
+                        {
+                            <td></td>
+                        }
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(itemIndex + "." + itemBundleIndex + ".")</th>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">
+                            @shoppingCartItemBundleModel.ItemId
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                            @(shoppingCartItemBundleModel.ItemMasterDesc0 + " " + shoppingCartItemBundleModel.ItemMasterDesc1)
+                            @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemMasterDesc2 + " " + shoppingCartItemBundleModel.ItemMasterDesc3))
+                            {
+                                <br style="clear: both;" />
+                                <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3)</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(shoppingCartItemBundleModel.ItemItemSpecsForDisplay))
+                            {
+                                <br style="clear: both;" />
+                                <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItemBundleModel.ItemItemSpecsForDisplay</span>
+                            }
+                            <br style="clear: both;" />
+                            @("HSN : " + shoppingCartItemBundleModel.HSNCode)&nbsp;@("Prod Code : " + shoppingCartItemBundleModel.ProductCode)
+                            <br style="clear: both;" />
+                            @if (Model.Checkout)
+                            {
+                                @Html.DisplayFor(m => shoppingCartItemBundleModel.OrderComments)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => shoppingCartItemBundleModel.OrderComments, new { id = "orderComments" + (itemIndex - 1) + "_" + (itemBundleIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onblur = "javascript: return orderComments_onchange(" + (itemIndex - 1) + ", " + (itemBundleIndex - 1) + ");", onchange = "javascript: return orderComments_onchange(" + (itemIndex - 1) + ", " + (itemBundleIndex - 1) + ");" })
+                            }
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
+                            @shoppingCartItemBundleModel.ItemRateFormatted
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                            @shoppingCartItemBundleModel.OrderQty
+                        </td>
+                        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
+                            @shoppingCartItemBundleModel.OrderAmountFormatted
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    }
+</table>
 <span id="shoppingCartItemsCountWork" style="display: none;">@Model.ShoppingCartItemModels.Count</span>
 <span id="shoppingCartTotalAmountWork" style="display: none;">@Model.ShoppingCartSummaryModel.TotalOrderAmountFormatted</span>

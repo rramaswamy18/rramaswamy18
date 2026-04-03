@@ -6,9 +6,9 @@ using System.Web;
 
 namespace RetailSlnModels
 {
-    public class SearchKeywordListModel
+    public class SearchMetaDataListModel
     {
-        public List<SearchKeywordModel> SearchKeywordModels { set; get; }
+        public List<SearchMetaDataModel> SearchMetaDataModels { set; get; }
         public PaginationModel PaginationModel { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

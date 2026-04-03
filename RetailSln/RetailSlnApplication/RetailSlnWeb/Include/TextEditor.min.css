@@ -1,11 +1,11 @@
 /*Sriramajayam*/
-/*TextEditor.min.css*/
+/*TextEditor.css*/
 /* general styles */
 /*html, body {
     padding: 30px 100px;
     background: #E5E5E5
 }
-*/
+
 * {
     font-family: Verdana, Arial, sans-serif;
     color: #000
@@ -16,6 +16,7 @@ h1 {
     color: #99CC00;
     margin: 15px 0
 }
+*/
 
 .navigation {
     margin: 10px 0 20px;
@@ -30,6 +31,7 @@ h1 {
             margin-right: 4px;
         }
 
+/*
 h2 {
     margin: 15px 0 25px;
     color: #608000;
@@ -40,6 +42,7 @@ h2 {
 a:link, a:visited {
     text-decoration: underline
 }
+*/
 
 .testbutton {
     margin-bottom: 30px;

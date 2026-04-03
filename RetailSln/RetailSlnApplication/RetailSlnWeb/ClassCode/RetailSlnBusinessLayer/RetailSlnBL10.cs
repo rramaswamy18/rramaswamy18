@@ -151,7 +151,7 @@ namespace RetailSlnBusinessLayer
                     CommissionPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCommission")),
                     CouponListId = couponListModel.CouponListId.Value,
                     DiscountPercent = couponListModel.DiscountPercent,
-                    PersonId = registerUserEmailModel.RegisterUserModel.PersonId,
+                    PersonId = registerUserEmailModel.RegisterUserResponseModel.PersonId,
                 };
                 registerUserEmailModel.ReferralListModel = referralListModel;
                 ApplicationDataContext.ReferralListAdd(referralListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);

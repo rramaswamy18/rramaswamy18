@@ -326,6 +326,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        #region Commented Out Code
         //public static void OrderDetailWIPAdd(OrderDetailWIPModel orderDetailWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         //{
         //    string methodName = MethodBase.GetCurrentMethod().Name;
@@ -392,43 +393,44 @@ namespace RetailSlnDataLayer
         //        throw;
         //    }
         //}
-        public static void OrderDetailWIPUpd(long orderHeaderWIPId, long itemId, long orderQty, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            try
-            {
-                #region
-                string sqlStmt = "";
-                sqlStmt += "        UPDATE RetailSlnSch.OrderDetailWIP" + Environment.NewLine;
-                sqlStmt += "           SET OrderQty = @OrderQty" + Environment.NewLine;
-                sqlStmt += "              ,UpdUserId = @LoggedInUserId" + Environment.NewLine;
-                sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
-                sqlStmt += "         WHERE OrderHeaderWIPId = @OrderHeaderWIPId" + Environment.NewLine;
-                sqlStmt += "           AND ItemId = @ItemId" + Environment.NewLine;
-                #endregion
-                #region
-                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
-                sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
-                sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
-                sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
-                #endregion
-                #region
-                sqlCommand.Parameters["@OrderQty"].Value = orderQty;
-                sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
-                sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderHeaderWIPId;
-                sqlCommand.Parameters["@ItemId"].Value = itemId;
-                #endregion
-                sqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-        }
+        //public static void OrderDetailWIPUpd(long orderHeaderWIPId, long itemId, long orderQty, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        #region
+        //        string sqlStmt = "";
+        //        sqlStmt += "        UPDATE RetailSlnSch.OrderDetailWIP" + Environment.NewLine;
+        //        sqlStmt += "           SET OrderQty = @OrderQty" + Environment.NewLine;
+        //        sqlStmt += "              ,UpdUserId = @LoggedInUserId" + Environment.NewLine;
+        //        sqlStmt += "              ,UpdDateTime = GETDATE()" + Environment.NewLine;
+        //        sqlStmt += "         WHERE OrderHeaderWIPId = @OrderHeaderWIPId" + Environment.NewLine;
+        //        sqlStmt += "           AND ItemId = @ItemId" + Environment.NewLine;
+        //        #endregion
+        //        #region
+        //        SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+        //        sqlCommand.Parameters.Add("@OrderQty", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
+        //        sqlCommand.Parameters.Add("@OrderHeaderWIPId", SqlDbType.BigInt);
+        //        sqlCommand.Parameters.Add("@ItemId", SqlDbType.BigInt);
+        //        #endregion
+        //        #region
+        //        sqlCommand.Parameters["@OrderQty"].Value = orderQty;
+        //        sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
+        //        sqlCommand.Parameters["@OrderHeaderWIPId"].Value = orderHeaderWIPId;
+        //        sqlCommand.Parameters["@ItemId"].Value = itemId;
+        //        #endregion
+        //        sqlCommand.ExecuteNonQuery();
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //}
+        #endregion
         public static void OrderHeaderAdd(OrderHeader orderHeader, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -571,6 +573,7 @@ namespace RetailSlnDataLayer
                 throw;
             }
         }
+        #region Commented out code
         //public static void OrderHeaderWIPAdd(OrderHeaderWIPModel orderHeaderWIPModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         //{
         //    string methodName = MethodBase.GetCurrentMethod().Name;
@@ -633,6 +636,7 @@ namespace RetailSlnDataLayer
         //        throw;
         //    }
         //}
+        #endregion
         public static void OrderPaymentAdd(PaymentDataModel paymentDataModel, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             string methodName = MethodBase.GetCurrentMethod().Name;

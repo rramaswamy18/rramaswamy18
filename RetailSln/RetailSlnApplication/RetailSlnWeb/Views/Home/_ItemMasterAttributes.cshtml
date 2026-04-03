@@ -2,9 +2,10 @@
 @using RetailSlnEnumerations
 @using RetailSlnModels
 @model ItemMasterAttributesModel
-<table class="table table-condensed table-responsive" style="border-style: none; border-width: 0px; padding: 0px; width: 99%;">
+<table @*class="table table-condensed table-responsive"*@ style="border-style: none; border-width: 0px; padding: 0px; width: 81%;">
     <tr>
         <th class="text-left" style="border-style: none; border-width: 0px; padding-left: 18px; width: 65%;">
+            <span style="color: #000000; font-size: 18px;">@(Model.OrderItem1Model.ItemMasterModel.ItemMasterId + ".")</span>
             <span style="color: #000000; font-size: 18px;">@Model.OrderItem1Model.ItemMasterModel.ItemMasterDesc</span>
             <span style="color: #a54000; font-size: 14px; padding-left: 5px;">@(Model.OrderItem1Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle ? "(Item Bundle)" :  "")</span>
             @if (!string.IsNullOrWhiteSpace(Model.OrderItem1Model.ItemMasterModel.ItemMasterDesc2 + " " + Model.OrderItem1Model.ItemMasterModel.ItemMasterDesc3))

@@ -1,0 +1,193 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@model ItemModel
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    List<CodeDataModel> itemStockStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemStockStatus").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> itemStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemStatus").CodeDataModelsCodeDataNameId;
+}
+<style>
+    #ItemTypeId-error,
+    #ItemStatusId-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<style>
+    .container-with-text {
+        position: relative; /* Set parent to relative positioning */
+        border: 2px solid #ccc;
+        padding: 5px;
+        margin-top: 5px; /* Add margin-top equal to half the text height or more */
+        background-color: #ffffff;
+    }
+
+    .border-text {
+        position: absolute; /* Position the text absolutely */
+        top: -10px; /* Move the text up by half its height to sit on the border */
+        left: 20px; /* Adjust horizontal position as needed */
+        background-color: #ffffff; /* Match the background color to hide the border behind the text */
+        padding: 0 3px; /* Add padding for spacing around the text */
+    }
+</style>
+<style>
+    .box {
+        flex: 1;
+    }
+
+    .box2 {
+        display: block;
+    }
+
+    .savebutton {
+        width: 27%;
+    }
+
+    .containersplit {
+        /*this is your main container that holds the two columns*/
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+        width: 81%;
+    }
+
+    .container__col-1 {
+        /*this is your first column set to 50% width of the parent container*/
+        width: 50%;
+    }
+
+    .container__col-2 {
+        /*this is your second column set to 50% width of the parent container*/
+        padding-left: 27px;
+        width: 50%;
+    }
+
+    @@media(max-width:600px) {
+
+        .box {
+        }
+
+        .box2 {
+            display: none;
+        }
+
+        .containersplit {
+            flex-direction: column;
+        }
+        /*now your first column will take the full width of the parent*/
+        /*container which will push the second column below it*/
+        .container__col-1 {
+            width: 100%;
+        }
+
+        .container__col-2 {
+            padding-left: 0px;
+            width: 100%;
+        }
+
+        .savebutton {
+            width: 45%;
+        }
+    }
+</style>
+<div class="containersplit">
+    <div class="container__col-1">
+        <div class="box">
+            @if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+            {
+                <div class="row validationSummaryMessage">
+                    @Model.ResponseObjectModel.ValidationSummaryMessage
+                </div>
+            }
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="row">
+                    <div class="row">
+                        @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+                    </div>
+                </div>
+            }
+            @if (Model != null && Model.ResponseObjectModel != null)
+            {
+                <div class="row" id="divLoginUserProfResponseObject">
+                    @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+                </div>
+            }
+        </div>
+        <div class="box">
+            @*@Html.LabelFor(m => m.ItemMasterDesc0, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextBoxFor(m => m.ItemMasterDesc0, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc0), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc0, "", new { id = "ItemMasterDesc0-error" }).ToHtmlString()))*@
+        </div>
+        <div class="box">
+            @*@Html.LabelFor(m => m.ItemMasterDesc1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextBoxFor(m => m.ItemMasterDesc1, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc1), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc1, "", new { id = "ItemMasterDesc1-error" }).ToHtmlString()))*@
+        </div>
+        <div class="box">
+            @*@Html.LabelFor(m => m.ItemMasterDesc2, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.ItemMasterDesc2, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc2), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc2, "", new { id = "ItemMasterDesc2-error" }).ToHtmlString()))*@
+        </div>
+        <div class="box">
+            @*@Html.LabelFor(m => m.ItemMasterDesc3, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.ItemMasterDesc3, new { @class = "form-control", maxlength = "512", placeholder = @Html.DisplayNameFor(m => m.ItemMasterDesc3), style = "width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemMasterDesc3, "", new { id = "ItemMasterDesc3-error" }).ToHtmlString()))*@
+        </div>
+        <div class="box">
+            @*@Html.LabelFor(m => m.ImageNameHttpPostedFileBase, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextBoxFor(m => m.ImageNameHttpPostedFileBase, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.ImageNameHttpPostedFileBase), style = "width: 63%;", type = "file" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ImageNameHttpPostedFileBase, "", new { id = "ImageNameHttpPostedFileBase-error" }).ToHtmlString()))*@
+        </div>
+        <div class="box">
+            @*New Image<br style="clear: both;" />
+            <img alt="Preview of item master image to be uploaded" id="itemMasterImagePreview" src="" style="height: 225px; width: 297px;" title="=" Preview of item master image to be uploaded"" />*@
+        </div>
+        <div class="box">
+            @*Existing Image<br />
+            <img alt="Existing item master image" id="" src="~/ClientSpecific/@(clientId + "_" + clientName)/Documents/Images/ItemMaster/@Model.ImageName" style="height: 225px; width: 297px;" />*@
+        </div>
+        @for (int index = 0; index < Model.ItemInfoModels.Count; index++)
+        {
+            <div class="box">
+                @Html.HiddenFor(m => m.ItemInfoModels[index].ItemInfoId)
+                @Model.ItemInfoModels[index].ItemInfoId
+                @Html.TextBoxFor(m => m.ItemInfoModels[index].SeqNum, new { @class = "form-control", placeholder = "#", style = "float: left; font-size: 12px; width: 15%;", type = "number" })
+                <span style="float: left; padding-right: 9px;">&nbsp;</span>
+                @Html.TextBoxFor(m => m.ItemInfoModels[index].ItemMasterInfoLabelText, new { @class = "form-control", placeholder = "Label", style = "float: left; font-size: 12px; width: 81%;" })
+                <br style="clear: both;" />
+                @Html.TextAreaFor(m => m.ItemInfoModels[index].ItemMasterInfoText, new { @class = "jqte-test", placeholder = "Info Text", style = "margin-top: 0px; padding-top: 0px;" })
+                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemInfoModels[index].ItemMasterInfoText, "", new { id = "ItemInfoText-error" }).ToHtmlString()))
+            </div>
+        }
+    </div>
+    <div class="container__col-2">
+        <div class="box">
+            @Html.LabelFor(m => m.ItemStockStatusId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.DropDownListFor(m => m.ItemStockStatusId, new SelectList(itemStockStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.ItemStockStatusId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemStockStatusId, "", new { id = "ItemStockStatusId-error" }).ToHtmlString()))
+        </div>
+        <div class="box">
+            @Html.LabelFor(m => m.ItemStatusId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.DropDownListFor(m => m.ItemStatusId, new SelectList(itemStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", Model.ItemStatusId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 63%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.ItemStatusId, "", new { id = "ItemStatusId-error" }).ToHtmlString()))
+        </div>
+        <div class="box container-with-text" style="width: 63%;">
+            <span class="border-text">Spec(s)</span>
+            @foreach (var itemItemSpecModelList in Model.ItemItemSpecModelsList)
+            {
+                <span>@itemItemSpecModelList.ItemSpecMasterModel.SpecDesc</span>
+                <br />
+            }
+        </div>
+    </div>
+</div>

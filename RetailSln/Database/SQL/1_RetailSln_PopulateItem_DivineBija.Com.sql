@@ -105,11 +105,11 @@ DECLARE @ClientId BIGINT = 3
 --Begin Item
 --
         INSERT RetailSlnSch.Item
-              (ClientId, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
+              (ClientId, ItemStockStatusId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
               ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName
               )
 --Item & Item Bundle
-        SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId, ItemMaster.ItemMasterId
+        SELECT @ClientId AS ClientId, CASE [USA For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemStockStatusId, ItemMaster.ItemMasterId
               ,-1 AS ItemRate, -1 AS ItemRateMSRP
               ,CASE ISNUMERIC([Spec Seq]) WHEN 1 THEN CAST([Spec Seq] AS INT) ELSE 0 END AS ItemSeqNum, Description0 AS ItemShortDesc0
               ,Description1 AS ItemShortDesc1, Description2 AS ItemShortDesc2, Description3 AS ItemShortDesc3, 5 AS ItemStarCount
@@ -126,11 +126,11 @@ DECLARE @ClientId BIGINT = 3
       ORDER BY ItemShortDesc0, ItemShortDesc1, ItemShortDesc2, ItemShortDesc3, ItemSeqNum
 --
         INSERT RetailSlnSch.Item
-              (ClientId, ItemForSaleId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
+              (ClientId, ItemStockStatusId, ItemMasterId, ItemRate, ItemRateMSRP, ItemSeqNum, ItemShortDesc0, ItemShortDesc1, ItemShortDesc2
               ,ItemShortDesc3, ItemStarCount, ItemStatusId, ItemTypeId, ItemUniqueDesc, ProductItemId, UploadImageFileName
               )
 --Books
-        SELECT @ClientId AS ClientId, CASE [India For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemForSaleId
+        SELECT @ClientId AS ClientId, CASE [USA For Sale] WHEN 1 THEN 100 ELSE 200 END AS ItemStockStatusId
               ,ItemMaster.ItemMasterId, -1 AS ItemRate, -1 AS ItemRateMSRP, 0 AS ItemSeqNum
               ,ProductDesc0 AS ItemShortDesc0, ProductDesc1 AS ItemShortDesc1, '' AS ItemShortDesc2, '' AS ItemShortDesc3
               ,5 AS ItemStarCount, CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId, 200 AS ItemTypeId
@@ -408,91 +408,21 @@ SET NOCOUNT OFF
                   ,ItemSpecWork.ItemSpecMasterId
 --End ItemItemSpec
 --
---Begin SearchList & SearchResult
-TRUNCATE TABLE RetailSlnSch.SearchMetaData
-TRUNCATE TABLE RetailSlnSch.SearchKeywordSynonym
-TRUNCATE TABLE RetailSlnSch.SearchKeyword
---
---SearchKeyword
---DECLARE @ClientId INT = 3
-INSERT RetailSlnSch.SearchKeyword(ClientId, SearchKeywordText)
-SELECT DISTINCT @ClientId AS ClientId, LOWER(MainSearchKeyword) AS SearchKeywordText FROM DivineBija_SearchKeyword WHERE ISNULL(MainSearchKeyword, '') <> '' ORDER BY 1
---SearchMetaData
-DROP TABLE IF EXISTS #TEMPA
-SELECT DISTINCT SearchKeyword.ClientId, SearchKeyword.SearchKeywordId, 'ITEMMASTER' AS EntityTypeNameDesc, Item.ItemMasterId AS EntityId
-  INTO #TEMPA
-FROM DivineBija_SearchKeyword
-INNER JOIN RetailSlnSch.SearchKeyword ON DivineBija_SearchKeyword.MainSearchKeyword = SearchKeyword.SearchKeywordText
-INNER JOIN RetailSlnSch.Item ON DivineBija_SearchKeyword.UniqueDescription = Item.ItemUniqueDesc
-WHERE DivineBija_SearchKeyword.KeywordType = 'ITEM' AND ISNULL(MainSearchKeyword, '') <> ''
-UNION
-SELECT DISTINCT SearchKeyword.ClientId, SearchKeyword.SearchKeywordId, 'CATEGORY' AS EntityTypeNameDesc, Category.CategoryId AS EntityId
-FROM DivineBija_SearchKeyword
-INNER JOIN RetailSlnSch.SearchKeyword ON DivineBija_SearchKeyword.MainSearchKeyword = SearchKeyword.SearchKeywordText
-INNER JOIN RetailSlnSch.Category ON DivineBija_SearchKeyword.UniqueDescription = Category.CategoryNameDesc
-WHERE DivineBija_SearchKeyword.KeywordType = 'CATEGORY' AND ISNULL(MainSearchKeyword, '') <> ''
-INSERT RetailSlnSch.SearchMetaData(ClientId, SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
-SELECT *, ROW_NUMBER() OVER(PARTITION BY EntityTypeNameDesc, SearchKeywordId ORDER BY EntityTypeNameDesc, SearchKeywordId)
-FROM #TEMPA
---SearchKeywordSynonym
-INSERT RetailSlnSch.SearchKeywordSynonym(SearchKeywordId, SearchKeywordSynonymText)
-SELECT DISTINCT SearchKeyword.SearchKeywordId, DivineBija_SearchKeywordSynonym.MainSearchKeywordSynonym
-FROM DivineBija_SearchKeywordSynonym
-INNER JOIN RetailSlnSch.SearchKeyword ON DivineBija_SearchKeywordSynonym.MainSearchKeyword = SearchKeyword.SearchKeywordText
-ORDER BY 1, 2
---End SearchList & SearchResult
---
-----Begin SearchList & SearchResult
---BEGIN
---TRUNCATE TABLE RetailSlnSch.SearchMetaData
---TRUNCATE TABLE RetailSlnSch.SearchKeyword
-----
---DECLARE @EntityId BIGINT, @SearchCharIndex BIGINT, @SearchKeywords NVARCHAR(MAX), @SearchKeywordText NVARCHAR(512)
---DECLARE @SearchKeywordId BIGINT, @EntityTypeNameDesc NVARCHAR(50)
-----
---DECLARE SearchKeywordMetaDataCursor CURSOR FOR
---SELECT Id AS EntityId, 'CATEGORY' AS EntityTypeNameDesc, [Search Keywords] FROM dbo.DivineBija_Categories WHERE Active = 1 AND [Search Keywords] <> ''
---UNION
---SELECT ItemMaster.ItemMasterId AS EntityId, 'ITEMMASTER' AS EntityTypeNameDesc, [Search Keywords]
---FROM dbo.DivineBija_Products INNER JOIN RetailSlnSch.ItemMaster ON DivineBija_Products.Id = ItemMaster.ProductItemId
---WHERE [Search Keywords] <> ''
---UNION
---SELECT ItemMaster.ItemMasterId AS EntityId, 'ITEMMASTER' AS EntityTypeNameDesc, [Search Keywords]
---FROM dbo.DivineBija_Books INNER JOIN RetailSlnSch.ItemMaster ON DivineBija_Books.Id = ItemMaster.ProductItemId
---WHERE [Search Keywords] <> ''
---ORDER BY EntityTypeNameDesc, Id
-
---OPEN SearchKeywordMetaDataCursor
-
---FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
-
---WHILE @@FETCH_STATUS = 0
---BEGIN
---    SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
---    WHILE @SearchCharIndex > 0
---    BEGIN
---        SET @SearchKeywordText = SUBSTRING(@SearchKeywords, 1, @SearchCharIndex - 1)
---        SET @SearchKeywords = SUBSTRING(@SearchKeywords, @SearchCharIndex + 1, LEN(@SearchKeywords))
---        SET @SearchKeywordId = NULL
---        SELECT @SearchKeywordId = SearchKeyword.SearchKeywordId FROM RetailSlnSch.SearchKeyword WHERE SearchKeyword.SearchKeywordText = @SearchKeywordText
---        IF @SearchKeywordId IS NULL
---        BEGIN
---            INSERT RetailSlnSch.SearchKeyword(ClientId, SearchKeywordText)
---            SELECT @ClientId AS ClientId, LOWER(@SearchKeywordText)
---            SET @SearchKeywordId = @@IDENTITY
---        END
---        INSERT RetailSlnSch.SearchMetaData(ClientId, SearchKeywordId, EntityTypeNameDesc, EntityId, SeqNum)
---        SELECT @ClientId AS ClientId, @SearchKeywordId AS SearchKeywordId, @EntityTypeNameDesc AS EntityTypeNameDesc, @EntityId AS EntityId, 1 AS SeqNum
---        SET @SearchCharIndex = CHARINDEX(' ', @SearchKeywords)
---    END
---    FETCH SearchKeywordMetaDataCursor INTO @EntityId, @EntityTypeNameDesc, @SearchKeywords
---END
-
---CLOSE SearchKeywordMetaDataCursor
---DEALLOCATE SearchKeywordMetaDataCursor
---END
-----End SearchList & SearchResult
-
+--Begin SearchMetaData
+        TRUNCATE TABLE RetailSlnSch.SearchMetaData
+        INSERT RetailSlnSch.SearchMetaData(ClientId, EntityTypeNameDesc, EntityId, SearchKeyword)
+        SELECT DISTINCT
+               @ClientId AS ClientId
+              ,DivineBija_SearchMetaData.KeywordType AS EntityTypeNameDesc
+              ,Item.ItemMasterId
+              ,DivineBija_SearchMetaData.Keyword
+          FROM DivineBija_SearchMetaData
+    INNER JOIN RetailSlnSch.Item
+            ON DivineBija_SearchMetaData.UniqueDescription = Item.ItemUniqueDesc
+      ORDER BY EntityTypeNameDesc
+              ,Item.ItemMasterId
+              ,DivineBija_SearchMetaData.Keyword
+--End SearchMetaData
 --Begin ItemInfo
         TRUNCATE TABLE RetailSlnSch.ItemInfo
         INSERT RetailSlnSch.ItemInfo(ClientId, ItemId, ItemInfoLabelText, ItemInfoText, SeqNum)
@@ -589,18 +519,49 @@ ORDER BY 1, 2
         AND ParentCategoryId NOT IN(102, 120)--Exclude ('Bulk Orders', 'Wholesale Orders')
         ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterSeqNum, ItemSeqNum
 --Category Hier
-        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
+        INSERT RetailSlnSch.CategoryItemMasterHierOld(ClientId, AspNetRoleName, CategoryId, ParentCategoryId, SeqNum)
         SELECT @ClientId AS ClientId, DivineBija_CategoryHiers.[Role Name] AS AspNetRoleName, Category.CategoryId, ParentCategory.CategoryId AS ParentCategoryId, DivineBija_CategoryHiers.[Seq Num] AS SeqNum
           FROM DivineBija_CategoryHiers
     INNER JOIN RetailSlnSch.Category ON DivineBija_CategoryHiers.[Category Name Desc] = Category.CategoryNameDesc
     INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
          WHERE DivineBija_CategoryHiers.[Role Name] IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
-        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
+        INSERT RetailSlnSch.CategoryItemMasterHierOld(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
         SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum FROM #TEMP2A
          WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 --End CategoryItemMasterHier
+--Begin CategoryItemMasterHier
+TRUNCATE TABLE RetailSlnSch.CategoryCategoryHier
+INSERT RetailSlnSch.CategoryCategoryHier(ClientId, CategoryId, ParentCategoryId)--, SeqNum)
+SELECT DISTINCT ClientId, CategoryId, ParentCategoryId/*, MIN(SeqNum) AS SeqNum*/ FROM RetailSlnSch.CategoryItemMasterHierOld WHERE CategoryId IS NOT NULL /*GROUP BY ClientId, CategoryId, ItemMasterId, ParentCategoryId*/
+ORDER BY ParentCategoryId, CategoryId
+--End CategoryItemMasterHier
+--Begin CategoryItemMasterHier
+TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ItemMasterId, ParentCategoryId, SeqNum)
+SELECT ClientId, ItemMasterId, ParentCategoryId, MIN(SeqNum) AS SeqNum FROM RetailSlnSch.CategoryItemMasterHierOld WHERE CategoryId IS NULL GROUP BY ClientId, CategoryId, ItemMasterId, ParentCategoryId
+ORDER BY ParentCategoryId, SeqNum
+--End CategoryItemMasterHierNew
+--Begin AspNetRoleCategory
+TRUNCATE TABLE RetailSlnSch.AspNetRoleCategory
+INSERT RetailSlnSch.AspNetRoleCategory(ClientId, AspNetRoleName, CategoryId)
+SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId FROM RetailSlnSch.CategoryItemMasterHierOld ORDER BY AspNetRoleName, ParentCategoryId
+--End AspNetRoleCategory
+--Begin Language in Books
+INSERT RetailSlnSch.ItemItemSpec(ClientId, ItemId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, SeqNum, SeqNumItem)
+SELECT 3 ClientId, ItemId, 28 AS ItemSpecMasterId, '' AS ItemSpecUnitValue, [Language] ItemSpecValue, 28 AS SeqNum, 28 AS SeqNumItem FROM DivineBija_Books ORDER BY ItemId
+--End Language in Books
+--Begin Update ItemSpecValueWithUnit in ItemItemSpec
+UPDATE RetailSlnSch.ItemItemSpec SET ItemSpecValueWithUnit = NULL
+UPDATE RetailSlnSch.ItemItemSpec SET ItemSpecValueWithUnit = ItemItemSpec.ItemSpecValue + ' ' + CodeData.CodeDataDesc0
+FROM RetailSlnSch.ItemItemSpec
+INNER JOIN RetailSlnSch.ItemSpecMaster
+ON ItemItemSpec.ItemSpecMasterId = ItemSpecMaster.ItemSpecMasterId
+INNER JOIN Lookup.CodeData
+ON ItemSpecMaster.CodeTypeId = CodeData.CodeTypeId AND ItemItemSpec.ItemSpecUnitValue = CodeData.CodeDataNameId
+UPDATE RetailSlnSch.ItemItemSpec SET ItemSpecValueWithUnit = ItemSpecValue WHERE ItemSpecValueWithUnit IS NULL
+--End Update ItemSpecValueWithUnit in ItemItemSpec
 SELECT 'copy "' + UploadImageFileName + '" "DivineBija.ComUploadedImages\"' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
 --SELECT 'copy "C:\Common\Images\DivineBija\DivineBija_20230927\UploadedImages\' + UploadImageFileName + '"' AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId
 SELECT 'copy "DivineBija.ComUploadedImages\' + UploadImageFileName + '" ItemMaster\ItemMaster' + CAST(ItemMasterId AS VARCHAR) + '.' + ImageExtension AS DosCopyCommand, UploadImageFileName, ImageName, ItemMasterId, ItemMasterDesc FROM RetailSlnSch.ItemMaster ORDER BY ItemMasterId

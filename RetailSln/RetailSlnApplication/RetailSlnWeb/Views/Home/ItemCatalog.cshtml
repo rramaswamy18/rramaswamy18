@@ -20,7 +20,7 @@
     {
         corpAcctId = 0;
     }
-    List<CategoryItemMasterHierModel> categoryCategoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleNameProxy][0];
+    List<CategoryModel> categoryModels = RetailSlnCache.AspNetRoleCategoryHierCategorys[aspNetRoleNameProxy][0];
     #endregion
 }
 <style>
@@ -64,15 +64,17 @@
         text-decoration: underline;
     }
 </style>
-<table class="table table-bordered table-condensed table-responsive" style="border: none !important; margin-bottom: 0px; margin-left: auto; margin-right: auto; padding: 0px; width: 81%;">
+<table style="border: none !important; margin-bottom: 0px; margin-left: auto; margin-right: auto; padding: 0px; width: 81%;">
     <tr>
-        <th class="dataStyle1Left" style="border: none !important; vertical-align: middle;">
-            @Html.DropDownList("ParentCategoryId", new SelectList(categoryCategoryItemMasterHierModels, "CategoryModel.CategoryId", "CategoryModel.CategoryDesc", null), "--- Select Catalog ---", new { @class = "form-control", onchange = "javascript: ParentCategoryId_onclick();", style = "float: left; font-size: 14px; font-weight: normal; width: 54%;", title = "Select category to view the catalog" })
+        <th class="dataStyle1Left" style="border: none !important; padding-right: 1px; vertical-align: middle;">
+            @Html.DropDownList("parentCategoryId", new SelectList(categoryModels, "CategoryId", "CategoryDesc", null), "--- Select Catalog ---", new { @class = "form-control", onchange = "javascript: parentCategoryId_onclick();", style = "float: left; font-size: 14px; font-weight: normal; width: 99%;", title = "Select category to view the catalog" })
             <span id="spnParentCategoryId" style="display: none;"></span>
-            <span id="spnParentCategoryDesc" style="color: #0000ff; float: left; font-size: 18px; font-weight: bold; padding-left: 9px; padding-top: 3px;"></span>
-            <span id="spnItemMasterCount" style="color: #ff0000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 8px;"></span>
-            <span style="color: #000000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 8px;">/</span>
-            <span id="spnItemCount" style="color: #a54000; float: left; font-size: 15px; font-weight: bold; padding-left: 5px; padding-top: 8px;"></span>
+        </th>
+        <th class="dataStyle1Left" style="border: none !important; padding-left: 1px; vertical-align: middle;">
+            <span id="spnParentCategoryDesc" style="color: #0000ff; float: left; font-size: 14px; font-weight: bold; padding-left: 9px; padding-top: 3px;"></span>
+            <span id="spnItemMasterCount" style="color: #ff0000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 3px;"></span>
+            <span style="color: #000000; float: left; font-size: 14px; font-weight: bold; padding-left: 5px; padding-top: 3px;">/</span>
+            <span id="spnItemCount" style="color: #a54000; float: left; font-size: 15px; font-weight: bold; padding-left: 5px; padding-top: 3px;"></span>
         </th>
     </tr>
 </table>
@@ -80,12 +82,12 @@
 </div>
 <script type="text/javascript">
     function window_onload() {
-        ParentCategoryId_onclick();
+        parentCategoryId_onclick();
     }
-    function ParentCategoryId_onclick() {
-        console.log("ParentCategoryId_onclick", "00000000", "ENTER!!!");
+    function parentCategoryId_onclick() {
+        console.log("parentCategoryId_onclick", "00000000", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        var parentCategoryIdElement = document.getElementById("ParentCategoryId");
+        var parentCategoryIdElement = document.getElementById("parentCategoryId");
         var parentCategoryId = parentCategoryIdElement.value;
         document.getElementById("spnParentCategoryId").innerText = parentCategoryId;
         parentCategoryIdElement.selectedIndex = 0;
@@ -105,11 +107,11 @@
                 document.getElementById("spnItemCount").innerText = document.getElementById("spnItemCountWork").innerText;
                 document.getElementById("divScrollIntoView").scrollIntoView();
                 $('#loadingModal').modal('hide');
-                console.log("ParentCategoryId_onclick", "00001000", "SUCCESS!!!", textStatus);
+                console.log("parentCategoryId_onclick", "00001000", "SUCCESS!!!", textStatus);
             },
             error: function (xhr, exception) {
                 $('#loadingModal').modal('hide');
-                console.log("ParentCategoryId_onclick", "00099000", "ERROR???");
+                console.log("parentCategoryId_onclick", "00099000", "ERROR???");
                 console.log(xhr, exception);
             }
         });

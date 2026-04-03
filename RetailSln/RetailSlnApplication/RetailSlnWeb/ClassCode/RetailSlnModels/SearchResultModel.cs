@@ -10,8 +10,10 @@ namespace RetailSlnModels
     {
         public long CategoryCountTotal { set; get; }
         public string CurrencySymbol { set; get; }
-        public List<CategoryItemMasterHierModel> CategoryCategoryItemMasterHierModels { set; get; }
-        public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        //public List<CategoryItemMasterHierModel> CategoryCategoryItemMasterHierModels { set; get; }
+        //public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        public List<CategoryModel> CategoryModels { set; get; }
+        public List<ItemMasterModel> ItemMasterModels { set; get; }
         public Dictionary<long, ItemDiscountModel> ItemDiscountModels { set; get; }
         public long ItemMasterCountFrom { set; get; }
         public long ItemMasterCountTo { set; get; }

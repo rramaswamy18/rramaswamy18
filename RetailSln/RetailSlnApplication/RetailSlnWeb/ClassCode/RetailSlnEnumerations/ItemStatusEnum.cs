@@ -8,13 +8,9 @@ namespace RetailSlnEnumerations
 {
     public enum ItemStatusEnum : int
     {
-        [Description("In Stock")]
-        InStock = 100,
-        [Description("Out of Stock")]
-        OutOfStock = 200,
-        [Description("Mark to be deleted")]
-        MarkedForDeletion = 800,
+        [Description("Active")]
+        Active = 100,
         [Description("Inactive")]
-        Inactive = 900,
+        Inactive = 200,
     }
 }

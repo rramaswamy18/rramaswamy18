@@ -31,6 +31,59 @@ function btnSearchText_onclick(pageNum) {
         }
     });
 }
+function imageUpload_onchange_bind(imageInput, imagePreview) {
+    //Add an event listener to the file input
+    imageInput.addEventListener('change', function (event) {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            //Ensure the selected file is an image
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                //When the file is loaded, set the src of the image tag
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    //Make the image visible
+                    imagePreview.style.display = 'block';
+                };
+                //Read the image data as a Data URL
+                reader.readAsDataURL(file);
+            } else {
+                //Handle non-image files
+                alert("Please select an image file.");
+                imagePreview.style.display = 'none';
+                imagePreview.src = '#';
+            }
+        }
+    });
+}
+function itemAddEdit_onclick(itemId) {
+    console.log("itemAddEdit_onclick", "00000000", "ENTER!!!", url);
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    //document.getElementById("divErrorMessage").innerHTML = "";
+    var url = "/Dashboard/Item?id=" + itemId;
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        //data: jsonPostDataString,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "itemAddEdit_onclick success", responseData.processMessage);
+            document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            jQueryTextEditorInit();
+            //const imageInput = document.getElementById('ImageNameHttpPostedFileBase');
+            //const imagePreview = document.getElementById('itemMasterImagePreview');
+            //imageUpload_onchange_bind(imageInput, imagePreview);
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("itemAddEdit_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+        }
+    });
+}
 function itemMasterAddEdit_onclick(itemMasterId) {
     console.log("itemMasterAddEdit_onclick", "00000000", "ENTER!!!", url);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
@@ -46,6 +99,10 @@ function itemMasterAddEdit_onclick(itemMasterId) {
             $('#loadingModal').modal('hide');
             console.log("00001000", "itemMasterAddEdit_onclick success", responseData.processMessage);
             document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+            jQueryTextEditorInit();
+            const imageInput = document.getElementById('ImageNameHttpPostedFileBase');
+            const imagePreview = document.getElementById('itemMasterImagePreview');
+            imageUpload_onchange_bind(imageInput, imagePreview);
         },
         error: function (xhr, exception) {
             $('#loadingModal').modal('hide');
@@ -53,6 +110,9 @@ function itemMasterAddEdit_onclick(itemMasterId) {
             console.log(xhr, exception);
         }
     });
+}
+function itemMasterPagination_onclick(pageNum) {
+    menuLink_onclick("/Dashboard/ItemMasterList", `?pageNum=${pageNum}&rowCount=45`);
 }
 function itemMasterSave_onclick() {
     console.log("itemMasterSave_onclick", "00000000", "ENTER!!!", url);
@@ -80,7 +140,42 @@ function itemMasterSave_onclick() {
         }
     });
 }
-function menuLink_onclick(url, queryString, functionNamesString) {
+function itemMasterSearch_onclick() {
+    var queryString = `?pageNum=1&rowCount=45&itemTypeId=${document.getElementById("ItemType").value}&itemStatusId=${document.getElementById("ItemStatus").value}&itemStockStatusId=${document.getElementById("ItemStockStatus").value}`;
+    menuLink_onclick('/Dashboard/ItemMasterListData', queryString, '', 'divItemMasterListData');
+}
+function jQueryTextEditorInit() {
+    console.log("00000000", "jQueryTextEditorInit", "ENTER!!!");
+    $('.jqte-test').jqte();
+    $(".jqte_fontsize").each(function () {
+        var sizeValue = $(this).attr("jqte-styleval");
+        $(this).text(sizeValue);
+        $(this).css({
+            "font-size": "14px",
+            "text-decoration": "none"
+        });
+    });
+    $(".jqte_fontsizes").css(
+        {
+            "width": "45px",
+            "min-height": "210px",
+            "text-align": "center"
+        });
+    $(".jqte_tool ").css(
+        {
+            "border": "1px solid #abb2b9",
+            "padding": "2px 8px",
+            "border-radius": "4px",
+            "margin-right": "6px",
+        });
+    // settings of status
+    var jqteStatus = true;
+    $(".status").click(function () {
+        jqteStatus = jqteStatus ? false : true;
+        $('.jqte-test').jqte({ "status": jqteStatus })
+    });
+}
+function menuLink_onclick(url, queryString, functionNamesString, responseDataContainerId) {
     console.log("menuLink_onclick", "00000000", "ENTER!!!", url, queryString);
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
     url += queryString;
@@ -92,9 +187,14 @@ function menuLink_onclick(url, queryString, functionNamesString) {
         //dataType: "json",
         //data: jsonPostDataString,
         success: function (responseData, textStatus, request) {
-            console.log("00001000", "menuLink_onclick SUCCESS!!!", textStatus, request);
-            document.getElementById("divDashboard").innerHTML = responseData;
-            if (functionNamesString != undefined) {
+            console.log("00001000", "menuLink_onclick SUCCESS!!!", textStatus);
+            if (responseDataContainerId === undefined || responseDataContainerId === null || responseDataContainerId === "") {
+                document.getElementById("divDashboard").innerHTML = responseData;
+            }
+            else {
+                document.getElementById(responseDataContainerId).innerHTML = responseData;
+            }
+            if (!(typeof window[functionNamesString] === 'undefined' || typeof window[functionNamesString] === undefined)) {
                 if (typeof window[functionNamesString] === 'function') {
                     window[functionNamesString]();
                 } else {
@@ -106,6 +206,29 @@ function menuLink_onclick(url, queryString, functionNamesString) {
         error: function (xhr, exception) {
             $('#loadingModal').modal('hide');
             console.log("menuLink_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+            document.getElementById("divDashboard").innerHTML = xhr.responseText;
+        }
+    });
+}
+function orderView_onclick(orderHeaderSummaryId) {
+    console.log("orderView_onclick", "00000000", "ENTER!!!");
+    var url = "/Dashboard/OrderView";
+    url += "?id=" + orderHeaderSummaryId;
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        //data: jsonPostDataString,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "orderView_onclick success", responseData.processMessage);
+            document.getElementById("divDashboard").innerHTML = responseData.htmlString;
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("orderView_onclick", "00099000", "ERROR???");
             console.log(xhr, exception);
         }
     });
@@ -132,34 +255,12 @@ function parentCategoryId_onclick() {
             document.getElementById("spnItemMasterCount").innerText = document.getElementById("spnItemMasterCountWork").innerText;
             document.getElementById("spnItemCount").innerText = document.getElementById("spnItemCountWork").innerText;
             document.getElementById("divScrollIntoView").scrollIntoView();
-            console.log("ParentCategoryId_onclick", "00001000", "SUCCESS!!!", textStatus);
+            console.log("parentCategoryId_onclick", "00001000", "SUCCESS!!!", textStatus);
             $('#loadingModal').modal('hide');
         },
         error: function (xhr, exception) {
             $('#loadingModal').modal('hide');
-            console.log("ParentCategoryId_onclick", "00099000", "ERROR???");
-            console.log(xhr, exception);
-        }
-    });
-}
-function orderView_onclick(orderHeaderSummaryId) {
-    console.log("orderView_onclick", "00000000", "ENTER!!!");
-    var url = "/Dashboard/OrderView";
-    url += "?id=" + orderHeaderSummaryId;
-    $.ajax({
-        url: url,
-        type: "GET",
-        //contentType: "application/json; charset=utf-8",
-        //dataType: "json",
-        //data: jsonPostDataString,
-        success: function (responseData, textStatus, request) {
-            $('#loadingModal').modal('hide');
-            console.log("00001000", "orderView_onclick success", responseData.processMessage);
-            document.getElementById("divDashboard").innerHTML = responseData.htmlString;
-        },
-        error: function (xhr, exception) {
-            $('#loadingModal').modal('hide');
-            console.log("orderView_onclick", "00099000", "ERROR???");
+            console.log("parentCategoryId_onclick", "00099000", "ERROR???");
             console.log(xhr, exception);
         }
     });

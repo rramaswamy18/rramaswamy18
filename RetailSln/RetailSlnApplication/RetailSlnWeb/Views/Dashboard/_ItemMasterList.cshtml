@@ -1,3 +1,33 @@
-﻿@using RetailSlnModels
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnModels
 @model ItemMasterListModel
-@Html.Partial("_ItemMasterListData", Model)
+@{
+    #region
+    List<CodeDataModel> itemTypeCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemType").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> itemStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemStatus").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> itemStockCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemStockStatus").CodeDataModelsCodeDataNameId;
+    #endregion
+}
+<table class="table table-bordered table-condensed table-responsive" style="border-color: #ffffff; border-style: none; border-width: 0px; margin-bottom: 0px; margin-left: auto; margin-right: auto; padding: 0px; width: 90%; ">
+    <tr>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: left; vertical-align: middle; width: 18%;">
+            @Html.DropDownList("ItemType", new SelectList(itemTypeCodeDataModels, "CodeDataNameId", "CodeDataDesc0", null), "--- Item Type ---", new { @class = "form-control", style = "font-size: 14px;" })
+        </th>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: left; vertical-align: middle; width: 18%;">
+            @Html.DropDownList("ItemStatus", new SelectList(itemStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", null), "--- Item Status ---", new { @class = "form-control", style = "font-size: 14px;" })
+        </th>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: left; vertical-align: middle; width: 18%;">
+            @Html.DropDownList("ItemStockStatus", new SelectList(itemStockCodeDataModels, "CodeDataNameId", "CodeDataDesc0", null), "--- Item Stock ---", new { @class = "form-control", style = "font-size: 14px;" })
+        </th>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: left; vertical-align: middle; width: 18%;">
+            <input class="form-control" placeholder="Search..." />
+        </th>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: left; vertical-align: middle; width: 9%;">
+            <button class="loginRegisterbtn" id="itemMasterSearch" onclick="javascript: return itemMasterSearch_onclick();" style="font-size: 18px; padding: 1px; height: 27px; width: 81%;">Search</button>
+        </th>
+    </tr>
+</table>
+<div id="divItemMasterListData">
+    @Html.Partial("_ItemMasterListData", Model)
+</div>

@@ -11,7 +11,7 @@ namespace RetailSlnModels
         public long ClientId { set; get; }
         public long EntityId { set; get; }
         public string EntityTypeNameDesc { set; get; }
-        public long SearchKeywordId { set; get; }
+        public string SearchKeyword { set; get; }
         public float SeqNum { set; get; }
         public CategoryModel CategoryModel { set; get; }
         public ItemMasterModel ItemMasterModel { set; get; }

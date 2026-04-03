@@ -5,19 +5,31 @@
     int index = 0;
     ShoppingCartBundleModel shoppingCartBundleModel = new ShoppingCartBundleModel { Checkout = Model.Checkout };
 }
-<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; width: 99%;">
+<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; table-layout: auto; width: auto;">
     <colgroup>
         @if (!Model.Checkout)
         {
-            <col style="width: 27px;" />
+            <col />
         }
-        <col style="width: 36px;" />
-        <col style="width: 27px;" />
         <col />
-        <col style="width: 72px;" />
-        <col style="width: 81px;" />
-        <col style="width: 81px;" />
+        <col />
+        <col style="width: 81%;" />
+        <col />
+        <col />
+        <col />
     </colgroup>
+    @*<colgroup>
+            @if (!Model.Checkout)
+            {
+                <col style="width: 27px;" />
+            }
+            <col style="width: 36px;" />
+            <col style="width: 27px;" />
+            <col />
+            <col style="width: 72px;" />
+            <col style="width: 81px;" />
+            <col style="width: 81px;" />
+        </colgroup>*@
     <tr>
         @if (!Model.Checkout)
         {
@@ -58,7 +70,18 @@
                     <br />
                     HSN :&nbsp;@shoppingCartItem.HSNCode&nbsp;Prod Code :&nbsp;@shoppingCartItem.ProductCode
                     <br style="clear: both;" />
-                    MSRP&nbsp;@shoppingCartItem.ItemRateBeforeDiscountFormatted&nbsp;Disc&nbsp;@shoppingCartItem.ItemDiscountPercentFormatted
+                    MSRP&nbsp;@shoppingCartItem.ItemRateBeforeDiscountFormatted&nbsp;Disc&nbsp;@shoppingCartItem.ItemDiscountPercentFormatted&nbsp;
+                    @if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
+                    {
+                        if (shoppingCartItem.DoNotBreakBundle)
+                        {
+                            <a href="javascript: void(0);" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(index)').scrollIntoView();">View items in bundle #</a>
+                        }
+                        else
+                        {
+                            <a href="javascript: void(0);" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(index)').scrollIntoView();">Edit quantity for items in bundle #</a>
+                        }
+                    }
                     <br style="clear: both;" />
                     @if (Model.Checkout)
                     {
@@ -88,31 +111,74 @@
                     }
                     else
                     {
-                        if (shoppingCartItem.DoNotBreakBundle)
-                        {
-                            <input class="form-control" id="shoppingCartOrderQty@(index - 1)" oninput="javascript: return shoppingCartOrderQty_oninput(@(index - 1), -1);" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; font-size: 12px; font-weight: bold; width: 90%;" type="number" value="@shoppingCartItem.OrderQty" />
-                        }
-                        else
-                        {
-                            @shoppingCartItem.OrderQty
-                        }
+                        @*
+                            if (shoppingCartItem.DoNotBreakBundle)
+                            {
+                                <input class="form-control" id="shoppingCartOrderQty@(index - 1)" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; font-size: 12px; font-weight: bold; width: 90%;" title="Change quantity and click add to cart" type="number" value="@shoppingCartItem.OrderQty" />
+                                <a href="javascript: void(0);" onclick="javascript: return shoppingCartOrderQty_oninput(@(index - 1), -1);"><img alt="Change quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Change quantity and click add to cart" /></a>
+                            }
+                            else
+                            {
+                                @shoppingCartItem.OrderQty
+                            }
+                        *@
+                        @shoppingCartItem.OrderQty
                     }
                 </td>
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
                     @shoppingCartItem.OrderAmountFormatted
                 </td>
             </tr>
-            if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle && !Model.Checkout)
+            @*
+                if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle && !Model.Checkout)
+                {
+                    shoppingCartBundleModel.Index = index;
+                    shoppingCartBundleModel.ShoppingCartItemModel = shoppingCartItem;
+                    <tr>
+                        <td></td>
+                        <td colspan="5">
+                            <div style="height: 261px; overflow-y: scroll;">
+                                @Html.Partial("_ShoppingCartBundle2", shoppingCartBundleModel)
+                            </div>
+                        </td>
+                    </tr>
+                }
+            *@
+        }
+    }
+    <tr>
+        @if (!Model.Checkout)
+        {
+            <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+        }
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+        <th colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: left; vertical-align: top;">Desc</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-family: Arial; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: top;">Amount</th>
+    </tr>
+    @{
+        index = 0;
+        foreach (var shoppingCartItemModelSummary in Model.ShoppingCartItemModelsSummary)
+        {
+            if (shoppingCartItemModelSummary.OrderDetailTypeId != OrderDetailTypeEnum.DoNotShow)
             {
-                shoppingCartBundleModel.Index = index;
-                shoppingCartBundleModel.ShoppingCartItemModel = shoppingCartItem;
+                index++;
                 <tr>
-                    <td></td>
-                    <td colspan="5">
-                        <div style="height: 261px; overflow-y: scroll;">
-                            @Html.Partial("_ShoppingCartBundle2", shoppingCartBundleModel)
-                        </div>
-                    </td>
+                    @if (!Model.Checkout)
+                    {
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; text-align: center; vertical-align: top;"></th>
+                    }
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: center; vertical-align: top;">@(index + ".")</th>
+                    <th colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: left; vertical-align: top;">
+                        @shoppingCartItemModelSummary.ItemShortDesc
+                        @if (shoppingCartItemModelSummary.OrderDetailTypeId == OrderDetailTypeEnum.TotalOrderAmount)
+                        {
+                            <br />
+                            @("Total Weight : " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRounded + " " + Model.ShoppingCartSummaryModel.TotalProductOrVolumetricWeightRoundedUnit)
+                        }
+                    </th>
+                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-weight: normal; padding: 5px; text-align: right; vertical-align: top;">
+                        @shoppingCartItemModelSummary.OrderAmountFormatted
+                    </th>
                 </tr>
             }
         }

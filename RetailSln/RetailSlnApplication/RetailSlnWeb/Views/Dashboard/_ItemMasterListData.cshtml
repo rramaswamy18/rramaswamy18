@@ -1,12 +1,22 @@
 ﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
 @using RetailSlnCacheData
+@using RetailSlnEnumerations
 @using RetailSlnModels
 @model ItemMasterListModel
 @{
+    #region
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
     var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int itemMasterndex = 0, itemIndex;
+    int pageNumPrev = Model.PaginationModel.PageNum - 1, pageNumNext = Model.PaginationModel.PageNum + 1;
+    if (pageNumPrev < 1) { pageNumPrev = 1; }
+    if (pageNumNext > Model.PaginationModel.TotalPageCount) { pageNumNext = Model.PaginationModel.TotalPageCount; }
+    List<CodeDataModel> itemTypeCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemType").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> itemStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemStatus").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> itemStockCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "ItemStockStatus").CodeDataModelsCodeDataNameId;
+    #endregion
 }
 <style>
     .dataStyle1Left {
@@ -38,18 +48,13 @@
         text-decoration: underline;
     }
 </style>
-<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; padding: 5px; width: 90%;">
+<table class="table table-bordered table-condensed table-responsive" style="border-color: #ffffff; border-style: none; border-width: 0px; margin-bottom: 0px; margin-left: auto; margin-right: auto; padding: 0px; width: 90%; ">
     <tr>
-        <th class="dataStyle1Left" colspan="9" style="color: #a54000; font-size: 15px;"><a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterAddEdit_onclick('');">Add New</a></th>
-    </tr>
-    <tr>
-        <th class="dataStyle1Center" colspan="9" style="color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Item(s) List</th>
-    </tr>
-    <tr>
-        <td class="dataStyle1Center" colspan="9">
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: left; width: 9%;"><a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterAddEdit_onclick('');" style="font-size: 15px;">Add New</a></th>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; text-align: center;">
             <ul class="pagination" style="margin: 0px;">
                 <li class="page-item">
-                    <a alt="Page# -1" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(-1);" , title="Jump to page# -1">
+                    <a alt="Page# @pageNumPrev" class="page-link" href="javascript: void(0);" onclick="javascript: return itemMasterPagination_onclick(@pageNumPrev);" , title="Jump to page# @pageNumPrev">
                         Prev
                     </a>
                 </li>
@@ -58,7 +63,7 @@
                     if (i == Model.PaginationModel.PageNum)
                     {
                         <li class="page-item active">
-                            <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(@i);" , title="Jump to page# @i">
+                            <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return itemMasterPagination_onclick(@i);" , title="Jump to page# @i">
                                 @i
                             </a>
                         </li>
@@ -66,35 +71,29 @@
                     else
                     {
                         <li class="page-item">
-                            <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(@i);" , title="Jump to page# @i">
+                            <a alt="Page# @i" class="page-link" href="javascript: void(0);" onclick="javascript: return itemMasterPagination_onclick(@i);" , title="Jump to page# @i">
                                 @i
                             </a>
                         </li>
                     }
                 }
                 <li class="page-item">
-                    <a alt="Page# -1" class="page-link" href="javascript: void(0);" onclick="javascript: return searchResult_onclick(-1);" , title="Jump to page# -1">
+                    <a alt="Page# @pageNumNext" class="page-link" href="javascript: void(0);" onclick="javascript: return itemMasterPagination_onclick(@pageNumNext);" , title="Jump to page# @pageNumNext">
                         Next
                     </a>
                 </li>
             </ul>
-        </td>
+        </th>
+        <th style="border-color: #ffffff; border-style: none; border-width: 0px; color: #a54000; font-size: 18px; letter-spacing: 4px; text-align: right; text-transform: uppercase; width: 18%;">Item(s) List</th>
     </tr>
+</table>
+<table class="table table-bordered table-condensed table-responsive" style="margin-left: auto; margin-right: auto; margin-top: 0px; padding: 0px; width: 90%;">
     <tr>
-        <th>
-            #
-        </th>
-        <th>
-            Id
-        </th>
-        <th>
-            Desc
-        </th>
-        <th>
-        </th>
-        <th>
-            Image
-        </th>
+        <th style="background-color: #d3d3d3;">#</th>
+        <th style="background-color: #d3d3d3;">Id</th>
+        <th style="background-color: #d3d3d3;">Desc</th>
+        <th style="background-color: #d3d3d3;"></th>
+        <th style="background-color: #d3d3d3;">Image</th>
     </tr>
     @foreach (var itemMasterModel in Model.ItemMasterModels)
     {
@@ -105,33 +104,36 @@
                 @(itemMasterndex).
             </td>
             <td class="dataStyle1Center">
-                @itemMasterModel.ItemMasterId
+                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemMasterAddEdit_onclick(@itemMasterModel.ItemMasterId);">@itemMasterModel.ItemMasterId</a>
             </td>
             <td class="dataStyle1Left">
-                @itemMasterModel.ItemMasterDesc0
-                <br style="clear: both;" />
-                @itemMasterModel.ItemMasterDesc1
+                @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
                 @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2))
                 {
-                    <br style="clear: both;" />
-                    @itemMasterModel.ItemMasterDesc2
+                    @(" " + itemMasterModel.ItemMasterDesc2)
                 }
                 @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc3))
                 {
-                    <br style="clear: both;" />
-                    @itemMasterModel.ItemMasterDesc3
+                    @(" " + itemMasterModel.ItemMasterDesc3)
                 }
-                <br style="clear: both;" />
                 @itemMasterModel.ItemMasterItemSpecsForDisplayAll
                 <table class="table table-bordered table-condensed table-responsive">
                     <colgroup>
                         <col style="width: 27px;" />
                         <col style="width: 27px;" />
-                        <col style="width: 54px;" />
+                        <col style="width: 63px;" />
                         <col />
                         <col style="width: 54px;" />
                         <col style="width: 54px;" />
                     </colgroup>
+                    <tr>
+                        <th style="background-color: #d3d3d3;">#</th>
+                        <th style="background-color: #d3d3d3;">Id</th>
+                        <th style="background-color: #d3d3d3;"></th>
+                        <th style="background-color: #d3d3d3;">Desc <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemAddEdit_onclick('');" style="font-size: 15px;">Add New</a></th>
+                        <th style="background-color: #d3d3d3;">MSRP</th>
+                        <th style="background-color: #d3d3d3;">Price</th>
+                    </tr>
                     @foreach (var itemModel in itemMasterModel.ItemModels)
                     {
                         itemIndex++;
@@ -140,10 +142,12 @@
                                 @(itemIndex).
                             </td>
                             <td class="dataStyle2">
-                                @itemModel.ItemId
+                                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return itemAddEdit_onclick(@itemModel.ItemId);">@itemModel.ItemId</a>
                             </td>
                             <td class="dataStyle1Left">
-                                @itemModel.ItemForSaleId
+                                @itemModel.ItemStatusId.GetDescription()
+                                <br style="clear: both;" />
+                                @itemModel.ItemStockStatusId.GetDescription()
                             </td>
                             <td class="dataStyle1Left">
                                 @itemModel.ItemItemSpecsForDisplay
@@ -159,13 +163,44 @@
                 </table>
             </td>
             <td class="dataStyle1Left">
-                Status : @itemMasterModel.ItemMasterStatusId
-                <br />
-                Type : @itemMasterModel.ItemTypeId
-                <br />
-                <select class="dataStyle1Left form-control">
-                    <option>--Category(s)--</option>
-                </select>
+                Type : @itemMasterModel.ItemTypeId.GetDescription()
+                <br style="clear: both;" />
+                Status : @itemMasterModel.ItemMasterStatusId.GetDescription()
+                <div style="max-height: 90px; overflow-y: scroll;">
+                    <span style="color: #0000ff; font-family: Arial; font-size: 13px; font-weight: 900;">Categories...</span>
+                    <br style="clear: both;" />
+                    @{
+                        int index1 = 0, index2 = -9;
+                        string aspNetRoleName = "";
+                        foreach (var aspNetRoleCategoryModel in itemMasterModel.AspNetRoleCategoryModels)
+                        {
+                            if (aspNetRoleName != aspNetRoleCategoryModel.AspNetRoleName)
+                            {
+                                index1++;
+                                index2 = 0;
+                                aspNetRoleName = aspNetRoleCategoryModel.AspNetRoleName;
+                                <span style="color: #000000; font-family: Arial; font-size: 10px; font-weight: 800;">@(index1 + ". " + aspNetRoleName)</span>
+                                <br style="clear: both;" />
+                            }
+                            index2++;
+                            <span style="color: #000000; font-family: Arial; font-size: 11px; font-weight: 600;">@(index1 + "." + index2 + ". " + aspNetRoleCategoryModel.CategoryModel.CategoryDesc)</span>
+                            <br style="clear: both;" />
+                        }
+                    }
+                </div>
+                <div style="max-height: 90px; overflow-y: scroll;">
+                    <span style="color: #ff0000; font-family: Arial; font-size: 13px; font-weight: 900;">Search...</span>
+                    <br style="clear: both;" />
+                    @{
+                        index1 = 0;
+                        foreach (var searchKeyword in itemMasterModel.SearchKeywords)
+                        {
+                            index1++;
+                            <span style="color: #000000; font-family: Arial; font-size: 12px; font-weight: 600;">@(index1 + "." + searchKeyword)</span>
+                            <br style="clear: both;" />
+                        }
+                    }
+                </div>
             </td>
             <td class="dataStyle1Left">
                 <img src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 99px; width: 99px;" />

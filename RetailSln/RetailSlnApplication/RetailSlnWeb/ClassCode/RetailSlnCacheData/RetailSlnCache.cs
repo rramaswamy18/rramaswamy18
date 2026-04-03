@@ -23,8 +23,10 @@ namespace RetailSlnCacheData
     {
         #region Properties
         public static List<AspNetRoleModel> AspNetRoleModelsReferral { set; get; }
+        public static List<AspNetRoleCategoryModel> AspNetRoleCategoryModels { set; get; }
         public static List<CategoryModel> CategoryModels { set; get; }
-        public static List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        public static List<CategoryCategoryHierModel> CategoryCategoryHierModels { set; get; }
+        public static List<CategoryItemMasterHierModel> CategoryItemMasterHierNewModels { set; get; }
         public static Dictionary<long, Dictionary<long, ItemDiscountModel>> CorpAcctItemDiscountModels { set; get; }
         public static List<CorpAcctModel> CorpAcctModels { set; get; }
         public static List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
@@ -40,8 +42,8 @@ namespace RetailSlnCacheData
         public static List<PickupLocationModel> PickupLocationModels { set; get; }
         #endregion
         #region
-        public static Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryCategoryModels { set; get; }
-        public static Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>> AspNetRoleParentCategoryItemMasterModels { set; get; }
+        public static Dictionary<string, Dictionary<long, List<CategoryModel>>> AspNetRoleCategoryHierCategorys { set; get; }
+        public static Dictionary<string, Dictionary<long, List<ItemMasterModel>>> AspNetRoleCategoryHierItemMasters { set; get; }
         public static string BuildDateTime { set; get; }
         public static CultureInfo CurrencyCultureInfo { set; get; }
         public static string CurrencyDecimalPlaces { set; get; }
@@ -63,8 +65,11 @@ namespace RetailSlnCacheData
             BuildDateTime = GetBuildDateTime();
             RetailSlnCacheBL retailSlnCacheBL = new RetailSlnCacheBL();
             retailSlnCacheBL.Initialize(out RetailSlnInitModel retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            AspNetRoleCategoryModels = retailSlnInitModel.AspNetRoleCategoryModels;
             CategoryModels = retailSlnInitModel.CategoryModels;
-            CategoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels;
+            CategoryCategoryHierModels = retailSlnInitModel.CategoryCategoryHierModels;
+            //CategoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels;
+            CategoryItemMasterHierNewModels = retailSlnInitModel.CategoryItemMasterHierNewModels;
             CorpAcctModels = retailSlnInitModel.CorpAcctModels;
             CorpAcctLocationModels = retailSlnInitModel.CorpAcctLocationModels;
             DeliveryMethodFilterModels = retailSlnInitModel.DeliveryMethodFilterModels;
@@ -102,6 +107,7 @@ namespace RetailSlnCacheData
         {
             BuildCacheModels0(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             BuildCacheModels1(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
+            //BuildCacheModels1New(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             BuildCacheModels2(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             BuildCacheModels3(retailSlnInitModel, clientId, ipAddress, execUniqueId, loggedInUserId);
         }
@@ -149,7 +155,7 @@ namespace RetailSlnCacheData
                         }
                         catch (Exception exception)
                         {
-                            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception, "ItemId", itemItemSpecModel.ItemId.ToString(), "ItemItemSpecId", itemItemSpecModel.ItemItemSpecId.ToString());
+                            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception, "ItemId", itemItemSpecModel.ItemId.ToString(), "ItemItemSpecId", itemItemSpecModel.ItemItemSpecId.ToString(), "CodeTypeId", itemItemSpecModel.ItemSpecMasterModel.CodeTypeId.ToString(), "ItemSpecUnitValue", itemItemSpecModel.ItemSpecUnitValue);
                         }
                     }
                 }
@@ -161,8 +167,8 @@ namespace RetailSlnCacheData
                 itemSeqNum++;
                 itemModel.ItemMasterModel = retailSlnInitModel.ItemMasterModels.First(x => x.ItemMasterId == itemModel.ItemMasterId);
                 itemModel.ItemRateFormatted = itemModel.ItemRate.Value.ToString(CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "");
-                itemModel.ImageTitle = itemModel.ItemShortDesc + " Id" + itemModel.ItemId + " #" + itemSeqNum + "/" + retailSlnInitModel.ItemModels.Count;
-                if (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)
+                itemModel.ImageTitle = itemModel.ItemMasterModel.ItemMasterDesc + " Id" + itemModel.ItemId + " #" + itemSeqNum + "/" + retailSlnInitModel.ItemModels.Count;
+                if (itemModel.ItemStockStatusId == ItemStockStatusEnum.OutOfStock)
                 {
                     itemModel.ImageTitle += " Sold Out";
                     if (string.IsNullOrEmpty(itemModel.ExpectedAvailability))
@@ -194,6 +200,8 @@ namespace RetailSlnCacheData
                 itemMasterSeqNum++;
                 itemMasterModel.ImageTitle = itemMasterModel.ItemMasterDesc + " Id" + itemMasterModel.ItemMasterId + " #" + itemMasterSeqNum + "/" + retailSlnInitModel.ItemMasterModels.Count;
                 itemMasterModel.ItemModels = retailSlnInitModel.ItemModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
+                //itemMasterModel.CategoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
+                itemMasterModel.CategoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierNewModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId);
                 itemMasterModel.ItemRatesForDisplay = "";
                 itemMasterModel.ItemRatesForDisplayAll = "";
                 prefixString = "";
@@ -245,83 +253,57 @@ namespace RetailSlnCacheData
                     i++;
                 }
             }
-            List<CategoryItemMasterHierModel> categoryItemMasterHierModels;
-            foreach (var categoryItemMasterHierModel in retailSlnInitModel.CategoryItemMasterHierModels)
+            foreach (var categoryItemMasterHierModel in retailSlnInitModel.CategoryItemMasterHierNewModels)
             {
                 categoryItemMasterHierModel.ParentCategoryModel = retailSlnInitModel.CategoryModels.First(x => x.CategoryId == categoryItemMasterHierModel.ParentCategoryId);
-                if (categoryItemMasterHierModel.CategoryId != null)
-                {
-                    categoryItemMasterHierModel.CategoryModel = retailSlnInitModel.CategoryModels.First(x => x.CategoryId == categoryItemMasterHierModel.CategoryId);
-                }
-                if (categoryItemMasterHierModel.ItemMasterId != null)
-                {
-                    categoryItemMasterHierModel.ItemMasterModel = retailSlnInitModel.ItemMasterModels.First(x => x.ItemMasterId == categoryItemMasterHierModel.ItemMasterId);
-                }
+                categoryItemMasterHierModel.ItemMasterModel = retailSlnInitModel.ItemMasterModels.First(x => x.ItemMasterId == categoryItemMasterHierModel.ItemMasterId);
             }
-            //Get all with Item Master Id Null - All categories (hier)
-            AspNetRoleParentCategoryCategoryModels = new Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>>();
-            categoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ItemMasterId == null).OrderBy(y => y.AspNetRoleName).ThenBy(y => y.ParentCategoryId).ThenBy(y => y.SeqNum).ToList();
+            //Distinct is not needed - This is just in case
+            var aspNetRoleCategoryParentCategorys = (from aspNetRoleCategoryModels in AspNetRoleCategoryModels
+                                                     join categoryCategoryHierModels in CategoryCategoryHierModels
+                                                          on aspNetRoleCategoryModels.CategoryId equals categoryCategoryHierModels.CategoryId
+                                                     select new
+                                                     {
+                                                         aspNetRoleCategoryModels.AspNetRoleName,
+                                                         categoryCategoryHierModels.ParentCategoryId,
+                                                         categoryCategoryHierModels.SeqNum,
+                                                         categoryCategoryHierModels.CategoryId
+                                                     }).Distinct().OrderBy(x => x.AspNetRoleName).ThenBy(x => x.SeqNum).ToList();
+            //Build categories for each role
+            AspNetRoleCategoryHierCategorys = new Dictionary<string, Dictionary<long, List<CategoryModel>>>();
             i = 0;
-            while (i < categoryItemMasterHierModels.Count)
+            while (i < aspNetRoleCategoryParentCategorys.Count)
             {
-                aspNetRoleName = categoryItemMasterHierModels[i].AspNetRoleName;
-                AspNetRoleParentCategoryCategoryModels[aspNetRoleName] = new Dictionary<long, List<CategoryItemMasterHierModel>>();
-                while (i < categoryItemMasterHierModels.Count &&
-                       categoryItemMasterHierModels[i].AspNetRoleName == aspNetRoleName
-                      )
+                aspNetRoleName = aspNetRoleCategoryParentCategorys[i].AspNetRoleName;
+                AspNetRoleCategoryHierCategorys[aspNetRoleName] = new Dictionary<long, List<CategoryModel>>();
+                while (i < aspNetRoleCategoryParentCategorys.Count && aspNetRoleCategoryParentCategorys[i].AspNetRoleName == aspNetRoleName)
                 {
-                    parentCategoryId = categoryItemMasterHierModels[i].ParentCategoryId;
-                    AspNetRoleParentCategoryCategoryModels[aspNetRoleName][parentCategoryId] = new List<CategoryItemMasterHierModel>();
-                    while (i < categoryItemMasterHierModels.Count &&
-                           categoryItemMasterHierModels[i].AspNetRoleName == aspNetRoleName &&
-                           categoryItemMasterHierModels[i].ParentCategoryId == parentCategoryId
-                          )
+                    parentCategoryId = aspNetRoleCategoryParentCategorys[i].ParentCategoryId;
+                    AspNetRoleCategoryHierCategorys[aspNetRoleName][parentCategoryId] = new List<CategoryModel>();
+                    while (i < aspNetRoleCategoryParentCategorys.Count && aspNetRoleCategoryParentCategorys[i].AspNetRoleName == aspNetRoleName)
                     {
-                        AspNetRoleParentCategoryCategoryModels[aspNetRoleName][parentCategoryId].Add(categoryItemMasterHierModels[i]);
+                        AspNetRoleCategoryHierCategorys[aspNetRoleName][parentCategoryId].Add(retailSlnInitModel.CategoryModels.First(x => x.CategoryId == aspNetRoleCategoryParentCategorys[i].CategoryId));
                         i++;
                     }
                 }
             }
-            //Get all with Item Master Id Not Null - All item masters (hier)
-            AspNetRoleParentCategoryItemMasterModels = new Dictionary<string, Dictionary<long, List<CategoryItemMasterHierModel>>>();
-            categoryItemMasterHierModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.CategoryId == null).OrderBy(y => y.AspNetRoleName).ThenBy(y => y.ParentCategoryId).ThenBy(y => y.SeqNum).ToList();
+            AspNetRoleCategoryHierItemMasters = new Dictionary<string, Dictionary<long, List<ItemMasterModel>>>();
+            //Build item masters for each role
             i = 0;
-            while (i < categoryItemMasterHierModels.Count)
+            while (i < aspNetRoleCategoryParentCategorys.Count)
             {
-                aspNetRoleName = categoryItemMasterHierModels[i].AspNetRoleName;
-                AspNetRoleParentCategoryItemMasterModels[aspNetRoleName] = new Dictionary<long, List<CategoryItemMasterHierModel>>();
-                while (i < categoryItemMasterHierModels.Count &&
-                       categoryItemMasterHierModels[i].AspNetRoleName == aspNetRoleName
-                      )
+                aspNetRoleName = aspNetRoleCategoryParentCategorys[i].AspNetRoleName;
+                AspNetRoleCategoryHierItemMasters[aspNetRoleName] = new Dictionary<long, List<ItemMasterModel>>();
+                while (i < aspNetRoleCategoryParentCategorys.Count && aspNetRoleCategoryParentCategorys[i].AspNetRoleName == aspNetRoleName)
                 {
-                    parentCategoryId = categoryItemMasterHierModels[i].ParentCategoryId;
-                    AspNetRoleParentCategoryItemMasterModels[aspNetRoleName][parentCategoryId] = new List<CategoryItemMasterHierModel>();
-                    while (i < categoryItemMasterHierModels.Count &&
-                           categoryItemMasterHierModels[i].AspNetRoleName == aspNetRoleName &&
-                           categoryItemMasterHierModels[i].ParentCategoryId == parentCategoryId
-                          )
+                    parentCategoryId = aspNetRoleCategoryParentCategorys[i].CategoryId;
+                    AspNetRoleCategoryHierItemMasters[aspNetRoleName][parentCategoryId] = new List<ItemMasterModel>();
+                    var itemMasterHModels = retailSlnInitModel.CategoryItemMasterHierNewModels.FindAll(x => x.ParentCategoryId == parentCategoryId).OrderBy(x => x.SeqNum);
+                    foreach (var itemMasterHModel in itemMasterHModels)
                     {
-                        AspNetRoleParentCategoryItemMasterModels[aspNetRoleName][parentCategoryId].Add(categoryItemMasterHierModels[i]);
-                        i++;
+                        AspNetRoleCategoryHierItemMasters[aspNetRoleName][parentCategoryId].Add(itemMasterHModel.ItemMasterModel);
                     }
-                }
-            }
-            foreach (var itemMasterModel in retailSlnInitModel.ItemMasterModels)
-            {
-                List<CategoryItemMasterHierModel> aspNetRoleNameCategoryModels = retailSlnInitModel.CategoryItemMasterHierModels.FindAll(x => x.ItemMasterId == itemMasterModel.ItemMasterId).OrderBy(x => x.AspNetRoleName).ToList();//.ThenBy(x => x.CategoryModel.CategoryDesc).ToList();
-                i = 0;
-                itemMasterModel.AspNetRoleNameCategoryModels = new Dictionary<string, List<CategoryModel>>();
-                while (i < aspNetRoleNameCategoryModels.Count)
-                {
-                    aspNetRoleName = aspNetRoleNameCategoryModels[i].AspNetRoleName;
-                    itemMasterModel.AspNetRoleNameCategoryModels[aspNetRoleName] = new List<CategoryModel>();
-                    while (i < aspNetRoleNameCategoryModels.Count &&
-                           aspNetRoleName == aspNetRoleNameCategoryModels[i].AspNetRoleName
-                          )
-                    {
-                        itemMasterModel.AspNetRoleNameCategoryModels[aspNetRoleName].Add(aspNetRoleNameCategoryModels[i].ParentCategoryModel);
-                        i++;
-                    }
+                    i++;
                 }
             }
         }

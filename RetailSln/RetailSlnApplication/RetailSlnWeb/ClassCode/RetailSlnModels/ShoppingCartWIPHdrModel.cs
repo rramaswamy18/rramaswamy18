@@ -13,5 +13,6 @@ namespace RetailSlnModels
         public long CreatedForPersonId { set; get; }
         public long PersonId { set; get; }
         public float SeqNum { set; get; }
+        public List<ShoppingCartWIPModel> ShoppingCartWIPModels { set; get; }
     }
 }

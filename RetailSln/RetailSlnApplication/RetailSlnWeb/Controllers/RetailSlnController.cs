@@ -224,7 +224,7 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    SessionObjectModel sessionObjectModel = archLibBL.CheckoutOTPResponse(ref oTPResponseModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    SessionObjectModel sessionObjectModel = archLibBL.CheckoutOTPResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
                         if (sessionObjectModel.NewUser && sessionObjectModel.AspNetRoleName != "GUESTROLE")
@@ -234,7 +234,7 @@ namespace RetailSlnWeb.Controllers
                         Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
                         sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                         string currentLoggedInUserId = loggedInUserId;
-                        LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
+                        LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
                         SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
                         success = true;
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
@@ -493,7 +493,7 @@ namespace RetailSlnWeb.Controllers
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
                 ItemCatalogModel itemCatalogModel = retailSlnBL.ItemCatalogData(parentCategoryId, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = PartialView("_ItemCatalog", itemCatalogModel);
+                actionResult = PartialView("_ItemCatalogData", itemCatalogModel);
             }
             catch (Exception exception)
             {
@@ -1391,13 +1391,21 @@ namespace RetailSlnWeb.Controllers
             int shoppingCartItemsCount;
             string shoppingCartTotalAmount;
             ShoppingCartModel shoppingCartModel = ((ShoppingCartModel)Session["ShoppingCart"]);
-            shoppingCartModel.ShoppingCartItemModels = shoppingCartModel.ShoppingCartItemModels ?? new List<ShoppingCartItemModel>();
-            shoppingCartModel.ShoppingCartSummaryModel = shoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
+            if (shoppingCartModel != null)
+            {
+                shoppingCartModel.ShoppingCartItemModels = shoppingCartModel.ShoppingCartItemModels ?? new List<ShoppingCartItemModel>();
+                shoppingCartModel.ShoppingCartSummaryModel = shoppingCartModel.ShoppingCartSummaryModel ?? new ShoppingCartSummaryModel();
+                shoppingCartItemsCount = shoppingCartModel.ShoppingCartItemModels.Count;
+                shoppingCartTotalAmount = shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
+            }
+            else
+            {
+                shoppingCartItemsCount = 0;
+                shoppingCartTotalAmount = "";
+            }
             success = true;
             processMessage = "SUCCESS!!!";
             htmlString = archLibBL.ViewToHtmlString(this, "_ShoppingCart", shoppingCartModel);
-            shoppingCartItemsCount = shoppingCartModel.ShoppingCartItemModels.Count;
-            shoppingCartTotalAmount = shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted;
             actionResult = Json(new { success, processMessage, htmlString, shoppingCartItemsCount, shoppingCartTotalAmount }, JsonRequestBehavior.AllowGet);
             return actionResult;
         }

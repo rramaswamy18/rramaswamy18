@@ -12,9 +12,13 @@ namespace RetailSlnModels
 
         public string CatalogMessageForeColor { set; get; }
 
-        public List<CategoryItemMasterHierModel> CategoryCategoryItemMasterHierModels { set; get; }
+        public List<CategoryModel> CategoryModels { set; get; }
 
-        public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        public List<ItemMasterModel> ItemMasterModels { set; get; }
+
+        //public List<CategoryItemMasterHierNewModel> CategoryItemMasterHierModelCategorys { set; get; }
+
+        //public List<CategoryItemMasterHierNewModel> CategoryItemMasterHierModelItemMasters { set; get; }
 
         public string CurrencySymbol { set; get; }
 

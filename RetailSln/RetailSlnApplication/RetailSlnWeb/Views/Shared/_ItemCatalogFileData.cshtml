@@ -4,6 +4,7 @@
 @using RetailSlnModels
 @model ItemCatalogFileModel
 @{
+    #region
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
     string imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
@@ -12,16 +13,15 @@
     bool itemBundleFlag;
     int itemBundleItemIndex, itemIndex = -1, itemMasterIndex = 1, itemIndexSeqNum = 0;
     ItemDiscountModel itemDiscountModel;
-    ItemMasterModel itemMasterModel;
     ParentItemBundleModel parentItemBundleModel;
+    #endregion
 }
-@foreach (var categoryItemMasterHierModel in Model.CategoryItemMasterHierModels)
+@foreach (var itemMasterModel in Model.ItemMasterModels)
 {
-    itemMasterModel = categoryItemMasterHierModel.ItemMasterModel;
     Model.ItemDiscountModels.TryGetValue(itemMasterModel.ItemModels[0].ItemId.Value, out itemDiscountModel);
     if (itemDiscountModel == null)
     {
-        discountPercent = "";
+        discountPercent = "0.00%";
     }
     else
     {
@@ -44,52 +44,65 @@
                 <br style="clear: both;" />
                 <span style="color: #1d1d1d; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
             }
+        </td>
+        <td class="dataStyle1Left" rowspan="2">
+            <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })">
+                <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" class="itemImageStyle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName@imageDateTime" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td colspan="2" style="vertical-align: top;">
             <!--Begin Item #@itemMasterIndex / @itemIndex /@itemIndexSeqNum-->
-            <table class="table table-bordered" style="width: 100%;">
+            <table class="itemTableStyle">
                 <colgroup>
-                    <col style="width: 27px;" />
-                    <col style="width: 36px;" />
+                    <col style="width: 7%;" />
+                    <col style="width: 9%;" />
                     <col />
-                    <col style="width: 54px;" />
-                    <col style="width: 54px;" />
-                    <col style="width: 153px;" />
+                    <col style="width: 15%;" />
                 </colgroup>
                 <tr style="background-color: #d0d0d0;">
                     <th style="padding: 5px; text-align: right;">#</th>
                     <th style="padding: 5px; text-align: center;">Id</th>
-                    <th style="padding: 5px; text-align: left;">Spec(s) (@itemMasterModel.ItemModels.Count)</th>
-                    <th style="padding: 5px; text-align: right;">Rate</th>
-                    <th style="padding: 5px; text-align: right;">Disc.</th>
-                    <th style="padding: 5px; text-align: left;">Qty</th>
+                    <th style="padding: 5px; text-align: left;">
+                        Spec(s) (@itemMasterModel.ItemModels.Count)
+                    </th>
+                    <th style="padding: 5px; text-align: left;">
+                        Qty<a href="javascript: void(0);" onclick="javascript: return document.getElementById('divScrollIntoView').scrollIntoView();" style="color: #0000ff; font-size: 12px; padding-left: 3px; text-decoration: underline;">Top&#129145;</a>
+                    </th>
                 </tr>
                 @foreach (var itemModel in itemMasterModel.ItemModels)
                 {
-                    itemBundleFlag = (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle);
+                    itemBundleFlag = (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle);
                     itemIndex++;
                     itemIndexSeqNum++;
                     RetailSlnCache.ParentItemBundleModels.TryGetValue(itemModel.ItemId.Value, out parentItemBundleModel);
                     <!--Begin Item #@itemMasterIndex / @itemIndex/ @itemIndexSeqNum-->
                     <tr>
-                        <td style="font-size: 12px; padding: 5px; text-align: right;">@itemIndexSeqNum.</td>
-                        <td style="color: #0000ff; font-size: 12px; font-weight: bold; padding: 5px; text-align: center;">
+                        <td style="font-size: 12px; padding: 5px; text-align: right; vertical-align: top;">@itemIndexSeqNum.</td>
+                        <td style="color: #0000ff; font-size: 12px; font-weight: bold; padding: 5px; text-align: center; vertical-align: top;">
                             <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="font-weight: bold; text-decoration: underline;">
                                 @itemModel.ItemId
                             </a>
                         </td>
-                        <td style="font-size: 12px; padding: 5px; text-align: left;">
+                        <td style="font-size: 12px; padding: 5px; text-align: left; vertical-align: top;">
                             @itemModel.ItemItemSpecsForDisplay
-                            <br style="clear: both;" />
                             @if (itemBundleFlag)
                             {
+                                <br style="clear: both;" />
                                 <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order all items in bundle without breaking&nbsp;</span>
                                 <span style="color: #a54000; font-size: 13px; font-weight: bold;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count) Items)</span>
                             }
+                            <br style="clear: both;" />
+                            <br style="clear: both;" />
+                            <span style="color: #000000; font-size: 12px;">Disc.:</span><span style="color: #000000; font-size: 12px; font-weight: 600; padding-left: 3px;">@discountPercent</span>
+                            <span style="color: #000000; font-size: 12px;">Price:</span><span style="color: #000000; font-size: 12px; font-weight: 600; padding-left: 3px;">@itemModel.ItemRateFormatted</span>
+                            <span style="color: #000000; font-size: 12px; padding-left: 3px;">Order Qty.:</span><span style="color: #000000; font-size: 12px; font-weight: 600; padding-left: 3px;"></span>
                         </td>
-                        <td style="font-size: 12px; padding: 5px; text-align: right;">@itemModel.ItemRateFormatted</td>
-                        <td style="font-size: 12px; padding: 5px; text-align: right;">@discountPercent</td>
-                        <td style="padding: 5px; text-align: left;">
+                        <td colspan="2" style="padding: 5px; text-align: left; vertical-align: top; ">
                             <input class="form-control" id="orderQty@(itemIndex)" inputmode="numeric" max="999" maxlength="3" min="1" oninput="javascript: return orderQty_oninput(this, '');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
-                            <span style="width: 9px;">&nbsp;</span>
+                            <br style="clear: both;" />
                             <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemModel.ItemId, @itemIndex, '', true, @itemBundleFlag.ToString().ToLower());" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
                             <span id="spnMessageSuccess@(itemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
                                 <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
@@ -110,133 +123,106 @@
                             itemBundleItemIndex = -1;
                             itemIndex++;
                             <tr>
-                                <td style="font-size: 12px; padding: 5px; text-align: right;">@itemIndexSeqNum.</td>
-                                <td style="color: #0000ff; font-size: 12px; font-weight: bold; padding: 5px; text-align: center;">
-                                    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="font-weight: bold; text-decoration: underline;">
-                                        @itemModel.ItemId
-                                    </a>
+                                <td colspan="3" style="color: #0000ff; padding: 5px; text-align: left; vertical-align: top; ">
+                                    <span style="color: #ff0000; font-size: 13px; font-weight: bold;">Order individual items from bundle</span>
+                                    <span style="color: #a54000; font-size: 13px; font-weight: bold;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count) Items)</span>
+                                    <span id="itemBundleItemRate@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold; padding-left: 9px;">
+                                        @(Model.CurrencySymbol + "0.00")
+                                    </span>
+                                    <span id="itemBundleItemPiecesCount@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold; padding-left: 9px;">
+                                        0
+                                    </span>
+                                    <span style="color: #000000; font-size: 13px; font-weight: bold; padding-left: 3px;">
+                                        pieces
+                                    </span>
                                 </td>
-                                <td colspan="7">
-                                    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #000000; font-weight: bold; text-decoration: underline;">
-                                        @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
-                                    </a>
-                                    @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
-                                    {
+                                <td style="text-align: left; vertical-align: middle;">
+                                    <input id="itemId@(itemIndex)" type="hidden" value="@itemModel.ItemId" />
+                                    <input id="orderQty@(itemIndex)" max="999" maxlength="3" min="1" type="hidden" value="1" />
+                                    <span id="spnMessageSuccess@(itemIndex)" style="display: none;">
+                                        <i class="fa fa-check" style="color: #00d000; font-size: 12px;"></i>
+                                        <span style="color: #a54000; font-family: Arial; font-size: 12px; font-weight: bold; padding-left: 3px;">Added...</span>
+                                        <span id="spnMessageSuccessText@(itemIndex)" style="color: #0000ff; font-family: Arial; font-size: 12px; font-weight: bold;"></span>
                                         <br style="clear: both;" />
-                                        <span style="color: #1d1d1d; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
-                                    }
-                                    <br />
-                                    @itemModel.ItemItemSpecsForDisplay
+                                    </span>
+                                    <span id="spnMessageError@(itemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                        <span id="spnMessageErrorText@(itemIndex)" style="color: #ff0000;"></span>
+                                        <br style="clear: both;" />
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td colspan="5">
-                                    <div style="height: 207px; max-height: 450px; min-height: 180px; overflow-y: scroll; width: 100%;">
-                                        <table class="table table-bordered" style="width: 100%;">
-                                            <colgroup>
-                                                <col style="width: 27px;" />
-                                                <col style="width: 36px;" />
-                                                <col />
-                                                <col style="width: 54px;" />
-                                                <col style="width: 63px;" />
-                                                <col style="width: 63px;" />
-                                                <col style="width: 54px;" />
-                                            </colgroup>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <span style="color: #ff0000; font-size: 12px; font-weight: bold;">Order individual items from bundle</span>
-                                                    <span style="color: #a54000; font-size: 13px; font-weight: bold;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count) Items)</span>
-                                                </td>
-                                                <td style="padding-left: 9px; text-align: right;">
-                                                    <span id="itemBundleItemPiecesCount@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold;">0</span><span style="color: #000000; font-size: 13px; font-weight: bold; padding-left: 3px;">pieces</span>
-                                                </td>
-                                                <td style="padding-left: 9px; text-align: right;">
-                                                    <span id="itemBundleItemRate@(itemIndex)" style="color: #000000; font-size: 13px; font-weight: bold; padding: 5px; text-align: right; vertical-align: middle;">@(Model.CurrencySymbol + "0.00")</span>
-                                                </td>
-                                                <td colspan="2" style="text-align: left;">
-                                                    <input id="itemId@(itemIndex)" type="hidden" value="@itemModel.ItemId" />
-                                                    <input id="orderQty@(itemIndex)" max="999" maxlength="3" min="1" type="hidden" value="1" />
-                                                    <span id="spnMessageSuccess@(itemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                                                        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-                                                        <span style="color: #a54000;">Added...<span id="spnMessageSuccessText@(itemIndex)" style="color: #0000ff; font-size:12px;"></span></span>
-                                                        <br style="clear: both;" />
-                                                    </span>
-                                                    <span id="spnMessageError@(itemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                                                        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
-                                                        <span id="spnMessageErrorText@(itemIndex)" style="color: #ff0000;"></span>
-                                                        <br style="clear: both;" />
-                                                    </span>
-                                                </td>
-                                            </tr>
+                                <td colspan="7" style="vertical-align: top;">
+                                    <table class="itemBundleTableStyle">
+                                        <colgroup>
+                                            <col style="width: 7%;" />
+                                            <col style="width: 9%;" />
+                                            <col />
+                                            <col style="width: 15%;" />
+                                        </colgroup>
+                                        <thead class="theadthStyle">
                                             <tr style="background-color: #d0d0d0;">
                                                 <th style="padding: 5px; text-align: right;">#</th>
                                                 <th style="padding: 5px; text-align: center;">Id</th>
                                                 <th style="padding: 5px; text-align: left;">Desc</th>
-                                                <th style="padding: 5px; text-align: right;">Price</th>
-                                                <th style="padding: 5px; text-align: right;">Qty</th>
-                                                <th style="padding: 5px; text-align: right;"></th>
-                                                <th style="padding: 5px; text-align: right;">Amount</th>
+                                                <th style="padding: 5px;">Qty</th>
                                             </tr>
-                                            @foreach (var itemBundleItem in parentItemBundleModel.ShoppingCartItemBundleModels)
-                                            {
-                                                itemBundleItemIndex++;
-                                                <tr>
-                                                    <td class="text-right">@(itemBundleItemIndex + 1).</td>
-                                                    <td class="text-center" style="color: #0000ff; font-size: 12px; font-weight: bold;">@itemBundleItem.ItemId</td>
-                                                    <td class="text-left">
-                                                        @(itemBundleItem.ItemMasterDesc0 + " " + itemBundleItem.ItemMasterDesc1)
-                                                        @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3))
-                                                        {
-                                                            <br style="clear: both;" />
-                                                            <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3)</span>
-                                                        }
-                                                        @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemItemSpecsForDisplay))
-                                                        {
-                                                            <br style="clear: both;" />
-                                                            <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@itemBundleItem.ItemItemSpecsForDisplay</span>
-                                                        }
-                                                    </td>
-                                                    <td class="text-right">
-                                                        @itemBundleItem.ItemRateFormatted
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span id="itemIdForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none;">@itemBundleItem.ItemId</span>
-                                                        <span id="itemRateForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none;">@itemBundleItem.ItemRate.Value</span>
-                                                        <input class="form-control" id="orderQtyForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" min="0" max="999" maxlength="3" name="orderQtyForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" oninput="javascript: return orderQtyBundle_oninput(@itemModel.ItemId, this, @itemIndex, @parentItemBundleModel.ItemModels.Count, '@Model.CurrencySymbol');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" type="number" value="@itemBundleItem.OrderQty" />
-                                                        <span id="spnMessageSuccessForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                                                            <br style="clear: both;" />
-                                                            <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
-                                                            <span style="color: #a54000;">Added...<span id="spnMessageSuccessTextForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="color: #0000ff; font-size:12px;"></span></span>
-                                                        </span>
-                                                        <span id="spnMessageErrorForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
-                                                            <br style="clear: both;" />
-                                                            <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
-                                                            <span id="spnMessageErrorTextForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="color: #ff0000;"></span>
-                                                        </span>
-                                                    </td>
-                                                    <td style="text-align: center;">
-                                                        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemModel.ItemId, @itemIndex, '1', false, @itemBundleFlag.ToString().ToLower()); resetItemBundleRate(@parentItemBundleModel.ParentItemId, '', @parentItemBundleModel.ShoppingCartItemBundleModels.Count, '@Model.CurrencySymbol');" title="Enter quantity and click add to cart @itemModel.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ItemMasterModel.ImageTitle" /></a>
-                                                    </td>
-                                                    <td id="itemAmountForBundle@("_" + parentItemBundleModel.ParentItemModel.ItemId + "_" + itemBundleItemIndex)" class="text-right">
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </table>
-                                    </div>
+                                        </thead>
+                                        @foreach (var itemBundleItem in parentItemBundleModel.ShoppingCartItemBundleModels)
+                                        {
+                                            itemBundleItemIndex++;
+                                            <tr>
+                                                <td style="padding: 5px; text-align: right; vertical-align: top;">@(itemBundleItemIndex + 1).</td>
+                                                <td style="color: #0000ff; font-size: 12px; font-weight: bold; padding: 5px; text-align: center; vertical-align: top;">@itemBundleItem.ItemId</td>
+                                                <td class="text-left" style="padding: 5px;">
+                                                    @(itemBundleItem.ItemMasterDesc0 + " " + itemBundleItem.ItemMasterDesc1)
+                                                    @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3))
+                                                    {
+                                                        <br style="clear: both;" />
+                                                        <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3)</span>
+                                                    }
+                                                    @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemItemSpecsForDisplay))
+                                                    {
+                                                        <br style="clear: both;" />
+                                                        <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@itemBundleItem.ItemItemSpecsForDisplay</span>
+                                                    }
+                                                    <br style="clear: both;" />
+                                                    <br style="clear: both;" />
+                                                    <span style="color: #000000; font-size: 12px;">Disc.:</span><span style="color: #000000; font-size: 12px; font-weight: 600; padding-left: 3px;">0.00%</span>
+                                                    <span style="color: #000000; font-size: 12px;">Price:</span><span style="color: #000000; font-size: 12px; font-weight: 600; padding-left: 3px;">@itemBundleItem.ItemRateFormatted</span>
+                                                    <span style="color: #000000; font-size: 12px; padding-left: 3px;">Order Qty.:</span><span style="color: #000000; font-size: 12px; font-weight: 600; padding-left: 3px;"></span>
+                                                </td>
+                                                <td style="padding: 5px; text-align: left; vertical-align: top;">
+                                                    <span id="itemIdForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none;">@itemBundleItem.ItemId</span>
+                                                    <span id="itemRateForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none;">@itemBundleItem.ItemRate.Value</span>
+                                                    <input class="form-control" id="orderQtyForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" min="0" max="999" maxlength="3" name="orderQtyForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" oninput="javascript: return orderQtyBundle_oninput(@itemModel.ItemId, this, @itemIndex, @parentItemBundleModel.ItemModels.Count, '@Model.CurrencySymbol');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 12px; font-weight: 900; width: 63px;" type="number" value="@itemBundleItem.OrderQty" />
+                                                    <br style="clear: both;" />
+                                                    <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemModel.ItemId, @itemIndex, '1', false, @itemBundleFlag.ToString().ToLower()); resetItemBundleRate(@parentItemBundleModel.ParentItemId, '', @parentItemBundleModel.ShoppingCartItemBundleModels.Count, '@Model.CurrencySymbol');" title="Enter quantity and click add to cart @itemModel.ItemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 2px; width: 45px;" title="Enter quantity and click add to cart @itemModel.ItemMasterModel.ImageTitle" /></a>
+                                                    <br style="clear: both;" />
+                                                    <span id="itemAmountForBundle@("_" + parentItemBundleModel.ParentItemModel.ItemId + "_" + itemBundleItemIndex)" style="color: #000000; font-family: Arial; font-size: 13px; font-weight: bold; text-align: right;">@(Model.CurrencySymbol + "0.00")</span>
+                                                    <span id="spnMessageSuccessForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                                        <br style="clear: both;" />
+                                                        <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
+                                                        <span style="color: #a54000;">Added...<span id="spnMessageSuccessTextForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="color: #0000ff; font-size:12px;"></span></span>
+                                                    </span>
+                                                    <span id="spnMessageErrorForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
+                                                        <br style="clear: both;" />
+                                                        <i class="fa fa-remove" style="color: #ff0000; padding-left: 7px; padding-right: 1px;"></i>
+                                                        <span id="spnMessageErrorTextForBundle@("_" + itemModel.ItemId + "_" + itemBundleItemIndex)" style="color: #ff0000;"></span>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
                                 </td>
                             </tr>
-
                         }
                     }
                     <!--End Item #@itemMasterIndex / @itemIndex / @itemIndexSeqNum-->
                 }
             </table>
-        </td>
-        <td class="dataStyle1Left" style="text-align: center; vertical-align: top;">
-            <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })">
-                <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName@imageDateTime" style="height: 180px; width: 180px;" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
-            </a>
+            <!--End Item #@itemMasterIndex / @itemIndex /@itemIndexSeqNum-->
         </td>
     </tr>
     <!--End Item Master #@itemMasterIndex-->

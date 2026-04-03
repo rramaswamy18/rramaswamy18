@@ -40,22 +40,16 @@ namespace RetailSlnModels
         public string ItemMasterDesc1 { set; get; }
 
         [Display(Name = "Description 2")]
-        //[Required(ErrorMessage = "Enter valid description 2")]
-        //[MinLength(1)]
-        //[MaxLength(512)]
         public string ItemMasterDesc2 { set; get; }
 
         [Display(Name = "Description 3")]
-        //[Required(ErrorMessage = "Enter valid description 3")]
-        //[MinLength(1)]
-        //[MaxLength(512)]
         public string ItemMasterDesc3 { set; get; }
 
         public string ItemMasterName { set; get; }
 
         [Display(Name = "Status")]
         [Required(ErrorMessage = "Select item status")]
-        public YesNoEnum? ItemMasterStatusId { set; get; }
+        public ItemStatusEnum? ItemMasterStatusId { set; get; }
 
         public string ItemRatesForDisplay { set; get; }
 
@@ -69,17 +63,31 @@ namespace RetailSlnModels
 
         public string UploadImageFileName { set; get; }
 
-        public Dictionary<string, List<CategoryModel>> AspNetRoleNameCategoryModels { set; get; }
-
-        public string CategoryIds { set; get; }
+        [Display(Name = "Category(s)")]
+        [Required(ErrorMessage = "Select Category(s)")]
+        public List<string> CategoryIds { set; get; }
 
         public string ItemMasterItemSpecsForDisplay { set; get; }
 
         public string ItemMasterItemSpecsForDisplayAll { set; get; }
 
+        public List<AspNetRoleCategoryModel> AspNetRoleCategoryModels { set; get; }
+
+        public Dictionary<string, List<CategoryModel>> AspNetRoleNameCategoryModels { set; get; }
+
+        public List<CategoryCategoryHierModel> CategoryCategoryHierModels { set; get; }
+
+        public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+
+        public List<ItemMasterInfoModel> ItemMasterInfoModels { set; get; }
+
         public Dictionary<string, ItemMasterItemSpecModel> ItemMasterItemSpecModels { set; get; }
 
+        public List<ItemMasterItemSpecModel> ItemMasterItemSpecModelsList { set; get; }
+
         public List<ItemModel> ItemModels { set; get; }
+
+        public List<string> SearchKeywords { set; get; }
 
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }

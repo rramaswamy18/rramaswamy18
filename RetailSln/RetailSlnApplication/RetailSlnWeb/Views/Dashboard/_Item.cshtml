@@ -1,0 +1,20 @@
+﻿@using RetailSlnModels
+@model ItemDataModel
+@{
+    string addEditLabel;
+    if (Model.ItemModel.ItemId == 0)
+    {
+        addEditLabel = "Add";
+    }
+    else
+    {
+        addEditLabel = "Edit #" + Model.ItemModel.ItemId;
+    }
+}
+<div class="container">
+</div>
+<h2 style="color: #a54000; font-weight: bold;">Item (@addEditLabel)</h2>
+<form id="formItemMasterData" method="post" enctype="multipart/form-data">
+    @Html.Partial("_ItemData", Model.ItemModel)
+</form>
+<button class="loginRegisterbtn savebutton" id="itemSave" onclick="javascript: return itemSave_onclick();" style="letter-spacing: 9px; text-transform: uppercase;" type="button">save</button>

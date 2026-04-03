@@ -10,8 +10,10 @@ namespace RetailSlnModels
 {
     public class RetailSlnInitModel
     {
+        public List<AspNetRoleCategoryModel> AspNetRoleCategoryModels { set; get; }
         public List<CategoryModel> CategoryModels { set; get; }
-        public List<CategoryItemMasterHierModel> CategoryItemMasterHierModels { set; get; }
+        public List<CategoryCategoryHierModel> CategoryCategoryHierModels { set; get; }
+        public List<CategoryItemMasterHierModel> CategoryItemMasterHierNewModels { set; get; }
         public List<CorpAcctModel> CorpAcctModels { set; get; }
         public List<CorpAcctLocationModel> CorpAcctLocationModels { set; get; }
         public List<DeliveryMethodFilterModel> DeliveryMethodFilterModels { set; get; }

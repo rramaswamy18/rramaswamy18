@@ -1,0 +1,64 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserResponseModel
+<style>
+    #OTPCode-error, #EmailAddress-error {
+        color: #ff0000;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div class="box">
+    <h3 style="font-weight: bold;">@Model.RequestType - Confirm OTP</h3>
+</div>
+@{
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="box validationSummaryMessage">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="box">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; font-size: 12px;" }).ToHtmlString()))
+        </div>
+    }
+}
+<div class="box">
+    @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-form-label" })
+    <span style="color: #0000ff; font-size: 15px; font-weight: bold; padding-left: 18px;">@Model.TelephoneNumberFormatted</span>
+</div>
+<div class="box">
+    @Html.LabelFor(m => m.OTPCode, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+    @Html.TextBoxFor(m => m.OTPCode, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.OTPCode), style = "width: 81%;" })
+    @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OTPCode, "", new { id = "OTPCode-error", style = "width: 81%;" }).ToHtmlString()))
+</div>
+@if (Model.EmailAddressRequired)
+{
+    if (!Model.EmailAddressExists)
+    {
+        <div class="box">
+            <span style="color: #ff0000; font-size: 12px; font-weight: bold;">First time... - enter your email address</span>
+            <br />
+            @Html.LabelFor(m => m.EmailAddress, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
+            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control validate", placeholder = "Enter " + @Html.DisplayNameFor(m => m.EmailAddress), style = "width: 86%;" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.EmailAddress, "", new { id = "EmailAddress-error" }).ToHtmlString()))
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(m => m.EmailAddress)
+    }
+}
+else
+{
+    @Html.HiddenFor(m => m.EmailAddress)
+}
+@Html.HiddenFor(m => m.AspNetUserId)
+@Html.HiddenFor(m => m.OTPDataId)
+@Html.HiddenFor(m => m.EmailAddressExists)
+@Html.HiddenFor(m => m.EmailAddressRequired)
+@Html.HiddenFor(m => m.TelephoneCountryId)
+@Html.HiddenFor(m => m.TelephoneNumber)
+@Html.HiddenFor(m => m.TelephoneNumberFormatted)

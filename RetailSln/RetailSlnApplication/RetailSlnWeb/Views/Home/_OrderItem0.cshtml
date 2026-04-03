@@ -7,23 +7,50 @@
     input[type=number]::-webkit-outer-spin-button {
         opacity: 1;
     }
+
+    .divItemStyle {
+        display: inline-block;
+        padding: 18px;
+        vertical-align: top;
+        width: @Model.ImageDivWidth1;
+    }
+
+    .itemImageStyle {
+        border-radius: 25px;
+        height: @Model.ImageHeight1;
+        width: @Model.ImageWidth1;
+    }
+
+    @@media screen and (max-width: 600px) {
+        .itemImageStyle {
+            border-radius: 25px;
+            height: @Model.ImageHeight2;
+            width: @Model.ImageWidth2;
+        }
+
+        .divItemStyle {
+            display: inline-block;
+            padding: 18px;
+            vertical-align: top;
+            width: @Model.ImageDivWidth2;
+        }
+    }
 </style>
 @{
     long clientId = ArchLibCache.ClientId;
     string clientName = ArchLibCache.ClientName;
     string imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int itemSeqNum = 0, imageIndex = 0, imageCountIndex = 0;
-    ItemMasterModel itemMasterModel;
     @BuildPaginationLinks(Model.PageCount)
     <br style="clear: both;" />
     <input id="selectedCategoryId" type="hidden" value="@Model.ParentCategoryId" />
-    foreach (var categoryItemMasterHierModel in Model.CategoryItemMasterHierModels)
+    foreach (var itemMasterModel in Model.ItemMasterModels)
     {
-        itemMasterModel = categoryItemMasterHierModel.ItemMasterModel;
         imageIndex++;
         imageCountIndex++;
-        <div style="display: inline-block; padding: 18px; vertical-align: top; width: @Model.ImageDivWidth;">
-            @BuildItem(itemMasterModel, Model.ItemDiscountModels, ++itemSeqNum, imageIndex, Model.ImageDivWidth, Model.ImageHeight, Model.ImageWidth, clientId, clientName, Model.CategoryOrItem)
+        @*<div style="display: inline-block; padding: 18px; vertical-align: top; width: @Model.ImageDivWidth;">*@
+        <div class="divItemStyle">
+            @BuildItem(itemMasterModel, Model.ItemDiscountModels, ++itemSeqNum, imageIndex, Model.ImageHeight1, Model.ImageWidth1, clientId, clientName, Model.CategoryOrItem)
         </div>
         if (imageCountIndex == Model.ImageCountPerRow)
         {
@@ -77,9 +104,6 @@
                 <li class="page-item">
                     <span class="page-link">Next</span>
                 </li>
-                @*<li class="page-item">
-                        <span class="page-link">Last</span>
-                    </li>*@
             }
             else
             {
@@ -92,11 +116,11 @@
         </ul>
     }
 }
-@helper BuildItem(ItemMasterModel itemMasterModel, Dictionary<long, ItemDiscountModel> itemDiscountModels, int itemSeqNum, int imageIndex, string imageDivWidth, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
+@helper BuildItem(ItemMasterModel itemMasterModel, Dictionary<long, ItemDiscountModel> itemDiscountModels, int itemSeqNum, int imageIndex, string imageHeight, string imageWidth, long clientId, string clientName, string categoryOrItem)
 {
     string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
     ItemDiscountModel itemDiscountModel;
-    if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
+    if (itemMasterModel.ItemModels[0].ItemStockStatusId == ItemStockStatusEnum.OutOfStock)
     {
         <div style="position: relative;">
             <div style="left: 2px; position: absolute; top: 1px;">
@@ -115,7 +139,7 @@
         </div>
     }
     <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="View specifications, images, bundle - @itemMasterModel.ItemMasterDesc">
-        <img alt="@itemMasterModel.ImageTitle" class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName@imageDateTime" style="border-radius: 25px; height: @imageHeight; width: @imageWidth;" title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
+        <img alt="@itemMasterModel.ImageTitle" class="img-responsive itemImageStyle" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName@imageDateTime" @*style="border-radius: 25px; height: @imageHeight; width: @imageWidth;"*@ title="@(itemMasterModel.ImageTitle + " " + itemSeqNum)" />
     </a>
     if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
     {
@@ -140,7 +164,7 @@
             <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
         }
     </div>
-    if (itemMasterModel.ItemModels[0].ItemStatusId == ItemStatusEnum.OutOfStock)
+    if (itemMasterModel.ItemModels[0].ItemStockStatusId == ItemStockStatusEnum.OutOfStock)
     {
         <br style="clear: both;" />
         <br style="clear: both;" />
@@ -169,20 +193,20 @@
     {
         <span id="itemId@(imageIndex)" style="display: none;">@itemMasterModel.ItemModels[0].ItemId</span>
     }
-<div style="font-size: 12px; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">
-    <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(this, '');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 11px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
-    <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold; text-decoration: underline;">
-        <img alt="Add to cart @itemMasterModel.ItemMasterDesc" src="~/Images/CircleWithPlus.png" style="height: 21px; width: 21px;" title="Add to cart @itemMasterModel.ItemMasterDesc" />
-    </a>
-    @if (itemMasterModel.ItemModels.Count > 1 || itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-    {
-        <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
-    }
-    else
-    {
-        <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemMasterModel.ItemModels[0].ItemId, '@(imageIndex)', '', true, false);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
-    }
-</div>
+    <div style="font-size: 12px; font-weight: bold; height: 40px; padding-right: 5px; padding-top: 8px; vertical-align: middle;">
+        <input class="form-control" id="orderQty@(imageIndex)" inputmode="numeric" max="9999" maxlength="4" min="1" oninput="javascript: return orderQty_oninput(this, '');" style="background-color: #e1e1e1; border-color: #000000; border-style: none; border-width: 1px; border-radius: 30px; float: left; font-size: 11px; font-weight: 900; width: 63px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" type="number" value="" />
+        <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" style="color: #ff0000; font-family: Arial; font-size: 12px; font-weight: bold; text-decoration: underline;">
+            <img alt="Add to cart @itemMasterModel.ItemMasterDesc" src="~/Images/CircleWithPlus.png" style="height: 21px; width: 21px;" title="Add to cart @itemMasterModel.ItemMasterDesc" />
+        </a>
+        @if (itemMasterModel.ItemModels.Count > 1 || itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+        {
+            <a href="@Url.Action("ItemMasterAttributes", "Home", new { id = itemMasterModel.ItemMasterId, tabId = 0 })" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+        }
+        else
+        {
+            <a href="javascript: void(0);" onclick="javascript: return addToCart_onclick(@itemMasterModel.ItemModels[0].ItemId, '@(imageIndex)', '', true, false);" title="Enter quantity and click add to cart @itemMasterModel.ItemMasterDesc"><img alt="Enter quantity and click add to cart" src="~/Images/Addtocart.png" style="height: 36px; padding-left: 4px; width: 45px;" title="Enter quantity and click add to cart @itemMasterModel.ImageTitle" /></a>
+        }
+    </div>
     <span id="spnMessageSuccess@(imageIndex)" style="display: none; font-family: Arial; font-size: 12px; font-weight: bold;">
         <br style="clear: both;" />
         <i class="fa fa-check" style="color: #00d000; padding-left: 7px; padding-right: 1px;"></i>
@@ -195,3 +219,16 @@
     </span>
     @*}//else (itemModel.ItemStatusId == ItemStatusEnum.OutOfStock)*@
 }
+@*
+    <script>
+        alert(1);
+        const rootStyle = getComputedStyle(document.documentElement);
+        const variableValue = rootStyle.getPropertyValue('--image-width').trim();
+        console.log("Current variable value 1: ", variableValue);
+        alert("Current variable value 1: ", variableValue);
+        //setImageWidths();
+        //function setImageWidths() {
+        //    alert(2);
+        //}
+    </script>
+*@

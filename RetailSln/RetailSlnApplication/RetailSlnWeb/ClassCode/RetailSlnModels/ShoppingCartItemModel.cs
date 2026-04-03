@@ -75,6 +75,8 @@ namespace RetailSlnModels
 
         public string OrderQtyParm { set; get; }
 
+        public long? OrderQtyPrevious { set; get; }
+
         public long? ParentItemId { set; get; }
 
         public string ProductCode { set; get; }

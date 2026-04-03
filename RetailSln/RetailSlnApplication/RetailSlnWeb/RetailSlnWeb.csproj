@@ -236,12 +236,16 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryMethodEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\DeliveryTypeEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\EnumExtensions.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemStatusEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\ItemStockStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\ItemTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderDetailTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\PaymentModeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApplSessionObjectModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\AspNetRoleCategoryModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CategoryCategoryHierModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryItemMasterHierModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryModel.cs" />
@@ -251,6 +255,8 @@
     <Compile Include="ClassCode\RetailSlnModels\CorpAcctModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CouponListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CouponPaymentModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CRMListListModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\CRMListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\DeliveryMethodFilterModel.cs" />
@@ -263,10 +269,13 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemCatalogFileModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemCatalogItemModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemCatalogModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemDataModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemInfoModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\ItemMasterInfoModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterItemSpecModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemItemSpecModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\SearchKeywordListModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderInvoiceModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderItem1Model.cs" />
@@ -1356,6 +1365,7 @@
     <Content Include="Include\font-awesome\sprites\solid.svg" />
     <Content Include="Include\javaScriptCode-1.1.1.min.js" />
     <Content Include="Include\javaScriptCode-1.1.1.js" />
+    <Content Include="Include\jquery-te-1.4.0.min.css" />
     <Content Include="Include\jquery-te-1.4.0.css" />
     <Content Include="Include\jquery-te-1.4.0.js" />
     <Content Include="Include\jquery-te-1.4.0.min.js" />
@@ -1535,10 +1545,6 @@
     <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserSuccess.cshtml" />
-    <Content Include="Views\Home\_ResetPassword.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordData.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordEmailBody.cshtml" />
-    <Content Include="Views\Home\_ResetPasswordEmailSubject.cshtml" />
     <Content Include="Views\Home\_ReturnPolicy.cshtml" />
     <Content Include="Views\Home\_SearchResult.cshtml" />
     <Content Include="Views\Home\_SearchResultCategory.cshtml" />
@@ -1546,10 +1552,6 @@
     <Content Include="Views\Home\_ShippingPolicy.cshtml" />
     <Content Include="Views\Home\_TermsofService.cshtml" />
     <Content Include="Views\Home\_Testimonials.cshtml" />
-    <Content Include="Views\Home\_UpdatePassword.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordData.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordEmailBody.cshtml" />
-    <Content Include="Views\Home\_UpdatePasswordEmailSubject.cshtml" />
     <Content Include="Views\Home\_UserProfile.cshtml" />
     <Content Include="Views\Home\_UserProfileData1.cshtml" />
     <Content Include="Views\Home\_UserProfileData2.cshtml" />
@@ -1569,7 +1571,6 @@
     <Content Include="Views\Home\RefundPolicy.cshtml" />
     <Content Include="Views\Home\RegisterUser.cshtml" />
     <Content Include="Views\Home\RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\ResetPassword.cshtml" />
     <Content Include="Views\Home\ReturnPolicy.cshtml" />
     <Content Include="Views\Home\SearchResult.cshtml" />
     <Content Include="Views\Home\ShippingPolicy.cshtml" />
@@ -1601,9 +1602,6 @@
     <Content Include="Views\Dashboard\_CorpAcctListData.cshtml" />
     <Content Include="Views\Dashboard\_DashboardFooter.cshtml" />
     <Content Include="Views\Dashboard\_DashboardHeader.cshtml" />
-    <Content Include="Views\Dashboard\_DashboardHeaderMenu.cshtml" />
-    <Content Include="Views\Dashboard\_DashboardHeaderMenuHamburger.cshtml" />
-    <Content Include="Views\Dashboard\_DashboardHeaderMenuTop.cshtml" />
     <Content Include="Views\Dashboard\_DashboardLayout.cshtml" />
     <Content Include="Views\Dashboard\_ItemMaster.cshtml" />
     <Content Include="Views\Dashboard\_ItemMasterData.cshtml" />
@@ -1614,7 +1612,6 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\_ItemSpecMasterList.cshtml" />
     <Content Include="Views\Dashboard\_ItemSpecMasterListData.cshtml" />
-    <Content Include="Views\Home\_ItemCatalog.cshtml" />
     <Content Include="Views\Shared\_ShoppingCartBundle2.cshtml" />
     <Content Include="Views\Home\RegisterUserOTP.cshtml" />
     <Content Include="Views\Home\_RegisterUserOTP.cshtml" />
@@ -1636,13 +1633,26 @@
     <Content Include="Views\Shared\_ItemCatalogFile.cshtml" />
     <Content Include="Views\Shared\_ItemCatalogFileData.cshtml" />
     <Content Include="Views\Dashboard\_SearchKeywordList.cshtml" />
-    <Content Include="Views\Dashboard\_ItemCatalogData.cshtml" />
+    <Content Include="Views\Shared\_ItemCatalogData.cshtml" />
     <Content Include="Views\Dashboard\DeliveryInfo.cshtml" />
     <Content Include="Views\Home\_DeliveryInfo.cshtml" />
     <Content Include="Views\Home\_DeliveryInfoData.cshtml" />
     <Content Include="Views\Dashboard\_DeliveryInfo.cshtml" />
     <Content Include="Views\Dashboard\_DeliveryInfoData.cshtml" />
     <Content Include="Views\Dashboard\_UserList.cshtml" />
+    <Content Include="Views\Dashboard\_Item.cshtml" />
+    <Content Include="Views\Dashboard\_ItemData.cshtml" />
+    <Content Include="Views\Home\_RegisterUserRequest.cshtml" />
+    <Content Include="Views\Home\_RegisterUserResponse.cshtml" />
+    <Content Include="Views\Home\_RegisterUserRequestData.cshtml" />
+    <Content Include="Views\Home\_RegisterUserOTPRequestEmailBody.cshtml" />
+    <Content Include="Views\Home\_RegisterUserOTPRequestEmailSubject.cshtml" />
+    <Content Include="Views\Home\_RegisterUserResponseData.cshtml" />
+    <Content Include="Views\Shared\_Layout - Copy.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_HeaderResponsive.cshtml" />
+    <Content Include="Views\Dashboard\_CRMListList.cshtml" />
+    <Content Include="Views\Dashboard\_CRMList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

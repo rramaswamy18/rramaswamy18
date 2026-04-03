@@ -1,0 +1,7 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@model RegisterUserResponseModel
+@{
+    long clientId = ArchLibCache.ClientId;
+}
+@(ArchLibCache.GetApplicationDefault(clientId, "BusinessNameAbbrev", "") + " OTP " + Model.OTPCode + " expires in " + Model.OTPDuration + " minutes at " + Model.OTPExpiryDate + " " + Model.OTPExpiryTime)

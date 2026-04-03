@@ -1,12 +1,104 @@
 ﻿@using ArchitectureLibraryModels
-@model RegisterUserModel
+@model RegisterUserRequestModel
 @{
     ViewBag.Title = "RegisterUser";
-    Layout = "~/Views/Shared/_Layout3.cshtml";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-@Html.Partial("_RegisterUser", Model)
+<div id="divRegisterUser">
+    @Html.Partial("_RegisterUserRequest", Model)
+</div>
 <script type="text/javascript">
     function window_onload() {
-
     }
+    function OTPSendTypeIdClear_clear() {
+        var radio;
+        document.getElementById("OTPSendTypeIdClear").checked = false;
+        for (var i = 0; ; i++) {
+            radio = document.getElementById("OTPSendTypeId" + i);
+            if (radio == null) {
+                break;
+            }
+            else {
+                radio.checked = false;
+            }
+        }
+    }
+    function registerUserOTPRequestSave_onclick() {
+        console.log("00000000", "oTPRequestSave_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUserOTPRequest";
+        var postData = $("#formRegisterUserRequest").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "registerUserOTPRequestSave_onclick success", responseData);
+                if (responseData.success) {
+                    document.getElementById("divRegisterUser").innerHTML = responseData.htmlString;
+                }
+                else {
+                    document.getElementById("formRegisterUserRequest").innerHTML = responseData.htmlString;
+                }
+                console.log("00090000", "registerUserOTPRequestSave_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "registerUserOTPRequestSave_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formRegisterUserRequest").innerHTML = xhr.responseText;
+                console.log("00090100", "registerUserOTPRequestSave_onclick error", "Exit");
+            }
+        });
+    }
+    function registerUserResponseSave_onclick() {
+        console.log("00000000", "registerUserResponseSave_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUserOTPResponse";
+        var postData = $("#formRegisterUserResponse").serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "registerUserResponseSave_onclick success", responseData);
+                if (responseData.success) {
+                    window.location = responseData.htmlString;
+                }
+                else {
+                    document.getElementById("formRegisterUserResponse").innerHTML = responseData.htmlString;
+                }
+                console.log("00090000", "registerUserResponseSave_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "registerUserResponseSave_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formRegisterUserResponse").innerHTML = xhr.responseText;
+                console.log("00090100", "registerUserResponseSave_onclick error", "Exit");
+            }
+        });
+    }
+    function oTPGetNew_onclick() {
+        window.location.reload();
+    }
+    const timerInterval = setInterval(function () {
+        if (document.getElementById("oTPExpires") != null) {
+            var oTPTimeRemaining = document.getElementById("oTPExpires").innerHTML;
+            oTPTimeRemaining--;
+            if (oTPTimeRemaining <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById("oTPExpires").innerHTML = "EXPIRED";
+                return;
+            }
+            //Display the result
+            document.getElementById("oTPExpires").innerHTML = oTPTimeRemaining;
+        }
+    }, 1000);
 </script>

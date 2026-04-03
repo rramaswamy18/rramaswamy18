@@ -69,6 +69,123 @@ namespace RetailSlnBusinessLayer
             }
             return categoryListModel;
         }
+        // GET: CategoryList
+        public CRMListListModel CRMListList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            CRMListListModel cRMListListModel;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                int.TryParse(pageNumParm, out int pageNum);
+                if (pageNum <= 0) pageNum = 1;
+                int.TryParse(pageSizeParm, out int pageSize);
+                if (pageSize <= 0) pageSize = 135;
+                //int offSetCount = (pageNum - 1) * pageSize;
+                ApplicationDataContext.OpenSqlConnection();
+                cRMListListModel = new CRMListListModel
+                {
+                    PageNum = pageNum,
+                    RowCountFrom = (pageNum - 1) * pageSize + 1,
+                    RowCountTo = pageNum * pageSize,
+                    TotalRowCount = ApplicationDataContext.CRMListCount(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    CRMListModels = ApplicationDataContext.CRMList(pageNum, pageSize, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    ResponseObjectModel = new ResponseObjectModel
+                    {
+                        ResponseTypeId = ResponseTypeEnum.Success,
+                    },
+                };
+                cRMListListModel.TotalPageCount = (cRMListListModel.TotalRowCount + pageSize - 1) / pageSize;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+            return cRMListListModel;
+        }
+        // GET : Item
+        public ItemDataModel Item(string itemIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                int.TryParse(itemIdParm, out int itemId);
+                ItemDataModel itemDataModel;
+                if (itemId == 0)
+                {
+                    itemDataModel = new ItemDataModel
+                    {
+                        ItemModel = new ItemModel
+                        {
+                            ItemMasterId = 0,
+                            ItemStatusId = ItemStatusEnum.Active,
+                            ItemStockStatusId = ItemStockStatusEnum.InStock,
+                            ItemInfoModels = new List<ItemInfoModel>
+                            {
+                                new ItemInfoModel
+                                {
+                                    SeqNum = 1,
+                                },
+                                new ItemInfoModel
+                                {
+                                    SeqNum = 2,
+                                },
+                                new ItemInfoModel
+                                {
+                                    SeqNum = 3,
+                                },
+                            },
+                            ItemItemSpecModelsList = new List<ItemItemSpecModel>(),
+                        },
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    };
+                    foreach (var itemSpecMasterModel in RetailSlnCache.ItemSpecMasterModels)
+                    {
+                        itemDataModel.ItemModel.ItemItemSpecModelsList.Add
+                        (
+                            new ItemItemSpecModel
+                            {
+                                ItemSpecMasterModel = itemSpecMasterModel,
+                            }
+                        );
+                    }
+                }
+                else
+                {
+                    itemDataModel = new ItemDataModel
+                    {
+                        ItemModel = RetailSlnCache.ItemModels.First(x => x.ItemId == itemId),
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    };
+                }
+                return itemDataModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
         // GET : ItemMaster
         public ItemMasterDataModel ItemMaster(string itemMasterIdParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -86,11 +203,27 @@ namespace RetailSlnBusinessLayer
                     {
                         ItemMasterModel = new ItemMasterModel
                         {
+                            CategoryItemMasterHierModels = new List<CategoryItemMasterHierModel>(),
                             ItemMasterId = 0,
                             ItemMasterDesc0 = "Divine Bija",
                             ItemTypeId = ItemTypeEnum.RegularItem,
-                            ItemMasterStatusId = YesNoEnum.Yes,
-                            //CategoryIds = new List<bool>(RetailSlnCache.CategoryModels.Count),
+                            ItemMasterStatusId = ItemStatusEnum.Active,
+                            ItemMasterInfoModels = new List<ItemMasterInfoModel>
+                            {
+                                new ItemMasterInfoModel
+                                {
+                                    SeqNum = 1,
+                                },
+                                new ItemMasterInfoModel
+                                {
+                                    SeqNum = 2,
+                                },
+                                new ItemMasterInfoModel
+                                {
+                                    SeqNum = 3,
+                                },
+                            },
+                            ItemMasterItemSpecModelsList = new List<ItemMasterItemSpecModel>(),
                             ItemModels = new List<ItemModel>(),
                         },
                         ResponseObjectModel = new ResponseObjectModel
@@ -98,10 +231,28 @@ namespace RetailSlnBusinessLayer
                             ResponseTypeId = ResponseTypeEnum.Info,
                         },
                     };
+                    foreach (var itemSpecMasterModel in RetailSlnCache.ItemSpecMasterModels.FindAll(x => x.ItemMasterFlag))
+                    {
+                        itemMasterDataModel.ItemMasterModel.ItemMasterItemSpecModelsList.Add
+                        (
+                            new ItemMasterItemSpecModel
+                            {
+                                ItemSpecMasterModel = itemSpecMasterModel,
+                            }
+                        );
+                    }
                 }
                 else
                 {
-                    itemMasterDataModel = new ItemMasterDataModel();
+                    itemMasterDataModel = new ItemMasterDataModel
+                    {
+                        //Load this from database
+                        ItemMasterModel = RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == itemMasterId),
+                        ResponseObjectModel = new ResponseObjectModel
+                        {
+                            ResponseTypeId = ResponseTypeEnum.Info,
+                        },
+                    };
                 }
                 return itemMasterDataModel;
             }
@@ -273,7 +424,7 @@ namespace RetailSlnBusinessLayer
             }
         }
         // GET : ItemMasterList
-        public SearchKeywordListModel SearchKeywordList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        public SearchMetaDataListModel SearchKeywordList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //int x = 1, y = 0, z = x / y;
             string methodName = MethodBase.GetCurrentMethod().Name;
@@ -290,9 +441,9 @@ namespace RetailSlnBusinessLayer
                 //SqlConnection sqlConnection = ApplicationDataContext.OpenSqlConnection(true);
                 //int totalRowCount = ApplicationDataContext.ItemMasterCount(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 //int totalPageCount = (totalRowCount + pageSize - 1) / pageSize;
-                SearchKeywordListModel searchKeywordListModel = new SearchKeywordListModel
+                SearchMetaDataListModel searchKeywordListModel = new SearchMetaDataListModel
                 {
-                    SearchKeywordModels = ApplicationDataContext.SearchKeywordList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                    SearchMetaDataModels = null,//ApplicationDataContext.SearchKeywordList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                     //PaginationModel = new PaginationModel
                     //{
                     //    OffsetCount = offSetCount,

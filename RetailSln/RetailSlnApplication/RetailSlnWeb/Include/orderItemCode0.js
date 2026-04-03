@@ -30,7 +30,7 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
                 orderQtyBundleCount = 0;
                 for (var i = 0; ; i++) {
                     orderQtyHtmlElement = document.getElementById("orderQtyForBundle" + "_" + jsonPostData.ItemIdParm + "_" + i);
-                    console.log("Ummachi", "orderQtyForBundle" + "_" + jsonPostData.ItemIdParm + "_" + i, orderQtyHtmlElement == null);
+                    //console.log("orderQtyForBundle" + "_" + jsonPostData.ItemIdParm + "_" + i, orderQtyHtmlElement == null);
                     if (orderQtyHtmlElement == null) {
                         break;
                     }
@@ -86,7 +86,7 @@ function addToCart_onclick(itemId, elementIdSuffix, defaultValue, doNotBreakBund
             returnValue = false;
         }
         if (returnValue) {
-            console.log("Kadavul jsonPostData", jsonPostData);
+            console.log("jsonPostData", jsonPostData);
             document.getElementById("divErrorMessage").innerHTML = "";
             document.getElementById("spnMessageError" + elementIdSuffix).style.display = "none";
             document.getElementById("spnMessageErrorText" + elementIdSuffix).innerHTML = "";
@@ -177,10 +177,9 @@ function categoryId_onclick(categoryId, pageNum, categoryCount) {
         //data: jsonPostDataString,
         success: function (responseData, textStatus, request) {
             $('#loadingModal').modal('hide');
-            //console.log("00001000", "categoryId_onclick success", responseData.processMessage);
             if (responseData.success) {
-                //setCategoryIdSelected(categoryId, categoryCount);
                 document.getElementById("divOrderProcess").innerHTML = responseData.htmlString;
+                setCategoryIdSelected(categoryId);
                 document.getElementById("divScrollIntoView").scrollIntoView();
             }
             else {
@@ -482,7 +481,7 @@ function calculateItemBundleRate(itemId, elementIdSuffix, itemBundleCount, curre
         itemBundleItemRate += itemAmountForBundle;
     }
     console.log("itemBundleItemRate" + elementIdSuffix);
-    document.getElementById("itemBundleItemRate" + elementIdSuffix).innerText = currencySymbol + itemBundleItemRate.toFixed(2);
+    document.getElementById("itemBundleItemRate" + elementIdSuffix).innerHTML = currencySymbol + itemBundleItemRate.toFixed(2);
     document.getElementById("itemBundleItemPiecesCount" + elementIdSuffix).innerText = itemBundleItemPiecesCount;
     console.log("calculateItemBundleRate", "00003000", "calculateItemBundleRate", "00002000", "currencySymbol", currencySymbol, "itemBundleItemRate", itemBundleItemRate, "itemBundleItemPiecesCount", itemBundleItemPiecesCount);
 }
@@ -887,6 +886,36 @@ function checkLoggedInStatus(idParm, controller, action) {
                 window.location = "/" + controller + "/" + action;
             }
         });
+}
+function setCategoryIdSelected(categoryId) {
+    var count, menuCategoryItemId, menuCategoryItem;
+    for (var count = 0; ; count++) {
+        menuCategoryItemId = document.getElementById("menuCategoryId" + count);
+        if (menuCategoryItemId === null) {
+            break;
+        }
+        menuCategoryItem = document.getElementById("menuCategory" + count);
+        if (menuCategoryItem.classList.length > 0) {
+            menuCategoryItem.classList.remove("active_feature");
+            menuCategoryItem = document.getElementById("menuCategoryA" + count);
+            menuCategoryItem.classList.remove("active_feature");
+        }
+    }
+    for (var count = 0; ; count++) {
+        menuCategoryItemId = document.getElementById("menuCategoryId" + count);
+        if (menuCategoryItemId === null) {
+            break;
+        }
+        menuCategoryItem = document.getElementById("menuCategory" + count);
+        if (parseInt(menuCategoryItemId.innerText) === categoryId) {
+            menuCategoryItem.classList.add("active_feature");
+            menuCategoryItem = document.getElementById("menuCategoryA" + count);
+            menuCategoryItem.classList.add("active_feature");
+            document.getElementById("categoryNameSelected").innerText = menuCategoryItem.innerText;
+            document.getElementById("categoryNameSelectedA").innerText = menuCategoryItem.innerText;
+            break;
+        }
+    }
 }
 //function ApproverSignatureTextValue_oninput2(approverSignatureTextValueElementId, approverSignatureTextIdElementId, approverSignatureTextValueSelectedElementId) {
 //    document.getElementById(approverSignatureTextValueSelectedElementId).innerText = document.getElementById(approverSignatureTextValueElementId).value;

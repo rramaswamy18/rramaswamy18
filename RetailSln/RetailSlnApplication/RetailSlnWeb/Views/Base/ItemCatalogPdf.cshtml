@@ -8,7 +8,6 @@
     string clientName = ArchLibCache.ClientName;
     string imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
     int itemBundleItemIndex, itemMasterIndex = 1, itemIndex = 0;
-    ItemMasterModel itemMasterModel;
     ParentItemBundleModel parentItemBundleModel;
 
     Layout = null;
@@ -106,21 +105,20 @@
             <th></th>
             <th></th>
         </tr>
-        @foreach (var categoryItemMasterHierModel in Model.CategoryItemMasterHierModels)
+        @foreach (var itemMasterModel in Model.ItemMasterModels)
         {
-        itemMasterModel = categoryItemMasterHierModel.ItemMasterModel;
-        <!--Begin Item Master #@itemMasterIndex-->
-        <tr>
-            <td class="dataStyle1Right">@itemMasterIndex.</td>
-            <td class="dataStyle1Center">
-                @itemMasterModel.ItemMasterId
-            </td>
-            <td class="dataStyle1Left">
-                @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
-                @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
-                {
-                    <br style="clear: both;" />
-                    <span style="color: #1d1d1d; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
+            <!--Begin Item Master #@itemMasterIndex-->
+            <tr>
+                <td class="dataStyle1Right">@itemMasterIndex.</td>
+                <td class="dataStyle1Center">
+                    @itemMasterModel.ItemMasterId
+                </td>
+                <td class="dataStyle1Left">
+                    @(itemMasterModel.ItemMasterDesc0 + " " + itemMasterModel.ItemMasterDesc1)
+                    @if (!string.IsNullOrWhiteSpace(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3))
+                    {
+                        <br style="clear: both;" />
+                        <span style="color: #1d1d1d; font-weight: 600; line-height: 18px;">@(itemMasterModel.ItemMasterDesc2 + " " + itemMasterModel.ItemMasterDesc3)</span>
                     }
                     <!--Begin Item #@itemMasterIndex / @itemIndex-->
                     <table class="table table-bordered" style="width: 100%;">
@@ -143,82 +141,82 @@
                             itemIndex++;
                             RetailSlnCache.ParentItemBundleModels.TryGetValue(itemModel.ItemId.Value, out parentItemBundleModel);
                             <!--Begin Item #@itemMasterIndex / @itemIndex-->
-                        <tr>
-                            <td style="font-size: 12px; padding: 5px; text-align: right;">@(itemIndex + 1).</td>
-                            <td style="font-size: 12px; font-weight: bold; padding: 5px; text-align: center;">
-                                @itemModel.ItemId
-                            </td>
-                            <td style="font-size: 12px; padding: 5px; text-align: left;">
-                                @itemModel.ItemItemSpecsForDisplay
-                                <br style="clear: both;" />
-                                @if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-                                {
-                                    <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order bundle without breaking (as is)</span><br style="clear: both;" />
-                                    <span style="color: #a54000; font-size: 14px; font-weight: bold;">Bundled Items <span style="color: #ff0000; font-size: 13px;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count))</span></span>
-                                }
-                            </td>
-                            <td style="font-size: 12px; padding: 5px; text-align: right;">@itemModel.ItemRateFormatted</td>
-                        </tr>
-                        if (itemModel.ItemTypeId == ItemTypeEnum.ItemBundle)
-                        {
-                            if (parentItemBundleModel != null)
+                            <tr>
+                                <td style="font-size: 12px; padding: 5px; text-align: right;">@(itemIndex + 1).</td>
+                                <td style="font-size: 12px; font-weight: bold; padding: 5px; text-align: center;">
+                                    @itemModel.ItemId
+                                </td>
+                                <td style="font-size: 12px; padding: 5px; text-align: left;">
+                                    @itemModel.ItemItemSpecsForDisplay
+                                    <br style="clear: both;" />
+                                    @if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                                    {
+                                        <span style="color: #0000ff; font-size: 13px; font-weight: bold;">Order bundle without breaking (as is)</span><br style="clear: both;" />
+                                        <span style="color: #a54000; font-size: 14px; font-weight: bold;">Bundled Items <span style="color: #ff0000; font-size: 13px;">(#@(parentItemBundleModel == null ? -1 : parentItemBundleModel.ItemModels.Count))</span></span>
+                                    }
+                                </td>
+                                <td style="font-size: 12px; padding: 5px; text-align: right;">@itemModel.ItemRateFormatted</td>
+                            </tr>
+                            if (itemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
                             {
-                                itemBundleItemIndex = 0;
-                                <tr>
-                                    <td></td>
-                                    <td colspan="5">
-                                        <div style="height: 207px; max-height: 450px; min-height: 180px; overflow-y: scroll; width: 100%;">
-                                            <table class="table table-bordered" style="width: 100%;">
-                                                <colgroup>
-                                                    <col style="width: 27px;" />
-                                                    <col style="width: 36px;" />
-                                                    <col />
-                                                    <col style="width: 54px;" />
-                                                </colgroup>
-                                                <tr style="background-color: #d0d0d0;">
-                                                    <th style="padding: 5px; text-align: right;">#</th>
-                                                    <th style="padding: 5px; text-align: center;">Id</th>
-                                                    <th style="padding: 5px; text-align: left;">Desc</th>
-                                                    <th style="padding: 5px; text-align: right;">Price</th>
-                                                </tr>
-                                                @foreach (var itemBundleItem in parentItemBundleModel.ShoppingCartItemBundleModels)
-                                                {
-                                                    <tr>
-                                                        <td class="text-right">@(++itemBundleItemIndex).</td>
-                                                        <td class="text-center" style="color: #0000ff; font-size: 12px; font-weight: bold;">@itemBundleItem.ItemId</td>
-                                                        <td class="text-left">
-                                                            @(itemBundleItem.ItemMasterDesc0 + " " + itemBundleItem.ItemMasterDesc1)
-                                                            @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3))
-                                                            {
-                                                                <br style="clear: both;" />
-                                                                <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3)</span>
-                                                            }
-                                                            @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemItemSpecsForDisplay))
-                                                            {
-                                                                <br style="clear: both;" />
-                                                                <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@itemBundleItem.ItemItemSpecsForDisplay</span>
-                                                            }
-                                                        </td>
+                                if (parentItemBundleModel != null)
+                                {
+                                    itemBundleItemIndex = 0;
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="5">
+                                            <div style="height: 207px; max-height: 450px; min-height: 180px; overflow-y: scroll; width: 100%;">
+                                                <table class="table table-bordered" style="width: 100%;">
+                                                    <colgroup>
+                                                        <col style="width: 27px;" />
+                                                        <col style="width: 36px;" />
+                                                        <col />
+                                                        <col style="width: 54px;" />
+                                                    </colgroup>
+                                                    <tr style="background-color: #d0d0d0;">
+                                                        <th style="padding: 5px; text-align: right;">#</th>
+                                                        <th style="padding: 5px; text-align: center;">Id</th>
+                                                        <th style="padding: 5px; text-align: left;">Desc</th>
+                                                        <th style="padding: 5px; text-align: right;">Price</th>
                                                     </tr>
-                                                }
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                    @foreach (var itemBundleItem in parentItemBundleModel.ShoppingCartItemBundleModels)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-right">@(++itemBundleItemIndex).</td>
+                                                            <td class="text-center" style="color: #0000ff; font-size: 12px; font-weight: bold;">@itemBundleItem.ItemId</td>
+                                                            <td class="text-left">
+                                                                @(itemBundleItem.ItemMasterDesc0 + " " + itemBundleItem.ItemMasterDesc1)
+                                                                @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3))
+                                                                {
+                                                                    <br style="clear: both;" />
+                                                                    <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600; line-height: 18px;">@(itemBundleItem.ItemMasterDesc2 + " " + itemBundleItem.ItemMasterDesc3)</span>
+                                                                }
+                                                                @if (!string.IsNullOrWhiteSpace(itemBundleItem.ItemItemSpecsForDisplay))
+                                                                {
+                                                                    <br style="clear: both;" />
+                                                                    <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@itemBundleItem.ItemItemSpecsForDisplay</span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 }
-                                }
-                                <!--End Item #@itemMasterIndex / @itemIndex-->
                             }
-</table>
-</td>
-<td class="dataStyle1Left" style="text-align: center; vertical-align: top;">
-    <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 180px; width: 180px;" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
-</td>
-</tr>
-<!--End Item Master #@itemMasterIndex-->
-itemMasterIndex++;
-}
-</table>
+                            <!--End Item #@itemMasterIndex / @itemIndex-->
+                        }
+                    </table>
+                </td>
+                <td class="dataStyle1Left" style="text-align: center; vertical-align: top;">
+                    <img alt="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@itemMasterModel.ImageName" style="height: 180px; width: 180px;" title="@(itemMasterModel.ItemMasterDesc + " " + imageTitle)" />
+                </td>
+            </tr>
+            <!--End Item Master #@itemMasterIndex-->
+            itemMasterIndex++;
+        }
+    </table>
 </body>
 </html>
 <!--content: a:after {content '( attr(href))' }-->

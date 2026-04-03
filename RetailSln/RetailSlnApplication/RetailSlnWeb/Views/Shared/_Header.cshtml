@@ -1,0 +1,164 @@
+﻿<!--_Menu.cshtml-->
+@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+<style>
+    .customTopNav {
+        align-items: center;
+        background-color: #9a031e; /*#800000;*/
+        /*display: flex;*/
+        min-height: 50px;
+        /*overflow: hidden;*/
+        /*position: sticky;*/
+        /*top: 0px;*/
+        width: 100%;
+    }
+
+        .customTopNav a {
+            color: #ffffff;
+            display: block;
+            float: left;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 15px 18px;
+            text-align: center;
+            /*
+                text-decoration: underline;
+                text-decoration-thickness: 3px;
+                text-underline-offset: 5px;
+            */
+        }
+
+        .customTopNav .icon {
+            display: none;
+        }
+
+    .customDropDown {
+        float: left;
+        overflow: hidden;
+    }
+
+        .customDropDown .customDropBtn {
+            background-color: #9a031e; /*#800000;*/
+            border: none;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+            outline: none;
+            padding: 5px 7px;
+            width: 99px;
+            /*
+                text-decoration: underline;
+                text-decoration-thickness: 3px;
+                text-underline-offset: 5px;
+            */
+        }
+
+    .customDropDown-content {
+        background-color: #9a031e; /*#800000;*/
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        display: none;
+        font-size: 15px;
+        font-weight: bold;
+        min-width: 160px;
+        position: fixed;
+        z-index: 1;
+    }
+
+        .customDropDown-content a {
+            color: #ffffff;
+            display: block;
+            float: none;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 3px 7px;
+            text-align: left;
+            /*text-decoration: underline;*/
+        }
+
+    .customTopNav a:hover, .customDropDown:hover .customDropBtn {
+        background-color: #8f0000;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .customDropDown-content a:hover {
+        background-color: #8f0000;
+        color: #ffffff;
+    }
+
+    .customDropDown:hover .customDropDown-content {
+        display: block;
+    }
+
+    .responsiveTag a:hover {
+        text-decoration: none;
+    }
+
+    #divHeaderTop {
+        display: block;
+    }
+
+    #divHeaderTopResponsive {
+        display: none;
+    }
+
+    @@media screen and (max-width: 600px) {
+        #divHeaderTop {
+            display: none;
+        }
+
+        #divHeaderTopResponsive {
+            display: block;
+        }
+    }
+</style>
+@{
+    #region
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleNameProxy;
+    bool isLoggedIn;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleNameProxy = "DEFAULTROLE";
+        isLoggedIn = false;
+    }
+    else
+    {
+        aspNetRoleNameProxy = sessionObjectModel.AspNetRoleNameProxy;
+        isLoggedIn = true;
+    }
+    //Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
+    isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
+    List<CategoryModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleCategoryHierCategorys[aspNetRoleNameProxy][0];
+    int i, mainCategoryCount = 4;
+    #endregion
+}
+<div class="customTopNav">
+    <a href="@Url.Action("ItemCatalog", "Home")" style="padding-left: 38px;">Catalog</a>
+    @for (i = 0; i < mainCategoryCount && i < categoryItemMasterHierModels.Count; i++)
+    {
+        <span id="menuCategoryId@(i)" style="display: none;">@categoryItemMasterHierModels[i].CategoryId</span>
+        <a href="javascript: void(0);" id="menuCategory@(i)" onclick="javascript: return categoryId_onclick(@categoryItemMasterHierModels[i].CategoryId, 1, @categoryItemMasterHierModels.Count);">@categoryItemMasterHierModels[i].CategoryDesc</a>
+    }
+    <div class="customDropDown">
+        <button class="customDropBtn" style="padding: 15px 7px">More...<i class="fa fa-caret-down" style="color: #ffffff;"></i></button>
+        <div class="customDropDown-content" style="height: 261px; overflow: auto;">
+            @for (; i < categoryItemMasterHierModels.Count; i++)
+            {
+                <span id="menuCategoryId@(i)" style="display: none;">@categoryItemMasterHierModels[i].CategoryId</span>
+                <a href="javascript: void(0);" id="menuCategory@(i)" onclick="javascript: return categoryId_onclick(@categoryItemMasterHierModels[i].CategoryId, 1, @categoryItemMasterHierModels.Count);">@categoryItemMasterHierModels[i].CategoryDesc</a>
+            }
+        </div>
+    </div>
+    <a href="@Url.Action("RegisterUser", "Home")" style="padding: 15px 15px;">Referral Register</a>
+    <a href="javascript: void(0);" style="cursor: default; padding: 13px 12px;">
+        <span id="categoryNameSelected" style="color: #61ce70; font-size: 16px; font-weight: bold;"></span>
+    </a>
+</div>

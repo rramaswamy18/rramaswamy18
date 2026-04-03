@@ -2,10 +2,49 @@
     ViewBag.Title = "Index";
     Layout = "_DashboardLayout.cshtml";
 }
-<div id="divDashboard">
-</div>
 <script type="text/javascript">
     function window_onload() {
         menuLink_onclick('@Url.Action("OrderList", "Dashboard")', '');
+    }
+    function cRMListPageNum_onchange() {
+        var pageNum = document.getElementById("cRMListPageNum").value;
+        menuLink_onclick('@Url.Action("CRMListList", "Dashboard")', "?pageNum=" + pageNum + "&rowCount=135", null);
+        document.getElementById("cRMListPageNum").selectedIndex = 0;
+    }
+    function cRMListPageNext_onclick(pageNum, totalPageCount) {
+        pageNum++;
+        if (pageNum > totalPageCount) {
+            pageNum = totalPageCount;
+        }
+        menuLink_onclick('@Url.Action("CRMListList", "Dashboard")', "?pageNum=" + pageNum + "&rowCount=135", null);
+    }
+    function cRMListPagePrev_onclick(pageNum) {
+        pageNum--;
+        if (pageNum <= 0) {
+            pageNum = 1;
+        }
+        menuLink_onclick('@Url.Action("CRMListList", "Dashboard")', "?pageNum=" + pageNum + "&rowCount=135", null);
+    }
+    function calculateEditCount() {
+        console.log("calculateEditCount", "00000000", "ENTER!!!!");
+        index = 0;
+        editCount = 0;
+        while (true) {
+            if (document.getElementById("cRMListModel_TelephoneNumber" + index) == null) {
+                break;
+            }
+            if (
+                document.getElementById("cRMListModel_TelephoneNumber" + index).value == document.getElementById("cRMListModel_TelephoneNumberSave" + index).value
+                && document.getElementById("cRMListModel_TelephoneCountryId" + index).value == document.getElementById("cRMListModel_TelephoneCountryIdSave" + index).value
+                && document.getElementById("cRMListModel_TelephoneNumberValid" + index).value == document.getElementById("cRMListModel_TelephoneNumberValidSave" + index).value
+            ) {
+            }
+            else {
+                editCount++;
+            }
+            index++;
+        }
+        document.getElementById("editCount").innerText = editCount;
+        console.log("calculateEditCount", "00090000", "EXIT!!!!", "editCount", editCount);
     }
 </script>

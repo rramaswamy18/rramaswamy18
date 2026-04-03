@@ -1,0 +1,73 @@
+﻿<!--_Menu.cshtml-->
+@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnModels
+@{
+    #region
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    var imageTitle = ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "") + " | " + ArchLibCache.GetApplicationDefault(clientId, "BusinessType", "");
+    SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+    string aspNetRoleNameProxy;
+    bool isLoggedIn;
+    if (sessionObjectModel == null)
+    {
+        aspNetRoleNameProxy = "DEFAULTROLE";
+        isLoggedIn = false;
+    }
+    else
+    {
+        aspNetRoleNameProxy = sessionObjectModel.AspNetRoleNameProxy;
+        isLoggedIn = true;
+    }
+    isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
+    List<CategoryModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleCategoryHierCategorys[aspNetRoleNameProxy][0];
+    int i, index;
+    #endregion
+}
+<div class="responsiveTag" id="divMenuResponsive" style="background-color: #800000;">
+    @{
+        i = 0;
+        index = 0;
+        while (i < categoryItemMasterHierModels.Count)
+        {
+        <div style="background-color: #800000; float: left; padding-left: 9px; padding-right: 9px; padding-top: 1px;">
+            @{
+                if (i == 0)
+                {
+                    <a href="@Url.Action("ItemCatalog", "Home")" style="color: #ffffff; display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px;">Catalog</a>
+                    <br style="clear: both;" />
+                    index++;
+                }
+                while (i < categoryItemMasterHierModels.Count && index < 9)
+                {
+                    <span id="menuCategoryIdA@(i)" style="display: none;">@categoryItemMasterHierModels[i].CategoryId</span>
+                    <a href="javascript: void(0);" id="menuCategoryA@(i)" onclick="javascript: categoryId_onclick(@categoryItemMasterHierModels[i].CategoryId, 1, @categoryItemMasterHierModels.Count); myFunction('responsiveMenuBars', 'responsiveMenuTimes', 'none');" style="color: #ffffff; display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px;">@categoryItemMasterHierModels[i].CategoryDesc</a>
+                    <br style="clear: both;" />
+                    index++;
+                    i++;
+                }
+                if (i == categoryItemMasterHierModels.Count)
+                {
+                    <a class="@(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" style="color: #ffffff; display: block; float: left; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; margin-bottom: 4px; padding-right: 18px; text-align: center; " title="Logout - @imageTitle">
+                        Logout
+                    </a>
+                    <br style="clear: both;" />
+                    <br style="clear: both;" />
+                    index++;
+                    while (index < 9)
+                    {
+                        <span style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px;">
+                            &nbsp;
+                        </span>
+                        <br style="clear: both;" />
+                        index++;
+                    }
+                }
+                index = 0;
+            }
+        </div>
+        }
+    }
+</div>

@@ -14,8 +14,11 @@ namespace RetailSlnCacheBusinessLayer
             ApplicationDataContext.OpenSqlConnection();
             retailSlnInitModel = new RetailSlnInitModel
             {
+                AspNetRoleCategoryModels = ApplicationDataContext.AspNetRoleCategoryList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CategoryModels = ApplicationDataContext.CategoryList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
-                CategoryItemMasterHierModels = ApplicationDataContext.CategoryItemMasterHierList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                CategoryCategoryHierModels = ApplicationDataContext.CategoryCategoryHierList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                //CategoryItemMasterHierModels = ApplicationDataContext.CategoryItemMasterHierList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
+                CategoryItemMasterHierNewModels = ApplicationDataContext.CategoryItemMasterHierNewList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CorpAcctModels = ApplicationDataContext.CorpAcctList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 CorpAcctLocationModels = ApplicationDataContext.CorpAcctLocationList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),
                 DeliveryMethodFilterModels = ApplicationDataContext.DeliveryMethodFilterList(ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId),

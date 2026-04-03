@@ -544,11 +544,28 @@ ORDER BY 1, 2
     INNER JOIN RetailSlnSch.Category AS ParentCategory ON DivineBija_CategoryHiers.[Parent CategoryName Desc] = ParentCategory.CategoryNameDesc
          WHERE DivineBija_CategoryHiers.[Role Name] IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY DivineBija_CategoryHiers.[Role Name], ParentCategory.CategoryId, DivineBija_CategoryHiers.[Seq Num]
-        INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
+        INSERT RetailSlnSch.CategoryItemMasterHierOld(ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, SeqNum)
         SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum FROM #TEMP2A
          WHERE AspNetRoleName IN('APPLADMN1', 'BULKORDERSROLE', 'DEFAULTROLE', 'WHOLESALEROLE')
       ORDER BY AspNetRoleName, ParentCategoryId, ItemMasterId, ItemMasterSeqNum
 --End CategoryItemMasterHier
+--Begin CategoryItemMasterHier
+TRUNCATE TABLE RetailSlnSch.CategoryCategoryHier
+INSERT RetailSlnSch.CategoryCategoryHier(ClientId, CategoryId, ParentCategoryId)--, SeqNum)
+SELECT DISTINCT ClientId, CategoryId, ParentCategoryId/*, MIN(SeqNum) AS SeqNum*/ FROM RetailSlnSch.CategoryItemMasterHierOld WHERE CategoryId IS NOT NULL /*GROUP BY ClientId, CategoryId, ItemMasterId, ParentCategoryId*/
+ORDER BY ParentCategoryId, CategoryId
+--End CategoryItemMasterHier
+--Begin CategoryItemMasterHier
+TRUNCATE TABLE RetailSlnSch.CategoryItemMasterHier
+INSERT RetailSlnSch.CategoryItemMasterHier(ClientId, ItemMasterId, ParentCategoryId, SeqNum)
+SELECT ClientId, ItemMasterId, ParentCategoryId, MIN(SeqNum) AS SeqNum FROM RetailSlnSch.CategoryItemMasterHierOld WHERE CategoryId IS NULL GROUP BY ClientId, CategoryId, ItemMasterId, ParentCategoryId
+ORDER BY ParentCategoryId, SeqNum
+--End CategoryItemMasterHierNew
+--Begin AspNetRoleCategory
+TRUNCATE TABLE RetailSlnSch.AspNetRoleCategory
+INSERT RetailSlnSch.AspNetRoleCategory(ClientId, AspNetRoleName, CategoryId)
+SELECT DISTINCT ClientId, AspNetRoleName, ParentCategoryId FROM RetailSlnSch.CategoryItemMasterHierOld ORDER BY AspNetRoleName, ParentCategoryId
+--End AspNetRoleCategory
 --Begin Language in Books
 INSERT RetailSlnSch.ItemItemSpec(ClientId, ItemId, ItemSpecMasterId, ItemSpecUnitValue, ItemSpecValue, SeqNum, SeqNumItem)
 SELECT 3 ClientId, ItemId, 28 AS ItemSpecMasterId, '' AS ItemSpecUnitValue, [Language] ItemSpecValue, 28 AS SeqNum, 28 AS SeqNumItem FROM DivineBija_Books ORDER BY ItemId

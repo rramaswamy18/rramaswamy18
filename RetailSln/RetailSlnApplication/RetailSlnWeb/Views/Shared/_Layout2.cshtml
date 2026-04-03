@@ -1,8 +1,10 @@
-﻿@using ArchitectureLibraryCacheData
+﻿<!--_Layout2.cshtml-->
+@using ArchitectureLibraryCacheData
 @using ArchitectureLibraryModels
 @using RetailSlnCacheData
 @using RetailSlnModels
 @{
+    #region Backend Code
     //DivineBija - 97, 98, 99
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
@@ -22,9 +24,9 @@
     }
     isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
     bool mobileDevice = Request.Browser.IsMobileDevice;
-    //mobileDevice = true;
     Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[aspNetRoleNameProxy];
-    List<CategoryItemMasterHierModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleNameProxy][0];
+    List<CategoryModel> categoryItemMasterHierModels = RetailSlnCache.AspNetRoleCategoryHierCategorys[aspNetRoleNameProxy][0];
+    #endregion
 }
 <!DOCTYPE html>
 <html lang="en">
