@@ -20,23 +20,17 @@
             The specification implemented by this class is ISO 19005-1
             </remarks>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfA1Checker.#ctor(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Creates a PdfA1Checker with the required conformance level</summary>
-            <param name="conformanceLevel">
-            the required conformance level, <c>a</c> or
+        <member name="M:iText.Pdfa.Checker.PdfA1Checker.#ctor(iText.Kernel.Pdf.PdfAConformance)">
+            <summary>Creates a PdfA1Checker with the required conformance</summary>
+            <param name="aConformance">
+            the required conformance, <c>a</c> or
             <c>b</c>
             </param>
-        </member>
-        <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckColor(iText.Kernel.Colors.Color,iText.Kernel.Pdf.PdfDictionary,System.Nullable{System.Boolean},iText.Kernel.Pdf.PdfStream)">
-            <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckColor(iText.Kernel.Pdf.Canvas.CanvasGraphicsState,iText.Kernel.Colors.Color,iText.Kernel.Pdf.PdfDictionary,System.Nullable{System.Boolean},iText.Kernel.Pdf.PdfStream)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckColorSpace(iText.Kernel.Pdf.Colorspace.PdfColorSpace,iText.Kernel.Pdf.PdfObject,iText.Kernel.Pdf.PdfDictionary,System.Boolean,System.Nullable{System.Boolean})">
-            <summary><inheritDoc/></summary>
-        </member>
-        <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckColorsUsages">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckPageColorsUsages(iText.Kernel.Pdf.PdfDictionary,iText.Kernel.Pdf.PdfDictionary)">
@@ -130,21 +124,22 @@
             The specification implemented by this class is ISO 19005-2
             </remarks>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfA2Checker.#ctor(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Creates a PdfA2Checker with the required conformance level</summary>
-            <param name="conformanceLevel">
-            the required conformance level, <c>a</c> or
+        <member name="M:iText.Pdfa.Checker.PdfA2Checker.#ctor(iText.Kernel.Pdf.PdfAConformance)">
+            <summary>Creates a PdfA2Checker with the required conformance</summary>
+            <param name="aConformance">
+            the required conformance, <c>a</c> or
             <c>u</c> or <c>b</c>
             </param>
-        </member>
-        <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckColor(iText.Kernel.Colors.Color,iText.Kernel.Pdf.PdfDictionary,System.Nullable{System.Boolean},iText.Kernel.Pdf.PdfStream)">
-            <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckColor(iText.Kernel.Pdf.Canvas.CanvasGraphicsState,iText.Kernel.Colors.Color,iText.Kernel.Pdf.PdfDictionary,System.Nullable{System.Boolean},iText.Kernel.Pdf.PdfStream)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckColorSpace(iText.Kernel.Pdf.Colorspace.PdfColorSpace,iText.Kernel.Pdf.PdfObject,iText.Kernel.Pdf.PdfDictionary,System.Boolean,System.Nullable{System.Boolean})">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckNumberOfDeviceNComponents(iText.Kernel.Pdf.Colorspace.PdfSpecialCs.DeviceN)">
+            <summary>Checks the number of components in DeviceN color space.</summary>
+            <param name="deviceN">the color space to check</param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckAnnotation(iText.Kernel.Pdf.PdfDictionary)">
             <summary><inheritDoc/></summary>
@@ -179,9 +174,9 @@
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckFormXObject(iText.Kernel.Pdf.PdfStream)">
             <summary>
-            For pdf/a-2+ checkers use the
-            <c>checkFormXObject(PdfStream form, PdfStream contentStream)</c>
-            method
+            For pdf/a-2+ checkers this method is overridden to use
+            <see cref="M:iText.Pdfa.Checker.PdfA2Checker.CheckFormXObject(iText.Kernel.Pdf.PdfStream,iText.Kernel.Pdf.PdfStream)"/>
+            method.
             </summary>
             <param name="form">
             the
@@ -254,10 +249,10 @@
             The specification implemented by this class is ISO 19005-3
             </remarks>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfA3Checker.#ctor(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Creates a PdfA3Checker with the required conformance level</summary>
-            <param name="conformanceLevel">
-            the required conformance level, <c>a</c> or
+        <member name="M:iText.Pdfa.Checker.PdfA3Checker.#ctor(iText.Kernel.Pdf.PdfAConformance)">
+            <summary>Creates a PdfA3Checker with the required conformance</summary>
+            <param name="aConformance">
+            the required conformance, <c>a</c> or
             <c>u</c> or <c>b</c>
             </param>
         </member>
@@ -275,9 +270,9 @@
             The specification implemented by this class is ISO 19005-4
             </remarks>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfA4Checker.#ctor(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Creates a PdfA4Checker with the required conformance level</summary>
-            <param name="conformanceLevel">the required conformance level</param>
+        <member name="M:iText.Pdfa.Checker.PdfA4Checker.#ctor(iText.Kernel.Pdf.PdfAConformance)">
+            <summary>Creates a PdfA4Checker with the required conformance</summary>
+            <param name="aConformance">the required conformance</param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA4Checker.CheckColorSpace(iText.Kernel.Pdf.Colorspace.PdfColorSpace,iText.Kernel.Pdf.PdfObject,iText.Kernel.Pdf.PdfDictionary,System.Boolean,System.Nullable{System.Boolean})">
             <summary><inheritDoc/></summary>
@@ -370,6 +365,37 @@
         <member name="M:iText.Pdfa.Checker.PdfA4Checker.GetMaxNameLength">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Pdfa.Checker.PdfA4Checker.IsValidXmpConformance(System.String)">
+            <summary>
+            A PDF/A-4e conforming file shall specify the value of
+            <c>pdfa:conformance</c>
+            as E.
+            </summary>
+            <remarks>
+            A PDF/A-4e conforming file shall specify the value of
+            <c>pdfa:conformance</c>
+            as E. A PDF/A-4f conforming file
+            shall specify the value of
+            <c>pdfa:conformance</c>
+            as F. A file that does not conform to either PDF/A-4e or
+            PDF/A-4f shall not provide any
+            <c>pdfa:conformance</c>.
+            </remarks>
+            <param name="value">
+            
+            <c>pdfa:conformance</c>
+            value to check
+            </param>
+            <returns>
+            
+            <see langword="true"/>
+            if
+            <c>pdfa:conformance</c>
+            value is valid,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
         <member name="T:iText.Pdfa.Checker.PdfAChecker">
             <summary>
             An abstract class that will run through all necessary checks defined in the
@@ -427,6 +453,7 @@
             maximum number of graphics state operators with code <c>q</c> that
             may be opened (i.e. not yet closed by a corresponding <c>Q</c>) at
             any point in a content stream sequence.
+            <para />
             Defined as 28 by PDF/A-1 section 6.1.12, by referring to the PDF spec
             Appendix C table 1 "architectural limits".
             </remarks>
@@ -437,14 +464,15 @@
             Contains some objects that are already checked.
             NOTE: Not all objects that were checked are stored in that set. This set is used for avoiding double checks for
             actions, signatures, xObjects and page objects; and for letting those objects to be manually flushed.
+            <para />
             Use this mechanism carefully: objects that are able to be changed (or at least if object's properties
             that shall be checked are able to be changed) shouldn't be marked as checked if they are not to be
             flushed immediately.
             </remarks>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.#ctor(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Creates a PdfAChecker with the required conformance level.</summary>
-            <param name="conformanceLevel">the required conformance level</param>
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.#ctor(iText.Kernel.Pdf.PdfAConformance)">
+            <summary>Creates a PdfAChecker with the required conformance.</summary>
+            <param name="aConformance">the required conformance</param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckDocument(iText.Kernel.Pdf.PdfCatalog)">
             <summary>
@@ -458,6 +486,16 @@
             as private methods in this class.
             </remarks>
             <param name="catalog">The catalog being checked</param>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.Validate(iText.Kernel.Validation.IValidationContext)">
+            <summary>
+            <inheritDoc/>.
+            </summary>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.IsPdfObjectReadyToFlush(iText.Kernel.Pdf.PdfObject)">
+            <summary>
+            <inheritDoc/>.
+            </summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckSinglePage(iText.Kernel.Pdf.PdfPage)">
             <summary>
@@ -473,13 +511,13 @@
             </summary>
             <param name="obj">the COS object that must be checked</param>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.GetConformanceLevel">
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.GetAConformance">
             <summary>
             Gets the
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfAConformance"/>
             for this file.
             </summary>
-            <returns>the defined conformance level for this document.</returns>
+            <returns>the defined conformance for this document.</returns>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.IsFullCheckMode">
             <summary>In full check mode all objects will be tested for ISO conformance.</summary>
@@ -501,14 +539,6 @@
             <param name="fullCheckMode">is a new value for full check mode switcher</param>
             <seealso cref="M:iText.Kernel.Pdf.PdfObject.IsModified"/>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.ObjectIsChecked(iText.Kernel.Pdf.PdfObject)">
-            <summary>
-            Remembers which objects have already been checked, in order to avoid
-            redundant checks.
-            </summary>
-            <param name="object">the object to check</param>
-            <returns>whether or not the object has already been checked</returns>
-        </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckTagStructureElement(iText.Kernel.Pdf.PdfObject)">
             <summary>
             This method checks compliance of the tag structure elements, such as struct elements
@@ -525,8 +555,14 @@
             </param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckSignatureType(System.Boolean)">
-            <summary>This method checks compliance of the signature type</summary>
-            <param name="isCAdES">true is CAdES sig type is used, false otherwise.</param>
+            <summary>This method checks compliance of the signature type.</summary>
+            <param name="isCAdES">
+            
+            <see langword="true"/>
+            if CAdES signature type is used,
+            <see langword="false"/>
+            otherwise
+            </param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckCanvasStack(System.Char)">
             <summary>
@@ -552,25 +588,6 @@
             containing the color spaces used in the document
             </param>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckColor(iText.Kernel.Colors.Color,iText.Kernel.Pdf.PdfDictionary,System.Nullable{System.Boolean},iText.Kernel.Pdf.PdfStream)">
-            <summary>
-            This method checks compliance with the color restrictions imposed by the
-            available color spaces in the document.
-            </summary>
-            <remarks>
-            This method checks compliance with the color restrictions imposed by the
-            available color spaces in the document.
-            This method will be abstract in update 7.2
-            </remarks>
-            <param name="color">the color to check</param>
-            <param name="currentColorSpaces">
-            a
-            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            containing the color spaces used in the document
-            </param>
-            <param name="fill">whether the color is used for fill or stroke operations</param>
-            <param name="contentStream">current content stream</param>
-        </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckColor(iText.Kernel.Pdf.Canvas.CanvasGraphicsState,iText.Kernel.Colors.Color,iText.Kernel.Pdf.PdfDictionary,System.Nullable{System.Boolean},iText.Kernel.Pdf.PdfStream)">
             <summary>
             This method checks compliance with the color restrictions imposed by the
@@ -593,20 +610,6 @@
             </summary>
             <param name="colorSpace">the color space to check</param>
             <param name="pdfObject">the pdf object to check color space in</param>
-            <param name="currentColorSpaces">
-            a
-            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            containing the color spaces used in the document
-            </param>
-            <param name="checkAlternate">whether or not to also check the parent color space</param>
-            <param name="fill">whether the color space is used for fill or stroke operations</param>
-        </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckColorSpace(iText.Kernel.Pdf.Colorspace.PdfColorSpace,iText.Kernel.Pdf.PdfDictionary,System.Boolean,System.Nullable{System.Boolean})">
-            <summary>
-            This method performs a range of checks on the given color space, depending
-            on the type and properties of that color space.
-            </summary>
-            <param name="colorSpace">the color space to check</param>
             <param name="currentColorSpaces">
             a
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
@@ -674,20 +677,35 @@
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckCrypto(iText.Kernel.Pdf.PdfObject)">
             <summary>Verify the conformity of encryption usage.</summary>
-            <param name="crypto">Encryption object to verify.</param>
+            <param name="crypto">encryption object to verify</param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckText(System.String,iText.Kernel.Font.PdfFont)">
             <summary>Verify the conformity of the text written by the specified font.</summary>
-            <param name="text">Text to verify.</param>
-            <param name="font">Font to verify the text against.</param>
+            <param name="text">text to verify</param>
+            <param name="font">font to verify the text against</param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckContentStream(iText.Kernel.Pdf.PdfStream)">
             <summary>Attest content stream conformance with appropriate specification.</summary>
             <remarks>
             Attest content stream conformance with appropriate specification.
-            Throws PdfAConformanceException if any discrepancy was found
+            <para />
+            Throws
+            <see cref="T:iText.Pdfa.Exceptions.PdfAConformanceException"/>
+            if any discrepancy was found.
             </remarks>
             <param name="contentStream">is a content stream to validate</param>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckContentStream(iText.Kernel.Pdf.PdfStream,iText.Kernel.Pdf.PdfResources)">
+            <summary>Attest content stream conformance with appropriate specification.</summary>
+            <remarks>
+            Attest content stream conformance with appropriate specification.
+            <para />
+            Throws
+            <see cref="T:iText.Pdfa.Exceptions.PdfAConformanceException"/>
+            if any discrepancy was found.
+            </remarks>
+            <param name="contentStream">is a content stream to validate</param>
+            <param name="resources">the resources of the contentStream</param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckContentStreamObject(iText.Kernel.Pdf.PdfObject)">
             <summary>
@@ -740,20 +758,17 @@
             to be checked
             </param>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckColorsUsages">
-            <summary>Verify the conformity of used color spaces.</summary>
-        </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckPageColorsUsages(iText.Kernel.Pdf.PdfDictionary,iText.Kernel.Pdf.PdfDictionary)">
             <summary>Verify the conformity of used color spaces on the page.</summary>
             <param name="pageDict">
             the
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            contains contents for colors to be checked.
+            contains contents for colors to be checked
             </param>
             <param name="pageResources">
             the
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            contains resources for colors to be checked.
+            contains resources for colors to be checked
             </param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckImage(iText.Kernel.Pdf.PdfStream,iText.Kernel.Pdf.PdfDictionary)">
@@ -907,7 +922,7 @@
             <param name="catalog">
             the
             <see cref="T:iText.Kernel.Pdf.PdfCatalog"/>
-            of trailer to check.
+            of trailer to check
             </param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckPageTransparency(iText.Kernel.Pdf.PdfDictionary,iText.Kernel.Pdf.PdfDictionary)">
@@ -921,14 +936,6 @@
             the
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             contains resources for transparency to be checked
-            </param>
-        </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckResources(iText.Kernel.Pdf.PdfDictionary)">
-            <summary>Verify the conformity of the resources dictionary.</summary>
-            <param name="resources">
-            the
-            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            to be checked
             </param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckResources(iText.Kernel.Pdf.PdfDictionary,iText.Kernel.Pdf.PdfObject)">
@@ -946,14 +953,14 @@
             <param name="flag">to be checked</param>
             <returns>true if the specified flag is set</returns>
         </member>
-        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckStructure(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Checks conformance level of PDF/A standard.</summary>
-            <param name="conformanceLevel">
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckStructure(iText.Kernel.Pdf.PdfAConformance)">
+            <summary>Checks conformance of PDF/A standard.</summary>
+            <param name="aConformance">
             the
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfAConformance"/>
             to be checked
             </param>
-            <returns>true if the specified conformanceLevel is <c>a</c> for PDF/A-1, PDF/A-2 or PDF/A-3</returns>
+            <returns>true if the specified aConformance is <c>a</c> for PDF/A-1, PDF/A-2 or PDF/A-3</returns>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.IsContainsTransparencyGroup(iText.Kernel.Pdf.PdfDictionary)">
             <summary>Checks whether the specified dictionary has a transparency group.</summary>
@@ -1013,62 +1020,24 @@
         <member name="T:iText.Pdfa.Logs.PdfALogMessageConstant">
             <summary>Class containing constants to be used in logging.</summary>
         </member>
-        <member name="T:iText.Pdfa.PdfAAgnosticPdfDocument">
+        <member name="T:iText.Pdfa.PdfADefaultFontStrategy">
             <summary>
-            This class extends
-            <see cref="T:iText.Pdfa.PdfADocument"/>
-            and serves as
-            <see cref="T:iText.Pdfa.PdfADocument"/>
-            for
-            PDF/A compliant documents and as
-            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            for non PDF/A documents.
+            The class presents default font strategy for PDF/A documents which
+            doesn't provide default font because all used fonts must be embedded.
             </summary>
-            <remarks>
-            This class extends
-            <see cref="T:iText.Pdfa.PdfADocument"/>
-            and serves as
-            <see cref="T:iText.Pdfa.PdfADocument"/>
-            for
-            PDF/A compliant documents and as
-            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            for non PDF/A documents.
-            <para />
-            This class can throw various exceptions like
-            <see cref="T:iText.Kernel.Exceptions.PdfException"/>
-            as well as
-            <see cref="T:iText.Pdfa.Exceptions.PdfAConformanceException"/>
-            for PDF/A documents.
-            </remarks>
         </member>
-        <member name="M:iText.Pdfa.PdfAAgnosticPdfDocument.#ctor(iText.Kernel.Pdf.PdfReader,iText.Kernel.Pdf.PdfWriter)">
-            <summary>Opens a PDF/A document in stamping mode.</summary>
-            <param name="reader">
-            the
-            <see cref="T:iText.Kernel.Pdf.PdfReader"/>
-            </param>
-            <param name="writer">
-            the
-            <see cref="T:iText.Kernel.Pdf.PdfWriter"/>
-            object to write to
-            </param>
+        <member name="M:iText.Pdfa.PdfADefaultFontStrategy.#ctor(iText.Kernel.Pdf.PdfDocument)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Pdfa.PdfADefaultFontStrategy"/>
+            instance based on the document which will use that strategy.
+            </summary>
+            <param name="pdfDocument">the pdf document which will use that strategy</param>
         </member>
-        <member name="M:iText.Pdfa.PdfAAgnosticPdfDocument.#ctor(iText.Kernel.Pdf.PdfReader,iText.Kernel.Pdf.PdfWriter,iText.Kernel.Pdf.StampingProperties)">
-            <summary>Opens a PDF/A document in stamping mode.</summary>
-            <param name="reader">
-            the
-            <see cref="T:iText.Kernel.Pdf.PdfReader"/>
-            </param>
-            <param name="writer">
-            the
-            <see cref="T:iText.Kernel.Pdf.PdfWriter"/>
-            object to write to
-            </param>
-            <param name="properties">
-            
-            <see cref="T:iText.Kernel.Pdf.StampingProperties"/>
-            of the stamping process
-            </param>
+        <member name="M:iText.Pdfa.PdfADefaultFontStrategy.GetFont">
+            <summary>
+            <inheritDoc/>.
+            </summary>
         </member>
         <member name="T:iText.Pdfa.PdfADocument">
             <summary>
@@ -1082,23 +1051,25 @@
             <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
             and is in charge of creating files
             that comply with the PDF/A standard.
+            <para />
             Client code is still responsible for making sure the file is actually PDF/A
             compliant: multiple steps must be undertaken (depending on the
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
             ) to ensure that the PDF/A standard is followed.
+            <para />
             This class will throw exceptions, mostly
             <see cref="T:iText.Pdfa.Exceptions.PdfAConformanceException"/>
             ,
             and thus refuse to output a PDF/A file if at any point the document does not
             adhere to the PDF/A guidelines specified by the
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>.
             </remarks>
         </member>
-        <member name="M:iText.Pdfa.PdfADocument.#ctor(iText.Kernel.Pdf.PdfWriter,iText.Kernel.Pdf.PdfAConformanceLevel,iText.Kernel.Pdf.PdfOutputIntent)">
+        <member name="M:iText.Pdfa.PdfADocument.#ctor(iText.Kernel.Pdf.PdfWriter,iText.Kernel.Pdf.PdfAConformance,iText.Kernel.Pdf.PdfOutputIntent)">
             <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
             <remarks>
             Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
-            PDF/A file has a conformance level, and must have an explicit output
+            PDF/A file has a conformance, and must have an explicit output
             intent.
             </remarks>
             <param name="writer">
@@ -1106,17 +1077,17 @@
             <see cref="T:iText.Kernel.Pdf.PdfWriter"/>
             object to write to
             </param>
-            <param name="conformanceLevel">the generation and strictness level of the PDF/A that must be followed.</param>
+            <param name="aConformance">the generation and strictness level of the PDF/A that must be followed.</param>
             <param name="outputIntent">
             a
             <see cref="T:iText.Kernel.Pdf.PdfOutputIntent"/>
             </param>
         </member>
-        <member name="M:iText.Pdfa.PdfADocument.#ctor(iText.Kernel.Pdf.PdfWriter,iText.Kernel.Pdf.PdfAConformanceLevel,iText.Kernel.Pdf.PdfOutputIntent,iText.Kernel.Pdf.DocumentProperties)">
+        <member name="M:iText.Pdfa.PdfADocument.#ctor(iText.Kernel.Pdf.PdfWriter,iText.Kernel.Pdf.PdfAConformance,iText.Kernel.Pdf.PdfOutputIntent,iText.Kernel.Pdf.DocumentProperties)">
             <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
             <remarks>
             Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
-            PDF/A file has a conformance level, and must have an explicit output
+            PDF/A file has a conformance, and must have an explicit output
             intent.
             </remarks>
             <param name="writer">
@@ -1124,7 +1095,7 @@
             <see cref="T:iText.Kernel.Pdf.PdfWriter"/>
             object to write to
             </param>
-            <param name="conformanceLevel">the generation and strictness level of the PDF/A that must be followed.</param>
+            <param name="aConformance">the generation and strictness level of the PDF/A that must be followed.</param>
             <param name="outputIntent">
             a
             <see cref="T:iText.Kernel.Pdf.PdfOutputIntent"/>
@@ -1133,13 +1104,6 @@
             a
             <see cref="T:iText.Kernel.Pdf.DocumentProperties"/>
             </param>
-        </member>
-        <member name="M:iText.Pdfa.PdfADocument.GetDefaultFont">
-            <summary>No default font for PDF/A documents.</summary>
-            <returns>
-            
-            <see langword="null"/>.
-            </returns>
         </member>
         <member name="M:iText.Pdfa.PdfADocument.#ctor(iText.Kernel.Pdf.PdfReader,iText.Kernel.Pdf.PdfWriter)">
             <summary>Opens a PDF/A document in the stamping mode.</summary>
@@ -1152,46 +1116,58 @@
             <param name="writer">PDF writer.</param>
             <param name="properties">properties of the stamping process</param>
         </member>
-        <member name="M:iText.Pdfa.PdfADocument.GetConformanceLevel">
-            <summary><inheritDoc/></summary>
-        </member>
-        <member name="M:iText.Pdfa.PdfADocument.AddOutputIntent(iText.Kernel.Pdf.PdfOutputIntent)">
-            <summary><inheritDoc/></summary>
-            <param name="outputIntent">
-            
-            <inheritDoc/>
-            </param>
-        </member>
-        <member name="M:iText.Pdfa.PdfADocument.CheckIsoConformance(System.Object,iText.Kernel.Pdf.IsoKey,iText.Kernel.Pdf.PdfResources,iText.Kernel.Pdf.PdfStream,System.Object)">
-            <param name="obj">an object to conform.</param>
-            <param name="key">type of object to conform.</param>
-            <param name="resources">
-            
-            <see cref="T:iText.Kernel.Pdf.PdfResources"/>
-            associated with an object to check.
-            </param>
-            <param name="contentStream">current content stream.</param>
-            <param name="extra">extra data required for the check.</param>
-        </member>
-        <member name="M:iText.Pdfa.PdfADocument.SetChecker(iText.Kernel.Pdf.PdfAConformanceLevel)">
+        <member name="M:iText.Pdfa.PdfADocument.GetCorrectCheckerFromConformance(iText.Kernel.Pdf.PdfAConformance)">
             <summary>
-            Sets the checker that defines the requirements of the PDF/A standard
-            depending on conformance level.
+            Gets correct
+            <see cref="T:iText.Pdfa.Checker.PdfAChecker"/>
+            for specified PDF/A conformance.
             </summary>
-            <param name="conformanceLevel">
-            
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
-            </param>
+            <param name="aConformance">the conformance for which checker is needed</param>
+            <returns>the correct PDF/A checker</returns>
         </member>
-        <member name="M:iText.Pdfa.PdfADocument.InitTagStructureContext">
-            <summary>Initializes tagStructureContext to track necessary information of document's tag structure.</summary>
+        <member name="T:iText.Pdfa.PdfADocumentInfoHelper">
+            <summary>The class is helper which used for PDF/A document to properly configure PDF document's info dictionary.
+                </summary>
         </member>
-        <member name="M:iText.Pdfa.PdfADocument.FlushInfoDictionary(System.Boolean)">
-            <summary><inheritDoc/></summary>
-            <param name="appendMode">
-            
-            <inheritDoc/>
-            </param>
+        <member name="M:iText.Pdfa.PdfADocumentInfoHelper.#ctor(iText.Kernel.Pdf.PdfDocument)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Pdfa.PdfADocumentInfoHelper"/>
+            instance based on the document.
+            </summary>
+            <param name="pdfDocument">the pdf document which will use that helper</param>
+        </member>
+        <member name="M:iText.Pdfa.PdfADocumentInfoHelper.ShouldAddDocumentInfoToTrailer">
+            <summary>
+            <inheritDoc/>.
+            </summary>
+        </member>
+        <member name="M:iText.Pdfa.PdfADocumentInfoHelper.AdjustDocumentInfo(iText.Kernel.Pdf.PdfDocumentInfo)">
+            <summary>
+            <inheritDoc/>.
+            </summary>
+        </member>
+        <member name="T:iText.Pdfa.PdfAPageFactory">
+            <summary>The class implements PDF page factory which is used for creating correct PDF/A documents.</summary>
+        </member>
+        <member name="M:iText.Pdfa.PdfAPageFactory.#ctor(iText.Pdfa.Checker.PdfAChecker)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Pdfa.PdfAPageFactory"/>
+            instance based on
+            <see cref="T:iText.Pdfa.Checker.PdfAChecker"/>.
+            </summary>
+            <param name="checker">the PDF/A checker</param>
+        </member>
+        <member name="M:iText.Pdfa.PdfAPageFactory.CreatePdfPage(iText.Kernel.Pdf.PdfDictionary)">
+            <summary>
+            <inheritDoc/>.
+            </summary>
+        </member>
+        <member name="M:iText.Pdfa.PdfAPageFactory.CreatePdfPage(iText.Kernel.Pdf.PdfDocument,iText.Kernel.Geom.PageSize)">
+            <summary>
+            <inheritDoc/>.
+            </summary>
         </member>
         <member name="T:iText.Pdfa.PdfAXMPUtil">
             <summary>Utilities to construct an XMP for a PDF/A file.</summary>

@@ -1028,6 +1028,14 @@
             defaulting to respective viewbox values if either one is not present or
             to browser default if viewbox is missing as well
             </summary>
+            <remarks>
+            Extract width and height of the passed SVGNodeRenderer,
+            defaulting to respective viewbox values if either one is not present or
+            to browser default if viewbox is missing as well
+            <para />
+            Deprecated in favour of
+            <see cref="M:iText.Svg.Utils.SvgCssUtils.ExtractWidthAndHeight(iText.Svg.Renderers.ISvgNodeRenderer,System.Single,iText.Svg.Renderers.SvgDrawContext)"/>
+            </remarks>
             <param name="topSvgRenderer">
             the
             <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
@@ -1052,11 +1060,8 @@
             <summary>Helper class that allows you to check if a property is inheritable.</summary>
         </member>
         <member name="F:iText.Svg.Css.Impl.SvgAttributeInheritance.inheritableProperties">
-            <summary>
-            Set of inheritable SVG style attributes
-            in accordance with "http://www.w3schools.com/cssref/"
-            and "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference"
-            </summary>
+            <summary>Set of inheritable SVG style attributes in accordance with "https://www.w3.org/TR/SVG2/propidx.html".
+                </summary>
         </member>
         <member name="T:iText.Svg.Css.Impl.SvgNodeRendererInheritanceResolver">
             <summary>
@@ -1116,11 +1121,51 @@
             <param name="rootNode">node to collect css from</param>
             <param name="context">the processor context</param>
         </member>
+        <member name="M:iText.Svg.Css.Impl.SvgStyleResolver.ResolveFontSizeStyle(System.Collections.Generic.IDictionary{System.String,System.String},iText.Svg.Css.SvgCssContext,System.String)">
+            <summary>Resolves the font size stored inside the current element.</summary>
+            <param name="styles">attributes map of the current element</param>
+            <param name="cssContext">
+            
+            <see cref="T:iText.Svg.Css.SvgCssContext"/>
+            instance in order to resolve relative font size
+            </param>
+            <param name="parentFontSizeStr">parent font size value</param>
+        </member>
+        <member name="M:iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested(iText.StyledXmlParser.Node.IElementNode,System.String)">
+            <summary>Checks whether element is nested within the passed parent element.</summary>
+            <remarks>
+            Checks whether element is nested within the passed parent element. Nesting is checked at several levels
+            (recursively).
+            </remarks>
+            <param name="element">
+            
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            element to check
+            </param>
+            <param name="parentElementNameForSearch">expected parent element name</param>
+            <returns>
+            
+            <see langword="true"/>
+            if element is nested within the expected parent,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
         <member name="M:iText.Svg.Css.Impl.SvgStyleResolver.ResolveNativeStyles(iText.StyledXmlParser.Node.INode,iText.StyledXmlParser.Css.Resolve.AbstractCssContext)">
             <summary>Resolves node styles without inheritance of parent element styles.</summary>
             <param name="node">the node</param>
             <param name="cssContext">the CSS context (RootFontSize, etc.)</param>
             <returns>the map containing the resolved styles that are defined in the body of the element</returns>
+        </member>
+        <member name="M:iText.Svg.Css.Impl.SvgStyleResolver.PutMissingVariables(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Merge variables from parent node with current one.</summary>
+            <remarks>
+            Merge variables from parent node with current one.
+            This is needed for svg elements like &lt;defs&gt;, which do not inherit parent styles, but do inherit
+            css variables.
+            </remarks>
+            <param name="styles">current element styles to put variable in</param>
+            <param name="parentStyles">styles to search variables for</param>
         </member>
         <member name="M:iText.Svg.Css.Impl.SvgStyleResolver.ProcessXLink(iText.StyledXmlParser.Node.IAttribute,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
@@ -1169,6 +1214,10 @@
         <member name="M:iText.Svg.Css.SvgCssContext.SetRootFontSize(System.String)">
             <summary>Sets the root font size.</summary>
             <param name="fontSizeStr">the new root font size</param>
+        </member>
+        <member name="M:iText.Svg.Css.SvgCssContext.SetRootFontSize(System.Single)">
+            <summary>Sets the root font size.</summary>
+            <param name="rootFontSize">the new root font size</param>
         </member>
         <member name="T:iText.Svg.Css.SvgStrokeParameterConverter">
             <summary>This class converts stroke related SVG parameters and attributes into those from PDF specification.
@@ -1229,6 +1278,17 @@
             <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>.
             </param>
         </member>
+        <member name="M:iText.Svg.Element.SvgImage.GetSvgImageXObject">
+            <summary>
+            Gets the
+            <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>
+            contained in this image object.
+            </summary>
+            <returns>
+            a
+            <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>
+            </returns>
+        </member>
         <member name="M:iText.Svg.Element.SvgImage.Generate(iText.Kernel.Pdf.PdfDocument)">
             <summary>
             Draws SVG image to a canvas-like object maintained in the
@@ -1260,6 +1320,12 @@
         </member>
         <member name="T:iText.Svg.Logs.SvgLogMessageConstant">
             <summary>Class that holds the logging and exception messages.</summary>
+        </member>
+        <member name="F:iText.Svg.Logs.SvgLogMessageConstant.MISSING_WIDTH">
+            <summary>The constant not used anymore and will be removed in the next major release.</summary>
+        </member>
+        <member name="F:iText.Svg.Logs.SvgLogMessageConstant.MISSING_HEIGHT">
+            <summary>The constant not used anymore and will be removed in the next major release.</summary>
         </member>
         <member name="T:iText.Svg.MarkerVertexType">
             <summary>
@@ -1341,6 +1407,18 @@
         <member name="T:iText.Svg.Processors.Impl.Font.SvgFontProcessor">
             <summary>Class that processes and add resolved css fonts to the FontProvider</summary>
         </member>
+        <member name="M:iText.Svg.Processors.Impl.Font.SvgFontProcessor.#ctor(iText.Svg.Processors.Impl.SvgProcessorContext)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Processors.Impl.Font.SvgFontProcessor"/>
+            instance.
+            </summary>
+            <param name="context">
+            
+            <see cref="T:iText.Svg.Processors.Impl.SvgProcessorContext"/>
+            to add resolved fonts to
+            </param>
+        </member>
         <member name="M:iText.Svg.Processors.Impl.Font.SvgFontProcessor.AddFontFaceFonts(iText.StyledXmlParser.Css.ICssResolver)">
             <summary>Adds @font-face fonts to the FontProvider.</summary>
             <param name="cssResolver">the css styles resolver</param>
@@ -1414,6 +1492,63 @@
             Instantiates its members, IResourceRetriever and ISvgNodeRendererFactory, to its default implementations.
             </remarks>
         </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.GetCustomViewport">
+            <summary>Gets the custom viewport of SVG.</summary>
+            <remarks>
+            Gets the custom viewport of SVG.
+            <para />
+            The custom viewport is used to resolve percent values of the top level svg.
+            </remarks>
+            <returns>the custom viewport</returns>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.GetAccessibilityProperties">
+            <summary>Gets the accessibility properties.</summary>
+            <returns>the accessibility properties.</returns>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.SetCustomViewport(iText.Kernel.Geom.Rectangle)">
+            <summary>Sets the custom viewport of SVG.</summary>
+            <remarks>
+            Sets the custom viewport of SVG.
+            <para />
+            The custom viewport is used to resolve percent values of the top level svg.
+            </remarks>
+            <param name="customViewport">the custom viewport</param>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.SetRendererFactory(iText.Svg.Renderers.Factories.ISvgNodeRendererFactory)">
+            <summary>Sets renderer factory.</summary>
+            <param name="rendererFactory">
+            
+            <see cref="T:iText.Svg.Renderers.Factories.ISvgNodeRendererFactory"/>
+            to set
+            </param>
+            <returns>
+            this
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.SetFontProvider(iText.Layout.Font.FontProvider)">
+            <summary>Sets font provider.</summary>
+            <param name="fontProvider">
+            
+            <see cref="T:iText.Layout.Font.FontProvider"/>
+            to set
+            </param>
+            <returns>
+            this
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.SetCharset(System.String)">
+            <summary>Sets the character set.</summary>
+            <param name="charset">the character set to set</param>
+            <returns>
+            this
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>
+            instance
+            </returns>
+        </member>
         <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.GetBaseUri">
             <summary>Gets the base URI.</summary>
             <returns>the base URI</returns>
@@ -1443,6 +1578,19 @@
             The resourceRetriever is used to retrieve data from resources by URL.
             </remarks>
             <param name="resourceRetriever">the resource retriever</param>
+            <returns>
+            the
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgConverterProperties.SetCssStyleSheet(iText.StyledXmlParser.Css.CssStyleSheet)">
+            <summary>Sets the CSS style sheet.</summary>
+            <remarks>
+            Sets the CSS style sheet.
+            Style sheet is used to apply CSS statements to elements.
+            </remarks>
+            <param name="cssStyleSheet">the CSS style sheet</param>
             <returns>
             the
             <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>
@@ -1513,6 +1661,10 @@
             <summary>Add temporary font from @font-face.</summary>
             <param name="fontInfo">the font info</param>
             <param name="alias">the alias</param>
+        </member>
+        <member name="M:iText.Svg.Processors.Impl.SvgProcessorContext.GetCssStyleSheet">
+            <summary>Gets the CSS style sheet.</summary>
+            <returns>the CSS style sheet</returns>
         </member>
         <member name="T:iText.Svg.Processors.Impl.SvgProcessorResult">
             <summary>
@@ -1616,6 +1768,14 @@
             The resourceRetriever is used to retrieve data from resources by URL.
             </remarks>
             <returns>the resource retriever</returns>
+        </member>
+        <member name="M:iText.Svg.Processors.ISvgConverterProperties.GetCssStyleSheet">
+            <summary>Gets the CSS style sheet.</summary>
+            <remarks>
+            Gets the CSS style sheet.
+            Style sheet is used to apply CSS statements to elements.
+            </remarks>
+            <returns>the CSS style sheet</returns>
         </member>
         <member name="T:iText.Svg.Processors.ISvgProcessor">
             <summary>Interface for SVG processors.</summary>
@@ -1789,6 +1949,11 @@
         </member>
         <member name="F:iText.Svg.Renderers.Impl.AbstractBranchSvgNodeRenderer.VIEWBOX_VALUES_NUMBER">
             <summary>The number of viewBox values.</summary>
+            <remarks>
+            The number of viewBox values.
+            Deprecate in favour of
+            <c>SvgConstants.Values.VIEWBOX_VALUES_NUMBER</c>
+            </remarks>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractBranchSvgNodeRenderer.DoDraw(iText.Svg.Renderers.SvgDrawContext)">
             <summary>
@@ -1808,15 +1973,6 @@
             <summary>Applies a clipping operation based on the view port.</summary>
             <param name="context">the svg draw context</param>
         </member>
-        <member name="M:iText.Svg.Renderers.Impl.AbstractBranchSvgNodeRenderer.ProcessAspectRatioPosition(iText.Svg.Renderers.SvgDrawContext,System.Single[],System.String,System.Single,System.Single)">
-            <summary>If present, process the preserveAspectRatio position.</summary>
-            <param name="context">the svg draw context</param>
-            <param name="viewBoxValues">the four values depicting the viewbox [min-x min-y width height]</param>
-            <param name="align">alignment method to use</param>
-            <param name="scaleWidth">the multiplier for scaling width</param>
-            <param name="scaleHeight">the multiplier for scaling height</param>
-            <returns>the transformation based on the preserveAspectRatio value</returns>
-        </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractBranchSvgNodeRenderer.CleanUp(iText.Svg.Renderers.SvgDrawContext)">
             <summary>Cleans up the SvgDrawContext by removing the current viewport and by popping the current canvas.</summary>
             <param name="context">context to clean</param>
@@ -1828,29 +1984,37 @@
             </summary>
             <param name="deepCopy">renderer to add copies of children to</param>
         </member>
-        <member name="M:iText.Svg.Renderers.Impl.AbstractBranchSvgNodeRenderer.WriteBBoxAccordingToVisibleOverflow(iText.Svg.Renderers.SvgDrawContext,iText.Kernel.Pdf.PdfStream)">
+        <member name="M:iText.Svg.Renderers.Impl.AbstractBranchSvgNodeRenderer.GetBBoxAccordingToVisibleOverflow(iText.Svg.Renderers.SvgDrawContext)">
             <summary>
             When in the svg element
             <c>overflow</c>
             is
             <c>visible</c>
-            the corresponding formXObject
-            should have a BBox (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries)
-            that should cover the entire svg space (page in pdf) in order to be able to show parts of the element which are outside the current element viewPort.
+            the corresponding formXObject should have a BBox
+            (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries) that should cover the entire svg
+            space (page in pdf) in order to be able to show parts of the element which are outside the current element
+            viewPort.
             </summary>
             <remarks>
             When in the svg element
             <c>overflow</c>
             is
             <c>visible</c>
-            the corresponding formXObject
-            should have a BBox (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries)
-            that should cover the entire svg space (page in pdf) in order to be able to show parts of the element which are outside the current element viewPort.
-            To do this, we get the inverse matrix of all the current transformation matrix changes and apply it to the root viewPort.
-            This allows you to get the root rectangle in the final coordinate system.
+            the corresponding formXObject should have a BBox
+            (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries) that should cover the entire svg
+            space (page in pdf) in order to be able to show parts of the element which are outside the current element
+            viewPort. To do this, we get the inverse matrix of all the current transformation matrix changes and apply it
+            to the root viewPort. This allows you to get the root rectangle in the final coordinate system.
             </remarks>
             <param name="context">current context to get canvases and view ports</param>
-            <param name="stream">stream to write a BBox</param>
+            <returns>
+            the set to
+            <c>PdfStream</c>
+            bbox
+            </returns>
+        </member>
+        <member name="T:iText.Svg.Renderers.Impl.AbstractContainerSvgNodeRenderer">
+            <summary>Abstract class that will be the superclass for any element that instantiates new view port.</summary>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractContainerSvgNodeRenderer.CalculateViewPort(iText.Svg.Renderers.SvgDrawContext)">
             <summary>Calculate the viewport based on the context.</summary>
@@ -1942,8 +2106,37 @@
             <returns>true if the renderer can construct a viewport</returns>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.GetCurrentFontSize">
-            <summary>Return font-size of the current element</summary>
+            <summary>Return font-size of the current element in px.</summary>
+            <remarks>
+            Return font-size of the current element in px.
+            <para />
+            This method is deprecated in favour of
+            <see cref="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.GetCurrentFontSize(iText.Svg.Renderers.SvgDrawContext)"/>
+            because
+            current one can't support relative values (em, rem) and those can't be resolved without
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>.
+            </remarks>
             <returns>absolute value of font-size</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.GetCurrentFontSize(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Return font-size of the current element in px.</summary>
+            <param name="context">draw context from which root font size can be extracted</param>
+            <returns>absolute value of font-size</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.GetCurrentViewBox(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Gets the viewbox from the first parent element which can define it.</summary>
+            <remarks>
+            Gets the viewbox from the first parent element which can define it.
+            <para />
+            See <a href="https://svgwg.org/svg2-draft/coords.html#establishinganewsvgviewport">SVG specification</a>
+            to find which elements can define a viewbox.
+            </remarks>
+            <param name="context">draw context from which fallback viewbox can be extracted</param>
+            <returns>
+            the viewbox or
+            <see langword="null"/>
+            if the element doesn't have parent which can define the viewbox
+            </returns>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.DeepCopyAttributesAndStyles(iText.Svg.Renderers.ISvgNodeRenderer)">
             <summary>
@@ -1955,6 +2148,37 @@
         <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.DoDraw(iText.Svg.Renderers.SvgDrawContext)">
             <summary>Draws this element to a canvas-like object maintained in the context.</summary>
             <param name="context">the object that knows the place to draw this element and maintains its state</param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.IsHidden">
+            <summary>Check if this renderer should draw the element based on its attributes (e.g. visibility/display)</summary>
+            <returns>true if element won't be drawn, false otherwise</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.GetParentClipPath">
+            <summary>
+            Gets parent
+            <see cref="T:iText.Svg.Renderers.Impl.ClipPathSvgNodeRenderer"/>
+            if it exists or
+            <see langword="null"/>
+            otherwise.
+            </summary>
+            <returns>
+            the parent
+            <see cref="T:iText.Svg.Renderers.Impl.ClipPathSvgNodeRenderer"/>
+            or
+            <see langword="null"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.ApplyNonScalingStrokeTransform(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>
+            Applies non-scaling-stroke vector-effect to this renderer by concatenating all transformations applied
+            from the top level of the svg to the current one, inverting it and applying to the current canvas.
+            </summary>
+            <param name="context">the SVG draw context</param>
+            <returns>
+            the transformation that was inverted and applied to this renderer
+            to achieve non-scaling-stroke vector-effect
+            </returns>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.CalculateViewPortTranslation(iText.Svg.Renderers.SvgDrawContext)">
             <summary>Calculate the transformation for the viewport based on the context.</summary>
@@ -1973,6 +2197,15 @@
             </remarks>
             <param name="context">the svg draw context</param>
         </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.DoStrokeOrFill(System.String,iText.Kernel.Pdf.Canvas.PdfCanvas)">
+            <summary>
+            Do stroke or fill based on
+            <c>doFill/doStroke</c>
+            fields.
+            </summary>
+            <param name="fillRuleRawValue">fill rule attribute value.</param>
+            <param name="currentCanvas">current canvas to draw on.</param>
+        </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.PreDraw(iText.Svg.Renderers.SvgDrawContext)">
             <summary>Operations to perform before drawing an element.</summary>
             <remarks>
@@ -1981,8 +2214,74 @@
             </remarks>
             <param name="context">the svg draw context</param>
         </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.ParseHorizontalLength(System.String,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Parse x-axis length value.</summary>
+            <remarks>
+            Parse x-axis length value.
+            If this method is called and there is no view port in
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            , a default current viewport
+            will be created. This can happen if svg is created manually
+            (not through
+            <see cref="T:iText.Svg.Element.SvgImage"/>
+            or
+            <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>
+            )
+            and don't have
+            <see cref="T:iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer"/>
+            as its parent.
+            </remarks>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            length for parsing
+            </param>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            instance
+            </param>
+            <returns>absolute length in points</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.ParseVerticalLength(System.String,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Parse y-axis length value.</summary>
+            <remarks>
+            Parse y-axis length value.
+            If this method is called and there is no view port in
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            , a default current viewport
+            will be created. This can happen if svg is created manually
+            (not through
+            <see cref="T:iText.Svg.Element.SvgImage"/>
+            or
+            <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>
+            )
+            and don't have
+            <see cref="T:iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer"/>
+            as its parent.
+            </remarks>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            length for parsing
+            </param>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            instance
+            </param>
+            <returns>absolute length in points</returns>
+        </member>
         <member name="M:iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer.ParseAbsoluteLength(System.String,System.Single,System.Single,iText.Svg.Renderers.SvgDrawContext)">
             <summary>Parse length attributes.</summary>
+            <remarks>
+            Parse length attributes.
+            <para />
+            This method is deprecated and
+            <see cref="M:iText.Svg.Utils.SvgCssUtils.ParseAbsoluteLength(iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer,System.String,System.Single,System.Single,iText.Svg.Renderers.SvgDrawContext)"/>
+            should
+            be used instead.
+            </remarks>
             <param name="length">
             
             <see cref="T:System.String"/>
@@ -2008,9 +2307,24 @@
             This renderer represents a collection of elements (simple shapes and paths).
             The elements are not drawn visibly, but the union of their shapes will be used
             to only show the parts of the drawn objects that fall within the clipping path.
+            <para />
             In PDF, the clipping path operators use the intersection of all its elements, not the union (as in SVG);
             thus, we need to draw the clipped elements multiple times if the clipping path consists of multiple elements.
             </remarks>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ClipPathSvgNodeRenderer.DrawClippedRenderer(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Draw the clipped renderer.</summary>
+            <param name="context">the context on which clipped renderer will be drawn</param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ClipPathSvgNodeRenderer.SetClippedRenderer(iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer)">
+            <summary>Sets the clipped renderer.</summary>
+            <param name="clippedRenderer">the clipped renderer</param>
+        </member>
+        <member name="T:iText.Svg.Renderers.Impl.DefsSvgNodeRenderer">
+            <summary>
+            <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
+            implementation for the &lt;defs&gt; tag.
+            </summary>
         </member>
         <member name="T:iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer">
             <summary>
@@ -2023,7 +2337,29 @@
             Fetches a map of String values by calling getAttribute(String s) method
             and maps it's values to arc parameter cx, cy , rx, ry respectively
             </summary>
+            <remarks>
+            Fetches a map of String values by calling getAttribute(String s) method
+            and maps it's values to arc parameter cx, cy , rx, ry respectively
+            <para />
+            This method is deprecated in favour of
+            <see cref="M:iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer.SetParameters(iText.Svg.Renderers.SvgDrawContext)"/>
+            , because
+            x/y/rx/ry can contain relative values which can't be resolved without
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>.
+            </remarks>
             <returns>boolean values to indicate whether all values exit or not</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer.SetParameters(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>
+            Fetches a map of String values by calling getAttribute(String s) method
+            and maps it's values to arc parameter cx, cy , rx, ry respectively
+            </summary>
+            <param name="context">the SVG draw context</param>
+            <returns>boolean values to indicate whether all values exit or not</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer.InitCenter(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Initialize ellipse cx and cy.</summary>
+            <param name="context">svg draw context</param>
         </member>
         <member name="T:iText.Svg.Renderers.Impl.GroupSvgNodeRenderer">
             <summary>This renderer represents a branch in an SVG tree.</summary>
@@ -2036,6 +2372,75 @@
             Responsible for drawing Images to the canvas.
             Referenced SVG images aren't supported yet. TODO DEVSIX-2277
             </remarks>
+        </member>
+        <member name="T:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer">
+            <summary>Interface for &lt;text&gt; and &lt;tspan&gt; related renderers.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer.GetTextContentLength(System.Single,iText.Kernel.Font.PdfFont)">
+            <summary>Gets text content length.</summary>
+            <param name="parentFontSize">parent font size</param>
+            <param name="font">current font</param>
+            <returns>text content length</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer.GetRelativeTranslation">
+            <summary>
+            This method is deprecated and will be replaced with new signature
+            <c>getRelativeTranslation(SvgDrawContext)</c>.
+            </summary>
+            <remarks>
+            This method is deprecated and will be replaced with new signature
+            <c>getRelativeTranslation(SvgDrawContext)</c>.
+            This is needed because xMove/yMove can contain relative values, so SvgDrawContext is needed to resolve them.
+            </remarks>
+            <returns>text relative translation</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer.ContainsRelativeMove">
+            <summary>
+            This method is deprecated and will be replaced with new signature
+            <c>containsRelativeMove(SvgDrawContext)</c>.
+            </summary>
+            <remarks>
+            This method is deprecated and will be replaced with new signature
+            <c>containsRelativeMove(SvgDrawContext)</c>.
+            This is needed because xMove/yMove can contain relative values, so SvgDrawContext is needed to resolve them.
+            </remarks>
+            <returns>
+            
+            <see langword="true"/>
+            if there is a relative move,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer.ContainsAbsolutePositionChange">
+            <summary>
+            This method is deprecated and will be replaced with new signature
+            <c>containsAbsolutePositionChange(SvgDrawContext)</c>.
+            </summary>
+            <remarks>
+            This method is deprecated and will be replaced with new signature
+            <c>containsAbsolutePositionChange(SvgDrawContext)</c>.
+            This is needed because x/y can contain relative values, so SvgDrawContext is needed to resolve them.
+            </remarks>
+            <returns>
+            
+            <see langword="true"/>
+            if an absolute position is specified via x/y attributes,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer.GetAbsolutePositionChanges">
+            <summary>
+            This method is deprecated and will be replaced with new signature
+            <c>getAbsolutePositionChanges(SvgDrawContext)</c>.
+            </summary>
+            <remarks>
+            This method is deprecated and will be replaced with new signature
+            <c>getAbsolutePositionChanges(SvgDrawContext)</c>.
+            This is needed because x/y can contain relative values, so SvgDrawContext is needed to resolve them.
+            </remarks>
+            <returns>text absolute position</returns>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer.GetTextRectangle(iText.Svg.Renderers.SvgDrawContext,iText.Kernel.Geom.Point)">
             <summary>Return the bounding rectangle of the text element.</summary>
@@ -2066,6 +2471,13 @@
             <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
             implementation for the &lt;marker&gt; tag.
             </summary>
+        </member>
+        <member name="F:iText.Svg.Renderers.Impl.MarkerSvgNodeRenderer.MARKER_INDEX">
+            <summary>Attribute defining the marker index on polygon, line or polyline.</summary>
+            <remarks>
+            Attribute defining the marker index on polygon, line or polyline.
+            It is not a property from css standard, used for internal marker processing.
+            </remarks>
         </member>
         <member name="T:iText.Svg.Renderers.Impl.PathSvgNodeRenderer">
             <summary>
@@ -2131,6 +2543,10 @@
             <see cref="T:iText.Svg.Renderers.Path.Impl.MoveTo"/>
             operation before it may be drawn.
             </remarks>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.PathSvgNodeRenderer.DoDraw(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Draws this element to a canvas-like object maintained in the context.</summary>
+            <param name="context">the object that knows the place to draw this element and maintains its state</param>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.PathSvgNodeRenderer.GetShapeCoordinates(iText.Svg.Renderers.Path.IPathShape,iText.Svg.Renderers.Path.IPathShape,System.String[])">
             <summary>
@@ -2262,12 +2678,27 @@
             implementation for the &lt;polyline&gt; tag.
             </summary>
         </member>
+        <member name="F:iText.Svg.Renderers.Impl.PolylineSvgNodeRenderer.previousOrientationVector">
+            <summary>Orientation vector which is used for marker angle calculation.</summary>
+        </member>
         <member name="F:iText.Svg.Renderers.Impl.PolylineSvgNodeRenderer.points">
             <summary>
             A List of
             <see cref="T:iText.Kernel.Geom.Point"/>
-            objects representing the path to be drawn by the polyline tag
+            objects representing the path to be drawn by the polyline tag.
             </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.PolylineSvgNodeRenderer.GetPoints">
+            <summary>
+            Returns a list of
+            <see cref="T:iText.Kernel.Geom.Point"/>
+            objects representing the path to be drawn by the polyline tag.
+            </summary>
+            <returns>
+            a list of
+            <see cref="T:iText.Kernel.Geom.Point"/>
+            objects
+            </returns>
         </member>
         <member name="M:iText.Svg.Renderers.Impl.PolylineSvgNodeRenderer.SetPoints(System.String)">
             <summary>
@@ -2360,6 +2791,12 @@
             implementation for the &lt;svg&gt; tag.
             </summary>
         </member>
+        <member name="T:iText.Svg.Renderers.Impl.SymbolSvgNodeRenderer">
+            <summary>
+            <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
+            implementation for the &lt;symbol&gt; tag.
+            </summary>
+        </member>
         <member name="T:iText.Svg.Renderers.Impl.TextLeafSvgNodeRenderer">
             <summary>
             <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
@@ -2376,6 +2813,98 @@
             <summary>Top level transformation to flip the y-axis results in the character glyphs being mirrored, this tf corrects for this behaviour
                 </summary>
         </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Impl.TextSvgBranchRenderer"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.AddChild(iText.Svg.Renderers.Impl.ISvgTextNodeRenderer)">
+            <summary>
+            Adds a child to the current
+            <see cref="T:iText.Svg.Renderers.Impl.TextSvgBranchRenderer"/>
+            renderer.
+            </summary>
+            <param name="child">
+            
+            <see cref="T:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer"/>
+            child to add
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.GetChildren">
+            <summary>
+            Retrieves a list of all children of the current
+            <see cref="T:iText.Svg.Renderers.Impl.TextSvgBranchRenderer"/>
+            renderer.
+            </summary>
+            <returns>
+            a list of
+            <see cref="T:iText.Svg.Renderers.Impl.ISvgTextNodeRenderer"/>
+            children
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.GetRelativeTranslation(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Gets relative translation of the current &lt;text&gt; or &lt;tspan&gt; element.</summary>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>
+            float array that contains relative
+            <c>dx</c>
+            and
+            <c>dy</c>
+            translations
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.ContainsRelativeMove(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Checks whether current &lt;text&gt; or &lt;tspan&gt; element contains relative position change.</summary>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>
+            
+            <see langword="true"/>
+            is current element contains relative position,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.ContainsAbsolutePositionChange(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Checks whether current &lt;text&gt; or &lt;tspan&gt; element contains absolute position attributes.
+                </summary>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>
+            
+            <see langword="true"/>
+            is current element contains absolute position,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.GetAbsolutePositionChanges(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Gets absolute position of the current &lt;text&gt; or &lt;tspan&gt; element.</summary>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>
+            float array that contains absolute
+            <c>x</c>
+            and
+            <c>y</c>
+            positions as either single item arrays
+            or null if attribute is not present
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.MarkWhiteSpaceProcessed">
+            <summary>Marks white-space property as processed.</summary>
+        </member>
         <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.DoDraw(iText.Svg.Renderers.SvgDrawContext)">
             <summary>
             Method that will set properties to be inherited by this branch renderer's
@@ -2386,14 +2915,29 @@
             maintains its state
             </param>
         </member>
-        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.GetFont">
-            <summary>Return the font used in this text element.</summary>
-            <remarks>
-            Return the font used in this text element.
-            Note that font should already be resolved with
-            <see cref="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.ResolveFont(iText.Svg.Renderers.SvgDrawContext)"/>.
-            </remarks>
-            <returns>font of the current text element</returns>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgBranchRenderer.GetCommonRectangleWithAnchor(iText.Kernel.Geom.Rectangle,iText.Kernel.Geom.Rectangle,System.Single,System.String)">
+            <summary>
+            Adjust absolutely positioned text chunk (shift it to the start of view port, apply text anchor) and
+            merge it with the common text rectangle.
+            </summary>
+            <param name="commonRect">rectangle for the whole text tag</param>
+            <param name="textChunkRect">rectangle for the last absolutely positioned text chunk</param>
+            <param name="absoluteX">last absolute x position</param>
+            <param name="textAnchorValue">text anchor for the last text chunk</param>
+            <returns>merged common text rectangle</returns>
+        </member>
+        <member name="T:iText.Svg.Renderers.Impl.TextSvgTSpanBranchRenderer">
+            <summary>
+            <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
+            implementation for the &lt;tspan&gt; tag.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Impl.TextSvgTSpanBranchRenderer.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Impl.TextSvgTSpanBranchRenderer"/>
+            instance.
+            </summary>
         </member>
         <member name="T:iText.Svg.Renderers.Impl.UseSvgNodeRenderer">
             <summary>Renderer implementing the use tag.</summary>
@@ -2511,16 +3055,180 @@
         <member name="F:iText.Svg.Renderers.Path.Impl.AbstractPathShape.relative">
             <summary>Whether this is a relative operator or not.</summary>
         </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.AbstractPathShape"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.AbstractPathShape"/>
+            instance.
+            </summary>
+            <param name="relative">boolean defining whether this is a relative operator</param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.#ctor(System.Boolean,iText.Svg.Renderers.Path.Impl.IOperatorConverter)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.AbstractPathShape"/>
+            instance.
+            </summary>
+            <param name="relative">boolean defining whether this is a relative operator</param>
+            <param name="copier">
+            
+            <see cref="T:iText.Svg.Renderers.Path.Impl.IOperatorConverter"/>
+            copier for converting relative coordinates to absolute coordinates
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.CreatePoint(System.String,System.String)">
+            <summary>
+            Creates
+            <see cref="T:iText.Kernel.Geom.Point"/>
+            based on provided
+            <c>x</c>
+            and
+            <c>y</c>
+            coordinates.
+            </summary>
+            <param name="coordX">
+            
+            <c>x</c>
+            coordinate of the point
+            </param>
+            <param name="coordY">
+            
+            <c>y</c>
+            coordinate of the point
+            </param>
+            <returns>
+            created
+            <see cref="T:iText.Kernel.Geom.Point"/>
+            instance
+            </returns>
+        </member>
         <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.GetPathShapeRectangle(iText.Kernel.Geom.Point)">
             <summary>Get bounding rectangle of the current path shape.</summary>
             <param name="lastPoint">start point for this shape</param>
             <returns>calculated rectangle</returns>
         </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.Draw">
+            <summary>Draws this instruction to a canvas object.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.SetParent(iText.Svg.Renderers.Impl.PathSvgNodeRenderer)">
+            <summary>Set parent path for this shape.</summary>
+            <param name="parent">
+            
+            <see cref="T:iText.Svg.Renderers.Impl.PathSvgNodeRenderer"/>
+            instance
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.SetContext(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Set svg draw context for this shape.</summary>
+            <param name="context">
+            
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            instance.
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.SetTransform(iText.Kernel.Geom.AffineTransform)">
+            <summary>
+            Sets
+            <see cref="T:iText.Kernel.Geom.AffineTransform"/>
+            to apply before drawing the shape.
+            </summary>
+            <param name="transform">
+            
+            <see cref="T:iText.Kernel.Geom.AffineTransform"/>
+            to apply before drawing
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.ParseHorizontalLength(System.String)">
+            <summary>Parse x axis length value.</summary>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            length for parsing
+            </param>
+            <returns>absolute length in points</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.ParseVerticalLength(System.String)">
+            <summary>Parse y axis length value.</summary>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            length for parsing
+            </param>
+            <returns>absolute length in points</returns>
+        </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.ClosePath">
-            <summary>Implements closePath(Z) attribute of SVG's path element</summary>
+            <summary>Implements closePath(Z) attribute of SVG's path element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.ClosePath.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.ClosePath"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.ClosePath.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.ClosePath"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.CurveTo">
-            <summary>Implements curveTo(C) attribute of SVG's path element</summary>
+            <summary>Implements curveTo(C) attribute of SVG's path element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.CurveTo.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.CurveTo"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.CurveTo.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.CurveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.CurveTo.#ctor(System.Boolean,iText.Svg.Renderers.Path.Impl.IOperatorConverter)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.CurveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
+            <param name="copier">
+            
+            <see cref="T:iText.Svg.Renderers.Path.Impl.IOperatorConverter"/>
+            copier for converting relative coordinates to absolute coordinates
+            </param>
         </member>
         <member name="M:iText.Svg.Renderers.Path.Impl.CurveTo.GetBezierMinMaxPoints(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
@@ -2797,10 +3505,52 @@
             </remarks>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.LineTo">
-            <summary>Implements lineTo(L) attribute of SVG's path element</summary>
+            <summary>Implements lineTo(L) attribute of SVG's path element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.LineTo.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.LineTo"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.LineTo.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.LineTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.MoveTo">
-            <summary>Implements moveTo(M) attribute of SVG's path element</summary>
+            <summary>Implements moveTo(M) attribute of SVG's path element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.MoveTo.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.MoveTo"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.MoveTo.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.MoveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.PathShapeMapper">
             <summary>
@@ -2814,9 +3564,49 @@
             </summary>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo">
-            <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element</summary>
+            <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element.</summary>
         </member>
-        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo.Draw(iText.Kernel.Pdf.Canvas.PdfCanvas)">
+        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo.#ctor(System.Boolean,iText.Svg.Renderers.Path.Impl.IOperatorConverter)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
+            <param name="copier">
+            
+            <see cref="T:iText.Svg.Renderers.Path.Impl.IOperatorConverter"/>
+            copier for converting relative coordinates to absolute coordinates
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticCurveTo.Draw">
             <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
                 </summary>
         </member>
@@ -2854,10 +3644,52 @@
             <param name="tValuesList">list storing t values</param>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.QuadraticSmoothCurveTo">
-            <summary>Implements shorthand/smooth quadraticCurveTo (T) attribute of SVG's path element</summary>
+            <summary>Implements shorthand/smooth quadraticCurveTo (T) attribute of SVG's path element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticSmoothCurveTo.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.QuadraticSmoothCurveTo"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.QuadraticSmoothCurveTo.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.QuadraticSmoothCurveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.SmoothSCurveTo">
-            <summary>Implements shorthand/smooth curveTo (S) attribute of SVG's path element</summary>
+            <summary>Implements shorthand/smooth curveTo (S) attribute of SVG's path element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.SmoothSCurveTo.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.SmoothSCurveTo"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.Impl.SmoothSCurveTo.#ctor(System.Boolean)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Renderers.Path.Impl.SmoothSCurveTo"/>
+            instance.
+            </summary>
+            <param name="relative">
+            
+            <see langword="true"/>
+            in case it is a relative operator,
+            <see langword="false"/>
+            if it is an absolute operator
+            </param>
         </member>
         <member name="T:iText.Svg.Renderers.Path.Impl.VerticalLineTo">
             <summary>Implements lineTo(V) attribute of SVG's path element</summary>
@@ -2875,6 +3707,22 @@
         </member>
         <member name="M:iText.Svg.Renderers.Path.IPathShape.Draw(iText.Kernel.Pdf.Canvas.PdfCanvas)">
             <summary>Draws this instruction to a canvas object.</summary>
+            <remarks>
+            Draws this instruction to a canvas object.
+            <para />
+            Deprecated in favour of
+            <see cref="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.Draw"/>
+            and later this method should be introduced
+            in this interface, along with
+            <see cref="M:iText.Svg.Renderers.Path.Impl.AbstractPathShape.SetContext(iText.Svg.Renderers.SvgDrawContext)"
+                />
+            method. Since
+            canvas can be got from
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            the
+            <see cref="T:iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+            parameter is no more needed.
+            </remarks>
             <param name="canvas">to which this instruction is drawn</param>
         </member>
         <member name="M:iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[],iText.Kernel.Geom.Point)">
@@ -2925,9 +3773,20 @@
             <returns>
             a
             <see cref="!:System.Collections.IDictionary&lt;K, V&gt;"/>
-            with Strings as keys and {link @
+            with Strings as keys and
             <see cref="T:iText.Svg.Renderers.Path.IPathShape"/>
             implementations as values
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.Path.IPathShapeMapper.GetArgumentCount">
+            <summary>
+            Provides a mapping of SVG path element's path-data instruction name to the appropriate number of arguments
+            for a path command, based on this passed SVG path data instruction tag.
+            </summary>
+            <returns>
+            a
+            <see cref="!:System.Collections.IDictionary&lt;K, V&gt;"/>
+            with Strings as keys and Integers as values
             </returns>
         </member>
         <member name="T:iText.Svg.Renderers.Path.SvgPathShapeFactory">
@@ -2971,6 +3830,24 @@
             instance of
             <see cref="T:iText.Layout.Font.FontProvider"/>
             </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetCustomViewport">
+            <summary>Gets the custom viewport of SVG.</summary>
+            <remarks>
+            Gets the custom viewport of SVG.
+            <para />
+            The custom viewport is used to resolve percent values of the top level svg.
+            </remarks>
+            <returns>the custom viewport</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.SetCustomViewport(iText.Kernel.Geom.Rectangle)">
+            <summary>Sets the custom viewport of SVG.</summary>
+            <remarks>
+            Sets the custom viewport of SVG.
+            <para />
+            The custom viewport is used to resolve percent values of the top level svg.
+            </remarks>
+            <param name="customViewport">the custom viewport</param>
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.GetCurrentCanvas">
             <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
@@ -3063,7 +3940,7 @@
             <param name="elementId">referenced element ID</param>
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.GetLastTextTransform">
-            <summary>Get the text transformation that was last applied</summary>
+            <summary>Get the text transformation that was last applied.</summary>
             <returns>
             
             <see cref="T:iText.Kernel.Geom.AffineTransform"/>
@@ -3071,23 +3948,35 @@
             </returns>
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.SetLastTextTransform(iText.Kernel.Geom.AffineTransform)">
-            <summary>Set the last text transformation</summary>
+            <summary>Set the last text transformation.</summary>
             <param name="newTransform">last text transformation</param>
         </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetRootTransform">
+            <summary>Get the current root transformation that was last applied.</summary>
+            <returns>
+            
+            <see cref="T:iText.Kernel.Geom.AffineTransform"/>
+            representing the root transformation.
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.SetRootTransform(iText.Kernel.Geom.AffineTransform)">
+            <summary>Set the current root transformation.</summary>
+            <param name="newTransform">root transformation.</param>
+        </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.GetTextMove">
-            <summary>Get the stored current text move</summary>
+            <summary>Get the stored current text move.</summary>
             <returns>[horizontal text move, vertical text move]</returns>
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.ResetTextMove">
             <summary>Reset the stored text move to [0f,0f]</summary>
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.AddTextMove(System.Single,System.Single)">
-            <summary>Increment the stored text move</summary>
+            <summary>Increment the stored text move.</summary>
             <param name="additionalMoveX">horizontal value to add</param>
             <param name="additionalMoveY">vertical value to add</param>
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.GetCurrentCanvasTransform">
-            <summary>Get the current canvas transformation</summary>
+            <summary>Get the current canvas transformation.</summary>
             <returns>
             the
             <see cref="T:iText.Kernel.Geom.AffineTransform"/>
@@ -3122,6 +4011,82 @@
         </member>
         <member name="M:iText.Svg.Renderers.SvgDrawContext.PopPatternId">
             <summary>Pops the last template id from the stack.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.SetPreviousElementTextMove(System.Single[])">
+            <summary>Sets a previous element text move.</summary>
+            <param name="previousElementTextMove">previous element text move</param>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetPreviousElementTextMove">
+            <summary>Gets a previous element text move.</summary>
+            <returns>the previous element text move</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetSvgTextProperties">
+            <summary>
+            Retrieves
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            for text SVG elements.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            text properties
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.SetSvgTextProperties(iText.Svg.Utils.SvgTextProperties)">
+            <summary>
+            Sets
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            for textSVG elements.
+            </summary>
+            <param name="textProperties">
+            
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            to set
+            </param>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetRelativePosition">
+            <summary>
+            Retrieves relative position for the current text SVG element relative to the last origin
+            identified by absolute position.
+            </summary>
+            <returns>relative position for the current text SVG element</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.MoveRelativePosition(System.Single,System.Single)">
+            <summary>Adds move to the current relative position for the text SVG element.</summary>
+            <param name="dx">x-axis movement</param>
+            <param name="dy">y-axis movement</param>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.ResetRelativePosition">
+            <summary>Resets current relative position for the text SVG element.</summary>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetClippingElementTransform">
+            <summary>Gets clipping element transformation matrix.</summary>
+            <remarks>
+            Gets clipping element transformation matrix.
+            <para />
+            It is used to preserve clipping element transformation matrix and before drawing clipped element revert canvas
+            transformation matrix into original state. After clipped element will be drawn, clipping element transformation
+            matrix will be used once again to return clipping element matrix for next siblings.
+            </remarks>
+            <returns>the current clipping element transformation matrix</returns>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.ResetClippingElementTransform">
+            <summary>Resets clipping element transformation matrix.</summary>
+            <remarks>
+            Resets clipping element transformation matrix.
+            <para />
+            See
+            <see cref="M:iText.Svg.Renderers.SvgDrawContext.GetClippingElementTransform"/>
+            for more info about clipping element transformation matrix.
+            </remarks>
+        </member>
+        <member name="M:iText.Svg.Renderers.SvgDrawContext.GetConcatenatedTransform">
+            <summary>Concatenates all transformations applied from the top level of the svg to the current one.</summary>
+            <returns>
+            
+            <see cref="T:iText.Kernel.Geom.AffineTransform"/>
+            instance
+            </returns>
         </member>
         <member name="T:iText.Svg.Renderers.SvgImageRenderer">
             <summary>
@@ -3444,6 +4409,9 @@
         <member name="F:iText.Svg.SvgConstants.Tags.VKERN">
             <summary>Tag defining the vertical kerning values in between two glyphs.</summary>
         </member>
+        <member name="F:iText.Svg.SvgConstants.Tags.XML_STYLESHEET">
+            <summary>Tag defining the xml stylesheet declaration.</summary>
+        </member>
         <member name="T:iText.Svg.SvgConstants.Attributes">
             <summary>Class containing the constant property names for the attributes of tags in the SVG spec</summary>
         </member>
@@ -3461,6 +4429,9 @@
         </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.D">
             <summary>Attribute defining the outline of a shape.</summary>
+        </member>
+        <member name="F:iText.Svg.SvgConstants.Attributes.DIRECTION">
+            <summary>Attribute defining the direction used by the text</summary>
         </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.DX">
             <summary>Attribute defining the relative x-translation of a text-element</summary>
@@ -3516,6 +4487,9 @@
         </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.MARKER_HEIGHT">
             <summary>Attribute defining the height of the viewport in which the marker is to be fitted</summary>
+        </member>
+        <member name="F:iText.Svg.SvgConstants.Attributes.MARKER">
+            <summary>Attribute defining shorthand for marker-start/marker-mid/marker-end</summary>
         </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.MARKER_MID">
             <summary>Attribute defining the marker drawn at every other vertex but the start and end of a path, line, polygon or polyline
@@ -3656,6 +4630,9 @@
         <member name="F:iText.Svg.SvgConstants.Attributes.STROKE_LINECAP">
             <summary>Attribute defining the stroke linecap.</summary>
         </member>
+        <member name="F:iText.Svg.SvgConstants.Attributes.STROKE_LINEJOIN">
+            <summary>Attribute defining the stroke linejoin.</summary>
+        </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.STROKE_MITERLIMIT">
             <summary>Attribute defining the stroke miterlimit.</summary>
         </member>
@@ -3698,6 +4675,9 @@
         <member name="F:iText.Svg.SvgConstants.Attributes.XMLNS">
             <summary>Attribute defining XML namespace</summary>
         </member>
+        <member name="F:iText.Svg.SvgConstants.Attributes.XML_SPACE">
+            <summary>Attribute defining the property that sets how white space inside an element is handled.</summary>
+        </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.Y">
             <summary>Attribute defining the y value of an element.</summary>
         </member>
@@ -3707,8 +4687,11 @@
         <member name="F:iText.Svg.SvgConstants.Attributes.Y2">
             <summary>Attribute defining the second y coordinate value of a line.</summary>
         </member>
+        <member name="F:iText.Svg.SvgConstants.Attributes.VECTOR_EFFECT">
+            <summary>Attribute defining vector-effect.</summary>
+        </member>
         <member name="F:iText.Svg.SvgConstants.Attributes.VERSION">
-            <summary>Attribute defining version</summary>
+            <summary>Attribute defining version.</summary>
         </member>
         <member name="T:iText.Svg.SvgConstants.Values">
             <summary>Class containing the constants for values appearing in SVG tags and attributes</summary>
@@ -3725,6 +4708,27 @@
         <member name="F:iText.Svg.SvgConstants.Values.DEFAULT_ASPECT_RATIO">
             <summary>Value representing the default aspect ratio: xmidymid.</summary>
         </member>
+        <member name="F:iText.Svg.SvgConstants.Values.DEFAULT_VIEWPORT_WIDTH">
+            <summary>Default svg view port width value (300px * 0.75 = 225).</summary>
+            <remarks>
+            Default svg view port width value (300px * 0.75 = 225).
+            See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            </remarks>
+        </member>
+        <member name="F:iText.Svg.SvgConstants.Values.DEFAULT_VIEWPORT_HEIGHT">
+            <summary>Default svg view port height value (150px * 0.75 = 112.5).</summary>
+            <remarks>
+            Default svg view port height value (150px * 0.75 = 112.5).
+            See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            </remarks>
+        </member>
+        <member name="F:iText.Svg.SvgConstants.Values.DEFAULT_WIDTH_AND_HEIGHT_VALUE">
+            <summary>Default width and height value.</summary>
+            <remarks>
+            Default width and height value.
+            See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            </remarks>
+        </member>
         <member name="F:iText.Svg.SvgConstants.Values.DEFER">
             <summary>Value representing how to preserve the aspect ratio when dealing with images.</summary>
         </member>
@@ -3738,7 +4742,10 @@
             <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
         </member>
         <member name="F:iText.Svg.SvgConstants.Values.NONE">
-            <summary>Value representing the "none" value".</summary>
+            <summary>Value representing the "none" value.</summary>
+        </member>
+        <member name="F:iText.Svg.SvgConstants.Values.NONE_SCALING_STROKE">
+            <summary>Value representing the "non-scaling-stroke" value for vector-effect attribute.</summary>
         </member>
         <member name="F:iText.Svg.SvgConstants.Values.OBJECT_BOUNDING_BOX">
             <summary>Value representing the units relation "objectBoundingBox".</summary>
@@ -3770,6 +4777,9 @@
         </member>
         <member name="F:iText.Svg.SvgConstants.Values.USER_SPACE_ON_USE">
             <summary>Value representing the units relation "userSpaceOnUse".</summary>
+        </member>
+        <member name="F:iText.Svg.SvgConstants.Values.VIEWBOX_VALUES_NUMBER">
+            <summary>The number of viewBox values.</summary>
         </member>
         <member name="F:iText.Svg.SvgConstants.Values.XMIN_YMIN">
             <summary>Value representing how to align when scaling.</summary>
@@ -3822,6 +4832,41 @@
             <param name="extent">extent of the arc</param>
             <param name="cv">canvas to paint on</param>
         </member>
+        <member name="M:iText.Svg.Utils.DrawUtils.Arc(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,iText.Kernel.Pdf.Canvas.PdfCanvas,iText.Kernel.Geom.AffineTransform)">
+            <summary>
+            Draw an arc on the passed canvas with provided transform,
+            enclosed by the rectangle for which two opposite corners are specified.
+            </summary>
+            <remarks>
+            Draw an arc on the passed canvas with provided transform,
+            enclosed by the rectangle for which two opposite corners are specified.
+            The arc starts at the passed starting angle and extends to the starting angle + extent
+            </remarks>
+            <param name="x1">corner-coordinate of the enclosing rectangle, first corner</param>
+            <param name="y1">corner-coordinate of the enclosing rectangle, first corner</param>
+            <param name="x2">corner-coordinate of the enclosing rectangle, second corner</param>
+            <param name="y2">corner-coordinate of the enclosing rectangle, second corner</param>
+            <param name="startAng">starting angle in degrees</param>
+            <param name="extent">extent of the arc</param>
+            <param name="cv">canvas to paint on</param>
+            <param name="transform">
+            
+            <see cref="T:iText.Kernel.Geom.AffineTransform"/>
+            to apply before drawing,
+            or
+            <see langword="null"/>
+            in case transform shouldn't be applied
+            </param>
+        </member>
+        <member name="M:iText.Svg.Utils.DrawUtils.DoStrokeOrFillForClosedFigure(System.String,iText.Kernel.Pdf.Canvas.PdfCanvas,System.Boolean)">
+            <summary>Perform stroke or fill operation for closed figure (e.g. Ellipse, Polygon, Circle).</summary>
+            <param name="fillRuleRawValue">fill rule (e.g. evenodd, nonzero)</param>
+            <param name="currentCanvas">canvas to draw on</param>
+            <param name="doStroke">if true, stroke operation will be performed, fill otherwise</param>
+        </member>
+        <member name="T:iText.Svg.Utils.SvgCoordinateUtils">
+            <summary>Utility class that facilitates various methods for calculating/transforming coordinates.</summary>
+        </member>
         <member name="M:iText.Svg.Utils.SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(System.String[],System.Double[])">
             <summary>Converts relative coordinates to absolute ones.</summary>
             <remarks>
@@ -3865,6 +4910,11 @@
             is a percentage value, the given percentage of 1 will be returned.
             And if it's a valid value with a number, the number will be extracted from that value.
             </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgCoordinateUtils.CalculateNormalizedDiagonalLength(iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Calculate normalized diagonal length.</summary>
+            <param name="context">svg draw context.</param>
+            <returns>diagonal length in px.</returns>
         </member>
         <member name="M:iText.Svg.Utils.SvgCoordinateUtils.ApplyViewBox(iText.Kernel.Geom.Rectangle,iText.Kernel.Geom.Rectangle,System.String,System.String)">
             <summary>Returns the viewBox received after scaling and displacement given preserveAspectRatio.</summary>
@@ -3921,6 +4971,262 @@
             <param name="value">to be converted double value</param>
             <returns>the value in a String representation</returns>
         </member>
+        <member name="M:iText.Svg.Utils.SvgCssUtils.ParseAbsoluteLength(iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer,System.String,System.Single,System.Single,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Parse length attribute and convert it to an absolute value.</summary>
+            <param name="svgNodeRenderer">renderer for which length should be parsed</param>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            for parsing
+            </param>
+            <param name="percentBaseValue">the value on which percent length is based on</param>
+            <param name="defaultValue">default value if length is not recognized</param>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>absolute value in points</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgCssUtils.ParseAbsoluteVerticalLength(iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer,System.String,System.Single,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Parses vertical length attribute and converts it to an absolute value.</summary>
+            <param name="svgNodeRenderer">renderer for which length should be parsed</param>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            for parsing
+            </param>
+            <param name="defaultValue">default value if length is not recognized</param>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>absolute value in points</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgCssUtils.ParseAbsoluteHorizontalLength(iText.Svg.Renderers.Impl.AbstractSvgNodeRenderer,System.String,System.Single,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Parses horizontal length attribute and converts it to an absolute value.</summary>
+            <param name="svgNodeRenderer">renderer for which length should be parsed</param>
+            <param name="length">
+            
+            <see cref="T:System.String"/>
+            for parsing
+            </param>
+            <param name="defaultValue">default value if length is not recognized</param>
+            <param name="context">
+            current
+            <see cref="T:iText.Svg.Renderers.SvgDrawContext"/>
+            </param>
+            <returns>absolute value in points</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgCssUtils.ParseViewBox(iText.Svg.Renderers.ISvgNodeRenderer)">
+            <summary>Extract svg viewbox values.</summary>
+            <param name="svgRenderer">
+            the
+            <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
+            instance that contains
+            the renderer tree
+            </param>
+            <returns>float[4] or null, if no correct viewbox property is present.</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgCssUtils.ExtractWidthAndHeight(iText.Svg.Renderers.ISvgNodeRenderer,System.Single,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>
+            Extract width and height of the passed SVGNodeRenderer, defaulting to
+            <see cref="M:iText.Svg.Renderers.SvgDrawContext.GetCustomViewport"/>
+            if either one is not present.
+            </summary>
+            <remarks>
+            Extract width and height of the passed SVGNodeRenderer, defaulting to
+            <see cref="M:iText.Svg.Renderers.SvgDrawContext.GetCustomViewport"/>
+            if either one is not present. If
+            <see cref="M:iText.Svg.Renderers.SvgDrawContext.GetCustomViewport"/>
+            isn't specified, than respective
+            viewbox values or browser default (if viewbox is missing) will be used.
+            </remarks>
+            <param name="svgRenderer">
+            the
+            <see cref="T:iText.Svg.Renderers.ISvgNodeRenderer"/>
+            instance that contains the renderer tree
+            </param>
+            <param name="em">em value in pt</param>
+            <param name="context">the svg draw context</param>
+            <returns>rectangle, where x,y = 0 and width and height are extracted ones by this method.</returns>
+        </member>
+        <member name="T:iText.Svg.Utils.SvgTextProperties">
+            <summary>
+            This class represents
+            <c>text</c>
+            and
+            <c>tspan</c>
+            SVG elements properties identifying their graphics state.
+            </summary>
+            <remarks>
+            This class represents
+            <c>text</c>
+            and
+            <c>tspan</c>
+            SVG elements properties identifying their graphics state.
+            Created for internal usage.
+            </remarks>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.#ctor(iText.Svg.Utils.SvgTextProperties)">
+            <summary>
+            Creates copy of the provided
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance.
+            </summary>
+            <param name="textProperties">
+            
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance to copy
+            </param>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetStrokeColor">
+            <summary>Gets text stroke color.</summary>
+            <returns>stroke color</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetStrokeColor(iText.Kernel.Colors.Color)">
+            <summary>Sets text stroke color.</summary>
+            <param name="strokeColor">stroke color to set</param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetFillColor">
+            <summary>Gets text fill color.</summary>
+            <returns>fill color</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetFillColor(iText.Kernel.Colors.Color)">
+            <summary>Sets text fill color.</summary>
+            <param name="fillColor">fill color to set</param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetLineWidth">
+            <summary>Gets text line (or stroke) width.</summary>
+            <returns>text line width</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetLineWidth(System.Single)">
+            <summary>Sets text line (or stroke) width.</summary>
+            <param name="lineWidth">text line width</param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetStrokeOpacity">
+            <summary>Gets text stroke opacity.</summary>
+            <returns>stroke opacity</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetStrokeOpacity(System.Single)">
+            <summary>Sets text stroke opacity.</summary>
+            <param name="strokeOpacity">stroke opacity to set</param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetFillOpacity">
+            <summary>Gets text fill opacity.</summary>
+            <returns>fill opacity</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetFillOpacity(System.Single)">
+            <summary>Sets text fill opacity.</summary>
+            <param name="fillOpacity">fill opacity to set</param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetTextDecoration">
+            <summary>
+            Gets the list of
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            values representing text-decoration horizontal lines that can be an
+            underline, strikethrough or overline.
+            </summary>
+            <returns>
+            the list of
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            values
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetTextDecoration(System.Collections.Generic.IList{iText.Layout.Properties.Underline})">
+            <summary>
+            Sets the list of
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            values representing text-decoration horizontal lines that can be an
+            underline, strikethrough or overline.
+            </summary>
+            <param name="underlineList">
+            the list of
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            values to set
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetDashArray">
+            <summary>Gets dash array part of the dash pattern to be used when paths are stroked.</summary>
+            <remarks>
+            Gets dash array part of the dash pattern to be used when paths are stroked. Default value is solid line.
+            <para />
+            The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+            where dashArray is itself an array and dashPhase is an integer.
+            <para />
+            An empty dash array (first element in the array) and zero phase (second element in the array)
+            can be used to restore the dash pattern to a solid line.
+            </remarks>
+            <returns>float dash array</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.GetDashPhase">
+            <summary>Gets dash phase part of the dash pattern to be used when paths are stroked.</summary>
+            <remarks>
+            Gets dash phase part of the dash pattern to be used when paths are stroked. Default value is solid line.
+            <para />
+            The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+            where dashArray is itself an array and dashPhase is an integer.
+            <para />
+            An empty dash array (first element in the array) and zero phase (second element in the array)
+            can be used to restore the dash pattern to a solid line.
+            </remarks>
+            <returns>float dash array</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextProperties.SetDashPattern(System.Single[],System.Single)">
+            <summary>Sets a description of the dash pattern to be used when paths are stroked.</summary>
+            <remarks>
+            Sets a description of the dash pattern to be used when paths are stroked. Default value is solid line.
+            <para />
+            The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+            where dashArray is itself an array and dashPhase is a number.
+            <para />
+            An empty dash array (first element in the array) and zero phase (second element in the array)
+            can be used to restore the dash pattern to a solid line.
+            </remarks>
+            <param name="dashArray">dash array</param>
+            <param name="dashPhase">dash phase value</param>
+            <returns>
+            this same
+            <see cref="T:iText.Svg.Utils.SvgTextProperties"/>
+            instance
+            </returns>
+        </member>
         <member name="T:iText.Svg.Utils.SvgTextUtil">
             <summary>Class containing utility methods for text operations in the context of SVG processing</summary>
         </member>
@@ -3945,6 +5251,18 @@
             <param name="isLeadingElement">true if this element is a leading element(either the first child or the first element after an absolute position change)
                 </param>
         </member>
+        <member name="M:iText.Svg.Utils.SvgTextUtil.ProcessWhiteSpace(iText.Svg.Renderers.Impl.TextSvgBranchRenderer,System.Boolean,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Process the whitespace inside the Text Tree.</summary>
+            <remarks>
+            Process the whitespace inside the Text Tree.
+            Whitespace is collapsed and new lines are handled
+            A leading element in each subtree is handled different: the preceding whitespace is trimmed instead of kept
+            </remarks>
+            <param name="root">root of the text-renderer subtree</param>
+            <param name="isLeadingElement">true if this element is a leading element(either the first child or the first element after an absolute position change)
+                </param>
+            <param name="context">the svg draw context</param>
+        </member>
         <member name="M:iText.Svg.Utils.SvgTextUtil.IsOnlyWhiteSpace(System.String)">
             <summary>Check if the String is only composed of whitespace characters</summary>
             <param name="s">string to check</param>
@@ -3963,6 +5281,28 @@
                 </summary>
             <param name="name">value to be filtered</param>
             <returns>filtered value</returns>
+        </member>
+        <member name="M:iText.Svg.Utils.SvgTextUtil.ApplyTextDecoration(iText.Svg.Renderers.Impl.ISvgTextNodeRenderer,System.Boolean,System.Boolean,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Processes text-decoration attribute which is shorthand for text-decoration-line and text-decoration-style.
+                </summary>
+            <remarks>
+            Processes text-decoration attribute which is shorthand for text-decoration-line and text-decoration-style.
+            <para />
+            Note, that text-decoration from styles (resolved in SvgStyleResolver) takes precedence when both are specified.
+            </remarks>
+            <param name="renderer">to apply text-decoration for</param>
+            <param name="doFill">boolean specifying whether text should be filled</param>
+            <param name="doStroke">boolean specifying whether text should be stroked</param>
+            <param name="context">current SVG draw context</param>
+        </member>
+        <member name="T:iText.Svg.Utils.TemplateResolveUtils">
+            <summary>Utility class which contains methods related to href resolving</summary>
+        </member>
+        <member name="M:iText.Svg.Utils.TemplateResolveUtils.Resolve(iText.Svg.Renderers.IBranchSvgNodeRenderer,iText.Svg.Renderers.SvgDrawContext)">
+            <summary>Resolve href to other object within svg and fills renderer with its properties and children if needed.
+                </summary>
+            <param name="renderer">renderer which should be updated after resolving its href attribute</param>
+            <param name="context">svg draw context instance</param>
         </member>
         <member name="T:iText.Svg.Utils.TextRectangle">
             <summary>A rectangle adapted for working with text elements.</summary>
@@ -4137,6 +5477,45 @@
             for the SVG image.
             </param>
         </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.#ctor(iText.Svg.Processors.ISvgProcessorResult,iText.Svg.Renderers.SvgDrawContext,System.Single,iText.Kernel.Pdf.PdfDocument)">
+            <summary>Creates a new instance of Form XObject for the relative sized SVG image.</summary>
+            <param name="result">processor result containing the SVG information</param>
+            <param name="svgContext">the svg draw context</param>
+            <param name="em">em value in pt</param>
+            <param name="pdfDocument">pdf that shall contain the SVG image, can be null</param>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.SetIsCreatedByImg(System.Boolean)">
+            <summary>Set if SVG image is created from HTML img tag context</summary>
+            <param name="isCreatedByImg">true if object is created from HTML img tag, false otherwise</param>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.IsCreatedByImg">
+            <summary>Check if SVG image is created from HTML img tag context</summary>
+            <returns>true if object is created from HTML img tag, false otherwise</returns>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.SetIsCreatedByObject(System.Boolean)">
+            <summary>Set if SVG image is created from HTML object tag context</summary>
+            <param name="isCreatedByObject">true if object is created from HTML object tag, false otherwise</param>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.IsCreatedByObject">
+            <summary>Check if SVG image is created from HTML object tag context</summary>
+            <returns>true if object is created from HTML object tag, false otherwise</returns>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.IsRelativeSized">
+            <summary>If the SVG image is relative sized.</summary>
+            <remarks>
+            If the SVG image is relative sized. This information
+            is used during image layouting to resolve it's relative size.
+            </remarks>
+            <returns>
+            
+            <see langword="true"/>
+            if the SVG image is relative sized,
+            <see langword="false"/>
+            otherwise
+            </returns>
+            <seealso cref="M:iText.Svg.Xobject.SvgImageXObject.UpdateBBox(System.Single,System.Single)"/>
+            <seealso cref="M:iText.Svg.Xobject.SvgImageXObject.#ctor(iText.Svg.Processors.ISvgProcessorResult,iText.Svg.Renderers.SvgDrawContext,System.Single,iText.Kernel.Pdf.PdfDocument)"/>
+        </member>
         <member name="M:iText.Svg.Xobject.SvgImageXObject.GetResult">
             <summary>Returns processor result containing the SVG information.</summary>
             <returns>{ISvgProcessorResult} processor result.</returns>
@@ -4155,7 +5534,24 @@
             Processes xObject before first image generation to avoid drawing it twice or more. It allows to reuse the same
             Form XObject multiple times.
             </remarks>
-            <param name="document">pdf that shall contain the SVG image.</param>
+            <param name="document">
+            pdf that shall contain the SVG image, can be null if constructor
+            <see cref="M:iText.Svg.Xobject.SvgImageXObject.#ctor(iText.Svg.Processors.ISvgProcessorResult,iText.Svg.Renderers.SvgDrawContext,System.Single,iText.Kernel.Pdf.PdfDocument)"/>
+            was used
+            </param>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.UpdateBBox(System.Single,System.Single)">
+            <summary>Updated XObject BBox for relative sized SVG image.</summary>
+            <param name="areaWidth">the area width where SVG image will be drawn</param>
+            <param name="areaHeight">the area height where SVG image will be drawn</param>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.GetElementWidth">
+            <summary>Gets the SVG element width.</summary>
+            <returns>the SVG element width</returns>
+        </member>
+        <member name="M:iText.Svg.Xobject.SvgImageXObject.GetElementHeight">
+            <summary>Gets the SVG element height.</summary>
+            <returns>the SVG element height</returns>
         </member>
     </members>
 </doc>

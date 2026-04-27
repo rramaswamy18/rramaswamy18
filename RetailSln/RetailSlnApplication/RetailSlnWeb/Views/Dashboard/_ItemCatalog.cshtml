@@ -96,8 +96,10 @@
 </table>
 <div class="container">
     <div class="column" style="color: #a54000; font-size: 14px; font-weight: bold; width: 90%;">
-        You are creating order for @(createForSessionObject.TelephoneNumberFormatted)@* + " " + applSessionObjectModel.CorpAcctModel.CorpAcctName)*@
+        You are creating order for <span style="color: #0000ff;">@(createForSessionObject.TelephoneNumberFormatted)</span>
+        <input id="btnChangeOrderCreatedFor" name="btnSearchText" onclick="javascript: btnChangeOrderCreatedFor_onclick();" style="background-color: #ffffff; border-style: none; color: #000000; font-weight: bold; padding-left: 9px; padding-top: 9px; text-decoration: underline;" type="button" value="Change" />
     </div>
 </div>
+<div id="divErrorMessage"></div>
 <div id="divItemCatalogData" style="padding: 0px;">
 </div>

@@ -22,33 +22,147 @@
         <member name="T:iText.IO.Codec.Brotli.Dec.BitReader">
             <summary>Bit reading helpers.</summary>
         </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.BitReader.Capacity">
+        <member name="M:iText.IO.Codec.Brotli.Dec.BitReader.ReadMoreInput(iText.IO.Codec.Brotli.Dec.State)">
+            <summary>Fills up the input buffer.</summary>
+            <remarks>
+            Fills up the input buffer.
+            <para /> Should not be called if there are at least 36 bytes present after current position.
+            <para /> After encountering the end of the input stream, 64 additional zero bytes are copied to the
+            buffer.
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BitReader.ReadFewBits(iText.IO.Codec.Brotli.Dec.State,System.Int32)">
+            <summary>Fetches bits from accumulator.</summary>
+            <remarks>
+            Fetches bits from accumulator.
+            WARNING: accumulator MUST contain at least the specified amount of bits,
+            otherwise BitReader will become broken.
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BitReader.BytesToNibbles(iText.IO.Codec.Brotli.Dec.State,System.Int32)">
+            <summary>Translates bytes to halves (int/short).</summary>
+        </member>
+        <member name="T:iText.IO.Codec.Brotli.Dec.BrotliError">
+            <summary>Possible errors from decoder.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_OK">
+            <summary>Success; anything greater is also success.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_OK_DONE">
+            <summary>Success; decoder has finished decompressing the input.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_OK_NEED_MORE_OUTPUT">
+            <summary>Success; decoder has more output to produce.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR">
+            <summary>Error code threshold; actual error codes are LESS than -1!</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_CORRUPTED_CODE_LENGTH_TABLE">
+            <summary>Stream error: corrupted code length table.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_CORRUPTED_CONTEXT_MAP">
+            <summary>Stream error: corrupted context map.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_CORRUPTED_HUFFMAN_CODE_HISTOGRAM">
+            <summary>Stream error: corrupted Huffman code histogram.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_CORRUPTED_PADDING_BITS">
+            <summary>Stream error: corrupted padding bits.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_CORRUPTED_RESERVED_BIT">
+            <summary>Stream error: corrupted reserved bit.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_DUPLICATE_SIMPLE_HUFFMAN_SYMBOL">
+            <summary>Stream error: duplicate simple Huffman symbol.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_EXUBERANT_NIBBLE">
+            <summary>Stream error: exuberant nibble.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_INVALID_BACKWARD_REFERENCE">
+            <summary>Stream error: invalid backward reference.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_INVALID_METABLOCK_LENGTH">
+            <summary>Stream error: invalid metablock length.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_INVALID_WINDOW_BITS">
+            <summary>Stream error: invalid window bits.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_NEGATIVE_DISTANCE">
+            <summary>Stream error: negative distance.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_READ_AFTER_END">
+            <summary>Stream error: read after end of input buffer.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_READ_FAILED">
+            <summary>IO error: read failed.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_SYMBOL_OUT_OF_RANGE">
+            <summary>IO error: symbol out of range.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_TRUNCATED_INPUT">
+            <summary>Stream error: truncated input.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_UNUSED_BYTES_AFTER_END">
+            <summary>Stream error: unused bytes after end of stream.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_ERROR_UNUSED_HUFFMAN_SPACE">
+            <summary>Stream error: unused Huffman space.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC">
+            <summary>Exception code threshold.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_ALREADY_CLOSED">
+            <summary>Exception: stream is already closed.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_MAX_DISTANCE_TOO_SMALL">
+            <summary>Exception: max distance is too small.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_STATE_NOT_FRESH">
+            <summary>Exception: state is not fresh.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_STATE_NOT_INITIALIZED">
+            <summary>Exception: state is not initialized.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_STATE_NOT_UNINITIALIZED">
+            <summary>Exception: state is not uninitialized.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_TOO_MANY_DICTIONARY_CHUNKS">
+            <summary>Exception: too many dictionary chunks.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_UNEXPECTED_STATE">
+            <summary>Exception: unexpected state.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_UNREACHABLE">
+            <summary>Exception: unreachable code.</summary>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliError.BROTLI_PANIC_UNALIGNED_COPY_BYTES">
+            <summary>Exception: unaligned copy bytes.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliError.#ctor">
+            <summary>Non-instantiable.</summary>
+        </member>
+        <member name="T:iText.IO.Codec.Brotli.Dec.BrotliInputStream">
             <summary>
-            Input byte buffer, consist of a ring-buffer and a "slack" region where bytes from the start of
-            the ring-buffer are copied.
+            <see cref="T:System.IO.Stream"/>
+            decorator that decompresses brotli data.
             </summary>
+            <remarks>
+            <see cref="T:System.IO.Stream"/>
+            decorator that decompresses brotli data.
+            <para /> Not thread-safe.
+            </remarks>
         </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.BitReader.endOfStreamReached">
-            <summary>Input stream is finished.</summary>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliInputStream.DEFAULT_INTERNAL_BUFFER_SIZE">
+            <summary>Default size of internal buffer (used for faster byte-by-byte reading).</summary>
         </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.BitReader.accumulator">
-            <summary>Pre-fetched bits.</summary>
+        <member name="F:iText.IO.Codec.Brotli.Dec.BrotliInputStream.END_OF_STREAM_MARKER">
+            <summary>Value expected by InputStream contract when stream is over.</summary>
+            <remarks>
+            Value expected by InputStream contract when stream is over.
+            In Java it is -1.
+            In C# it is 0 (should be patched during transpilation).
+            </remarks>
         </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.BitReader.bitOffset">
-            <summary>Current bit-reading position in accumulator.</summary>
-        </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.BitReader.intOffset">
-            <summary>Offset of next item in intBuffer.</summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.BitReader.ReadMoreInput(iText.IO.Codec.Brotli.Dec.BitReader)" -->
-        <member name="M:iText.IO.Codec.Brotli.Dec.BitReader.FillBitWindow(iText.IO.Codec.Brotli.Dec.BitReader)">
-            <summary>Advances the Read buffer by 5 bytes to make room for reading next 24 bits.</summary>
-        </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(iText.IO.Codec.Brotli.Dec.BitReader,System.Int32)">
-            <summary>Reads the specified number of bits from Read Buffer.</summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.BitReader.Init(iText.IO.Codec.Brotli.Dec.BitReader,System.IO.Stream)" -->
-        <!-- Badly formed XML comment ignored for member "T:iText.IO.Codec.Brotli.Dec.BrotliInputStream" -->
         <member name="F:iText.IO.Codec.Brotli.Dec.BrotliInputStream.buffer">
             <summary>Internal buffer used for efficient byte-by-byte reading.</summary>
         </member>
@@ -61,9 +175,65 @@
         <member name="F:iText.IO.Codec.Brotli.Dec.BrotliInputStream.state">
             <summary>Decoder state.</summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.#ctor(System.IO.Stream)" -->
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.#ctor(System.IO.Stream,System.Int32)" -->
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.#ctor(System.IO.Stream,System.Int32,System.Byte[])" -->
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a
+            <see cref="T:System.IO.Stream"/>
+            wrapper that decompresses brotli data.
+            </summary>
+            <remarks>
+            Creates a
+            <see cref="T:System.IO.Stream"/>
+            wrapper that decompresses brotli data.
+            <para /> For byte-by-byte reading (
+            <see cref="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.ReadByte"/>
+            ) internal buffer with
+            <see cref="F:iText.IO.Codec.Brotli.Dec.BrotliInputStream.DEFAULT_INTERNAL_BUFFER_SIZE"/>
+            size is allocated and used.
+            <para /> Will block the thread until first
+            <see cref="!:BitReader#CAPACITY"/>
+            bytes of data of source
+            are available.
+            </remarks>
+            <param name="source">underlying data source</param>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.#ctor(System.IO.Stream,System.Int32)">
+            <summary>
+            Creates a
+            <see cref="T:System.IO.Stream"/>
+            wrapper that decompresses brotli data.
+            </summary>
+            <remarks>
+            Creates a
+            <see cref="T:System.IO.Stream"/>
+            wrapper that decompresses brotli data.
+            <para /> For byte-by-byte reading (
+            <see cref="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.ReadByte"/>
+            ) internal buffer of specified size is
+            allocated and used.
+            <para /> Will block the thread until first
+            <see cref="!:BitReader#CAPACITY"/>
+            bytes of data of source
+            are available.
+            </remarks>
+            <param name="source">compressed data source</param>
+            <param name="byteReadBufferSize">
+            size of internal buffer used in case of
+            byte-by-byte reading
+            </param>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.AttachDictionaryChunk(System.Byte[])">
+            <summary>Attach "RAW" dictionary (chunk) to decoder.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.EnableEagerOutput">
+            <summary>Request decoder to produce output as soon as it is available.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.EnableLargeWindow">
+            <summary>Enable "large window" stream feature.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.Close">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.IO.Codec.Brotli.Dec.BrotliInputStream.ReadByte">
             <summary><inheritDoc/></summary>
         </member>
@@ -79,35 +249,135 @@
         <member name="T:iText.IO.Codec.Brotli.Dec.Decode">
             <summary>API for Brotli decompression.</summary>
         </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.Decode.FixedTable">
+        <member name="F:iText.IO.Codec.Brotli.Dec.Decode.MAX_HUFFMAN_TABLE_SIZE">
+            <summary>
+            Maximum possible Huffman table size for an alphabet size of (index * 32),
+            max code length 15 and root table bits 8.
+            </summary>
+            <remarks>
+            Maximum possible Huffman table size for an alphabet size of (index * 32),
+            max code length 15 and root table bits 8.
+            The biggest alphabet is "command" - 704 symbols. Though "distance" alphabet could theoretically
+            outreach that limit (for 62 extra bit distances), practically it is limited by
+            MAX_ALLOWED_DISTANCE and never gets bigger than 544 symbols.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.Decode.FIXED_TABLE">
             <summary>Static Huffman code for the code length code lengths.</summary>
         </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.DecodeVarLenUnsignedByte(iText.IO.Codec.Brotli.Dec.BitReader)">
+        <member name="F:iText.IO.Codec.Brotli.Dec.Decode.MAX_ALLOWED_DISTANCE">
+            <summary>Safe distance limit.</summary>
+            <remarks>
+            Safe distance limit.
+            Limit ((1 &lt;&lt; 31) - 4) allows safe distance calculation without overflows,
+            given the distance alphabet size is limited to corresponding size.
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.DecodeWindowBits(iText.IO.Codec.Brotli.Dec.State)">
+            <summary>Reads brotli stream header and parses "window bits".</summary>
+            <param name="s">initialized state, before any read is performed.</param>
+            <returns>-1 if header is invalid</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.EnableEagerOutput(iText.IO.Codec.Brotli.Dec.State)">
+            <summary>Switch decoder to "eager" mode.</summary>
+            <remarks>
+            Switch decoder to "eager" mode.
+            In "eager" mode decoder returns as soon as there is enough data to fill output buffer.
+            </remarks>
+            <param name="s">initialized state, before any read is performed.</param>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.InitState(iText.IO.Codec.Brotli.Dec.State)">
+            <summary>Associate input with decoder state.</summary>
+            <param name="s">uninitialized state without associated input</param>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.DecodeVarLenUnsignedByte(iText.IO.Codec.Brotli.Dec.State)">
             <summary>Decodes a number in the range [0..255], by reading 1 - 11 bits.</summary>
         </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.ReadSymbol(System.Int32[],System.Int32,iText.IO.Codec.Brotli.Dec.BitReader)">
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.ReadSymbol(System.Int32[],System.Int32,iText.IO.Codec.Brotli.Dec.State)">
             <summary>Decodes the next Huffman code from bit-stream.</summary>
         </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.ReadMetablockInfo(iText.IO.Codec.Brotli.Dec.State)">
-            <summary>Reads next metablock header.</summary>
-            <param name="state">decoding state</param>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.ReadSimpleHuffmanCode(System.Int32,System.Int32,System.Int32[],System.Int32,iText.IO.Codec.Brotli.Dec.State)">
+            <summary>Reads up to 4 symbols directly and applies predefined histograms.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Decode.ReadHuffmanCode(System.Int32,System.Int32,System.Int32[],System.Int32,iText.IO.Codec.Brotli.Dec.State)">
+            <summary>Decodes Huffman table from bit-stream.</summary>
+            <returns>number of slots used by resulting Huffman table</returns>
         </member>
         <member name="M:iText.IO.Codec.Brotli.Dec.Decode.Decompress(iText.IO.Codec.Brotli.Dec.State)">
             <summary>Actual decompress implementation.</summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:iText.IO.Codec.Brotli.Dec.Dictionary" -->
-        <!-- Badly formed XML comment ignored for member "T:iText.IO.Codec.Brotli.Dec.Dictionary.DataHolder0" -->
+        <member name="T:iText.IO.Codec.Brotli.Dec.Dictionary">
+            <summary>Collection of static dictionary words.</summary>
+            <remarks>
+            Collection of static dictionary words.
+            <para />Dictionary content is loaded from binary resource when
+            <see cref="M:iText.IO.Codec.Brotli.Dec.Dictionary.GetData"/>
+            is executed for the
+            first time. Consequently, it saves memory and CPU in case dictionary is not required.
+            <para />One possible drawback is that multiple threads that need dictionary data may be blocked (only
+            once in each classworld). To avoid this, it is enough to call
+            <see cref="M:iText.IO.Codec.Brotli.Dec.Dictionary.GetData"/>
+            proactively.
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Dictionary.SetData(System.Byte[],System.Int32[])">
+            <summary>Initialize static dictionary.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Dictionary.GetData">
+            <summary>Access static dictionary.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Dictionary.#ctor">
+            <summary>Non-instantiable.</summary>
+        </member>
+        <member name="T:iText.IO.Codec.Brotli.Dec.DictionaryData">
+            <summary>Built-in dictionary data.</summary>
+            <remarks>
+            Built-in dictionary data.
+            When this class is loaded, it sets its data:
+            <see cref="!:Dictionary.SetData(Java.Nio.ByteBuffer, int[])"/>.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.DictionaryData.SKIP_FLIP">
+            <summary>Encoded interval lengths, where 7-th bit is constant.</summary>
+            <remarks>
+            Encoded interval lengths, where 7-th bit is constant.
+            To avoid multibyte UTF-8 runes, DATAx literals contain only 7-bit characters.
+            7-th bit of original data is well compressed with RLE. As there are only 2 alternating values,
+            only the lengths of the series are stored.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Codec.Brotli.Dec.DictionaryData.SIZE_BITS_DATA">
+            <summary>Encoded sizeBits array.</summary>
+            <remarks>
+            Encoded sizeBits array.
+            Values: 0, 0, 0, 0, 10, 10, 11, 11, 10, 10, 10, 10, 10, 9, 9, 8, 7, 7, 8, 7, 7, 6, 6, 5, 5
+            </remarks>
+        </member>
         <member name="T:iText.IO.Codec.Brotli.Dec.Huffman">
             <summary>Utilities for building Huffman decoding tables.</summary>
         </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize">
-            <summary>
-            Maximum possible Huffman table size for an alphabet size of 704, max code length 15 and root
-            table bits 8.
-            </summary>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Huffman.GetNextKey(System.Int32,System.Int32)">
+            <summary>Returns reverse(reverse(key, len) + 1, len).</summary>
+            <remarks>
+            Returns reverse(reverse(key, len) + 1, len).
+            <para /> reverse(key, len) is the bit-wise reversal of the len least significant bits of key.
+            </remarks>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.Huffman.GetNextKey(System.Int32,System.Int32)" -->
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.Huffman.ReplicateValue(System.Int32[],System.Int32,System.Int32,System.Int32,System.Int32)" -->
+        <member name="M:iText.IO.Codec.Brotli.Dec.Huffman.ReplicateValue(System.Int32[],System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Stores
+            <paramref name="item"/>
+            in
+            <c>table[0], table[step], table[2 * step] .., table[end]</c>.
+            </summary>
+            <remarks>
+            Stores
+            <paramref name="item"/>
+            in
+            <c>table[0], table[step], table[2 * step] .., table[end]</c>.
+            <para /> Assumes that end is an integer multiple of step.
+            </remarks>
+        </member>
         <member name="M:iText.IO.Codec.Brotli.Dec.Huffman.NextTableBitSize(System.Int32[],System.Int32,System.Int32)">
             <param name="count">histogram of bit lengths for the remaining symbols,</param>
             <param name="len">code length of the next processed symbol.</param>
@@ -115,63 +385,60 @@
         </member>
         <member name="M:iText.IO.Codec.Brotli.Dec.Huffman.BuildHuffmanTable(System.Int32[],System.Int32,System.Int32,System.Int32[],System.Int32)">
             <summary>Builds Huffman lookup table assuming code lengths are in symbol order.</summary>
-        </member>
-        <member name="T:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup">
-            <summary>Contains a collection of huffman trees with the same alphabet size.</summary>
-        </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup.alphabetSize">
-            <summary>The maximal alphabet size in this group.</summary>
-        </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup.codes">
-            <summary>Storage for Huffman lookup tables.</summary>
-        </member>
-        <member name="F:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup.trees">
-            <summary>
-            Offsets of distinct lookup tables in
-            <see cref="F:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup.codes"/>
-            storage.
-            </summary>
-        </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup.Init(iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup,System.Int32,System.Int32)">
-            <summary>Initializes the Huffman tree group.</summary>
-            <param name="group">POJO to be initialised</param>
-            <param name="alphabetSize">the maximal alphabet size in this group</param>
-            <param name="n">number of Huffman codes</param>
-        </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup.Decode(iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup,iText.IO.Codec.Brotli.Dec.BitReader)">
-            <summary>Decodes Huffman trees from input stream and constructs lookup tables.</summary>
-            <param name="group">target POJO</param>
-            <param name="br">data source</param>
-        </member>
-        <member name="T:iText.IO.Codec.Brotli.Dec.IntReader">
-            <summary>Byte-to-int conversion magic.</summary>
-        </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.IntReader.Convert(iText.IO.Codec.Brotli.Dec.IntReader,System.Int32)">
-            <summary>Translates bytes to ints.</summary>
-            <remarks>
-            Translates bytes to ints.
-            NB: intLen == 4 * byteSize!
-            NB: intLen should be less or equal to intBuffer length.
-            </remarks>
-        </member>
-        <!-- Badly formed XML comment ignored for member "T:iText.IO.Codec.Brotli.Dec.Prefix" -->
-        <member name="T:iText.IO.Codec.Brotli.Dec.RunningState">
-            <summary>Enumeration of decoding state-machine.</summary>
-        </member>
-        <member name="M:iText.IO.Codec.Brotli.Dec.State.SetInput(iText.IO.Codec.Brotli.Dec.State,System.IO.Stream)">
-            <summary>Associate input with decoder state.</summary>
-            <param name="state">uninitialized state without associated input</param>
-            <param name="input">compressed data source</param>
+            <returns>number of slots used by resulting Huffman table</returns>
         </member>
         <member name="T:iText.IO.Codec.Brotli.Dec.Transform">
             <summary>Transformations on dictionary words.</summary>
+            <remarks>
+            Transformations on dictionary words.
+            Transform descriptor is a triplet: {prefix, operator, suffix}.
+            "prefix" and "suffix" are short strings inserted before and after transformed dictionary word.
+            "operator" is applied to dictionary word itself.
+            Some operators has "built-in" parameters, i.e. parameter is defined by operator ordinal. Other
+            operators have "external" parameters, supplied via additional table encoded in shared dictionary.
+            Operators:
+            - IDENTITY (0): dictionary word is inserted "as is"
+            - OMIT_LAST_N (1 - 9): last N octets of dictionary word are not inserted; N == ordinal
+            - OMIT_FIRST_M (12-20): first M octets of dictionary word are not inserted; M == ordinal - 11
+            - UPPERCASE_FIRST (10): first "scalar" is XOR'ed with number 32
+            - UPPERCASE_ALL (11): all "scalars" are XOR'ed with number 32
+            - SHIFT_FIRST (21): first "scalar" is shifted by number form parameter table
+            - SHIFT_ALL (22): all "scalar" is shifted by number form parameter table
+            Here "scalar" is a variable length character coding similar to UTF-8 encoding.
+            UPPERCASE_XXX / SHIFT_XXX operators were designed to change the case of UTF-8 encoded characters.
+            While UPPERCASE_XXX works well only on ASCII charset, SHIFT is much more generic and could be
+            used for most (all?) alphabets.
+            </remarks>
         </member>
         <member name="T:iText.IO.Codec.Brotli.Dec.Utils">
             <summary>A set of utility methods.</summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.Utils.FillWithZeroes(System.Byte[],System.Int32,System.Int32)" -->
-        <!-- Badly formed XML comment ignored for member "M:iText.IO.Codec.Brotli.Dec.Utils.FillWithZeroes(System.Int32[],System.Int32,System.Int32)" -->
-        <!-- Badly formed XML comment ignored for member "T:iText.IO.Codec.Brotli.Dec.WordTransformType" -->
+        <member name="M:iText.IO.Codec.Brotli.Dec.Utils.FillBytesWithZeroes(System.Byte[],System.Int32,System.Int32)">
+            <summary>Fills byte array with zeroes.</summary>
+            <remarks>
+            Fills byte array with zeroes.
+            <para /> Current implementation uses
+            <see cref="!:System.Array.Copy(System.Object, int, System.Object, int, int)"/>
+            , so it should be used for length not
+            less than 16.
+            </remarks>
+            <param name="dest">array to fill with zeroes</param>
+            <param name="start">the first item to fill</param>
+            <param name="end">the last item to fill (exclusive)</param>
+        </member>
+        <member name="M:iText.IO.Codec.Brotli.Dec.Utils.FillIntsWithZeroes(System.Int32[],System.Int32,System.Int32)">
+            <summary>Fills int array with zeroes.</summary>
+            <remarks>
+            Fills int array with zeroes.
+            <para /> Current implementation uses
+            <see cref="!:System.Array.Copy(System.Object, int, System.Object, int, int)"/>
+            , so it should be used for length not
+            less than 16.
+            </remarks>
+            <param name="dest">array to fill with zeroes</param>
+            <param name="start">the first item to fill</param>
+            <param name="end">the last item to fill (exclusive)</param>
+        </member>
         <member name="T:iText.IO.Codec.CCITTG4Encoder">
             <summary>Encodes data in the CCITT G4 FAX format.</summary>
         </member>
@@ -220,8 +487,124 @@
         <member name="T:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment">
             <summary>Inner class that holds information about a JBIG2 segment.</summary>
         </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetDataLength">
+            <summary>Retrieves the data length of a JBig2Segment object.</summary>
+            <returns>data length value</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetDataLength(System.Int64)">
+            <summary>Sets the data length of a JBig2Segment object.</summary>
+            <param name="dataLength">data length value</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetPage">
+            <summary>Retrieves the page number of a JBig2Segment object.</summary>
+            <returns>page number</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetPage(System.Int32)">
+            <summary>Sets the page number of a JBig2Segment object.</summary>
+            <param name="page">page number</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetReferredToSegmentNumbers">
+            <summary>Retrieves the referred-to segment numbers of a JBig2Segment object.</summary>
+            <returns>Every referred-to segment number</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetReferredToSegmentNumbers(System.Int32[])">
+            <summary>Sets the referred-to segment numbers of a JBig2Segment object.</summary>
+            <param name="referredToSegmentNumbers">Referred-to segment numbers</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetSegmentRetentionFlags">
+            <summary>Retrieves segment retention flags of a JBig2Segment object.</summary>
+            <returns>Every segment retention flag value</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetSegmentRetentionFlags(System.Boolean[])">
+            <summary>Sets segment retention flags of a JBig2Segment object.</summary>
+            <param name="segmentRetentionFlags">Segment retention flag values</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetType">
+            <summary>Retrieves type of the JBig2Segment object.</summary>
+            <returns>Type value</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetType(System.Int32)">
+            <summary>Sets type of the JBig2Segment object.</summary>
+            <param name="type">Type value</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.IsDeferredNonRetain">
+            <summary>Retrieves whether the object is deferred without retention.</summary>
+            <remarks>
+            Retrieves whether the object is deferred without retention.
+            Default value is false.
+            </remarks>
+            <returns>true if deferred without retention, false otherwise</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetDeferredNonRetain(System.Boolean)">
+            <summary>Sets whether the JBig2Segments object is deferred without retention.</summary>
+            <param name="deferredNonRetain">true for deferred without retention, false otherwise</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetCountOfReferredToSegments">
+            <summary>Retrieves the count of the referred-to segments.</summary>
+            <returns>count of referred-to segments</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetCountOfReferredToSegments(System.Int32)">
+            <summary>Sets the count of referred-to segments of the JBig2Segment object.</summary>
+            <param name="countOfReferredToSegments">count of referred segments</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetData">
+            <summary>Retrieves data of the JBig2Segment object.</summary>
+            <returns>data bytes</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetData(System.Byte[])">
+            <summary>Sets data of the JBig2Segment object.</summary>
+            <param name="data">data bytes</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetHeaderData">
+            <summary>Retrieves header data of the JBig2Segment object.</summary>
+            <returns>header data bytes</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetHeaderData(System.Byte[])">
+            <summary>Sets header data of the JBig2Segment object.</summary>
+            <param name="headerData">header date bytes</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.IsPageAssociationSize">
+            <summary>Retrieves page association size of the JBig2Segment object.</summary>
+            <returns>page association size value</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetPageAssociationSize(System.Boolean)">
+            <summary>Sets page association size of the JBig2Segment object.</summary>
+            <param name="pageAssociationSize">page association size</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetPageAssociationOffset">
+            <summary>Retrieves the page association offset of the JBig2Segment object.</summary>
+            <returns>page association offset value</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.SetPageAssociationOffset(System.Int32)">
+            <summary>Sets page association offset of the JBig2Segment object.</summary>
+            <param name="pageAssociationOffset">page association offset</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Segment.GetSegmentNumber">
+            <summary>Retrieves the segment number of the JBig2Segment object.</summary>
+            <returns>segment number</returns>
+        </member>
         <member name="T:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page">
             <summary>Inner class that holds information about a JBIG2 page.</summary>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page.GetPage">
+            <summary>Retrieves the page number of the Jbig2Page object.</summary>
+            <returns>page number</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page.GetPageBitmapWidth">
+            <summary>Retrieves page bitmap width of the Jbig2Page object.</summary>
+            <returns>width of page bitmap</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page.SetPageBitmapWidth(System.Int32)">
+            <summary>Sets page bitmap width of the JBig2Page object.</summary>
+            <param name="pageBitmapWidth">page bitmap width</param>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page.GetPageBitmapHeight">
+            <summary>Retrieves page bitmap height of the JBig2Page object.</summary>
+            <returns>height of the page bitmap</returns>
+        </member>
+        <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page.SetPageBitmapHeight(System.Int32)">
+            <summary>Sets the height of the page bitmap of a Jbig2Page object.</summary>
+            <param name="pageBitmapHeight">height of the page bitmap</param>
         </member>
         <member name="M:iText.IO.Codec.Jbig2SegmentReader.Jbig2Page.GetData(System.Boolean)">
             <summary>
@@ -1758,7 +2141,10 @@
             <summary>Inner class containing info about an ASCII field.</summary>
         </member>
         <member name="T:iText.IO.Colors.IccProfile">
-            <summary>Class used to represented the International Color Consortium profile</summary>
+            <summary>Class used to represent the International Color Consortium profile</summary>
+        </member>
+        <member name="M:iText.IO.Colors.IccProfile.#ctor">
+            <summary>Creates a new, empty icc profile.</summary>
         </member>
         <member name="M:iText.IO.Colors.IccProfile.GetInstance(System.Byte[],System.Int32)">
             <summary>Construct an icc profile from the passed byte[], using the passed number of components.</summary>
@@ -1815,6 +2201,34 @@
             This file is a helper class for internal usage only.
             Be aware that its API and functionality may be changed in future.
             </remarks>
+        </member>
+        <member name="T:iText.IO.Exceptions.FontCompressionException">
+            <summary>General compressed font parsing exception.</summary>
+        </member>
+        <member name="M:iText.IO.Exceptions.FontCompressionException.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.IO.Exceptions.FontCompressionException"/>.
+            </summary>
+        </member>
+        <member name="M:iText.IO.Exceptions.FontCompressionException.#ctor(System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.IO.Exceptions.FontCompressionException"/>.
+            </summary>
+            <param name="message">the detail message</param>
+        </member>
+        <member name="M:iText.IO.Exceptions.FontCompressionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.IO.Exceptions.FontCompressionException"/>.
+            </summary>
+            <param name="message">the detail message</param>
+            <param name="cause">
+            the cause (which is saved for later retrieval by
+            <see cref="P:System.Exception.InnerException"/>
+            method)
+            </param>
         </member>
         <member name="T:iText.IO.Exceptions.IOException">
             <summary>Exception class for exceptions in io module.</summary>
@@ -1873,6 +2287,90 @@
         <member name="T:iText.IO.Exceptions.IoExceptionMessageConstant">
             <summary>Class containing constants to be used in exceptions in the IO module.</summary>
         </member>
+        <member name="T:iText.IO.Exceptions.ReadingByteLimitException">
+            <summary>Thrown when the limit on the number of bytes read was violated.</summary>
+        </member>
+        <member name="M:iText.IO.Exceptions.ReadingByteLimitException.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.IO.Exceptions.ReadingByteLimitException"/>
+            instance.
+            </summary>
+        </member>
+        <member name="T:iText.IO.Font.AbstractTrueTypeFontModifier">
+            <summary>The abstract class which provides a functionality to modify TrueType fonts with returning raw data of modified font.
+                </summary>
+        </member>
+        <member name="F:iText.IO.Font.AbstractTrueTypeFontModifier.tableDirectory">
+            <summary>Contains the location of the several tables.</summary>
+            <remarks>
+            Contains the location of the several tables. The key is the name of the table and the
+            value is an
+            <c>int[3]</c>
+            where position 0 is the checksum, position 1 is the offset
+            from the start of the file and position 2 is the length of the table.
+            <para />
+            The length of the table can be any. But when writing data, it should be aligned to 4 bytes. Say, if table length
+            is 54 we should write 2 extra zeroes at the end, and it should be taken into account for calculating the start
+            offset of the next table (but not the length of the current table).
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Font.AbstractTrueTypeFontModifier.glyphDataMap">
+            <summary>Contains glyph data from `glyf` table.</summary>
+            <remarks>Contains glyph data from `glyf` table. The key is the GID (glyph ID) and the value is a raw data of glyph.
+                </remarks>
+        </member>
+        <member name="F:iText.IO.Font.AbstractTrueTypeFontModifier.modifiedTables">
+            <summary>Contains font tables which have been changed during the modification.</summary>
+            <remarks>
+            Contains font tables which have been changed during the modification. The key is the name of table which has
+            been changed and the value is raw data of the modified table.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Font.AbstractTrueTypeFontModifier.raf">
+            <summary>Font raw data on which new modified font will be built.</summary>
+        </member>
+        <member name="F:iText.IO.Font.AbstractTrueTypeFontModifier.directoryOffset">
+            <summary>
+            Table directory offset which corresponds to font's raw data from
+            <see cref="F:iText.IO.Font.AbstractTrueTypeFontModifier.raf"/>.
+            </summary>
+        </member>
+        <member name="F:iText.IO.Font.AbstractTrueTypeFontModifier.fontName">
+            <summary>the name of font which will be modified</summary>
+        </member>
+        <member name="M:iText.IO.Font.AbstractTrueTypeFontModifier.#ctor(System.String,System.Boolean)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.IO.Font.AbstractTrueTypeFontModifier"/>
+            instance.
+            </summary>
+            <param name="fontName">the name of font which will be modified</param>
+            <param name="subsetTables">
+            whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+            (true type collection) font where single "full" font is needed. Despite the value of that
+            flag, only used glyphs will be left in the font
+            </param>
+        </member>
+        <member name="M:iText.IO.Font.AbstractTrueTypeFontModifier.CreateNewHorizontalMetricsTable(System.Int32)">
+            <summary>Creates new hmtx table.</summary>
+            <remarks>
+            Creates new hmtx table.
+            <para />
+            hmtx is a "hybrid" table, it has maxp.numGlyphs indices, for (indices &lt;= hhea.numberOfHMetrics) 4 bytes (advanced
+            width + left side bearing), for (hhea.numberOfHMetrics &lt; indices &lt;= maxp.numGlyphs) 2 bytes (left side bearing).
+            </remarks>
+            <param name="maxGlyphId">the max glyph id</param>
+            <returns>raw data of new hmtx table</returns>
+        </member>
+        <member name="T:iText.IO.Font.CFFFont">
+            <summary>Class containing base Compact Font Format functionality</summary>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.GetString(System.Char)">
+            <summary>Gets string from INDEX structure which corresponds to provided SID.</summary>
+            <param name="sid">2-byte string identifier</param>
+            <returns>string value</returns>
+        </member>
         <member name="T:iText.IO.Font.CFFFont.Item">
             <summary>List items for the linked list that builds the new CID font.</summary>
         </member>
@@ -1887,16 +2385,29 @@
         <member name="M:iText.IO.Font.CFFFont.Item.Xref">
             <summary>Fix up cross references to this item (applies only to markers).</summary>
         </member>
-        <member name="M:iText.IO.Font.CFFFont.OffsetItem.Set(System.Int32)">
-            <summary>Set the value of an offset item that was initially unknown.</summary>
+        <member name="T:iText.IO.Font.CFFFont.OffsetItem">
+            <summary>An offset item, representing a data object.</summary>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.OffsetItem.GetOffset">
+            <summary>Retrieves offset of an OffsetItem object.</summary>
+            <returns>offset value</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.OffsetItem.SetOffset(System.Int32)">
+            <summary>Sets the value of an offset item that was initially unknown.</summary>
             <remarks>
-            Set the value of an offset item that was initially unknown.
-            It will be fixed up latex by a call to xref on some marker.
+            Sets the value of an offset item that was initially unknown.
+            It will be fixed up later by a call to xref on some marker.
             </remarks>
             <param name="offset">offset to set</param>
         </member>
         <member name="T:iText.IO.Font.CFFFont.RangeItem">
             <summary>A range item.</summary>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.RangeItem.#ctor(iText.IO.Source.RandomAccessFileOrArray,System.Int32,System.Int32)">
+            <summary>Creates a new range item represented by offset and length</summary>
+            <param name="buf">buffer containing font data</param>
+            <param name="offset">an offset relative to start of the CFF data</param>
+            <param name="length">length of the data</param>
         </member>
         <member name="T:iText.IO.Font.CFFFont.IndexOffsetItem">
             <summary>An index-offset item for the list.</summary>
@@ -1908,24 +2419,55 @@
             variable-size representation.
             </remarks>
         </member>
+        <member name="M:iText.IO.Font.CFFFont.IndexOffsetItem.#ctor(System.Int32,System.Int32)">
+            <summary>Creates a new index-offset item</summary>
+            <param name="size">required size in the CFF</param>
+            <param name="value">offset value</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.IndexOffsetItem.#ctor(System.Int32)">
+            <summary>Creates a new index-offset item</summary>
+            <param name="size">required size in the CFF</param>
+        </member>
         <member name="T:iText.IO.Font.CFFFont.DictOffsetItem">
-            <summary>an unknown offset in a dictionary for the list.</summary>
+            <summary>An unknown offset in a dictionary for the list.</summary>
             <remarks>
-            an unknown offset in a dictionary for the list.
+            An unknown offset in a dictionary for the list.
             We will fix up the offset later; for now, assume it's large.
             </remarks>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.DictOffsetItem.#ctor">
+            <summary>Creates a new unknown offset item</summary>
         </member>
         <member name="T:iText.IO.Font.CFFFont.UInt24Item">
             <summary>Card24 item.</summary>
         </member>
+        <member name="M:iText.IO.Font.CFFFont.UInt24Item.#ctor(System.Int32)">
+            <summary>Creates a new Card24 item.</summary>
+            <param name="value">0 - 2097151 unsigned number</param>
+        </member>
         <member name="T:iText.IO.Font.CFFFont.UInt32Item">
-            <summary>Card32 item.</summary>
+            <summary>A Card32 item.</summary>
         </member>
         <member name="T:iText.IO.Font.CFFFont.UInt16Item">
             <summary>A SID or Card16 item.</summary>
         </member>
+        <member name="M:iText.IO.Font.CFFFont.UInt16Item.#ctor(System.Char)">
+            <summary>Creates a new Card16 item</summary>
+            <param name="value">0 - 65535 unsigned number</param>
+        </member>
         <member name="T:iText.IO.Font.CFFFont.UInt8Item">
             <summary>A Card8 item.</summary>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.UInt8Item.#ctor(System.Char)">
+            <summary>Creates a new card8 item</summary>
+            <param name="value">0 - 255 unsigned number</param>
+        </member>
+        <member name="T:iText.IO.Font.CFFFont.StringItem">
+            <summary>A String item</summary>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.StringItem.#ctor(System.String)">
+            <summary>Creates a new string item.</summary>
+            <param name="s">string to be represented</param>
         </member>
         <member name="T:iText.IO.Font.CFFFont.DictNumberItem">
             <summary>A dictionary number on the list.</summary>
@@ -1935,6 +2477,14 @@
             representation.
             </remarks>
         </member>
+        <member name="M:iText.IO.Font.CFFFont.DictNumberItem.GetSize">
+            <summary>Retrieves the size of a DictNumberItem.</summary>
+            <returns>size value</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.DictNumberItem.SetSize(System.Int32)">
+            <summary>Sets the size of a DictNumberItem.</summary>
+            <param name="size">size value</param>
+        </member>
         <member name="T:iText.IO.Font.CFFFont.MarkerItem">
             <summary>An offset-marker item for the list.</summary>
             <remarks>
@@ -1943,14 +2493,14 @@
             </remarks>
         </member>
         <member name="M:iText.IO.Font.CFFFont.GetEntireIndexRange(System.Int32)">
-            <summary>a utility that creates a range item for an entire index</summary>
+            <summary>A utility that creates a range item for an entire index</summary>
             <param name="indexOffset">where the index is</param>
             <returns>a range item representing the entire index</returns>
         </member>
         <member name="M:iText.IO.Font.CFFFont.GetCID(System.String)">
-            <summary>get a single CID font.</summary>
+            <summary>Gets a single CID font.</summary>
             <remarks>
-            get a single CID font. The PDF architecture (1.4)
+            Gets a single CID font. The PDF architecture (1.4)
             supports 16-bit strings only with CID CFF fonts, not
             in Type-1 CFF fonts, so we convert the font to CID if
             it is in the Type-1 format.
@@ -1962,8 +2512,303 @@
             <param name="fontName">name of the font</param>
             <returns>byte array represents the CID font</returns>
         </member>
+        <member name="M:iText.IO.Font.CFFFont.IsCID">
+            <summary>Determines whether the first font in FontSet is CID font.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if font is CID,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.IsCID(System.String)">
+            <summary>Determines whether specified font is CID font.</summary>
+            <param name="fontName">font name to check in fonts table</param>
+            <returns>
+            
+            <see langword="true"/>
+            if specified font is CID,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Exists(System.String)">
+            <summary>Checks for font existence in FontSet.</summary>
+            <param name="fontName">font name to search for</param>
+            <returns>
+            
+            <see langword="true"/>
+            if font exists in FontSet,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.GetNames">
+            <summary>Gets all font names from FontSet table.</summary>
+            <returns>font names contained by this CFF font</returns>
+        </member>
         <member name="F:iText.IO.Font.CFFFont.buf">
             <summary>A random Access File or an array</summary>
+        </member>
+        <member name="T:iText.IO.Font.CFFFont.Font">
+            <summary>Represents font contained by the CFF font in a FontSet.</summary>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetName">
+            <summary>Retrieves the name of the font.</summary>
+            <returns>font name</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetName(System.String)">
+            <summary>Sets the name of the font.</summary>
+            <param name="name">font name</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFullName">
+            <summary>Retrieves the full name of the font.</summary>
+            <returns>full font name</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFullName(System.String)">
+            <summary>Sets the full name of the font.</summary>
+            <param name="fullName">full font name</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.IsCID">
+            <summary>Retrieves whether the font is a CID font.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if font is CID font,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCID(System.Boolean)">
+            <summary>Sets if font is CID font.</summary>
+            <param name="CID">
+            
+            <see langword="true"/>
+            if font is CID font,
+            <see langword="false"/>
+            otherwise
+            </param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetPrivateOffset">
+            <summary>Retrieves the private offset of the font.</summary>
+            <returns>private offset value</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetPrivateOffset(System.Int32)">
+            <summary>Sets the private offset of the font.</summary>
+            <param name="privateOffset">private offset value</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetPrivateLength">
+            <summary>Retrieves the private length of the font.</summary>
+            <returns>private length value</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetPrivateLength(System.Int32)">
+            <summary>Sets the private length of the font.</summary>
+            <param name="privateLength">private length value</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetPrivateSubrs">
+            <summary>Retrieves the private subrs of the font.</summary>
+            <returns>private subrs value</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetPrivateSubrs(System.Int32)">
+            <summary>Sets the private subrs of the font.</summary>
+            <param name="privateSubrs">private subrs value</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetCharstringsOffset">
+            <summary>Retrieves the char string offset of the font.</summary>
+            <returns>char string offset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCharstringsOffset(System.Int32)">
+            <summary>Sets the char string offset of the font.</summary>
+            <param name="charstringsOffset">char string offset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetEncodingOffset">
+            <summary>Retrieves the encoding offset of the font.</summary>
+            <returns>encoding offset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetEncodingOffset(System.Int32)">
+            <summary>Sets the encoding offset of the font.</summary>
+            <param name="encodingOffset">encoding offset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetCharsetOffset">
+            <summary>Retrieves the charset offset of the font.</summary>
+            <returns>charset offset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCharsetOffset(System.Int32)">
+            <summary>Sets the charset offset of the font.</summary>
+            <param name="charsetOffset">charset offset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFdarrayOffset">
+            <summary>Retrieves the font dictionary array offset of the object.</summary>
+            <returns>font dictionary array offset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFdarrayOffset(System.Int32)">
+            <summary>Sets the font dictionary array offset of the object.</summary>
+            <param name="fdarrayOffset">font dictionary array offset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFdselectOffset">
+            <summary>Retrieves the font dictionary select offset of the object.</summary>
+            <returns>font dictionary select offset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFdselectOffset(System.Int32)">
+            <summary>Sets the font dictionary select offset of the object.</summary>
+            <param name="fdselectOffset">font dictionary select offset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFdprivateOffsets">
+            <summary>Retrieves the font dictionary private offsets of the object.</summary>
+            <returns>font dictionary private offsets</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFdprivateOffsets(System.Int32[])">
+            <summary>Sets the font dictionary private offsets of the object.</summary>
+            <param name="fdprivateOffsets">font dictionary private offsets</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFdprivateLengths">
+            <summary>Retrieves the font dictionary private lengths of the object.</summary>
+            <returns>font dictionary private lengths</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFdprivateLengths(System.Int32[])">
+            <summary>Sets the font dictionary private lengths of the object.</summary>
+            <param name="fdprivateLengths">font dictionary private lengths</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFdprivateSubrs">
+            <summary>Retrieves the font dictionary private subrs of the object.</summary>
+            <returns>font dictionary private subrs</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFdprivateSubrs(System.Int32[])">
+            <summary>Sets the font dictionary private subrs of the object.</summary>
+            <param name="fdprivateSubrs">font dictionary private subrs</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetNglyphs">
+            <summary>Retrieves the number of glyphs in the font.</summary>
+            <returns>number of glyphs</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetNglyphs(System.Int32)">
+            <summary>Sets the number of glyphs in the font.</summary>
+            <param name="nglyphs">number of glyphs</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetNstrings">
+            <summary>Retrieves the number of strings of the font.</summary>
+            <returns>number of strings</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetNstrings(System.Int32)">
+            <summary>Sets the number of strings of the font.</summary>
+            <param name="nstrings">number of strings</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetCharsetLength">
+            <summary>Retrieves the charset length of the font.</summary>
+            <returns>charset length</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCharsetLength(System.Int32)">
+            <summary>Sets the charset length of the font.</summary>
+            <param name="charsetLength">charset length</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetCharstringsOffsets">
+            <summary>Retrieves the char strings offsets of the font.</summary>
+            <returns>char strings offsets</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCharstringsOffsets(System.Int32[])">
+            <summary>Sets the char strings offsets of the font.</summary>
+            <param name="charstringsOffsets">char strings offsets</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetCharset">
+            <summary>Retrieves the charset of the font.</summary>
+            <returns>charset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCharset(System.Int32[])">
+            <summary>Sets the charset of the font.</summary>
+            <param name="charset">charset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFDSelect">
+            <summary>Retrieves the font dictionary select of the object.</summary>
+            <returns>FD select</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFDSelect(System.Int32[])">
+            <summary>Sets the font dictionary select of the object.</summary>
+            <param name="FDSelect">font dictionary select</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFDSelectLength">
+            <summary>Retrieves the font dictionary select length of the object.</summary>
+            <returns>font dictionary select length</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFDSelectLength(System.Int32)">
+            <summary>Sets the font dictionary select length of the object.</summary>
+            <param name="FDSelectLength">font dictionary select length</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFDSelectFormat">
+            <summary>Retrieves the font dictionary select format of the object.</summary>
+            <returns>font dictionary select format</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFDSelectFormat(System.Int32)">
+            <summary>Sets the font dictionary select format of the object.</summary>
+            <param name="FDSelectFormat">font dictionary select format</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetCharstringType">
+            <summary>Retrieves the char string type of the font.</summary>
+            <returns>char string type</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetCharstringType(System.Int32)">
+            <summary>Sets the char string type of the font.</summary>
+            <param name="charstringType">char string type</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFDArrayCount">
+            <summary>Retrieves the font dictionary array count of the object.</summary>
+            <returns>font dictionary array count</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFDArrayCount(System.Int32)">
+            <summary>Sets the font dictionary array count of the object.</summary>
+            <param name="FDArrayCount">font dictionary array count</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFDArrayOffsize">
+            <summary>Retrieves the font dictionary array offsize of the object.</summary>
+            <returns>font dictionary array offsize</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFDArrayOffsize(System.Int32)">
+            <summary>Sets the font dictionary array offsize of the object.</summary>
+            <param name="FDArrayOffsize">font dictionary array offsize</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetFDArrayOffsets">
+            <summary>Retrieves the font dictionary array offsets of the object.</summary>
+            <returns>font dictionary array offsets</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetFDArrayOffsets(System.Int32[])">
+            <summary>Sets the font dictionary array offsets of the object.</summary>
+            <param name="FDArrayOffsets">font dictionary array offsets</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetPrivateSubrsOffset">
+            <summary>Retrieves the private subrs offset of the font.</summary>
+            <returns>private subrs offset</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetPrivateSubrsOffset(System.Int32[])">
+            <summary>Sets the private subrs offset of the font</summary>
+            <param name="privateSubrsOffset">private subrs offset</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetPrivateSubrsOffsetsArray">
+            <summary>Retrieves the private subrs offsets array of the font.</summary>
+            <returns>private subrs offsets array</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetPrivateSubrsOffsetsArray(System.Int32[][])">
+            <summary>Sets the private subrs offsets array of the font.</summary>
+            <param name="privateSubrsOffsetsArray">private subrs offsets array</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetSubrsOffsets">
+            <summary>Retrieves the subrs offsets of the font.</summary>
+            <returns>subrs offsets</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetSubrsOffsets(System.Int32[])">
+            <summary>Sets the subrs offsets of the font.</summary>
+            <param name="subrsOffsets">subrs offsets</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.GetGidToCid">
+            <summary>Retrieves the glyphs to character id array of the font.</summary>
+            <returns>glyphs to character id array</returns>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.Font.SetGidToCid(System.Int32[])">
+            <summary>Sets the glyphs to character id array of the font.</summary>
+            <param name="gidToCid">glyphs to character id array</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFont.#ctor(System.Byte[])">
+            <summary>Creates a new CFF font instance from CFF font data.</summary>
+            <param name="cff">cff font binary data</param>
         </member>
         <member name="T:iText.IO.Font.CFFFontSubset">
             <summary>This Class subsets a CFF Type Font.</summary>
@@ -2041,6 +2886,21 @@
         <member name="M:iText.IO.Font.CFFFontSubset.#ctor(System.Byte[])">
             <summary>C'tor for CFFFontSubset</summary>
             <param name="cff">- The font file</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFontSubset.#ctor(System.Byte[],System.Collections.Generic.ICollection{System.Int32})">
+            <summary>C'tor for CFFFontSubset</summary>
+            <param name="cff">font binary data</param>
+            <param name="GlyphsUsed">glyphs used in the text after being converted to glyph number by the CMap</param>
+        </member>
+        <member name="M:iText.IO.Font.CFFFontSubset.#ctor(System.Byte[],System.Collections.Generic.ICollection{System.Int32},System.Boolean)">
+            <summary>C'tor for CFFFontSubset</summary>
+            <param name="cff">font binary data</param>
+            <param name="GlyphsUsed">glyphs used in the text after being converted to glyph number by the CMap</param>
+            <param name="isCidParsingRequired">
+            if
+            <see langword="true"/>
+            , gid to cid array will be created
+            </param>
         </member>
         <member name="M:iText.IO.Font.CFFFontSubset.CountCharset(System.Int32,System.Int32)">
             <summary>Calculates the length of the charset according to its format</summary>
@@ -2429,12 +3289,62 @@
             an exception is thrown.
             </returns>
         </member>
+        <member name="T:iText.IO.Font.CMapEncoding">
+            <summary>Class representing CMap encoding in pdf document.</summary>
+        </member>
         <member name="M:iText.IO.Font.CMapEncoding.#ctor(System.String)">
-            <param name="cmap">CMap name.</param>
+            <summary>Creates a new CMap encoding.</summary>
+            <param name="cmap">CMap name</param>
         </member>
         <member name="M:iText.IO.Font.CMapEncoding.#ctor(System.String,System.String)">
-            <param name="cmap">CMap name.</param>
-            <param name="uniMap">CMap to convert Unicode value to CID.</param>
+            <summary>Creates a new CMap encoding.</summary>
+            <param name="cmap">CMap name</param>
+            <param name="uniMap">CMap to convert Unicode value to CID</param>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.#ctor(System.String,System.Byte[])">
+            <summary>Creates a new CMap encoding.</summary>
+            <param name="cmap">CMap name</param>
+            <param name="cmapBytes">CMap binary data</param>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.IsDirect">
+            <summary>Checks if CMap is direct or indirect pdf object</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if direct,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.HasUniMap">
+            <summary>Checks if CMap to convert Unicode value to CID is present.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if present,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.GetRegistry">
+            <summary>Gets string identifying the issuer of the character collection.</summary>
+            <returns>name of the issuer</returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.GetOrdering">
+            <summary>Gets string that uniquely names the character collection within the specified registry.</summary>
+            <returns>character collection name</returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.GetSupplement">
+            <summary>Gets the supplement number of the character collection</summary>
+            <returns>supplement number</returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.GetUniMapName">
+            <summary>Gets CMap name which converts Unicode value to CID.</summary>
+            <returns>CMap name</returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.GetCmapName">
+            <summary>Gets CMap name.</summary>
+            <returns>CMap name</returns>
         </member>
         <member name="M:iText.IO.Font.CMapEncoding.IsBuiltWith(System.String)">
             <summary>
@@ -2443,7 +3353,72 @@
             was built with corresponding cmap name.
             </summary>
             <param name="cmap">a CMAP</param>
-            <returns>true, if the CMapEncoding was built with the cmap. Otherwise false.</returns>
+            <returns>
+            
+            <see langword="true"/>
+            , if the CMapEncoding was built with the cmap,
+            <see langword="false"/>
+            otherwise.
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.CMapEncoding.GetCmapBytes(System.Int32)">
+            <summary>Gets CMap bytes by CID.</summary>
+            <param name="cid">id of the CMap</param>
+            <returns>cmap as byte array</returns>
+        </member>
+        <member name="T:iText.IO.Font.Cmap.AbstractCMap">
+            <summary>Class containing base CMap functionality</summary>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.AbstractCMap.GetName">
+            <summary>Gets cmap table name.</summary>
+            <returns>table name</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.AbstractCMap.GetOrdering">
+            <summary>Gets string that uniquely names the character collection within the specified registry.</summary>
+            <returns>character collection name</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.AbstractCMap.GetRegistry">
+            <summary>Gets string identifying the issuer of the character collection.</summary>
+            <returns>name of the issuer</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.AbstractCMap.GetSupplement">
+            <summary>Gets the supplement number of the character collection.</summary>
+            <returns>supplement number</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.AbstractCMap.DecodeStringToByte(System.String)">
+            <summary>Converts given string to a byte array.</summary>
+            <param name="range">string to convert</param>
+            <returns>byte array representation of the provided string</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.AbstractCMap.ToUnicodeString(System.String,System.Boolean)">
+            <summary>Converts string in pdf encoding to string in unicode encoding.</summary>
+            <param name="value">
+            string in pdf encoding (Either
+            <see cref="F:iText.IO.Font.PdfEncodings.UNICODE_BIG_UNMARKED"/>
+            ,
+            <see cref="F:iText.IO.Font.PdfEncodings.UNICODE_BIG"/>
+            ,
+            <see cref="F:iText.IO.Font.PdfEncodings.PDF_DOC_ENCODING"/>
+            )
+            </param>
+            <param name="isHexWriting">marker if string is hex encoded</param>
+            <returns>string in unicode encoding</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.CMapByteCid.Cursor.GetOffset">
+            <summary>Retrieves the offset of the object.</summary>
+            <returns>offset value</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.CMapByteCid.Cursor.SetOffset(System.Int32)">
+            <summary>Sets the offset of the object.</summary>
+            <param name="offset">offset value</param>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.CMapByteCid.Cursor.GetLength">
+            <summary>Retrieves the length of the object.</summary>
+            <returns>length value</returns>
+        </member>
+        <member name="M:iText.IO.Font.Cmap.CMapByteCid.Cursor.SetLength(System.Int32)">
+            <summary>Sets the length value of the object.</summary>
+            <param name="length">length value</param>
         </member>
         <member name="M:iText.IO.Font.Cmap.CMapByteCid.DecodeSequence(System.Byte[],System.Int32,System.Int32)">
             <summary>Decode byte sequence.</summary>
@@ -2524,15 +3499,6 @@
             if the end of content was reached.
             </returns>
         </member>
-        <member name="M:iText.IO.Font.Cmap.CMapContentParser.DecodeName(System.Byte[])">
-            <summary>
-            Use
-            <see cref="M:iText.IO.Util.PdfNameUtil.DecodeName(System.Byte[])"/>
-            instead.
-            </summary>
-            <param name="content">to decode</param>
-            <returns>decoded content</returns>
-        </member>
         <member name="M:iText.IO.Font.Cmap.CMapContentParser.ToHex(System.Int32)">
             <summary>Gets an hex string in the format "&lt;HHHH&gt;".</summary>
             <param name="n">the number</param>
@@ -2555,16 +3521,27 @@
         <member name="M:iText.IO.Font.Cmap.CMapToUnicode.#ctor">
             <summary>Creates a new instance of CMap.</summary>
         </member>
+        <member name="M:iText.IO.Font.Cmap.CMapToUnicode.CreateToUnicodeCmap(iText.IO.Font.FontEncoding)">
+            <summary>Creates a ToUnicode CMap from the given font encoding.</summary>
+            <param name="fontEncoding">the font encoding</param>
+            <returns>the ToUnicode CMap</returns>
+        </member>
         <member name="M:iText.IO.Font.Cmap.CMapToUnicode.HasByteMappings">
             <summary>This will tell if this cmap has any two byte mappings.</summary>
-            <returns>true If there are any two byte mappings, false otherwise.</returns>
+            <returns>
+            
+            <see langword="true"/>
+            If there are any two byte mappings,
+            <see langword="false"/>
+            otherwise
+            </returns>
         </member>
         <member name="M:iText.IO.Font.Cmap.CMapToUnicode.Lookup(System.Byte[],System.Int32,System.Int32)">
             <summary>This will perform a lookup into the map.</summary>
-            <param name="code">The code used to lookup.</param>
-            <param name="offset">The offset into the byte array.</param>
-            <param name="length">The length of the data we are getting.</param>
-            <returns>The string that matches the lookup.</returns>
+            <param name="code">the code used to lookup</param>
+            <param name="offset">the offset into the byte array</param>
+            <param name="length">the length of the data we are getting</param>
+            <returns>the string that matches the lookup</returns>
         </member>
         <member name="M:iText.IO.Font.Cmap.CMapToUnicode.GetCodeSpaceRanges">
             <summary>
@@ -2598,6 +3575,12 @@
             https://www.microsoft.com/typography/otspec/head.htm
             </remarks>
         </member>
+        <member name="T:iText.IO.Font.Constants.FontResources">
+            <summary>Font resources paths.</summary>
+        </member>
+        <member name="T:iText.IO.Font.Constants.FontStretches">
+            <summary>Font stretch constants and ids</summary>
+        </member>
         <member name="M:iText.IO.Font.Constants.FontStretches.FromOpenTypeWidthClass(System.Int32)">
             <summary>Convert from Open Type font width class notation.</summary>
             <remarks>
@@ -2611,6 +3594,9 @@
             <see cref="T:iText.IO.Font.Constants.FontStretches"/>
             constants.
             </returns>
+        </member>
+        <member name="T:iText.IO.Font.Constants.FontStyles">
+            <summary>Font styles ids</summary>
         </member>
         <member name="F:iText.IO.Font.Constants.FontStyles.UNDEFINED">
             <summary>Undefined font style.</summary>
@@ -2626,6 +3612,30 @@
         </member>
         <member name="F:iText.IO.Font.Constants.FontStyles.BOLDITALIC">
             <summary>Bold-Italic font style.</summary>
+        </member>
+        <member name="T:iText.IO.Font.Constants.FontWeights">
+            <summary>Font weight values and utility methods</summary>
+        </member>
+        <member name="M:iText.IO.Font.Constants.FontWeights.FromType1FontWeight(System.String)">
+            <summary>Parses font weight constant to corresponding value.</summary>
+            <param name="weight">weight constant</param>
+            <returns>corresponding weight int value</returns>
+        </member>
+        <member name="M:iText.IO.Font.Constants.FontWeights.NormalizeFontWeight(System.Int32)">
+            <summary>
+            Normalize font weight to either
+            <see cref="F:iText.IO.Font.Constants.FontWeights.THIN"/>
+            or
+            <see cref="F:iText.IO.Font.Constants.FontWeights.BLACK"/>.
+            </summary>
+            <param name="fontWeight">font weight int value</param>
+            <returns>
+            either
+            <see cref="F:iText.IO.Font.Constants.FontWeights.THIN"/>
+            or
+            <see cref="F:iText.IO.Font.Constants.FontWeights.BLACK"/>
+            based on a given weight value
+            </returns>
         </member>
         <member name="T:iText.IO.Font.Constants.StandardFontFamilies">
             <summary>
@@ -2739,38 +3749,6 @@
             </remarks>
             <param name="bit">index from ulCodePageRange bit settings (OS/2 table). From 0 to 63.</param>
             <returns>code bage description.</returns>
-        </member>
-        <member name="M:iText.IO.Font.FontCache.IsPredefinedCidFont(System.String)">
-            <summary>
-            Checks if the font with the given name and encoding is one
-            of the predefined CID fonts.
-            </summary>
-            <param name="fontName">the font name.</param>
-            <returns>
-            
-            <see langword="true"/>
-            if it is CJKFont.
-            </returns>
-        </member>
-        <member name="M:iText.IO.Font.FontCache.GetCompatibleCidFont(System.String)">
-            <summary>Finds a CJK font family which is compatible to the given CMap.</summary>
-            <param name="cmap">a name of the CMap for which compatible font is searched.</param>
-            <returns>a CJK font name if there's known compatible font for the given cmap name, or null otherwise.</returns>
-        </member>
-        <member name="M:iText.IO.Font.FontCache.GetCompatibleCmaps(System.String)">
-            <summary>
-            Finds all CMap names that belong to the same registry to which a given
-            font belongs.
-            </summary>
-            <param name="fontName">a name of the font for which CMap's are searched.</param>
-            <returns>a set of CMap names corresponding to the given font.</returns>
-        </member>
-        <member name="M:iText.IO.Font.FontCache.GetCid2UniCmap(System.String)">
-            <summary>Parses CMap with a given name producing it in a form of cid to unicode mapping.</summary>
-            <param name="uniMap">a CMap name. It is expected that CMap identified by this name defines unicode to cid mapping.
-                </param>
-            <returns>an object for convenient mapping from cid to unicode. If no CMap was found for provided name an exception is thrown.
-                </returns>
         </member>
         <member name="M:iText.IO.Font.FontCache.ClearSavedFonts">
             <summary>
@@ -3249,12 +4227,7 @@
         <member name="M:iText.IO.Font.FontProgramFactory.CreateFont(System.Byte[])">
             <summary>Creates a new font program.</summary>
             <remarks>
-            Creates a new font program. This font program can be one of the 14 built in fonts,
-            a Type1 font referred to by an AFM or PFM file, a TrueType font or
-            a CJK font from the Adobe Asian Font Pack.
-            Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
-            This would get the second font (indexes start at 0), in this case "MS PGothic".
-            <para />
+            Creates a new font program.
             The fonts are cached and if they already exist they are extracted from the cache,
             not parsed again.
             <para />
@@ -3269,22 +4242,27 @@
         <member name="M:iText.IO.Font.FontProgramFactory.CreateFont(System.Byte[],System.Boolean)">
             <summary>Creates a new font program.</summary>
             <remarks>
-            Creates a new font program. This font program can be one of the 14 built in fonts,
-            a Type 1 font referred to by an AFM or PFM file, a TrueType font or
-            a CJK font from the Adobe Asian Font Pack.
-            Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
-            This would get the second font (indexes start at 0), in this case "MS PGothic".
-            <para />
+            Creates a new font program.
             The fonts are cached and if they already exist they are extracted from the cache,
             not parsed again.
             <para />
             </remarks>
             <param name="fontProgram">the byte contents of the font program</param>
-            <param name="cached">whether to to cache this font program</param>
+            <param name="cached">whether to cache this font program</param>
             <returns>
             returns a new
             <see cref="T:iText.IO.Font.FontProgram"/>
             . This font program may come from the cache
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.FontProgramFactory.CreateTrueTypeFont(System.Byte[],System.Boolean)">
+            <summary>Creates a new TrueType font from the byte content.</summary>
+            <param name="fontProgram">the byte contents of the font program</param>
+            <param name="isLenientMode">whether parse font in lenient mode (when allowed that some tables can be missed) or not
+                </param>
+            <returns>
+            a new
+            <see cref="T:iText.IO.Font.FontProgram"/>
             </returns>
         </member>
         <member name="M:iText.IO.Font.FontProgramFactory.CreateType1Font(System.Byte[],System.Byte[])">
@@ -3454,6 +4432,11 @@
             <param name="dir">the directory</param>
             <returns>the number of fonts registered</returns>
         </member>
+        <member name="M:iText.IO.Font.FontProgramFactory.RegisterFontDirectoryRecursively(System.String)">
+            <summary>Register all the fonts in a directory recursively.</summary>
+            <param name="dir">the directory</param>
+            <returns>the number of fonts registered</returns>
+        </member>
         <member name="M:iText.IO.Font.FontProgramFactory.RegisterSystemFontDirectories">
             <summary>Register fonts in some probable directories.</summary>
             <remarks>
@@ -3620,6 +4603,12 @@
         <member name="F:iText.IO.Font.OpenTypeParser.PostTable.isFixedPitch">
             <summary><c>true</c> if all the glyphs have the same width.</summary>
         </member>
+        <member name="F:iText.IO.Font.OpenTypeParser.CmapTable.cmapEncodings">
+            <summary>
+            Collection of the pairs representing Platform ID and Encoding ID of the “cmap” subtables
+            present in the font program.
+            </summary>
+        </member>
         <member name="F:iText.IO.Font.OpenTypeParser.CmapTable.cmap10">
             <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             <remarks>
@@ -3688,8 +4677,40 @@
             of the table.
             </remarks>
         </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.#ctor(System.Byte[])">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.IO.Font.OpenTypeParser"/>
+            instance based on raw font data.
+            </summary>
+            <param name="ttf">the raw font data</param>
+        </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.#ctor(System.Byte[],System.Boolean)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.IO.Font.OpenTypeParser"/>
+            instance based on raw font data.
+            </summary>
+            <param name="ttf">the raw font data</param>
+            <param name="isLenientMode">whether font parsing will be in lenient mode (when some tables are allowed to be absent) or not
+                </param>
+        </member>
         <member name="M:iText.IO.Font.OpenTypeParser.GetPsFontName">
             <summary>Gets the Postscript font name.</summary>
+        </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.GetFullFont">
+            <summary>Gets the raw bytes of parsed font.</summary>
+            <returns>the raw bytes of parsed font</returns>
+        </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.GetGlyphDataForGid(System.Int32)">
+            <summary>Gets glyph data from `glyph` table for passed GID (glyph ID).</summary>
+            <param name="gid">the glyph ID to get data for</param>
+            <returns>the raw glyph data</returns>
+        </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.GetHorizontalMetricForGid(System.Int32)">
+            <summary>Gets horizontal metric data from `hmtx` table for passed GID (glyph ID).</summary>
+            <param name="gid">the glyph ID to get data for</param>
+            <returns>the raw horizontal metric data</returns>
         </member>
         <member name="M:iText.IO.Font.OpenTypeParser.ReadCffFont">
             <summary>
@@ -3703,9 +4724,38 @@
             </remarks>
             <returns>a byte array</returns>
         </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.GetSubset(System.Collections.Generic.ICollection{System.Int32},System.Boolean)">
+            <summary>Gets raw bytes of subset of parsed font and a number of glyphs in a subset.</summary>
+            <remarks>
+            Gets raw bytes of subset of parsed font and a number of glyphs in a subset.
+            <para />
+            The number of glyphs in a subset is not just glyphs.size() here. It's the biggest glyph id + 1 (for glyph 0).
+            It also may include possible composite glyphs.
+            </remarks>
+            <param name="glyphs">the glyphs to subset the font</param>
+            <param name="subsetTables">
+            whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+            (true type collection) font where single "full" font is needed. Despite the value of that
+            flag, only used glyphs will be left in the font
+            </param>
+            <returns>a tuple of the number of glyphs and the raw data of subset font</returns>
+        </member>
+        <member name="M:iText.IO.Font.OpenTypeParser.GetFlatGlyphs(System.Collections.Generic.ICollection{System.Int32})">
+            <summary>Gets flatten glyphs based on passed glyphs.</summary>
+            <remarks>
+            Gets flatten glyphs based on passed glyphs. Flattening means that for all
+            composite glyphs contour glyph will be added to the returned list.
+            </remarks>
+            <param name="glyphs">the glyphs to flatten</param>
+            <returns>the list of passed glyphs plus their contours (if there are)</returns>
+        </member>
         <member name="M:iText.IO.Font.OpenTypeParser.LoadTables(System.Boolean)">
             <summary>Reads the font data.</summary>
-            <param name="all">if true, all tables will be read, otherwise only 'head', 'name', and 'os/2'.</param>
+            <param name="all">
+            if
+            <see langword="true"/>
+            , all tables will be read, otherwise only 'head', 'name', and 'os/2'
+            </param>
         </member>
         <member name="M:iText.IO.Font.OpenTypeParser.GetTTCName(System.String)">
             <summary>Gets the name from a composed TTC file name.</summary>
@@ -3937,6 +4987,22 @@
             if context matches, or -1 if context doesn't match
             </returns>
         </member>
+        <member name="M:iText.IO.Font.Otf.FeatureRecord.GetTag">
+            <summary>Retrieves the tag of the feature record.</summary>
+            <returns>tag</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.FeatureRecord.SetTag(System.String)">
+            <summary>Sets the tag of the feature record.</summary>
+            <param name="tag">tag</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.FeatureRecord.GetLookups">
+            <summary>Retrieves the lookups of the feature record.</summary>
+            <returns>lookups</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.FeatureRecord.SetLookups(System.Int32[])">
+            <summary>Sets the lookups of the feature record.</summary>
+            <param name="lookups">lookups</param>
+        </member>
         <member name="M:iText.IO.Font.Otf.Glyph.#ctor(System.Int32,System.Int32,System.Int32)">
             <summary>Construct a non-mark Glyph, retrieving characters from unicode.</summary>
             <param name="code">code representation of the glyph in the font file</param>
@@ -4045,6 +5111,30 @@
             <param name="start">starting index of the slice</param>
             <param name="end">terminating index of the slice</param>
         </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GetStart">
+            <summary>Retrieves the start of the glyph line.</summary>
+            <returns>start of glyph line</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.SetStart(System.Int32)">
+            <summary>Sets the start of the glyph line.</summary>
+            <param name="start">start of glyph line</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GetEnd">
+            <summary>Retrieves the end of the glyph line.</summary>
+            <returns>end of glyph line</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.SetEnd(System.Int32)">
+            <summary>Sets the end of the glyph line.</summary>
+            <param name="end">end of glyph line</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GetIdx">
+            <summary>Retrieves the idx of the glyph line.</summary>
+            <returns>idx of glyph line</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.SetIdx(System.Int32)">
+            <summary>Sets the idx of the glyph line.</summary>
+            <param name="idx">idx of glyph line</param>
+        </member>
         <member name="M:iText.IO.Font.Otf.GlyphLine.ToUnicodeString(System.Int32,System.Int32)">
             <summary>Get the unicode string representation of the GlyphLine slice.</summary>
             <param name="start">starting index of the slice</param>
@@ -4070,6 +5160,61 @@
             <summary>Replaces the current content with the other line's content.</summary>
             <param name="other">the line with the content to be set to the current one</param>
         </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.#ctor(System.Int32,System.Int32)">
+            <summary>Creates a glyph line part object with given start and end values.</summary>
+            <remarks>
+            Creates a glyph line part object with given start and end values.
+            Actual text is set to null.
+            </remarks>
+            <param name="start">start value of the glyph line part</param>
+            <param name="end">end value of the glyph line part</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>Creates a glyph line part object with given start, end and actual text values.</summary>
+            <param name="start">start value of the glyph line part</param>
+            <param name="end">end value of the glyph line part</param>
+            <param name="actualText">actual text</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.GetStart">
+            <summary>Retrieves the start of the glyph line part.</summary>
+            <returns>start value of glyph line part</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.SetStart(System.Int32)">
+            <summary>Sets the start of the glyph line part.</summary>
+            <param name="start">start of the glyph line part</param>
+            <returns>Altered glyph line part object</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.GetEnd">
+            <summary>Retrieves the end of the glyph line part.</summary>
+            <returns>end value of glyph line part</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.SetEnd(System.Int32)">
+            <summary>Sets the end of the glyph line part.</summary>
+            <param name="end">end value of glyph line part</param>
+            <returns>Altered glyph line part object</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.GetActualText">
+            <summary>Retrieves the actual text of the glyph line part.</summary>
+            <returns>Actual text of glyph line part</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.SetActualText(System.String)">
+            <summary>Sets the actual text of the glyph line part.</summary>
+            <param name="actualText">Actual text of glyph line part</param>
+            <returns>Altered Glyph line part object</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.IsReversed">
+            <summary>Retrieves whether the glyph line part is reversed.</summary>
+            <returns>True if it is reversed, false otherwise.</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.GlyphLinePart.SetReversed(System.Boolean)">
+            <summary>Sets whether the glyph line part is reversed.</summary>
+            <param name="reversed">true if it should be reversed, false otherwise</param>
+            <returns>Altered glyph line part object</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphLine.ActualText.GetValue">
+            <summary>Retrieves the value of the actual text.</summary>
+            <returns>actual text value</returns>
+        </member>
         <member name="T:iText.IO.Font.Otf.GlyphPositioningTableReader">
             <summary>Parses an OpenTypeFont file and reads the Glyph Substitution Table.</summary>
             <remarks>
@@ -4088,6 +5233,26 @@
             This has been written according to the OPenTypeFont specifications. This may be found <a href="http://www.microsoft.com/typography/otspec/gsub.htm">here</a>.
             </remarks>
         </member>
+        <member name="M:iText.IO.Font.Otf.GposAnchor.#ctor(iText.IO.Font.Otf.GposAnchor)">
+            <summary>Creates a Gpos Anchor object based on a given Gpos Anchor object.</summary>
+            <param name="other">other Gpos Anchor object</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposAnchor.GetXCoordinate">
+            <summary>Retrieves the X coordinate of the Gpos Anchor.</summary>
+            <returns>X coordinate</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposAnchor.SetXCoordinate(System.Int32)">
+            <summary>Sets the x coordinate of the Gpos Anchor.</summary>
+            <param name="xCoordinate">X coordinate</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposAnchor.GetYCoordinate">
+            <summary>Retrieves the Y coordinate of the Gpos Anchor.</summary>
+            <returns>Y coordinate</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposAnchor.SetYCoordinate(System.Int32)">
+            <summary>Sets the Y coordinate of the Gpos Anchor.</summary>
+            <param name="yCoordinate">Y coordinate</param>
+        </member>
         <member name="T:iText.IO.Font.Otf.GposLookupType1">
             <summary>Lookup Type 1: Single Adjustment Positioning Subtable</summary>
         </member>
@@ -4096,6 +5261,22 @@
             Lookup Type 2:
             Pair Adjustment Positioning Subtable
             </summary>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposLookupType2.PairValueFormat.GetFirst">
+            <summary>Retrieves the first object of the pair.</summary>
+            <returns>first object</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposLookupType2.PairValueFormat.SetFirst(iText.IO.Font.Otf.GposValueRecord)">
+            <summary>Sets the first object of the pair.</summary>
+            <param name="first">first object</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposLookupType2.PairValueFormat.GetSecond">
+            <summary>Retrieves the second object of the pair.</summary>
+            <returns>second object</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposLookupType2.PairValueFormat.SetSecond(iText.IO.Font.Otf.GposValueRecord)">
+            <summary>Sets the second object of the pair.</summary>
+            <param name="second">second object</param>
         </member>
         <member name="T:iText.IO.Font.Otf.GposLookupType4">
             <summary>
@@ -4127,6 +5308,38 @@
             Chaining Contextual Positioning Subtable
             </summary>
         </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.GetXPlacement">
+            <summary>Retrieves the X placement of the Gpos value record.</summary>
+            <returns>X placement</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.SetXPlacement(System.Int32)">
+            <summary>Sets the X placement of the Gpos value record.</summary>
+            <param name="xPlacement">X placement</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.GetYPlacement">
+            <summary>Retrieves the Y placement of the Gpos value record.</summary>
+            <returns>Y placement</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.SetYPlacement(System.Int32)">
+            <summary>Sets the Y placement of the Gpos value record.</summary>
+            <param name="yPlacement">Y placement</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.GetXAdvance">
+            <summary>Retrieves the X advance of the Gpos value record.</summary>
+            <returns>x advance</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.SetXAdvance(System.Int32)">
+            <summary>Sets the X advance of the Gpos value record.</summary>
+            <param name="xAdvance">X advance</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.GetYAdvance">
+            <summary>Retrieves the Y advance of the Gpos value record.</summary>
+            <returns>Y advance</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposValueRecord.SetYAdvance(System.Int32)">
+            <summary>Sets the Y advance of the Gpos value record.</summary>
+            <param name="yAdvance">Y advance</param>
+        </member>
         <member name="T:iText.IO.Font.Otf.GsubLookupType2">
             <summary>LookupType 2: Multiple Substitution Subtable</summary>
         </member>
@@ -4148,6 +5361,30 @@
         </member>
         <member name="T:iText.IO.Font.Otf.GsubLookupType6">
             <summary>LookupType 6: Chaining Contextual Substitution Subtable</summary>
+        </member>
+        <member name="M:iText.IO.Font.Otf.LanguageRecord.GetTag">
+            <summary>Retrieves the tag of the language record.</summary>
+            <returns>tag of record</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.LanguageRecord.SetTag(System.String)">
+            <summary>Sets the tag of the language record.</summary>
+            <param name="tag">tag of record</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.LanguageRecord.GetFeatureRequired">
+            <summary>Retrieves the feature required of the language record.</summary>
+            <returns>feature required</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.LanguageRecord.SetFeatureRequired(System.Int32)">
+            <summary>Sets the feature required of the language record.</summary>
+            <param name="featureRequired">feature required</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.LanguageRecord.GetFeatures">
+            <summary>Retrieves the features of the language record.</summary>
+            <returns>features</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.LanguageRecord.SetFeatures(System.Int32[])">
+            <summary>Sets the features of the language record.</summary>
+            <param name="features">features</param>
         </member>
         <member name="T:iText.IO.Font.Otf.LanguageTags">
             <summary>Constants corresponding to language tags in the OTF specification.</summary>
@@ -4186,6 +5423,30 @@
         <member name="T:iText.IO.Font.Otf.Lookuptype8.PosTableLookup8Format3">
             <summary>Chained Contexts Positioning Format 3: Coverage-based Glyph Contexts</summary>
         </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.GetLine">
+            <summary>Retrieves the glyph line of the object.</summary>
+            <returns>glyph line</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.SetLine(iText.IO.Font.Otf.GlyphLine)">
+            <summary>Sets the glyph line of the object.</summary>
+            <param name="line">glyph line</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.GetGlyph">
+            <summary>Retrieves the glyph of the object.</summary>
+            <returns>glyph</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.SetGlyph(iText.IO.Font.Otf.Glyph)">
+            <summary>Sets the glyph of the object.</summary>
+            <param name="glyph">glyph</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.GetIdx">
+            <summary>Retrieves the idx of the glyph indexer.</summary>
+            <returns>idx</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.SetIdx(System.Int32)">
+            <summary>Sets the idx of the glyph indexer.</summary>
+            <param name="idx">idx</param>
+        </member>
         <member name="M:iText.IO.Font.Otf.OpenTypeFontTableReader.StartReadingTable">
             <summary>This is the starting point of the class.</summary>
             <remarks>
@@ -4194,6 +5455,62 @@
             <see cref="M:iText.IO.Font.Otf.OpenTypeFontTableReader.ReadLookupTable(System.Int32,System.Int32,System.Int32[])"/>
             method.
             </remarks>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OtfMarkRecord.GetMarkClass">
+            <summary>Retrieves the mark class of the OtfMarkRecord.</summary>
+            <returns>mark class</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OtfMarkRecord.SetMarkClass(System.Int32)">
+            <summary>Sets the mark class of the OtfMarkRecord.</summary>
+            <param name="markClass">mark class</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OtfMarkRecord.GetAnchor">
+            <summary>Retrieves the anchor of the OtfMarkRecord.</summary>
+            <returns>anchor</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OtfMarkRecord.SetAnchor(iText.IO.Font.Otf.GposAnchor)">
+            <summary>Sets the anchor of the OtfMarkRecord.</summary>
+            <param name="anchor">anchor</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.ScriptRecord.GetTag">
+            <summary>Retrieves the tag of the Script Record.</summary>
+            <returns>tag of record</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.ScriptRecord.SetTag(System.String)">
+            <summary>Sets the tag of the Script Record.</summary>
+            <param name="tag">tag of record</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.ScriptRecord.GetDefaultLanguage">
+            <summary>Retrieves the default language of the Script Record.</summary>
+            <returns>default language</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.ScriptRecord.SetDefaultLanguage(iText.IO.Font.Otf.LanguageRecord)">
+            <summary>Sets the default language of the Script Record.</summary>
+            <param name="defaultLanguage">default language</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.ScriptRecord.GetLanguages">
+            <summary>Retrieves the languages of the Script Record.</summary>
+            <returns>languages</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.ScriptRecord.SetLanguages(iText.IO.Font.Otf.LanguageRecord[])">
+            <summary>Sets the languages of the Script Record.</summary>
+            <param name="languages">languages</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.TagAndLocation.GetTag">
+            <summary>Retrieves the tag of the object.</summary>
+            <returns>tag</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.TagAndLocation.SetTag(System.String)">
+            <summary>Sets the tag of the object.</summary>
+            <param name="tag">tag</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.TagAndLocation.GetLocation">
+            <summary>Retrieves the location of the object.</summary>
+            <returns>location</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.TagAndLocation.SetLocation(System.Int32)">
+            <summary>Sets the location of the object.</summary>
+            <param name="location">location</param>
         </member>
         <member name="F:iText.IO.Font.PdfEncodings.IDENTITY_H">
             <summary>The Unicode encoding with horizontal writing.</summary>
@@ -4414,6 +5731,50 @@
             </remarks>
             <returns>directory Offset</returns>
         </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.GetSubset(System.Collections.Generic.ICollection{System.Int32},System.Boolean)">
+            <summary>Gets subset based on the passed glyphs.</summary>
+            <param name="glyphs">the glyphs to subset the font</param>
+            <param name="subsetTables">
+            whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+            (true type collection) font where single "full" font is needed. Despite the value of that
+            flag, only used glyphs will be left in the font
+            </param>
+            <returns>the subset font</returns>
+        </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.Subset(System.Collections.Generic.ICollection{System.Int32},System.Boolean)">
+            <summary>Gets subset and a number of glyphs in it based on the passed glyphs.</summary>
+            <remarks>
+            Gets subset and a number of glyphs in it based on the passed glyphs.
+            <para />
+            The number of glyphs in a subset is not just glyphs.size() here. It's the biggest glyph id + 1 (for glyph 0).
+            It also may include possible composite glyphs.
+            </remarks>
+            <param name="glyphs">the glyphs to subset the font</param>
+            <param name="subsetTables">
+            whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+            (true type collection) font where single "full" font is needed. Despite the value of that
+            flag, only used glyphs will be left in the font
+            </param>
+            <returns>the subset of the font and the number of glyphs in it</returns>
+        </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.Merge(System.Collections.Generic.IDictionary{iText.IO.Font.TrueTypeFont,System.Collections.Generic.ICollection{System.Int32}},System.String)">
+            <summary>Merges the passed font into one.</summary>
+            <remarks>Merges the passed font into one. Used glyphs per each font are applied to subset the merged font.
+                </remarks>
+            <param name="toMerge">the fonts to merge with used glyphs per each font</param>
+            <param name="fontName">the name of fonts to merge</param>
+            <returns>the raw data of merged font</returns>
+        </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.Merge(System.Collections.Generic.IDictionary{iText.IO.Font.TrueTypeFont,System.Collections.Generic.ICollection{System.Int32}},System.String,System.Boolean)">
+            <summary>Merges the passed font into one.</summary>
+            <remarks>Merges the passed font into one. Used glyphs per each font are applied to subset the merged font.
+                </remarks>
+            <param name="toMerge">the fonts to merge with used glyphs per each font</param>
+            <param name="fontName">the name of fonts to merge</param>
+            <param name="isCmapCheckRequired">the flag which specifies whether 'cmap' table should be checked while merging or not
+                </param>
+            <returns>the raw data of merged font</returns>
+        </member>
         <member name="M:iText.IO.Font.TrueTypeFont.MapGlyphsCidsToGids(System.Collections.Generic.ICollection{System.Int32})">
             <summary>
             Maps a set of glyph CIDs (as used in PDF file) to corresponding GID values
@@ -4430,6 +5791,31 @@
             <param name="glyphs">a set of glyph CIDs</param>
             <returns>a set of glyph ids corresponding to the passed glyph CIDs</returns>
         </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.IsCmapPresent(System.Int32,System.Int32)">
+            <summary>
+            Checks whether current
+            <see cref="T:iText.IO.Font.TrueTypeFont"/>
+            program contains the “cmap” subtable
+            with provided platform ID and encoding ID.
+            </summary>
+            <param name="platformID">platform ID</param>
+            <param name="encodingID">encoding ID</param>
+            <returns>
+            
+            <see langword="true"/>
+            if “cmap” subtable with provided platform ID and encoding ID is present in the font program,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.GetNumberOfCmaps">
+            <summary>
+            Gets the number of the “cmap” subtables for the current
+            <see cref="T:iText.IO.Font.TrueTypeFont"/>
+            program.
+            </summary>
+            <returns>the number of the “cmap” subtables</returns>
+        </member>
         <member name="M:iText.IO.Font.TrueTypeFont.GetCodePagesSupported">
             <summary>Gets the code pages supported by the font.</summary>
             <returns>the code pages supported by the font</returns>
@@ -4443,12 +5829,23 @@
             </remarks>
             <param name="usedGlyphs">
             a set of integers, which are glyph ids that denote used glyphs.
-            This set is updated inside of the method if needed.
+            This set is updated inside the method if needed.
             </param>
             <param name="subset">subset status</param>
             <param name="subsetRanges">additional subset ranges</param>
         </member>
-        <member name="M:iText.IO.Font.TrueTypeFont.ToCompactRange(System.Collections.Generic.IList{System.Int32[]})">
+        <member name="M:iText.IO.Font.TrueTypeFont.UpdateUsedGlyphs(System.Collections.Generic.IDictionary{System.Int32,iText.IO.Font.Otf.Glyph},System.Boolean,System.Collections.Generic.IList{System.Int32[]})">
+            <summary>The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
+                </summary>
+            <remarks>
+            The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
+            This map of used glyphs can be used for building width array and ToUnicode CMAP.
+            </remarks>
+            <param name="usedGlyphs">a map of glyph ids to glyphs. This map is updated inside the method if needed</param>
+            <param name="subset">subset status</param>
+            <param name="subsetRanges">additional subset ranges</param>
+        </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.ToCompactRange(System.Collections.Generic.IList{System.Int32[]},System.Boolean)">
             <summary>
             Normalizes given ranges by making sure that first values in pairs are lower than second values and merges overlapping
             ranges in one.
@@ -4457,52 +5854,23 @@
             a
             <see cref="!:System.Collections.IList&lt;E&gt;"/>
             of integer arrays, which are constituted by pairs of ints that denote
-            each range limits. Each integer array size shall be a multiple of two.
+            each range limits. Each integer array size shall be a multiple of two
             </param>
-            <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
+            <param name="subset">
+            
+            <see langword="true"/>
+            if a font subset is required. Used only if
+            <paramref name="ranges"/>
+            is
+            <see langword="null"/>
+            </param>
+            <returns>single merged array consisting of pairs of integers, each of them denoting a range</returns>
         </member>
-        <member name="T:iText.IO.Font.TrueTypeFontSubset">
+        <member name="T:iText.IO.Font.TrueTypeFontMerger">
+            <summary>Merges TrueType fonts and subset merged font by leaving only needed glyphs in the font.</summary>
+        </member>
+        <member name="T:iText.IO.Font.TrueTypeFontSubsetter">
             <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
-        </member>
-        <member name="F:iText.IO.Font.TrueTypeFontSubset.tableDirectory">
-            <summary>Contains the location of the several tables.</summary>
-            <remarks>
-            Contains the location of the several tables. The key is the name of
-            the table and the value is an
-            <c>int[3]</c>
-            where position 0
-            is the checksum, position 1 is the offset from the start of the file
-            and position 2 is the length of the table.
-            </remarks>
-        </member>
-        <member name="F:iText.IO.Font.TrueTypeFontSubset.rf">
-            <summary>The file in use.</summary>
-        </member>
-        <member name="F:iText.IO.Font.TrueTypeFontSubset.fileName">
-            <summary>The file name.</summary>
-        </member>
-        <member name="M:iText.IO.Font.TrueTypeFontSubset.#ctor(System.String,iText.IO.Source.RandomAccessFileOrArray,System.Collections.Generic.ICollection{System.Int32},System.Int32,System.Boolean)">
-            <summary>Creates a new TrueTypeFontSubSet</summary>
-            <param name="directoryOffset">The offset from the start of the file to the table directory</param>
-            <param name="fileName">the file name of the font</param>
-            <param name="glyphsUsed">the glyphs used</param>
-        </member>
-        <member name="M:iText.IO.Font.TrueTypeFontSubset.Process">
-            <summary>Does the actual work of subsetting the font.</summary>
-            <returns>the subset font</returns>
-        </member>
-        <member name="M:iText.IO.Font.TrueTypeFontSubset.ReadStandardString(System.Int32)">
-            <summary>
-            Reads a
-            <c>String</c>
-            from the font file as bytes using the Cp1252 encoding.
-            </summary>
-            <param name="length">the length of bytes to read</param>
-            <returns>
-            the
-            <c>String</c>
-            read
-            </returns>
         </member>
         <member name="F:iText.IO.Font.Type1Font.kernPairs">
             <summary>Represents the section KernPairs in the AFM file.</summary>
@@ -4950,6 +6318,46 @@
             <param name="ra">an random access file or array</param>
             <returns>a byte array</returns>
         </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.GetNumOfComps">
+            <summary>Retrieves number of components of the object.</summary>
+            <returns>number of components</returns>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.SetNumOfComps(System.Int32)">
+            <summary>Sets number of components of the object.</summary>
+            <param name="numOfComps">number of components</param>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.GetColorSpecBoxes">
+            <summary>Retrieves the color spec boxes of the object.</summary>
+            <returns>color spec boxes</returns>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.SetColorSpecBoxes(System.Collections.Generic.IList{iText.IO.Image.Jpeg2000ImageData.ColorSpecBox})">
+            <summary>Sets the color spec boxes of the object.</summary>
+            <param name="colorSpecBoxes">color spec boxes</param>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.IsJp2">
+            <summary>Retrieves whether the object is a Jp2.</summary>
+            <returns>true if it is a jp2, otherwise false</returns>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.SetJp2(System.Boolean)">
+            <summary>Sets whether the object is a jp2.</summary>
+            <param name="jp2">true is it is a jp2, otherwise false</param>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.IsJpxBaseline">
+            <summary>Retrieves whether jpx is baseline.</summary>
+            <returns>true if jpx is baseline, false otherwise</returns>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.SetJpxBaseline(System.Boolean)">
+            <summary>Sets whether jpx is baseline.</summary>
+            <param name="jpxBaseline">true if jpx is baseline, false otherwise</param>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.GetBpcBoxData">
+            <summary>Retrieves the bits per component of the box data.</summary>
+            <returns>bits per component</returns>
+        </member>
+        <member name="M:iText.IO.Image.Jpeg2000ImageData.Parameters.SetBpcBoxData(System.Byte[])">
+            <summary>Sets the bits per component of the box data.</summary>
+            <param name="bpcBoxData">bits per component</param>
+        </member>
         <member name="M:iText.IO.Image.Jpeg2000ImageHelper.ProcessParameters(iText.IO.Image.Jpeg2000ImageData)">
             <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
         </member>
@@ -5129,8 +6537,297 @@
         <member name="T:iText.IO.Logs.IoLogMessageConstant">
             <summary>Class containing constants to be used in logging.</summary>
         </member>
+        <member name="T:iText.IO.Resolver.Resource.DefaultResourceRetriever">
+            <summary>
+            Default implementation of the
+            <see cref="T:iText.IO.Resolver.Resource.IResourceRetriever"/>
+            interface, which can set a limit
+            on the size of retrieved resources using input stream with a limit on the number of bytes read.
+            </summary>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.IO.Resolver.Resource.DefaultResourceRetriever"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates a new
+            <see cref="T:iText.IO.Resolver.Resource.DefaultResourceRetriever"/>
+            instance.
+            The limit on the size of retrieved resources is by default equal to
+            <see cref="F:System.Int64.MaxValue"/>
+            bytes.
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.GetResourceSizeByteLimit">
+            <summary>Gets the resource size byte limit.</summary>
+            <remarks>
+            Gets the resource size byte limit.
+            <para />
+            The resourceSizeByteLimit is used to create input stream with a limit on the number of bytes read.
+            </remarks>
+            <returns>the resource size byte limit</returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.SetResourceSizeByteLimit(System.Int64)">
+            <summary>Sets the resource size byte limit.</summary>
+            <remarks>
+            Sets the resource size byte limit.
+            <para />
+            The resourceSizeByteLimit is used to create input stream with a limit on the number of bytes read.
+            </remarks>
+            <param name="resourceSizeByteLimit">the resource size byte limit</param>
+            <returns>
+            the
+            <see cref="T:iText.IO.Resolver.Resource.IResourceRetriever"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.GetConnectTimeout">
+            <summary>Gets the connect timeout.</summary>
+            <remarks>
+            Gets the connect timeout.
+            <para />
+            The connect timeout is used to create input stream with a limited time to establish connection to resource.
+            </remarks>
+            <returns>the connect timeout in milliseconds</returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.SetConnectTimeout(System.Int32)">
+            <summary>Sets the connect timeout.</summary>
+            <remarks>
+            Sets the connect timeout.
+            <para />
+            The connect timeout is used to create input stream with a limited time to establish connection to resource.
+            </remarks>
+            <param name="connectTimeout">the connect timeout in milliseconds</param>
+            <returns>
+            the
+            <see cref="T:iText.IO.Resolver.Resource.IResourceRetriever"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.GetRequestHeaders">
+            <summary>Gets the request headers to use in the request.</summary>
+            <returns>the request headers to use in the request</returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.SetRequestHeaders(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Sets the request headers to use in the request.</summary>
+            <param name="headers">the request headers to use in the request</param>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.GetReadTimeout">
+            <summary>Gets the read timeout.</summary>
+            <remarks>
+            Gets the read timeout.
+            <para />
+            The read timeout is used to create input stream with a limited time to receive data from resource.
+            </remarks>
+            <returns>the read timeout in milliseconds</returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.SetReadTimeout(System.Int32)">
+            <summary>Sets the read timeout.</summary>
+            <remarks>
+            Sets the read timeout.
+            <para />
+            The read timeout is used to create input stream with a limited time to receive data from resource.
+            </remarks>
+            <param name="readTimeout">the read timeout in milliseconds</param>
+            <returns>
+            the
+            <see cref="T:iText.IO.Resolver.Resource.IResourceRetriever"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.GetInputStreamByUrl(System.Uri)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.GetByteArrayByUrl(System.Uri)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.Get(System.Uri,System.Byte[],System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.DefaultResourceRetriever.UrlFilter(System.Uri)">
+            <summary>Method for filtering resources by URL.</summary>
+            <remarks>
+            Method for filtering resources by URL.
+            <para />
+            The default implementation allows for all URLs. Override this method if want to set filtering.
+            </remarks>
+            <param name="url">the source URL</param>
+            <returns>true if the resource can be retrieved and false otherwise</returns>
+        </member>
+        <member name="T:iText.IO.Resolver.Resource.IAdvancedResourceRetriever">
+            <summary>Extended interface for classes that can retrieve data from resources by URL.</summary>
+            <remarks>
+            Extended interface for classes that can retrieve data from resources by URL.
+            An extra method with http headers and request data is added.
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.IAdvancedResourceRetriever.Get(System.Uri,System.Byte[],System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Gets the
+            <see cref="T:System.IO.Stream"/>
+            with the data from a provided URL by instantiating an HTTP connection to the URL.
+            </summary>
+            <param name="url">the source URL</param>
+            <param name="request">data to send to the URL</param>
+            <param name="headers">HTTP headers to set for the outgoing connection</param>
+            <returns>the input stream with the retrieved data</returns>
+        </member>
+        <member name="T:iText.IO.Resolver.Resource.IResourceRetriever">
+            <summary>Interface for classes that can retrieve data from resources by URL.</summary>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.IResourceRetriever.GetInputStreamByUrl(System.Uri)">
+            <summary>
+            Gets the
+            <see cref="T:System.IO.Stream"/>
+            with the data from a provided URL by instantiating an HTTP connection to the URL.
+            </summary>
+            <param name="url">the source URL</param>
+            <returns>the input stream with the retrieved data</returns>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.IResourceRetriever.GetByteArrayByUrl(System.Uri)">
+            <summary>Gets the byte array with the data from a provided URL by instantiating an HTTP connection to the URL.
+                </summary>
+            <param name="url">the source URL</param>
+            <returns>the byte array with the retrieved data</returns>
+        </member>
+        <member name="T:iText.IO.Resolver.Resource.LimitedInputStream">
+             <summary>
+             Implementation of the
+             <see cref="T:System.IO.Stream"/>
+             abstract class, which is used to restrict
+             reading bytes from input stream i.e. if more bytes are read than the readingByteLimit,
+             an
+             <see cref="T:iText.IO.Exceptions.ReadingByteLimitException"/>
+             exception will be thrown.
+            
+             Note that the readingByteLimit is not taken into account in the <see cref="M:iText.IO.Resolver.Resource.LimitedInputStream.Seek(System.Int64,System.IO.SeekOrigin)"/>,
+             <see cref="M:iText.IO.Resolver.Resource.LimitedInputStream.set_Position(System.Int64)"/> methods.
+             </summary>
+        </member>
+        <member name="M:iText.IO.Resolver.Resource.LimitedInputStream.#ctor(System.IO.Stream,System.Int64)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.IO.Resolver.Resource.LimitedInputStream"/>
+            instance.
+            </summary>
+            <param name="inputStream">the input stream, the reading of bytes from which will be limited</param>
+            <param name="readingByteLimit">the reading byte limit, must not be less than zero</param>
+        </member>
         <member name="T:iText.IO.Source.ArrayRandomAccessSource">
             <summary>A RandomAccessSource that is based on an underlying byte array</summary>
+        </member>
+        <member name="T:iText.IO.Source.ASCII85OutputStream">
+            <summary>
+            An output stream that encodes data according to the
+            <c>ASCII85Decode</c>
+            filter from the PDF specification.
+            </summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.OFFSET">
+            <summary>Offset to the first base-85 output char.</summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.INPUT_LENGTH">
+            <summary>Size of the encoding block.</summary>
+            <remarks>
+            Size of the encoding block. After this amount of bytes data is converted
+            and flush to the backing stream.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.OUTPUT_LENGTH">
+            <summary>Amount of bytes produced from a block of input bytes.</summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.ALL_ZEROS_MARKER">
+            <summary>Marker written, when all input bytes are zero.</summary>
+            <remarks>
+            Marker written, when all input bytes are zero. Not used for partial
+            blocks.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.EOD">
+            <summary>End Of Data marker.</summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.buffer">
+            <summary>Encoding block buffer.</summary>
+            <remarks>Encoding block buffer. Reused for encoding output, when flushing.</remarks>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.inputOr">
+            <summary>Bitwise OR of all bytes within the encoding block.</summary>
+            <remarks>
+            Bitwise OR of all bytes within the encoding block. Used to quickly
+            check, whether the encoding block contains only zeros.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.inputCursor">
+            <summary>Input bytes cursor within the buffer.</summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCII85OutputStream.finished">
+            <summary>
+            Flag for detecting, whether
+            <see cref="M:iText.IO.Source.ASCII85OutputStream.Finish"/>
+            has been called.
+            </summary>
+        </member>
+        <member name="M:iText.IO.Source.ASCII85OutputStream.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new
+            <c>ASCIIHexDecode</c>
+            encoding stream.
+            </summary>
+            <param name="out">the output stream to write encoded data to</param>
+        </member>
+        <member name="M:iText.IO.Source.ASCII85OutputStream.Write(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Source.ASCII85OutputStream.Close">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Source.ASCII85OutputStream.Finish">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.IO.Source.ASCIIHexOutputStream">
+            <summary>
+            An output stream that encodes data according to the
+            <c>ASCIIHexDecode</c>
+            filter from the PDF specification.
+            </summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCIIHexOutputStream.EOD">
+            <summary>End Of Data marker.</summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCIIHexOutputStream.CHAR_MAP">
+            <summary>
+            Array for mapping nibble values to the corresponding lowercase
+            hexadecimal characters.
+            </summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCIIHexOutputStream.buffer">
+            <summary>Buffer for storing the output hex char pair.</summary>
+        </member>
+        <member name="F:iText.IO.Source.ASCIIHexOutputStream.finished">
+            <summary>
+            Flag for detecting, whether
+            <see cref="M:iText.IO.Source.ASCIIHexOutputStream.Finish"/>
+            has been called.
+            </summary>
+        </member>
+        <member name="M:iText.IO.Source.ASCIIHexOutputStream.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new
+            <c>ASCIIHexDecode</c>
+            encoding stream.
+            </summary>
+            <param name="out">the output stream to write encoded data to</param>
+        </member>
+        <member name="M:iText.IO.Source.ASCIIHexOutputStream.Write(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Source.ASCIIHexOutputStream.Close">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Source.ASCIIHexOutputStream.Finish">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.IO.Source.ByteBuffer.Prepend(System.Byte)">
             <summary>
@@ -5301,6 +6998,48 @@
             <param name="absoluteOffset">the offset in the parent GroupedRandomAccessSource</param>
             <returns>the effective offset in the underlying source</returns>
         </member>
+        <member name="T:iText.IO.Source.IFinishable">
+            <summary>Interface for output streams that supports finalization without closing the underlying stream.</summary>
+            <remarks>
+            Interface for output streams that supports finalization without closing the underlying stream.
+            <para />
+            This interface is designed for output streams that wrap other streams and need to complete
+            their processing (such as finishing compression, flushing buffers, or writing final data)
+            without closing the underlying output stream. This is particularly useful when multiple
+            operations need to be performed on the same underlying stream sequentially.
+            <para />
+            Implementations of this interface should ensure that calling
+            <see cref="M:iText.IO.Source.IFinishable.Finish"/>
+            completes
+            all pending operations and releases any resources associated with the stream processing,
+            but does not close the underlying stream.
+            </remarks>
+            <seealso cref="T:iText.IO.Source.DeflaterOutputStream"/>
+            <seealso cref="M:System.IO.Stream.Dispose"/>
+        </member>
+        <member name="M:iText.IO.Source.IFinishable.Finish">
+            <summary>
+            Is called to finalize the stream, implementing classes should ensure that the underlying
+            output stream remains open after this method is called.
+            </summary>
+            <remarks>
+            Is called to finalize the stream, implementing classes should ensure that the underlying
+            output stream remains open after this method is called.
+            <para />
+            This method completes any pending write operations, flushes internal buffers,
+            writes any final data required by the stream format, and releases resources
+            associated with the stream processing. However, unlike
+            <see cref="M:System.IO.Stream.Dispose"/>
+            ,
+            it does not close the underlying output stream.
+            <para />
+            After calling this method, no further data should be written to this stream,
+            but the underlying stream remains open and can be used for other operations.
+            <para />
+            This method should be idempotent - calling it multiple times should have the
+            same effect as calling it once.
+            </remarks>
+        </member>
         <member name="T:iText.IO.Source.IndependentRandomAccessSource">
             <summary>A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().</summary>
             <remarks>
@@ -5377,6 +7116,23 @@
             as necessary to account for any junk that occurs in the byte source before the header
             </remarks>
             <param name="file">the source</param>
+        </member>
+        <member name="M:iText.IO.Source.PdfTokenizer.Peek">
+            <summary>Gets the next byte of pdf source without moving source position.</summary>
+            <returns>the byte, or -1 if EOF is reached</returns>
+        </member>
+        <member name="M:iText.IO.Source.PdfTokenizer.Peek(System.Byte[])">
+            <summary>
+            Gets the next
+            <c>buffer.length</c>
+            bytes of pdf source without moving source position.
+            </summary>
+            <param name="buffer">buffer to store read bytes</param>
+            <returns>
+            the number of read bytes. If it is less than
+            <c>buffer.length</c>
+            it means EOF has been reached.
+            </returns>
         </member>
         <member name="M:iText.IO.Source.PdfTokenizer.GetNextEof">
             <summary>Gets next %%EOF marker in current PDF file.</summary>
@@ -5556,13 +7312,6 @@
         <member name="T:iText.IO.Source.RandomAccessFileOrArray">
             <summary>Class that is used to unify reading from random access files and arrays.</summary>
         </member>
-        <member name="F:iText.IO.Source.RandomAccessFileOrArray.plainRandomAccess">
-            <summary>When true the file access is not done through a memory mapped file.</summary>
-            <remarks>
-            When true the file access is not done through a memory mapped file. Use it if the file
-            is too big to be mapped in your address space.
-            </remarks>
-        </member>
         <member name="F:iText.IO.Source.RandomAccessFileOrArray.byteSource">
             <summary>The source that backs this object</summary>
         </member>
@@ -5608,6 +7357,23 @@
         <member name="M:iText.IO.Source.RandomAccessFileOrArray.Read">
             <summary>Reads a single byte</summary>
             <returns>the byte, or -1 if EOF is reached</returns>
+        </member>
+        <member name="M:iText.IO.Source.RandomAccessFileOrArray.Peek">
+            <summary>Gets the next byte without moving current position.</summary>
+            <returns>the next byte, or -1 if EOF is reached</returns>
+        </member>
+        <member name="M:iText.IO.Source.RandomAccessFileOrArray.Peek(System.Byte[])">
+            <summary>
+            Gets the next
+            <c>buffer.length</c>
+            bytes without moving current position.
+            </summary>
+            <param name="buffer">buffer to store read bytes</param>
+            <returns>
+            the number of read bytes. If it is less than
+            <c>buffer.length</c>
+            it means EOF has been reached.
+            </returns>
         </member>
         <member name="M:iText.IO.Source.RandomAccessFileOrArray.Read(System.Byte[],System.Int32,System.Int32)">
             <summary>Reads the specified amount of bytes to the buffer applying the offset.</summary>
@@ -6028,6 +7794,59 @@
         <member name="M:iText.IO.Source.RASInputStream.ReadByte">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.IO.Source.RunLengthOutputStream">
+            <summary>
+            An output stream that encodes data according to the
+            <c>RunLengthDecode</c>
+            filter from the PDF specification.
+            </summary>
+        </member>
+        <member name="F:iText.IO.Source.RunLengthOutputStream.MAX_LENGTH">
+            <summary>Maximum length of a run.</summary>
+            <remarks>Maximum length of a run. Applies to both "unique" and repeating ones.</remarks>
+        </member>
+        <member name="F:iText.IO.Source.RunLengthOutputStream.EOD">
+            <summary>End Of Data marker.</summary>
+        </member>
+        <member name="F:iText.IO.Source.RunLengthOutputStream.buffer">
+            <summary>Buffer for storing the pending run.</summary>
+        </member>
+        <member name="F:iText.IO.Source.RunLengthOutputStream.repeatValue">
+            <summary>Value, that repeats in a repeating run.</summary>
+            <remarks>
+            Value, that repeats in a repeating run. Set to
+            <c>-1</c>
+            , when the
+            pending run is a "unique" one.
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Source.RunLengthOutputStream.currentLength">
+            <summary>Current length of the pending run.</summary>
+        </member>
+        <member name="F:iText.IO.Source.RunLengthOutputStream.finished">
+            <summary>
+            Flag for detecting, whether
+            <see cref="M:iText.IO.Source.RunLengthOutputStream.Finish"/>
+            has been called.
+            </summary>
+        </member>
+        <member name="M:iText.IO.Source.RunLengthOutputStream.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new
+            <c>RunLengthDecode</c>
+            encoding stream.
+            </summary>
+            <param name="out">the output stream to write encoded data to</param>
+        </member>
+        <member name="M:iText.IO.Source.RunLengthOutputStream.Write(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Source.RunLengthOutputStream.Close">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Source.RunLengthOutputStream.Finish">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.IO.Source.WindowRandomAccessSource">
             <summary>
             A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
@@ -6391,70 +8210,6 @@
             <summary>Appends value's hashCode to the current hashCode.</summary>
             <param name="value">new element</param>
             <returns>this</returns>
-        </member>
-        <member name="F:iText.IO.Util.ImageHandlerUtil.GHOSTSCRIPT_ENVIRONMENT_VARIABLE">
-            <summary>The name of the environment variable with the command to execute Ghostscript operations.</summary>
-        </member>
-        <member name="F:iText.IO.Util.ImageHandlerUtil.MAGICK_COMPARE_ENVIRONMENT_VARIABLE">
-            <summary>The name of the environment variable with the command to execute ImageMagic comparison operations.
-                </summary>
-        </member>
-        <member name="M:iText.IO.Util.ImageHandlerUtil.RunGhostScriptImageGeneration(System.String,System.String,System.String)">
-            <summary>Runs ghostscript to create images of pdfs.</summary>
-            <param name="pdf">Path to the pdf file.</param>
-            <param name="outDir">Path to the output directory</param>
-            <param name="image">Path to the generated image</param>
-        </member>
-        <member name="M:iText.IO.Util.ImageHandlerUtil.RunGhostScriptImageGeneration(System.String,System.String,System.String,System.String)">
-            <summary>Runs ghostscript to create images of specified pages of pdfs.</summary>
-            <param name="pdf">Path to the pdf file.</param>
-            <param name="outDir">Path to the output directory</param>
-            <param name="image">Path to the generated image</param>
-            <param name="pageNumber">
-            Number of the required page of pdf to extract as image. Can be null,
-            if it is required to extract all pages as images
-            </param>
-        </member>
-        <member name="M:iText.IO.Util.ImageHandlerUtil.RunImageMagickImageCompare(System.String,System.String,System.String)">
-            <summary>Runs imageMagick to visually compare images and generate difference output.</summary>
-            <param name="outImageFilePath">Path to the output image file</param>
-            <param name="cmpImageFilePath">Path to the cmp image file</param>
-            <param name="diffImageName">Path to the difference output image file</param>
-            <returns>boolean result of comparing: true - images are visually equal</returns>
-        </member>
-        <member name="M:iText.IO.Util.ImageHandlerUtil.RunImageMagickImageCompare(System.String,System.String,System.String,System.String)">
-            <summary>Runs imageMagick to visually compare images with the specified fuzziness value and generate difference output.
-                </summary>
-            <param name="outImageFilePath">Path to the output image file</param>
-            <param name="cmpImageFilePath">Path to the cmp image file</param>
-            <param name="diffImageName">Path to the difference output image file</param>
-            <param name="fuzzValue">fuzziness value to compare images. Can be null, if it is not required to use fuzziness
-                </param>
-            <returns>boolean result of comparing: true - images are visually equal</returns>
-        </member>
-        <member name="M:iText.IO.Util.ImageHandlerUtil.IsVersionCommandExecutable(System.String)">
-            <summary>
-            Checks if the specified by input parameter tool's system variable is correctly specified
-            and the specified tool can be executed.
-            </summary>
-            <param name="keyWord">the keyword specifying the tool (GhostScript or ImageMagick)</param>
-            <returns>
-            boolean result of checking: true - System variable is correctly specified
-            and the specified tool can be executed
-            </returns>
-        </member>
-        <member name="T:iText.IO.Util.ImageHandlerUtil.ImageHandlerExecutionException">
-            <summary>
-            Exceptions thrown when errors occur during generation and comparison of images obtained on the basis of pdf
-            files.
-            </summary>
-        </member>
-        <member name="M:iText.IO.Util.ImageHandlerUtil.ImageHandlerExecutionException.#ctor(iText.IO.Util.ImageHandlerUtil,System.String)">
-            <summary>
-            Creates a new
-            <see cref="T:iText.IO.Util.ImageHandlerUtil.ImageHandlerExecutionException"/>.
-            </summary>
-            <param name="msg">the detail message.</param>
         </member>
         <member name="T:iText.IO.Util.ImageMagickCompareResult">
             <summary>
@@ -6885,6 +8640,7 @@
             <paramref name="len"/>
             bytes from an input stream.
             </summary>
+            <param name="input">the stream to read</param>
             <param name="b">the buffer into which the data is read.</param>
             <param name="off">an int specifying the offset into the data.</param>
             <param name="len">an int specifying the number of bytes to read.</param>
@@ -7027,6 +8783,18 @@
             <param name="filename">a given filename</param>
             <returns>a valid URL</returns>
         </member>
+        <member name="M:iText.IO.Util.UrlUtil.OpenStream(System.Uri,System.Int32,System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Gets the input stream of connection related to last redirected url. You should manually close input stream after
+            calling this method to not hold any open resources.
+            </summary>
+            <param name="url">an initial URL.</param>
+            <param name="connectTimeout">a connect timeout in milliseconds</param>
+            <param name="readTimeout">a read timeout in milliseconds</param>
+            <param name="requestHeaders">custom request headers</param>
+            
+            <returns>an input stream of connection related to the last redirected url.</returns>
+        </member>
         <member name="M:iText.IO.Util.UrlUtil.ToNormalizedURI(System.String)">
             <summary>
             This method makes a normalized URI from a given filename. 
@@ -7040,6 +8808,11 @@
             </summary>
             <param name="file">a given file</param>
             <returns>a valid Uri</returns>
+        </member>
+        <member name="M:iText.IO.Util.UrlUtil.ToAbsoluteURI(System.Uri)">
+            <summary>Get the entire URI string which is properly encoded.</summary>
+            <param name="uri">URI which convert to encoded string</param>
+            <returns>URI string representation</returns>
         </member>
         <member name="M:iText.IO.Util.UrlUtil.GetFileUriString(System.String)">
             <summary>
@@ -7064,10 +8837,34 @@
             
             <returns>an input stream of connection related to the last redirected url.</returns>
         </member>
+        <member name="M:iText.IO.Util.UrlUtil.GetInputStreamOfFinalConnection(System.Uri,System.Int32,System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Gets the input stream of connection related to last redirected url. You should manually close input stream after
+            calling this method to not hold any open resources.
+            </summary>
+            <param name="url">an initial URL</param>
+            <param name="connectTimeout">a connect timeout in milliseconds</param>
+            <param name="readTimeout">a read timeout in milliseconds</param>
+            <param name="requestHeaders">custom request headers</param>
+            
+            <returns>an input stream of connection related to the last redirected url</returns>
+        </member>
+        <member name="M:iText.IO.Util.UrlUtil.Get(System.Uri,System.Byte[],System.Collections.Generic.IDictionary{System.String,System.String},System.Int32,System.Int32)">
+            <summary>
+            Gets the input stream with the data from a provided URL by instantiating an HTTP connection to the URL.
+            </summary>
+            <param name="url">a URL to connect to</param>
+            <param name="request">data to send to the URL</param>
+            <param name="headers">HTTP headers to set for the outgoing connection</param>
+            <param name="connectTimeout">a connect timeout in milliseconds</param>
+            <param name="readTimeout">a read timeout in milliseconds</param>
+            
+            <returns>the input stream with the retrieved data</returns>
+        </member>
         <member name="T:iText.IO.Util.XmlUtil">
             <summary>
             This file is a helper class for internal usage only.
-            Be aware that its API and functionality may be changed in future.
+            Be aware that its API and functionality may be changed in the future.
             </summary>
         </member>
         <member name="M:iText.IO.Util.XmlUtil.InitNewXmlDocument">
@@ -7075,6 +8872,13 @@
             This method creates a new empty Xml document.
             </summary>
             <returns>a new Xml document</returns>
+        </member>
+        <member name="M:iText.IO.Util.XmlUtil.InitXmlDocument(System.IO.Stream)">
+            <summary>
+            This method creates a new Xml document from input stream.
+            </summary>
+            <param name="inputStream">to parse</param>
+            <returns>parsed Xml document</returns>
         </member>
         <member name="T:System.util.zlib.ZDeflaterOutputStream">
             <summary>

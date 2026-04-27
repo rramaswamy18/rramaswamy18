@@ -4,6 +4,9 @@
         <name>itext.styledxmlparser</name>
     </assembly>
     <members>
+        <member name="T:iText.StyledXmlParser.CommonAttributeConstants">
+            <summary>Class containing the constant property names for the attributes of tags in the XML.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.CommonAttributeConstants.CLASS">
             <summary>The Constant CLASS.</summary>
         </member>
@@ -172,6 +175,9 @@
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.BREAK_ALL">
             <summary>The Constant BREAK_ALL.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.BREAK_SPACES">
+            <summary>The Constant BREAK_SPACES.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.CAPTION_SIDE">
             <summary>The Constant CAPTION_SIDE.</summary>
         </member>
@@ -213,6 +219,9 @@
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.DISPLAY">
             <summary>The Constant DISPLAY.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.DENSE">
+            <summary>The Constant DENSE.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.EMPTY_CELLS">
             <summary>The Constant EMPTY_CELLS.</summary>
@@ -298,8 +307,65 @@
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.FONT_WEIGHT">
             <summary>The Constant FONT_WEIGHT.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.FR">
+            <summary>The Constant FR.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GAP">
             <summary>The Constant GAP.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID">
+            <summary>The Constant GRID.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_COLUMN">
+            <summary>The Constant GRID_COLUMN.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_ROW">
+            <summary>The Constant GRID_ROW.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_TEMPLATE">
+            <summary>The Constant GRID_TEMPLATE.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_COLUMN_END">
+            <summary>The Constant GRID_COLUMN_END.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_COLUMN_GAP">
+            <summary>The Constant GRID_COLUMN_GAP.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_COLUMN_START">
+            <summary>The Constant GRID_COLUMN_START.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_GAP">
+            <summary>The Constant GRID_GAP.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_ROW_END">
+            <summary>The Constant GRID_ROW_END.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_ROW_GAP">
+            <summary>The Constant GRID_ROW_GAP.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_ROW_START">
+            <summary>The Constant GRID_ROW_START.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_TEMPLATE_AREAS">
+            <summary>The Constant GRID_TEMPLATE_AREAS.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_TEMPLATE_COLUMNS">
+            <summary>The Constant GRID_TEMPLATE_COLUMNS.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_TEMPLATE_ROWS">
+            <summary>The Constant GRID_TEMPLATE_ROWS.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_AUTO_ROWS">
+            <summary>The Constant GRID_AUTO_ROWS.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_AUTO_COLUMNS">
+            <summary>The Constant GRID_AUTO_COLUMNS.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.GRID_AUTO_FLOW">
+            <summary>The Constant GRID_AUTO_FLOW.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.AUTO_FLOW">
+            <summary>The Constant AUTO_FLOW.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.HANGING_PUNCTUATION">
             <summary>The Constant HANGING_PUNCTUATION.</summary>
@@ -357,6 +423,18 @@
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.MARGIN_TOP">
             <summary>The Constant MARGIN_TOP.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.MARKER">
+            <summary>The Constant MARKER</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.MARKER_MID">
+            <summary>The Constant MARKER_MID</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.MARKER_START">
+            <summary>The Constant MARKER_START</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.MARKER_END">
+            <summary>The Constant MARKER_END</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.MIN_HEIGHT">
             <summary>The Constant MIN_HEIGHT.</summary>
@@ -763,6 +841,15 @@
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.PADDING_BOX">
             <summary>The Constant PADDING_BOX.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.PRE">
+            <summary>The Constant PRE.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.PRE_LINE">
+            <summary>The Constant PRE_LINE.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.PRE_WRAP">
+            <summary>The Constant PRE_WRAP.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.RAD">
             <summary>The Constant RAD.</summary>
         </member>
@@ -774,6 +861,12 @@
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.REPEAT_Y">
             <summary>The Constant REPEAT_Y.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.REVERT">
+            <summary>The Constant REVERT.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.REVERT_LAYER">
+            <summary>The Constant REVERT.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.RIDGE">
             <summary>The Constant RIDGE.</summary>
@@ -988,6 +1081,9 @@
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.CHECKED">
             <summary>The Constant CHECKED.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.HAS">
+            <summary>The Constant HAS.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.DISABLED">
             <summary>The Constant DISABLED.</summary>
         </member>
@@ -1138,6 +1234,44 @@
             <summary>Gets the rule name.</summary>
             <returns>the rule name</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.CssAtRuleFactory">
+            <summary>
+            A factory for creating
+            <see cref="T:iText.StyledXmlParser.Css.CssAtRule"/>
+            objects.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.CssAtRuleFactory.CreateSemicolonAtRule(System.String)">
+            <summary>
+            Create a new
+            <see cref="T:iText.StyledXmlParser.Css.CssSemicolonAtRule"/>
+            object.
+            </summary>
+            <param name="ruleDeclaration">the rule declaration</param>
+            <returns>
+            a
+            <see cref="T:iText.StyledXmlParser.Css.CssSemicolonAtRule"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.CssAtRuleFactory.CreateNestedRule(System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.CssNestedAtRule"/>
+            object.
+            </summary>
+            <param name="ruleDeclaration">the rule declaration</param>
+            <returns>
+            a
+            <see cref="T:iText.StyledXmlParser.Css.CssNestedAtRule"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.CssAtRuleFactory.ExtractRuleNameFromDeclaration(System.String)">
+            <summary>Extracts the rule name from the CSS rule declaration.</summary>
+            <param name="ruleDeclaration">the rule declaration</param>
+            <returns>the rule name</returns>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.CssContextNode">
             <summary>The CSS context node.</summary>
         </member>
@@ -1206,6 +1340,38 @@
             <summary>Gets the properties.</summary>
             <returns>the properties</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.CssFontFaceRule.ResolveUnicodeRange">
+            <summary>Resolves `unicode-range` property if it exists in the properties.</summary>
+            <returns>
+            the resolved range or
+            <see langword="null"/>
+            if there is no `unicode-range` property
+            </returns>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.CssImportAtRule">
+            <summary>
+            Implementation of
+            <see cref="T:iText.StyledXmlParser.Css.CssSemicolonAtRule"/>
+            for
+            <c>import</c>
+            rule.
+            </summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CssImportAtRule.ALLOWED_RULES_BEFORE">
+            <summary>
+            The list of rules which are allowed to be before
+            <c>import</c>
+            rule declaration in CSS stylesheet.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.CssImportAtRule.#ctor(System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.CssImportAtRule"/>
+            instance.
+            </summary>
+            <param name="ruleParameters">the rule parameters</param>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.CssNestedAtRule">
             <summary>
             Class to store a nested CSS at-rule
@@ -1245,6 +1411,10 @@
             <summary>Gets the list of CSS statements.</summary>
             <returns>the list of CSS statements</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.CssNestedAtRule.GetRuleParameters">
+            <summary>Gets the rule parameters.</summary>
+            <returns>the rule parameters</returns>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.CssNestedAtRuleFactory">
             <summary>
             A factory for creating
@@ -1272,11 +1442,6 @@
             instance
             </returns>
         </member>
-        <member name="M:iText.StyledXmlParser.Css.CssNestedAtRuleFactory.ExtractRuleNameFromDeclaration(System.String)">
-            <summary>Extracts the rule name from the CSS rule declaration.</summary>
-            <param name="ruleDeclaration">the rule declaration</param>
-            <returns>the rule name</returns>
-        </member>
         <member name="T:iText.StyledXmlParser.Css.CssRuleName">
             <summary>Class containing possible CSS rule names.</summary>
         </member>
@@ -1301,6 +1466,15 @@
         </member>
         <member name="F:iText.StyledXmlParser.Css.CssRuleName.BOTTOM_RIGHT_CORNER">
             <summary>The Constant BOTTOM_RIGHT_CORNER.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CssRuleName.CHARSET">
+            <summary>The Constant CHARSET.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CssRuleName.IMPORT">
+            <summary>The Constant IMPORT.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CssRuleName.LAYER">
+            <summary>The Constant LAYER.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.CssRuleName.LEFT_BOTTOM">
             <summary>The Constant LEFT_BOTTOM.</summary>
@@ -1378,6 +1552,16 @@
             <param name="selector">the CSS selector</param>
             <param name="declarations">the CSS declarations</param>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.CssRuleSet.#ctor(iText.StyledXmlParser.Css.Selector.ICssSelector,System.Collections.Generic.IList{iText.StyledXmlParser.Css.CssDeclaration},System.Collections.Generic.IList{iText.StyledXmlParser.Css.CssDeclaration})">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.CssRuleSet"/>
+            from a selector and a list of normal and important declarations.
+            </summary>
+            <param name="selector">the CSS selector</param>
+            <param name="normalDeclarations">the list of normal declarations</param>
+            <param name="importantDeclarations">the list of important declarations</param>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.CssRuleSet.GetSelector">
             <summary>Gets the CSS selector.</summary>
             <returns>the CSS selector</returns>
@@ -1417,6 +1601,19 @@
             instance.
             </summary>
             <param name="ruleDeclaration">the rule declaration</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.CssSemicolonAtRule.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.CssSemicolonAtRule"/>
+            instance.
+            </summary>
+            <param name="ruleName">the rule name</param>
+            <param name="ruleParams">the rule params</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.CssSemicolonAtRule.GetRuleParams">
+            <summary>Gets the rule params.</summary>
+            <returns>the rule params</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Css.CssStatement">
             <summary>Abstract superclass for all kinds of CSS statements.</summary>
@@ -1587,6 +1784,24 @@
         </member>
         <member name="F:iText.StyledXmlParser.Css.Font.CssFontFace.CssFontFaceSrc.isLocal">
             <summary>Indicates if the font is local.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Font.CssFontFace.CssFontFaceSrc.GetFormat">
+            <summary>Gets the font format.</summary>
+            <returns>the font format</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Font.CssFontFace.CssFontFaceSrc.GetSrc">
+            <summary>Gets the source path.</summary>
+            <returns>the source path</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Font.CssFontFace.CssFontFaceSrc.IsLocal">
+            <summary>Checks if the font is local.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if the font is local,
+            <see langword="false"/>
+            otherwise
+            </returns>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Font.CssFontFace.CssFontFaceSrc.Create(System.String)">
             <summary>
@@ -2444,19 +2659,35 @@
             <summary>Gets the next valid token.</summary>
             <returns>the next valid token</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.ParseFunctionToken(iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.Token,System.Int32)">
+            <summary>Parse internal function token to full function token, e.g.</summary>
+            <remarks>
+            Parse internal function token to full function token, e.g.
+            <para />
+            <c>calc(calc(</c>
+            to
+            <c>calc(calc(50px + 5px) + 20px)</c>
+            </remarks>
+            <param name="token">function token to expand</param>
+            <param name="funcDepth">
+            function depth for resolving, e.g. if you want to resolve only nested function, not the whole
+            declaration
+            </param>
+            <returns>expanded function token</returns>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.GetNextToken">
             <summary>Gets the next token.</summary>
             <returns>the next token</returns>
-        </member>
-        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.IsHexDigit(System.Char)">
-            <summary>Checks if a character is a hexadecimal digit.</summary>
-            <param name="c">the character</param>
-            <returns>true, if it's a hexadecimal digit</returns>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.ProcessFunctionToken(iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.Token,System.Text.StringBuilder)">
             <summary>Processes a function token.</summary>
             <param name="token">the token</param>
             <param name="functionBuffer">the function buffer</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.IsHexDigit(System.Char)">
+            <summary>Checks if a character is a hexadecimal digit.</summary>
+            <param name="c">the character</param>
+            <returns>true, if it's a hexadecimal digit</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.Token">
             <summary>The Token class.</summary>
@@ -2484,6 +2715,20 @@
             <summary>Gets the type.</summary>
             <returns>the type</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.Token.GetStringQuote">
+            <summary>Gets the quotes of the string.</summary>
+            <returns>
+            
+            <c>0</c>
+            if the token isn't a string or there are no quotes,
+            <c>quote char</c>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.Token.HasSpace">
+            <summary>Gets the flag if token contains whitespace.</summary>
+            <returns>true, if containing whitespace</returns>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.Token.IsString">
             <summary>Checks if the token is a string.</summary>
             <returns>true, if is string</returns>
@@ -2502,6 +2747,45 @@
         </member>
         <member name="F:iText.StyledXmlParser.Css.Parse.CssDeclarationValueTokenizer.TokenType.UNKNOWN">
             <summary>Unknown type.</summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser">
+            <summary>Tokenizer for searching var expressions in css declarations.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.#ctor(System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser"/>
+            instance.
+            </summary>
+            <param name="propertyValue">the property value</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.GetFirstValidVarToken">
+            <summary>Gets the first valid var expression token.</summary>
+            <remarks>
+            Gets the first valid var expression token. This method can't be called in chain to find all
+            var expressions in declaration since it invalidates internal parser state.
+            </remarks>
+            <returns>the first valid var expression token</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.ExtractSingleVar(System.String)">
+            <summary>Cut symbols not related to first variable.</summary>
+            <param name="expression">expression to process</param>
+            <returns>expression with single variable</returns>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.VarToken">
+            <summary>The Token class which contains CSS var expression.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.VarToken.GetValue">
+            <summary>Gets the var expression value.</summary>
+            <returns>the value</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.VarToken.GetStart">
+            <summary>Gets start position of var expression in original css declaration</summary>
+            <returns>start position in original css declaration</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssDeclarationVarParser.VarToken.GetEnd">
+            <summary>Gets end position of var expression in original css declaration</summary>
+            <returns>end position in original css declaration</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Parse.CssPageSelectorParser">
             <summary>Utilities class to parse CSS page selectors.</summary>
@@ -2592,58 +2876,350 @@
             <returns>the semicolon position</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser">
-            <summary>Utilities class to parse a CSS selector.</summary>
+            <summary>Utility class for parsing CSS selectors.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.Parse.CssSelectorParser.LEGACY_PSEUDO_ELEMENTS">
-            <summary>Set of legacy pseudo elements (first-line, first-letter, before, after).</summary>
-        </member>
-        <member name="F:iText.StyledXmlParser.Css.Parse.CssSelectorParser.SELECTOR_PATTERN_STR">
-            <summary>The pattern string for selectors.</summary>
-        </member>
-        <member name="F:iText.StyledXmlParser.Css.Parse.CssSelectorParser.selectorPattern">
-            <summary>The pattern for selectors.</summary>
+            <summary>legacy pseudo-elements (first-line, first-letter, before, after).</summary>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.#ctor">
             <summary>
-            Creates a new
-            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser"/>
-            instance.
+            Private constructor for the
+            <c>CssSelectorParser</c>
+            utility class.
             </summary>
+            <remarks>
+            Private constructor for the
+            <c>CssSelectorParser</c>
+            utility class.
+            This constructor prevents instantiation of the class since it only provides
+            static methods and is not meant to be instantiated.
+            </remarks>
         </member>
-        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.ParseSelectorItems(System.String)">
-            <summary>Parses the selector items.</summary>
-            <param name="selector">
-            the selectors in the form of a
-            <see cref="T:System.String"/>
-            </param>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.ParseCommaSeparatedSelectors(System.String)">
+            <summary>
+            Parses a comma-separated list of CSS selectors from a string and returns a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.ICssSelector"/>
+            objects that represent the selectors.
+            </summary>
+            <param name="arguments">the string containing a comma-separated list of CSS selectors</param>
             <returns>
-            the resulting list of
-            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.ICssSelector"/>
+            objects representing the parsed selectors
             </returns>
         </member>
-        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.AppendPseudoSelector(System.Collections.Generic.IList{iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem},System.String,iText.Commons.Utils.Matcher,System.String)">
-            <summary>Resolves a pseudo selector and appends it to list.</summary>
-            <param name="selectorItems">list of items to which new selector will be added to</param>
-            <param name="pseudoSelector">the pseudo selector</param>
-            <param name="match">
-            the corresponding
-            <see cref="T:iText.Commons.Utils.Matcher"/>.
-            </param>
-            <param name="source">is the original source</param>
-        </member>
-        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.HandleBracketsOfPseudoSelector(System.String,iText.Commons.Utils.Matcher,System.String)">
-            <summary>Resolves a pseudo selector if it contains brackets.</summary>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.ParseSelectorItems(System.String)">
+            <summary>
+            Parses the given CSS selector string into a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            objects.
+            </summary>
             <remarks>
-            Resolves a pseudo selector if it contains brackets. Updates internal state of
-            <see cref="T:iText.Commons.Utils.Matcher"/>
-            if necessary.
+            Parses the given CSS selector string into a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            objects.
+            This method processes the selector string character by character, handling state transitions
+            and escape sequences to generate a structured representation of the selector components.
             </remarks>
-            <param name="pseudoSelector">the pseudo selector</param>
-            <param name="match">
-            the corresponding
-            <see cref="T:iText.Commons.Utils.Matcher"/>.
+            <param name="selector">the CSS selector string to be parsed</param>
+            <returns>
+            a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            objects representing the components of the parsed selector
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.ParseSelectorItems(System.String,System.Boolean)">
+            <summary>
+            Parses the given CSS selector string into a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            objects, with an option
+            to allow a relative selector at the beginning.
+            </summary>
+            <remarks>
+            Parses the given CSS selector string into a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            objects, with an option
+            to allow a relative selector at the beginning. This method processes the selector character
+            by character, handling state transitions and escaped sequences to properly parse the structure.
+            </remarks>
+            <param name="selector">the CSS selector string to be parsed</param>
+            <param name="allowRelativeSelectorAtStart">
+            a boolean flag indicating whether a relative selector
+            is allowed at the start of the selector string
             </param>
-            <param name="source">is the original source</param>
+            <returns>
+            a list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            objects representing the parsed components
+            of the CSS selector
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.SplitByTopLevelComma(System.String)">
+            <summary>Splits a string by top-level commas, ignoring commas inside parentheses or quoted strings.</summary>
+            <remarks>
+            Splits a string by top-level commas, ignoring commas inside parentheses or quoted strings.
+            This handles escape sequences for quotes correctly.
+            </remarks>
+            <param name="input">the string to split</param>
+            <returns>a list of string parts split by top-level commas</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.ProcessEscape(System.Int32,System.String)">
+            <summary>Processes a possible escape sequence in the given source string, starting from the specified index.
+                </summary>
+            <remarks>
+            Processes a possible escape sequence in the given source string, starting from the specified index.
+            This method extracts and decodes an escape sequence based on its hexadecimal representation
+            or returns the character directly if no valid escape sequence is found.
+            </remarks>
+            <param name="start">the starting index in the source string to begin processing the escape sequence</param>
+            <param name="source">the source string containing the potential escape sequence</param>
+            <returns>
+            a
+            <see cref="T:iText.Commons.Datastructures.Tuple2`2"/>
+            object where the first element is the index after the processed escape sequence,
+            and the second element is the decoded character or a replacement character ('\uFFFD') if the escape
+            sequence is invalid
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.IsHexDigit(System.Char)">
+            <summary>Determines if the provided character is a valid hexadecimal digit.</summary>
+            <param name="c">the character to check</param>
+            <returns>true if the character is a valid hexadecimal digit, otherwise false</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TrySwitchToTagState(iText.StyledXmlParser.Css.Parse.CssSelectorParser.State)">
+            <summary>
+            Attempts to switch the current parser state to
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TagState"/>
+            based on the provided current state.
+            </summary>
+            <remarks>
+            Attempts to switch the current parser state to
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TagState"/>
+            based on the provided current state.
+            If the current state is an instance of
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.NoneState"/>
+            or
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.SeparatorState"/>
+            , a new
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TagState"/>
+            instance is created and returned. Otherwise, the original state is returned unchanged.
+            </remarks>
+            <param name="state">the current state of the parser</param>
+            <returns>
+            the new state, which may either remain the same or switch to
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TagState"/>
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TrySwitchState(iText.StyledXmlParser.Css.Parse.CssSelectorParser.State,System.Char,System.Boolean)">
+            <summary>Attempts to switch the current state based on the provided character.</summary>
+            <remarks>
+            Attempts to switch the current state based on the provided character.
+            If the current state is not ready for a switch, the original state is returned.
+            Determines connections between states.
+            </remarks>
+            <param name="state">the current state of the parser</param>
+            <param name="c">the character that determines whether and to which state to switch</param>
+            <returns>
+            the new state after evaluating the character; if no switch is performed,
+            the original state is returned
+            </returns>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.State">
+            <summary>Represents the state of a CSS selector parser.</summary>
+            <remarks>
+            Represents the state of a CSS selector parser. Each state defines a specific behavior for
+            processing characters, transitioning between states, and modifying the selector items list.
+            This interface is intended to be implemented by various state types, each accounting for
+            different selector parsing behaviors such as handling tags, separators, or escape sequences.
+            </remarks>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.State.IsReadyForSwitch(System.Char)">
+            <summary>
+            Determines whether the current state is ready to transition to another state
+            based on the provided character.
+            </summary>
+            <param name="c">the character that is being evaluated to decide state transition</param>
+            <returns>true if the state is ready to switch to a new state, false otherwise</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.State.AddChar(System.Char,System.Boolean)">
+            <summary>Adds a character to the current state's processing logic.</summary>
+            <param name="c">the character to be added</param>
+            <param name="isEscaped">true if the character is escaped, false otherwise</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.State.Process(System.Collections.Generic.IList{iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem})">
+            <summary>Processes a list of CSS selector items.</summary>
+            <remarks>
+            Processes a list of CSS selector items. The implementation of this method
+            performs operations specific to the current state of the CSS selector parser,
+            which can include modifying, validating, or analyzing the provided selector items.
+            </remarks>
+            <param name="selectorItems">the list of CSS selector items to be processed or modified</param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.NoneState">
+            <summary>
+            Represents a "None" state in the
+            <c>CssSelectorParser</c>.
+            </summary>
+            <remarks>
+            Represents a "None" state in the
+            <c>CssSelectorParser</c>
+            . This state acts as a default or
+            placeholder state where no specific processing or state changes occur. It adheres to the
+            <c>State</c>
+            interface but does not modify any selector items or perform any transitions.
+            </remarks>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.TagState">
+            <summary>Represents a state in the CSS selector parser responsible for processing tag selectors.</summary>
+            <remarks>
+            Represents a state in the CSS selector parser responsible for processing tag selectors.
+            This state accumulates characters to define a tag name and, upon processing, creates
+            a
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssTagSelectorItem"/>
+            to add to the selector items list.
+            <para />
+            This is a private static inner class of the CSS selector parser and implements the
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.State"/>
+            interface to define specific behaviors for handling tag selector components in a CSS string.
+            </remarks>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.SeparatorState">
+            <summary>Represents a state in the CSS selector parser responsible for processing combinators and separators.
+                </summary>
+            <remarks>
+            Represents a state in the CSS selector parser responsible for processing combinators and separators.
+            It is designed to handle the state where a separator character (e.g., space, comma) is encountered
+            during the parsing process. This state aids in managing validation, transitioning, and the placement
+            of separators within the parsed CSS selectors.
+            <para />
+            An instance of SeparatorState implements the
+            <c>State</c>
+            interface and therefore defines the behavior
+            for processing characters, validating transitions, and modifying the list of selector items.
+            </remarks>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.SeparatorState.Process(System.Collections.Generic.IList{iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem})">
+            <summary>
+            Processes a list of CSS selector items by validating and updating the state
+            of separator characters (e.g., spaces, commas) within the selector list.
+            </summary>
+            <remarks>
+            Processes a list of CSS selector items by validating and updating the state
+            of separator characters (e.g., spaces, commas) within the selector list.
+            <para />
+            If the list is empty, an exception is thrown indicating an invalid initial state.
+            Handles proper appending or replacement of separator items and ensures no
+            invalid consecutive separators are added.
+            </remarks>
+            <param name="selectorItems">
+            the list of
+            <c>ICssSelectorItem</c>
+            objects representing
+            the current state of CSS selectors being parsed and processed.
+            Must not be empty.
+            </param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.ClassState">
+            <summary>Represents a state in the CSS selector parser responsible for processing class selectors.</summary>
+            <remarks>
+            Represents a state in the CSS selector parser responsible for processing class selectors.
+            This state accumulates characters to define a class name and, upon processing, creates
+            a
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssClassSelectorItem"/>
+            to add to the selector items list.
+            <para />
+            This is a private static inner class of the CSS selector parser and implements the
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.State"/>
+            interface to define specific behaviors for handling class selector components in a CSS string.
+            </remarks>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.IdState">
+            <summary>Represents the state of the CSS selector parser for processing ID selectors.</summary>
+            <remarks>
+            Represents the state of the CSS selector parser for processing ID selectors.
+            This state manages the collection of characters for an ID-based selector
+            and processes it into a
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssIdSelectorItem"/>
+            when the parsing is completed.
+            </remarks>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.FunctionState">
+            <summary>
+            Represents an abstract state for managing the parsing and processing of CSS selector
+            elements that involve function-like syntax.
+            </summary>
+            <remarks>
+            Represents an abstract state for managing the parsing and processing of CSS selector
+            elements that involve function-like syntax. It provides common functionality for
+            handling character-based transitions such as detecting closures and string literals.
+            This class is intended to be extended by other concrete state implementations that
+            require specific behavior for selectors involving functions or brackets.
+            </remarks>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.FunctionState.#ctor(System.Char)">
+            <summary>Constructs a new FunctionState object with the specified closure character.</summary>
+            <remarks>
+            Constructs a new FunctionState object with the specified closure character.
+            The closure character determines the character that signifies the termination
+            of the function-like construct being processed by this state.
+            </remarks>
+            <param name="closure">the character that represents the closure for this state</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.FunctionState.AddChar(System.Char,System.Boolean)">
+            <summary>Updates the internal flags based on the provided character and its escape status.</summary>
+            <remarks>
+            Updates the internal flags based on the provided character and its escape status.
+            This method detects if the character is part of a string literal or
+            if it marks the closure of the current function-like construct.
+            </remarks>
+            <param name="c">the character to be added</param>
+            <param name="isEscaped">a boolean indicating whether the character is escaped</param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.AttributeState">
+            <summary>
+            Represents a state in the
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser"/>
+            responsible for parsing attribute selectors.
+            </summary>
+            <remarks>
+            Represents a state in the
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser"/>
+            responsible for parsing attribute selectors.
+            This class extends
+            <see cref="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.FunctionState"/>
+            and processes attribute selector data, constructing
+            an
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssAttributeSelectorItem"/>
+            instance to be added to the list of selector items.
+            The state operates until a closing bracket (']') is encountered.
+            </remarks>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParser.PseudoState">
+            <summary>
+            Represents a state used in the CSS Selector parsing process for handling pseudo-classes
+            and pseudo-elements.
+            </summary>
+            <remarks>
+            Represents a state used in the CSS Selector parsing process for handling pseudo-classes
+            and pseudo-elements. This state monitors character input to determine whether to transition
+            to another state and processes pseudo-selectors, differentiating between legacy pseudo-elements,
+            modern pseudo-elements, and pseudo-classes.
+            </remarks>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssSelectorParser.PseudoState.Process(System.Collections.Generic.IList{iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem})">
+            <summary>Processes a list of CSS selector items to handle pseudo-elements and pseudo-classes.</summary>
+            <remarks>
+            Processes a list of CSS selector items to handle pseudo-elements and pseudo-classes.
+            Differentiates between modern pseudo-elements (indicated by "::"), legacy pseudo-elements,
+            and pseudo-classes. Adds the appropriate selector item to the provided list or throws
+            an exception if the pseudo-class is unsupported.
+            </remarks>
+            <param name="selectorItems">
+            the list of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+            to which processed pseudo-element
+            or pseudo-class selectors will be added
+            </param>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Parse.CssSelectorParserMatch">
             <summary>Internal class not for public use.</summary>
@@ -2685,10 +3261,22 @@
         <member name="M:iText.StyledXmlParser.Css.Parse.CssStyleSheetParser.Parse(System.IO.Stream,System.String)">
             <summary>
             Parses a stream into a
-            <see cref="T:iText.StyledXmlParser.Css.Parse.CssRuleSetParser"/>.
+            <see cref="T:iText.StyledXmlParser.Css.CssStyleSheet"/>.
             </summary>
             <param name="stream">the stream</param>
             <param name="baseUrl">the base url</param>
+            <returns>
+            the resulting
+            <see cref="T:iText.StyledXmlParser.Css.CssStyleSheet"/>
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.CssStyleSheetParser.Parse(System.IO.Stream,iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController)">
+            <summary>
+            Parses a stream into a
+            <see cref="T:iText.StyledXmlParser.Css.CssStyleSheet"/>.
+            </summary>
+            <param name="stream">the stream</param>
+            <param name="controller">the parse state controller</param>
             <returns>
             the resulting
             <see cref="T:iText.StyledXmlParser.Css.CssStyleSheet"/>
@@ -2833,6 +3421,12 @@
         <member name="T:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController">
             <summary>State machine that will parse content into a style sheet.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.SUPPORTED_RULES">
+            <summary>Set of the supported rules.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.CONDITIONAL_GROUP_RULES">
+            <summary>Set of conditional group rules.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.currentState">
             <summary>The current state.</summary>
         </member>
@@ -2851,17 +3445,20 @@
         <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.styleSheet">
             <summary>The style sheet.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.styleSheetFromImport">
+            <summary>The style sheet from import CSS rules.</summary>
+            <remarks>
+            The style sheet from import CSS rules. It is used to store styles from import
+            separately to avoid
+            <see cref="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_MUST_COME_BEFORE"/>
+            on check whether were styles before import or not.
+            </remarks>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.nestedAtRules">
             <summary>The nested At-rules.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.storedPropertiesWithoutSelector">
             <summary>The stored properties without selector.</summary>
-        </member>
-        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.SUPPORTED_RULES">
-            <summary>Set of the supported rules.</summary>
-        </member>
-        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.CONDITIONAL_GROUP_RULES">
-            <summary>Set of conditional group rules.</summary>
         </member>
         <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.commentStartState">
             <summary>The comment start state.</summary>
@@ -2887,8 +3484,8 @@
         <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.atRuleBlockState">
             <summary>The At-rule block state.</summary>
         </member>
-        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.uriResolver">
-            <summary>The URI resolver.</summary>
+        <member name="F:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.resourceResolver">
+            <summary>The resource resolver.</summary>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController.#ctor">
             <summary>
@@ -3017,6 +3614,26 @@
         <member name="M:iText.StyledXmlParser.Css.Parse.Syntax.IParserState.Process(System.Char)">
             <summary>Process a character.</summary>
             <param name="ch">the character</param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Parse.Syntax.NoDuplicatesResourceRetriever">
+            <summary>
+            Implementation of
+            <see cref="T:iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever"/>
+            which returns
+            <see langword="null"/>
+            if the
+            <c>URL</c>
+            from
+            <see cref="M:iText.StyledXmlParser.Css.Parse.Syntax.NoDuplicatesResourceRetriever.GetInputStreamByUrl(System.Uri)"/>
+            has been already processed by the current instance.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Parse.Syntax.NoDuplicatesResourceRetriever.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.Parse.Syntax.NoDuplicatesResourceRetriever"/>
+            instance.
+            </summary>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Parse.Syntax.RuleState">
             <summary>
@@ -3177,6 +3794,12 @@
         </member>
         <member name="M:iText.StyledXmlParser.Css.Resolve.CssInheritance.IsInheritable(System.String)">
             <summary>Checks if a property is inheritable.</summary>
+            <remarks>
+            Checks if a property is inheritable.
+            <para />
+            If css custom property (--*) is encountered always returns true,
+            since css variables are always inheritable
+            </remarks>
             <param name="cssProperty">the CSS property</param>
             <returns>true, if the property is inheritable</returns>
         </member>
@@ -3463,8 +4086,20 @@
         <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.ColumnsShorthandResolver.ResolveShorthand(System.String)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.FlexFlowShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for flex-flow.
+            </summary>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.FlexFlowShorthandResolver.ResolveShorthand(System.String)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.FlexShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for flex.
+            </summary>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.FlexShorthandResolver.ResolveShorthand(System.String)">
             <summary><inheritDoc/></summary>
@@ -3489,7 +4124,82 @@
             <param name="shorthandExpression">the shorthand expression</param>
             <returns>the font properties</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver">
+            <summary>
+            Shorthand resolver for gap shorthand properties, can be used for
+            different gap properties like
+            <c>gap</c>
+            or
+            <c>grid-gap</c>.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver.#ctor">
+            <summary>
+            Instantiates default
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver"/>
+            for
+            <c>gap</c>
+            shorthand.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver.#ctor(System.String)">
+            <summary>
+            Instantiates default
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver"/>
+            for passed gap shorthand.
+            </summary>
+            <param name="gapShorthandProperty">the name of the gap shorthand property</param>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver.ResolveShorthand(System.String)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridColumnShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for grid-column shorthand.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridColumnShorthandResolver.#ctor">
+            <summary>Creates a shorthand resolver for grid-column property</summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridItemShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for grid items column/row start and end positions.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridItemShorthandResolver.#ctor(System.String)">
+            <summary>Creates a new shorthand resolver for provided shorthand template</summary>
+            <param name="shorthand">shorthand from which template will be created.</param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridRowShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for grid-row shorthand.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridRowShorthandResolver.#ctor">
+            <summary>Creates a shorthand resolver for grid-row property</summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for grid shorthand.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridShorthandResolver.ResolveShorthand(System.String)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridTemplateShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for grid-template shorthand.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridTemplateShorthandResolver.#ctor">
+            <summary>Creates grid template shorthand resolver.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridTemplateShorthandResolver.ResolveShorthand(System.String)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.ListStyleShorthandResolver">
@@ -3510,6 +4220,19 @@
             implementation for margins.
             </summary>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.MarkerShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for marker.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.MarkerShorthandResolver.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.MarkerShorthandResolver"/>
+            instance.
+            </summary>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.OutlineShorthandResolver">
             <summary>
             <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.AbstractBorderShorthandResolver"/>
@@ -3522,8 +4245,20 @@
             implementation for paddings.
             </summary>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.PlaceItemsShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for place-items.
+            </summary>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.PlaceItemsShorthandResolver.ResolveShorthand(System.String)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.TextDecorationShorthandResolver">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+            implementation for text-decoration.
+            </summary>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver">
             <summary>Interface for shorthand resolvers.</summary>
@@ -3565,6 +4300,10 @@
             instance.
             </summary>
             <param name="selectorItems">the selector items</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.AbstractCssSelector.GetSelectorItems">
+            <summary>Gets selector items.</summary>
+            <returns>the selector items</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Selector.CssPageMarginBoxSelector">
             <summary>
@@ -3623,10 +4362,49 @@
             </summary>
             <param name="selector">the selector</param>
         </member>
-        <member name="M:iText.StyledXmlParser.Css.Selector.CssSelector.Matches(iText.StyledXmlParser.Node.INode,System.Int32)">
+        <member name="M:iText.StyledXmlParser.Css.Selector.CssSelector.MatchesWithinScope(iText.StyledXmlParser.Node.INode,iText.StyledXmlParser.Node.INode)">
+            <summary>
+            Checks if the node matches this selector, but limits ancestor traversal so that it never
+            goes above the provided
+            <paramref name="scope"/>
+            node.
+            </summary>
+            <remarks>
+            Checks if the node matches this selector, but limits ancestor traversal so that it never
+            goes above the provided
+            <paramref name="scope"/>
+            node.
+            <para />
+            This is primarily used to implement
+            <c>:has(...)</c>
+            correctly: when matching a candidate
+            descendant against an argument selector, ancestor combinators must not escape the
+            <c>:has()</c>
+            scope element.
+            </remarks>
+            <param name="element">the element to match</param>
+            <param name="scope">
+            the scope boundary (inclusive). If
+            <see langword="null"/>
+            , behaves like
+            <see cref="M:iText.StyledXmlParser.Css.Selector.CssSelector.Matches(iText.StyledXmlParser.Node.INode)"/>.
+            </param>
+            <returns>true if the element matches within the given scope, false otherwise</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.CssSelector.NotMatches(iText.StyledXmlParser.Node.INode)">
+            <summary>Checks if the node not matches all the selectors.</summary>
+            <param name="element">the node</param>
+            <returns>true, if node doesn't match all the selectors</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.CssSelector.Matches(iText.StyledXmlParser.Node.INode,System.Int32,iText.StyledXmlParser.Node.INode)">
             <summary>Checks if a node matches the selector.</summary>
             <param name="element">the node</param>
             <param name="lastSelectorItemInd">the index of the last selector</param>
+            <param name="scope">
+            the boundary scope node (inclusive) for ancestor traversal, or
+            <see langword="null"/>
+            for unbounded
+            </param>
             <returns>true, if there's a match</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Selector.CssSelectorComparator">
@@ -3756,6 +4534,19 @@
             <param name="node">the child node</param>
             <returns>the sibling nodes with the type of a child node</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassHasSelectorItem">
+            <summary>A class representing a CSS pseudo-class selector item for the ":has()" CSS pseudo-class.</summary>
+            <remarks>
+            A class representing a CSS pseudo-class selector item for the ":has()" CSS pseudo-class.
+            This class is responsible for evaluating whether a given node matches the conditions
+            defined in the ":has()" selector.
+            <para />
+            The primary responsibility of this class is handling the logic for matching nodes based on
+            argument selectors and compiled versions of those selectors. The ":has()" pseudo-class takes
+            other selectors as its arguments, and it matches elements that have descendants or other
+            relative elements matching the provided criteria.
+            </remarks>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassNthSelectorItem.nthA">
             <summary>The nth A.</summary>
         </member>
@@ -3791,6 +4582,50 @@
             </summary>
             <param name="pseudoClass">the pseudo class name</param>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem"/>
+            instance.
+            </summary>
+            <param name="pseudoClass">the pseudo class name</param>
+            <param name="arguments">the arguments of the selector</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem.Create(System.String)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem"/>
+            from
+            passed string which contains selector name and its arguments.
+            </summary>
+            <param name="fullSelectorString">the full selector string</param>
+            <returns>
+            the
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem"/>
+            or
+            <see langword="null"/>
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem.Create(System.String,System.String)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem"/>
+            from
+            passed selector class name and its arguments.
+            </summary>
+            <param name="pseudoClass">the pseudo class name</param>
+            <param name="arguments">the arguments of the selector</param>
+            <returns>
+            the
+            <see cref="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem"/>
+            or
+            <see langword="null"/>
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem.GetPseudoClass">
+            <summary>Gets the selector pseudo class name.</summary>
+            <returns>the pseudo class name</returns>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoElementSelectorItem">
             <summary>
             <see cref="T:iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
@@ -3807,6 +4642,19 @@
             instance.
             </summary>
             <param name="pseudoElementName">the pseudo element name</param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Selector.Item.CssSelectorItemTraversalUtil">
+            <summary>
+            Utility class providing methods for traversing and filtering nodes
+            in a tree structure, particularly focusing on element nodes based
+            on various criteria.
+            </summary>
+            <remarks>
+            Utility class providing methods for traversing and filtering nodes
+            in a tree structure, particularly focusing on element nodes based
+            on various criteria. This class serves as a helper for operations
+            related to CSS selector processing.
+            </remarks>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Selector.Item.CssSeparatorSelectorItem">
             <summary>
@@ -3909,6 +4757,9 @@
             <param name="value">the value</param>
             <returns>the background property type value</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Util.CssBackgroundUtils.BackgroundPropertyType">
+            <summary>Enum for background related properties.</summary>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils">
             <summary>Utilities class for CSS dimension parsing operations.</summary>
         </member>
@@ -4004,6 +4855,11 @@
             <param name="emValue">the em value</param>
             <param name="remValue">the root em value</param>
             <returns>the unit value</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils.ParseFlex(System.String)">
+            <summary>Parses a flex value "xfr" to x.</summary>
+            <param name="value">String containing the flex value to parse</param>
+            <returns>the flex value as a float</returns>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils.ParseLength(System.String,System.Single,System.Single,System.Single,System.Single)">
             <summary>Parse length attributes.</summary>
@@ -4191,6 +5047,11 @@
             <param name="data">the data</param>
             <returns>true, if the data is base 64 encoded</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.Util.CssTypesValidationUtils.IsInlineData(System.String)">
+            <summary>Checks if the string represent inline data in format `data:{FORMAT};{ENCODING},{DATA}`.</summary>
+            <param name="data">the string to check</param>
+            <returns>true, if the string is inline data</returns>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Util.CssTypesValidationUtils.IsColorProperty(System.String)">
             <summary>Checks if a value is a color property.</summary>
             <param name="value">the value</param>
@@ -4357,6 +5218,20 @@
             <param name="url">the url attribute to parse</param>
             <returns>the parsed url. Or original url if not wrappend in url()</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.Util.CssUtils.ExtractUnquotedString(System.String)">
+            <summary>
+            Unquotes the passed string, e.g. parse
+            <c>"text"</c>
+            to
+            <c>text</c>.
+            </summary>
+            <param name="str">the quotes string</param>
+            <returns>
+            the unquoted string, or original
+            <paramref name="str"/>
+            if not wrapped in quotes
+            </returns>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Util.CssUtils.ExtractAttributeValue(System.String,iText.StyledXmlParser.Node.IElementNode)">
             <summary>Parses string and return attribute value.</summary>
             <param name="attrStr">the string contains attr() to extract attribute value</param>
@@ -4518,6 +5393,13 @@
         <member name="F:iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator.defaultValidators">
             <summary>A map containing all the CSS declaration validators.</summary>
         </member>
+        <member name="M:iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator.#ctor">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator"/>
+            instance with the default validators map.
+            </summary>
+        </member>
         <member name="M:iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator.IsValid(iText.StyledXmlParser.Css.CssDeclaration)">
             <summary>Validates a CSS declaration.</summary>
             <param name="declaration">the CSS declaration</param>
@@ -4531,6 +5413,16 @@
             <see cref="T:iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator"/>
             to also support device-cmyk color structure.
             </remarks>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Validate.Impl.CssDeviceCmykAwareValidator.#ctor">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.StyledXmlParser.Css.Validate.Impl.CssDeviceCmykAwareValidator"/>
+            instance which extends the
+            default
+            <see cref="T:iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator"/>
+            to also support device-cmyk color structure.
+            </summary>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Validate.Impl.Datatype.ArrayDataTypeValidator">
             <summary>
@@ -4570,6 +5462,12 @@
         </member>
         <member name="M:iText.StyledXmlParser.Css.Validate.Impl.Datatype.CssBackgroundValidator.IsValid(System.String)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.StyledXmlParser.Css.Validate.Impl.Datatype.CssBlendModeValidator">
+            <summary>
+            <see cref="T:iText.StyledXmlParser.Css.Validate.ICssDataTypeValidator"/>
+            implementation for CSS blend mode property.
+            </summary>
         </member>
         <member name="T:iText.StyledXmlParser.Css.Validate.Impl.Datatype.CssCmykAwareColorValidator">
             <summary>
@@ -4761,6 +5659,13 @@
         </member>
         <member name="T:iText.StyledXmlParser.Exceptions.ReadingByteLimitException">
             <summary>Thrown when the limit on the number of bytes read was violated.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Exceptions.ReadingByteLimitException.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Exceptions.ReadingByteLimitException"/>
+            instance.
+            </summary>
         </member>
         <member name="T:iText.StyledXmlParser.Exceptions.StyledXMLParserException">
             <summary>Runtime exception that gets thrown if something goes wrong in the HTML to PDF conversion.</summary>
@@ -9361,6 +10266,12 @@
         <member name="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION">
             <summary>The Constant INVALID_CSS_PROPERTY_DECLARATION.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_VARIABLE_COUNT">
+            <summary>The Constant INVALID_CSS_VARIABLE_NESTING.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_DURING_CSS_VARIABLE_RESOLVING">
+            <summary>The Constant ERROR_DURING_CSS_VARIABLE_RESOLVING.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_CHARACTER_SEQUENCE">
             <summary>The Constant INCORRECT_CHARACTER_SEQUENCE.</summary>
         </member>
@@ -9387,6 +10298,9 @@
         </member>
         <member name="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_RESOLVING_PARENT_STYLES">
             <summary>The Constant ERROR_RESOLVING_PARENT_STYLES.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_LOADING_FONT">
+            <summary>The Constant ERROR_LOADING_FONT.</summary>
         </member>
         <member name="M:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.#ctor">
             <summary>Instantiates a new log message constant.</summary>
@@ -9419,6 +10333,18 @@
             <summary>Returns the number of attributes.</summary>
             <returns>the number of attributes</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Node.IAttributesContainer">
+            <summary>Interface for classes that can get and set attributes.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Node.IAttributesContainer.GetAttributes">
+            <summary>Gets the attributes.</summary>
+            <returns>the attributes</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Node.IAttributesContainer.GetAttribute(System.String)">
+            <summary>Gets an attribute.</summary>
+            <param name="key">the key of the attribute we want to get</param>
+            <returns>the value of the attribute</returns>
+        </member>
         <member name="T:iText.StyledXmlParser.Node.ICustomElementNode">
             <summary>
             Interface that serves as a marker indicating that this particular
@@ -9447,19 +10373,6 @@
             Interface for node classes that have a parent and children, and for which
             styles can be defined; each of these nodes can also have a name and attributes.
             </summary>
-        </member>
-        <member name="M:iText.StyledXmlParser.Node.IElementNode.Name">
-            <summary>Gets the name of the element node.</summary>
-            <returns>the string</returns>
-        </member>
-        <member name="M:iText.StyledXmlParser.Node.IElementNode.GetAttributes">
-            <summary>Gets the attributes.</summary>
-            <returns>the attributes</returns>
-        </member>
-        <member name="M:iText.StyledXmlParser.Node.IElementNode.GetAttribute(System.String)">
-            <summary>Gets an attribute.</summary>
-            <param name="key">the key of the attribute we want to get</param>
-            <returns>the value of the attribute</returns>
         </member>
         <member name="M:iText.StyledXmlParser.Node.IElementNode.GetAdditionalHtmlStyles">
             <summary>
@@ -9689,6 +10602,30 @@
             </summary>
             <param name="textNode">the text node</param>
         </member>
+        <member name="T:iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupXmlDeclarationNode">
+            <summary>
+            Implementation of the
+            <see cref="T:iText.StyledXmlParser.Node.IXmlDeclarationNode"/>
+            interface; wrapper for the JSoup
+            <see cref="T:iText.StyledXmlParser.Jsoup.Nodes.XmlDeclaration"/>
+            class.
+            </summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupXmlDeclarationNode.#ctor(iText.StyledXmlParser.Jsoup.Nodes.XmlDeclaration)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupXmlDeclarationNode"/>
+            instance.
+            </summary>
+            <param name="xmlDeclaration">the xml declaration node</param>
+        </member>
+        <member name="T:iText.StyledXmlParser.Node.INameContainer">
+            <summary>Interface for classes that can return their name.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Node.INameContainer.Name">
+            <summary>Gets the name of the element node.</summary>
+            <returns>the string</returns>
+        </member>
         <member name="T:iText.StyledXmlParser.Node.INode">
             <summary>Interface for classes that describe a Node with a parent and children.</summary>
         </member>
@@ -9730,10 +10667,13 @@
             <summary>Returns all the text.</summary>
             <returns>the text</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Node.IXmlDeclarationNode">
+            <summary>Interface for node classes that have a parent and children, name and attributes.</summary>
+        </member>
         <member name="T:iText.StyledXmlParser.PortUtil">
             <summary>
             This file is a helper class for internal usage only.
-            Be aware that its API and functionality may be changed in future.
+            Be aware that its API and functionality may be changed in the future.
             </summary>
         </member>
         <member name="M:iText.StyledXmlParser.PortUtil.CreateRegexPatternWithDotMatchingNewlines(System.String)">
@@ -9753,6 +10693,18 @@
             that allows configuring in the constructor which fonts are loaded by default.
             </summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.HTML_TO_PDF_SHIPPED_FONT_RESOURCE_PATH">
+            <summary>The path to the html2pdf shipped fonts.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.HTML_TO_PDF_SHIPPED_FONT_NAMES">
+            <summary>The file names of the html2pdf shipped fonts.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.shippedFontResourcePath">
+            <summary>The path to the shipped fonts.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.shippedFontNames">
+            <summary>The file names of the shipped fonts.</summary>
+        </member>
         <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.#ctor">
             <summary>
             Creates a new
@@ -9771,6 +10723,18 @@
             <param name="registerSystemFonts">use true if you want to register the system fonts (can require quite some resources)
                 </param>
         </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.#ctor(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Resolver.Font.BasicFontProvider"/>
+            instance.
+            </summary>
+            <param name="registerStandardPdfFonts">use true if you want to register the standard Type 1 fonts (can't be embedded)
+                </param>
+            <param name="registerShippedFonts">use true if you want to register the shipped fonts (can be embedded)</param>
+            <param name="registerSystemFonts">use true if you want to register the system fonts (can require quite some resources)
+                </param>
+        </member>
         <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.#ctor(System.Boolean,System.Boolean,System.String)">
             <summary>
             Creates a new
@@ -9783,6 +10747,19 @@
                 </param>
             <param name="defaultFontFamily">default font family</param>
         </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.#ctor(System.Boolean,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.StyledXmlParser.Resolver.Font.BasicFontProvider"/>
+            instance.
+            </summary>
+            <param name="registerStandardPdfFonts">use true if you want to register the standard Type 1 fonts (can't be embedded)
+                </param>
+            <param name="registerShippedFonts">use true if you want to register the shipped fonts (can be embedded)</param>
+            <param name="registerSystemFonts">use true if you want to register the system fonts (can require quite some resources)
+                </param>
+            <param name="defaultFontFamily">default font family</param>
+        </member>
         <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.#ctor(iText.Layout.Font.FontSet,System.String)">
             <summary>
             Creates a new
@@ -9791,6 +10768,41 @@
             </summary>
             <param name="fontSet">predefined set of fonts, could be null.</param>
             <param name="defaultFontFamily">default font family.</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.AddCalligraphFonts">
+            <summary>This method loads a list of noto fonts from pdfCalligraph (if it is present in the classpath) into FontProvider.
+                </summary>
+            <remarks>
+            This method loads a list of noto fonts from pdfCalligraph (if it is present in the classpath) into FontProvider.
+            The list is the following (each font is represented in regular and bold types): NotoSansArabic, NotoSansGurmukhi,
+            NotoSansOriya, NotoSerifBengali, NotoSerifDevanagari, NotoSerifGujarati, NotoSerifHebrew, NotoSerifKannada,
+            NotoSerifKhmer, NotoSerifMalayalam, NotoSerifTamil, NotoSerifTelugu, NotoSerifThai.
+            If it's needed to have a BasicFontProvider without typography fonts loaded,
+            create an extension of BasicFontProvider and override this method, so it does nothing and only returns null.
+            </remarks>
+            <returns>
+            a unicode
+            <see cref="T:iText.Layout.Font.Range"/>
+            that excludes the loaded from pdfCalligraph fonts,
+            i.e. the unicode range that is to be rendered with any other font contained in this FontProvider
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.AddShippedFonts(iText.Layout.Font.Range)">
+            <summary>Adds fonts shipped with the font provider.</summary>
+            <remarks>
+            Adds fonts shipped with the font provider.
+            For
+            <see cref="T:iText.StyledXmlParser.Resolver.Font.BasicFontProvider"/>
+            this method does nothing but can be overridden to load additional fonts.
+            </remarks>
+            <param name="rangeToLoad">
+            a unicode
+            <see cref="T:iText.Layout.Font.Range"/>
+            to load characters
+            </param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Font.BasicFontProvider.InitShippedFontsResourcePath">
+            <summary>Initialize path to shipped fonts and list of font files.</summary>
         </member>
         <member name="T:iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever">
             <summary>
@@ -9830,6 +10842,48 @@
             The resourceSizeByteLimit is used to create input stream with a limit on the number of bytes read.
             </remarks>
             <param name="resourceSizeByteLimit">the resource size byte limit</param>
+            <returns>
+            the
+            <see cref="T:iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever.GetConnectTimeout">
+            <summary>Gets the connect timeout.</summary>
+            <remarks>
+            Gets the connect timeout.
+            The connect timeout is used to create input stream with a limited time to establish connection to resource.
+            </remarks>
+            <returns>the connect timeout in milliseconds</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever.SetConnectTimeout(System.Int32)">
+            <summary>Sets the connect timeout.</summary>
+            <remarks>
+            Sets the connect timeout.
+            The connect timeout is used to create input stream with a limited time to establish connection to resource.
+            </remarks>
+            <param name="connectTimeout">the connect timeout in milliseconds</param>
+            <returns>
+            the
+            <see cref="T:iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever.GetReadTimeout">
+            <summary>Gets the read timeout.</summary>
+            <remarks>
+            Gets the read timeout.
+            The read timeout is used to create input stream with a limited time to receive data from resource.
+            </remarks>
+            <returns>the read timeout in milliseconds</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever.SetReadTimeout(System.Int32)">
+            <summary>Sets the read timeout.</summary>
+            <remarks>
+            Sets the read timeout.
+            The read timeout is used to create input stream with a limited time to receive data from resource.
+            </remarks>
+            <param name="readTimeout">the read timeout in milliseconds</param>
             <returns>
             the
             <see cref="T:iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
@@ -10024,8 +11078,40 @@
             <param name="uri">the uri</param>
             <returns>the url</returns>
         </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.ResourceResolver.GetBaseUri">
+            <summary>Gets the base URI.</summary>
+            <returns>the base uri</returns>
+        </member>
         <member name="M:iText.StyledXmlParser.Resolver.Resource.ResourceResolver.ResetCache">
             <summary>Resets the simple image cache.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.ResourceResolver.TryResolveBase64ImageSource(System.String)">
+            <summary>
+            Creates
+            <see cref="T:iText.Kernel.Pdf.Xobject.PdfXObject"/>
+            based on passed base64 encoded string.
+            </summary>
+            <param name="src">the base64 encoded string</param>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Pdf.Xobject.PdfXObject"/>
+            based on passed base64 encoded string or
+            <see langword="null"/>
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Resolver.Resource.ResourceResolver.TryResolveUrlImageSource(System.String)">
+            <summary>
+            Creates
+            <see cref="T:iText.Kernel.Pdf.Xobject.PdfXObject"/>
+            based on the string which defines the path to local image.
+            </summary>
+            <param name="uri">the path to the local image</param>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Pdf.Xobject.PdfXObject"/>
+            based on local image or
+            <see langword="null"/>
+            </returns>
         </member>
         <member name="M:iText.StyledXmlParser.Resolver.Resource.ResourceResolver.CreateImageByUrl(System.Uri)">
             <summary>Create a iText XObject based on the image stored at the passed location.</summary>
@@ -10185,8 +11271,61 @@
             </summary>
             <returns>true if baseURI is local, otherwise false</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Util.CssVariableUtil">
+            <summary>Utility class for resolving css variables in declarations.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Util.CssVariableUtil.MAX_CSS_VAR_COUNT">
+            <summary>Max count of css var expressions in single declaration.</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.CssVariableUtil.ResolveCssVariables(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Resolve all css variables in style map</summary>
+            <param name="styles">css styles map</param>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.CssVariableUtil.ContainsVarExpression(System.String)">
+            <summary>Checks for var expression.</summary>
+            <param name="expression">css expression to check</param>
+            <returns>true if there is a var expression, false otherwise</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.CssVariableUtil.IsCssVariable(System.String)">
+            <summary>Checks property for css variable.</summary>
+            <param name="property">css property to check</param>
+            <returns>true if it is a css variable, false otherwise</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.CssVariableUtil.ResolveSingleVar(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Resolve single css var expression recursively</summary>
+            <param name="key">css style property</param>
+            <param name="expression">css expression</param>
+            <param name="styles">css styles map</param>
+            <returns>resolved var expression if present or null if none found</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.CssVariableUtil.ResolveVarRecursively(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Int32)">
+            <summary>Resolves variables without taking into account default values</summary>
+            <param name="expression">var value</param>
+            <param name="styles">element styles</param>
+            <param name="level">current var expression nesting level</param>
+            <returns>resolved var expression</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.CssVariableUtil.ResolveVarExpression(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Resolve css variable expression, if there is a fallback value and primary value is null,
+            default value will be returned.
+            </summary>
+            <param name="varExpression">expression as the following: var(.+?(?:,.*?)?)</param>
+            <param name="styles">map of styles containing resolved variables</param>
+            <returns>resolved var expression</returns>
+        </member>
         <member name="T:iText.StyledXmlParser.Util.FontFamilySplitterUtil">
             <summary>Split CSS 'font-family' string into list of font-families or generic-families</summary>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.FontFamilySplitterUtil.SplitFontFamily(System.String)">
+            <summary>Splits passed `font-family` CSS string into list of font families or generic families.</summary>
+            <param name="fontFamilies">the CSS 'font-family' string</param>
+            <returns>list of font families or generic families</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.FontFamilySplitterUtil.RemoveQuotes(System.String)">
+            <summary>Removes quotes from a passed `font-family` CSS string.</summary>
+            <param name="fontFamily">the CSS 'font-family' string</param>
+            <returns>the unquoted CSS 'font-family' string</returns>
         </member>
         <member name="T:iText.StyledXmlParser.Util.StyleUtil">
             <summary>Utility class for resolving parent-inheritance of style and attribute declarations.</summary>
@@ -10233,6 +11372,28 @@
                 </summary>
             <param name="ch">the character</param>
             <returns>true, if the character is a white space character, but no em, en or similar</returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.WhiteSpaceUtil.IsNonLineBreakSpace(System.Char)">
+            <summary>Checks if a character is white space value that doesn't cause a newline.</summary>
+            <param name="ch">the character</param>
+            <returns>
+            
+            <see langword="true"/>
+            , if the character is a white space character, but no newline
+            </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Util.WhiteSpaceUtil.ProcessWhitespaces(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Processes whitespaces according to provided
+            <paramref name="keepLineBreaks"/>
+            and
+            <paramref name="collapseSpaces"/>
+            values.
+            </summary>
+            <param name="text">string to process</param>
+            <param name="keepLineBreaks">whether to keep line breaks</param>
+            <param name="collapseSpaces">whether to collapse spaces</param>
+            <returns>processed string</returns>
         </member>
     </members>
 </doc>

@@ -97,6 +97,9 @@
         <member name="M:iText.Bouncycastle.Asn1.Asn1EncodableVectorBC.AddOptional(iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1EncodableVectorBC.Size">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Bouncycastle.Asn1.Asn1EncodableVectorBC.Equals(System.Object)">
             <summary>Indicates whether some other object is "equal to" this one.</summary>
             <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
@@ -315,6 +318,65 @@
         </member>
         <member name="M:iText.Bouncycastle.Asn1.Asn1OctetStringBC.GetDerEncoded">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Bouncycastle.Asn1.Asn1OutputStreamBC">
+            <summary>
+            Wrapper class for
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.#ctor(System.IO.Stream)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
+            </summary>
+            <param name="stream">
+            OutputStream to create
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.#ctor(Org.BouncyCastle.Asn1.Asn1OutputStream)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
+            </summary>
+            <param name="stream">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.GetAsn1OutputStream">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.WriteObject(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.Dispose">
+            <summary>
+            Delegates
+            <c>close</c>
+            method call to the wrapped stream.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.Equals(System.Object)">
+            <summary>Indicates whether some other object is "equal to" this one.</summary>
+            <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.GetHashCode">
+            <summary>Returns a hash code value based on the wrapped object.</summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Asn1OutputStreamBC.ToString">
+            <summary>
+            Delegates
+            <c>toString</c>
+            method call to the wrapped object.
+            </summary>
         </member>
         <member name="T:iText.Bouncycastle.Asn1.Asn1SequenceBC">
             <summary>
@@ -858,6 +920,9 @@
         <member name="M:iText.Bouncycastle.Asn1.DerBitStringBC.IntValue">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.Asn1.DerBitStringBC.GetBytes">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Bouncycastle.Asn1.DerEnumeratedBC">
             <summary>
             Wrapper class for
@@ -898,30 +963,6 @@
             <returns>
             
             <inheritDoc/>
-            </returns>
-        </member>
-        <member name="T:iText.Bouncycastle.Asn1.DerGeneralizedTimeBC">
-            <summary>
-            Wrapper class for
-            <see cref="T:Org.BouncyCastle.Asn1.DerGeneralizedTime"/>.
-            </summary>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerGeneralizedTimeBC.#ctor(Org.BouncyCastle.Asn1.DerGeneralizedTime)">
-            <summary>
-            Creates new wrapper instance for
-            <see cref="T:Org.BouncyCastle.Asn1.DerGeneralizedTime"/>.
-            </summary>
-            <param name="asn1GeneralizedTime">
-            
-            <see cref="T:Org.BouncyCastle.Asn1.DerGeneralizedTime"/>
-            to be wrapped
-            </param>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerGeneralizedTimeBC.GetDerGeneralizedTime">
-            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-            <returns>
-            wrapped
-            <see cref="T:Org.BouncyCastle.Asn1.DerGeneralizedTime"/>.
             </returns>
         </member>
         <member name="T:iText.Bouncycastle.Asn1.DerIA5StringBC">
@@ -1113,65 +1154,6 @@
             wrapped
             <see cref="T:Org.BouncyCastle.Asn1.DerOctetString"/>.
             </returns>
-        </member>
-        <member name="T:iText.Bouncycastle.Asn1.DerOutputStreamBC">
-            <summary>
-            Wrapper class for
-            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
-            </summary>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.#ctor(System.IO.Stream)">
-            <summary>
-            Creates new wrapper instance for
-            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
-            </summary>
-            <param name="stream">
-            OutputStream to create
-            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>
-            to be wrapped
-            </param>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.#ctor(Org.BouncyCastle.Asn1.Asn1OutputStream)">
-            <summary>
-            Creates new wrapper instance for
-            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
-            </summary>
-            <param name="stream">
-            
-            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>
-            to be wrapped
-            </param>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.GetDerOutputStream">
-            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-            <returns>
-            wrapped
-            <see cref="T:Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
-            </returns>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.WriteObject(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
-            <summary><inheritDoc/></summary>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.Dispose">
-            <summary>
-            Delegates
-            <c>close</c>
-            method call to the wrapped stream.
-            </summary>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.Equals(System.Object)">
-            <summary>Indicates whether some other object is "equal to" this one.</summary>
-            <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.GetHashCode">
-            <summary>Returns a hash code value based on the wrapped object.</summary>
-        </member>
-        <member name="M:iText.Bouncycastle.Asn1.DerOutputStreamBC.ToString">
-            <summary>
-            Delegates
-            <c>toString</c>
-            method call to the wrapped object.
-            </summary>
         </member>
         <member name="T:iText.Bouncycastle.Asn1.DerSequenceBC">
             <summary>
@@ -1646,6 +1628,37 @@
         <member name="M:iText.Bouncycastle.Asn1.Ess.SigningCertificateV2BC.GetCerts">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.Bouncycastle.Asn1.IAsn1GeneralizedTimeBC">
+            <summary>
+            Wrapper class for
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1GeneralizedTime"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.IAsn1GeneralizedTimeBC.#ctor(Org.BouncyCastle.Asn1.Asn1GeneralizedTime)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1GeneralizedTime"/>.
+            </summary>
+            <param name="asn1GeneralizedTime">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1GeneralizedTime"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.IAsn1GeneralizedTimeBC.GetAsn1GeneralizedTime">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Asn1.Asn1GeneralizedTime"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.IAsn1GeneralizedTimeBC.GetDate">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
         <member name="T:iText.Bouncycastle.Asn1.Ocsp.BasicOcspResponseBC">
             <summary>
             Wrapper class for
@@ -1691,6 +1704,12 @@
         <member name="M:iText.Bouncycastle.Asn1.Ocsp.BasicOcspResponseBC.GetProducedAt">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.Asn1.Ocsp.BasicOcspResponseBC.GetExtensionParsedValue(iText.Commons.Bouncycastle.Asn1.IDerObjectIdentifier)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Ocsp.BasicOcspResponseBC.GetSignatureAlgorithmID">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Bouncycastle.Asn1.Ocsp.OcspObjectIdentifiersBC">
             <summary>
             Wrapper class for
@@ -1730,6 +1749,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.Asn1.Ocsp.OcspObjectIdentifiersBC.GetIdPkixOcspNoCheck">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.Ocsp.OcspObjectIdentifiersBC.GetIdPkixOcspArchiveCutoff">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.Asn1.Ocsp.OcspObjectIdentifiersBC.Equals(System.Object)">
@@ -2363,6 +2385,30 @@
         <member name="M:iText.Bouncycastle.Asn1.X509.GeneralNamesBC.GetNames">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.Bouncycastle.Asn1.X509.GeneralSubtreeBC">
+            <summary>
+            Wrapper class for
+            <see cref="T:Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.GeneralSubtreeBC.#ctor(Org.BouncyCastle.Asn1.X509.GeneralSubtree)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>.
+            </summary>
+            <param name="subtree">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.GeneralSubtreeBC.GetGeneralSubtree">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>
+            </returns>
+        </member>
         <member name="T:iText.Bouncycastle.Asn1.X509.IssuingDistributionPointBC">
             <summary>
             Wrapper class for
@@ -2502,6 +2548,75 @@
         <member name="M:iText.Bouncycastle.Asn1.X509.KeyUsageBC.GetNonRepudiation">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.Bouncycastle.Asn1.X509.NameConstraintsBC">
+            <summary>
+            Wrapper class for
+            <see cref="T:Org.BouncyCastle.Asn1.X509.NameConstraints"/>
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.NameConstraintsBC.#ctor(Org.BouncyCastle.Asn1.X509.NameConstraints)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.X509.NameConstraints"/>.
+            </summary>
+            <param name="nameConstraints">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.X509.NameConstraints"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.NameConstraintsBC.GetNameConstraints">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Asn1.X509.NameConstraints"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.NameConstraintsBC.GetPermittedSubtrees">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.NameConstraintsBC.GetExcludedSubtrees">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Bouncycastle.Asn1.X509.Qualified.QCStatementBC">
+            <summary>Wrapper class for QCStatement.</summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.Qualified.QCStatementBC.#ctor(Org.BouncyCastle.Asn1.X509.Qualified.QCStatement)">
+            <summary>
+            Creates a new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.X509.Qualified.QCStatement"/>.
+            </summary>
+            <param name="qcStatement">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.X509.Qualified.QCStatement"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.Qualified.QCStatementBC.GetQCStatement">
+            <summary>
+            Gets actual
+            <see cref="T:Org.BouncyCastle.Asn1.X509.Qualified.QCStatement"/>
+            object being wrapped.
+            </summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Asn1.X509.Qualified.QCStatement"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.Qualified.QCStatementBC.GetStatementId">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.Qualified.QCStatementBC.GetStatementInfo">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
         <member name="T:iText.Bouncycastle.Asn1.X509.ReasonFlagsBC">
             <summary>
             Wrapper class for
@@ -2575,6 +2690,9 @@
             </returns>
         </member>
         <member name="M:iText.Bouncycastle.Asn1.X509.SubjectPublicKeyInfoBC.GetAlgorithm">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.SubjectPublicKeyInfoBC.GetPublicKeyData">
             <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Bouncycastle.Asn1.X509.TbsCertificateStructureBC">
@@ -2722,6 +2840,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.Asn1.X509.X509ExtensionsBC.GetSubjectKeyIdentifier">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Asn1.X509.X509ExtensionsBC.GetExpiredCertsOnCRL">
             <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Bouncycastle.Asn1.X509.X509NameBC">
@@ -3017,6 +3138,9 @@
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateGeneralName">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateGeneralName(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateOtherHashAlgAndValue(iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier,iText.Commons.Bouncycastle.Asn1.IAsn1OctetString)">
             <summary><inheritDoc/></summary>
         </member>
@@ -3077,6 +3201,9 @@
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateASN1GeneralizedTime(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateASN1GeneralizedTime(System.DateTime)">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateASN1UTCTime(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
             <summary><inheritDoc/></summary>
         </member>
@@ -3084,6 +3211,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateTimeStampRequest(System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateTimeStampTokenGenerator(iText.Commons.Bouncycastle.Crypto.IPrivateKey,iText.Commons.Bouncycastle.Cert.IX509Certificate,System.String,System.String,System.String)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateTimeStampTokenGenerator(iText.Commons.Bouncycastle.Crypto.IPrivateKey,iText.Commons.Bouncycastle.Cert.IX509Certificate,System.String,System.String)">
@@ -3096,6 +3226,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateRespID(iText.Commons.Bouncycastle.Asn1.X500.IX500Name)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateRespID(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateBasicOCSPRespBuilder(iText.Commons.Bouncycastle.Cert.Ocsp.IRespID)">
@@ -3138,6 +3271,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateTSTInfo(iText.Commons.Bouncycastle.Asn1.Cms.IContentInfo)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateTSTInfo(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateSingleResp(iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse)">
@@ -3227,6 +3363,9 @@
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.IsNull(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GetSecureRandom">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateExtension(System.Boolean,iText.Commons.Bouncycastle.Asn1.IDerOctetString)">
             <summary><inheritDoc/></summary>
         </member>
@@ -3246,6 +3385,36 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateEndDate(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GenerateHKDF(System.Byte[],System.Byte[],System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GenerateHMACSHA256Token(System.Byte[],System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GenerateEncryptedKeyWithAES256NoPad(System.Byte[],System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GenerateDecryptedKeyWithAES256NoPad(System.Byte[],System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateGCMBlockCipher">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GetRsaParametersFromCertificate(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.GetPoliciesIds(System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.ParseQcStatement(System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateNameConstraintValidator">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.BouncyCastleFactory.CreateNameConstraints(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.BouncyCastleUtil.ReadPkcs7Certs(System.IO.Stream)">
@@ -3332,16 +3501,33 @@
             <see cref="T:Org.BouncyCastle.Asn1.Ocsp.CertID"/>.
             </summary>
             <param name="hashAlgorithm">
-            hash algorithm to create
+            hash algorithm
             <see cref="T:Org.BouncyCastle.Asn1.Ocsp.CertID"/>
             </param>
             <param name="issuerCert">
-            X509Certificate wrapper to create
+            X509Certificate wrapper
             <see cref="T:Org.BouncyCastle.Asn1.Ocsp.CertID"/>
             </param>
             <param name="serialNumber">
-            serial number to create
+            serial number
             <see cref="T:Org.BouncyCastle.Asn1.Ocsp.CertID"/>
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.CertIDBC.#ctor(Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier,iText.Commons.Bouncycastle.Cert.IX509Certificate,iText.Commons.Bouncycastle.Math.IBigInteger)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.CertID"/>.
+            </summary>
+            <param name="hashAlgId">
+            hash algorithm indentifier
+            <see cref="T:Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier"/>
+            </param>
+            <param name="issuerCert">
+            X509Certificate wrapper
+            <see cref="T:iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+            </param>
+            <param name="serialNumber">
+            serial number
             </param>
         </member>
         <member name="M:iText.Bouncycastle.Cert.Ocsp.CertIDBC.GetInstance">
@@ -3652,12 +3838,24 @@
             <see cref="T:Org.BouncyCastle.Ocsp.RespID"/>
             </param>
         </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.RespIDBC.#ctor(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Ocsp.RespID"/>.
+            </summary>
+            <param name="certificate">X509Certificate wrapper to create
+            <see cref="T:Org.BouncyCastle.Ocsp.RespID"/>
+            </param>
+        </member>
         <member name="M:iText.Bouncycastle.Cert.Ocsp.RespIDBC.GetRespID">
             <summary>Gets actual org.bouncycastle object being wrapped.</summary>
             <returns>
             wrapped
             <see cref="T:Org.BouncyCastle.Ocsp.RespID"/>.
             </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.RespIDBC.ToASN1Primitive">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.Cert.Ocsp.RespIDBC.Equals(System.Object)">
             <summary>Indicates whether some other object is "equal to" this one.</summary>
@@ -3672,6 +3870,36 @@
             <c>toString</c>
             method call to the wrapped object.
             </summary>
+        </member>
+        <member name="T:iText.Bouncycastle.Cert.Ocsp.ResponderIDBC">
+            <summary>
+            Wrapper class for
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.ResponderIDBC.#ctor(Org.BouncyCastle.Asn1.Ocsp.ResponderID)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
+            </summary>
+            <param name="responderID">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.ResponderIDBC.GetName">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.ResponderIDBC.GetKeyHash">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.ResponderIDBC.GetResponderID">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
+            </returns>
         </member>
         <member name="T:iText.Bouncycastle.Cert.Ocsp.RevokedStatusBC">
             <summary>
@@ -4209,6 +4437,9 @@
         <member name="M:iText.Bouncycastle.Crypto.CipherCBCnoPadBC.ProcessBlock(System.Byte[],System.Int32,System.Int32)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.Crypto.CipherCBCnoPadBC.DoFinal">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Bouncycastle.Crypto.CipherCBCnoPadBC.Equals(System.Object)">
             <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         </member>
@@ -4311,6 +4542,59 @@
             method call to the wrapped object.
             </summary>
         </member>
+        <member name="T:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC">
+            <summary>
+            This class provides the functionality of a cryptographic cipher of aes-gcm for encryption and decryption via
+            wrapping the corresponding
+            <c>GCMBlockCipher</c>
+            class from bouncy-castle.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.#ctor(Org.BouncyCastle.Crypto.Modes.GcmBlockCipher)">
+            <summary>
+            Creates new wrapper for
+            <see cref="T:Org.BouncyCastle.Crypto.Modes.GcmBlockCipher"/>
+            aes-gcm block cipher class.
+            </summary>
+            <param name="cipher">bouncy-castle class to wrap</param>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.GetCipher">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Crypto.Modes.GcmBlockCipher"/>
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.Init(System.Boolean,System.Byte[],System.Int32,System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.GetUpdateOutputSize(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.ProcessBytes(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.ProcessBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.GetOutputSize(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.DoFinal(System.Byte[],System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.DoFinal">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.Equals(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.GetHashCode">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.Modes.GCMBlockCipherBC.ToString">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Bouncycastle.Crypto.PrivateKeyBC">
             <summary>
             Wrapper class for
@@ -4406,6 +4690,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.Crypto.SignerBC.InitSign(iText.Commons.Bouncycastle.Crypto.IPrivateKey)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Crypto.SignerBC.InitRsaPssSigner(System.String,System.Int32,System.Int32)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.Crypto.SignerBC.Update(System.Byte[],System.Int32,System.Int32)">
@@ -4608,6 +4895,100 @@
             Delegates
             <c>toString</c>
             method call to the wrapped object.
+            </summary>
+        </member>
+        <member name="T:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC">
+            <summary>
+            Wrapper class for
+            <see cref="!:Org.BouncyCastle.Pkix.PKIXNameConstraintValidator"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.#ctor(Org.BouncyCastle.Pkix.PkixNameConstraintValidator)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="!:Org.BouncyCastle.Pkix.PKIXNameConstraintValidator"/>.
+            </summary>
+            <param name="constraintValidator">
+            
+            <see cref="!:Org.BouncyCastle.Pkix.PKIXNameConstraintValidator"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.CheckPermittedDN(iText.Commons.Bouncycastle.Asn1.IAsn1Sequence)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.CheckExcludedDN(iText.Commons.Bouncycastle.Asn1.IAsn1Sequence)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.CheckPermitted(iText.Commons.Bouncycastle.Asn1.X509.IGeneralName)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.CheckExcluded(iText.Commons.Bouncycastle.Asn1.X509.IGeneralName)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.IntersectPermittedSubtree(iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.AddExcludedSubtree(iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.Equals(System.Object)">
+            <summary>Indicates whether some other object is "equal to" this one.</summary>
+            <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.GetHashCode">
+            <summary>Returns a hash code value based on the wrapped object.</summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorBC.ToString">
+            <summary>
+            Delegates
+            <c>toString</c>
+            method call to the wrapped object.
+            </summary>
+        </member>
+        <member name="T:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC">
+            <summary>
+            Wrapper class for
+            <see cref="T:Org.BouncyCastle.Pkix.PkixNameConstraintValidatorException"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC.#ctor(Org.BouncyCastle.Pkix.PkixNameConstraintValidatorException)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Tsp.TspException"/>.
+            </summary>
+            <param name="nameConstraintValidatorException">
+            
+            <see cref="T:Org.BouncyCastle.Tsp.TspException"/>
+            to be wrapped
+            </param>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC.GetNameConstraintValidatorException">
+            <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+            <returns>
+            wrapped
+            <see cref="T:Org.BouncyCastle.Pkix.PkixNameConstraintValidatorException"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC.Equals(System.Object)">
+            <summary>Indicates whether some other object is "equal to" this one.</summary>
+            <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC.GetHashCode">
+            <summary>Returns a hash code value based on the wrapped object.</summary>
+        </member>
+        <member name="M:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC.ToString">
+            <summary>
+            Delegates
+            <c>toString</c>
+            method call to the wrapped object.
+            </summary>
+        </member>
+        <member name="P:iText.Bouncycastle.Pkix.PKIXNameConstraintValidatorExceptionBC.Message">
+            <summary>
+            Delegates
+            <c>getMessage</c>
+            method call to the wrapped exception.
             </summary>
         </member>
         <member name="T:iText.Bouncycastle.Security.CertificateExpiredExceptionBC">
@@ -5105,6 +5486,15 @@
             <param name="allowedDigest">allowed digest</param>
             <param name="policyOid">policy OID</param>
         </member>
+        <member name="M:iText.Bouncycastle.Tsp.TimeStampTokenGeneratorBC.#ctor(Org.BouncyCastle.Cms.SignerInfoGenerator,Org.BouncyCastle.Crypto.IDigestFactory,Org.BouncyCastle.Asn1.DerObjectIdentifier)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Tsp.TimeStampTokenGenerator"/>.
+            </summary>
+            <param name="siGen">SignerInfoGenerator</param>
+            <param name="digestCalculator">IDigestFactory</param>
+            <param name="tsaPolicy">timestamp policy DerObjectIdentifier</param>
+        </member>
         <member name="M:iText.Bouncycastle.Tsp.TimeStampTokenGeneratorBC.GetTimeStampTokenGenerator">
             <summary>Gets actual org.bouncycastle object being wrapped.</summary>
             <returns>
@@ -5260,6 +5650,9 @@
         <member name="M:iText.Bouncycastle.X509.X509CertificateBC.GetPublicKey">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Bouncycastle.X509.X509CertificateBC.GetSigAlgName">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Bouncycastle.X509.X509CertificateBC.GetSigAlgOID">
             <summary><inheritDoc/></summary>
         </member>
@@ -5303,6 +5696,9 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.X509.X509CertificateBC.GetBasicConstraints">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.X509.X509CertificateBC.GetSubjectAttributeTypes">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.X509.X509CertificateBC.Equals(System.Object)">
@@ -5372,6 +5768,15 @@
             <see cref="T:Org.BouncyCastle.X509.X509Crl"/>
             to be wrapped
             </param>
+        </member>
+        <member name="M:iText.Bouncycastle.X509.X509CrlBC.GetSigAlgName">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.X509.X509CrlBC.GetSigAlgOID">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Bouncycastle.X509.X509CrlBC.GetSigAlgParams">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Bouncycastle.X509.X509CrlBC.GetX509Crl">
             <summary>Gets actual org.bouncycastle object being wrapped.</summary>

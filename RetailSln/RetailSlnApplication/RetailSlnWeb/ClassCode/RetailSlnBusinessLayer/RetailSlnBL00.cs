@@ -3173,7 +3173,96 @@ namespace RetailSlnBusinessLayer
         //    {
         //    }
         //}
+        //// PRIVATE: CreateInvoiceBackup
+        //private void CreateInvoiceBackup(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    //If it is not Final Invoice - create invoice as Html and Pdf file and email
+        //    //Set the Invoice Type to Final - create invoice as Html and Pdf
+        //    //Just in case reset the invoice type
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    try
+        //    {
+        //        ArchLibBL archLibBL = new ArchLibBL();
+        //        string orderFileName = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString();
+        //        CodeDataModel codeDataModel;
+        //        if (paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+        //        {
+        //            codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("InvoiceType", execUniqueId).First(x => x.CodeDataNameId == 900);
+        //        }
+        //        else
+        //        {
+        //            codeDataModel = LookupCache.GetCodeDatasForCodeTypeNameDescByCodeDataNameDesc("InvoiceType", execUniqueId).First(x => x.CodeDataNameId == 100);
+        //        }
+        //        paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceType = codeDataModel.CodeDataDesc0;
+        //        orderFileName += "_" + (int)paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId;
+        //        //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceFileNamePdf = orderFileName + ".pdf";
+        //        string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
+        //        string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
+        //        string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
+        //        PDFUtility pDFUtility = new PDFUtility();
+        //        string invoiceDirectoryName = Utilities.GetServerMapPath("~/Invoices/");
+        //        StreamWriter streamWriter = new StreamWriter(invoiceDirectoryName + orderFileName + ".html");
+        //        streamWriter.Write(emailBodyHtml);
+        //        streamWriter.Write(Environment.NewLine);
+        //        streamWriter.Close();
+        //        string pDFFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
+        //        //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceFullFileNamePdf = pDFFullFileName;
+        //        pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pDFFullFileName);
+        //        List<string> emailAttachmentFileNames = new List<string>
+        //        {
+        //            pDFFullFileName,
+        //        };
+        //        var toEmailAddresss = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress;// + ";" + ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "ToEmailAddress");
+        //        if (createForSessionObject.EmailAddress.ToLower() != sessionObjectModel.EmailAddress.ToLower())
+        //        {
+        //            toEmailAddresss += ";" + sessionObjectModel.EmailAddress;
+        //        }
+        //        //archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceHtmlString = emailBodyHtml;
+        //        if (paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+        //        {
+        //        }
+        //        else
+        //        {
+        //            paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId = InvoiceTypeEnum.FinalInvoice;
+        //            paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceType = "Tax Invoice";
+        //            emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
+        //            orderFileName = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString() + "_" + (int)paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId;
+        //            streamWriter = new StreamWriter(invoiceDirectoryName + orderFileName + ".html");
+        //            streamWriter.Write(emailBodyHtml);
+        //            streamWriter.Write(Environment.NewLine);
+        //            streamWriter.Close();
+        //            pDFFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
+        //            pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pDFFullFileName);
+        //        }
+        //        OrderInvoiceModel orderInvoiceModel = new OrderInvoiceModel
+        //        {
+        //            InvoiceFileNamePdf = orderFileName + ".pdf",
+        //            InvoiceFullFileNamePdf = pDFFullFileName,
+        //            InvoiceHtmlString = emailBodyHtml,
+        //            OrderHeaderId = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value,
+        //        };
+        //        httpSessionStateBase["OrderInvoice"] = orderInvoiceModel;
+        //        httpSessionStateBase["DeliveryInfo"] = null;
+        //        httpSessionStateBase["PaymentInfo"] = null;
+        //        httpSessionStateBase["ShoppingCart"] = null;
+        //        return;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
         #endregion
+        #endregion
+        // PRIVATE: CreateInvoice
         private void CreateInvoice(PaymentInfoModel paymentInfoModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
             //If it is not Final Invoice - create invoice as Html and Pdf file and email
@@ -4265,7 +4354,6 @@ namespace RetailSlnBusinessLayer
             }
             return corpAcctId.Value;
         }
-        #region Commenting Code for now - Need this after fixing
         // PRIVATE : GetDeliveryChargeModel
         private DeliveryChargeModel GetDeliveryChargeModel(DemogInfoAddressModel deliveryAddressModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -4291,7 +4379,6 @@ namespace RetailSlnBusinessLayer
             deliveryChargeModel = (DeliveryChargeModel)shippingService.GetRate(shippingInputModel, clientId, ipAddress, execUniqueId, loggedInUserId);
             return deliveryChargeModel;
         }
-        #endregion
         // PRIVATE : GetSalesTaxListModels
         private List<SalesTaxListModel> GetSalesTaxListModels(DemogInfoAddressModel demogInfoAddressModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -4417,6 +4504,5 @@ namespace RetailSlnBusinessLayer
             //    }
             //}
         }
-        #endregion
     }
 }

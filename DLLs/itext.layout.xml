@@ -1215,29 +1215,22 @@
             </param>
         </member>
         <member name="M:iText.Layout.ColumnDocumentRenderer.#ctor(iText.Layout.Document,System.Boolean,iText.Kernel.Geom.Rectangle[])">
-            <summary>
-            Creates a ColumnDocumentRenderer whose elements need not be flushed
-            immediately.
-            </summary>
+            <summary>Creates a ColumnDocumentRenderer whose elements need not be flushed immediately.</summary>
             <param name="document">
             the
             <see cref="T:iText.Layout.Document"/>
-            on which this Renderer will calculate
-            and execute element placements
+            on which this Renderer will calculate and execute element placements
             </param>
-            <param name="immediateFlush">whether or not to flush contents as soon as possible</param>
+            <param name="immediateFlush">whether to flush contents as soon as possible</param>
             <param name="columns">
             an array of
             <see cref="T:iText.Kernel.Geom.Rectangle"/>
-            specifying the acceptable
-            positions for elements on a page
+            specifying the acceptable positions for elements on a page
             </param>
         </member>
         <member name="M:iText.Layout.ColumnDocumentRenderer.GetNextAreaNumber">
-            <summary>
-            Gets the array index of the next area that will be written on after the
-            current one is full (overflowed).
-            </summary>
+            <summary>Gets the array index of the next area that will be written on after the current one is full (overflowed).
+                </summary>
             <returns>the array index of the next area that will be written on</returns>
         </member>
         <member name="T:iText.Layout.Document">
@@ -1845,6 +1838,14 @@
             </remarks>
             <returns>the current stroke color</returns>
         </member>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.GetTransparentStrokeColor">
+            <summary>Gets the stroke color for the current element.</summary>
+            <remarks>
+            Gets the stroke color for the current element.
+            The stroke color is the color of the outlines or edges of a shape.
+            </remarks>
+            <returns>the current stroke color</returns>
+        </member>
         <member name="M:iText.Layout.ElementPropertyContainer`1.SetStrokeColor(iText.Kernel.Colors.Color)">
             <summary>Sets the stroke color for the current element.</summary>
             <remarks>
@@ -1852,7 +1853,55 @@
             The stroke color is the color of the outlines or edges of a shape.
             </remarks>
             <param name="strokeColor">a new stroke color</param>
-            <returns>this Element.</returns>
+            <returns>this element</returns>
+        </member>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.SetStrokeColor(iText.Kernel.Colors.Color,System.Single)">
+            <summary>Sets the stroke color for the current element.</summary>
+            <remarks>
+            Sets the stroke color for the current element.
+            The stroke color is the color of the outlines or edges of a shape.
+            </remarks>
+            <param name="strokeColor">
+            a
+            <see cref="T:iText.Kernel.Colors.Color"/>
+            for the stroke
+            </param>
+            <param name="opacity">
+            an opacity for the stroke color; a float between 0 and 1, where 1 stands for fully opaque color
+            and 0 - for fully transparent
+            </param>
+            <returns>this element</returns>
+        </member>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.SetStrokeColor(iText.Layout.Properties.TransparentColor)">
+            <summary>Sets the stroke color for the current element.</summary>
+            <remarks>
+            Sets the stroke color for the current element.
+            The stroke color is the color of the outlines or edges of a shape.
+            </remarks>
+            <param name="transparentColor">a new stroke color with transparency</param>
+            <returns>this element</returns>
+        </member>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.SetDashPattern(System.Single[],System.Single)">
+            <summary>Sets the stroke dash pattern for the current text.</summary>
+            <remarks>
+            Sets the stroke dash pattern for the current text. Dash pattern is an array of the form [ dashArray dashPhase ],
+            where
+            <paramref name="dashArray"/>
+            is a float array that specifies the length of the alternating dashes and gaps,
+            <paramref name="dashPhase"/>
+            is a float that specifies the distance into the dash pattern to start the dash.
+            </remarks>
+            <param name="dashArray">
+            float array that specifies the length of the alternating dashes and gaps,
+            use
+            <see langword="null"/>
+            for solid line
+            </param>
+            <param name="dashPhase">
+            float that specifies the distance into the dash pattern to start the dash,
+            use 0 in case offset isn't needed
+            </param>
+            <returns>this element</returns>
         </member>
         <member name="M:iText.Layout.ElementPropertyContainer`1.GetStrokeWidth">
             <summary>Gets the stroke width for the current element.</summary>
@@ -1871,18 +1920,18 @@
             <param name="strokeWidth">a new stroke width</param>
             <returns>this Element.</returns>
         </member>
-        <member name="M:iText.Layout.ElementPropertyContainer`1.SetBold">
-            <summary>Switch on the simulation of bold style for a font.</summary>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.SimulateBold">
+            <summary>Simulates bold style for a font.</summary>
             <remarks>
-            Switch on the simulation of bold style for a font.
+            Simulates bold style for a font.
             Be aware that using correct bold font is highly preferred over this option.
             </remarks>
             <returns>this element</returns>
         </member>
-        <member name="M:iText.Layout.ElementPropertyContainer`1.SetItalic">
-            <summary>Switch on the simulation of italic style for a font.</summary>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.SimulateItalic">
+            <summary>Simulates italic style for a font.</summary>
             <remarks>
-            Switch on the simulation of italic style for a font.
+            Simulates italic style for a font.
             Be aware that using correct italic (oblique) font is highly preferred over this option.
             </remarks>
             <returns>this element</returns>
@@ -1943,9 +1992,9 @@
             <returns>this element</returns>
         </member>
         <member name="M:iText.Layout.ElementPropertyContainer`1.SetUnderline(iText.Kernel.Colors.Color,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32)">
-            <summary>Sets an horizontal line that can be an underline or a strikethrough.</summary>
+            <summary>Sets horizontal line that can be an underline or a strikethrough.</summary>
             <remarks>
-            Sets an horizontal line that can be an underline or a strikethrough.
+            Sets horizontal line that can be an underline or a strikethrough.
             Actually, the line can be anywhere vertically due to position parameter.
             Multiple call to this method will produce multiple lines.
             <para />
@@ -1958,8 +2007,10 @@
             the color of the line or <c>null</c> to follow the
             text color
             </param>
-            <param name="opacity">the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
-                </param>
+            <param name="opacity">
+            the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and
+            0 - for fully transparent
+            </param>
             <param name="thickness">the absolute thickness of the line</param>
             <param name="thicknessMul">the thickness multiplication factor with the font size</param>
             <param name="yPosition">the absolute y position relative to the baseline</param>
@@ -1967,6 +2018,20 @@
             <param name="lineCapStyle">
             the end line cap style. Allowed values are enumerated in
             <see cref="T:iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
+            </param>
+            <returns>this element</returns>
+        </member>
+        <member name="M:iText.Layout.ElementPropertyContainer`1.SetUnderline(iText.Layout.Properties.Underline)">
+            <summary>Sets horizontal line that can be an underline, overline or a strikethrough.</summary>
+            <remarks>
+            Sets horizontal line that can be an underline, overline or a strikethrough.
+            Actually, the line can be anywhere vertically due to position parameter.
+            Multiple call to this method will produce multiple lines.
+            </remarks>
+            <param name="underline">
+            
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            to set
             </param>
             <returns>this element</returns>
         </member>
@@ -2067,11 +2132,29 @@
             <returns>this Element</returns>
         </member>
         <member name="M:iText.Layout.Element.AbstractElement`1.MakeNewRenderer">
-            <summary>Creates new renderer instance.</summary>
+            <summary>Creates a new renderer instance.</summary>
             <returns>
             new
             <see cref="T:iText.Layout.Renderer.IRenderer"/>
             </returns>
+        </member>
+        <member name="T:iText.Layout.Element.AnonymousInlineBox">
+            <summary>
+            A layout element that represents anonymous box,
+            see https://developer.mozilla.org/en-US/docs/Web/CSS/Visual_formatting_model#anonymous_boxes.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Element.AnonymousInlineBox.#ctor">
+            <summary>
+            Creates an
+            <see cref="T:iText.Layout.Element.AnonymousInlineBox"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Element.AnonymousInlineBox.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Element.AnonymousInlineBox.MakeNewRenderer">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Layout.Element.AreaBreak">
             <summary>
@@ -2618,6 +2701,13 @@
             The concept is very similar to that of the div tag in HTML.
             </remarks>
         </member>
+        <member name="M:iText.Layout.Element.Div.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Layout.Element.Div"/>
+            instance.
+            </summary>
+        </member>
         <member name="M:iText.Layout.Element.Div.Add(iText.Layout.Element.IBlockElement)">
             <summary>Adds any block element to the div's contents.</summary>
             <param name="element">
@@ -2679,6 +2769,20 @@
             <summary>
             Creates new
             <see cref="T:iText.Layout.Element.FlexContainer"/>
+            instance.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Element.GridContainer">
+            <summary>
+            A
+            <see cref="T:iText.Layout.Element.GridContainer"/>
+            represents a container of the css grid object.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Element.GridContainer.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Layout.Element.GridContainer"/>
             instance.
             </summary>
         </member>
@@ -2772,10 +2876,16 @@
             <summary>Writes the newly added content to the document.</summary>
         </member>
         <member name="M:iText.Layout.Element.ILargeElement.FlushContent">
-            <summary>Flushes the content which has just been added to the document.</summary>
+            <summary>Writes to the output document the content which has just been added to it.</summary>
             <remarks>
-            Flushes the content which has just been added to the document.
-            This is a method for internal usage and is called automatically by the document.
+            Writes to the output document the content which has just been added to it.
+            <para />
+            This method is called automatically for the newly added
+            <see cref="T:iText.Layout.Element.ILargeElement"/>
+            to be immediately placed
+            in the page contents after it is added to the
+            <see cref="T:iText.Layout.Document"/>
+            , so it shouldn't be used in any other places.
             </remarks>
         </member>
         <member name="M:iText.Layout.Element.ILargeElement.SetDocument(iText.Layout.Document)">
@@ -3611,7 +3721,11 @@
             </remarks>
         </member>
         <member name="M:iText.Layout.Element.Paragraph.#ctor">
-            <summary>Creates a Paragraph.</summary>
+            <summary>
+            Creates a new
+            <see cref="T:iText.Layout.Element.Paragraph"/>
+            instance.
+            </summary>
         </member>
         <member name="M:iText.Layout.Element.Paragraph.#ctor(System.String)">
             <summary>Creates a Paragraph, initialized with a piece of text.</summary>
@@ -3785,9 +3899,22 @@
             <see cref="F:iText.Layout.Properties.Leading.FIXED"/>
             strategy.
             </summary>
+            <remarks>
+            Sets the leading value, using the
+            <see cref="F:iText.Layout.Properties.Leading.FIXED"/>
+            strategy.
+            <para />
+            If for the element
+            <see cref="!:iText.Layout.Properties.RenderingMode?.HTML_MODE"/>
+            is enabled, than
+            <see cref="F:iText.Layout.Properties.Property.LINE_HEIGHT"/>
+            property will be set instead of default layout
+            <see cref="F:iText.Layout.Properties.Property.LEADING"/>.
+            </remarks>
             <param name="leading">the new leading value</param>
             <returns>this Paragraph</returns>
             <seealso cref="T:iText.Layout.Properties.Leading"/>
+            <seealso cref="T:iText.Layout.Properties.LineHeight"/>
         </member>
         <member name="M:iText.Layout.Element.Paragraph.SetMultipliedLeading(System.Single)">
             <summary>
@@ -3795,9 +3922,28 @@
             <see cref="F:iText.Layout.Properties.Leading.MULTIPLIED"/>
             strategy.
             </summary>
+            <remarks>
+            Sets the leading value, using the
+            <see cref="F:iText.Layout.Properties.Leading.MULTIPLIED"/>
+            strategy.
+            <para />
+            If for the element
+            <see cref="!:iText.Layout.Properties.RenderingMode?.HTML_MODE"/>
+            is enabled, than
+            <see cref="F:iText.Layout.Properties.Property.LINE_HEIGHT"/>
+            property will be set instead of default layout
+            <see cref="F:iText.Layout.Properties.Property.LEADING"/>.
+            </remarks>
             <param name="leading">the new leading value</param>
             <returns>this Paragraph</returns>
             <seealso cref="T:iText.Layout.Properties.Leading"/>
+            <seealso cref="T:iText.Layout.Properties.LineHeight"/>
+        </member>
+        <member name="M:iText.Layout.Element.Paragraph.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Element.Paragraph.MakeNewRenderer">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Layout.Element.Tab">
             <summary>
@@ -4391,13 +4537,6 @@
         <member name="M:iText.Layout.Element.Table.Flush">
             <summary>Writes the newly added content to the document.</summary>
         </member>
-        <member name="M:iText.Layout.Element.Table.FlushContent">
-            <summary>Flushes the content which has just been added to the document.</summary>
-            <remarks>
-            Flushes the content which has just been added to the document.
-            This is a method for internal usage and is called automatically by the document.
-            </remarks>
-        </member>
         <member name="M:iText.Layout.Element.Table.GetLastRowBottomBorder">
             <summary>Gets the markup properties of the bottom border of the (current) last row.</summary>
             <returns>
@@ -4721,22 +4860,16 @@
             </remarks>
             <returns>this Element</returns>
         </member>
+        <member name="M:iText.Layout.Element.Text.DisableOtfFeatures">
+            <summary>Disable otf features applying for this text element.</summary>
+            <returns>
+            this
+            <c>Text</c>
+            element
+            </returns>
+        </member>
         <member name="T:iText.Layout.Exceptions.LayoutExceptionMessageConstant">
             <summary>Class that bundles all the error message templates as constants.</summary>
-        </member>
-        <member name="T:iText.Layout.Font.ComplexFontSelectorStrategy">
-            <summary>
-            Complex FontSelectorStrategy split text based on
-            <see cref="!:iText.Commons.Utils.UnicodeScript?"/>.
-            </summary>
-            <remarks>
-            Complex FontSelectorStrategy split text based on
-            <see cref="!:iText.Commons.Utils.UnicodeScript?"/>.
-            If unicode script changes, a new font will be found.
-            If there is no suitable font, only one notdef glyph from
-            <see cref="M:iText.Layout.Font.FontSelector.BestMatch"/>
-            will be added.
-            </remarks>
         </member>
         <member name="M:iText.Layout.Font.FontCharacteristics.SetFontWeight(System.Int16)">
             <summary>Sets preferred font weight</summary>
@@ -4901,9 +5034,14 @@
             cache.
             </summary>
             <param name="fontPath">
-            path to the font file to add. Can be a path to file or font name,
-            see
-            <see cref="M:iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>.
+            path to the font file to add. Can be a path to file or font name.
+            As a font name one of 14 built in fonts can be used, see
+            <see cref="T:iText.IO.Font.Constants.StandardFonts"/>.
+            If file is a true type collection, fonts in it should be addressed by index
+            such as "msgothic.ttc,1", starting with index 0.
+            See
+            <see cref="M:iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>
+            for more information.
             </param>
             <param name="encoding">
             font encoding to create
@@ -4923,9 +5061,14 @@
             cache.
             </summary>
             <param name="fontPath">
-            path to the font file to add. Can be a path to file or font name,
-            see
-            <see cref="M:iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>.
+            path to the font file to add. Can be a path to file or font name.
+            As a font name one of 14 built in fonts can be used, see
+            <see cref="T:iText.IO.Font.Constants.StandardFonts"/>.
+            If file is a true type collection, fonts in it should be addressed by index
+            such as "msgothic.ttc,1", starting with index 0.
+            See
+            <see cref="M:iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>
+            for more information.
             </param>
             <param name="encoding">
             font encoding to create
@@ -4944,9 +5087,14 @@
             cache.
             </summary>
             <param name="fontPath">
-            path to the font file to add. Can be a path to file or font name,
-            see
-            <see cref="M:iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>.
+            path to the font file to add. Can be a path to file or font name.
+            As a font name one of 14 built in fonts can be used, see
+            <see cref="T:iText.IO.Font.Constants.StandardFonts"/>.
+            If file is a true type collection, fonts in it should be addressed by index
+            such as "msgothic.ttc,1", starting with index 0.
+            See
+            <see cref="M:iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>
+            for more information.
             </param>
             <returns>true, if font was successfully added, otherwise false.</returns>
         </member>
@@ -5050,104 +5198,6 @@
             NOTE: This method can be overridden to customize behaviour.
             </remarks>
             <returns>the default embedding flag</returns>
-        </member>
-        <member name="M:iText.Layout.Font.FontProvider.GetStrategy(System.String,System.Collections.Generic.IList{System.String},iText.Layout.Font.FontCharacteristics,iText.Layout.Font.FontSet)">
-            <summary>
-            Gets the
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            to split specified text into sequences of glyphs, already tied
-            to the fonts which contain them.
-            </summary>
-            <remarks>
-            Gets the
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            to split specified text into sequences of glyphs, already tied
-            to the fonts which contain them. The fonts can be taken from the added fonts to the font provider and
-            are chosen based on font-families list and desired font characteristics.
-            </remarks>
-            <param name="text">for splitting into sequences of glyphs.</param>
-            <param name="fontFamilies">
-            target font families to create
-            <see cref="T:iText.Layout.Font.FontSelector"/>
-            for sequences of glyphs.
-            </param>
-            <param name="fc">
-            instance of
-            <see cref="T:iText.Layout.Font.FontCharacteristics"/>
-            to create
-            <see cref="T:iText.Layout.Font.FontSelector"/>
-            for sequences of glyphs.
-            </param>
-            <param name="additionalFonts">
-            set which provides fonts additionally to the fonts added to font provider.
-            Combined set of font provider fonts and additional fonts is used when choosing
-            a single font for a sequence of glyphs. Additional fonts will only be used for the given
-            font selector strategy instance and will not be otherwise preserved in font provider.
-            </param>
-            <returns>
-            
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            instance.
-            </returns>
-        </member>
-        <member name="M:iText.Layout.Font.FontProvider.GetStrategy(System.String,System.Collections.Generic.IList{System.String},iText.Layout.Font.FontCharacteristics)">
-            <summary>
-            Gets the
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            to split specified text into sequences of glyphs, already tied
-            to the fonts which contain them.
-            </summary>
-            <remarks>
-            Gets the
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            to split specified text into sequences of glyphs, already tied
-            to the fonts which contain them. The fonts can be taken from the added fonts to the font provider and
-            are chosen based on font-families list and desired font characteristics.
-            </remarks>
-            <param name="text">for splitting into sequences of glyphs.</param>
-            <param name="fontFamilies">
-            target font families to create
-            <see cref="T:iText.Layout.Font.FontSelector"/>
-            for sequences of glyphs.
-            </param>
-            <param name="fc">
-            instance of
-            <see cref="T:iText.Layout.Font.FontCharacteristics"/>
-            to create
-            <see cref="T:iText.Layout.Font.FontSelector"/>
-            for sequences of glyphs.
-            </param>
-            <returns>
-            
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            instance.
-            </returns>
-        </member>
-        <member name="M:iText.Layout.Font.FontProvider.GetStrategy(System.String,System.Collections.Generic.IList{System.String})">
-            <summary>
-            Gets the
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            to split specified text into sequences of glyphs, already tied
-            to the fonts which contain them.
-            </summary>
-            <remarks>
-            Gets the
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            to split specified text into sequences of glyphs, already tied
-            to the fonts which contain them. The fonts can be taken from the added fonts to the font provider and
-            are chosen based on font-families list and desired font characteristics.
-            </remarks>
-            <param name="text">for splitting into sequences of glyphs.</param>
-            <param name="fontFamilies">
-            target font families to create
-            <see cref="T:iText.Layout.Font.FontSelector"/>
-            for sequences of glyphs.
-            </param>
-            <returns>
-            
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            instance.
-            </returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:iText.Layout.Font.FontProvider.SetFontSelectorStrategyFactory(iText.Layout.Font.Selectorstrategy.IFontSelectorStrategyFactory)" -->
         <member name="M:iText.Layout.Font.FontProvider.CreateFontSelectorStrategy(System.Collections.Generic.IList{System.String},iText.Layout.Font.FontCharacteristics,iText.Layout.Font.FontSet)">
@@ -5361,24 +5411,6 @@
             caching.
             </summary>
             <seealso cref="T:iText.Layout.Font.FontSelectorCache"/>
-        </member>
-        <member name="T:iText.Layout.Font.FontSelectorStrategy">
-            <summary>
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            is responsible for splitting text into sub texts with one particular font.
-            </summary>
-            <remarks>
-            <see cref="T:iText.Layout.Font.FontSelectorStrategy"/>
-            is responsible for splitting text into sub texts with one particular font.
-            <see cref="M:iText.Layout.Font.FontSelectorStrategy.NextGlyphs"/>
-            will create next sub text and set current font.
-            </remarks>
-        </member>
-        <member name="M:iText.Layout.Font.FontSelectorStrategy.GetPdfFont(iText.Layout.Font.FontInfo)">
-            <summary>Utility method to create PdfFont.</summary>
-            <param name="fontInfo">instance of FontInfo.</param>
-            <returns>cached or just created PdfFont on success, otherwise null.</returns>
-            <seealso cref="M:iText.Layout.Font.FontProvider.GetPdfFont(iText.Layout.Font.FontInfo,iText.Layout.Font.FontSet)"/>
         </member>
         <member name="T:iText.Layout.Font.FontSet">
             <summary>Reusable font set for FontProgram related data.</summary>
@@ -6027,6 +6059,15 @@
             </summary>
         </member>
         <member name="M:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory.CreateFontSelectorStrategy(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory">
+            <summary>
+            The factory for
+            <see cref="T:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory.CreateFontSelectorStrategy(iText.Layout.Font.FontProvider,iText.Layout.Font.FontSelector,iText.Layout.Font.FontSet)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy">
@@ -8005,6 +8046,49 @@
             <param name="layoutBox">available area for child and its siblings layout. It might be adjusted inside the method
                 </param>
         </member>
+        <member name="M:iText.Layout.Minmaxwidth.MinMaxWidthUtils.CountDefaultMinMaxWidth(iText.Layout.Renderer.IRenderer)">
+            <summary>Default implementation for min max width calculation.</summary>
+            <param name="renderer">renderer to calculate min max width for</param>
+            <returns>
+            
+            <see cref="T:iText.Layout.Minmaxwidth.MinMaxWidth"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Minmaxwidth.MinMaxWidthUtils.CountDefaultMinMaxWidth(iText.Layout.Renderer.IRenderer,System.Single)">
+            <summary>Default implementation for min max width calculation.</summary>
+            <param name="renderer">renderer to calculate min max width for</param>
+            <param name="areaMaxWidth">max available area for layout</param>
+            <returns>
+            
+            <see cref="T:iText.Layout.Minmaxwidth.MinMaxWidth"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Minmaxwidth.MinMaxWidthUtils.GetBorderWidth(iText.Layout.IPropertyContainer)">
+            <summary>Get sum of left and right borders for the element.</summary>
+            <param name="element">element to calculate borders width for</param>
+            <returns>
+            sum of left and right borders as
+            <c>float</c>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Minmaxwidth.MinMaxWidthUtils.GetMarginsWidth(iText.Layout.IPropertyContainer)">
+            <summary>Get sum of left and right margins for the element.</summary>
+            <param name="element">element to calculate margins width for</param>
+            <returns>
+            sum of left and right margins as
+            <c>float</c>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Minmaxwidth.MinMaxWidthUtils.GetPaddingWidth(iText.Layout.IPropertyContainer)">
+            <summary>Get sum of left and right paddings for the element.</summary>
+            <param name="element">element to calculate paddings width for</param>
+            <returns>
+            sum of left and right paddings as
+            <c>float</c>
+            </returns>
+        </member>
         <member name="T:iText.Layout.Minmaxwidth.RotationMinMaxWidth">
             <summary>Class for min-max-width of rotated elements.</summary>
             <remarks>
@@ -8339,6 +8423,12 @@
             instance.
             </param>
         </member>
+        <member name="M:iText.Layout.Properties.BackgroundImage.CalculateBackgroundImageSize(System.Single,System.Single)">
+            <summary>Calculates width and height values for background image with a given area params.</summary>
+            <param name="areaWidth">width of the area of this images</param>
+            <param name="areaHeight">height of the area of this images</param>
+            <returns>array of two float values. NOTE that first value defines width, second defines height</returns>
+        </member>
         <member name="M:iText.Layout.Properties.BackgroundImage.GetBackgroundPosition">
             <summary>Gets background-position.</summary>
             <returns>
@@ -8406,6 +8496,14 @@
             
             <see cref="T:iText.Layout.Properties.BackgroundBox"/>
             </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.BackgroundImage.ResolveWidthAndHeight(System.Nullable{System.Single},System.Nullable{System.Single},System.Single,System.Single)">
+            <summary>Resolves the final size of the background image in specified area.</summary>
+            <param name="width">the intrinsic background image width</param>
+            <param name="height">the intrinsic background image height</param>
+            <param name="areaWidth">the area width in which background will be placed</param>
+            <param name="areaHeight">the area height in which background will be placed</param>
+            <returns>the final size of the background image</returns>
         </member>
         <member name="T:iText.Layout.Properties.BackgroundImage.Builder">
             <summary>
@@ -9042,6 +9140,11 @@
             <summary>Re adds the properties that were removed from the overflow renderer.</summary>
             <param name="blockRenderer">the renderer that is used to reapply properties.</param>
         </member>
+        <member name="M:iText.Layout.Properties.ContinuousContainer.UpdateValueOfSavedProperty(System.Int32,System.Object)">
+            <summary>Updates values of the saved property.</summary>
+            <param name="property">the property to be updated</param>
+            <param name="value">the new value</param>
+        </member>
         <member name="T:iText.Layout.Properties.FlexDirectionPropertyValue">
             <summary>
             A specialized enum containing potential property values for
@@ -9079,10 +9182,282 @@
             <see cref="T:iText.Layout.IPropertyContainer"/>.
             </remarks>
         </member>
+        <member name="T:iText.Layout.Properties.Grid.AutoRepeatValue">
+            <summary>This class represents an auto-repeat template value.</summary>
+            <remarks>
+            This class represents an auto-repeat template value.
+            This value is preprocessed before grid sizing algorithm so its only exists at template level.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.AutoRepeatValue.#ctor(System.Boolean,System.Collections.Generic.IList{iText.Layout.Properties.Grid.GridValue})">
+            <summary>Create a new auto-repeat value</summary>
+            <param name="autoFit">determines whether to shrink flatten template values to match the grid size</param>
+            <param name="values">template values to repeat</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.AutoRepeatValue.GetValues">
+            <summary>Get template values which should be repeated.</summary>
+            <returns>template values list</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.AutoRepeatValue.IsAutoFit">
+            <summary>Determines whether to shrink flatten template values to match the grid size.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if to shrink,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.AutoValue">
+            <summary>Represents an auto template value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.AutoValue.VALUE">
+            <summary>auto value constant.</summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.BreadthValue">
+            <summary>Represents a breadth value on a grid.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.BreadthValue.#ctor(iText.Layout.Properties.Grid.TemplateValue.ValueType)">
+            <summary>Init a breadth value with a given type</summary>
+            <param name="type">value type</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.FitContentValue">
+            <summary>Represents fit content function template value.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FitContentValue.#ctor(iText.Layout.Properties.Grid.LengthValue)">
+            <summary>
+            Create fit content function value based on provided
+            <see cref="T:iText.Layout.Properties.Grid.LengthValue"/>
+            instance.
+            </summary>
+            <param name="length">max size value</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FitContentValue.#ctor(iText.Layout.Properties.UnitValue)">
+            <summary>
+            Create fit content function value based on provided
+            <see cref="T:iText.Layout.Properties.UnitValue"/>
+            instance.
+            </summary>
+            <param name="length">max size value</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FitContentValue.GetLength">
+            <summary>
+            Get underlying
+            <see cref="T:iText.Layout.Properties.Grid.LengthValue"/>
+            which represents max size on a grid for this value.
+            </summary>
+            <returns>
+            underlying
+            <see cref="T:iText.Layout.Properties.Grid.LengthValue"/>
+            value
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FitContentValue.GetMaxSizeForSpace(System.Single)">
+            <summary>Gets the maximum size which the value can take on passed space.</summary>
+            <param name="space">the space for which fit-content size will be calculated</param>
+            <returns>the maximum size of the value on passed space</returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.FixedRepeatValue">
+            <summary>This class represents an fixed-repeat template value.</summary>
+            <remarks>
+            This class represents an fixed-repeat template value.
+            This value is preprocessed before grid sizing algorithm so its only exists at template level.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FixedRepeatValue.#ctor(System.Int32,System.Collections.Generic.IList{iText.Layout.Properties.Grid.GridValue})">
+            <summary>Create a new fixed-repeat value</summary>
+            <param name="repeatCount">number of repetitions</param>
+            <param name="values">template values to repeat</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FixedRepeatValue.GetValues">
+            <summary>Gets template values which should be repeated.</summary>
+            <returns>template values list</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FixedRepeatValue.GetRepeatCount">
+            <summary>Gets number of template values repetitions.</summary>
+            <returns>number of template values repetitions</returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.FlexValue">
+            <summary>Represents flexible template value.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FlexValue.#ctor(System.Single)">
+            <summary>Create new flexible value instance.</summary>
+            <param name="value">fraction value</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FlexValue.GetFlex">
+            <summary>Gets fraction value.</summary>
+            <returns>fraction value</returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.FunctionValue">
+            <summary>Abstract class representing function value on a grid.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.FunctionValue.#ctor(iText.Layout.Properties.Grid.TemplateValue.ValueType)">
+            <summary>Init a function value with a given type.</summary>
+            <param name="type">value type</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.GridFlow">
+            <summary>
+            A specialized enum containing potential property values for
+            <see cref="F:iText.Layout.Properties.Property.GRID_FLOW"/>.
+            </summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.GridFlow.ROW">
+            <summary>Defines row flow from left to right of a grid.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.GridFlow.COLUMN">
+            <summary>Defines column flow from top to bottom of a grid.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.GridFlow.ROW_DENSE">
+            <summary>
+            Same as
+            <c>ROW</c>
+            but uses dense algorithm for cell placement.
+            </summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.GridFlow.COLUMN_DENSE">
+            <summary>
+            Same as
+            <c>COLUMN</c>
+            but uses dense algorithm for cell placement.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.GridValue">
+            <summary>
+            A specialized class that holds a value for grid-template-columns/rows and
+            grid-auto-columns/rows properties and the type it is measured in.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.GridValue.#ctor(iText.Layout.Properties.Grid.TemplateValue.ValueType)">
+            <summary>Create grid value with a given type.</summary>
+            <param name="type">grid value type</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.LengthValue">
+            <summary>Abstract class representing length value on a grid.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.LengthValue.GetValue">
+            <summary>Gets length value.</summary>
+            <returns>length value</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.LengthValue.#ctor(iText.Layout.Properties.Grid.TemplateValue.ValueType,System.Single)">
+            <summary>Init a breadth value with a given type and value.</summary>
+            <param name="type">value type</param>
+            <param name="value">length value</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.MaxContentValue">
+            <summary>Represents max-content template value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.MaxContentValue.VALUE">
+            <summary>max-content value.</summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.MinContentValue">
+            <summary>Represents min-content template value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.MinContentValue.VALUE">
+            <summary>min-content value.</summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.MinMaxValue">
+            <summary>Represents minmax function template value.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.MinMaxValue.#ctor(iText.Layout.Properties.Grid.BreadthValue,iText.Layout.Properties.Grid.BreadthValue)">
+            <summary>Create a minmax function with a given values.</summary>
+            <param name="min">min value of a track</param>
+            <param name="max">max value of a track</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.MinMaxValue.GetMin">
+            <summary>Gets min template value</summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Grid.BreadthValue"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.MinMaxValue.GetMax">
+            <summary>Gets max template value</summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Grid.BreadthValue"/>
+            instance
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.PercentValue">
+            <summary>Represents percent template value.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.PercentValue.#ctor(System.Single)">
+            <summary>Creates percent value.</summary>
+            <param name="value">percent value</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.PointValue">
+            <summary>Represents point template value.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.PointValue.#ctor(System.Single)">
+            <summary>Creates point value with a given length.</summary>
+            <param name="value">length value</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.TemplateValue">
+            <summary>A class that indicates its descendant class can be used as a grid template value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.type">
+            <summary>Template value type.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.TemplateValue.#ctor(iText.Layout.Properties.Grid.TemplateValue.ValueType)">
+            <summary>Creates template value with a given type.</summary>
+            <param name="type">template value type</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Grid.TemplateValue.GetType">
+            <summary>Gets template value type.</summary>
+            <returns>template value type</returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Grid.TemplateValue.ValueType">
+            <summary>Enum of sizing value types.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.POINT">
+            <summary>Type which represents absolute point value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.PERCENT">
+            <summary>Type which represents relative percent value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.AUTO">
+            <summary>Type which represents relative auto value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.MIN_CONTENT">
+            <summary>Type which represents relative min content value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.MAX_CONTENT">
+            <summary>Type which represents relative max content value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.FIT_CONTENT">
+            <summary>Type which presents fit content function value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.MINMAX">
+            <summary>Type which represents minmax function value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.FLEX">
+            <summary>Type which represents relative flexible value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.FIXED_REPEAT">
+            <summary>Type which represents fixed repeat value.</summary>
+        </member>
+        <member name="F:iText.Layout.Properties.Grid.TemplateValue.ValueType.AUTO_REPEAT">
+            <summary>Type which represents auto-repeat value.</summary>
+        </member>
         <member name="T:iText.Layout.Properties.HorizontalAlignment">
             <summary>
             A specialized enum containing potential property values for
             <see cref="F:iText.Layout.Properties.Property.HORIZONTAL_ALIGNMENT"/>.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Properties.IBeforeTextRestoreExecutor">
+            <summary>
+            The interface is used to execute some logic before canvas state
+            restoring in
+            <see cref="T:iText.Layout.Renderer.TextRenderer"/>
+            which happens for text and underline.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.IBeforeTextRestoreExecutor.Execute">
+            <summary>
+            Execute code before canvas state restoring in
+            <see cref="T:iText.Layout.Renderer.TextRenderer"/>.
             </summary>
         </member>
         <member name="T:iText.Layout.Properties.IListSymbolFactory">
@@ -9692,6 +10067,19 @@
         <member name="F:iText.Layout.Properties.Property.HORIZONTAL_SCALING">
             <summary>Value of 1 is equivalent to no scaling</summary>
         </member>
+        <member name="F:iText.Layout.Properties.Property.STROKE_DASH_PATTERN">
+            <summary>
+            STROKE_DASH_PATTERN property specifies dash pattern for the text stroke and stores the
+            <see cref="!:System.Collections.IList&lt;E&gt;"/>
+            as float array of the form [ dashArray dashPhase ], where
+            <c>dashArray</c>
+            is a float array that specifies
+            the length of the alternating dashes and gaps,
+            <c>dashPhase</c>
+            is a float that specifies the distance into
+            the dash pattern to start the dash.
+            </summary>
+        </member>
         <member name="F:iText.Layout.Properties.Property.TEXT_RENDERING_MODE">
             <summary>
             Use values from
@@ -9735,6 +10123,9 @@
         <member name="F:iText.Layout.Properties.RenderingMode.HTML_MODE">
             <summary>Mode in which objects are processed in accordance with the HTML documentation</summary>
         </member>
+        <member name="F:iText.Layout.Properties.RenderingMode.SVG_MODE">
+            <summary>Mode in which objects are processed in accordance with the SVG documentation</summary>
+        </member>
         <member name="T:iText.Layout.Properties.TabAlignment">
             <summary>
             A specialized enum holding the possible values for a
@@ -9746,6 +10137,12 @@
             <summary>
             A specialized enum containing potential property values for
             <see cref="F:iText.Layout.Properties.Property.TEXT_ALIGNMENT"/>.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Properties.TextAnchor">
+            <summary>
+            A specialized enum containing potential property values for
+            <see cref="F:iText.Layout.Properties.Property.TEXT_ANCHOR"/>.
             </summary>
         </member>
         <member name="T:iText.Layout.Properties.Transform">
@@ -9827,12 +10224,24 @@
             <see cref="T:iText.Layout.Properties.Transform.SingleTransform"/>
             instance.
             </summary>
+            <remarks>
+            Creates a
+            <see cref="T:iText.Layout.Properties.Transform.SingleTransform"/>
+            instance.
+            <para />
+            Detailed explanation of
+            <c>[a b c d e f]</c>
+            parameters of transformation
+            matrix can be found in
+            <see cref="T:iText.Kernel.Geom.Matrix"/>
+            documentation.
+            </remarks>
             <param name="a">horizontal scaling</param>
             <param name="b">vertical skewing</param>
             <param name="c">horizontal skewing</param>
             <param name="d">vertical scaling</param>
-            <param name="tx">horizontal translation</param>
-            <param name="ty">vertical translation</param>
+            <param name="e">horizontal translation</param>
+            <param name="f">vertical translation</param>
         </member>
         <member name="M:iText.Layout.Properties.Transform.SingleTransform.GetFloats">
             <summary>Gets an array of values corresponding to transformation, i.e. scaling and skewing.</summary>
@@ -9911,15 +10320,16 @@
             <summary>A POJO that describes the underline of a layout element.</summary>
             <remarks>
             A POJO that describes the underline of a layout element.
+            <para />
             This class is to be used as a property for an element or renderer,
             as the value for
-            <see cref="F:iText.Layout.Properties.Property.UNDERLINE"/>
+            <see cref="F:iText.Layout.Properties.Property.UNDERLINE"/>.
             </remarks>
         </member>
         <member name="M:iText.Layout.Properties.Underline.#ctor(iText.Kernel.Colors.Color,System.Single,System.Single,System.Single,System.Single,System.Int32)">
             <summary>Creates an Underline.</summary>
             <remarks>
-            Creates an Underline. Both the thickness and vertical positioning under
+            Creates an Underline. Both thickness and vertical positioning under
             the text element's base line can be set to a fixed value, or a variable
             one depending on the element's font size.
             If you want a fixed-width thickness, set <c>thicknessMul</c> to 0;
@@ -9947,7 +10357,7 @@
         <member name="M:iText.Layout.Properties.Underline.#ctor(iText.Kernel.Colors.Color,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32)">
             <summary>Creates an Underline.</summary>
             <remarks>
-            Creates an Underline. Both the thickness and vertical positioning under
+            Creates an Underline. Both thickness and vertical positioning under
             the text element's base line can be set to a fixed value, or a variable
             one depending on the element's font size.
             If you want a fixed-width thickness, set <c>thicknessMul</c> to 0;
@@ -10009,6 +10419,85 @@
             the line cap style, as an <c>int</c> referring to
             the values of
             <see cref="T:iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.GetStrokeColor">
+            <summary>Gets the color of the underline stroke.</summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.TransparentColor"/>
+            stroke color
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.SetStrokeColor(iText.Layout.Properties.TransparentColor)">
+            <summary>Sets the stroke color of the underline.</summary>
+            <param name="strokeColor">
+            
+            <see cref="T:iText.Layout.Properties.TransparentColor"/>
+            stroke color
+            </param>
+            <returns>
+            this
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.GetStrokeWidth">
+            <summary>Gets the thickness of the underline stroke.</summary>
+            <returns>float value of the stroke width</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.SetStrokeWidth(System.Single)">
+            <summary>Sets the thickness of the underline stroke.</summary>
+            <param name="strokeWidth">float value of the stroke width</param>
+            <returns>
+            this
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.GetDashArray">
+            <summary>Gets dash array part of the dash pattern to be used when paths are stroked.</summary>
+            <remarks>
+            Gets dash array part of the dash pattern to be used when paths are stroked. Default value is solid line.
+            <para />
+            The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+            where dashArray is itself an array and dashPhase is an integer.
+            <para />
+            An empty dash array (first element in the array) and zero phase (second element in the array)
+            can be used to restore the dash pattern to a solid line.
+            </remarks>
+            <returns>float dash array</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.GetDashPhase">
+            <summary>Gets dash phase part of the dash pattern to be used when paths are stroked.</summary>
+            <remarks>
+            Gets dash phase part of the dash pattern to be used when paths are stroked. Default value is solid line.
+            <para />
+            The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+            where dashArray is itself an array and dashPhase is an integer.
+            <para />
+            An empty dash array (first element in the array) and zero phase (second element in the array)
+            can be used to restore the dash pattern to a solid line.
+            </remarks>
+            <returns>float dash array</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Underline.SetDashPattern(System.Single[],System.Single)">
+            <summary>Sets a description of the dash pattern to be used when paths are stroked.</summary>
+            <remarks>
+            Sets a description of the dash pattern to be used when paths are stroked. Default value is solid line.
+            <para />
+            The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+            where dashArray is itself an array and dashPhase is a number.
+            <para />
+            An empty dash array (first element in the array) and zero phase (second element in the array)
+            can be used to restore the dash pattern to a solid line.
+            </remarks>
+            <param name="dashArray">dash array</param>
+            <param name="dashPhase">dash phase value</param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Underline"/>
+            instance
             </returns>
         </member>
         <member name="T:iText.Layout.Properties.UnitValue">
@@ -10172,6 +10661,10 @@
             <summary>Creates a renderer for the specified layout element.</summary>
             <param name="modelElement">the layout element that will be drawn by this renderer</param>
         </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.#ctor(iText.Layout.Renderer.AbstractRenderer)">
+            <summary>Creates a new renderer based on an instance of another renderer.</summary>
+            <param name="other">renderer from which to copy essential properties</param>
+        </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.AddChild(iText.Layout.Renderer.IRenderer)">
             <summary><inheritDoc/></summary>
         </member>
@@ -10332,6 +10825,23 @@
         <member name="M:iText.Layout.Renderer.AbstractRenderer.Draw(iText.Layout.Renderer.DrawContext)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.BeginElementOpacityApplying(iText.Layout.Renderer.DrawContext)">
+            <summary>
+            Apply
+            <c>Property.OPACITY</c>
+            property if specified by setting corresponding values in graphic state dictionary
+            opacity will be applied to all elements drawn after calling this method and before
+            calling
+            <see cref="M:iText.Layout.Renderer.AbstractRenderer.EndElementOpacityApplying(iText.Layout.Renderer.DrawContext)"/>.
+            </summary>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.EndElementOpacityApplying(iText.Layout.Renderer.DrawContext)">
+            <summary>
+            <see cref="M:iText.Layout.Renderer.AbstractRenderer.BeginElementOpacityApplying(iText.Layout.Renderer.DrawContext)"/>.
+            </summary>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
+        </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.DrawBackground(iText.Layout.Renderer.DrawContext)">
             <summary>
             Draws a background layer if it is defined by a key
@@ -10340,7 +10850,7 @@
             <see cref="T:iText.Layout.Renderer.IRenderer"/>
             itself.
             </summary>
-            <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.CreateXObject(iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder,iText.Kernel.Geom.Rectangle,iText.Kernel.Pdf.PdfDocument)">
             <summary>
@@ -10364,19 +10874,24 @@
             <see cref="T:iText.Layout.Renderer.IRenderer">children</see>
             of this renderer.
             </summary>
-            <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.DrawBorder(iText.Layout.Renderer.DrawContext)">
             <summary>
-            Performs the drawing operation for the border of this renderer, if
-            defined by any of the
-            <see cref="F:iText.Layout.Properties.Property.BORDER"/>
-            values in either the layout
-            element or this
+            Performs the drawing operation for the border of this renderer, if defined by the
+            <see cref="F:iText.Layout.Properties.Property.BORDER_TOP"/>
+            ,
+            <see cref="F:iText.Layout.Properties.Property.BORDER_RIGHT"/>
+            ,
+            <see cref="F:iText.Layout.Properties.Property.BORDER_BOTTOM"/>
+            and
+            <see cref="F:iText.Layout.Properties.Property.BORDER_LEFT"/>
+            values in either
+            the layout element or this
             <see cref="T:iText.Layout.Renderer.IRenderer"/>
             itself.
             </summary>
-            <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation</param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.IsFlushed">
             <summary>
@@ -10610,14 +11125,14 @@
             <param name="updatedHeight">element's new fixed content box height, shall be not null.</param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.RetrieveMaxHeight">
-            <summary>Retrieve element's content box max-ehight, if it's set.</summary>
+            <summary>Retrieve element's content box max-height, if it's set.</summary>
             <remarks>
-            Retrieve element's content box max-ehight, if it's set.
+            Retrieve element's content box max-height, if it's set.
             Takes into account
             <see cref="F:iText.Layout.Properties.Property.BOX_SIZING"/>
             property value.
             </remarks>
-            <returns>element's content box max-height or null if it's not set.</returns>
+            <returns>element's content box max-height or null if it's not set</returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.UpdateMaxHeight(iText.Layout.Properties.UnitValue)">
             <summary>Updates content box max-height value for this renderer.</summary>
@@ -10654,9 +11169,9 @@
             <remarks>
             Gets the first yLine of the nested children recursively. E.g. for a list, this will be the yLine of the
             first item (if the first item is indeed a paragraph).
-            NOTE: this method will no go further than the first child.
+            NOTE: this method will not go further than the first child.
             </remarks>
-            <returns>the first yline of the nested children, null if there is no text found</returns>
+            <returns>the first y line of the nested children, null if there is no text found</returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.ApplyMargins(iText.Kernel.Geom.Rectangle,iText.Layout.Properties.UnitValue[],System.Boolean)">
             <summary>Applies given margins on the given rectangle</summary>
@@ -10726,15 +11241,19 @@
             of the renderer
             </returns>
         </member>
-        <member name="M:iText.Layout.Renderer.AbstractRenderer.RetrieveResolvedParentDeclaredHeight">
-            <summary>Retrieve the parent's resolved height declaration.</summary>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.RetrieveResolvedDeclaredHeight">
+            <summary>Retrieve the resolved height declaration.</summary>
             <remarks>
-            Retrieve the parent's resolved height declaration.
-            If the parent has a relative height declaration, it will check it's parent recursively,
+            Retrieve the resolved height declaration.
+            If it has a relative height declaration,
+            <see cref="M:iText.Layout.Renderer.AbstractRenderer.RetrieveHeight"/>
+            is called.
             </remarks>
             <returns>
-            null if no height declaration is set on the parent, or if it's own height declaration cannot be resolved
-            The float value of the resolved height otherwiser
+            
+            <see langword="null"/>
+            if no height declaration is set on the parent, or if its own height declaration
+            cannot be resolved. The float value of the resolved height otherwise
             </returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.RetrieveDirectParentDeclaredHeight">
@@ -10743,6 +11262,14 @@
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.GetMinMaxWidth">
             <summary>Calculates min and max width values for current renderer.</summary>
+            <returns>
+            instance of
+            <see cref="T:iText.Layout.Minmaxwidth.MinMaxWidth"/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.GetMinMaxWidth(System.Nullable{System.Single})">
+            <summary>Calculates min and max width values for current renderer.</summary>
+            <param name="areaMaxWidth">max width of the area on which current renderer will be laid out</param>
             <returns>
             instance of
             <see cref="T:iText.Layout.Minmaxwidth.MinMaxWidth"/>
@@ -10795,7 +11322,7 @@
             a
             <see cref="T:iText.Kernel.Geom.Rectangle"/>
             which is a bbox of the content not relative to the parent's layout area but rather to
-            the some pdf entity coordinate system.
+            some pdf entity coordinate system.
             </returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.CalculateBBox(System.Collections.Generic.IList{iText.Kernel.Geom.Point})">
@@ -10837,11 +11364,18 @@
             <returns>PdfDocument, or null if there are no document</returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.GetPropertyAsUnitValue(iText.Layout.Renderer.IRenderer,System.Int32)">
-            <summary>Returns the property of the renderer as a UnitValue if it exists and is a UnitValue, null otherwise
-                </summary>
+            <summary>
+            Returns the property of the renderer as a UnitValue if it exists and is a UnitValue,
+            <see langword="null"/>
+            otherwise.
+            </summary>
             <param name="renderer">renderer to retrieve the property from</param>
             <param name="property">key for the property to retrieve</param>
-            <returns>A UnitValue if the property is present and is a UnitValue, null otherwise</returns>
+            <returns>
+            UnitValue if the property is present and is a UnitValue,
+            <see langword="null"/>
+            otherwise
+            </returns>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.ResolveFirstPdfFont">
             <summary>
@@ -10865,7 +11399,7 @@
             and
             <see cref="F:iText.Layout.Properties.Property.FONT_SET"/>
             properties.
-            This method will not change font property of renderer. Also it is not guarantied that returned font will contain
+            This method will not change font property of renderer. Also, it is not guarantied that returned font will contain
             all glyphs used in renderer or its children.
             <para />
             This method is usually needed for evaluating some layout characteristics like ascender or descender.
@@ -10888,7 +11422,7 @@
             Get first valid
             <see cref="T:iText.Kernel.Font.PdfFont"/>
             for this renderer, based on given font-families, font provider and font characteristics.
-            This method will not change font property of renderer. Also it is not guarantied that returned font will contain
+            This method will not change font property of renderer. Also, it is not guarantied that returned font will contain
             all glyphs used in renderer or its children.
             <para />
             This method is usually needed for evaluating some layout characteristics like ascender or descender.
@@ -10926,7 +11460,7 @@
             <param name="child">
             the
             <see cref="T:iText.Layout.Renderer.IRenderer">child renderer</see>
-            to be add
+            to add
             </param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.AddAllChildRenderers(System.Collections.Generic.IList{iText.Layout.Renderer.IRenderer})">
@@ -10940,7 +11474,7 @@
             <param name="children">
             the collection of
             <see cref="T:iText.Layout.Renderer.IRenderer">child renderers</see>
-            to be add
+            to add
             </param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.AddAllChildRenderers(System.Int32,System.Collections.Generic.IList{iText.Layout.Renderer.IRenderer})">
@@ -10955,7 +11489,7 @@
             <param name="children">
             the collection of
             <see cref="T:iText.Layout.Renderer.IRenderer">child renderers</see>
-            to be add
+            to add
             </param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.SetChildRenderers(System.Collections.Generic.IList{iText.Layout.Renderer.IRenderer})">
@@ -11000,7 +11534,8 @@
             <c>this</c>
             and it would not present in the children list after
             removal, then the parent link of the removed renderer would be erased (i.e. set to
-            <see langword="null"/>.
+            <see langword="null"/>
+            ).
             </remarks>
             <param name="index">the index of the renderer to be removed</param>
             <returns>the removed renderer</returns>
@@ -11019,7 +11554,8 @@
             <c>this</c>
             , then
             the parent link of the removed renderer would be erased (i.e. set to
-            <see langword="null"/>.
+            <see langword="null"/>
+            ).
             </remarks>
             <param name="children">the collections of renderers to be removed from children list</param>
             <returns>
@@ -11119,6 +11655,36 @@
             <see cref="T:iText.Layout.Renderer.AccessibleTypes"/>
             class documentation.
             </remarks>
+        </member>
+        <member name="T:iText.Layout.Renderer.AnonymousInlineBoxRenderer">
+            <summary>
+            This class represents the
+            <see cref="T:iText.Layout.Renderer.IRenderer"/>
+            object for a
+            <see cref="T:iText.Layout.Element.AnonymousInlineBox"/>
+            object.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AnonymousInlineBoxRenderer.#ctor(iText.Layout.Element.AnonymousInlineBox)">
+            <summary>
+            Creates an
+            <see cref="T:iText.Layout.Renderer.AnonymousInlineBoxRenderer"/>
+            from its corresponding layout model element.
+            </summary>
+            <param name="modelElement">
+            the
+            <see cref="T:iText.Layout.Element.AnonymousInlineBox"/>
+            layout model element to render
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.AnonymousInlineBoxRenderer.GetNextRenderer">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AnonymousInlineBoxRenderer.RetrieveResolvedDeclaredHeight">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AnonymousInlineBoxRenderer.GetDefaultProperty``1(System.Int32)">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Layout.Renderer.AreaBreakRenderer">
             <summary>
@@ -11220,21 +11786,6 @@
             
             <inheritDoc/>
             </param>
-        </member>
-        <member name="T:iText.Layout.Renderer.BackgroundSizeCalculationUtil">
-            <summary>Utility class for calculate background image width and height.</summary>
-        </member>
-        <member name="M:iText.Layout.Renderer.BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(iText.Layout.Properties.BackgroundImage,System.Single,System.Single)">
-            <summary>Calculates width and height values for image with a given area params.</summary>
-            <param name="image">
-            the
-            <see cref="T:iText.Layout.Properties.BackgroundImage"/>
-            width and height of which you want to calculate
-            </param>
-            <param name="areaWidth">width of the area of this images</param>
-            <param name="areaHeight">height of the area of this images</param>
-            <returns>array of two Float values. NOTE that first value defines width, second defines height.</returns>
-            <seealso cref="T:iText.Layout.Properties.BackgroundSize"/>
         </member>
         <member name="T:iText.Layout.Renderer.BlockFormattingContextUtil">
             <summary>
@@ -11382,6 +11933,19 @@
         </member>
         <member name="M:iText.Layout.Renderer.BlockRenderer.GetMinMaxWidth">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.BlockRenderer.GetMinMaxWidth(System.Nullable{System.Single})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.BlockRenderer.LayoutPositionedChildrenIfAny(iText.Layout.Renderer.AbstractRenderer,iText.Layout.Properties.UnitValue[])">
+            <summary>Layout positioned children for the specified renderer instance.</summary>
+            <remarks>
+            Layout positioned children for the specified renderer instance.
+            This is needed because some split/overflow code steps return early from layout(),
+            skipping the normal positioned-children layout step at the end of layout().
+            </remarks>
+            <param name="parent">renderer which positioned children to layout</param>
+            <param name="paddings">current renderer paddings to apply</param>
         </member>
         <member name="M:iText.Layout.Renderer.BottomToTopFlexItemMainDirector.ApplyDirectionForLine``1(System.Collections.Generic.IList{``0})">
             <summary><inheritDoc/></summary>
@@ -11670,11 +12234,63 @@
             <param name="customPageSize">the size of created pages, can be null</param>
             <returns>the page size of the last created page, or null if no page was created</returns>
         </member>
+        <member name="T:iText.Layout.Renderer.DrawContext">
+            <summary>This class holds instances which required for drawing on pdf document.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.DrawContext.#ctor(iText.Kernel.Pdf.PdfDocument,iText.Kernel.Pdf.Canvas.PdfCanvas)">
+            <summary>Create drawing context by setting document and pdf canvas on which drawing will be performed.</summary>
+            <param name="document">pdf document</param>
+            <param name="canvas">canvas to draw on</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.DrawContext.#ctor(iText.Kernel.Pdf.PdfDocument,iText.Kernel.Pdf.Canvas.PdfCanvas,System.Boolean)">
+            <summary>Create drawing context by setting document and pdf canvas on which drawing will be performed.</summary>
+            <param name="document">pdf document</param>
+            <param name="canvas">canvas to draw on</param>
+            <param name="enableTagging">if true document drawing operations will be appropriately tagged</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.DrawContext.GetDocument">
+            <summary>Get pdf document.</summary>
+            <returns>
+            
+            <c>PdfDocument</c>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.DrawContext.GetCanvas">
+            <summary>Get pdf canvas.</summary>
+            <returns>
+            
+            <c>PdfCanvas</c>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.DrawContext.IsTaggingEnabled">
+            <summary>Get document tagging property.</summary>
+            <returns>true if tagging is enabled, false otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.DrawContext.SetTaggingEnabled(System.Boolean)">
+            <summary>Set document tagging property.</summary>
+            <param name="taggingEnabled">true if to enable tagging, false to disable it</param>
+        </member>
         <member name="M:iText.Layout.Renderer.FlexColumnItemMainDirector.ApplyDirection(System.Collections.Generic.IList{System.Collections.Generic.IList{iText.Layout.Renderer.FlexItemInfo}})">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Layout.Renderer.FlexColumnItemMainDirector.ApplyDirectionForLine``1(System.Collections.Generic.IList{``0})">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.FlexContainerRenderer.hypotheticalCrossSizes">
+            <summary>
+            Used for caching purposes in FlexUtil
+            We couldn't find the real use case when this map contains more than 1 entry
+            but let it still be a map to be on a safe(r) side
+            Map mainSize (always width in our case) - hypotheticalCrossSize
+            </summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.FlexContainerRenderer.heights">
+            <summary>Child renderers and their heights and min/max heights before the layout.</summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.FlexContainerRenderer.widths">
+            <summary>Child renderers and their widths and min/max widths before the layout.</summary>
         </member>
         <member name="M:iText.Layout.Renderer.FlexContainerRenderer.#ctor(iText.Layout.Element.Div)">
             <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
@@ -11788,6 +12404,443 @@
             </summary>
             <param name="flexContainerMainSize">the width of the flex container</param>
             <returns>content size suggestion</returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.Grid">
+            <summary>This class represents a grid of elements.</summary>
+            <remarks>
+            This class represents a grid of elements.
+            Complex elements (which span over few cells of a grid) are stored as duplicates.
+            For example if element with width = 2, height = 3 added to a grid, grid will store it as 6 elements each having
+            width = height = 1.
+            </remarks>
+        </member>
+        <member name="F:iText.Layout.Renderer.Grid.rows">
+            <summary>Cells container.</summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.Grid.rowOffset">
+            <summary>Row start offset, it is not zero only if there are cells with negative indexes.</summary>
+            <remarks>
+            Row start offset, it is not zero only if there are cells with negative indexes.
+            Such cells should not be covered by templates, so the offset represents row from which template values
+            should be considered.
+            </remarks>
+        </member>
+        <member name="F:iText.Layout.Renderer.Grid.columnOffset">
+            <summary>Column start offset, it is not zero only if there are cells with negative indexes.</summary>
+            <remarks>
+            Column start offset, it is not zero only if there are cells with negative indexes.
+            Such cells should not be covered by templates, so the offset represents column from which template values
+            should be considered.
+            </remarks>
+        </member>
+        <member name="F:iText.Layout.Renderer.Grid.uniqueCells">
+            <summary>Unique grid cells cached values.</summary>
+            <remarks>
+            Unique grid cells cached values. first value of array contains unique cells in order from left to right
+            and the second value contains cells in order from top to bottom.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Creates new grid instance.</summary>
+            <param name="initialRowsCount">initial number of row for the grid</param>
+            <param name="initialColumnsCount">initial number of columns for the grid</param>
+            <param name="columnOffset">actual start(zero) position of columns, from where template should be applied</param>
+            <param name="rowOffset">actual start(zero) position of rows, from where template should be applied</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.GetRows">
+            <summary>Get internal matrix of cells.</summary>
+            <returns>matrix of cells.</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.GetNumberOfRows">
+            <summary>Gets the current number of rows of grid.</summary>
+            <returns>the number of rows</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.GetNumberOfColumns">
+            <summary>Gets the current number of rows of grid.</summary>
+            <returns>the number of columns</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.GetRowOffset">
+            <summary>get row start offset or grid "zero row" position.</summary>
+            <returns>row start offset if there are negative indexes, 0 otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.GetColumnOffset">
+            <summary>get column start offset or grid "zero column" position.</summary>
+            <returns>column start offset if there are negative indexes, 0 otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.GetUniqueGridCells(iText.Layout.Renderer.Grid.GridOrder)">
+            <summary>Get all unique cells in the grid.</summary>
+            <remarks>
+            Get all unique cells in the grid.
+            Internally big cells (height * width &gt; 1) are stored in multiple quantities
+            For example, cell with height = 2 and width = 2 will have 4 instances on a grid (width * height) to simplify
+            internal grid processing. This method counts such cells as one and returns a list of unique cells.
+            The result is cached since grid can't be changed after creation.
+            </remarks>
+            <param name="iterationOrder">
+            if {GridOrder.ROW} the order of cells is from left to right, top to bottom
+            if {GridOrder.COLUMN} the order of cells is from top to bottom, left to right
+            </param>
+            <returns>collection of unique grid cells.</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.Resize(System.Int32,System.Int32)">
+            <summary>Resize grid if needed, so it would have given number of rows/columns.</summary>
+            <param name="height">new grid height</param>
+            <param name="width">new grid width</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.CollapseNullLines(iText.Layout.Renderer.Grid.GridOrder,System.Int32)">
+            <summary>Deletes all null rows/columns depending on the given values.</summary>
+            <remarks>
+            Deletes all null rows/columns depending on the given values.
+            If resulting grid size is less than provided minSize than some null lines will be preserved.
+            </remarks>
+            <param name="order">
+            which null lines to remove -
+            <see cref="F:iText.Layout.Renderer.Grid.GridOrder.ROW"/>
+            to remove rows
+            <see cref="F:iText.Layout.Renderer.Grid.GridOrder.COLUMN"/>
+            to remove columns
+            </param>
+            <param name="minSize">minimal size of the resulting grid</param>
+            <returns>the number of left lines in given order</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.AddCell(iText.Layout.Renderer.GridCell)">
+            <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
+            <param name="cell">cell to and in the grid</param>
+        </member>
+        <member name="T:iText.Layout.Renderer.Grid.Builder">
+            <summary>This class is used to properly initialize starting values for grid.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.Builder.ForItems(System.Collections.Generic.IList{iText.Layout.Renderer.IRenderer})">
+            <summary>Get grid builder for list of values.</summary>
+            <param name="values">values to layout on grid</param>
+            <returns>new grid builder instance</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.Builder.Columns(System.Int32)">
+            <summary>
+            Set number of columns for a grid, the result will be either a provided one or if some elements
+            have a property defining more columns on a grid than provided value it will be set instead.
+            </summary>
+            <param name="explicitColumnCount">explicit column count of a grid</param>
+            <returns>current builder instance</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.Builder.Rows(System.Int32)">
+            <summary>
+            Set number of rows for a grid, the result will be either a provided one or if some elements
+            have a property defining more rows on a grid than provided value it will be set instead.
+            </summary>
+            <param name="explicitRowCount">explicit height of a grid</param>
+            <returns>current builder instance</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.Builder.Flow(iText.Layout.Properties.Grid.GridFlow)">
+            <summary>Set iteration flow for a grid.</summary>
+            <param name="flow">iteration flow</param>
+            <returns>current builder instance</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.Builder.Build">
+            <summary>Build a grid with provided properties.</summary>
+            <returns>
+            new
+            <c>Grid</c>
+            instance.
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.Grid.RowCellComparator">
+            <summary>
+            This comparator sorts cells so ones with both fixed row and column positions would go first,
+            then cells with fixed row and then all other cells.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Renderer.Grid.ColumnCellComparator">
+            <summary>
+            This comparator sorts cells so ones with both fixed row and column positions would go first,
+            then cells with fixed column and then all other cells.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.CssGridCell.InitAxisPlacement(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32)">
+            <summary>
+            Init axis placement values
+            if start &gt; end values are swapped
+            </summary>
+            <param name="startProperty">x/y pos of cell on a grid</param>
+            <param name="endProperty">x/y + width/height pos of cell on a grid</param>
+            <param name="spanProperty">vertical or horizontal span of the cell on a grid</param>
+            <returns>
+            array, where first value is column/row start, second is column/row span and third is an offset
+            to the opposite direction of current axis where cell should be placed.
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.Grid.CellPlacementHelper">
+            <summary>This class is used to place cells on grid.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.Grid.CellPlacementHelper.Fit(iText.Layout.Renderer.GridCell)">
+            <summary>Place cell on grid and resize grid if needed.</summary>
+            <param name="cell">cell to place on a grid.</param>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridCell">
+            <summary>This class represents a cell in a grid.</summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.GridCell.rowSizes">
+            <summary>Cached track sizes for rows to use them during split.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridCell.#ctor(iText.Layout.Renderer.IRenderer,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Create a grid cell and init value renderer position on a grid based on its properties.</summary>
+            <param name="value">item renderer</param>
+            <param name="x">column number at which this cell starts (column numbers start from 0)</param>
+            <param name="y">row number at which this cell starts (row numbers from 0)</param>
+            <param name="width">number of columns spanned by this cell.</param>
+            <param name="height">number of rows spanned by this cell.</param>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridContainerRenderer">
+            <summary>Represents a renderer for a grid.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridContainerRenderer.#ctor(iText.Layout.Element.GridContainer)">
+            <summary>Creates a Grid renderer from its corresponding layout object.</summary>
+            <param name="modelElement">
+            the
+            <see cref="T:iText.Layout.Element.GridContainer"/>
+            which this object should manage
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridContainerRenderer.GetNextRenderer">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridContainerRenderer.Layout(iText.Layout.Layout.LayoutContext)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridContainerRenderer.AddChild(iText.Layout.Renderer.IRenderer)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridContainerRenderer.DetermineCollapsingMargins(iText.Layout.Renderer.IRenderer)">
+            <summary>Calculates collapsing margins value.</summary>
+            <remarks>
+            Calculates collapsing margins value. It's based on browser behavior.
+            Always returning true somehow also almost works.
+            </remarks>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridItemRenderer">
+            <summary>Wrapper renderer around grid item.</summary>
+            <remarks>Wrapper renderer around grid item. It's expected there is always exactly 1 child renderer.</remarks>
+        </member>
+        <member name="F:iText.Layout.Renderer.GridItemRenderer.renderer">
+            <summary>A renderer to wrap.</summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.GridItemRenderer.heightSet">
+            <summary>Flag saying that we updated height of the renderer we wrap.</summary>
+            <remarks>
+            Flag saying that we updated height of the renderer we wrap.
+            It allows to remove that property on split.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridItemRenderer.AddChild(iText.Layout.Renderer.IRenderer)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridItemRenderer.GetNextRenderer">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridItemRenderer.GetProperty``1(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridItemRenderer.SetProperty(System.Int32,System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridItemRenderer.UpdateHeightsOnSplit(System.Single,System.Boolean,iText.Layout.Renderer.AbstractRenderer,iText.Layout.Renderer.AbstractRenderer,System.Boolean)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridItemRenderer.AddChildRenderer(iText.Layout.Renderer.IRenderer)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridMulticolUtil">
+            <summary>The class stores common logic for multicol and grid layout.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridMulticolUtil.CreateSplitRenderer(System.Collections.Generic.IList{iText.Layout.Renderer.IRenderer},iText.Layout.Renderer.AbstractRenderer)">
+            <summary>Creates a split renderer.</summary>
+            <param name="children">children of the split renderer</param>
+            <param name="renderer">parent renderer</param>
+            <returns>
+            a new
+            <see cref="T:iText.Layout.Renderer.AbstractRenderer"/>
+            instance
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridSizer">
+            <summary>Class representing grid sizing algorithm.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridSizer.#ctor(iText.Layout.Renderer.Grid,System.Collections.Generic.IList{iText.Layout.Properties.Grid.GridValue},System.Collections.Generic.IList{iText.Layout.Properties.Grid.GridValue},iText.Layout.Properties.Grid.GridValue,iText.Layout.Properties.Grid.GridValue,System.Single,System.Single,iText.Kernel.Geom.Rectangle)">
+            <summary>Creates new grid sizer instance.</summary>
+            <param name="grid">grid to size</param>
+            <param name="templateColumns">template values for columns</param>
+            <param name="templateRows">template values for rows</param>
+            <param name="columnAutoWidth">value which used to size columns out of template range</param>
+            <param name="rowAutoHeight">value which used to size rows out of template range</param>
+            <param name="columnGap">gap size between columns</param>
+            <param name="rowGap">gap size between rows</param>
+            <param name="actualBBox">actual bbox which restricts sizing algorithm</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridSizer.SizeGrid">
+            <summary>Resolves grid track sizes.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridSizer.GetContainerHeight">
+            <summary>Gets grid container height.</summary>
+            <remarks>
+            Gets grid container height.
+            Use this method only after calling
+            <see cref="M:iText.Layout.Renderer.GridSizer.SizeGrid"/>.
+            </remarks>
+            <returns>grid container height covered by row template</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridSizer.CalculateGridOccupiedHeight(System.Collections.Generic.IList{System.Single})">
+            <summary>Calculate grid container occupied area based on original (non-expanded percentages) track sizes.</summary>
+            <param name="originalSizes">original track sizes</param>
+            <returns>grid container occupied area</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTemplateResolver.IsCollapseNullLines">
+            <summary>Determines if auto-fit repeat was encountered during processing.</summary>
+            <returns>true if auto-fit repeat was encountered, false otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTemplateResolver.GetFixedValuesCount">
+            <summary>Determines how many fixed values (all template values except auto-fit/fill repeat) in the result.
+                </summary>
+            <returns>number of fixed values in template list</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTemplateResolver.ShrinkTemplatesToFitSize(System.Int32)">
+            <summary>Shrinks template list to fit the given size by reducing number of auto-fit/fill repetitions.</summary>
+            <param name="sizeToFit">size to fit template list</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTemplateResolver.ResolveTemplate(System.Collections.Generic.IList{iText.Layout.Properties.Grid.TemplateValue})">
+            <summary>Resolves template values to grid values by flatting repeats.</summary>
+            <param name="template">template values list</param>
+            <returns>grid values list</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTemplateResolver.AutoRepeatResolver.Resolve(System.Single)">
+            <summary>Resolves auto-fit/fill repeat if it was encountered.</summary>
+            <remarks>
+            Resolves auto-fit/fill repeat if it was encountered.
+            If given space is less than 0, only one iteration will be performed.
+            </remarks>
+            <param name="leftSpace">space to fit repeat values on</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTemplateResolver.AutoRepeatResolver.ShrinkTemplatesToFitSize(System.Int32)">
+            <summary>Shrinks template list to fit the given size by reducing number of auto-fit/fill repetitions.</summary>
+            <param name="sizeToFit">size to fit template list</param>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridTrackSizer">
+            <summary>Class representing a track sizing algorithm.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTrackSizer.#ctor(iText.Layout.Renderer.Grid,System.Collections.Generic.IList{iText.Layout.Properties.Grid.GridValue},System.Single,System.Single,iText.Layout.Renderer.Grid.GridOrder)">
+            <summary>Create a track sizing algorithm for given template.</summary>
+            <param name="grid">grid to process</param>
+            <param name="values">template values</param>
+            <param name="gap">gap between tracks</param>
+            <param name="availableSpace">space to fit tracks on</param>
+            <param name="order">grid order</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTrackSizer.SizeTracks">
+            <summary>Resolves template values and auto-values to point values.</summary>
+            <returns>list of points, representing track sizes with expanded percentages in case of inline calculation.
+                </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTrackSizer.CalculateMinMaxContribution(iText.Layout.Renderer.GridCell,System.Boolean)">
+            <summary>Calculate min or max contribution of a cell.</summary>
+            <param name="cell">cell to calculate contribution</param>
+            <param name="minTypeContribution">type of contribution: min if true, max otherwise</param>
+            <returns>contribution value</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTrackSizer.TrackSizingResult.GetTrackSizes">
+            <summary>Get original track sizes which are were resolved during track sizing algorithm.</summary>
+            <remarks>
+            Get original track sizes which are were resolved during track sizing algorithm.
+            If result contains inline percentages those are not expanded/reduced and have a size equivalent
+            of AUTO.
+            </remarks>
+            <returns>original track sizes list</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridTrackSizer.TrackSizingResult.GetTrackSizesAndExpandPercents(System.Collections.Generic.IList{iText.Layout.Properties.Grid.GridValue})">
+            <summary>Get expanded track sizes where inline percents are resolved against calculated grid area.</summary>
+            <param name="template">grid value template</param>
+            <returns>expanded track sizes list</returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridView">
+            <summary>This class represents a view on a grid, which returns cells one by one in a specified order.</summary>
+            <remarks>
+            This class represents a view on a grid, which returns cells one by one in a specified order.
+            Also it allows to place a cell on a grid in this specific order and resizes the grid if needed.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.Reset(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Resets grid view and sets it up for processing new element
+            If sparse algorithm is used then x and y positions on a grid are not reset.
+            </summary>
+            <param name="y">left upper corner y position of an element on the grid</param>
+            <param name="x">left upper corner x position of an element on the grid</param>
+            <param name="rightMargin">specifies how many cells not to process at the right end of a grid</param>
+            <param name="bottomMargin">specifies how many cells not to process at the bottom end of a grid</param>
+            <returns>first element position</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.Fit(System.Int32,System.Int32)">
+            <summary>Try to fit cell at the current position.</summary>
+            <remarks>
+            Try to fit cell at the current position.
+            If cell is fit, then update current flow cursor axis by width/height of a laid out cell.
+            </remarks>
+            <param name="width">width of the cell</param>
+            <param name="height">height of the cell</param>
+            <returns>true if cell is fit, false otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.ResetCursorIfIntersectingCellIsPlaced">
+            <summary>Reset cursor to the start of a grid if placed a cell, which intersects current flow axis.</summary>
+            <remarks>
+            Reset cursor to the start of a grid if placed a cell, which intersects current flow axis.
+            This is needed because such cells should be placed out of order and it's expected that
+            they are go first while constructing the grid.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.IncreaseDefaultCursor(iText.Layout.Renderer.GridView.Pos)">
+            <summary>Increase cursor in current flow axis</summary>
+            <param name="cellSizes">cell width and height values</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.IsFixed">
+            <summary>Determines if current grid view can be iterated.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if fixed
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridView.Pos">
+            <summary>Represents position on a grid.</summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.GridView.Pos.x">
+            <summary>column index.</summary>
+        </member>
+        <member name="F:iText.Layout.Renderer.GridView.Pos.y">
+            <summary>row index.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.Pos.#ctor(System.Int32,System.Int32)">
+            <summary>Creates a position from two integers.</summary>
+            <param name="y">row index.</param>
+            <param name="x">column index.</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.Pos.#ctor(iText.Layout.Renderer.GridView.Pos)">
+            <summary>Creates a position from other position instance.</summary>
+            <param name="other">other position</param>
+        </member>
+        <member name="T:iText.Layout.Renderer.GridView.Cursor">
+            <summary>Represents a placement cursor.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.Cursor.#ctor(System.Boolean)">
+            <summary>Create new placement cursor with either sparse or dense placement algorithm.</summary>
+            <param name="densePacking">true to use "dense", false to use "sparse" placement algorithm</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.GridView.Cursor.Increment(iText.Layout.Renderer.Grid.GridOrder,iText.Layout.Renderer.GridView.Pos)">
+            <summary>
+            Increment cursor in specified flow axis and if it exceeds the boundary in that axis
+            make a carriage return.
+            </summary>
+            <param name="flow">flow which determines in which axis cursor will be increased</param>
+            <param name="boundaries">grid view boundaries</param>
         </member>
         <member name="T:iText.Layout.Renderer.IFlexItemMainDirector">
             <summary>Base interface to customize placing flex items on main flex direction.</summary>
@@ -12048,6 +13101,9 @@
             <summary>Returns the number of base characters, i.e. non-mark characters</summary>
             <returns>the number of base non-mark characters</returns>
         </member>
+        <member name="M:iText.Layout.Renderer.LineRenderer.RetrieveResolvedDeclaredHeight">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Layout.Renderer.LineRenderer.CalculateTab(iText.Layout.Renderer.IRenderer,System.Single,System.Single)">
             <summary>Calculates and sets encountered tab size.</summary>
             <remarks>
@@ -12107,7 +13163,7 @@
             Extracts ascender and descender of an already layouted
             <see cref="T:iText.Layout.Renderer.IRenderer">childRenderer</see>.
             </summary>
-            <param name="childRenderer">an already layouted child who's ascender and descender are to be extracted</param>
+            <param name="childRenderer">an already layouted child whose ascender and descender are to be extracted</param>
             <param name="childResult">
             
             <see cref="T:iText.Layout.Layout.LayoutResult"/>
@@ -12209,6 +13265,22 @@
         </member>
         <member name="M:iText.Layout.Renderer.LineRenderer.ResolveChildrenFonts">
             <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.LineRenderer.RendererGlyph.SetGlyph(iText.IO.Font.Otf.Glyph)">
+            <summary>Sets the glyph of the object.</summary>
+            <param name="glyph">glyph</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.LineRenderer.RendererGlyph.GetGlyph">
+            <summary>Retrieves the glyph of the object.</summary>
+            <returns>glyph</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.LineRenderer.RendererGlyph.SetRenderer(iText.Layout.Renderer.TextRenderer)">
+            <summary>Sets the renderer of the object.</summary>
+            <param name="renderer">renderer</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.LineRenderer.RendererGlyph.GetRenderer">
+            <summary>Retrieves the renderer of the object.</summary>
+            <returns>renderer</returns>
         </member>
         <member name="M:iText.Layout.Renderer.LineSeparatorRenderer.#ctor(iText.Layout.Element.LineSeparator)">
             <summary>Creates a LineSeparatorRenderer from its corresponding layout object.</summary>
@@ -12396,22 +13468,28 @@
         </member>
         <member name="M:iText.Layout.Renderer.MulticolRenderer.DrawBorder(iText.Layout.Renderer.DrawContext)">
             <summary>
-            Performs the drawing operation for the border of this renderer, if
-            defined by any of the
-            <see cref="F:iText.Layout.Properties.Property.BORDER"/>
-            values in either the layout
-            element or this
+            Performs the drawing operation for the border of this renderer, if defined by the
+            <see cref="F:iText.Layout.Properties.Property.BORDER_TOP"/>
+            ,
+            <see cref="F:iText.Layout.Properties.Property.BORDER_RIGHT"/>
+            ,
+            <see cref="F:iText.Layout.Properties.Property.BORDER_BOTTOM"/>
+            and
+            <see cref="F:iText.Layout.Properties.Property.BORDER_LEFT"/>
+            values in either
+            the layout element or this
             <see cref="T:iText.Layout.Renderer.IRenderer"/>
             itself.
             </summary>
-            <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
         </member>
-        <member name="M:iText.Layout.Renderer.MulticolRenderer.CreateSplitRenderer(System.Collections.Generic.IList{iText.Layout.Renderer.IRenderer})">
-            <summary>Creates a split renderer.</summary>
-            <param name="children">children of the split renderer</param>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.LayoutInColumns(iText.Layout.Layout.LayoutContext,iText.Kernel.Geom.Rectangle)">
+            <summary>Layouts multicol in the provided area.</summary>
+            <param name="layoutContext">the layout context</param>
+            <param name="actualBBox">the area to layout multicol on</param>
             <returns>
-            a new
-            <see cref="T:iText.Layout.Renderer.AbstractRenderer"/>
+            the
+            <see cref="T:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult"/>
             instance
             </returns>
         </member>
@@ -12443,11 +13521,56 @@
             </param>
             <returns>height by which current height of given multicol renderer should be increased</returns>
         </member>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.ColumnHeightCalculator.MaxAmountOfRelayouts">
+            <returns>maximum amount of relayouts which can be done by this height enhancer</returns>
+        </member>
         <member name="T:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult">
             <summary>
             Represents result of one iteration of MulticolRenderer layouting
             It contains split renderers which were lauded on a given height and overflow renderer
             for which height should be increased, so it can be lauded.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult.GetSplitRenderers">
+            <summary>Gets the split renderers.</summary>
+            <returns>
+            the split renderers (always not
+            <see langword="null"/>
+            )
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult.GetOverflowRenderer">
+            <summary>Gets the overflow renderer.</summary>
+            <returns>
+            the overflow renderer, can be
+            <see langword="null"/>
+            if there is no overflow
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult.SetOverflowRenderer(iText.Layout.Renderer.AbstractRenderer)">
+            <summary>Sets the overflow renderer.</summary>
+            <param name="overflowRenderer">the overflow renderer to be set</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult.GetCauseOfNothing">
+            <summary>Gets the cause of nothing renderer.</summary>
+            <returns>
+            the cause of nothing renderer, can be
+            <see langword="null"/>
+            if
+            <see cref="M:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult.GetSplitRenderers"/>
+            is not empty
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.MulticolRenderer.MulticolLayoutResult.SetCauseOfNothing(iText.Layout.Renderer.IRenderer)">
+            <summary>Sets the cause of nothing renderer.</summary>
+            <param name="causeOfNothing">cause of nothing renderer to be set</param>
+        </member>
+        <member name="T:iText.Layout.Renderer.MulticolRenderer.LayoutInInfiniteHeightCalculator">
+            <summary>
+            Default implementation of
+            <see cref="T:iText.Layout.Renderer.MulticolRenderer.ColumnHeightCalculator"/>
+            which allows 4 relayouts and performs
+            simple additional height calculation (split the elements which don't fit).
             </summary>
         </member>
         <member name="M:iText.Layout.Renderer.MulticolRenderer.LayoutInInfiniteHeightCalculator.MaxAmountOfRelayouts">
@@ -12610,6 +13733,9 @@
             <see cref="M:iText.Layout.Renderer.ParagraphRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>.
             </summary>
             <returns>paragraph lines, or <c>null</c> if layout hasn't been called yet</returns>
+        </member>
+        <member name="F:iText.Layout.Renderer.RootRenderer.LOGGER">
+            <summary>The Logger instance.</summary>
         </member>
         <member name="M:iText.Layout.Renderer.RootRenderer.Flush">
             <summary>Draws (flushes) the content.</summary>
@@ -12774,6 +13900,9 @@
             <see cref="T:iText.Layout.Element.Cell">table cells</see>.
             </remarks>
         </member>
+        <member name="F:iText.Layout.Renderer.TableRenderer.LOGGER">
+            <summary>The Logger instance.</summary>
+        </member>
         <member name="F:iText.Layout.Renderer.TableRenderer.isOriginalNonSplitRenderer">
             <summary>True for newly created renderer.</summary>
             <remarks>True for newly created renderer. For split renderers this is set to false. Used for tricky layout.
@@ -12801,12 +13930,12 @@
         </member>
         <member name="M:iText.Layout.Renderer.TableRenderer.ApplySpacing(iText.Kernel.Geom.Rectangle,System.Single,System.Single,System.Boolean)">
             <summary>Applies the given spacings on the given rectangle</summary>
-            <param name="rect">a rectangle spacings will be applied on.</param>
+            <param name="rect">a rectangle spacings will be applied on</param>
             <param name="horizontalSpacing">the horizontal spacing to be applied on the given rectangle</param>
             <param name="verticalSpacing">the vertical spacing to be applied on the given rectangle</param>
             <param name="reverse">
-            indicates whether the spacings will be applied
-            inside (in case of false) or outside (in case of false) the rectangle.
+            indicates whether the spacings will be applied inside (in case of false)
+            or outside (in case of false) the rectangle
             </param>
             <returns>
             a
@@ -12892,7 +14021,19 @@
             <summary>Returns minWidth</summary>
         </member>
         <member name="T:iText.Layout.Renderer.TableRenderer.CellRendererInfo">
-            <summary>This are a structs used for convenience in layout.</summary>
+            <summary>These are the structs used for convenience in layout.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.TableRenderer.CellRendererInfo.GetCellRenderer">
+            <summary>Retrieves the cell renderer.</summary>
+            <returns>cell renderer</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.TableRenderer.CellRendererInfo.GetColumn">
+            <summary>Retrieves the column.</summary>
+            <returns>column</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.TableRenderer.CellRendererInfo.GetFinishRowInd">
+            <summary>Retrieves the finish row index.</summary>
+            <returns>finish row index</returns>
         </member>
         <member name="T:iText.Layout.Renderer.TableRenderer.OverflowRowsWrapper">
             <summary>Utility class that copies overflow renderer rows on cell replacement so it won't affect original renderer
@@ -13039,14 +14180,14 @@
             </summary>
         </member>
         <member name="M:iText.Layout.Renderer.TextRenderer.GetAscent">
-            <summary>Gets the maximum offset above the base line that this Text extends to.</summary>
+            <summary>Gets the maximum offset above the baseline that this Text extends to.</summary>
             <returns>
             the upwards vertical offset of this
             <see cref="T:iText.Layout.Element.Text"/>
             </returns>
         </member>
         <member name="M:iText.Layout.Renderer.TextRenderer.GetDescent">
-            <summary>Gets the maximum offset below the base line that this Text extends to.</summary>
+            <summary>Gets the maximum offset below the baseline that this Text extends to.</summary>
             <returns>
             the downwards vertical offset of this
             <see cref="T:iText.Layout.Element.Text"/>
@@ -13152,6 +14293,7 @@
             <see cref="F:iText.Layout.Renderer.TextRenderer.text"/>
             , bounded by start and end,
             contains glyphs belonging to special script.
+            <para />
             Mind that the behavior of this method depends on the analyzeSpecialScriptsWordBreakPointsOnly parameter:
             - pass
             <see langword="false"/>
@@ -13160,7 +14302,7 @@
             by checking each of its glyphs
             AND to fill
             <see cref="F:iText.Layout.Renderer.TextRenderer.specialScriptsWordBreakPoints"/>
-            list afterwards,
+            list afterward,
             i.e. when analyzing a sequence of TextRenderers prior to layouting;
             - pass
             <see langword="true"/>
@@ -13442,6 +14584,13 @@
             <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
             <typeparam name="T">this type</typeparam>
         </member>
+        <member name="M:iText.Layout.RootElement`1.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Layout.RootElement`1"/>
+            instance.
+            </summary>
+        </member>
         <member name="M:iText.Layout.RootElement`1.Add(iText.Layout.Element.IBlockElement)">
             <summary>Adds an element to the root.</summary>
             <remarks>Adds an element to the root. The element is immediately placed in the contents.</remarks>
@@ -13573,6 +14722,9 @@
             <param name="radAngle">the angle of rotation applied to the text, in radians</param>
             <returns>this object</returns>
         </member>
+        <member name="M:iText.Layout.RootElement`1.EnsureRootTagIsCreated">
+            <summary>Ensures that the root tag is created in the tagging structure.</summary>
+        </member>
         <member name="T:iText.Layout.Splitting.BreakAllSplitCharacters">
             <summary>
             The implementation of
@@ -13599,7 +14751,7 @@
             <see cref="T:iText.IO.Font.Otf.GlyphLine"/>
             </param>
             <param name="text">an array of unicode char codes which represent current text</param>
-            <returns>true if the character can split a line.</returns>
+            <returns>true if the line can be split after the character</returns>
         </member>
         <member name="T:iText.Layout.Splitting.KeepAllSplitCharacters">
             <summary>
@@ -13974,6 +15126,28 @@
             tree for layout element (with keeping right order for tags).
             </summary>
         </member>
+        <member name="T:iText.Layout.Tagging.ProhibitedTagRelationsResolver">
+            <summary>This class is used to resolve prohibited relations between parent and child tags.</summary>
+        </member>
+        <member name="M:iText.Layout.Tagging.ProhibitedTagRelationsResolver.#ctor(iText.Kernel.Pdf.PdfDocument)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Layout.Tagging.ProhibitedTagRelationsResolver"/>.
+            </summary>
+            <param name="pdfDocument">the document to be processed.</param>
+        </member>
+        <member name="M:iText.Layout.Tagging.ProhibitedTagRelationsResolver.RepairTagStructure(iText.Layout.Tagging.LayoutTaggingHelper,iText.Layout.Renderer.IRenderer)">
+            <summary>Resolves prohibited relations between parent and child tags.</summary>
+            <param name="taggingHelper">the tagging helper.</param>
+            <param name="topRender">the top renderer.</param>
+        </member>
+        <member name="M:iText.Layout.Tagging.ProhibitedTagRelationsResolver.OverwriteTaggingRule(System.String,System.String,System.String)">
+            <summary>Overwrites tagging rule if it already exists.</summary>
+            <remarks>Overwrites tagging rule if it already exists. Otherwise, adds the new rule.</remarks>
+            <param name="parentRole">The parent role.</param>
+            <param name="childRole">The child role.</param>
+            <param name="newRole">The new role the child should have.</param>
+        </member>
         <member name="M:iText.Layout.Tagging.TableTaggingRule.GetTbodyTag(iText.Layout.Tagging.TaggingHintKey)">
             <summary>
             Creates a dummy element with
@@ -14146,6 +15320,25 @@
         </member>
         <member name="M:iText.Layout.Tagging.THTaggingRule.OnTagFinish(iText.Layout.Tagging.LayoutTaggingHelper,iText.Layout.Tagging.TaggingHintKey)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Validation.Context.LayoutValidationContext">
+            <summary>
+            Class for
+            <see cref="T:iText.Layout.Renderer.IRenderer"/>
+            validation context.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Validation.Context.LayoutValidationContext.#ctor(iText.Layout.Renderer.IRenderer)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Layout.Validation.Context.LayoutValidationContext"/>
+            based on renderer.
+            </summary>
+            <param name="renderer">the renderer</param>
+        </member>
+        <member name="M:iText.Layout.Validation.Context.LayoutValidationContext.GetRenderer">
+            <summary>Gets the renderer.</summary>
+            <returns>the renderer</returns>
         </member>
     </members>
 </doc>

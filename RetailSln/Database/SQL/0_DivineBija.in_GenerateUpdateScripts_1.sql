@@ -153,7 +153,8 @@ ORDER BY PickupLocationId
         INSERT RetailSlnSch.CorpAcct(ClientId, CorpAcctName, CorpAcctTypeId, CreditDays, CreditLimit, CreditSale, DefaultDiscountPercent, MinOrderAmount, OrderApprovalRequired, TaxIdentNum, ShippingAndHandlingCharges, StatusId)
         SELECT DISTINCT
                @ClientId AS ClientId, CorpAcctName
-              ,CASE CorpAcctType WHEN 'Individual' THEN 100 ELSE 200 END CorpAcctTypeId, CreditDays, CreditLimit
+              ,CASE CorpAcctType WHEN 'Individual' THEN 100 WHEN 'Wholesale' THEN 200 WHEN 'BulkOrder' THEN 300 ELSE NULL END CorpAcctTypeId
+			  ,CreditDays, CreditLimit
               ,CASE CreditSale WHEN 0 THEN 200 ELSE 100 END AS CreditSale, DefaultDiscountPercent, MinOrderAmount
               ,CASE OrderApproval WHEN 0 THEN 200 ELSE 100 END AS OrderApproval, Tax_Num
               ,CASE SHCharges WHEN 0 THEN 200 ELSE 100 END AS SHCharges, 100 AS StatusId

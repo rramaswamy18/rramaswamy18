@@ -8,6 +8,7 @@ using RetailSlnEnumerations;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -462,6 +463,178 @@ namespace RetailSlnBusinessLayer
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET / POST : SearchResult & SearchResultItemMaster
+        public SearchResultModel SearchResult(string parentCategoryIdParm, string searchKeywordText, string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForSessionObject, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                long corpAcctId = GetCorpAcctId(controller, sessionObjectModel, createForSessionObject, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
+                RetailSlnCache.CorpAcctItemDiscountModels.TryGetValue(corpAcctId, out Dictionary<long, ItemDiscountModel> itemDiscountModels);
+                itemDiscountModels = itemDiscountModels ?? new Dictionary<long, ItemDiscountModel>();
+                var aspNetRoleNameProxy = createForSessionObject?.AspNetRoleNameProxy;
+                if (string.IsNullOrEmpty(aspNetRoleNameProxy))
+                {
+                    aspNetRoleNameProxy = "DEFAULTROLE";
+                }
+                int.TryParse(pageNumParm, out int pageNum);
+                if (pageNum <= 0) pageNum = 1;
+                int.TryParse(pageSizeParm, out int pageSize);
+                if (pageSize <= 0) pageSize = 45;
+                string sqlStmt = "";
+                #region
+                sqlStmt += "--Query 1 Item Count" + Environment.NewLine;
+                sqlStmt += "        SELECT COUNT(*) AS ItemMasterCountTotal" + Environment.NewLine;
+                sqlStmt += "          FROM" + Environment.NewLine;
+                sqlStmt += "              (" + Environment.NewLine;
+                sqlStmt += "        SELECT" + Environment.NewLine;
+                sqlStmt += "               DISTINCT CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.AspNetRoleCategory" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ParentCategoryId = AspNetRoleCategory.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
+                sqlStmt += "           AND SearchMetaData.SearchKeyword LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT" + Environment.NewLine;
+                sqlStmt += "               DISTINCT CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.AspNetRoleCategory" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ParentCategoryId = AspNetRoleCategory.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               AspNetRoleCategory.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND(" + Environment.NewLine;
+                sqlStmt += "                ItemMaster.ItemMasterDesc0 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc1 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "              )" + Environment.NewLine;
+                sqlStmt += "              ) A" + Environment.NewLine;
+                sqlStmt += "--Query 2 Item Master List" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.AspNetRoleCategory" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ParentCategoryId = AspNetRoleCategory.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'ITEMMASTER'" + Environment.NewLine;
+                sqlStmt += "           AND SearchMetaData.SearchKeyword LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.CategoryItemMasterHier" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.ItemMaster" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ItemMasterId = ItemMaster.ItemMasterId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.AspNetRoleCategory" + Environment.NewLine;
+                sqlStmt += "            ON CategoryItemMasterHier.ParentCategoryId = AspNetRoleCategory.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               AspNetRoleCategory.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND(" + Environment.NewLine;
+                sqlStmt += "                ItemMaster.ItemMasterDesc0 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc1 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "            OR  ItemMaster.ItemMasterDesc2 LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "               )" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               CategoryItemMasterHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "        OFFSET @OffSetRowCount ROWS" + Environment.NewLine;
+                sqlStmt += "    FETCH NEXT @FetchNextRowCount ROWS ONLY" + Environment.NewLine;
+                sqlStmt += "--Query 3 Category List" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               CategoryCategoryHier.CategoryId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryCategoryHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.SearchMetaData" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryCategoryHier" + Environment.NewLine;
+                sqlStmt += "            ON SearchMetaData.EntityId = CategoryCategoryHier.CategoryId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.AspNetRoleCategory" + Environment.NewLine;
+                sqlStmt += "            ON CategoryCategoryHier.CategoryId = AspNetRoleCategory.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE" + Environment.NewLine;
+                sqlStmt += "               SearchMetaData.EntityTypeNameDesc = 'CATEGORY'" + Environment.NewLine;
+                sqlStmt += "           AND AspNetRoleCategory.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "           AND SearchMetaData.SearchKeyword LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "UNION" + Environment.NewLine;
+                sqlStmt += "        SELECT DISTINCT" + Environment.NewLine;
+                sqlStmt += "               Category.CategoryId" + Environment.NewLine;
+                sqlStmt += "              ,CategoryCategoryHier.SeqNum" + Environment.NewLine;
+                sqlStmt += "          FROM RetailSlnSch.Category" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.AspNetRoleCategory" + Environment.NewLine;
+                sqlStmt += "            ON Category.CategoryId = AspNetRoleCategory.CategoryId" + Environment.NewLine;
+                sqlStmt += "    INNER JOIN RetailSlnSch.CategoryCategoryHier" + Environment.NewLine;
+                sqlStmt += "            ON Category.CategoryId = CategoryCategoryHier.CategoryId" + Environment.NewLine;
+                sqlStmt += "         WHERE CategoryDesc LIKE '%' + @SearchKeyWordText + '%'" + Environment.NewLine;
+                sqlStmt += "           AND AspNetRoleCategory.AspNetRoleName = @AspNetRoleName" + Environment.NewLine;
+                sqlStmt += "      ORDER BY" + Environment.NewLine;
+                sqlStmt += "               CategoryCategoryHier.SeqNum" + Environment.NewLine;
+                #endregion
+                #region
+                ApplicationDataContext.OpenSqlConnection();
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, ApplicationDataContext.SqlConnectionObject);
+                sqlCommand.Parameters.Add("@AspNetRoleName", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters.Add("@OffSetRowCount", SqlDbType.Int);
+                sqlCommand.Parameters.Add("@FetchNextRowCount", SqlDbType.Int);
+                sqlCommand.Parameters.Add("@SearchKeywordText", SqlDbType.NVarChar, 50);
+                sqlCommand.Parameters["@AspNetRoleName"].Value = aspNetRoleNameProxy;
+                sqlCommand.Parameters["@SearchKeywordText"].Value = searchKeywordText;
+                sqlCommand.Parameters["@OffSetRowCount"].Value = (pageNum - 1) * pageSize;
+                sqlCommand.Parameters["@FetchNextRowCount"].Value = pageSize;
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                #endregion
+                sqlDataReader.Read();
+                long itemMasterCountTotal = long.Parse(sqlDataReader["ItemMasterCountTotal"].ToString());
+                sqlDataReader.NextResult();
+                //List<long> itemMasterIds = new List<long>();
+                List<ItemMasterModel> itemMasterModels = new List<ItemMasterModel>();
+                while (sqlDataReader.Read())
+                {
+                    //itemMasterIds.Add(long.Parse(sqlDataReader["ItemMasterId"].ToString()));
+                    itemMasterModels.Add(RetailSlnCache.ItemMasterModels.First(x => x.ItemMasterId == long.Parse(sqlDataReader["ItemMasterId"].ToString())));
+                }
+                sqlDataReader.NextResult();
+                //List<long> categoryIds = new List<long>();
+                List<CategoryModel> categoryModels = new List<CategoryModel>();
+                while (sqlDataReader.Read())
+                {
+                    //categoryIds.Add(long.Parse(sqlDataReader["CategoryId"].ToString()));
+                    categoryModels.Add(RetailSlnCache.CategoryModels.First(x => x.CategoryId == long.Parse(sqlDataReader["CategoryId"].ToString())));
+                }
+                sqlDataReader.Close();
+                long itemMasterCountFrom = (pageNum - 1) * pageSize + 1;
+                long itemMasterCountTo = pageNum * pageSize;
+                if (itemMasterCountTo > itemMasterCountTotal) itemMasterCountTo = itemMasterCountTotal;
+                SearchResultModel searchResultModel = new SearchResultModel
+                {
+                    CategoryModels = categoryModels,
+                    CategoryCountTotal = categoryModels.Count,
+                    ItemMasterModels = itemMasterModels,
+                    CurrencySymbol = RetailSlnCache.CurrencySymbol,
+                    ItemDiscountModels = itemDiscountModels,
+                    ItemMasterCountFrom = itemMasterCountFrom,
+                    ItemMasterCountTo = itemMasterCountTo,
+                    ItemMasterCountTotal = itemMasterCountTotal,
+                    PageNum = pageNum,
+                    TotalPageCount = (itemMasterCountTotal + pageSize - 1) / pageSize,
+                    SearchKeywordText = searchKeywordText,
+                };
+                return searchResultModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
             }
             finally

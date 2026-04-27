@@ -140,24 +140,11 @@
             <see cref="T:iText.Kernel.Colors.Color">color</see>
             </returns>
         </member>
-        <member name="M:iText.Forms.Fields.AbstractPdfFormField.GetPdfAConformanceLevel">
-            <summary>Gets the declared conformance level.</summary>
-            <remarks>
-            Gets the declared conformance level.
-            Deprecated  use
-            <see cref="T:iText.Forms.Fields.AbstractPdfFormField"/>
-            getPdfConformanceLevel
-            </remarks>
+        <member name="M:iText.Forms.Fields.AbstractPdfFormField.GetPdfConformance">
+            <summary>Gets the declared conformance.</summary>
             <returns>
             the
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
-            </returns>
-        </member>
-        <member name="M:iText.Forms.Fields.AbstractPdfFormField.GetPdfConformanceLevel">
-            <summary>Gets the declared conformance level.</summary>
-            <returns>
-            the
-            <see cref="T:iText.Kernel.Pdf.IConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.AbstractPdfFormField.RegenerateField">
@@ -337,6 +324,14 @@
         <member name="M:iText.Forms.Fields.AbstractPdfFormField.IsTerminalFormField">
             <summary>Determines whether current form field is terminal or not.</summary>
             <returns>true if this form field is a terminal one, false otherwise.</returns>
+        </member>
+        <member name="M:iText.Forms.Fields.AbstractPdfFormField.GetFieldName(System.Collections.Generic.ICollection{iText.Forms.Fields.PdfFormField})">
+            <summary>Gets the current field name.</summary>
+            <param name="visited">list of visited parents which is used to determine cycle references</param>
+            <returns>
+            the current field name, as a
+            <see cref="T:iText.Kernel.Pdf.PdfString"/>.
+            </returns>
         </member>
         <member name="M:iText.Forms.Fields.AbstractPdfFormField.Equals(System.Object)">
             <summary>Indicate whether some other object is "equal to" this one.</summary>
@@ -548,8 +543,8 @@
         <member name="F:iText.Forms.Fields.FormFieldBuilder`1.formFieldName">
             <summary>Name of the form field.</summary>
         </member>
-        <member name="F:iText.Forms.Fields.FormFieldBuilder`1.conformanceLevel">
-            <summary>Conformance level of the form field.</summary>
+        <member name="F:iText.Forms.Fields.FormFieldBuilder`1.conformance">
+            <summary>Conformance of the form field.</summary>
         </member>
         <member name="M:iText.Forms.Fields.FormFieldBuilder`1.#ctor(iText.Kernel.Pdf.PdfDocument,System.String)">
             <summary>
@@ -572,39 +567,22 @@
             <summary>Gets name of the form field.</summary>
             <returns>name to be used for form field creation</returns>
         </member>
-        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.GetConformanceLevel">
-            <summary>Gets conformance level for form field creation.</summary>
+        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.GetConformance">
+            <summary>Gets conformance for form field creation.</summary>
             <returns>
             instance of
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
             to be used for form field creation
             </returns>
         </member>
-        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.GetGenericConformanceLevel">
-            <summary>Gets conformance level for form field creation.</summary>
-            <returns>
-            instance of
-            <see cref="T:iText.Kernel.Pdf.IConformanceLevel"/>
-            to be used for form field creation
-            </returns>
-        </member>
-        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.SetConformanceLevel(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Sets conformance level for form field creation.</summary>
-            <param name="conformanceLevel">
-            instance of
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
-            to be used for form field creation
-            </param>
-            <returns>this builder</returns>
-        </member>
-        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.SetGenericConformanceLevel(iText.Kernel.Pdf.IConformanceLevel)">
-            <summary>Sets conformance level for form field creation.</summary>
-            <param name="conformanceLevel">
+        <member name="M:iText.Forms.Fields.FormFieldBuilder`1.SetConformance(iText.Kernel.Pdf.PdfConformance)">
+            <summary>Sets conformance for form field creation.</summary>
+            <param name="conformance">
             Instance of
-            <see cref="T:iText.Kernel.Pdf.IConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
             to be used for form field creation.
             </param>
-            <returns>This builder.</returns>
+            <returns>this builder</returns>
         </member>
         <member name="M:iText.Forms.Fields.FormFieldBuilder`1.GetThis">
             <summary>Returns this builder object.</summary>
@@ -614,7 +592,7 @@
         <member name="T:iText.Forms.Fields.FormsMetaInfoStaticContainer">
             <summary>Class to store meta info that will be used in forms module in static context.</summary>
         </member>
-        <member name="M:iText.Forms.Fields.FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(iText.Layout.Renderer.MetaInfoContainer,iText.Commons.Utils.Action)">
+        <member name="M:iText.Forms.Fields.FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(iText.Layout.Renderer.MetaInfoContainer,System.Action)">
             <summary>Sets meta info related to forms into static context, executes the action and then cleans meta info.
                 </summary>
             <remarks>
@@ -654,7 +632,13 @@
             <param name="firstField">the first field</param>
             <param name="secondField">the second field</param>
             <param name="throwExceptionOnError">if true, an exception will be thrown</param>
-            <returns>true if the second field was renamed successfully, false otherwise</returns>
+            <returns>
+            returns
+            <see langword="false"/>
+            value, since
+            <see cref="T:iText.Forms.Fields.Merging.AddIndexStrategy"/>
+            never merges fields.
+            </returns>
         </member>
         <member name="T:iText.Forms.Fields.Merging.AlwaysThrowExceptionStrategy">
             <summary>
@@ -718,7 +702,7 @@
             <param name="firstField">the first field</param>
             <param name="secondField">the second field</param>
             <param name="throwExceptionOnError">if true, an exception will be thrown</param>
-            <returns>true if the second field was renamed successfully, false otherwise</returns>
+            <returns>true if the second field was merged successfully, false otherwise</returns>
         </member>
         <member name="T:iText.Forms.Fields.NonTerminalFormFieldBuilder">
             <summary>Builder for non-terminal form field.</summary>
@@ -1456,10 +1440,10 @@
             <para />
             Also note that the model element won't be used for annotations for choice form field.
             </remarks>
-            <param name="element">model element to set.</param>
+            <param name="element">model element to set</param>
             <returns>
             this
-            <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormAnnotation.SetAppearance(iText.Kernel.Pdf.PdfName,System.String,iText.Kernel.Pdf.PdfStream)">
@@ -1496,6 +1480,18 @@
             The edited
             <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>.
             </returns>
+        </member>
+        <member name="M:iText.Forms.Fields.PdfFormAnnotation.SetAlternativeDescription(System.String)">
+            <summary>Changes the alternative description of the annotation to the specified value.</summary>
+            <param name="alternativeDescription">string to be used as alternative description.</param>
+            <returns>
+            The edited
+            <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>.
+            </returns>
+        </member>
+        <member name="M:iText.Forms.Fields.PdfFormAnnotation.GetAlternativeDescription">
+            <summary>Gets the current alternative description.</summary>
+            <returns>the current alternative description.</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormAnnotation.GetRect(iText.Kernel.Pdf.PdfDictionary)">
             <summary>
@@ -2363,13 +2359,13 @@
             <summary>Flag that designates, if set, that the field's contents must be obfuscated.</summary>
         </member>
         <member name="F:iText.Forms.Fields.PdfFormField.FF_READ_ONLY">
-            <summary>The ReadOnly flag, which specifies whether or not the field can be changed.</summary>
+            <summary>The ReadOnly flag, which specifies whether the field can be changed.</summary>
         </member>
         <member name="F:iText.Forms.Fields.PdfFormField.FF_REQUIRED">
-            <summary>The Required flag, which specifies whether or not the field must be filled in.</summary>
+            <summary>The Required flag, which specifies whether the field must be filled in.</summary>
         </member>
         <member name="F:iText.Forms.Fields.PdfFormField.FF_NO_EXPORT">
-            <summary>The NoExport flag, which specifies whether or not exporting is forbidden.</summary>
+            <summary>The NoExport flag, which specifies whether exporting is forbidden.</summary>
         </member>
         <member name="F:iText.Forms.Fields.PdfFormField.FORM_FIELD_KEYS">
             <summary>List of all allowable keys in form fields.</summary>
@@ -2386,7 +2382,7 @@
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             must be an indirect object.
             </remarks>
-            <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
+            <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference</param>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.#ctor(iText.Kernel.Pdf.PdfDocument)">
             <summary>
@@ -2396,7 +2392,7 @@
             <param name="pdfDocument">
             The
             <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            instance.
+            instance
             </param>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.#ctor(iText.Kernel.Pdf.Annot.PdfWidgetAnnotation,iText.Kernel.Pdf.PdfDocument)">
@@ -2406,12 +2402,12 @@
             </summary>
             <param name="widget">
             The widget which will be a kid of the
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </param>
             <param name="pdfDocument">
             The
             <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            instance.
+            instance
             </param>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.MakeFormField(iText.Kernel.Pdf.PdfObject,iText.Kernel.Pdf.PdfDocument)">
@@ -2429,21 +2425,21 @@
             <param name="pdfObject">
             assumed to be either a
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            , or a
+            ,
+            or a
             <see cref="T:iText.Kernel.Pdf.PdfIndirectReference"/>
             to a
-            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             </param>
             <param name="document">
             the
             <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            to create the field in.
+            to create the field in
             </param>
             <returns>
             a new
             <see cref="T:iText.Forms.Fields.PdfFormField"/>
-            , or <c>null</c> if
-            <c>pdfObject</c> is not a form field.
+            , or <c>null</c> if <c>pdfObject</c> is not a form field
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.MakeFormFieldOrAnnotation(iText.Kernel.Pdf.PdfObject,iText.Kernel.Pdf.PdfDocument)">
@@ -2458,21 +2454,22 @@
             <param name="pdfObject">
             assumed to be either a
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            , or a
+            ,
+            or a
             <see cref="T:iText.Kernel.Pdf.PdfIndirectReference"/>
             to a
-            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             </param>
             <param name="document">
             the
             <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            to create the field in.
+            to create the field in
             </param>
             <returns>
             a new
             <see cref="T:iText.Forms.Fields.AbstractPdfFormField"/>
             , or <c>null</c> if
-            <c>pdfObject</c> is not a form field and is not a widget annotation.
+            <c>pdfObject</c> is not a form field and is not a widget annotation
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.MakeFieldFlag(System.Int32)">
@@ -2481,63 +2478,99 @@
             Makes a field flag by bit position. Bit positions are numbered 1 to 32.
             But position 0 corresponds to flag 1, position 3 corresponds to flag 4 etc.
             </remarks>
-            <param name="bitPosition">bit position of a flag in range 1 to 32 from the pdf specification.</param>
-            <returns>corresponding field flag.</returns>
+            <param name="bitPosition">a bit position of a flag in range 1 to 32 from the pdf specification</param>
+            <returns>corresponding field flag</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsFormField(iText.Kernel.Pdf.PdfDictionary)">
             <summary>Checks if dictionary contains any of the form field keys.</summary>
-            <param name="dict">field dictionary to check.</param>
-            <returns>true if it is a form field dictionary, false otherwise.</returns>
+            <param name="dict">field dictionary to check</param>
+            <returns>true if it is a form field dictionary, false otherwise</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetFormFieldKeys">
             <summary>
             Gets a set of all possible form field keys except
             <c>PdfName.Parent</c>.
             </summary>
-            <returns>a set of form field keys.</returns>
+            <returns>a set of form field keys</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetFormType(iText.Kernel.Pdf.PdfDictionary)">
             <summary>
             Returns the type of the form field dictionary, or of the parent
             &lt;PdfDictionary&gt; object.
             </summary>
-            <param name="fieldDict">field dictionary to get its type.</param>
+            <param name="fieldDict">field dictionary to get its type</param>
             <returns>
             the form type, as a
-            <see cref="T:iText.Kernel.Pdf.PdfName"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfName"/>
             </returns>
         </member>
-        <member name="M:iText.Forms.Fields.PdfFormField.GetFormType">
+        <member name="M:iText.Forms.Fields.PdfFormField.GetStringValue(iText.Kernel.Pdf.PdfObject)">
             <summary>
-            Returns the type of the parent form field, or of the wrapped
-            &lt;PdfDictionary&gt; object.
+            Retrieves string value from
+            <see cref="T:iText.Kernel.Pdf.PdfObject"/>
+            representing text string or text stream.
             </summary>
+            <param name="value">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfObject"/>
+            representing text string or text stream
+            </param>
+            <returns>
+            
+            <see cref="T:System.String"/>
+            value
+            </returns>
+        </member>
+        <member name="M:iText.Forms.Fields.PdfFormField.ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField,iText.Layout.Tagging.IAccessibleElement,iText.Kernel.Pdf.PdfDocument)">
+            <summary>
+            Applies
+            <see cref="T:iText.Kernel.Pdf.Tagutils.AccessibilityProperties"/>
+            for provided form field and its annotation children.
+            </summary>
+            <param name="formField">
+            
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
+            the form field to which the accessibility properties should be applied
+            </param>
+            <param name="modelElement">
+            
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            the form field layout element with accessibility properties
+            </param>
+            <param name="pdfDocument">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            the document to which the form field belongs
+            </param>
+        </member>
+        <member name="M:iText.Forms.Fields.PdfFormField.GetFormType">
+            <summary>Returns the type of the parent form field, or of the wrapped &lt;PdfDictionary&gt; object.</summary>
             <returns>
             the form type, as a
-            <see cref="T:iText.Kernel.Pdf.PdfName"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfName"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetValue(System.String)">
             <summary>Sets a value to the field and generating field appearance if needed.</summary>
-            <param name="value">of the field.</param>
-            <returns>the field.</returns>
+            <param name="value">of the field</param>
+            <returns>the field</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetValue(System.String,System.Boolean)">
             <summary>Sets a value to the field (and fields with the same names) and generates field appearance if needed.
                 </summary>
-            <param name="value">of the field.</param>
-            <param name="generateAppearance">if false, appearance won't be regenerated.</param>
-            <returns>the field.</returns>
+            <param name="value">of the field</param>
+            <param name="generateAppearance">if false, appearance won't be regenerated</param>
+            <returns>the field</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetValue(System.String,iText.Kernel.Font.PdfFont,System.Single)">
             <summary>Set text field value with given font and size.</summary>
-            <param name="value">text value.</param>
+            <param name="value">text value</param>
             <param name="font">
             a
-            <see cref="T:iText.Kernel.Font.PdfFont"/>.
+            <see cref="T:iText.Kernel.Font.PdfFont"/>
             </param>
-            <param name="fontSize">the size of the font.</param>
-            <returns>the edited field.</returns>
+            <param name="fontSize">the size of the font</param>
+            <returns>the edited field</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetValue(System.String,System.String)">
             <summary>Sets the field value and the display string.</summary>
@@ -2545,19 +2578,19 @@
             Sets the field value and the display string. The display string
             is used to build the appearance.
             </remarks>
-            <param name="value">the field value.</param>
+            <param name="value">the field value</param>
             <param name="displayValue">
             the string that is used for the appearance. If <c>null</c>
-            the <c>value</c> parameter will be used.
+            the <c>value</c> parameter will be used
             </param>
-            <returns>the edited field.</returns>
+            <returns>the edited field</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.RemoveChild(iText.Forms.Fields.AbstractPdfFormField)">
             <summary>Removes the childField object of this field.</summary>
             <param name="fieldName">
             a
             <see cref="T:iText.Forms.Fields.PdfFormField"/>
-            , that needs to be removed from form field children.
+            , that needs to be removed from form field children
             </param>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.RemoveChildren">
@@ -2567,19 +2600,19 @@
             <summary>Gets the kids of this object.</summary>
             <returns>
             contents of the dictionary's <c>Kids</c> property, as a
-            <see cref="T:iText.Kernel.Pdf.PdfArray"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfArray"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetChildFields">
             <summary>Gets the childFields of this object.</summary>
-            <returns>the children of the current field.</returns>
+            <returns>the children of the current field</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetChildFormFields">
             <summary>Gets all child form fields of this form field.</summary>
             <remarks>Gets all child form fields of this form field. Annotations are not returned.</remarks>
             <returns>
             a list of
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetAllChildFormFields">
@@ -2587,11 +2620,11 @@
             Gets all childFields of this object, including the children of the children
             but not annotations.
             </summary>
-            <returns>the children of the current field and their children.</returns>
+            <returns>the children of the current field and their children</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetAllChildFields">
             <summary>Gets all childFields of this object, including the children of the children.</summary>
-            <returns>the children of the current field and their children.</returns>
+            <returns>the children of the current field and their children</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetChildField(System.String)">
             <summary>Gets the child field of form field.</summary>
@@ -2603,11 +2636,11 @@
             <param name="fieldName">
             a
             <see cref="T:System.String"/>
-            , name of the received field.
+            , name of the received field
             </param>
             <returns>
             the child of the current field as a
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.AddKid(iText.Forms.Fields.AbstractPdfFormField)">
@@ -2623,11 +2656,11 @@
             <param name="kid">
             a new
             <see cref="T:iText.Forms.Fields.AbstractPdfFormField"/>
-            entry for the field's <c>Kids</c> array property.
+            entry for the field's <c>Kids</c> array property
             </param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.AddKid(iText.Forms.Fields.AbstractPdfFormField,System.Boolean)">
@@ -2643,15 +2676,15 @@
             <param name="kid">
             a new
             <see cref="T:iText.Forms.Fields.AbstractPdfFormField"/>
-            entry for the field's <c>Kids</c> array property.
+            entry for the field's <c>Kids</c> array property
             </param>
             <param name="throwExceptionOnError">
             define whether exception (true) or log (false) is expected in case kid with
-            the same name exists and merge of two kids failed.
+            the same name exists and merge of two kids failed
             </param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.AddKid(iText.Kernel.Pdf.Annot.PdfWidgetAnnotation)">
@@ -2667,19 +2700,19 @@
             <param name="kid">
             a new
             <see cref="T:iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
-            entry for the field's <c>Kids</c> array property.
+            entry for the field's <c>Kids</c> array property
             </param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetFieldName(System.String)">
             <summary>Changes the name of the field to the specified value.</summary>
-            <param name="name">the new field name, as a String.</param>
+            <param name="name">the new field name, as a String</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetPartialFieldName">
@@ -2690,7 +2723,7 @@
             . If the field has no partial name,
             an empty
             <see cref="T:iText.Kernel.Pdf.PdfString"/>
-            is returned.
+            is returned
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetAlternativeName(System.String)">
@@ -2699,10 +2732,10 @@
             Changes the alternate name of the field to the specified value. The
             alternate is a descriptive name to be used by status messages etc.
             </remarks>
-            <param name="name">the new alternate name, as a String.</param>
+            <param name="name">the new alternate name, as a String</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetAlternativeName">
@@ -2713,7 +2746,7 @@
             </remarks>
             <returns>
             the current alternate name, as a
-            <see cref="T:iText.Kernel.Pdf.PdfString"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfString"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetMappingName(System.String)">
@@ -2722,8 +2755,8 @@
             Changes the mapping name of the field to the specified value. The
             mapping name can be used when exporting the form data in the document.
             </remarks>
-            <param name="name">the new alternate name, as a String.</param>
-            <returns>the edited field.</returns>
+            <param name="name">the new alternate name, as a String</param>
+            <returns>the edited field</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetMappingName">
             <summary>Gets the current mapping name.</summary>
@@ -2733,7 +2766,7 @@
             </remarks>
             <returns>
             the current mapping name, as a
-            <see cref="T:iText.Kernel.Pdf.PdfString"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfString"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetFieldFlag(System.Int32)">
@@ -2741,10 +2774,10 @@
             Checks whether a certain flag, or any of a combination of flags, is set
             for this form field.
             </summary>
-            <param name="flag">an <c>int</c> interpreted as a series of a binary flags.</param>
+            <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
             <returns>
             true if any of the flags specified in the parameter is also set
-            in the form field.
+            in the form field
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetFieldFlag(System.Int32)">
@@ -2755,10 +2788,10 @@
             enforced. To <em>replace</em> the current value, use
             <see cref="M:iText.Forms.Fields.PdfFormField.SetFieldFlags(System.Int32)"/>.
             </remarks>
-            <param name="flag">an <c>int</c> interpreted as a series of a binary flags.</param>
+            <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetFieldFlag(System.Int32,System.Boolean)">
@@ -2769,20 +2802,20 @@
             technically enforced. To <em>replace</em> the current value, use
             <see cref="M:iText.Forms.Fields.PdfFormField.SetFieldFlags(System.Int32)"/>.
             </remarks>
-            <param name="flag">an <c>int</c> interpreted as a series of a binary flags.</param>
+            <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
             <param name="value">
             if <c>true</c>, adds the flag(s). if <c>false</c>,
-            removes the flag(s).
+            removes the flag(s)
             </param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsMultiline">
             <summary>If true, the field can contain multiple lines of text; if false, the field's text is restricted to a single line.
                 </summary>
-            <returns>whether the field can span over multiple lines.</returns>
+            <returns>whether the field can span over multiple lines</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsPassword">
             <summary>If true, the field is intended for entering a secure password that should not be echoed visibly to the screen.
@@ -2792,7 +2825,7 @@
             Characters typed from the keyboard should instead be echoed in some unreadable form, such as asterisks
             or bullet characters.
             </remarks>
-            <returns>whether or not the contents of the field must be obfuscated.</returns>
+            <returns>whether the contents of the field must be obfuscated</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetFieldFlags(System.Int32)">
             <summary>Sets a flag, or combination of flags, for the form field.</summary>
@@ -2802,28 +2835,28 @@
             <see cref="M:iText.Forms.Fields.PdfFormField.SetFieldFlag(System.Int32)"/>
             which <em>adds</em> a flag to the existing flags.
             </remarks>
-            <param name="flags">an <c>int</c> interpreted as a series of a binary flags.</param>
+            <param name="flags">an <c>int</c> interpreted as a series of a binary flags</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetFieldFlags">
             <summary>Gets the current list of PDF form field flags.</summary>
-            <returns>the current list of flags, encoded as an <c>int</c>.</returns>
+            <returns>the current list of flags, encoded as an <c>int</c></returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetValue">
             <summary>Gets the current value contained in the form field.</summary>
             <returns>
             the current value, as a
-            <see cref="T:iText.Kernel.Pdf.PdfObject"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfObject"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetValueAsString">
             <summary>Gets the current value contained in the form field.</summary>
             <returns>
             the current value, as a
-            <see cref="T:System.String"/>.
+            <see cref="T:System.String"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetDisplayValue">
@@ -2833,33 +2866,33 @@
             <see cref="T:System.String"/>
             , if it exists.
             If not, returns the value as a
-            <see cref="T:System.String"/>.
+            <see cref="T:System.String"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetDefaultValue(iText.Kernel.Pdf.PdfObject)">
             <summary>Sets the default fallback value for the form field.</summary>
-            <param name="value">the default value.</param>
+            <param name="value">the default value</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetDefaultValue">
             <summary>Gets the default fallback value for the form field.</summary>
-            <returns>the default value.</returns>
+            <returns>the default value</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetAdditionalAction(iText.Kernel.Pdf.PdfName,iText.Kernel.Pdf.Action.PdfAction)">
             <summary>Sets an additional action for the form field.</summary>
-            <param name="key">the dictionary key to use for storing the action.</param>
-            <param name="action">the action.</param>
+            <param name="key">the dictionary key to use for storing the action</param>
+            <param name="action">the action</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetAdditionalAction">
             <summary>Gets the currently additional action dictionary for the form field.</summary>
-            <returns>the additional action dictionary.</returns>
+            <returns>the additional action dictionary</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetOptions(iText.Kernel.Pdf.PdfArray)">
             <summary>Sets options for the form field.</summary>
@@ -2868,11 +2901,11 @@
             an array of
             <see cref="T:iText.Kernel.Pdf.PdfString"/>
             objects that each represent
-            the 'on' state of one of the choices.
+            the 'on' state of one of the choices
             </param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetOptions">
@@ -2886,7 +2919,7 @@
             <see cref="T:iText.Kernel.Pdf.PdfArray"/>
             of
             <see cref="T:iText.Kernel.Pdf.PdfString"/>
-            objects.
+            objects
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetWidgets">
@@ -2897,7 +2930,7 @@
             </summary>
             <returns>
             a list of
-            <see cref="T:iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
+            <see cref="T:iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetChildFormAnnotations">
@@ -2908,7 +2941,7 @@
             </summary>
             <returns>
             a list of
-            <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetFirstFormAnnotation">
@@ -2919,7 +2952,7 @@
             <returns>
             
             <see cref="T:iText.Forms.Fields.PdfFormAnnotation"/>
-            or null if there are no child annotations.
+            or null if there are no child annotations
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetDefaultAppearance">
@@ -2944,7 +2977,7 @@
             1 Centered
             2 Right-justified
             </summary>
-            <returns>the current justification attribute.</returns>
+            <returns>the current justification attribute</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetJustification(System.Nullable{iText.Layout.Properties.TextAlignment})">
             <summary>
@@ -2953,51 +2986,51 @@
             1 Centered
             2 Right-justified
             </summary>
-            <param name="justification">the value to set the justification attribute to.</param>
+            <param name="justification">the value to set the justification attribute to</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetDefaultStyle">
             <summary>Gets a default style string, as described in "Rich Text Strings" section of Pdf spec.</summary>
             <returns>
             the default style, as a
-            <see cref="T:iText.Kernel.Pdf.PdfString"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfString"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetDefaultStyle(iText.Kernel.Pdf.PdfString)">
             <summary>Sets a default style string, as described in "Rich Text Strings" section of Pdf spec.</summary>
-            <param name="defaultStyleString">a new default style for the form field.</param>
+            <param name="defaultStyleString">a new default style for the form field</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetRichText">
             <summary>Gets a rich text string, as described in "Rich Text Strings" section of Pdf spec.</summary>
             <remarks>
             Gets a rich text string, as described in "Rich Text Strings" section of Pdf spec.
-            May be either
+            It may be either
             <see cref="T:iText.Kernel.Pdf.PdfStream"/>
             or
             <see cref="T:iText.Kernel.Pdf.PdfString"/>.
             </remarks>
-            <returns>the current rich text value.</returns>
+            <returns>the current rich text value</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetRichText(iText.Kernel.Pdf.PdfObject)">
             <summary>Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.</summary>
             <remarks>
             Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.
-            May be either
+            It may be either
             <see cref="T:iText.Kernel.Pdf.PdfStream"/>
             or
             <see cref="T:iText.Kernel.Pdf.PdfString"/>.
             </remarks>
-            <param name="richText">a new rich text value.</param>
+            <param name="richText">a new rich text value</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetCheckType(iText.Forms.Fields.Properties.CheckBoxType)">
@@ -3008,10 +3041,10 @@
             <see cref="M:iText.Forms.Fields.PdfFormField.RegenerateField">regenerateField</see>
             method.
             </remarks>
-            <param name="checkType">the new checkbox marker.</param>
+            <param name="checkType">the new checkbox marker</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.RegenerateField">
@@ -3022,44 +3055,44 @@
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetReadOnly(System.Boolean)">
-            <summary>Sets the ReadOnly flag, specifying whether or not the field can be changed.</summary>
-            <param name="readOnly">if <c>true</c>, then the field cannot be changed.</param>
+            <summary>Sets the ReadOnly flag, specifying whether the field can be changed.</summary>
+            <param name="readOnly">if <c>true</c>, then the field cannot be changed</param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsReadOnly">
-            <summary>Gets the ReadOnly flag, specifying whether or not the field can be changed.</summary>
-            <returns><c>true</c> if the field cannot be changed.</returns>
+            <summary>Gets the ReadOnly flag, specifying whether the field can be changed.</summary>
+            <returns><c>true</c> if the field cannot be changed</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetRequired(System.Boolean)">
-            <summary>Sets the Required flag, specifying whether or not the field must be filled in.</summary>
-            <param name="required">if <c>true</c>, then the field must be filled in.</param>
+            <summary>Sets the Required flag, specifying whether the field must be filled in.</summary>
+            <param name="required">if <c>true</c>, then the field must be filled in</param>
             <returns>
             the edited
             <see cref="T:iText.Forms.Fields.PdfFormField"/>.
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsRequired">
-            <summary>Gets the Required flag, specifying whether or not the field must be filled in.</summary>
-            <returns><c>true</c> if the field must be filled in.</returns>
+            <summary>Gets the Required flag, specifying whether the field must be filled in.</summary>
+            <returns><c>true</c> if the field must be filled in</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetNoExport(System.Boolean)">
-            <summary>Sets the NoExport flag, specifying whether or not exporting is forbidden.</summary>
+            <summary>Sets the NoExport flag, specifying whether exporting is forbidden.</summary>
             <param name="noExport">if <c>true</c>, then exporting is <em>forbidden</em></param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Fields.PdfFormField"/>.
+            <see cref="T:iText.Forms.Fields.PdfFormField"/>
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsNoExport">
             <summary>Gets the NoExport attribute.</summary>
-            <returns>whether exporting the value following a form action is forbidden.</returns>
+            <returns>whether exporting the value following a form action is forbidden</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.IsInReadingMode">
             <summary>Checks if the document that contains the field is created in reading mode.</summary>
-            <returns>true if reading mode is used, false otherwise.</returns>
+            <returns>true if reading mode is used, false otherwise</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.GetAppearanceStates">
             <summary><inheritDoc/></summary>
@@ -3084,8 +3117,8 @@
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.SetChildField(iText.Forms.Fields.AbstractPdfFormField)">
             <summary>Adds a field to the children of the current field.</summary>
-            <param name="kid">the field, which should become a child.</param>
-            <returns>the kid itself.</returns>
+            <param name="kid">the field, which should become a child</param>
+            <returns>the kid itself</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.ReplaceKids(System.Collections.Generic.ICollection{iText.Forms.Fields.AbstractPdfFormField})">
             <summary>Replaces /Kids value with passed kids dictionaries, and keeps old flashed fields there.</summary>
@@ -3094,7 +3127,7 @@
             Also updates childFields array for
             <see cref="T:iText.Forms.Fields.PdfFormField"/>.
             </remarks>
-            <param name="kids">collection of new kids.</param>
+            <param name="kids">collection of new kids</param>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.TryGenerateCheckboxAppearance(System.String)">
             <summary>
@@ -3102,7 +3135,8 @@
             not all equal, then consider that this checkbox is mutually exclusive and do nothing, otherwise regenerate
             normal appearance with value as on appearance state for all the widgets.
             </summary>
-            <param name="value">not empty value different from "Off".</param>
+            <param name="value">not empty value different from "Off"</param>
+            <returns>boolean value indicating whether checkbox appearance was generated</returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfFormField.PutAcroFormObject(iText.Kernel.Pdf.PdfName,iText.Kernel.Pdf.PdfObject)">
             <summary>Puts object directly to AcroForm dictionary.</summary>
@@ -3117,8 +3151,8 @@
             <see cref="M:iText.Forms.Fields.PdfFormField.AddAcroFormToCatalog"/>
             should be called explicitly.
             </remarks>
-            <param name="acroFormKey">the key of the object.</param>
-            <param name="acroFormObject">the object to add.</param>
+            <param name="acroFormKey">the key of the object</param>
+            <param name="acroFormObject">the object to add</param>
         </member>
         <member name="T:iText.Forms.Fields.PdfFormFieldMergeUtil">
             <summary>
@@ -3477,7 +3511,13 @@
             If true, the field is automatically divided into as many equally spaced positions,
             or combs, as the value of MaxLen, and the text is laid out into those combs.
             </remarks>
-            <returns>whether or not combing is enabled</returns>
+            <returns>
+            
+            <see langword="true"/>
+            if combing is enabled,
+            <see langword="false"/>
+            otherwise
+            </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfTextFormField.SetComb(System.Boolean)">
             <summary>
@@ -3587,11 +3627,11 @@
             <c>PdfSigner#setLocation</c>
             will be used.
             </remarks>
-            <param name="location">new signing location.</param>
+            <param name="location">new signing location</param>
             <returns>
             this same
             <see cref="T:iText.Forms.Fields.Properties.SignedAppearanceText"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.Properties.SignedAppearanceText.SetSignedBy(System.String)">
@@ -3601,16 +3641,16 @@
             <para />
             Note, that the signer name will be replaced by the one from the signing certificate during the actual signing.
             </remarks>
-            <param name="signedBy">name of the signer.</param>
+            <param name="signedBy">name of the signer</param>
             <returns>
             this same
             <see cref="T:iText.Forms.Fields.Properties.SignedAppearanceText"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.Properties.SignedAppearanceText.GetSignedBy">
             <summary>Gets the name of the signer from the certificate.</summary>
-            <returns>signedBy name of the signer.</returns>
+            <returns>signedBy name of the signer</returns>
         </member>
         <member name="M:iText.Forms.Fields.Properties.SignedAppearanceText.GetSignDate">
             <summary>Returns the signature date.</summary>
@@ -3625,16 +3665,16 @@
             <c>PdfSigner</c>
             during the signing.
             </remarks>
-            <param name="signDate">new signature date.</param>
+            <param name="signDate">new signature date</param>
             <returns>
             this same
             <see cref="T:iText.Forms.Fields.Properties.SignedAppearanceText"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.Properties.SignedAppearanceText.GenerateDescriptionText">
             <summary>Generates the signature description text based on the provided parameters.</summary>
-            <returns>signature description.</returns>
+            <returns>signature description</returns>
         </member>
         <member name="T:iText.Forms.Fields.PushButtonFormFieldBuilder">
             <summary>Builder for push button form field.</summary>
@@ -3876,11 +3916,6 @@
             </summary>
             <param name="id">the id of the field</param>
         </member>
-        <member name="M:iText.Forms.Form.Element.AbstractSelectField.AddOption(iText.Layout.Element.IBlockElement)">
-            <summary>Add a container with options.</summary>
-            <remarks>Add a container with options. This might be a container for options group.</remarks>
-            <param name="optionElement">a container with options</param>
-        </member>
         <member name="M:iText.Forms.Form.Element.AbstractSelectField.AddOption(iText.Forms.Form.Element.SelectFieldItem)">
             <summary>Add an option to the element.</summary>
             <param name="option">
@@ -3902,7 +3937,7 @@
             otherwise
             </param>
         </member>
-        <member name="M:iText.Forms.Form.Element.AbstractSelectField.GetItems">
+        <member name="M:iText.Forms.Form.Element.AbstractSelectField.GetOptions">
             <summary>
             Get a list of
             <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>.
@@ -3928,12 +3963,6 @@
             a
             <see cref="T:iText.Forms.Form.Element.SelectFieldItem"/>.
             </returns>
-        </member>
-        <member name="M:iText.Forms.Form.Element.AbstractSelectField.GetOptions">
-            <summary>Gets a list of containers with option(s).</summary>
-            <remarks>Gets a list of containers with option(s). Every container might be a container for options group.
-                </remarks>
-            <returns>a list of containers with options.</returns>
         </member>
         <member name="M:iText.Forms.Form.Element.AbstractSelectField.HasExportAndDisplayValues">
             <summary>Checks if the field has options with export and display values.</summary>
@@ -4055,19 +4084,10 @@
             <param name="checked">the checked state to set</param>
             <returns>this checkbox instance</returns>
         </member>
-        <member name="M:iText.Forms.Form.Element.CheckBox.SetPdfAConformanceLevel(iText.Kernel.Pdf.PdfAConformanceLevel)">
-            <summary>Sets the PDF/A conformance level for the checkbox.</summary>
-            <remarks>
-            Sets the PDF/A conformance level for the checkbox.
-            This method is deprecated use setPdfConformanceLevel.
-            </remarks>
-            <param name="conformanceLevel">The PDF/A conformance level to set.</param>
-            <returns>This checkbox instance.</returns>
-        </member>
-        <member name="M:iText.Forms.Form.Element.CheckBox.SetPdfConformanceLevel(iText.Kernel.Pdf.IConformanceLevel)">
-            <summary>Sets the conformance level for the checkbox.</summary>
-            <param name="conformanceLevel">The PDF/A conformance level to set.</param>
-            <returns>tThis checkbox instance.</returns>
+        <member name="M:iText.Forms.Form.Element.CheckBox.SetPdfConformance(iText.Kernel.Pdf.PdfConformance)">
+            <summary>Sets the conformance for the checkbox.</summary>
+            <param name="conformance">The PDF conformance to set.</param>
+            <returns>this checkbox instance</returns>
         </member>
         <member name="M:iText.Forms.Form.Element.CheckBox.SetCheckBoxType(iText.Forms.Fields.Properties.CheckBoxType)">
             <summary>Sets the icon of the checkbox.</summary>
@@ -4232,6 +4252,15 @@
             <inheritDoc/>
             </returns>
         </member>
+        <member name="M:iText.Forms.Form.Element.FormField`1.SetAlternativeDescription(System.String)">
+            <summary>Sets the form field's alternative description.</summary>
+            <param name="alternativeDescription">form field's alternative description.</param>
+            <returns>
+            this same
+            <see cref="T:iText.Forms.Form.Element.FormField`1"/>
+            element.
+            </returns>
+        </member>
         <member name="T:iText.Forms.Form.Element.IFormField">
             <summary>Common interface for HTML form elements.</summary>
         </member>
@@ -4241,11 +4270,11 @@
             <see cref="F:iText.Forms.Form.FormProperty.FORM_FIELD_VALUE"/>
             property.
             </summary>
-            <param name="value">string value of the property to be set.</param>
+            <param name="value">string value of the property to be set</param>
             <returns>
             this same
             <see cref="T:iText.Forms.Form.Element.IFormField"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Form.Element.IFormField.SetInteractive(System.Boolean)">
@@ -4256,34 +4285,34 @@
             if the form field element shall be added into Acroform,
             <see langword="false"/>
             otherwise.
-            By default, the form field element is not interactive and drawn on a page.
+            By default, the form field element is not interactive and drawn on a page
             </param>
             <returns>
             this same
             <see cref="T:iText.Forms.Form.Element.IFormField"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Form.Element.IFormField.GetId">
             <summary>Gets the id.</summary>
-            <returns>the id.</returns>
+            <returns>the id</returns>
         </member>
         <member name="M:iText.Forms.Form.Element.IFormField.SetWidth(System.Single)">
             <summary>Set the form field's width.</summary>
-            <param name="width">form field's width.</param>
+            <param name="width">form field's width</param>
             <returns>
             this
             <see cref="T:iText.Forms.Form.Element.FormField`1"/>
-            element.
+            element
             </returns>
         </member>
         <member name="M:iText.Forms.Form.Element.IFormField.SetHeight(System.Single)">
             <summary>Set the form field's height.</summary>
-            <param name="height">form field's height.</param>
+            <param name="height">form field's height</param>
             <returns>
             this
             <see cref="T:iText.Forms.Form.Element.FormField`1"/>
-            element.
+            element
             </returns>
         </member>
         <member name="T:iText.Forms.Form.Element.InputField">
@@ -4343,11 +4372,42 @@
             <param name="rotation">
             new rotation value, counterclockwise. Must be a multiple of 90 degrees.
             It has sense only in interactive mode, see
-            <see cref="M:iText.Forms.Form.Element.FormField`1.SetInteractive(System.Boolean)"/>.
+            <see cref="M:iText.Forms.Form.Element.FormField`1.SetInteractive(System.Boolean)"/>
             </param>
             <returns>
             the edited
-            <see cref="T:iText.Forms.Form.Element.InputField"/>.
+            <see cref="T:iText.Forms.Form.Element.InputField"/>
+            </returns>
+        </member>
+        <member name="M:iText.Forms.Form.Element.InputField.SetComb(System.Boolean)">
+            <summary>
+            Sets
+            <c>Comb</c>
+            flag for the text field.
+            </summary>
+            <remarks>
+            Sets
+            <c>Comb</c>
+            flag for the text field. Meaningful only if the MaxLen entry is present in the text field
+            dictionary and if the Multiline, Password and FileSelect flags are clear.
+            <para />
+            If true, the field is automatically divided into as many equally spaced positions, or combs,
+            as the value of MaxLen, and the text is laid out into those combs.
+            </remarks>
+            <param name="isComb">boolean value specifying whether to enable combing</param>
+            <returns>
+            this
+            <see cref="T:iText.Forms.Form.Element.InputField"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Forms.Form.Element.InputField.SetMaxLen(System.Int32)">
+            <summary>Sets the maximum length of the field's text, in characters.</summary>
+            <param name="maxLen">the current maximum text length</param>
+            <returns>
+            this
+            <see cref="T:iText.Forms.Form.Element.InputField"/>
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Form.Element.InputField.GetAccessibilityProperties">
@@ -4416,6 +4476,15 @@
         <member name="M:iText.Forms.Form.Element.ListBoxField.GetSelectedStrings">
             <summary>Get a list of selected options.</summary>
             <returns>a list of display values of selected options.</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Element.ListBoxField.SetTopIndex(System.Int32)">
+            <summary>Sets the index of the first visible option in a scrollable list.</summary>
+            <param name="topIndex">the index of the first option</param>
+            <returns>
+            this
+            <see cref="T:iText.Forms.Form.Element.ListBoxField"/>
+            instance
+            </returns>
         </member>
         <member name="M:iText.Forms.Form.Element.ListBoxField.GetAccessibilityProperties">
             <summary><inheritDoc/></summary>
@@ -4596,7 +4665,14 @@
             <see cref="T:iText.Forms.Form.Element.SignatureFieldAppearance"/>
             instance.
             </summary>
-            <param name="id">the id.</param>
+            <param name="id">
+            signature field name if you use this
+            <see cref="T:iText.Forms.Form.Element.SignatureFieldAppearance"/>
+            in pure layout for the new
+            interactive signature field creation. ID will be ignored if this
+            <see cref="T:iText.Forms.Form.Element.SignatureFieldAppearance"/>
+            is used for signing or for existing signature field
+            </param>
         </member>
         <member name="M:iText.Forms.Form.Element.SignatureFieldAppearance.SetContent(iText.Forms.Fields.Properties.SignedAppearanceText)">
             <summary>Sets the content for this signature.</summary>
@@ -4752,24 +4828,6 @@
             </summary>
             <param name="id">the id</param>
         </member>
-        <member name="M:iText.Forms.Form.Element.TextArea.UseAsPassword(System.Boolean)">
-            <summary>Determines, whether the input field will be password.</summary>
-            <remarks>
-            Determines, whether the input field will be password.
-            <para />
-            Usually means that instead of glyphs '*' will be shown in case of flatten field.
-            <para />
-            If the field is not flatten, value will be ignored.
-            </remarks>
-            <param name="isPassword">
-            
-            <see langword="true"/>
-            is this field shall be considered as password,
-            <see langword="false"/>
-            otherwise
-            </param>
-            <returns>this input field</returns>
-        </member>
         <member name="M:iText.Forms.Form.Element.TextArea.GetPlaceholder">
             <summary><inheritDoc/></summary>
         </member>
@@ -4815,9 +4873,6 @@
         <member name="F:iText.Forms.Form.FormProperty.FORM_FIELD_LABEL">
             <summary>The Constant FORM_FIELD_LABEL.</summary>
         </member>
-        <member name="F:iText.Forms.Form.FormProperty.FORM_ACCESSIBILITY_LANGUAGE">
-            <summary>The Constant FORM_ACCESSIBILITY_LANGUAGE.</summary>
-        </member>
         <member name="F:iText.Forms.Form.FormProperty.FORM_FIELD_RADIO_GROUP_NAME">
             <summary>The Constant FORM_FIELD_RADIO_GROUP_NAME.</summary>
         </member>
@@ -4829,6 +4884,21 @@
         </member>
         <member name="F:iText.Forms.Form.FormProperty.FORM_CONFORMANCE_LEVEL">
             <summary>The Constant FORM_CONFORMANCE_LEVEL.</summary>
+        </member>
+        <member name="F:iText.Forms.Form.FormProperty.LIST_BOX_TOP_INDEX">
+            <summary>The Constant LIST_BOX_TOP_INDEX representing the index of the first visible option in a scrollable list.
+                </summary>
+        </member>
+        <member name="F:iText.Forms.Form.FormProperty.TEXT_FIELD_COMB_FLAG">
+            <summary>
+            The Constant TEXT_FIELD_COMB_FLAG representing
+            <c>Comb</c>
+            flag for the text field.
+            </summary>
+        </member>
+        <member name="F:iText.Forms.Form.FormProperty.TEXT_FIELD_MAX_LEN">
+            <summary>The Constant TEXT_FIELD_MAX_LEN representing the maximum length of the field's text, in characters.
+                </summary>
         </member>
         <member name="T:iText.Forms.Form.Renderer.AbstractFormFieldRenderer">
             <summary>
@@ -4870,8 +4940,8 @@
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField,iText.Kernel.Pdf.PdfDocument)">
             <summary>Applies the accessibility properties to the form field.</summary>
-            <param name="formField">The form field to which the accessibility properties should be applied.</param>
-            <param name="pdfDocument">The document to which the form field belongs.</param>
+            <param name="formField">the form field to which the accessibility properties should be applied</param>
+            <param name="pdfDocument">the document to which the form field belongs</param>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.AdjustFieldLayout(iText.Layout.Layout.LayoutContext)">
             <summary>Adjusts the field layout.</summary>
@@ -4896,22 +4966,17 @@
             <returns>true, if the renderer fits.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetLang">
-            <summary>Gets the accessibility language.</summary>
+            <summary>
+            Gets the accessibility language using
+            <see cref="M:iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties"/>.
+            </summary>
             <returns>the accessibility language.</returns>
         </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
-            <summary>Gets the conformance level.</summary>
-            <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-                </remarks>
+        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetConformance(iText.Kernel.Pdf.PdfDocument)">
+            <summary>Gets the conformance.</summary>
+            <remarks>Gets the conformance. If the conformance is not set, the conformance of the document is used.</remarks>
             <param name="document">the document</param>
-            <returns>the conformance level or null if the conformance level is not set.</returns>
-        </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.GetGenericConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
-            <summary>Gets the conformance level.</summary>
-            <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-                </remarks>
-            <param name="document">the document</param>
-            <returns>the conformance level or null if the conformance level is not set.</returns>
+            <returns>the conformance or null if the conformance is not set.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractFormFieldRenderer.IsLayoutBasedOnFlatRenderer">
             <summary>Determines, whether the layout is based in the renderer itself or flat renderer.</summary>
@@ -4979,7 +5044,10 @@
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetLang">
-            <summary>Gets the accessibility language.</summary>
+            <summary>
+            Gets the accessibility language using
+            <see cref="M:iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties"/>.
+            </summary>
             <returns>the accessibility language.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.WriteAcroFormFieldLangAttribute(iText.Kernel.Pdf.PdfDocument)">
@@ -4989,8 +5057,8 @@
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField,iText.Kernel.Pdf.PdfDocument)">
             <summary>Applies the accessibility properties to the form field.</summary>
-            <param name="formField">The form field to which the accessibility properties should be applied.</param>
-            <param name="pdfDocument">The document to which the form field belongs.</param>
+            <param name="formField">the form field to which the accessibility properties should be applied</param>
+            <param name="pdfDocument">the document to which the form field belongs</param>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.CreateFlatRenderer">
             <summary>Creates the flat renderer instance.</summary>
@@ -5035,19 +5103,11 @@
             <param name="isClippedHeight">indicates whether the layout area's height is clipped or not</param>
             <returns>final height of the select field.</returns>
         </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
-            <summary>Gets the conformance level.</summary>
-            <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-                </remarks>
+        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetConformance(iText.Kernel.Pdf.PdfDocument)">
+            <summary>Gets the conformance.</summary>
+            <remarks>Gets the conformance. If the conformance is not set, the conformance of the document is used.</remarks>
             <param name="document">the document</param>
-            <returns>the conformance level or null if the conformance level is not set.</returns>
-        </member>
-        <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetGenericConformanceLevel(iText.Kernel.Pdf.PdfDocument)">
-            <summary>Gets the conformance level.</summary>
-            <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-                </remarks>
-            <param name="document">the document</param>
-            <returns>the conformance level or null if the conformance level is not set.</returns>
+            <returns>the conformance or null if the conformance is not set.</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.AbstractSelectFieldRenderer.GetOptionsMarkedSelected(iText.Layout.Renderer.IRenderer)">
             <summary>Gets options that are marked as selected from the select field options subtree.</summary>
@@ -5271,10 +5331,6 @@
             <summary>Gets the rendering mode of the checkbox.</summary>
             <returns>the rendering mode of the checkbox</returns>
         </member>
-        <member name="M:iText.Forms.Form.Renderer.CheckBoxRenderer.IsPdfA">
-            <summary>Returns whether or not the checkbox is in PDF/A mode.</summary>
-            <returns>true if the checkbox is in PDF/A mode, false otherwise</returns>
-        </member>
         <member name="M:iText.Forms.Form.Renderer.CheckBoxRenderer.GetCheckBoxType">
             <summary>Gets the checkBoxType.</summary>
             <returns>the checkBoxType</returns>
@@ -5304,6 +5360,7 @@
             <summary>Applies given paddings to the given rectangle.</summary>
             <remarks>
             Applies given paddings to the given rectangle.
+            <para />
             Checkboxes don't support setting of paddings as they are always centered.
             So that this method returns the rectangle as is.
             </remarks>
@@ -5392,6 +5449,14 @@
         </member>
         <member name="M:iText.Forms.Form.Renderer.InputFieldRenderer.SetMinMaxWidthBasedOnFixedWidth(iText.Layout.Minmaxwidth.MinMaxWidth)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.InputFieldRenderer.IsComb">
+            <summary>Checks if the input field is a comb field.</summary>
+            <returns>true, if the input field is a comb field</returns>
+        </member>
+        <member name="M:iText.Forms.Form.Renderer.InputFieldRenderer.GetMaxLen">
+            <summary>Gets the maximum length of the field's text, in characters.</summary>
+            <returns>the current maximum text length</returns>
         </member>
         <member name="M:iText.Forms.Form.Renderer.InputFieldRenderer.ObfuscatePassword(System.String)">
             <summary>Obfuscates the content of a password input field.</summary>
@@ -5576,23 +5641,23 @@
             <inheritDoc/>
             </param>
         </member>
-        <member name="T:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.RenderingMode">
-            <summary>Signature rendering modes.</summary>
+        <member name="T:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.DisplayOption">
+            <summary>Signature display options.</summary>
         </member>
-        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.RenderingMode.DESCRIPTION">
-            <summary>The rendering mode is just the description.</summary>
+        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.DisplayOption.DESCRIPTION">
+            <summary>The display option is just the description.</summary>
         </member>
-        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.RenderingMode.NAME_AND_DESCRIPTION">
-            <summary>The rendering mode is the name of the signer and the description.</summary>
+        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.DisplayOption.NAME_AND_DESCRIPTION">
+            <summary>The display option is the name of the signer and the description.</summary>
         </member>
-        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.RenderingMode.GRAPHIC_AND_DESCRIPTION">
-            <summary>The rendering mode is an image and the description.</summary>
+        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.DisplayOption.GRAPHIC_AND_DESCRIPTION">
+            <summary>The display option is an image and the description.</summary>
         </member>
-        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.RenderingMode.GRAPHIC">
-            <summary>The rendering mode is just an image.</summary>
+        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.DisplayOption.GRAPHIC">
+            <summary>The display option is just an image.</summary>
         </member>
-        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.RenderingMode.CUSTOM">
-            <summary>The rendering mode is div.</summary>
+        <member name="F:iText.Forms.Form.Renderer.SignatureAppearanceRenderer.DisplayOption.CUSTOM">
+            <summary>The display option is div.</summary>
         </member>
         <member name="T:iText.Forms.Form.Renderer.TextAreaRenderer">
             <summary>
@@ -6986,8 +7051,8 @@
         <member name="F:iText.Forms.Xfa.Xml2Som.inverseSearch">
             <summary>The data to do a search from the bottom hierarchy.</summary>
         </member>
-        <member name="F:iText.Forms.Xfa.Xml2Som.stack">
-            <summary>A stack to be used when parsing.</summary>
+        <member name="F:iText.Forms.Xfa.Xml2Som.somParts">
+            <summary>A som parts list in LIFO order as encountered when parsing dataset.</summary>
         </member>
         <member name="F:iText.Forms.Xfa.Xml2Som.anform">
             <summary>A temporary store for the repetition count.</summary>
@@ -7004,10 +7069,10 @@
         </member>
         <member name="M:iText.Forms.Xfa.Xml2Som.PrintStack">
             <summary>
-            Outputs the stack as the sequence of elements separated
+            Outputs the som parts list as the sequence of elements separated
             by '.'.
             </summary>
-            <returns>the stack as the sequence of elements separated by '.'</returns>
+            <returns>the som name</returns>
         </member>
         <member name="M:iText.Forms.Xfa.Xml2Som.GetShortName(System.String)">
             <summary>Gets the name with the <CODE>#subform</CODE> removed.</summary>
@@ -7016,13 +7081,13 @@
         </member>
         <member name="M:iText.Forms.Xfa.Xml2Som.InverseSearchAdd(System.String)">
             <summary>Adds a SOM name to the search node chain.</summary>
-            <param name="unstack">the SOM name</param>
+            <param name="somName">the SOM name</param>
         </member>
-        <member name="M:iText.Forms.Xfa.Xml2Som.InverseSearchAdd(System.Collections.Generic.IDictionary{System.String,iText.Forms.Xfa.InverseStore},System.Collections.Generic.Stack{System.String},System.String)">
+        <member name="M:iText.Forms.Xfa.Xml2Som.InverseSearchAdd(System.Collections.Generic.IDictionary{System.String,iText.Forms.Xfa.InverseStore},System.Collections.Generic.List{System.String},System.String)">
             <summary>Adds a SOM name to the search node chain.</summary>
             <param name="inverseSearch">the start point</param>
-            <param name="stack">the stack with the separated SOM parts</param>
-            <param name="unstack">the full name</param>
+            <param name="somParts">the list with the separated SOM parts in LIFO order</param>
+            <param name="somName">the full name</param>
         </member>
         <member name="M:iText.Forms.Xfa.Xml2Som.InverseSearchGlobal(System.Collections.Generic.IList{System.String})">
             <summary>Searches the SOM hierarchy from the bottom.</summary>

@@ -75,7 +75,8 @@
             ActionName = "CRMListList",
             ControllerName = "Dashboard",
             LinkText = "CRM",
-            QueryString = "?pageNum=1&rowCount=135",
+            //QueryString = "?pageNum=1&rowCount=135",
+            QueryString = "",
         },
     };
     int i;
@@ -215,6 +216,7 @@
     <a href="javascript: void(0);" onclick="javascript: return shoppingCart_onclick(event);" style="padding-left: 0px;">View Cart</a>
     <a href="javascript: void(0);" onclick="javascript: return false;">Checkout</a>
     <a href="@Url.Action("Logout", "Home")">Logout</a>
+    <a href="javascript: void(0);" style="color: #ffff00; cursor: auto; font-size: 12px; font-weight: 800; padding-left: 27px; text-decoration: none;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</a>
 </div>
 <div class="customTopNav" id="divMenuResponsive" style="background-color: #800000;">
     <div style="padding-bottom: 3px;">
@@ -225,6 +227,7 @@
         <a href="" style="padding-left: 1px; padding-right: 5px;">View Cart</a>
         <a href="" style="padding-left: 5px; padding-right: 5px;">Checkout</a>
         <a href="" style="padding-left: 5px; padding-right: 0px;">Logout</a>
+        <a href="javascript: void(0);" style="color: #ffff00; cursor: auto; font-size: 10px; font-weight: 800; margin-top: 4px; padding-left: 19px; text-decoration: none;">@ArchLibCache.GetApplicationDefault(clientId, "BusinessName1", "")</a>
         <div style="float: right; margin: 0px; padding: 0px; vertical-align: top;">
             <a href="javascript: void(0);" onclick="myFunction()"><i class="fa fa-bars"></i></a>
         </div>

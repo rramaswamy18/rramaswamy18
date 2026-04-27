@@ -85,6 +85,14 @@
             <summary>Obtains the wrapped event.</summary>
             <returns>wrapped event</returns>
         </member>
+        <member name="M:iText.Commons.Actions.AbstractEventWrapper.GetClassFromContext">
+            <summary>Obtains the class from context of the wrapped event.</summary>
+            <returns>class from context</returns>
+        </member>
+        <member name="M:iText.Commons.Actions.AbstractEventWrapper.GetEventType">
+            <summary>Obtains the event type of the wrapped event.</summary>
+            <returns>event type</returns>
+        </member>
         <member name="T:iText.Commons.Actions.AbstractITextConfigurationEvent">
             <summary>Abstract class which represents system configuration events.</summary>
             <remarks>Abstract class which represents system configuration events. Only for internal usage.</remarks>
@@ -580,8 +588,12 @@
             </remarks>
         </member>
         <member name="M:iText.Commons.Actions.EventManager.GetInstance">
-            <summary>Allows an access to the instance of EventManager.</summary>
-            <returns>the instance of the class</returns>
+            <summary>Allows access to the default instance of EventManager.</summary>
+            <returns>the default instance of the class</returns>
+        </member>
+        <member name="M:iText.Commons.Actions.EventManager.CreateNewInstance">
+            <summary>Creates a new instance of EventManager, it should be used for dedicated event usage.</summary>
+            <returns>a new instance of the class</returns>
         </member>
         <member name="M:iText.Commons.Actions.EventManager.AcknowledgeAgplUsageDisableWarningMessage">
             <summary>Deliberately turns off the warning message about AGPL usage.</summary>
@@ -901,15 +913,28 @@
             <see cref="T:iText.Commons.Actions.Confirmations.ConfirmedEventWrapper"/>
             or not.
             Format of the new producer line will be defined by the first event in the list.
-            Placeholder will be replaced and merged all together
+            Placeholder will be replaced and merged all together.
             </remarks>
             <param name="events">list of events registered for the document</param>
             <param name="oldProducer">
             old producer line. If <c>null</c> or empty, will be replaced
             with a new one. Otherwise new line will be attached with
             <c>modified using</c> prefix. If old producer line already contains
-            <c>modified using</c> substring, it will be overriden with a new one
+            <c>modified using itext</c> substring with the current version of itext at the end,
+            no changes will be made
             </param>
+            <returns>modified producer line</returns>
+        </member>
+        <member name="M:iText.Commons.Actions.Producer.ProducerBuilder.MergeProducerLines(System.String,System.String)">
+            <summary>Merges two producer lines.</summary>
+            <remarks>
+            Merges two producer lines. If first producer line <c>null</c> or empty, it will be replaced with the second one.
+            Otherwise second producer line will be attached with <c>modified using</c> prefix. If first producer line
+            already contains <c>modified using</c> substring with the second producer line at the end, first producer
+            line will be returned unchanged.
+            </remarks>
+            <param name="firstProducer">first producer line</param>
+            <param name="secondProducer">second producer line</param>
             <returns>modified producer line</returns>
         </member>
         <member name="M:iText.Commons.Actions.Producer.ProducerBuilder.DoAction">
@@ -982,6 +1007,12 @@
         </member>
         <member name="F:iText.Commons.Actions.ProductNameConstant.PDF_OCR_TESSERACT4">
             <summary>pdfocr-tesseract4 constant.</summary>
+        </member>
+        <member name="F:iText.Commons.Actions.ProductNameConstant.PDF_OCR_ONNXTR">
+            <summary>pdfocr-onnxtr constant.</summary>
+        </member>
+        <member name="F:iText.Commons.Actions.ProductNameConstant.PDF_OCR_ONNX">
+            <summary>pdfocr-onnx constant.</summary>
         </member>
         <member name="F:iText.Commons.Actions.ProductNameConstant.PRODUCT_NAMES">
             <summary>set of product names.</summary>
@@ -1335,6 +1366,18 @@
             </summary>
             <param name="element">AlgorithmIdentifier wrapper.</param>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.IAsn1EncodableVector.Size">
+            <summary>
+            Calls actual
+            <c>size</c>
+            method for the wrapped ASN1EncodableVector object.
+            </summary>
+            <returns>
+            
+            <c>int</c>
+            representing current vector size
+            </returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.IAsn1Encoding">
             <summary>
             This interface represents the wrapper for ASN1Encoding that provides the ability
@@ -1426,6 +1469,27 @@
             method for the wrapped ASN1OctetString object.
             </summary>
             <returns>DER-encoded byte array.</returns>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.IAsn1OutputStream">
+            <summary>
+            This interface represents the wrapper for ASN1OutputStream that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.IAsn1OutputStream.WriteObject(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
+            <summary>
+            Calls actual
+            <c>writeObject</c>
+            method for the wrapped ASN1OutputStream object.
+            </summary>
+            <param name="primitive">wrapped ASN1Primitive object.</param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.IAsn1OutputStream.Dispose">
+            <summary>
+            Delegates
+            <c>close</c>
+            method call to the wrapped stream.
+            </summary>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.IAsn1Sequence">
             <summary>
@@ -1553,6 +1617,14 @@
             </summary>
             <returns>int value of the wrapped ASN1BitString.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.IDerBitString.GetBytes">
+            <summary>
+            Call actual
+            <c>getBytes</c>
+            method for the wrapped ASN1BitString object.
+            </summary>
+            <returns>bytes of the wrapped ASN1BitString.</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.IDerEnumerated">
             <summary>
             This interface represents the wrapper for ASN1Enumerated that provides the ability
@@ -1572,6 +1644,18 @@
             This interface represents the wrapper for ASN1GeneralizedTime that provides the ability
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
             </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.IDerGeneralizedTime.GetDate">
+            <summary>
+            Calls actual
+            <c>getDate</c>
+            method for the wrapped ASN1GeneralizedTime object.
+            </summary>
+            <returns>
+            
+            <see cref="T:System.DateTime"/>
+            date stored in the wrapped ASN1GeneralizedTime.
+            </returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.IDerIA5String">
             <summary>
@@ -1617,27 +1701,6 @@
             <summary>
             This interface represents the wrapper for DEROctetString that provides the ability
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
-            </summary>
-        </member>
-        <member name="T:iText.Commons.Bouncycastle.Asn1.IDerOutputStream">
-            <summary>
-            This interface represents the wrapper for ASN1OutputStream that provides the ability
-            to switch between bouncy-castle and bouncy-castle FIPS implementations.
-            </summary>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Asn1.IDerOutputStream.WriteObject(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
-            <summary>
-            Calls actual
-            <c>writeObject</c>
-            method for the wrapped ASN1OutputStream object.
-            </summary>
-            <param name="primitive">wrapped ASN1Primitive object.</param>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Asn1.IDerOutputStream.Dispose">
-            <summary>
-            Delegates
-            <c>close</c>
-            method call to the wrapped stream.
             </summary>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.IDerSequence">
@@ -1739,6 +1802,22 @@
             </summary>
             <returns>date BasicOCSPResponse was produced at.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse.GetExtensionParsedValue(iText.Commons.Bouncycastle.Asn1.IDerObjectIdentifier)">
+            <summary>
+            Calls actual
+            <c>GetExtensionParsedValue</c>
+            method for the wrapped BasicOCSPResponse object.
+            </summary>
+            <returns>Parsed extension value.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse.GetSignatureAlgorithmID">
+            <summary>
+            Calls actual 
+            <c>getSignatureAlgorithmID</c> 
+            method for the wrapped BasicOCSPResp object.
+            </summary> 
+            <returns> the signature algorithm id</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.Ocsp.IOcspObjectIdentifiers">
             <summary>
             This interface represents the wrapper for OCSPObjectIdentifiers that provides the ability
@@ -1768,6 +1847,14 @@
             constant for the wrapped OCSPObjectIdentifiers.
             </summary>
             <returns>OCSPObjectIdentifiers.id_pkix_ocsp_nocheck wrapper.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Ocsp.IOcspObjectIdentifiers.GetIdPkixOcspArchiveCutoff">
+            <summary>
+            Gets
+            <c>id_pkix_ocsp_archive_cutoff</c>
+            constant for the wrapped OCSPObjectIdentifiers.
+            </summary>
+            <returns>OCSPObjectIdentifiers.id_pkix_ocsp_archive_cutoff wrapper.</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.Ocsp.IOcspResponse">
             <summary>
@@ -1916,6 +2003,86 @@
             values will be small.
             </remarks>
         </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.Pkix.AbstractPKIXNameConstraintValidatorException">
+            <summary>
+            This abstract class represents the wrapper for PKIXNameConstraintValidatorException that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator">
+            <summary>
+            This interface represents the wrapper for PKIXConstraintValidator that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator.CheckPermittedDN(iText.Commons.Bouncycastle.Asn1.IAsn1Sequence)">
+            <summary>
+            Calls actual
+            <c>checkPermittedDN</c>
+            method for the wrapped PKIXConstraintValidator object.
+            </summary>
+            <param name="dns">
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IAsn1Sequence"/>
+            direct name sequence wrapper to be checked
+            </param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator.CheckExcludedDN(iText.Commons.Bouncycastle.Asn1.IAsn1Sequence)">
+            <summary>
+            Calls actual
+            <c>checkExcludedDN</c>
+            method for the wrapped PKIXConstraintValidator object.
+            </summary>
+            <param name="dns">
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IAsn1Sequence"/>
+            direct name sequence wrapper to be checked
+            </param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator.CheckPermitted(iText.Commons.Bouncycastle.Asn1.X509.IGeneralName)">
+            <summary>
+            Calls actual
+            <c>checkPermitted</c>
+            method for the wrapped PKIXConstraintValidator object.
+            </summary>
+            <param name="name">
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralName"/>
+            general name wrapper to be checked
+            </param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator.CheckExcluded(iText.Commons.Bouncycastle.Asn1.X509.IGeneralName)">
+            <summary>
+            Calls actual
+            <c>checkExcluded</c>
+            method for the wrapped PKIXConstraintValidator object.
+            </summary>
+            <param name="name">
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralName"/>
+            general name wrapper to be checked
+            </param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator.IntersectPermittedSubtree(iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree[])">
+            <summary>
+            Calls actual
+            <c>intersectPermittedSubtree</c>
+            method for the wrapped PKIXConstraintValidator object.
+            </summary>
+            <param name="permitted">sequence of GeneralSubtree wrappers</param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.Pkix.IPKIXConstraintValidator.AddExcludedSubtree(iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree)">
+            <summary>
+            Calls actual
+            <c>addExcludedSubtree</c>
+            method for the wrapped PKIXConstraintValidator object.
+            </summary>
+            <param name="subtree">
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree"/>
+            wrapper
+            </param>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.Tsp.IMessageImprint">
             <summary>
             This interface represents the wrapper for MessageImprint that provides the ability
@@ -1998,6 +2165,14 @@
             This interface represents the wrapper for X500Name that provides the ability
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
             </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X500.IX500Name.GetName">
+            <summary>Gets the RFC2253 name.</summary>
+            <returns>the RFC2253 name</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X500.IX500Name.GetEncoded">
+            <summary>Gets byte array representation of a wrapped X500Name.</summary>
+            <returns>byte array representation of a wrapped X500Name</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier">
             <summary>
@@ -2201,6 +2376,12 @@
             <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralName"/>.
             </returns>
         </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree">
+            <summary>
+            This interface represents the wrapper for GeneralSubtree that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IIssuingDistributionPoint">
             <summary>
             This interface represents the wrapper for IssuingDistributionPoint that provides the ability
@@ -2299,6 +2480,36 @@
             </summary>
             <returns>KeyUsage.nonRepudiation value.</returns>
         </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.X509.INameConstraints">
+            <summary>
+            This interface represents the wrapper for NameConstraints that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.INameConstraints.GetPermittedSubtrees">
+            <summary>
+            Calls actual
+            <c>getPermittedSubtrees</c>
+            method for the wrapped NameConstraints object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree"/>
+            array of wrapped GeneralSubtree objects.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.INameConstraints.GetExcludedSubtrees">
+            <summary>
+            Calls actual
+            <c>getExcludedSubtrees</c>
+            method for the wrapped NameConstraints object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IGeneralSubtree"/>
+            array of wrapped GeneralSubtree objects.
+            </returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.IReasonFlags">
             <summary>
             This interface represents the wrapper for ReasonFlags that provides the ability
@@ -2327,6 +2538,18 @@
             
             <see cref="T:iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier"/>
             wrapped AlgorithmIdentifier.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.ISubjectPublicKeyInfo.GetPublicKeyData">
+            <summary>
+            Calls actual
+            <c>getPublicKeyData</c>
+            method for the wrapped SubjectPublicKeyInfo object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IDerBitString"/>
+            wrapped ASN1 Bit String representing public key data.
             </returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Asn1.X509.ITbsCertificateStructure">
@@ -2453,6 +2676,44 @@
             </summary>
             <returns>Extension.subjectKeyIdentifier wrapper.</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.IX509Extensions.GetExpiredCertsOnCRL">
+            <summary>
+            Gets
+            <c>expiredCertsOnCRL</c>
+            constant for the wrapped Extension.
+            </summary>
+            <returns>Extension.expiredCertsOnCRL wrapper.</returns>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Asn1.X509.Qualified.IQCStatement">
+            <summary>
+            This interface represents the wrapper for QCStatement that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.Qualified.IQCStatement.GetStatementId">
+            <summary>
+            Calls actual
+            <c>getStatementId</c>
+            method for the wrapped QCStatement object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IDerObjectIdentifier"/>
+            wrapped ASN1ObjectIdentifier object.
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Asn1.X509.Qualified.IQCStatement.GetStatementInfo">
+            <summary>
+            Calls actual
+            <c>getStatementInfo</c>
+            method for the wrapped QCStatement object.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IAsn1Encodable"/>
+            wrapped ASN1Encodable object.
+            </returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.CRLReason">
             <summary>
             The CRLReason enumeration specifies the reason that a certificate is revoked, as defined in RFC 5280: Internet X.509 Public Key Infrastructure Certificate and CRL Profile .
@@ -2558,6 +2819,12 @@
             Get the signature algorithms parameters. (EG DSA Parameters)
             </summary>
             <returns>A byte array containing the Der encoded version of the parameters or null if there are none.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetSigAlgName">
+            <summary>
+            Get the Signature Algorithms name.
+            </summary>
+            <returns>The Signature Algortihm name.</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetEncoded">
             <summary>
@@ -2665,6 +2932,12 @@
             </summary>
             <returns>int value representing basic constraints extension</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Certificate.GetSubjectAttributeTypes">
+            <summary>
+            Retrieves an array of IDerObjectIdentifier representing subject attribute types.
+            </summary>
+            <returns>array of IDerObjectIdentifier representing subject attribute types</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.IX509Crl">
             <summary>
             This interface represents the wrapper for X509Crl that provides the ability
@@ -2735,6 +3008,24 @@
             method for the wrapped X509Crl object.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Crl.GetSigAlgOID">
+            <summary>
+            Get the Signature Algorithms Object ID.
+            </summary>
+            <returns>A string containg a '.' separated object id.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Crl.GetSigAlgParams">
+            <summary>
+            Get the signature algorithms parameters. (EG DSA Parameters)
+            </summary>
+            <returns>A byte array containing the Der encoded version of the parameters or null if there are none.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.IX509Crl.GetSigAlgName">
+            <summary>
+            Get the Signature Algorithms name.
+            </summary>
+            <returns>The Signature Algortihm name.</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.IX509V2CrlGenerator">
             <summary>
@@ -3034,6 +3325,40 @@
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
             </summary>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.Ocsp.IRespID.ToASN1Primitive">
+            <summary>
+            Calls actual
+            <c>toASN1Primitive</c>
+            method for the wrapped BasicOCSPResp object.
+            </summary>
+            <returns>Responder ID as a ASN1 primitive.</returns>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Cert.Ocsp.IResponderID">
+            <summary>
+            This interface represents the wrapper for ResponderID that provides the ability
+            to switch between bouncy-castle and bouncy-castle FIPS implementations.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.Ocsp.IResponderID.GetName">
+            <summary>
+            Calls actual
+            <c>getName</c>
+            method for the wrapped BasicOCSPResp object.
+            </summary>
+            <returns>wrapped X500NAme</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Cert.Ocsp.IResponderID.GetKeyHash">
+            <summary>
+            Calls actual
+            <c>getKeyHash</c>
+            method for the wrapped BasicOCSPResp object.
+            </summary>
+            <returns>
+            
+            <c>byte[]</c>
+            representing corresponding key hash
+            </returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Cert.Ocsp.IRevokedCertStatus">
             <summary>
             This interface represents the wrapper for RevokedStatus that provides the ability
@@ -3266,72 +3591,17 @@
             <param name="inpLen">Input data length</param>
             <returns>Processed bytes</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.ICipherCBCnoPad.DoFinal">
+            <summary>
+            Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+            </summary>
+            <returns>Processed bytes</returns>
+        </member>
         <member name="T:iText.Commons.Bouncycastle.Crypto.IDigest">
             <summary>
             This interface represents the wrapper for IDigest that provides the ability
             to switch between bouncy-castle and bouncy-castle FIPS implementations.
             </summary>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.Digest(System.Byte[])">
-            <summary>
-            Calls actual
-            <c>Digest</c>
-            method for the wrapped IDigest object.
-            </summary>
-            <param name="enc2">byte array</param>
-            <returns>
-            byte array.
-            </returns>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.Digest">
-            <summary>
-            Calls actual
-            <c>Digest</c>
-            method for the wrapped IDigest object.
-            Leaves the digest reset.
-            </summary>
-            <returns>
-            byte array.
-            </returns>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.GetDigestLength">
-            <summary>
-            Gets byte length of wrapped digest algorithm.
-            </summary>
-            <returns>digest length</returns>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.Update(System.Byte[],System.Int32,System.Int32)">
-            <summary>
-            Calls actual
-            <c>Update</c>
-            method for the wrapped IDigest object.
-            </summary>
-            <param name="buf">byte array buffer</param>
-            <param name="off">offset</param>
-            <param name="len">buffer length</param>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.Update(System.Byte[])">
-            <summary>
-            Calls actual
-            <c>Update</c>
-            method for the wrapped IDigest object.
-            </summary>
-            <param name="buf">byte array buffer</param>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.Reset">
-            <summary>
-            Calls actual
-            <c>Reset</c>
-            method for the wrapped IDigest object.
-            </summary>
-        </member>
-        <member name="M:iText.Commons.Bouncycastle.Crypto.IDigest.GetAlgorithmName">
-            <summary>
-            Gets actual
-            <c>AlgorithmName</c>
-            for the wrapped IDigest object.
-            </summary>
-            <returns>algorithm name.</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.Crypto.IPrivateKey">
             <summary>
@@ -3371,6 +3641,14 @@
             method for the wrapped ISigner object.
             </summary>
             <param name="publicKey">public key</param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.ISigner.InitRsaPssSigner(System.String,System.Int32,System.Int32)">
+            <summary>
+            Creates actual signer object to create RSASSA-PSS signature
+            </summary>
+            <param name="digestAlgoName">digect algorithm</param>
+            <param name="saltLen">salt length</param>
+            <param name="trailerField">trailer field</param>
         </member>
         <member name="M:iText.Commons.Bouncycastle.Crypto.ISigner.Update(System.Byte[],System.Int32,System.Int32)">
             <summary>
@@ -3421,6 +3699,74 @@
             for the wrapped ISigner object.
             </summary>
             <param name="algorithm">digest algorithm</param>
+        </member>
+        <member name="T:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher">
+            <summary>Interface for aes-gcm cryptographic ciphers.</summary>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.Init(System.Boolean,System.Byte[],System.Int32,System.Byte[])">
+            <summary>Initialize this cipher with a key and a set of algorithm parameters.</summary>
+            <param name="forEncryption">true to use encrypt mode, false to use decrypt mode</param>
+            <param name="key">the encryption key</param>
+            <param name="macSizeBits">MAC size, MAC sizes from 32 bits to 128 bits (must be a multiple of 8)</param>
+            <param name="iv">the IV source buffer</param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.GetUpdateOutputSize(System.Int32)">
+            <summary>
+            Returns the length in bytes that an output buffer would need to be in order to hold the result of
+            the next update operation, given the input length (in bytes).
+            </summary>
+            <param name="len">input length (in bytes)</param>
+            <returns>output length in bytes</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.ProcessBytes(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Perform a multiple-part encryption or decryption operation (depending on how this cipher was initialized),
+            processing another data part.
+            </summary>
+            <param name="input">the input buffer</param>
+            <param name="inputOffset">the offset in input where the input starts</param>
+            <param name="len">the input length</param>
+            <param name="output">the buffer for the result</param>
+            <param name="outOffset">the offset in output where the result is stored</param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.ProcessBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Perform a multiple-part encryption or decryption operation (depending on how this cipher was initialized),
+            processing another data part.
+            </summary>
+            <param name="input">the input buffer</param>
+            <param name="inputOffset">the offset in input where the input starts</param>
+            <param name="len">the input length</param>
+            <returns>byte array with the result</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.GetOutputSize(System.Int32)">
+            <summary>
+            Returns the length in bytes that an output buffer would need to be in order to hold the result of
+            the next doFinal operation, given the input length (in bytes).
+            </summary>
+            <param name="len">input length (in bytes)</param>
+            <returns>output length in bytes</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.DoFinal(System.Byte[],System.Int32)">
+            <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+                </summary>
+            <remarks>
+            Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+            Input data that may have been buffered during a previous update operation is processed, also
+            the authentication tag is appended in the case of encryption, or verified in the case of decryption.
+            </remarks>
+            <param name="plainText">the buffer for the result</param>
+            <param name="i">the offset in output where the result is stored</param>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.Crypto.Modes.IGCMBlockCipher.DoFinal">
+            <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+                </summary>
+            <remarks>
+            Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+            Input data that may have been buffered during a previous update operation is processed, also
+            the authentication tag is appended in the case of encryption, or verified in the case of decryption.
+            </remarks>
+            <returns>byte array with the result</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.IBouncyCastleFactory">
             <summary>
@@ -4154,6 +4500,13 @@
             <summary>Create general name wrapper without parameters.</summary>
             <returns>created general name wrapper</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateGeneralName(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
+            <summary>
+            Creates General Name wrapper from the provided ASN1 Encodable wrapper.
+            </summary>
+            <param name="encodable">ASN1 Encodable wrapper</param>
+            <returns>General Name wrapper</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateOtherHashAlgAndValue(iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier,iText.Commons.Bouncycastle.Asn1.IAsn1OctetString)">
             <summary>Create other hash alg and value wrapper from algorithm identifier wrapper and ASN1 Octet string wrapper.
                 </summary>
@@ -4322,10 +4675,42 @@
             <param name="encodable">ASN1 Encodable wrapper to be cast</param>
             <returns>casted ASN1 Generalized time wrapper</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateASN1GeneralizedTime(System.DateTime)">
+            <summary>Cast DateTime to ASN1 Generalized time wrapper.</summary>
+            <param name="date">DateTime to be cast</param>
+            <returns>ASN1 Generalized time wrapper</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateASN1UTCTime(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
             <summary>Cast ASN1 Encodable wrapper to ASN1 UTC Time wrapper.</summary>
             <param name="encodable">ASN1 Encodable wrapper to be cast</param>
             <returns>casted ASN1 UTC Time wrapper</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateTimeStampTokenGenerator(iText.Commons.Bouncycastle.Crypto.IPrivateKey,iText.Commons.Bouncycastle.Cert.IX509Certificate,System.String,System.String,System.String)">
+             <summary>
+             Create timestamp response generator wrapper from private key wrapper, X509 Certificate wrapper, 
+             <see cref="!:System.string"/> 
+             allowed digest and
+             <see cref="!:System.string"/>
+             policy oid.
+             </summary>
+             <param name="pk">private key wrapper to create timestamp response generator wrapper from</param>
+             <param name="cert">X509 Certificate wrapper to create timestamp response generator wrapper from</param>
+             <param name="signatureAlgorithm">
+            
+             <see cref="!:System.string"/>
+             signature algorithm used for the private key to create timestamp response generator wrapper from
+             </param>
+             <param name="allowedDigest">
+            
+             <see cref="!:System.string"/>
+             allowed digest to create timestamp response generator wrapper from
+             </param>
+             <param name="policyOid">
+            
+             <see cref="!:System.string"/>
+             policy oid to create timestamp response generator wrapper from
+             </param>
+             <returns>created timestamp response generator wrapper</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateTimeStampTokenGenerator(iText.Commons.Bouncycastle.Crypto.IPrivateKey,iText.Commons.Bouncycastle.Cert.IX509Certificate,System.String,System.String)">
              <summary>
@@ -4401,9 +4786,26 @@
             </param>
             <returns>created X500 Name wrapper</returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateX500Name(iText.Commons.Bouncycastle.Asn1.IAsn1Sequence)">
+            <summary>
+            Create X500 Name wrapper from
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IAsn1Sequence"/>.
+            </summary>
+            <param name="s">
+            
+            <see cref="T:iText.Commons.Bouncycastle.Asn1.IAsn1Sequence"/>
+            to create X500 Name wrapper from
+            </param>
+            <returns>created X500 Name wrapper</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateRespID(iText.Commons.Bouncycastle.Asn1.X500.IX500Name)">
             <summary>Create resp ID wrapper from X500 Name wrapper.</summary>
             <param name="x500Name">X500 Name wrapper to create resp ID wrapper from</param>
+            <returns>created resp ID wrapper</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateRespID(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
+            <summary>Creates resp ID wrapper from X509Certificate wrapper.</summary>
+            <param name="certificate">X509Certificate wrapper from which resp ID wrapper will be created</param>
             <returns>created resp ID wrapper</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateBasicOCSPRespBuilder(iText.Commons.Bouncycastle.Cert.Ocsp.IRespID)">
@@ -4554,6 +4956,13 @@
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateTSTInfo(iText.Commons.Bouncycastle.Asn1.Cms.IContentInfo)">
             <summary>Create TST Info wrapper from content info wrapper.</summary>
             <param name="contentInfo">content info wrapper to create TST Info wrapper from</param>
+            <returns>created TST Info wrapper</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateTSTInfo(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
+            <summary>
+            Create TST Info wrapper from content info wrapper.
+            </summary>
+            <param name="contentInfo">primitive wrapper to create TST Info wrapper from</param>
             <returns>created TST Info wrapper</returns>
         </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateSingleResp(iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse)">
@@ -4927,6 +5336,19 @@
             otherwise
             </returns>
         </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.IsNull(iText.Commons.Bouncycastle.Asn1.IAsn1Encodable)">
+            <summary>
+            Check if provided encodable wrapper wraps null.
+            </summary>
+            <param name="encodable">encodable wrapper to be checked</param>
+            <returns>true if provided encodable wrapper wraps null, false otherwise</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GetSecureRandom">
+            <summary>
+            Get SecureRandom implementation from the factory.
+            </summary>
+            <returns>SecureRandom implementation</returns>
+        </member>
         <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateCipherBytes(iText.Commons.Bouncycastle.Cert.IX509Certificate,System.Byte[],iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier)">
              <summary>
              Create
@@ -4980,6 +5402,73 @@
             </summary>
             <param name="certificate">certificate to get end date</param>
             <returns>The end date of the certificate</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GenerateHKDF(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Generates byte array based on extract-and-expand key derivation function, using provided parameters.
+            </summary>
+            <param name="inputKey">byte[] input key material</param>
+            <param name="salt">byte[] salt</param>
+            <param name="info">byte[] info</param>
+            <returns>byte[] key derivation function result.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GenerateHMACSHA256Token(System.Byte[],System.Byte[])">
+            <summary>
+            Generates byte array based MAC token according to HMACSHA256 algorithm.
+            </summary>
+            <param name="key">MAC key</param>
+            <param name="data">data to be encrypted</param>
+            <returns>byte array based MAC token.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GenerateEncryptedKeyWithAES256NoPad(System.Byte[],System.Byte[])">
+            <summary>
+            Generates encrypted key based on AES256 without padding wrapping algorithm.
+            </summary>
+            <param name="key">key to be encrypted</param>
+            <param name="kek">key encryption key to be used</param>
+            <returns>encrypted key.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GenerateDecryptedKeyWithAES256NoPad(System.Byte[],System.Byte[])">
+            <summary>
+            Generates decrypted key based on AES256 without padding unwrapping algorithm.
+            </summary>
+            <param name="key">key to be decrypted</param>
+            <param name="kek">key encryption key to be used</param>
+            <returns>decrypted key.</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GetRsaParametersFromCertificate(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
+            <summary>
+            Get asymmetric algorithm object instance from bouncy-castle X509 certificate wrapper.
+            </summary>
+            <param name="certificate">Bouncy-castle X509 certificate wrapper</param>
+            <returns>Asymmetric algorithm instance</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.GetPoliciesIds(System.Byte[])">
+            <summary>
+            Gets list of policies IDs from the provided certificate policy extension.
+            </summary>
+            <param name="policyExtension">certificate policy extension as byte array</param>
+            <returns>list of policies IDs</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.ParseQcStatement(System.Byte[])">
+            <summary>
+            Parses list of IQCStatement from the provided certificate QC Statements Extension value.
+            </summary>
+            <param name="qcStatementsExtensionValue">certificate QC Statements Extension value as byte array</param>
+            <returns>list of IQCStatement</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateNameConstraintValidator">
+            <summary>
+            Creates name constraint validator wrapper.
+            </summary>
+            <returns>name constraint validator wrapper</returns>
+        </member>
+        <member name="M:iText.Commons.Bouncycastle.IBouncyCastleFactory.CreateNameConstraints(iText.Commons.Bouncycastle.Asn1.IAsn1Object)">
+            <summary>
+            Creates name constraints wrapper out of ASN1 Object wrapper.
+            </summary>
+            <param name="primitive">ASN1 Object wrapper from which name constraints wrapper is created</param>
+            <returns>name constraints wrapper</returns>
         </member>
         <member name="T:iText.Commons.Bouncycastle.IBouncyCastleTestConstantsFactory">
             <summary>
@@ -5506,6 +5995,69 @@
             <param name="v">the value</param>
             <returns>true, if the map contains the value</returns>
         </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.UnionWith(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.Add(`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.Clear">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.Contains(`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.CopyTo(`0[],System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.Remove(`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="P:iText.Commons.Datastructures.ConcurrentHashSet`1.Count">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="P:iText.Commons.Datastructures.ConcurrentHashSet`1.IsReadOnly">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.GetEnumerator">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.IntersectWith(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.ExceptWith(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.SymmetricExceptWith(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.IsSubsetOf(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.IsSupersetOf(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.IsProperSupersetOf(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.IsProperSubsetOf(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.System#Collections#Generic#ICollection{TElement}#Add(`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.Overlaps(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ConcurrentHashSet`1.SetEquals(System.Collections.Generic.IEnumerable{`0})">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Commons.Datastructures.ConcurrentWeakMap`2">
             <summary>Concurrent weak hash map implementation.</summary>
             <typeparam name="K">type of the keys</typeparam>
@@ -5559,6 +6111,71 @@
         <member name="P:iText.Commons.Datastructures.ConcurrentWeakMap`2.Values">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="T:iText.Commons.Datastructures.ISimpleList`1">
+            <summary>Interface for a simple list abstraction.</summary>
+            <remarks>
+            Interface for a simple list abstraction.
+            <para />
+            This interface is a subset of the
+            <see cref="!:System.Collections.IList&lt;E&gt;"/>
+            interface.
+            It is intended to be used in cases where the full
+            <see cref="!:System.Collections.IList&lt;E&gt;"/>
+            interface is not needed.
+            </remarks>
+            <typeparam name="T">The type of elements in this list.</typeparam>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.Add(`0)">
+            <summary>Adds an element to the end of the list.</summary>
+            <param name="element">the element to add</param>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.Add(System.Int32,`0)">
+            <summary>Adds an element to the list at the specified index.</summary>
+            <param name="index">the index at which to add the element</param>
+            <param name="element">the element to add</param>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.Get(System.Int32)">
+            <summary>Returns the element at the specified index.</summary>
+            <param name="index">the index of the element to return</param>
+            <returns>the element at the specified index</returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.Set(System.Int32,`0)">
+            <summary>Replaces the element at the specified index with the specified element.</summary>
+            <param name="index">the index of the element to replace</param>
+            <param name="element">the element to be stored at the specified index</param>
+            <returns>the element previously at the specified index</returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.IndexOf(System.Object)">
+            <summary>
+            Returns the index of the first occurrence of the specified element in the list,
+            or -1 if the list does not contain the element.
+            </summary>
+            <param name="element">the element to search for</param>
+            <returns>
+            the index of the first occurrence of the specified element in the list,
+            or -1 if the list does not contain the element
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.Remove(System.Int32)">
+            <summary>Removes the element at the specified index.</summary>
+            <param name="index">the index of the element to be removed</param>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.Size">
+            <summary>Returns the number of elements in the list.</summary>
+            <returns>the number of elements in the list</returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.ISimpleList`1.IsEmpty">
+            <summary>
+            Returns
+            <see langword="true"/>
+            if the list contains no elements, false otherwise.
+            </summary>
+            <returns>
+            
+            <see langword="true"/>
+            if the list contains no elements, false otherwise
+            </returns>
+        </member>
         <member name="T:iText.Commons.Datastructures.NullableContainer`1">
             <summary>A simple container that can hold a value.</summary>
             <remarks>
@@ -5579,6 +6196,114 @@
         <member name="M:iText.Commons.Datastructures.NullableContainer`1.GetValue">
             <summary>Gets the value.</summary>
             <returns>the value</returns>
+        </member>
+        <member name="T:iText.Commons.Datastructures.NullUnlimitedList`1">
+            <summary>
+            The class represents a list which allows null elements, but doesn't allocate a memory for them, in the rest of
+            cases it behaves like usual
+            <see cref="!:System.Collections.ArrayList&lt;E&gt;"/>
+            and should have the same complexity (because keys are unique
+            integers, so collisions are impossible).
+            </summary>
+            <typeparam name="T">elements of the list</typeparam>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.#ctor">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Commons.Datastructures.NullUnlimitedList`1"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.Add(`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.Add(System.Int32,`0)">
+            <summary>
+            <inheritDoc/>
+            In worth scenario O(n^2) but it is mostly impossible because keys shouldn't have
+            collisions at all (they are integers).
+            </summary>
+            <remarks>
+            <inheritDoc/>
+            In worth scenario O(n^2) but it is mostly impossible because keys shouldn't have
+            collisions at all (they are integers). So in average should be O(n).
+            </remarks>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.Get(System.Int32)">
+            <summary>
+            <inheritDoc/>
+            average O(1), worth O(n) (mostly impossible in case when keys are integers)
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.Set(System.Int32,`0)">
+            <summary>
+            <inheritDoc/>
+            average O(1), worth O(n) (mostly impossible in case when keys are integers)
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.IndexOf(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.Remove(System.Int32)">
+            <summary>
+            In worth scenario O(n^2) but it is mostly impossible because keys shouldn't have
+            collisions at all (they are integers).
+            </summary>
+            <remarks>
+            In worth scenario O(n^2) but it is mostly impossible because keys shouldn't have
+            collisions at all (they are integers). So in average should be O(n).
+            </remarks>
+            <param name="index">the index of the element to be removed</param>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.Size">
+            <returns>the size of the list</returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.NullUnlimitedList`1.IsEmpty">
+            <returns>true if the list is empty, false otherwise</returns>
+        </member>
+        <member name="T:iText.Commons.Datastructures.SimpleArrayList`1">
+            <summary>
+            Portable implementation of
+            <see cref="!:System.Collections.ArrayList&lt;E&gt;"/>.
+            </summary>
+            <typeparam name="T">the type of elements in this list</typeparam>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.#ctor">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Commons.Datastructures.SimpleArrayList`1"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of
+            <see cref="T:iText.Commons.Datastructures.SimpleArrayList`1"/>
+            with the specified initial capacity.
+            </summary>
+            <param name="initialCapacity">the initial capacity of the list</param>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.Add(`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.Add(System.Int32,`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.Get(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.Set(System.Int32,`0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.IndexOf(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.Remove(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.Size">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Datastructures.SimpleArrayList`1.IsEmpty">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Commons.Datastructures.Tuple2`2">
             <summary>Simple tuple container that holds two elements.</summary>
@@ -5601,6 +6326,29 @@
         <member name="M:iText.Commons.Datastructures.Tuple2`2.GetSecond">
             <summary>Get the second element.</summary>
             <returns>the second element</returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.Tuple2`2.Equals(System.Object)">
+            <summary><inheritDoc/></summary>
+            <remarks>
+            <inheritDoc/>
+            <para />
+            Note, that in case current class is overridden, equals should also be overridden.
+            </remarks>
+            <param name="obj">
+            
+            <inheritDoc/>
+            </param>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Datastructures.Tuple2`2.GetHashCode">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
         </member>
         <member name="M:iText.Commons.Datastructures.Tuple2`2.ToString">
             <summary><inheritDoc/></summary>
@@ -5784,6 +6532,211 @@
             <param name="type">The type.</param>
             <returns></returns>
         </member>
+        <member name="T:iText.Commons.Json.IJsonSerializable">
+            <summary>Interface which marks classes serializable to JSON AST.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.IJsonSerializable.ToJson">
+            <summary>Serializes object to JSON AST.</summary>
+            <returns>
+            
+            <see cref="T:iText.Commons.Json.JsonValue"/>
+            serialized object
+            </returns>
+        </member>
+        <member name="T:iText.Commons.Json.JsonArray">
+            <summary>Class representing json array value.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonArray.#ctor">
+            <summary>
+            Creates a new empty
+            <see cref="T:iText.Commons.Json.JsonArray"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonArray.#ctor(System.Collections.Generic.IList{iText.Commons.Json.JsonValue})">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Commons.Json.JsonArray"/>
+            with provided values.
+            </summary>
+            <param name="values">values to put into json array</param>
+        </member>
+        <member name="M:iText.Commons.Json.JsonArray.GetValues">
+            <summary>Gets a copy of json array values.</summary>
+            <returns>json array values</returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonArray.Add(iText.Commons.Json.JsonValue)">
+            <summary>Adds a new value into json array.</summary>
+            <param name="value">a value to put into json array</param>
+        </member>
+        <member name="M:iText.Commons.Json.JsonArray.Equals(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonArray.GetHashCode">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Commons.Json.JsonBoolean">
+            <summary>Class representing json boolean value.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonBoolean.Of(System.Boolean)">
+            <summary>
+            Gets
+            <see cref="T:iText.Commons.Json.JsonBoolean"/>
+            representing input boolean value.
+            </summary>
+            <param name="value">boolean value</param>
+            <returns>
+            
+            <see cref="T:iText.Commons.Json.JsonBoolean"/>
+            representing input boolean value
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonBoolean.GetValue">
+            <summary>
+            Gets a boolean value wrapped into this
+            <see cref="T:iText.Commons.Json.JsonBoolean"/>.
+            </summary>
+            <returns>a boolean value</returns>
+        </member>
+        <member name="T:iText.Commons.Json.JsonNull">
+            <summary>Class representing json null value.</summary>
+        </member>
+        <member name="F:iText.Commons.Json.JsonNull.JSON_NULL">
+            <summary>A single null instance of this class.</summary>
+        </member>
+        <member name="T:iText.Commons.Json.JsonNumber">
+            <summary>Class representing json number value.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonNumber.#ctor(System.Double)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Commons.Json.JsonNumber"/>
+            representing a provided value.
+            </summary>
+            <param name="value">
+            to wrap into this
+            <see cref="T:iText.Commons.Json.JsonNumber"/>
+            </param>
+        </member>
+        <member name="M:iText.Commons.Json.JsonNumber.GetValue">
+            <summary>
+            Gets a number value wrapped into this
+            <see cref="T:iText.Commons.Json.JsonNumber"/>.
+            </summary>
+            <returns>a number value</returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonNumber.Equals(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonNumber.GetHashCode">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Commons.Json.JsonObject">
+            <summary>Class representing json object value.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.#ctor">
+            <summary>
+            Creates a new empty
+            <see cref="T:iText.Commons.Json.JsonObject"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.#ctor(System.Collections.Generic.IDictionary{System.String,iText.Commons.Json.JsonValue})">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Commons.Json.JsonObject"/>
+            with provided fields.
+            </summary>
+            <param name="fields">fields to put into json object</param>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.GetFields">
+            <summary>Gets a copy of the json object fields.</summary>
+            <returns>json object fields</returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.GetField(System.String)">
+            <summary>Gets particular json object field.</summary>
+            <param name="fieldName">
+            
+            <see cref="T:System.String"/>
+            name of the field
+            </param>
+            <returns>
+            field as
+            <see cref="T:iText.Commons.Json.JsonValue"/>
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.Add(System.String,iText.Commons.Json.JsonValue)">
+            <summary>Adds a new field into json object.</summary>
+            <param name="key">a key to add into json object fields</param>
+            <param name="value">
+            a value to add into json object fields under the
+            <paramref name="key"/>
+            </param>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.Equals(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonObject.GetHashCode">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Commons.Json.JsonString">
+            <summary>Class representing json string value.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonString.#ctor(System.String)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Commons.Json.JsonString"/>
+            representing a provided value.
+            </summary>
+            <param name="value">
+            to wrap into this
+            <see cref="T:iText.Commons.Json.JsonString"/>
+            </param>
+        </member>
+        <member name="M:iText.Commons.Json.JsonString.GetValue">
+            <summary>
+            Gets a string value wrapped into this
+            <see cref="T:iText.Commons.Json.JsonString"/>.
+            </summary>
+            <returns>a string value</returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonString.Equals(System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonString.GetHashCode">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Commons.Json.JsonValue">
+            <summary>Class representing generic json value.</summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonValue.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Commons.Json.JsonValue"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Json.JsonValue.FromJson(System.String)">
+            <summary>
+            Parses string and creates
+            <see cref="T:iText.Commons.Json.JsonValue"/>
+            out of it.
+            </summary>
+            <param name="json">string to parse</param>
+            <returns>
+            
+            <see cref="T:iText.Commons.Json.JsonValue"/>
+            representing the input string
+            </returns>
+        </member>
+        <member name="M:iText.Commons.Json.JsonValue.ToJson">
+            <summary>
+            Converts this
+            <see cref="T:iText.Commons.Json.JsonValue"/>
+            into a string.
+            </summary>
+            <returns>
+            string representing this
+            <see cref="T:iText.Commons.Json.JsonValue"/>
+            </returns>
+        </member>
         <member name="T:iText.Commons.Logs.CommonsLogMessageConstant">
             <summary>Class that bundles all the error message templates as constants.</summary>
         </member>
@@ -5916,6 +6869,13 @@
             <param name="dateTime">date to be converted to millis</param>
             <returns>the date as UTC milliseconds from the epoch</returns>
         </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.OfEpochSecondUTC(System.Int64)">
+            <summary>
+            Gets the LocalDateTime from UTC seconds from the epoch.
+            </summary>
+            <param name="epochSecond">the UTC milliseconds from the epoch</param>
+            <returns>local time from UTC seconds</returns>
+        </member>
         <member name="M:iText.Commons.Utils.DateTimeUtil.GetCalendar(System.DateTime)">
             <summary>
             Gets the calendar date and time of a day.
@@ -5971,6 +6931,22 @@
             <param name="format">the format of parsing the date</param>
             <returns>parsed date</returns>
         </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.ParseToLocalDateTime(System.String,System.String)">
+            <summary>
+            Parses passing date with specified format.
+            </summary>
+            <param name="date">the date to be parsed</param>
+            <param name="format">the format of parsing the date</param>
+            <returns>parsed date</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.ParseLocalDateTime(System.DateTime,System.String)">
+            <summary>
+            Parses date time according to specified format.
+            </summary>
+            <param name="dateTime">date time to parse</param>
+            <param name="format">parsing format</param>
+            <returns>parse date time as string</returns>
+        </member>
         <member name="M:iText.Commons.Utils.DateTimeUtil.FormatWithDefaultPattern(System.DateTime)">
             <summary>
             Format passing date with default yyyy-MM-dd pattern.
@@ -5999,6 +6975,56 @@
             </summary>
             <param name="date">date to convert.</param>
             <returns>string date value.</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.CreateDateTime(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a DateTime object with the specified year, month, day, hour, minute, and second. 
+            </summary>
+            <param name="year">The year</param>
+            <param name="month">The month</param>
+            <param name="day">The day</param>
+            <param name="hour">The hour</param>
+            <param name="minute">The minute</param>
+            <param name="second">The second</param>
+            <returns></returns>
+        </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.CreateDateTime(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a DateTime object with the specified year, month, day, hour, minute, and second. 
+            </summary>
+            <param name="year">The year</param>
+            <param name="month">The month</param>
+            <param name="day">The day</param>
+            <param name="hour">The hour</param>
+            <param name="minute">The minute</param>
+            <param name="second">The second</param>
+            <returns></returns>
+        </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.GetTimeFromMillis(System.Int64)">
+            <summary>
+             Gets the DateTime from milliseconds.
+             </summary>
+             <param name="milliseconds"> the UTC milliseconds from the epoch</param>
+             <returns> DateTime converted from milliseconds</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.CreateUtcDateTime(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates UTC Date based on provided parameters.
+            </summary>
+            <param name="year">as int to be created</param>
+            <param name="month">as int to be created</param>
+            <param name="day">as int to be created</param>
+            <param name="hour">as int to be created</param>
+            <param name="minute">as int to be created</param>
+            <param name="second">as int to be created</param>
+            <returns>UTC date</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.DateTimeUtil.SerializeDateToISO8601(System.DateTime)">
+            <summary>
+            Serialize time using format YYYY-MM-DDTHH-MM-SS
+            </summary>
+            <param name="dateTime">local time to be converted</param>
+            <returns>serialized time</returns>
         </member>
         <member name="T:iText.Commons.Utils.DIContainer">
             <summary>A simple dependency injection container.</summary>
@@ -6109,6 +7135,14 @@
             <param name="recursive">if <CODE>true</CODE>, files from all the subdirectories will be returned</param>
             <returns>all the files located at the provided directory</returns>
         </member>
+        <member name="M:iText.Commons.Utils.FileUtil.ListDirectoriesInDirectory(System.String,System.Boolean)">
+            <summary>
+            Lists all the directories located at the provided directory.
+            </summary>
+            <param name="path">path to the directory</param>
+            <param name="recursive">if <CODE>true</CODE>, directories from all the subdirectories will be returned</param>
+            <returns>all the directories located at the provided directory</returns>
+        </member>
         <member name="M:iText.Commons.Utils.FileUtil.ListFilesInDirectoryByFilter(System.String,iText.Commons.Utils.FileUtil.IFileFilter)">
             <summary>
             Lists all the files located at the provided directory, which are accepted by the provided filter.
@@ -6187,24 +7221,46 @@
             <returns>the path to the temporary directory</returns>
             <exception cref="T:System.IO.IOException">signals that an I/O exception has occurred.</exception>
         </member>
-        <member name="T:iText.Commons.Utils.FilterReader">
+        <member name="T:iText.Commons.Utils.FilterOutputStream">
             <summary>
-            Abstract class for reading filtered character streams.
-            The abstract class <code>FilterReader</code> itself
-            provides default methods that pass all requests to
-            the contained stream. Subclasses of <code>FilterReader</code>
-            should override some of these methods and may also provide
-            additional methods and fields.
+            Analog of FilterOutputStream.
             </summary>
         </member>
-        <member name="M:iText.Commons.Utils.FilterReader.Read">
+        <member name="F:iText.Commons.Utils.FilterOutputStream.out">
             <summary>
-            Reads a single character.
+            The output stream to be filtered.
             </summary>
         </member>
-        <member name="M:iText.Commons.Utils.FilterReader.Read(System.Char[],System.Int32,System.Int32)">
+        <member name="F:iText.Commons.Utils.FilterOutputStream.closed">
             <summary>
-            Reads characters into a portion of an array.
+            Whether the stream is closed;
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Utils.FilterOutputStream.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a FilterOutputStream on top of the specified output stream.
+            </summary>
+            <param name="out">The output stream to be assigned</param>
+        </member>
+        <member name="M:iText.Commons.Utils.FilterOutputStream.Write(System.Int32)">
+            <summary>
+            Writes the specified int value to output stream.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:iText.Commons.Utils.FilterOutputStream.Write(System.Byte[])">
+            <summary>
+            Writes buffer.Length bytes to output stream.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Utils.FilterOutputStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Writes len bytes from the specified byte array starting at offset off to output stream.
+            </summary>
+        </member>
+        <member name="M:iText.Commons.Utils.FilterOutputStream.Flush">
+            <summary>
+            Flushes output stream.
             </summary>
         </member>
         <member name="T:iText.Commons.Utils.FunctionalInterfaceAttribute">
@@ -6338,6 +7394,44 @@
             Be aware that its API and functionality may be changed in future.
             </remarks>
         </member>
+        <member name="T:iText.Commons.Utils.MultiThreadingUtil">
+            <summary>Utility class for running actions in parallel using multiple threads.</summary>
+            <remarks>
+            Utility class for running actions in parallel using multiple threads.
+            This class provides a method to execute a list of Callable actions in parallel
+            and collect their results.
+            </remarks>
+        </member>
+        <member name="M:iText.Commons.Utils.MultiThreadingUtil.RunActionsParallel``1(System.Collections.Generic.IList{System.Func{``0}},System.Int32)">
+            <summary>Runs a list of Callable actions in parallel using a fixed thread pool.</summary>
+            <param name="actions">the list of Callable actions to be executed</param>
+            <param name="numberOfThreads">the number of threads to use for parallel execution</param>
+            <typeparam name="T">the type of the result returned by the Callable actions</typeparam>
+            <returns>a list of results from the executed actions</returns>
+        </member>
+        <member name="T:iText.Commons.Utils.NoopAnnotation">
+            An annotation that does nothing. It is used as a transpilation workaround for Java annotations that are
+            unneeded in C#.
+            
+        </member>
+        <member name="T:iText.Commons.Utils.Pair`2">
+            <summary>Class which represents a pair of key and value.</summary>
+            <typeparam name="K">key parameter type.</typeparam>
+            <typeparam name="V">value parameter type.</typeparam>
+        </member>
+        <member name="M:iText.Commons.Utils.Pair`2.#ctor(`0,`1)">
+            <summary>Creates key-value pair.</summary>
+            <param name="key">key parameter</param>
+            <param name="value">value parameter</param>
+        </member>
+        <member name="M:iText.Commons.Utils.Pair`2.GetKey">
+            <summary>Gets key parameter.</summary>
+            <returns>key parameter.</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.Pair`2.GetValue">
+            <summary>Gets value parameter.</summary>
+            <returns>value parameter.</returns>
+        </member>
         <member name="T:iText.Commons.Utils.PlaceHolderTextUtil">
             <summary>This class is used to generate placeholder text for the examples and tests.</summary>
             <remarks>
@@ -6388,99 +7482,13 @@
             Summary description for Properties.
             </summary>
         </member>
-        <member name="T:iText.Commons.Utils.PushbackReader">
-            <summary>
-            A character-stream reader that allows characters to be pushed back into the
-            stream.
-            
-            @author      Mark Reinhold
-            @since       JDK1.1
-            </summary>
+        <member name="T:iText.Commons.Utils.RuntimeUtil">
+            <summary>Utility class for runtime-related operations.</summary>
         </member>
-        <member name="F:iText.Commons.Utils.PushbackReader._buf">
-            <summary>
-            Pushback buffer </summary>
-        </member>
-        <member name="F:iText.Commons.Utils.PushbackReader._pos">
-            <summary>
-            Current position in buffer </summary>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.#ctor(System.IO.TextReader,System.Int32)">
-            <summary>
-            Creates a new pushback reader with a pushback buffer of the given size.
-            </summary>
-            <param name="in">   The reader from which characters will be read </param>
-            <param name="size"> The size of the pushback buffer </param>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.#ctor(System.IO.TextReader)">
-            <summary>
-            Creates a new pushback reader with a one-character pushback buffer.
-            </summary>
-            <param name="in">  The reader from which characters will be read </param>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.EnsureOpen">
-            <summary>
-            Checks to make sure that the stream has not been closed. </summary>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.Read">
-            <summary>
-            Reads a single character.
-            </summary>
-            <returns>     The character read, or -1 if the end of the stream has been
-                        reached
-            </returns>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.Read(System.Char[],System.Int32,System.Int32)">
-            <summary>
-            Reads characters into a portion of an array.
-            </summary>
-            <param name="cbuf">  Destination buffer </param>
-            <param name="off">   Offset at which to start writing characters </param>
-            <param name="len">   Maximum number of characters to read
-            </param>
-            <returns>     The number of characters read, or -1 if the end of the
-                        stream has been reached
-            </returns>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.Unread(System.Int32)">
-            <summary>
-            Pushes back a single character by copying it to the front of the
-            pushback buffer. After this method returns, the next character to be read
-            will have the value <code>(char)c</code>.
-            </summary>
-            <param name="c">  The int value representing a character to be pushed back
-            </param>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.Unread(System.Char[],System.Int32,System.Int32)">
-            <summary>
-            Pushes back a portion of an array of characters by copying it to the
-            front of the pushback buffer.  After this method returns, the next
-            character to be read will have the value <code>cbuf[off]</code>, the
-            character after that will have the value <code>cbuf[off+1]</code>, and
-            so forth.
-            </summary>
-            <param name="cbuf">  Character array </param>
-            <param name="off">   Offset of first character to push back </param>
-            <param name="len">   Number of characters to push back
-            </param>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.Unread(System.Char[])">
-            <summary>
-            Pushes back an array of characters by copying it to the front of the
-            pushback buffer.  After this method returns, the next character to be
-            read will have the value <code>cbuf[0]</code>, the character after that
-            will have the value <code>cbuf[1]</code>, and so forth.
-            </summary>
-            <param name="cbuf">  Character array to push back
-            </param>
-        </member>
-        <member name="M:iText.Commons.Utils.PushbackReader.Dispose(System.Boolean)">
-            <summary>
-            Closes the stream and releases any system resources associated with
-            it. Once the stream has been closed, further read(),
-            unread(), ready(), or skip() invocations will throw an IOException.
-            Closing a previously closed stream has no effect.
-            </summary>
+        <member name="M:iText.Commons.Utils.RuntimeUtil.IsClassLoaded(System.String)">
+            <summary>Checks if a class is loaded in the current runtime environment.</summary>
+            <param name="fullyQualifiedClassName">the fully qualified name of the class to check</param>
+            <returns>true if the class is loaded, false otherwise</returns>
         </member>
         <member name="T:iText.Commons.Utils.SortUtil">
             <summary>
@@ -6494,6 +7502,24 @@
             </summary>
             <param name="from">the index of the first element, inclusive, to be sorted</param>
             <param name="to">the index of the last element, exclusive, to be sorted</param>
+        </member>
+        <member name="T:iText.Commons.Utils.StringNormalizer">
+            <summary>Utility class for string normalization.</summary>
+        </member>
+        <member name="M:iText.Commons.Utils.StringNormalizer.ToLowerCase(System.String)">
+            <summary>Converts a string to lowercase using Root locale.</summary>
+            <param name="str">a string to convert</param>
+            <returns>a converted string</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.StringNormalizer.ToUpperCase(System.String)">
+            <summary>Converts a string to uppercase using Root locale.</summary>
+            <param name="str">a string to convert</param>
+            <returns>a converted string</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.StringNormalizer.Normalize(System.String)">
+            <summary>Converts a string to lowercase using Root locale and trims it.</summary>
+            <param name="str">a string to convert</param>
+            <returns>a converted string</returns>
         </member>
         <member name="T:iText.Commons.Utils.StringUtil">
             <summary>
@@ -6520,6 +7546,18 @@
             </summary>
             <param name="name">the name of environment variable.</param>
             <returns>variable value or null if there is no such.</returns>
+        </member>
+        <member name="T:iText.Commons.Utils.TimerUtil">
+            <summary>Utility class for creating and managing timers.</summary>
+        </member>
+        <member name="M:iText.Commons.Utils.TimerUtil.NewTimerWithRecurringTask(System.Action,System.Int64,System.Int64)">
+            <summary>Creates a new Timer instance.</summary>
+            <returns>a new Timer instance</returns>
+        </member>
+        <member name="M:iText.Commons.Utils.TimerUtil.StopTimer(System.Threading.Timer)">
+            <summary>
+            Stops the specified timer and releases its resources.
+            </summary>
         </member>
         <member name="F:iText.Commons.Utils.UnicodeScript.COMMON">
             Unicode script "Common".

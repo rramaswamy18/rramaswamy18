@@ -1,3 +1,32 @@
-﻿@using RetailSlnModels
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnModels
 @model CRMListListModel
-@Html.Partial("_CRMList", Model)
+@*
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-bottom: 0px; margin-left: auto; margin-right: auto; padding: 5px; width: auto;">
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;"></th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;"></th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;"></th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;"></th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Mobile
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            @Html.DropDownList("telephoneCountry", new SelectList(DemogInfoCache.DemogInfoCountrySelectListItems, "Value", "Text", null), "---", new { @class = "form-control", style = "float: left; font-size: 12px; width: 72%;" })
+            Yes <input id="telephoneCountryEmpty1" name="telephoneCountryEmpty" type="radio" value="1" />
+            No <input checked="checked" id="telephoneCountryEmpty2" name="telephoneCountryEmpty" type="radio" value="0" />
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            <input class="form-control" id="telephoneNumber" style="float: left; width: 63%;" type="text" />
+            Yes <input id="telephoneNumberEmpty1" name="telephoneNumberEmpty" type="radio" value="1" />
+            No <input checked="checked" id="telephoneNumberEmpty2" name="telephoneNumberEmpty" type="radio" value="0" />
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: middle;">
+            @Html.DropDownList("telephoneNumberValid", new SelectList(LookupCache.CodeTypeSelectListItems["YesNo"]["CodeDataNameId"], "Value", "Text", null), "---", new { @class = "form-control", style = "font-size: 12px;" })
+        </th>
+    </tr>
+</table>
+*@
+<div id="divCRMListListData">
+    @Html.Partial("_CRMListListData", Model)
+</div>

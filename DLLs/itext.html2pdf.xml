@@ -95,6 +95,30 @@
             objects
             </returns>
         </member>
+        <member name="T:iText.Html2pdf.Attach.DocumentTreeUtil">
+            <summary>Utility class for document tree operations.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.DocumentTreeUtil.Traverse(iText.StyledXmlParser.Node.INode,System.Collections.Generic.IList{iText.Html2pdf.Attach.IDocumentTreeJob})">
+            <summary>Traverses a document tree starting from a specified node and performs a collection of jobs on each node.
+                </summary>
+            <param name="node">node of the document tree to traverse</param>
+            <param name="jobs">a collection of jobs to be executed on each node during the traversal</param>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.IDocumentTreeJob">
+            <summary>Interface for document tree jobs.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.IDocumentTreeJob.Process(iText.StyledXmlParser.Node.INode,System.Int32)">
+            <summary>Processes a node within a document tree structure at a given level.</summary>
+            <remarks>
+            Processes a node within a document tree structure at a given level.
+            <br />
+            This method is used to perform specific operations on an
+            <see cref="T:iText.StyledXmlParser.Node.INode"/>
+            based on the context of its hierarchical position in the document tree.
+            </remarks>
+            <param name="node">the node to process</param>
+            <param name="level">the hierarchical level of the node in the document tree structure</param>
+        </member>
         <member name="T:iText.Html2pdf.Attach.IHtmlProcessor">
             <summary>
             Interface for classes that can process HTML to PDF in the form of a
@@ -292,6 +316,59 @@
             <summary>Return the IMetaInfo object.</summary>
             <returns>returns IMetaInfo</returns>
         </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.LabelContext">
+            <summary>This class keeps track of labels attached to applicable elements that present in the document.</summary>
+            <remarks>
+            This class keeps track of labels attached to applicable elements that present in the document.
+            After elements are proccessed, the DOM tree is scanned and labels are attached to corresponding objects.
+            This object in the
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>.
+            <para />
+            This class is not reusable, and a new instance shall be created for every new conversion process.
+            </remarks>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelContext.#ctor">
+            <summary>Creates new label context.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelContext.GetAltDescription(System.String)">
+            <summary>Gets the alternate description for the element by id.</summary>
+            <param name="id">id of the element</param>
+            <returns>alternate description</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelContext.Process(iText.StyledXmlParser.Node.INode,System.Int32)">
+            <summary>Processes a given node to analyze and store potential labels.</summary>
+            <param name="node">the node to process</param>
+            <param name="level">the level of the node within the document tree</param>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.LabelContext.SimpleTextNodeCollector">
+            <summary>Class that collects all children text nodes of given node to a string.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelContext.SimpleTextNodeCollector.#ctor">
+            <summary>Creates a new simple text node collector</summary>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.LabelContext.ImplicitLabelTextNodeCollector">
+            <summary>
+            Class that collects all children text nodes of the given node to a string except for the first encountered
+            labelable element.
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelContext.ImplicitLabelTextNodeCollector.#ctor">
+            <summary>Creates new text node collector for implicit labels.</summary>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.LabelContext.LabelIdGenerator">
+            <summary>Class that generate ids for labelable elements which don't have assigned id</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelContext.LabelIdGenerator.#ctor">
+            <summary>Creates new label id generator.</summary>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.LabelUtil">
+            <summary>Utility class for handling operations related to labels</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LabelUtil.IsLabelable(iText.StyledXmlParser.Node.INameContainer)">
+            <summary>Determines whether the provided element can be labeled.</summary>
+            <param name="element">element to be checked</param>
+            <returns>true if the element can be labeled; false otherwise</returns>
+        </member>
         <member name="T:iText.Html2pdf.Attach.Impl.Layout.BodyHtmlStylesContainer">
             <summary>
             This class is used to store styles of
@@ -481,7 +558,7 @@
         </member>
         <member name="F:iText.Html2pdf.Attach.Impl.Layout.HtmlDocumentRenderer.waitingElement">
             <summary>
-            The waiting element, an child element is kept waiting for the
+            The waiting element, a child element is kept waiting for the
             next element to process the "keep with previous" property.
             </summary>
         </member>
@@ -1138,9 +1215,18 @@
             <summary>Construct an (empty) LinkContext</summary>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.LinkContext.ScanForIds(iText.StyledXmlParser.Node.INode)">
-            <summary>Scan the DOM tree for all (internal) link targets</summary>
+            <summary>
+            Scan the DOM tree for all (internal) link targets
+            Deprecated in favor of
+            <see cref="M:iText.Html2pdf.Attach.Impl.LinkContext.Process(iText.StyledXmlParser.Node.INode,System.Int32)"/>
+            </summary>
             <param name="root">the DOM tree root node</param>
             <returns>this LinkContext</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.LinkContext.Process(iText.StyledXmlParser.Node.INode,System.Int32)">
+            <summary>Check if an element is a link.</summary>
+            <param name="node">the node to process</param>
+            <param name="level">the hierarchical level of the node in the document tree structure</param>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.LinkContext.IsUsedLinkDestination(System.String)">
             <summary>Returns whether a given (internal) link destination is used by at least one href element in the document
@@ -1234,21 +1320,10 @@
             <param name="extractor">the mark extractor</param>
             <returns>the outline handler</returns>
         </member>
-        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutTagPriorityMapping(System.String,System.Nullable{System.Int32})">
-            <summary>Put tag into priority mapping.</summary>
-            <param name="tagName">the tag name</param>
-            <param name="priority">the priority</param>
-            <returns>the outline handler</returns>
-        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutMarkPriorityMapping(System.String,System.Nullable{System.Int32})">
             <summary>Put mark into priority mapping.</summary>
             <param name="markName">the mark name</param>
             <param name="priority">the priority</param>
-            <returns>the outline handler</returns>
-        </member>
-        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutAllTagPriorityMappings(System.Collections.Generic.IDictionary{System.String,System.Nullable{System.Int32}})">
-            <summary>Put all tags into priority mappings.</summary>
-            <param name="mappings">the mappings</param>
             <returns>the outline handler</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.PutAllMarksPriorityMappings(System.Collections.Generic.IDictionary{System.String,System.Nullable{System.Int32}})">
@@ -1256,20 +1331,10 @@
             <param name="mappings">the mappings</param>
             <returns>the outline handler</returns>
         </member>
-        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.GetTagPriorityMapping(System.String)">
-            <summary>Gets the marks from priority mapping.</summary>
-            <param name="tagName">the tag name</param>
-            <returns>the tag priority mapping</returns>
-        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.GetMarkPriorityMapping(System.String)">
             <summary>Gets the mark from priority mapping.</summary>
             <param name="markName">the mark name</param>
             <returns>the tag priority mapping</returns>
-        </member>
-        <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.HasTagPriorityMapping(System.String)">
-            <summary>Checks for tag in priority mapping.</summary>
-            <param name="tagName">the tag name</param>
-            <returns>true, if the tag name is listed in the tag priorities mapping</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.OutlineHandler.HasMarkPriorityMapping(System.String)">
             <summary>Checks for tag in priority mapping.</summary>
@@ -1557,6 +1622,25 @@
             <param name="element">the element with defined styles</param>
             <param name="context">the context of the converter processor</param>
         </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.Tags.DisplayGridTagWorker">
+            <summary>
+            <see cref="T:iText.Html2pdf.Attach.ITagWorker"/>
+            implementation for elements with
+            <c>display: grid</c>.
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.Tags.DisplayGridTagWorker.#ctor(iText.StyledXmlParser.Node.IElementNode,iText.Html2pdf.Attach.ProcessorContext)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Html2pdf.Attach.Impl.Tags.DisplayGridTagWorker"/>
+            instance.
+            </summary>
+            <param name="element">the element</param>
+            <param name="context">the context</param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.Tags.DisplayGridTagWorker.ProcessTagChild(iText.Html2pdf.Attach.ITagWorker,iText.Html2pdf.Attach.ProcessorContext)">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Html2pdf.Attach.Impl.Tags.DisplayTableRowTagWorker">
             <summary>TagWorker class for a table row element.</summary>
         </member>
@@ -1668,6 +1752,16 @@
             <param name="element">the element</param>
             <param name="context">the context</param>
         </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.Tags.DivTagWorker.#ctor(iText.StyledXmlParser.Node.IElementNode,iText.Html2pdf.Attach.ProcessorContext,iText.Layout.Element.Div)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Html2pdf.Attach.Impl.Tags.DivTagWorker"/>
+            instance.
+            </summary>
+            <param name="element">the element</param>
+            <param name="context">the context</param>
+            <param name="container">div element container</param>
+        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.Tags.DivTagWorker.AddBlockChild(iText.Layout.Element.IElement)">
             <summary>Adds a child element to the div block.</summary>
             <param name="element">the element</param>
@@ -1691,6 +1785,13 @@
             </summary>
             <param name="element">the element</param>
             <param name="context">the context</param>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.Tags.HTagWorker">
+            <summary>
+            TagWorker class for the
+            <c>h</c>
+            element.
+            </summary>
         </member>
         <member name="M:iText.Html2pdf.Attach.Impl.Tags.HTagWorker.#ctor(iText.StyledXmlParser.Node.IElementNode,iText.Html2pdf.Attach.ProcessorContext)">
             <summary>
@@ -1978,6 +2079,15 @@
             <c>input</c>
             's placeholder.
             </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.Tags.PlaceholderTagWorker.#ctor(iText.StyledXmlParser.Node.IElementNode,iText.Html2pdf.Attach.ProcessorContext)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Html2pdf.Attach.Impl.Tags.PlaceholderTagWorker"/>
+            instance.
+            </summary>
+            <param name="element">the element</param>
+            <param name="context">the context</param>
         </member>
         <member name="T:iText.Html2pdf.Attach.Impl.Tags.PreTagWorker">
             <summary>
@@ -2380,6 +2490,15 @@
             <param name="child">the child</param>
             <returns>true, if successful</returns>
         </member>
+        <member name="T:iText.Html2pdf.Attach.Impl.Tags.Util.ATagUtil">
+            <summary>Utility class to work with the data in A tag.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Impl.Tags.Util.ATagUtil.ResolveAnchorLink(System.String,System.String)">
+            <summary>Resolves a link in A tag.</summary>
+            <param name="anchorLink">the link in A tag</param>
+            <param name="baseUrl">the base URL</param>
+            <returns>the resolved link</returns>
+        </member>
         <member name="T:iText.Html2pdf.Attach.IOutlineMarkExtractor">
             <summary>
             <see cref="T:iText.Html2pdf.Attach.IOutlineMarkExtractor"/>
@@ -2488,15 +2607,21 @@
         <member name="F:iText.Html2pdf.Attach.ProcessorContext.cssContext">
             <summary>The CSS context.</summary>
         </member>
+        <member name="F:iText.Html2pdf.Attach.ProcessorContext.cssStyleSheet">
+            <summary>The CSS style sheet.</summary>
+        </member>
         <member name="F:iText.Html2pdf.Attach.ProcessorContext.linkContext">
             <summary>The link context</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Attach.ProcessorContext.labelContext">
+            <summary>The label context</summary>
         </member>
         <member name="F:iText.Html2pdf.Attach.ProcessorContext.pdfDocument">
             <summary>The PDF document.</summary>
         </member>
-        <member name="F:iText.Html2pdf.Attach.ProcessorContext.pdfAConformanceLevelFromProperties">
+        <member name="F:iText.Html2pdf.Attach.ProcessorContext.pdfAConformanceFromProperties">
             <summary>
-            PDF/A conformance level from
+            PDF/A conformance from
             <see cref="T:iText.Html2pdf.ConverterProperties"/>
             instance.
             </summary>
@@ -2539,12 +2664,11 @@
             <remarks>Gets the PDF document. If the PDF document is not set, null is returned.</remarks>
             <returns>the PDF document or null</returns>
         </member>
-        <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetConformanceLevel">
-            <summary>Get the PDF document conformance level if specified.</summary>
+        <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetConformance">
+            <summary>Get the PDF document conformance.</summary>
             <returns>
             the
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
-            will be null if the processing result won't follow PDF/A strictness
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
             </returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetFontProvider">
@@ -2578,6 +2702,10 @@
         <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetLinkContext">
             <summary>Gets the link context.</summary>
             <returns>the link context</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetLabelContext">
+            <summary>Gets the label context.</summary>
+            <returns>the label context</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.ProcessorContext.IsCreateAcroForm">
             <summary>Checks if is an AcroForm needs to be created.</summary>
@@ -2661,6 +2789,26 @@
             <summary>check if continuous container is enabled.</summary>
             <returns>true if enabled, false otherwise</returns>
         </member>
+        <member name="M:iText.Html2pdf.Attach.ProcessorContext.SetCssStyleSheet(iText.StyledXmlParser.Css.CssStyleSheet)">
+            <summary>Sets the CSS style sheet.</summary>
+            <remarks>
+            Sets the CSS style sheet.
+            Style sheet is used to apply CSS statements to elements.
+            </remarks>
+            <param name="cssStyleSheet">the CSS style sheet</param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetCssStyleSheet">
+            <summary>Gets the CSS style sheet.</summary>
+            <remarks>
+            Gets the CSS style sheet.
+            Style sheet is used to apply CSS statements to elements.
+            </remarks>
+            <returns>the CSS style sheet</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.ProcessorContext.GetDIContainer">
+            <summary>Gets the DIContainer.</summary>
+            <returns>the DIContainer.</returns>
+        </member>
         <member name="T:iText.Html2pdf.Attach.State">
             <summary>State machine to push, pop, peek,...</summary>
             <remarks>
@@ -2712,6 +2860,204 @@
             <summary>Checks if the stack is empty.</summary>
             <returns>true, if the stack is empty</returns>
         </member>
+        <member name="T:iText.Html2pdf.Attach.Util.AccessiblePropHelper">
+            <summary>Utility class to set lang attribute.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AccessiblePropHelper.TrySetLangAttribute(iText.Layout.Tagging.IAccessibleElement,iText.StyledXmlParser.Node.IElementNode)">
+            <summary>Set language attribute in elements accessibility properties if it is not set, does nothing otherwise.
+                </summary>
+            <param name="accessibleElement">pdf element to set language property on</param>
+            <param name="element">html element from which lang property will be extracted</param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AccessiblePropHelper.TrySetLangAttribute(iText.Layout.Tagging.IAccessibleElement,System.String)">
+            <summary>Set language attribute in elements accessibility properties if it is not set, does nothing otherwise.
+                </summary>
+            <param name="accessibleElement">pdf element to set language property on</param>
+            <param name="lang">language to set</param>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver">
+            <summary>
+            Helper class for resolving the alternate description of an
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>.
+            </summary>
+            <remarks>
+            Helper class for resolving the alternate description of an
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>.
+            The alternate description is resolved in the following order:
+            1) alt attribute
+            2) title attribute
+            3) aria-label attribute
+            4) aria-description attribute
+            5) aria-describedby attribute
+            6) aria-labelledby attribute
+            <para />
+            If none of the above attributes are present, the alternate description is not set.
+            </remarks>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver.Resolve(iText.Layout.Tagging.IAccessibleElement,iText.StyledXmlParser.Node.IElementNode)">
+            <summary>
+            Resolves the alternate description of the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>.
+            </summary>
+            <param name="accessibleElement">
+            the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            to which the alternate description should be applied.
+            </param>
+            <param name="element">
+            the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            from which the alternate description should be resolved.
+            </param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver.ResolveLabelableElement(iText.Layout.Tagging.IAccessibleElement,iText.StyledXmlParser.Node.IElementNode,iText.Html2pdf.Attach.ProcessorContext)">
+            <summary>
+            Resolves the alternate description of the labeled
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            and
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>.
+            </summary>
+            <param name="accessibleElement">
+            the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            to which the alternate description should be applied.
+            </param>
+            <param name="element">
+            the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            from which properties the alternate description should be resolved.
+            </param>
+            <param name="context">
+            the
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>
+            from which the alternate description should be resolved.
+            </param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver.ResolveLink(iText.Layout.Tagging.IAccessibleElement,iText.StyledXmlParser.Node.IElementNode)">
+            <summary>
+            Resolves the alternate description of the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>.
+            </summary>
+            <remarks>
+            Resolves the alternate description of the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            . If the link has an img tag as a child, the alt attribute of the img tag is used as the
+            alternate description.
+            </remarks>
+            <param name="accessibleElement">
+            the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            to which the alternate description should be applied.
+            </param>
+            <param name="element">
+            the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            from which the alternate description should be resolved.
+            </param>
+            <returns>
+            
+            <see langword="true"/>
+            if the alternate description was resolved,
+            <see langword="false"/>
+            otherwise.
+            </returns>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver.ResolveFallback(iText.Layout.Tagging.IAccessibleElement,iText.StyledXmlParser.Node.IElementNode)">
+            <summary>
+            Resolves the alternate description of the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            in a fallback manner.
+            </summary>
+            <param name="accessibleElement">
+            the
+            <see cref="T:iText.Layout.Tagging.IAccessibleElement"/>
+            to which the alternate description should be applied.
+            </param>
+            <param name="element">
+            the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            from which the alternate description should be resolved.
+            </param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.AlternateDescriptionResolver.ResolveSvg(iText.Svg.Element.SvgImage,iText.StyledXmlParser.Node.IElementNode)">
+            <summary>
+            Resolves the alternate description of the
+            <see cref="T:iText.Svg.Element.SvgImage"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>.
+            </summary>
+            <remarks>
+            Resolves the alternate description of the
+            <see cref="T:iText.Svg.Element.SvgImage"/>
+            based on the attributes of the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>.
+            <para />
+            If the alternate description is not found in the attributes, it is searched for the
+            <c>&lt;descr&gt;</c>
+            tag the
+            child nodes.
+            </remarks>
+            <param name="accessibleElement">
+            the
+            <see cref="T:iText.Svg.Element.SvgImage"/>
+            to which the alternate description should be applied.
+            </param>
+            <param name="element">
+            the
+            <see cref="T:iText.StyledXmlParser.Node.IElementNode"/>
+            from which the alternate description should be resolved.
+            </param>
+            <returns>
+            
+            <see langword="true"/>
+            if the alternate description was resolved,
+            <see langword="false"/>
+            otherwise.
+            </returns>
+        </member>
+        <member name="T:iText.Html2pdf.Attach.Util.ContextMappingHelper">
+            <summary>
+            Utility class which helps to map
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>
+            properties on
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Util.ContextMappingHelper.MapToSvgConverterProperties(iText.Html2pdf.Attach.ProcessorContext)">
+            <summary>
+            Map
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>
+            properties to
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>.
+            </summary>
+            <param name="context">
+            
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>
+            instance
+            </param>
+            <returns>
+            
+            <see cref="T:iText.Svg.Processors.Impl.SvgConverterProperties"/>
+            filled with necessary data for svg convertion
+            </returns>
+        </member>
         <member name="T:iText.Html2pdf.Attach.Util.LinkHelper">
             <summary>Helper class for links.</summary>
         </member>
@@ -2722,30 +3068,12 @@
             class.
             </summary>
         </member>
-        <member name="M:iText.Html2pdf.Attach.Util.LinkHelper.ApplyLinkAnnotation(iText.Layout.IPropertyContainer,System.String)">
+        <member name="M:iText.Html2pdf.Attach.Util.LinkHelper.ApplyLinkAnnotation(iText.Layout.IPropertyContainer,System.String,iText.Html2pdf.Attach.ProcessorContext,iText.StyledXmlParser.Node.IElementNode)">
             <summary>Applies a link annotation.</summary>
             <param name="container">the containing object</param>
             <param name="url">the destination</param>
-        </member>
-        <member name="M:iText.Html2pdf.Attach.Util.LinkHelper.ApplyLinkAnnotation(iText.Layout.IPropertyContainer,System.String,iText.Html2pdf.Attach.ProcessorContext)">
-            <summary>Applies a link annotation.</summary>
-            <param name="container">the containing object.</param>
-            <param name="url">the destination.</param>
-            <param name="context">the processor context.</param>
-        </member>
-        <member name="M:iText.Html2pdf.Attach.Util.LinkHelper.ApplyLinkAnnotation(iText.Layout.IPropertyContainer,System.String,iText.Html2pdf.Attach.ProcessorContext,System.String)">
-            <summary>Applies a link annotation.</summary>
-            <param name="container">the containing object.</param>
-            <param name="url">the destination.</param>
-            <param name="context">the processor context.</param>
-            <param name="alternateDescription">description for a link.</param>
-        </member>
-        <member name="M:iText.Html2pdf.Attach.Util.LinkHelper.ApplyLinkAnnotation(iText.Layout.IPropertyContainer,System.String,iText.Html2pdf.Attach.ProcessorContext,iText.StyledXmlParser.Node.IElementNode)">
-            <summary>Applies a link annotation.</summary>
-            <param name="container">the containing object.</param>
-            <param name="url">the destination.</param>
-            <param name="context">the processor context.</param>
-            <param name="element">the element node.</param>
+            <param name="context">the processor context</param>
+            <param name="element">the element node</param>
         </member>
         <member name="M:iText.Html2pdf.Attach.Util.LinkHelper.CreateDestination(iText.Html2pdf.Attach.ITagWorker,iText.StyledXmlParser.Node.IElementNode,iText.Html2pdf.Attach.ProcessorContext)">
             <summary>Creates a destination</summary>
@@ -2799,11 +3127,6 @@
             <summary>Trim leaf elements, and sanitize.</summary>
             <param name="leafElements">the leaf elements</param>
             <returns>the trimmed and sanitized list</returns>
-        </member>
-        <member name="M:iText.Html2pdf.Attach.Util.TrimUtil.IsNonLineBreakSpace(System.Char)">
-            <summary>Checks if a character is white space value that doesn't cause a newline.</summary>
-            <param name="ch">the character</param>
-            <returns>true, if the character is a white space character, but no newline</returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Util.TrimUtil.TrimSubList(System.Collections.Generic.List{iText.Layout.Element.IElement},System.Int32,System.Int32,System.Boolean)">
             <summary>Trims a sub list of leaf elements.</summary>
@@ -2913,6 +3236,10 @@
             <summary>Adds a leaf element to the waiting leaves.</summary>
             <param name="element">the element</param>
         </member>
+        <member name="M:iText.Html2pdf.Attach.Util.WaitingInlineElementsHelper.Add(iText.Layout.Element.IBlockElement)">
+            <summary>Adds a block element to the waiting leaves.</summary>
+            <param name="element">the element</param>
+        </member>
         <member name="M:iText.Html2pdf.Attach.Util.WaitingInlineElementsHelper.AddAll(System.Collections.Generic.ICollection{iText.Layout.Element.ILeafElement})">
             <summary>Adds a collecton of leaf elements to the waiting leaves.</summary>
             <param name="collection">the collection</param>
@@ -2923,7 +3250,10 @@
         </member>
         <member name="M:iText.Html2pdf.Attach.Util.WaitingInlineElementsHelper.CreateLeavesContainer">
             <summary>Creates the leaves container.</summary>
-            <returns>a paragraph</returns>
+            <returns>
+            an
+            <see cref="T:iText.Layout.Element.AnonymousInlineBox"/>
+            </returns>
         </member>
         <member name="M:iText.Html2pdf.Attach.Util.WaitingInlineElementsHelper.GetWaitingLeaves">
             <summary>Gets the waiting leaves.</summary>
@@ -3241,6 +3571,21 @@
         <member name="F:iText.Html2pdf.Attach.Wrapelement.TableWrapper.headerLang">
             <summary>The header lang attribute value.</summary>
         </member>
+        <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.#ctor">
+            <summary>
+            Create new
+            <see cref="T:iText.Html2pdf.Attach.Wrapelement.TableWrapper"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.#ctor(System.Boolean)">
+            <summary>
+            Create new
+            <see cref="T:iText.Html2pdf.Attach.Wrapelement.TableWrapper"/>
+            instance.
+            </summary>
+            <param name="isRtl">table direction value, true for right to left direction, false for left to right</param>
+        </member>
         <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.GetRowsSize">
             <summary>Gets the number of rows.</summary>
             <returns>the number of rows</returns>
@@ -3265,6 +3610,18 @@
         <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.AddCell(iText.Layout.Element.Cell)">
             <summary>Adds a new cell to the body rows.</summary>
             <param name="cell">the cell</param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.SetLang(System.String)">
+            <summary>Set language attribute of the table.</summary>
+            <param name="lang">language code string value (e.g en-us)</param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.SetFooterLang(System.String)">
+            <summary>Set footer language attribute of the table.</summary>
+            <param name="footerLang">language code string value (e.g en-us)</param>
+        </member>
+        <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.SetHeaderLang(System.String)">
+            <summary>Set header language attribute of the table.</summary>
+            <param name="headerLang">language code string value (e.g en-us)</param>
         </member>
         <member name="M:iText.Html2pdf.Attach.Wrapelement.TableWrapper.AddCellToTable(iText.Layout.Element.Cell,System.Collections.Generic.IList{System.Collections.Generic.IList{iText.Html2pdf.Attach.Wrapelement.TableWrapper.CellWrapper}},iText.Html2pdf.Attach.Util.RowColHelper)">
             <summary>Adds a cell to a table.</summary>
@@ -3365,8 +3722,8 @@
         <member name="F:iText.Html2pdf.ConverterProperties.outputIntent">
             <summary>Output intent for final destination device.</summary>
         </member>
-        <member name="F:iText.Html2pdf.ConverterProperties.conformanceLevel">
-            <summary>Conformance level for conversion to pdf/a.</summary>
+        <member name="F:iText.Html2pdf.ConverterProperties.conformance">
+            <summary>Conformance for conversion to pdf/a.</summary>
         </member>
         <member name="M:iText.Html2pdf.ConverterProperties.#ctor">
             <summary>
@@ -3660,11 +4017,23 @@
             instance
             </returns>
         </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.GetDocumentOutputIntent">
+            <summary>Gets pdf document output intent (final destination device) to reproduce the color in the PDF.</summary>
+            <remarks>
+            Gets pdf document output intent (final destination device) to reproduce the color in the PDF.
+            <para />
+            Note, output intent isn't applicable for HtmlConverter#convertToElements methods
+            (e.g.
+            <see cref="M:iText.Html2pdf.HtmlConverter.ConvertToElements(System.IO.Stream,iText.Html2pdf.ConverterProperties)"/>
+            )
+            </remarks>
+            <returns>pdf output intent</returns>
+        </member>
         <member name="M:iText.Html2pdf.ConverterProperties.SetDocumentOutputIntent(iText.Kernel.Pdf.PdfOutputIntent)">
             <summary>Sets pdf document output intent (final destination device) to reproduce the color in the PDF.</summary>
             <remarks>
             Sets pdf document output intent (final destination device) to reproduce the color in the PDF.
-            Required parameter, when converting to pdf/a one have to specify an explicit output intent.
+            Required parameter, when converting to pdf/a one has to specify an explicit output intent.
             <para />
             Note, output intent isn't applicable for HtmlConverter#convertToElements methods
             (e.g.
@@ -3682,15 +4051,19 @@
             instance
             </returns>
         </member>
-        <member name="M:iText.Html2pdf.ConverterProperties.SetPdfAConformanceLevel(iText.Kernel.Pdf.PdfAConformanceLevel)">
+        <member name="M:iText.Html2pdf.ConverterProperties.GetPdfAConformance">
+            <summary>Gets the generation and strictness level of the PDF/A that must be followed.</summary>
+            <returns>pdf/a conformance</returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.SetPdfAConformance(iText.Kernel.Pdf.PdfAConformance)">
             <summary>Sets the generation and strictness level of the PDF/A that must be followed.</summary>
             <remarks>
             Sets the generation and strictness level of the PDF/A that must be followed.
-            Required parameter, when converting to pdf/a one have to specify an explicit pdf/a conformance level.
+            Required parameter, when converting to pdf/a one has to specify an explicit pdf/a conformance.
             </remarks>
-            <param name="conformanceLevel">
+            <param name="aConformance">
             a
-            <see cref="T:iText.Kernel.Pdf.PdfAConformanceLevel"/>
+            <see cref="T:iText.Kernel.Pdf.PdfAConformance"/>
             constant
             </param>
             <returns>
@@ -3699,21 +4072,49 @@
             instance
             </returns>
         </member>
-        <member name="M:iText.Html2pdf.ConverterProperties.GetDocumentOutputIntent">
-            <summary>Gets pdf document output intent (final destination device) to reproduce the color in the PDF.</summary>
-            <remarks>
-            Gets pdf document output intent (final destination device) to reproduce the color in the PDF.
-            <para />
-            Note, output intent isn't applicable for HtmlConverter#convertToElements methods
-            (e.g.
-            <see cref="M:iText.Html2pdf.HtmlConverter.ConvertToElements(System.IO.Stream,iText.Html2pdf.ConverterProperties)"/>
-            )
-            </remarks>
-            <returns>pdf output intent</returns>
+        <member name="M:iText.Html2pdf.ConverterProperties.GetPdfUaConformance">
+            <summary>Gets the generation and strictness level of the PDF/UA that must be followed.</summary>
+            <returns>The PDF/UA conformance level.</returns>
         </member>
-        <member name="M:iText.Html2pdf.ConverterProperties.GetConformanceLevel">
-            <summary>Gets the generation and strictness level of the PDF/A that must be followed.</summary>
-            <returns>pdf/a conformance level</returns>
+        <member name="M:iText.Html2pdf.ConverterProperties.SetPdfUAConformance(iText.Kernel.Pdf.PdfUAConformance)">
+            <summary>Sets the generation and strictness level of the PDF/UA that must be followed.</summary>
+            <remarks>
+            Sets the generation and strictness level of the PDF/UA that must be followed.
+            Required parameter, when converting to PDF/UA one has to specify an explicit PDF/UA conformance.
+            </remarks>
+            <param name="uaConformance">
+            a
+            <see cref="T:iText.Kernel.Pdf.PdfUAConformance"/>
+            constant
+            </param>
+            <returns>
+            the
+            <see cref="T:iText.Html2pdf.ConverterProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.SetWtPdfConformance(iText.Kernel.Pdf.WellTaggedPdfConformance)">
+            <summary>Sets the generation and strictness level of the WTPDF that must be followed.</summary>
+            <remarks>
+            Sets the generation and strictness level of the WTPDF that must be followed.
+            Required parameter, when converting to WTPDF one has to specify an explicit WTPDF conformance.
+            <para />
+            For pdfHtml currently we only support 1 WTPDF conformance level.
+            </remarks>
+            <param name="wtPdfConformance">
+            a
+            <see cref="T:iText.Kernel.Pdf.WellTaggedPdfConformance"/>
+            constant
+            </param>
+            <returns>
+            the
+            <see cref="T:iText.Html2pdf.ConverterProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.GetPdfConformance">
+            <summary>Gets the generation and strictness level of the conformance that must be followed.</summary>
+            <returns>The conformance level</returns>
         </member>
         <member name="M:iText.Html2pdf.ConverterProperties.IsImmediateFlush">
             <summary>Checks if immediateFlush is set.</summary>
@@ -3789,6 +4190,32 @@
             the
             <see cref="T:iText.Html2pdf.ConverterProperties"/>
             instance
+            </returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.GetDependencies">
+            <summary>Gets the dependencies.</summary>
+            <returns>the dependencies</returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.RegisterDependency(System.Type,System.Func{System.Object})">
+            <summary>Register custom dependency for the document.</summary>
+            <param name="clazz">type of the dependency</param>
+            <param name="instanceSupplier">the instance of the supplier for the dependency</param>
+            <returns>
+            this
+            <see cref="T:iText.Html2pdf.ConverterProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.GetDependenciesClasses">
+            <summary>Get all dependencies classes.</summary>
+            <returns>the set of dependencies classes</returns>
+        </member>
+        <member name="M:iText.Html2pdf.ConverterProperties.GetDependencySupplier(System.Type)">
+            <summary>Get specific dependency supplier.</summary>
+            <param name="clazz">the dependency class to return supplier for</param>
+            <returns>
+            supplier for the dependency.
+            May return {code null} if no dependency supplier is present for specified class.
             </returns>
         </member>
         <member name="T:iText.Html2pdf.Css.Apply.ICssApplier">
@@ -3923,6 +4350,15 @@
             <see cref="T:iText.Html2pdf.Css.Apply.ICssApplier"/>
             implementation for elements with display flex.
             </summary>
+        </member>
+        <member name="T:iText.Html2pdf.Css.Apply.Impl.DisplayGridTagCssApplier">
+            <summary>
+            <see cref="T:iText.Html2pdf.Css.Apply.ICssApplier"/>
+            implementation for elements with display grid.
+            </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Apply.Impl.DisplayGridTagCssApplier.Apply(iText.Html2pdf.Attach.ProcessorContext,iText.StyledXmlParser.Node.IStylesContainer,iText.Html2pdf.Attach.ITagWorker)">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Html2pdf.Css.Apply.Impl.DisplayTableRowTagCssApplier">
             <summary>
@@ -4219,6 +4655,12 @@
             <param name="cssProps">the CSS properties</param>
             <param name="element">the element</param>
         </member>
+        <member name="M:iText.Html2pdf.Css.Apply.Util.FlexApplierUtil.ApplyFlexContainerProperties(System.Collections.Generic.IDictionary{System.String,System.String},iText.Layout.IPropertyContainer,iText.Html2pdf.Attach.ProcessorContext)">
+            <summary>Applies properties to a flex container.</summary>
+            <param name="cssProps">the CSS properties</param>
+            <param name="element">the element</param>
+            <param name="context">the context of the converter processor</param>
+        </member>
         <member name="T:iText.Html2pdf.Css.Apply.Util.FloatApplierUtil">
             <summary>Utilities class to apply float values to elements.</summary>
         </member>
@@ -4254,6 +4696,27 @@
             <param name="context">the processor context</param>
             <param name="stylesContainer">the styles container</param>
             <param name="element">the element</param>
+        </member>
+        <member name="T:iText.Html2pdf.Css.Apply.Util.GridApplierUtil">
+            <summary>Utilities class to apply css grid properties and styles.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Css.Apply.Util.GridApplierUtil.propsMap">
+            <summary>Property map which maps property order in grid-area css prop to layout property</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Css.Apply.Util.GridApplierUtil.spansMap">
+            <summary>Property map which maps property order in grid-area css prop to grid span property</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Apply.Util.GridApplierUtil.ApplyGridItemProperties(System.Collections.Generic.IDictionary{System.String,System.String},iText.StyledXmlParser.Node.IStylesContainer,iText.Layout.IPropertyContainer)">
+            <summary>Applies grid properties to a grid item.</summary>
+            <param name="cssProps">the CSS properties</param>
+            <param name="stylesContainer">the styles container</param>
+            <param name="element">the element</param>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Apply.Util.GridApplierUtil.ApplyGridContainerProperties(System.Collections.Generic.IDictionary{System.String,System.String},iText.Layout.IPropertyContainer,iText.Html2pdf.Attach.ProcessorContext)">
+            <summary>Applies grid properties to a grid container.</summary>
+            <param name="cssProps">the CSS properties</param>
+            <param name="container">the grid container</param>
+            <param name="context">the context</param>
         </member>
         <member name="T:iText.Html2pdf.Css.Apply.Util.HyphenationApplierUtil">
             <summary>The Class HyphenationApplierUtil.</summary>
@@ -4490,6 +4953,9 @@
             <summary>Applies orphans and widows properties to an element.</summary>
             <param name="cssProps">the CSS properties</param>
             <param name="element">to which the property will be applied.</param>
+        </member>
+        <member name="T:iText.Html2pdf.Css.Apply.Util.OutlineApplierUtil">
+            <summary>Utility class to apply outline properties.</summary>
         </member>
         <member name="F:iText.Html2pdf.Css.Apply.Util.OutlineApplierUtil.LOGGER">
             <summary>The logger.</summary>
@@ -4730,6 +5196,24 @@
             <param name="supportedKeys">the supported keys</param>
             <returns>the filtered map</returns>
         </member>
+        <member name="T:iText.Html2pdf.Css.Apply.Util.TextDecorationApplierUtil">
+            <summary>Utility class which processes text decoration properties.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Apply.Util.TextDecorationApplierUtil.PropagateTextDecorationProperties(iText.StyledXmlParser.Node.IElementNode)">
+            <summary>Expand text decoration properties to the element if needed.</summary>
+            <remarks>
+            Expand text decoration properties to the element if needed.
+            <para />
+            E.g. the following:
+            <c>text-decoration-line: overline underline; text-decoration-color: pink</c>
+            will be translated to:
+            <c>text-decoration-line: overline underline; text-decoration-color: pink pink</c>
+            </remarks>
+            <param name="currentNode">the element which decoration properties shall be expanded</param>
+        </member>
+        <member name="T:iText.Html2pdf.Css.Apply.Util.TransformationApplierUtil">
+            <summary>Utility class to apply transform properties.</summary>
+        </member>
         <member name="M:iText.Html2pdf.Css.Apply.Util.TransformationApplierUtil.#ctor">
             <summary>
             Creates a new
@@ -4870,6 +5354,18 @@
             <param name="context">the processor context</param>
             <param name="element">the element</param>
         </member>
+        <member name="T:iText.Html2pdf.Css.CssConstants">
+            <summary>
+            Class containing possible CSS property keys and values, pseudo-element keys,
+            units of measurement, and so on, specific for html2pdf module.
+            </summary>
+        </member>
+        <member name="F:iText.Html2pdf.Css.CssConstants.AUTO_FIT">
+            <summary>The Constant AUTO_FIT.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Css.CssConstants.AUTO_FILL">
+            <summary>The Constant AUTO_FILL.</summary>
+        </member>
         <member name="F:iText.Html2pdf.Css.CssConstants.BLEED">
             <summary>The Constant BLEED.</summary>
         </member>
@@ -4908,6 +5404,9 @@
         </member>
         <member name="F:iText.Html2pdf.Css.CssConstants.MIN_WIDTH">
             <summary>The Constant MIN_WIDTH.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Css.CssConstants.MINMAX">
+            <summary>The Constant MIN_MAX.</summary>
         </member>
         <member name="F:iText.Html2pdf.Css.CssConstants.OBJECT_FIT">
             <summary>The Constant OBJECT_FIT.</summary>
@@ -4972,8 +5471,8 @@
         <member name="F:iText.Html2pdf.Css.CssConstants.FIRST_EXCEPT">
             <summary>The Constant FIRST_EXCEPT.</summary>
         </member>
-        <member name="F:iText.Html2pdf.Css.CssConstants.GRID">
-            <summary>The Constant GRID.</summary>
+        <member name="F:iText.Html2pdf.Css.CssConstants.GRID_AREA">
+            <summary>The Constant GRID_AREA.</summary>
         </member>
         <member name="F:iText.Html2pdf.Css.CssConstants.INLINE">
             <summary>The Constant INLINE.</summary>
@@ -5055,6 +5554,9 @@
         </member>
         <member name="F:iText.Html2pdf.Css.CssConstants.SUB">
             <summary>The Constant SUB.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Css.CssConstants.SUBGRID">
+            <summary>The Constant SUBGRID.</summary>
         </member>
         <member name="F:iText.Html2pdf.Css.CssConstants.SUPER">
             <summary>The Constant SUPER.</summary>
@@ -5175,6 +5677,23 @@
             <see cref="T:iText.StyledXmlParser.Node.INode"/>
             serving as a placeholder for running element.
             </summary>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Page.PageMarginRunningElementNode.#ctor(System.String,System.String)">
+            <summary>
+            Create new
+            <see cref="T:iText.Html2pdf.Css.Page.PageMarginRunningElementNode"/>
+            instance.
+            </summary>
+            <param name="runningElementName">running element id</param>
+            <param name="runningElementOccurrence">running element occurrence</param>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Page.PageMarginRunningElementNode.GetRunningElementName">
+            <summary>Get running element id (moved out of the content flow)</summary>
+            <returns>running element string id value</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Page.PageMarginRunningElementNode.GetRunningElementOccurrence">
+            <summary>Get running element occurrence</summary>
+            <returns>running element occurrence string value</returns>
         </member>
         <member name="T:iText.Html2pdf.Css.Resolve.CssContentElementNode">
             <summary><see cref="T:iText.StyledXmlParser.Node.IElementNode"/> implementation for content nodes.</summary>
@@ -5325,6 +5844,9 @@
         <member name="F:iText.Html2pdf.Css.Resolve.CssContext.rootFontSize">
             <summary>The root font size value in pt.</summary>
         </member>
+        <member name="F:iText.Html2pdf.Css.Resolve.CssContext.currentFontSize">
+            <summary>Current element font size in pt.</summary>
+        </member>
         <member name="F:iText.Html2pdf.Css.Resolve.CssContext.counterManager">
             <summary>The counter manager.</summary>
         </member>
@@ -5344,6 +5866,14 @@
         <member name="M:iText.Html2pdf.Css.Resolve.CssContext.SetRootFontSize(System.Single)">
             <summary>Sets the root font size.</summary>
             <param name="fontSize">the new root font size</param>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Resolve.CssContext.GetCurrentFontSize">
+            <summary>Gets the current element font size.</summary>
+            <returns>the current element font size in pt</returns>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Resolve.CssContext.SetCurrentFontSize(System.Single)">
+            <summary>Sets the current font size.</summary>
+            <param name="fontSize">the new current element font size</param>
         </member>
         <member name="M:iText.Html2pdf.Css.Resolve.CssContext.SetRootFontSize(System.String)">
             <summary>Sets the root font size.</summary>
@@ -5369,6 +5899,14 @@
             <summary>Checks if a non-page(s) target-counter(s) is present.</summary>
             <returns>true, if non-page(s) target-counter(s) present</returns>
         </member>
+        <member name="M:iText.Html2pdf.Css.Resolve.CssContext.GetRunningManager">
+            <summary>Get running element's manager.</summary>
+            <returns>
+            
+            <see cref="T:iText.Html2pdf.Css.Page.CssRunningManager"/>
+            instance
+            </returns>
+        </member>
         <member name="T:iText.Html2pdf.Css.Resolve.DefaultCssResolver">
             <summary>
             Default implementation of the
@@ -5376,14 +5914,14 @@
             interface.
             </summary>
         </member>
+        <member name="F:iText.Html2pdf.Css.Resolve.DefaultCssResolver.INHERITANCE_RULES">
+            <summary>Css inheritance checker</summary>
+        </member>
         <member name="F:iText.Html2pdf.Css.Resolve.DefaultCssResolver.cssStyleSheet">
             <summary>The CSS style sheet.</summary>
         </member>
         <member name="F:iText.Html2pdf.Css.Resolve.DefaultCssResolver.deviceDescription">
             <summary>The device description.</summary>
-        </member>
-        <member name="F:iText.Html2pdf.Css.Resolve.DefaultCssResolver.cssInheritance">
-            <summary>Css inheritance checker</summary>
         </member>
         <member name="F:iText.Html2pdf.Css.Resolve.DefaultCssResolver.fonts">
             <summary>The list of fonts.</summary>
@@ -5422,6 +5960,10 @@
         </member>
         <member name="M:iText.Html2pdf.Css.Resolve.DefaultCssResolver.ResolveStyles(iText.StyledXmlParser.Node.INode,iText.StyledXmlParser.Css.Resolve.AbstractCssContext)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Resolve.DefaultCssResolver.GetCssStyleSheet">
+            <summary>Gets the CSS style sheet.</summary>
+            <returns>the CSS style sheet</returns>
         </member>
         <member name="M:iText.Html2pdf.Css.Resolve.DefaultCssResolver.ResolveContentProperty(System.Collections.Generic.IDictionary{System.String,System.String},iText.StyledXmlParser.Node.INode,iText.Html2pdf.Css.Resolve.CssContext)">
             <summary>Resolves a content property.</summary>
@@ -5624,6 +6166,15 @@
         </member>
         <member name="F:iText.Html2pdf.Css.Resolve.Func.Counter.PageCountElementNode.totalPageCount">
             <summary>Indicates if the node represents the total page count.</summary>
+        </member>
+        <member name="M:iText.Html2pdf.Css.Resolve.Func.Counter.PageCountElementNode.#ctor(System.Boolean,iText.StyledXmlParser.Node.INode)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Html2pdf.Css.Resolve.Func.Counter.PageCountElementNode"/>
+            instance.
+            </summary>
+            <param name="totalPageCount">if true, total page count will present</param>
+            <param name="parent">parent element of this page counter</param>
         </member>
         <member name="M:iText.Html2pdf.Css.Resolve.Func.Counter.PageCountElementNode.IsTotalPageCount">
             <summary>Checks if the node represents the total page count.</summary>
@@ -6506,6 +7057,18 @@
         <member name="F:iText.Html2pdf.Html.AttributeConstants.ALT">
             <summary>The Constant ALT.</summary>
         </member>
+        <member name="F:iText.Html2pdf.Html.AttributeConstants.ARIA_LABEL">
+            <summary>The Constant ARIA-LABEL.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Html.AttributeConstants.ARIA_DESCRIPTION">
+            <summary>The Constant ARIA-DESCRIPTION.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Html.AttributeConstants.ARIA_LABELLEDBY">
+            <summary>The Constant ARIA-LABELLEDBY.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Html.AttributeConstants.ARIA_DESCRIBEDBY">
+            <summary>The Constant ARIA-DESCRIBEDBY.</summary>
+        </member>
         <member name="F:iText.Html2pdf.Html.AttributeConstants.APPLICATION_NAME">
             <summary>The Constant APPLICATION_NAME.</summary>
         </member>
@@ -6553,6 +7116,9 @@
         </member>
         <member name="F:iText.Html2pdf.Html.AttributeConstants.FACE">
             <summary>The Constant FACE.</summary>
+        </member>
+        <member name="F:iText.Html2pdf.Html.AttributeConstants.FOR">
+            <summary>The Constant FOR.</summary>
         </member>
         <member name="F:iText.Html2pdf.Html.AttributeConstants.HEIGHT">
             <summary>The Constant HEIGHT.</summary>
@@ -6754,6 +7320,9 @@
         </member>
         <member name="F:iText.Html2pdf.Html.AttributeConstants.INPUT_TYPE_VALUES">
             <summary>The Constant INPUT_TYPE_VALUES.</summary>
+        </member>
+        <member name="T:iText.Html2pdf.Html.AttributeConstants.ObjectTypes">
+            <summary>Class that holds object MIME types.</summary>
         </member>
         <member name="T:iText.Html2pdf.Html.HtmlUtils">
             <summary>Utilities class with HTML-related functionality.</summary>
@@ -7113,6 +7682,11 @@
         </member>
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.ERROR_LOADING_FONT">
             <summary>The Constant ERROR_LOADING_FONT.</summary>
+            <remarks>
+            The Constant ERROR_LOADING_FONT.
+            Deprecated in favour of
+            <see cref="F:iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_LOADING_FONT"/>
+            </remarks>
         </member>
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.ERROR_PARSING_CSS_SELECTOR">
             <summary>The Constant ERROR_PARSING_CSS_SELECTOR.</summary>
@@ -7165,12 +7739,6 @@
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.PAGE_SIZE_VALUE_IS_INVALID">
             <summary>The Constant PAGE_SIZE_VALUE_IS_INVALID.</summary>
         </member>
-        <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.PDF_DOCUMENT_NOT_PRESENT">
-            <summary>The Constant PDF_DOCUMENT_NOT_PRESENT.</summary>
-        </member>
-        <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.QUOTES_PROPERTY_INVALID">
-            <summary>The Constant QUOTES_PROPERTY_INVALID.</summary>
-        </member>
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.TEXT_DECORATION_BLINK_NOT_SUPPORTED">
             <summary>The Constant TEXT_DECORATION_BLINK_NOT_SUPPORTED.</summary>
         </member>
@@ -7183,14 +7751,8 @@
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.UNABLE_TO_PROCESS_SVG_ELEMENT">
             <summary>The Constant UNABLE_TO_PROCESS_SVG.</summary>
         </member>
-        <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.UNABLE_TO_RESOLVE_COUNTER">
-            <summary>The Constant UNABLE_TO_RESOLVE_COUNTER.</summary>
-        </member>
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.UNABLE_TO_RETRIEVE_FONT">
             <summary>The Constant UNABLE_TO_RETRIEVE_FONT.</summary>
-        </member>
-        <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI">
-            <summary>The Constant UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI.</summary>
         </member>
         <member name="F:iText.Html2pdf.Logs.Html2PdfLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI">
             <summary>The Constant UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI.</summary>
@@ -7234,15 +7796,21 @@
             the font provider in iText's styled-xml-parser, also includes a
             series of fonts that are shipped with the add-on.
             </summary>
-        </member>
-        <member name="F:iText.Html2pdf.Resolver.Font.DefaultFontProvider.SHIPPED_FONT_RESOURCE_PATH">
-            <summary>The path to the shipped fonts.</summary>
-        </member>
-        <member name="F:iText.Html2pdf.Resolver.Font.DefaultFontProvider.SHIPPED_FONT_NAMES">
-            <summary>The file names of the shipped fonts.</summary>
-        </member>
-        <member name="F:iText.Html2pdf.Resolver.Font.DefaultFontProvider.LOGGER">
-            <summary>The logger.</summary>
+            <remarks>
+            The default
+            <see cref="T:iText.StyledXmlParser.Resolver.Font.BasicFontProvider"/>
+            for pdfHTML, that, as opposed to
+            the font provider in iText's styled-xml-parser, also includes a
+            series of fonts that are shipped with the add-on.
+            <para />
+            Deprecated in favour of
+            <see cref="T:iText.StyledXmlParser.Resolver.Font.BasicFontProvider"/>
+            since it has the same functionality
+            This class will be removed and
+            <see cref="T:iText.StyledXmlParser.Resolver.Font.BasicFontProvider"/>
+            will be renamed to
+            <c>DefaultFontProvider</c>
+            </remarks>
         </member>
         <member name="M:iText.Html2pdf.Resolver.Font.DefaultFontProvider.#ctor">
             <summary>
@@ -7278,6 +7846,11 @@
         </member>
         <member name="M:iText.Html2pdf.Resolver.Font.DefaultFontProvider.AddShippedFonts(iText.Layout.Font.Range)">
             <summary>Adds the shipped fonts.</summary>
+            <remarks>
+            Adds the shipped fonts.
+            <para />
+            Deprecated since similar method was added to parent class.
+            </remarks>
             <param name="rangeToLoad">
             a unicode
             <see cref="T:iText.Layout.Font.Range"/>
@@ -7294,6 +7867,8 @@
             NotoSerifKhmer, NotoSerifMalayalam, NotoSerifTamil, NotoSerifTelugu, NotoSerifThai.
             If it's needed to have a DefaultFontProvider without typography fonts loaded,
             create an extension of DefaultFontProvider and override this method so it does nothing and only returns null.
+            <para />
+            Deprecated since similar method was added to parent class.
             </remarks>
             <returns>
             a unicode
@@ -7474,6 +8049,26 @@
             <param name="pdfDocument">pdf that shall contain the SVG image</param>
             <returns>
             
+            <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Html2pdf.Util.SvgProcessingUtil.CreateXObjectFromProcessingResult(iText.Svg.Processors.ISvgProcessorResult,iText.Html2pdf.Attach.ProcessorContext,System.Boolean)">
+            <summary>
+            Create an
+            <see cref="T:iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+            tied to the passed
+            <see cref="T:iText.Html2pdf.Attach.ProcessorContext"/>
+            using the SVG processing result.
+            </summary>
+            <param name="result">processing result containing the SVG information</param>
+            <param name="context">html2pdf processor context</param>
+            <param name="generateAbsolutelySizedSvg">
+            if true and context has pdf document and svg is not relative sized, it will be immediately
+            generated, otherwise no generation will be performed
+            </param>
+            <returns>
+            new
             <see cref="T:iText.Svg.Xobject.SvgImageXObject"/>
             instance
             </returns>

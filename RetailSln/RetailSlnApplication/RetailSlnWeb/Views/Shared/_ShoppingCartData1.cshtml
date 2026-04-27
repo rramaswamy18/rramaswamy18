@@ -71,18 +71,20 @@
                     HSN :&nbsp;@shoppingCartItem.HSNCode&nbsp;Prod Code :&nbsp;@shoppingCartItem.ProductCode
                     <br style="clear: both;" />
                     MSRP&nbsp;@shoppingCartItem.ItemRateBeforeDiscountFormatted&nbsp;Disc&nbsp;@shoppingCartItem.ItemDiscountPercentFormatted&nbsp;
-                    @if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
-                    {
-                        if (shoppingCartItem.DoNotBreakBundle)
+                    @*
+                        @if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
                         {
-                            <a href="javascript: void(0);" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(index)').scrollIntoView();">View items in bundle #</a>
+                            if (shoppingCartItem.DoNotBreakBundle)
+                            {
+                                <a href="javascript: void(0);" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(index)').scrollIntoView();">View items in bundle #</a>
+                            }
+                            else
+                            {
+                                <a href="javascript: void(0);" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(index)').scrollIntoView();">Edit quantity for items in bundle #</a>
+                            }
                         }
-                        else
-                        {
-                            <a href="javascript: void(0);" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(index)').scrollIntoView();">Edit quantity for items in bundle #</a>
-                        }
-                    }
-                    <br style="clear: both;" />
+                        <br style="clear: both;" />
+                    *@
                     @if (Model.Checkout)
                     {
                         @Html.DisplayFor(m => shoppingCartItem.OrderComments)

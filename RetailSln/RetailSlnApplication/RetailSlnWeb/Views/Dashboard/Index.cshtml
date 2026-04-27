@@ -47,4 +47,31 @@
         document.getElementById("editCount").innerText = editCount;
         console.log("calculateEditCount", "00090000", "EXIT!!!!", "editCount", editCount);
     }
+    function cRMListSearch_onclick() {
+        //alert(document.getElementById("telephoneCountryEmpty1").checked);
+        //alert(document.getElementById("telephoneCountryEmpty1").value);
+        //alert(document.getElementById("telephoneCountryEmpty2").checked);
+        //alert(document.getElementById("telephoneCountryEmpty2").value);
+        console.log("menuLink_onclick", "00000000", "ENTER!!!");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        url = "@Url.Action("CRMListList", "Dashboard")" + "?pageNum=9&rowCount=270";
+        $.ajax({
+            url: url,
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            //data: jsonPostDataString,
+            success: function (responseData, textStatus, request) {
+                console.log("00001000", "cRMListSearch_onclick SUCCESS!!!", textStatus);
+                document.getElementById("divDashboard").innerHTML = responseData;
+                $('#loadingModal').modal('hide');
+            },
+            error: function (xhr, exception) {
+                $('#loadingModal').modal('hide');
+                console.log("cRMListSearch_onclick", "00099000", "ERROR???");
+                console.log(xhr, exception);
+                document.getElementById("divDashboard").innerHTML = xhr.responseText;
+            }
+        });
+    }
 </script>

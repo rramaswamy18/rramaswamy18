@@ -89,9 +89,9 @@
     <div id="divScrollIntoView"></div>
     <div class="center" id="divDashboard" style="padding: 0px; text-align: center; width: 100%;">
         @RenderBody()
-        @Html.Partial("_ShoppingCartContainer")
-        @Html.Partial("_DashboardFooter")
     </div>
+    @Html.Partial("_ShoppingCartContainer")
+    @Html.Partial("_DashboardFooter")
     @Html.Partial("_LoadingModal")
 </body>
 </html>

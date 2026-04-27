@@ -1921,6 +1921,30 @@
             <param name="start">the start of the segment</param>
             <param name="end">the end of the segment</param>
         </member>
+        <member name="M:iText.Barcodes.BarcodePDF417.Segment.GetType">
+            <summary>Retrieves the type of the segment.</summary>
+            <returns>segment type</returns>
+        </member>
+        <member name="M:iText.Barcodes.BarcodePDF417.Segment.SetType(System.Char)">
+            <summary>Sets the type of the segment.</summary>
+            <param name="type">segment type</param>
+        </member>
+        <member name="M:iText.Barcodes.BarcodePDF417.Segment.GetStart">
+            <summary>Retrieves the start of the segment.</summary>
+            <returns>segment start</returns>
+        </member>
+        <member name="M:iText.Barcodes.BarcodePDF417.Segment.SetStart(System.Int32)">
+            <summary>Sets the start of the segment.</summary>
+            <param name="start">segment start</param>
+        </member>
+        <member name="M:iText.Barcodes.BarcodePDF417.Segment.GetEnd">
+            <summary>Retrieves the end of the segment.</summary>
+            <returns>segment end</returns>
+        </member>
+        <member name="M:iText.Barcodes.BarcodePDF417.Segment.SetEnd(System.Int32)">
+            <summary>Sets the end of the segment.</summary>
+            <param name="end">segment end</param>
+        </member>
         <member name="T:iText.Barcodes.BarcodePDF417.SegmentList">
             <summary>An utility class that encapsulates a list of segments.</summary>
         </member>
@@ -2069,6 +2093,34 @@
             <param name="dataBlock">size of a data-block</param>
             <param name="errorBlock">size of a error-correction block</param>
         </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetHeight">
+            <summary>Retrieves the height of DmParams object.</summary>
+            <returns>total height value</returns>
+        </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetWidth">
+            <summary>Retrieves the width of DmParams object.</summary>
+            <returns>total width value</returns>
+        </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetHeightSection">
+            <summary>Retrieves the height of a single section.</summary>
+            <returns>total height value</returns>
+        </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetWidthSection">
+            <summary>Retrieves the width of a single section.</summary>
+            <returns>total width value</returns>
+        </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetDataSize">
+            <summary>Retrieves the size of the data.</summary>
+            <returns>data size value</returns>
+        </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetDataBlock">
+            <summary>Retrieves the size of the data block.</summary>
+            <returns>data block size value</returns>
+        </member>
+        <member name="M:iText.Barcodes.Dmcode.DmParams.GetErrorBlock">
+            <summary>Retrieves the size of the error block.</summary>
+            <returns>error block size value</returns>
+        </member>
         <member name="T:iText.Barcodes.Dmcode.Placement">
             <summary>Utility class that helps to place the data in the barcode.</summary>
         </member>
@@ -2103,6 +2155,11 @@
         <member name="M:iText.Barcodes.Exceptions.WriterException.#ctor(System.String)">
             <summary>Creates a WriterException with a message.</summary>
             <param name="message">message of the exception</param>
+        </member>
+        <member name="M:iText.Barcodes.Exceptions.WriterException.#ctor(System.String,System.Exception)">
+            <summary>Creates a WriterException with a specified detail message and a cause.</summary>
+            <param name="message">the detail message, which provides additional information about the exception</param>
+            <param name="cause">the cause of the exception</param>
         </member>
         <member name="T:iText.Barcodes.Qrcode.BitArray">
             <summary>A simple, fast array of bits, represented compactly by an array of ints internally.</summary>
@@ -2643,7 +2700,7 @@
             </param>
             <param name="coefficients">
             coefficients as ints representing elements of GF(256), arranged
-            from most significant (highest-power term) coefficient to least significant
+            from the most significant (highest-power term) coefficient to the least significant
             </param>
         </member>
         <member name="M:iText.Barcodes.Qrcode.GF256Poly.GetDegree">

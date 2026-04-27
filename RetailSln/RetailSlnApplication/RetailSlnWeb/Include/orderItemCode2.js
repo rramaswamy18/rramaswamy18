@@ -1,9 +1,28 @@
 ﻿//Sriramajayam
 //orderItemCode2.js
+function btnChangeOrderCreatedFor_onclick() {
+    console.log("btnChangeOrderCreatedFor_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Dashboard/OrderCreatedFor";
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            document.getElementById("divItemCatalogData").innerHTML = responseData;
+            console.log("btnChangeOrderCreatedFor_onclick", "00001000", "SUCCESS!!!", textStatus);
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("btnChangeOrderCreatedFor_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+        }
+    });
+}
 function btnSearchText_onclick(pageNum) {
     console.log("btnSearchText_onclick", "00000000", "ENTER!!!");
     $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-    var url = "/Dashboard/SearchText";
+    var url = "/Dashboard/SearchResultItemMaster";
     var searchText = document.getElementById("txtSearchText").value;
     var parentCategoryId = document.getElementById("spnParentCategoryId").innerText;
     var jsonPostData =
@@ -11,6 +30,7 @@ function btnSearchText_onclick(pageNum) {
         "parentCategoryId": parentCategoryId,
         "searchText": searchText,
         "pageNum": pageNum,
+        "pageSize": pageSize,
     };
     $.ajax({
         url: url,
