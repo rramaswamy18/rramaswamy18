@@ -1,0 +1,111 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderListDataModel
+@{
+    OrderEditModel orderEditModel;
+    List<CodeDataModel> orderStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "OrderStatus").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> paymentModeCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> paymentStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentStatus").CodeDataModelsCodeDataNameId;
+    orderEditModel = new OrderEditModel
+    {
+        TrackingRefNumber = Model.TrackingRefNumber,
+        OrderDeliveryId = Model.OrderDeliveryId,
+        OrderHeaderId = Model.OrderHeaderId,
+        OrderHeaderSummaryId = Model.OrderHeaderSummaryId,
+        OrderPaymentId = Model.OrderPaymentId,
+        OrderStatusId = Model.OrderStatusId,
+        PaymentModeId = Model.PaymentModeId,
+        PaymentStatusId = Model.PaymentStatusId,
+    };
+    bool submitButton;
+    string updateStatus;
+}
+<tr>
+    <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top;">
+        @(Model.Index).
+    </td>
+    <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top;">
+        @Model.OrderHeaderId
+    </td>
+    <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top;">
+        @{
+            if (Model.OrderStatusId == OrderStatusEnum.OrderPlaced)
+            {
+                updateStatus = "true";
+            }
+            else
+            {
+                updateStatus = "false";
+            }
+            if (Model.OrderStatusId == OrderStatusEnum.OrderPlaced || Model.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+            {
+                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderView_onclick(@Model.OrderHeaderSummaryId, @updateStatus);">View</a>
+            }
+            else
+            {
+                <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderEdit(@Model.OrderHeaderSummaryId);">Edit</a>
+            }
+        }
+    </td>
+    <td class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+        @Model.CreatedForEmailAddress<br />
+        @Model.CreatedForFirstName<br />
+        @Model.CreatedForLastName
+    </td>
+    <td class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top; ">
+        @Model.OrderDateTime<br />
+        @Model.InvoiceTypeId.GetDescription()<br />
+        Tracking# @Model.TrackingRefNumber
+    </td>
+    <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top; ">
+        @Model.TotalOrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")<br />
+        @Model.AdditionalCharges.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+    </td>
+    <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top; ">
+        @Model.TotalTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")<br />
+        @Model.ShippingAndHandlingCharges.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+    </td>
+    <td class="text-right" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top; ">
+        @Model.TotalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")<br />
+        @Model.TotalAmountPaid.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")<br />
+        @Model.BalanceDue.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
+    </td>
+    <td class="text-left" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; vertical-align: top;">
+        @Model.OrderStatusId.GetDescription()<br />
+        @Model.PaymentModeId.GetDescription()<br />
+        @Model.PaymentStatusId.GetDescription()
+    </td>
+</tr>
+@if (Model.OrderStatusId > OrderStatusEnum.OrderPlaced)
+{
+    if (orderEditModel.PaymentStatusId == PaymentStatusEnum.PaidInFull && (orderEditModel.OrderStatusId == OrderStatusEnum.Delivered || orderEditModel.OrderStatusId == OrderStatusEnum.Canceled))
+    {
+        submitButton = false;
+    }
+    else
+    {
+        submitButton = true;
+    }
+    <tr>
+        <td colspan="2" style="padding: 0px;">
+        </td>
+        <td colspan="7" style="padding: 0px;">
+            <form id="formOrderEdit@(Model.Index)">
+                <table style="padding: 5px;">
+                    <tr>
+                        @Html.Partial("_OrderEditDetail", orderEditModel)
+                        <td style="padding: 5px;">
+                            @if (submitButton)
+                            {
+                                <input id="orderEditSave" onclick="javascript: return orderEditSave_onclick('@Model.Index');" style="background-color: #006400; color: #ffffff; font-size: 12px; padding: 5px;" type="button" value="Submit" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+    </tr>
+}

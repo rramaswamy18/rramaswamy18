@@ -9,19 +9,15 @@ namespace RetailSlnEnumerations
     public enum OrderStatusEnum :int
     {
         [Description("Order Placed")]
-        Open = 100,
+        OrderPlaced = 100,
         [Description("Order Viewed")]
-        Viewed = 200,
+        OrderViewed = 200,
         [Description("In Process")]
         InProcess = 300,
         [Description("In Transit")]
         InTransit = 400,
         [Description("Delivered")]
-        Delivered = 500,
-        [Description("Partial Payment")]
-        PartialPayment = 800,
-        [Description("Paid")]
-        Paid = 900,
+        Delivered = 1800,
         [Description("On Hold")]
         OnHold = 9000,
         [Description("Canceled")]

@@ -89,36 +89,38 @@
                     HSN :&nbsp;@shoppingCartItem.HSNCode&nbsp;Prod Code :&nbsp;@shoppingCartItem.ProductCode
                     <br style="clear: both;" />
                     MSRP&nbsp;@shoppingCartItem.ItemRateBeforeDiscountFormatted&nbsp;Disc&nbsp;@shoppingCartItem.ItemDiscountPercentFormatted&nbsp;
-                    @*
                         @if (shoppingCartItem.ItemTypeId == ItemTypeEnum.ItemBundle)
                         {
                             if (shoppingCartItem.DoNotBreakBundle)
                             {
-                                <a href="javascript: void(0);" id="shoppinCartBundleViewEditLink@(itemIndex)" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(itemIndex)').scrollIntoView();">View items in bundle #</a>
+                                <a href="javascript: void(0);" id="shoppinCartBundleViewEditLink@(itemIndex)" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(itemIndex)').scrollIntoView();">Bundle without breaking (all items) #@(shoppingCartItem.ShoppingCartItemBundleModels.Count + "/" + shoppingCartItem.ShoppingCartItemBundleModels.Count)</a>
                             }
                             else
                             {
-                                <a href="javascript: void(0);" id="shoppinCartBundleViewEditLink@(itemIndex)" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(itemIndex)').scrollIntoView();">Edit quantity for items in bundle #</a>
+                                <a href="javascript: void(0);" id="shoppinCartBundleViewEditLink@(itemIndex)" onclick="javascript: document.getElementById('shoppinCartBundleViewEdit@(itemIndex)').scrollIntoView();">Customize bundle #@(shoppingCartItem.ShoppingCartItemBundleModels.Count(x => x.OrderQty > 0) + "/" + shoppingCartItem.ShoppingCartItemBundleModels.Count)</a>
                             }
                         }
+                        else
+                        {
+                            <span style="color: #000000;">Single Item</span>
+                        }
                         <br style="clear: both;" />
-                    *@
                     @if (Model.Checkout)
                     {
-                        @Html.DisplayFor(m => shoppingCartItem.OrderComments)
+                            @Html.DisplayFor(m => shoppingCartItem.OrderComments)
                     }
                     else
-                    {
-                        @Html.TextBoxFor(m => shoppingCartItem.OrderComments, new { id = "orderComments" + (itemIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onchange = "javascript: return orderComments_onchange(" + (itemIndex - 1) + ", -1);" })
+                        {
+                            @Html.TextBoxFor(m => shoppingCartItem.OrderComments, new { id = "orderComments" + (itemIndex - 1), @class = "form-control", placeholder = "Enter comments for the item ordered", style = "height: 43px; width: 95%;", onchange = "javascript: return orderComments_onchange(" + (itemIndex - 1) + ", -1);" })
                     }
-                    @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
+                        @foreach (var shoppingCartItemSummary in shoppingCartItem.ShoppingCartItemSummarys)
                     {
-                        @shoppingCartItemSummary.ItemShortDesc
-                        <span>&nbsp;</span>
-                        @shoppingCartItemSummary.ItemRateFormatted
-                        <span>&nbsp;</span>
-                        @shoppingCartItemSummary.OrderAmountFormatted
-                        <span>&nbsp;</span>
+                            @shoppingCartItemSummary.ItemShortDesc
+                            <span>&nbsp;</span>
+                            @shoppingCartItemSummary.ItemRateFormatted
+                            <span>&nbsp;</span>
+                            @shoppingCartItemSummary.OrderAmountFormatted
+                            <span>&nbsp;</span>
                     }
                 </td>
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top; ">
@@ -127,10 +129,10 @@
                 <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: right; vertical-align: top;">
                     @if (Model.Checkout)
                     {
-                        @shoppingCartItem.OrderQty
+                            @shoppingCartItem.OrderQty
                     }
                     else
-                    {
+                        {
                         @*
                             if (shoppingCartItem.DoNotBreakBundle)
                             {

@@ -190,13 +190,10 @@
 </style>
 <div class="customTopNav" id="divMenu">
     @{
-        i = 0;
-        menuUrlAction = menuUrlActions[i];
-        <a class="active" href="javascript: void(0);" style="">@menuUrlAction.LinkText</a>
-        for (i = 1; i < 5; i++)
+        for (i = 0; i < 5; i++)
         {
             menuUrlAction = menuUrlActions[i];
-            <a href="javascript: void(0);" onclick="javascript: return menuLink_onclick('@Url.Action(menuUrlAction.ActionName, menuUrlAction.ControllerName)', '@menuUrlAction.QueryString', '@menuUrlAction.FunctionNamesString');">@menuUrlAction.LinkText</a>
+            <a href="javascript: void(0);" onclick="javascript: return menuLink_onclick('@Url.Action(menuUrlAction.ActionName, menuUrlAction.ControllerName)', '@menuUrlAction.QueryString', '@menuUrlAction.FunctionNamesString');" style="text-decoration: underline;">@menuUrlAction.LinkText</a>
         }
     }
     <div class="customDropDown">

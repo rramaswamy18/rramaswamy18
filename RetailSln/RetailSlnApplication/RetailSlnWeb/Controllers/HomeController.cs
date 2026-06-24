@@ -47,7 +47,7 @@ namespace RetailSlnWeb.Controllers
             //}
             #endregion
             //int x = 1, y = 0, z = x / y;
-            //Session.Timeout = 2;
+            Session.Timeout = 9;
             ViewData["ActionName"] = "Index";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -548,17 +548,17 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             //System.Threading.Thread.Sleep(5000); //Sleep for 2 seconds to make sure session has timedout
             var sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
-            string aspNetUserId;
-            if (sessionObjectModel != null)
-            {
-                aspNetUserId = sessionObjectModel.AspNetUserId;
-            }
-            else
-            {
-                aspNetUserId = string.Empty;
-            }
+            //string aspNetUserId;
+            //if (sessionObjectModel != null)
+            //{
+            //    aspNetUserId = sessionObjectModel.AspNetUserId;
+            //}
+            //else
+            //{
+            //    aspNetUserId = string.Empty;
+            //}
             var isAuthenticated = User.Identity.IsAuthenticated;
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: IsAuthenticatedStatus", "isAuthenticated", isAuthenticated.ToString(), "aspNetUserId", aspNetUserId);
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: IsAuthenticatedStatus", "isAuthenticated", isAuthenticated.ToString());//, "aspNetUserId", aspNetUserId);
             //var isAuthenticated = User.Identity.IsAuthenticated && sessionObjectModel != null;
             isAuthenticated = isAuthenticated && sessionObjectModel != null;
             if (isAuthenticated)
@@ -574,6 +574,7 @@ namespace RetailSlnWeb.Controllers
                     Request.GetOwinContext().Authentication.SignOut();
                     Session["SessionObject"] = null;
                     Session.Abandon();
+                    Session.Timeout = 2;
                 }
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
@@ -1270,7 +1271,7 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    registerUserResponseModel = archLibBL.RegisterUserOTPRequest(ref registerUserRequestModel, "REGISTERUSER", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    registerUserResponseModel = archLibBL.RegisterUserOTPRequest(ref registerUserRequestModel, "Register", "REGISTERUSER", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     registerUserResponseModel.RequestType = "Register Referral";
                     exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Data Validation Success");
                 }
@@ -1367,7 +1368,7 @@ namespace RetailSlnWeb.Controllers
                             else
                             {//Send message using Twillo
                                 string message = registerUserResponseModel.TelephoneNumberFormatted + " registered " + ArchLibCache.GetApplicationDefault(clientId, "BusinessNameAbbrev", "");
-                                archLibBL.SendWhatsAppMessagePayLoad(oTPServiceType, "+" + registerUserResponseModel.TelephoneCode + registerUserResponseModel.TelephoneNumber, message, clientId);
+                                //archLibBL.SendWhatsAppMessagePayLoad(oTPServiceType, "+" + registerUserResponseModel.TelephoneCode + registerUserResponseModel.TelephoneNumber, message, clientId);
                             }
                         }
                         else
@@ -1470,8 +1471,12 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, "REGISTERUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    oTPRequestModel.OTPPurpose = "Register";
+                    oTPRequestModel.OTPTypeNameDesc = "REGISTERUSERPROF";
+                    oTPRequestModel.RequestType = "Register";
+                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     oTPResponseModel.RequestType = "Register";
+                    //oTPResponseModel.RequestType = "Register";
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -1541,6 +1546,7 @@ namespace RetailSlnWeb.Controllers
                         sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                         string currentLoggedInUserId = loggedInUserId;
                         htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
+                        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfSuccess", oTPResponseModel);
                         success = true;
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                     }

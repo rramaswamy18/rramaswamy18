@@ -15,6 +15,7 @@ namespace RetailSlnModels
         public long OrderHeaderId { set; get; }
         public long OrderPaymentId { set; get; }
         public long PaymentModeId { set; get; }
+        public long PaymentStatusId { set; get; }
         public Dictionary<string, Dictionary<string, string>> PaymentRefOptions { set; get; }
         //public string PaymentRefNumCaption1 { set; get; }
         //public string PaymentRefNumData1 { set; get; }

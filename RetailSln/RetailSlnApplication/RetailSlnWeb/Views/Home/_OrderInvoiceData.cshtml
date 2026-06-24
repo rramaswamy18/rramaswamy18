@@ -46,6 +46,13 @@
     tr:nth-child(even) {
         background-color: #f2f2f2;
     }
+
+    .newPage {
+        display: block;
+        clear: both;
+        break-after: page; /* Modern standard */
+        page-break-after: always; /* Legacy support */
+    }
 </style>
 <div style="overflow-x: auto; width: 100%;">
     @{
@@ -53,8 +60,8 @@
         Model.ShoppingCartModel.ShowDetail = true;
         @Html.Partial("_ShoppingCartHeader1", Model)
         @Html.Partial("_ShoppingCartData1", Model.ShoppingCartModel)
-        @Html.Partial("_ShoppingCartSummary1", Model.ShoppingCartModel)
         @Html.Partial("_ShoppingCartFooter1", Model)
+        <div class="newPage">&nbsp;</div>
         @Html.Partial("_ShoppingCartBundle1", Model)
         Model.ShoppingCartModel.Checkout = false;
         Model.ShoppingCartModel.ShowDetail = false;

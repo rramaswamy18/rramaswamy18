@@ -9,7 +9,11 @@ namespace RetailSlnModels
 {
     public class OrderListDataModel
     {
+        public int Index { set; get; }
+        public long OrderDeliveryId { get; set; }
         public long OrderHeaderId { set; get; }
+        public long OrderHeaderSummaryId { set; get; }
+        public long OrderPaymentId { get; set; }
         public string CreatedForEmailAddress { set; get; }
         public string CreatedForFirstName { set; get; }
         public string CreatedForLastName { set; get; }
@@ -19,8 +23,11 @@ namespace RetailSlnModels
         public string LastName { set; get; }
         public string OrderDateTime { set; get; }
         public OrderStatusEnum OrderStatusId { set; get; }
+        public PaymentModeEnum PaymentModeId { set; get; }
+        public PaymentStatusEnum PaymentStatusId { set; get; }
         public long PersonId { set; get; }
 
+        public float AdditionalCharges { set; get; }
         public float BalanceDue { set; get; }
         public InvoiceTypeEnum InvoiceTypeId { set; get; }
         public float ShippingAndHandlingCharges { set; get; }
@@ -29,6 +36,7 @@ namespace RetailSlnModels
         public float TotalInvoiceAmount { set; get; }
         public float TotalOrderAmount { set; get; }
         public float TotalTaxAmount { set; get; }
+        public string TrackingRefNumber { set; get; }
         public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

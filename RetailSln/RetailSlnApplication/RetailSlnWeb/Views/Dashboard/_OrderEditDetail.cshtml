@@ -1,0 +1,41 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderEditModel
+@{
+    List<CodeDataModel> orderStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "OrderStatus").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> paymentModeCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentMode").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> paymentStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentStatus").CodeDataModelsCodeDataNameId;
+}
+<td style="padding: 5px;">
+    @Html.TextBoxFor(m => Model.TrackingRefNumber, new { @class = "form-control", id = "TrackingRefNumber", name = "TrackingRefNumber", placeholder = "Tracking Ref#", title = "Tracking Ref#" })
+    @Html.HiddenFor(m => Model.OrderDeliveryId, new { id = "OrderDeliveryId", name = "OrderDeliveryId" })
+</td>
+<td style="padding: 5px;">
+    @Html.DropDownListFor(m => Model.OrderStatusId, new SelectList(orderStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", (int)Model.OrderStatusId), "--- Ord Stat ---", new { @class = "form-control", id = "OrderStatusId", name = "OrderStatusId", style = "font-size: 14px; width: 99%;", title = "Order Status" })
+    @Html.HiddenFor(m => Model.OrderHeaderId, new { id = "OrderHeaderId", name = "OrderHeaderId" })
+    @Html.HiddenFor(m => Model.OrderHeaderSummaryId, new { id = "OrderHeaderSummaryId", name = "OrderHeaderSummaryId" })
+</td>
+<td style="padding: 5px;">
+    @if (Model.PaymentStatusId == PaymentStatusEnum.PaidInFull)
+    {
+        <span style="color: #000000;">@Model.PaymentStatusId.GetDescription()</span>
+    }
+    else
+    {
+        @Html.DropDownListFor(m => Model.PaymentStatusId, new SelectList(paymentStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", (int)Model.PaymentStatusId), "--- Pmt Stat ---", new { @class = "form-control", style = "font-size: 14px; width: 99%;", title = "Payment Status" })
+        @Html.HiddenFor(m => Model.OrderPaymentId)
+    }
+</td>
+<td style="padding: 5px;">
+    @if (Model.PaymentStatusId == PaymentStatusEnum.PaidInFull)
+    {
+        <span style="color: #000000;">@Model.PaymentModeId.GetDescription()</span>
+    }
+    else
+    {
+        @Html.DropDownListFor(m => Model.PaymentModeId, new SelectList(paymentModeCodeDataModels, "CodeDataNameId", "CodeDataDesc0", (int)Model.PaymentModeId), "--- Pmt Mode ---", new { @class = "form-control", style = "font-size: 14px; width: 99%;", title = "Payment Mode" })
+    }
+</td>

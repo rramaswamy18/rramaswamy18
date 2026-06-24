@@ -1,0 +1,133 @@
+﻿@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderHeaderSummary
+@{
+    var orderHeaderSummary = Model;
+}
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; width: 81%;">
+    <tr>
+        <th colspan="18" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #a54000; font-size: 20px; font-weight: 900; padding: 5px; text-align: center;">
+            Order View (#@orderHeaderSummary.OrderHeaderId)
+        </th>
+    </tr>
+</table>
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; width: 81%;">
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Date Time
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Person
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Created<br />For
+        </th>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            @orderHeaderSummary.OrderHeader.OrderDateTime
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            @(orderHeaderSummary.OrderHeader.PersonModel.FirstName + " " + orderHeaderSummary.OrderHeader.PersonModel.LastName)
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @(orderHeaderSummary.OrderHeader.CreatedForPersonModel.FirstName + " " + orderHeaderSummary.OrderHeader.PersonModel.LastName)
+        </td>
+    </tr>
+</table>
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; width: 81%;">
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Date Time
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Tracking#
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Ord<br />Status
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Pmt<br />Status
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Pmt<br />Mode
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Ord<br />Amt
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Inv<br />Amt
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Bal<br />Due
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+        </th>
+    </tr>
+    <tr>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            @orderHeaderSummary.OrderHeader.OrderDateTime
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            @orderHeaderSummary.OrderDelivery.TrackingRefNumber
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @orderHeaderSummary.OrderHeader.OrderStatusId.GetDescription()
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @orderHeaderSummary.OrderPayment.PaymentStatusId.GetDescription()
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @orderHeaderSummary.OrderPayment.PaymentModeId.GetDescription()
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @orderHeaderSummary.TotalOrderAmount
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @orderHeaderSummary.TotalInvoiceAmount
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+            @orderHeaderSummary.BalanceDue
+        </td>
+        <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left;">
+        </td>
+    </tr>
+</table>
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; width: 81%;">
+    <colgroup>
+        <col style="width: 3%;" />
+        <col style="width: 46%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 7%;" />
+    </colgroup>
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">#</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Desc</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Rate<br />Bef<br />Disc</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Rate<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Disc<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Qty<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Amt<br />Orig</th>
+    </tr>
+    @{
+        int index = 0;
+        foreach (var orderDetail in orderHeaderSummary.OrderDetails)
+        {
+            index++;
+            <tr>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">@index</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">@(orderDetail.ItemMasterDesc0 + " " + orderDetail.ItemMasterDesc1 + " " + orderDetail.ItemMasterDesc2 + " " + orderDetail.ItemMasterDesc3)<br />@orderDetail.ItemItemSpecsForDisplay</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.ItemRateBeforeDiscount</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.ItemRateOriginal</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.DiscountPercentOriginal</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.OrderQty</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.OrderAmount</td>
+            </tr>
+        }
+    }
+</table>

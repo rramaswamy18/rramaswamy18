@@ -1,4 +1,4 @@
-﻿using ArchitectureLibraryDocumentModels;
+﻿using ArchitectureLibraryModels;
 using RetailSlnEnumerations;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace RetailSlnModels
     {
         public long OrderHeaderSummaryId { set; get; }
         public long ClientId { set; get; }
+        public float AdditionalCharges { set; get; }
         public float BalanceDue { set; get; }
         public InvoiceTypeEnum InvoiceTypeId { set; get; }
         public long OrderHeaderId { set; get; }
@@ -20,5 +21,10 @@ namespace RetailSlnModels
         public float TotalInvoiceAmount { set; get; }
         public float TotalOrderAmount { set; get; }
         public float TotalTaxAmount { set; get; }
+        public OrderDelivery OrderDelivery { set; get; }
+        public OrderPayment OrderPayment { set; get; }
+        public OrderHeader OrderHeader { set; get; }
+        public List<OrderDetail> OrderDetails { set; get; }
+        public ResponseObjectModel ResponseObjectModel { set; get; }
     }
 }

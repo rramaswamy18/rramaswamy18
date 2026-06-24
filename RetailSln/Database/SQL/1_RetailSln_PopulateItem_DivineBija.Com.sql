@@ -113,7 +113,7 @@ DECLARE @ClientId BIGINT = 3
               ,-1 AS ItemRate, -1 AS ItemRateMSRP
               ,CASE ISNUMERIC([Spec Seq]) WHEN 1 THEN CAST([Spec Seq] AS INT) ELSE 0 END AS ItemSeqNum, Description0 AS ItemShortDesc0
               ,Description1 AS ItemShortDesc1, Description2 AS ItemShortDesc2, Description3 AS ItemShortDesc3, 5 AS ItemStarCount
-              ,CASE WHEN [India Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
+              ,CASE WHEN [USA Active] = 1 THEN 100 ELSE 200 END AS ItemStatusId
               ,CASE [Item Type] WHEN 'ITEMS' THEN 100 WHEN 'BUNDLE' THEN 300 END AS ItemTypeId, UniqueDescription AS ItemUniqueDesc
               ,ItemId AS ProductItemId, ImageFileName AS UploadImageFileName
           FROM dbo.DivineBija_Products

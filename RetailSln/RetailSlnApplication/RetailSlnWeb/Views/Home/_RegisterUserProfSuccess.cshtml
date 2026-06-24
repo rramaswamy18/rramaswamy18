@@ -1,0 +1,29 @@
+﻿@using ArchitectureLibraryModels
+@model OTPResponseModel
+<div style="padding-left: 72px; padding-top: 18px; text-align: left;">
+    <h3 style="color: #a54000; font-weight: bold;">REGISTER USER</h3>
+    <ul>
+        <li>
+            We appreciate you taking time to register
+        </li>
+        <li>
+            You are successfully registered
+        </li>
+        <li>
+            You are currently logged in
+        </li>
+        <li>
+            To login at a later time use your telephone number
+            <br />
+            @Model.TelephoneNumberFormatted
+        </li>
+        <li>
+            Please start placing your first order and enjoy the benefits
+        </li>
+        <li>
+            Code : @Model.TelephoneCode
+            <br />
+            Number : @Model.TelephoneNumber
+        </li>
+    </ul>
+</div>

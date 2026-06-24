@@ -562,6 +562,7 @@ function paymentInfo2Save_onclick() {
             $("#loadingModal").modal('hide');
             if (responseData.success) {
                 console.log("paymentInfo2Save_onclick", "00002000", responseData.success, responseData.processMessage);
+                $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
                 var jsonObject = JSON.parse(responseData.htmlString);
                 console.log(9.9, responseData.htmlString, jsonObject);
                 var options = {
@@ -596,6 +597,7 @@ function paymentInfo2Save_onclick() {
                 };
                 var rzp1 = new Razorpay(options);
                 rzp1.open();
+                $("#loadingModal").modal('hide');
             }
             else {
                 console.log("paymentInfo2Save_onclick", "00090900", "ERROR???");

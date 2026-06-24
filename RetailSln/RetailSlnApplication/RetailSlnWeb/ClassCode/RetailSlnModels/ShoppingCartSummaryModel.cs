@@ -8,6 +8,7 @@ namespace RetailSlnModels
 {
     public class ShoppingCartSummaryModel
     {
+        public float? AdditionalCharges { set; get; }
         public float? AmountPaidByCreditCard { set; get; }
         public float? AmountPaidByGiftCert { set; get; }
         public float? BalanceDue { set; get; }

@@ -23,14 +23,54 @@
             {
                 headingFlag = false;
                 <tr>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">#</th>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Id</th>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Description</th>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Rate</th>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Qty</th>
-                    <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Amt</th>
+                    <th colspan="7" style="color: #000000; font-size: 23px; font-weight: bold; text-align: center;">Bundle Details</th>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="background-color: #ffffff; border-style: none;"><br style="clear: both;" /><br style="clear: both;" /></td>
+                </tr>
+            }
+            <tr>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@(index + ".")</th>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: center; vertical-align: top;">@shoppingCartItem.ItemId</td>
+                <td colspan="4" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px; text-align: left; vertical-align: top;">
+                    @(shoppingCartItem.ItemMasterDesc0 + " " + shoppingCartItem.ItemMasterDesc1)
+                    @if (!string.IsNullOrWhiteSpace(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3))
+                    {
+                        <br style="clear: both;" />
+                        <span style="color: #1d1d1d; font-family: Arial; font-size: 12px; font-style: normal; font-weight: 600;">@(shoppingCartItem.ItemMasterDesc2 + " " + shoppingCartItem.ItemMasterDesc3)</span>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(shoppingCartItem.ItemItemSpecsForDisplay))
+                    {
+                        <br style="clear: both;" />
+                        <span style="color: #000000; font-size: 11px; font-weight: bold;">@shoppingCartItem.ItemItemSpecsForDisplay</span>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">#</th>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Id</th>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Description</th>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Rate</th>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Qty</th>
+                <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Amt</th>
+            </tr>
+            @*
+                if (headingFlag)
+                {
+                    headingFlag = false;
+                    <tr>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">#</th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Id</th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Description</th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Rate</th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Qty</th>
+                        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; font-size: 13px; padding: 5px;">Amt</th>
+                    </tr>
+                }
+            *@
             bundleIndex = 0;
             foreach (var shoppingCartItemBundleModel in shoppingCartItem.ShoppingCartItemBundleModels)
             {

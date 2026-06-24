@@ -58,6 +58,7 @@
     var applSessionObjectModel = (ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel;
     var demogInfoCountryModel = DemogInfoCache.DemogInfoCountryModels.FirstOrDefault(x => x.DemogInfoCountryId == Model.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId);
     var primaryTelephoneFormatted = "+" + demogInfoCountryModel.TelephoneCode.Value.ToString() + " " + long.Parse(Model.DeliveryDataModel.PrimaryTelephoneNum).ToString(demogInfoCountryModel.TelephoneFormat);
+    Model.DeliveryDataModel.PrimaryTelephoneTelephoneCode = demogInfoCountryModel.TelephoneCode.Value;
     Model.DeliveryDataModel.PrimaryTelephoneFormatted = primaryTelephoneFormatted;
     Model.DeliveryAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
     Model.DeliveryAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
@@ -156,6 +157,7 @@
 @Html.HiddenFor(m => m.OrderSummaryModel.EmailExists)
 @Html.HiddenFor(m => m.OrderSummaryModel.InvoiceTypeId)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId)
+@Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneTelephoneCode)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneNum)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted)
 @if (messageFlag)
@@ -242,12 +244,12 @@
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.OrderSummaryModel.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            @Html.TextAreaFor(m => m.OrderSummaryModel.FirstName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.FirstName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter first name" })
+            @Html.TextAreaFor(m => m.OrderSummaryModel.FirstName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", @*oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);",*@ placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.FirstName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter first name" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.FirstName, "", new { id = "OrderSummaryModel_FirstName-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.OrderSummaryModel.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter last name" })
+            @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", @*oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);",*@ placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter last name" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.LastName, "", new { id = "OrderSummaryModel_LastName-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">

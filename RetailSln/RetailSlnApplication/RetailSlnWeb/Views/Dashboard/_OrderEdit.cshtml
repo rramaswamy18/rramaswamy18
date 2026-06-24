@@ -1,0 +1,235 @@
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@using System.Data.SqlClient
+@using System.Web.Configuration
+@{
+    var orderHeaderSummaryId = Context.Request["id"];
+    #region
+    string databaseConnectionString = WebConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString;
+    SqlConnection sqlConnection = new SqlConnection(databaseConnectionString);
+    sqlConnection.Open();
+    #endregion
+    #region
+    string sqlStmt = "";
+    sqlStmt += $"        SELECT *" + Environment.NewLine;
+    sqlStmt += $"          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+    sqlStmt += $"    INNER JOIN RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
+    sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderHeaderSummary.OrderHeaderId" + Environment.NewLine;
+    sqlStmt += $"    INNER JOIN RetailSlnSch.OrderDelivery" + Environment.NewLine;
+    sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderDelivery.OrderHeaderId" + Environment.NewLine;
+    sqlStmt += $"    INNER JOIN RetailSlnSch.OrderPayment" + Environment.NewLine;
+    sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderPayment.OrderHeaderId" + Environment.NewLine;
+    sqlStmt += $"    INNER JOIN RetailSlnSch.OrderDetail" + Environment.NewLine;
+    sqlStmt += $"            ON OrderHeaderSummary.OrderHeaderSummaryId = OrderDetail.OrderHeaderSummaryId" + Environment.NewLine;
+    sqlStmt += $"         WHERE OrderHeaderSummary.OrderHeaderSummaryId = {orderHeaderSummaryId}" + Environment.NewLine;
+    sqlStmt += $"      ORDER BY OrderDetail.SeqNum" + Environment.NewLine;
+    //sqlStmt += "" + Environment.NewLine;
+    SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+    bool sqlDataReaderRead = sqlDataReader.Read();
+    #endregion
+    #region
+    OrderEditModel orderEditModel = new OrderEditModel
+    {
+        OrderDeliveryId = long.Parse(sqlDataReader["OrderDeliveryId"].ToString()),
+        TrackingRefNumber = sqlDataReader["TrackingRefNumber"].ToString(),
+
+        OrderPaymentId = long.Parse(sqlDataReader["OrderPaymentId"].ToString()),
+        PaymentModeId = (PaymentModeEnum)int.Parse(sqlDataReader["PaymentModeId"].ToString()),
+        PaymentStatusId = (PaymentStatusEnum)int.Parse(sqlDataReader["PaymentStatusId"].ToString()),
+
+        OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+        InvoiceTypeId = (InvoiceTypeEnum)int.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+        OrderStatusId = (OrderStatusEnum)int.Parse(sqlDataReader["OrderStatusId"].ToString()),
+
+        OrderHeaderSummaryId = long.Parse(sqlDataReader["OrderHeaderSummaryId"].ToString()),
+    };
+    OrderHeaderSummary orderHeaderSummary = new OrderHeaderSummary
+    {
+        OrderHeaderSummaryId = long.Parse(sqlDataReader["OrderHeaderSummaryId"].ToString()),
+        AdditionalCharges = float.Parse(sqlDataReader["AdditionalCharges"].ToString()),
+        BalanceDue = float.Parse(sqlDataReader["BalanceDue"].ToString()),
+        InvoiceTypeId = (InvoiceTypeEnum)int.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+        OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+        ShippingAndHandlingCharges = float.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+        TotalAmountPaid = float.Parse(sqlDataReader["TotalAmountPaid"].ToString()),
+        TotalDiscountAmount = float.Parse(sqlDataReader["TotalDiscountAmount"].ToString()),
+        TotalInvoiceAmount = float.Parse(sqlDataReader["TotalInvoiceAmount"].ToString()),
+        TotalOrderAmount = float.Parse(sqlDataReader["TotalOrderAmount"].ToString()),
+        TotalTaxAmount = float.Parse(sqlDataReader["TotalTaxAmount"].ToString()),
+        OrderDelivery = new OrderDelivery
+        {
+            OrderDeliveryId = long.Parse(sqlDataReader["OrderDeliveryId"].ToString()),
+            TrackingRefNumber = sqlDataReader["TrackingRefNumber"].ToString(),
+        },
+        OrderPayment = new OrderPayment
+        {
+            OrderPaymentId = long.Parse(sqlDataReader["OrderPaymentId"].ToString()),
+            PaymentModeId = (PaymentModeEnum)int.Parse(sqlDataReader["PaymentModeId"].ToString()),
+            PaymentStatusId = (PaymentStatusEnum)int.Parse(sqlDataReader["PaymentStatusId"].ToString()),
+        },
+        OrderHeader = new OrderHeader
+        {
+            OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+            InvoiceTypeId = (InvoiceTypeEnum)int.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+            OrderStatusId = (OrderStatusEnum)int.Parse(sqlDataReader["OrderStatusId"].ToString()),
+        },
+        OrderDetails = new List<OrderDetail>(),
+    };
+    while (sqlDataReaderRead)
+    {
+        orderHeaderSummary.OrderDetails.Add
+        (
+            new OrderDetail
+            {
+                OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
+                OrderDetailTypeId = (OrderDetailTypeEnum)long.Parse(sqlDataReader["OrderDetailTypeId"].ToString()),
+                DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                DiscountPercentOriginal = float.Parse(sqlDataReader["DiscountPercentOriginal"].ToString()),
+                ItemItemSpecsForDisplay = sqlDataReader["ItemItemSpecsForDisplay"].ToString(),
+                ItemMasterDesc0 = sqlDataReader["ItemMasterDesc0"].ToString(),
+                ItemMasterDesc1 = sqlDataReader["ItemMasterDesc1"].ToString(),
+                ItemMasterDesc2 = sqlDataReader["ItemMasterDesc2"].ToString(),
+                ItemMasterDesc3 = sqlDataReader["ItemMasterDesc3"].ToString(),
+                ItemRateBeforeDiscount = float.Parse(sqlDataReader["ItemRateBeforeDiscount"].ToString()),
+                ItemRateOriginal = float.Parse(sqlDataReader["ItemRateOriginal"].ToString()),
+                ItemRate = float.Parse(sqlDataReader["ItemRateOriginal"].ToString()),
+                OrderAmount = float.Parse(sqlDataReader["OrderAmount"].ToString()),
+                OrderQty = long.Parse(sqlDataReader["OrderQty"].ToString()),
+            }
+        );
+        sqlDataReaderRead = sqlDataReader.Read();
+    }
+    sqlDataReader.Close();
+    sqlConnection.Close();
+    List<CodeDataModel> orderStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "OrderStatus").CodeDataModelsCodeDataNameId;
+    List<CodeDataModel> paymentStatusCodeDataModels = LookupCache.CodeTypeModels.First(x => x.CodeTypeNameDesc == "PaymentStatus").CodeDataModelsCodeDataNameId;
+    #endregion
+}
+<table style="margin-left: auto; margin-right: auto; padding: 5px;">
+    <tr>
+        <th style="color: #a54000; font-size: 20px; font-weight: 900; padding: 5px; text-align: center;">
+            Order Edit (#@orderHeaderSummary.OrderHeaderId)
+        </th>
+    </tr>
+    @if (orderHeaderSummary.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
+    {
+        <tr>
+            <td style="padding: 0px;">
+                <form id="formOrderEdit">
+                    <table style="padding: 0px;">
+                        <tr>
+                            <th style="padding: 5px;">
+                                Tracking Ref#:
+                            </th>
+                            <td style="padding: 5px;">
+                                @Html.TextBoxFor(m => orderEditModel.TrackingRefNumber, new { @class = "form-control" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 5px;">
+                                Order Status:
+                            </th>
+                            <td style="padding: 5px; text-align: left;">
+                                @Html.DropDownListFor(m => orderEditModel.OrderStatusId, new SelectList(orderStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", (int)orderEditModel.OrderStatusId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 99%;" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 5px;">
+                                Payment Status:
+                            </th>
+                            <td style="padding: 5px; text-align: left;">
+                                @Html.DropDownListFor(m => orderEditModel.PaymentStatusId, new SelectList(paymentStatusCodeDataModels, "CodeDataNameId", "CodeDataDesc0", (int)orderEditModel.PaymentStatusId), "--- Select ---", new { @class = "form-control", style = "font-size: 14px; width: 99%;" })
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th style="padding: 5px; text-align: center;">
+                <input id="orderEditSave" onclick="javascript: return orderEditSave_onclick();" style="background-color: #006400; color: #ffffff; font-size: 14px; padding: 5px; width: 45%;" type="button" value="SUBMIT" />
+            </th>
+        </tr>
+    }
+    <tr>
+        <td style="padding: 0px;">
+            <table style="padding: 0px;">
+                <tr>
+                    <th style="padding: 5px;">
+                        Tracking Ref#:
+                    </th>
+                    <th style="padding: 5px;">
+                        Order Status:
+                    </th>
+                    <th style="padding: 5px;">
+                        Payment Status:
+                    </th>
+                </tr>
+                <tr>
+                    <td style="padding: 5px;">
+                        @orderHeaderSummary.OrderDelivery.TrackingRefNumber
+                    </td>
+                    <td style="padding: 5px; text-align: left;">
+                        @orderHeaderSummary.OrderHeader.OrderStatusId
+                    </td>
+                    <td style="padding: 5px; text-align: left;">
+                        @orderHeaderSummary.OrderPayment.PaymentStatusId
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; table-layout: fixed; width: 81%;">
+    <colgroup>
+        <col style="width: 3%;" />
+        <col style="width: 46%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 7%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 5%;" />
+        <col style="width: 7%;" />
+    </colgroup>
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">#</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Desc</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Rate<br />Bef<br />Disc</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Rate<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Disc<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Qty<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Amt<br />Orig</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Rate</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Disc</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Qty</th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">Amt</th>
+    </tr>
+    @{
+        int index = 0;
+        foreach (var orderDetail in orderHeaderSummary.OrderDetails)
+        {
+            index++;
+            <tr>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">@index</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: left; vertical-align: top;">@(orderDetail.ItemMasterDesc0 + " " + orderDetail.ItemMasterDesc1 + " " + orderDetail.ItemMasterDesc2 + " " + orderDetail.ItemMasterDesc3)<br />@orderDetail.ItemItemSpecsForDisplay</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.ItemRateBeforeDiscount</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.ItemRateOriginal</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.DiscountPercentOriginal</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.OrderQty</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.OrderAmount</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.ItemRate</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.DiscountPercent</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.OrderQty</td>
+                <td style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px; text-align: right; vertical-align: top;">@orderDetail.OrderAmount</td>
+            </tr>
+        }
+    }
+</table>
+<script type="text/javascript">
+</script>

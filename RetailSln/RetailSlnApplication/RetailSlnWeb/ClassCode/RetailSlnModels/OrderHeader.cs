@@ -15,7 +15,7 @@ namespace RetailSlnModels
         public InvoiceTypeEnum InvoiceTypeId { set; get; }
         public string OrderDateTime { set; get; }
         //public string OrderNumber { set; get; }
-        public long OrderStatusId { set; get; }
+        public OrderStatusEnum OrderStatusId { set; get; }
         public long PersonId { set; get; }
         public bool SaveThisAddress { set; get; }
         public PersonModel PersonModel { set; get; }

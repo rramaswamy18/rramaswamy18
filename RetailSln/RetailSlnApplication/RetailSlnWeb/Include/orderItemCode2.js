@@ -231,9 +231,9 @@ function menuLink_onclick(url, queryString, functionNamesString, responseDataCon
         }
     });
 }
-function orderView_onclick(orderHeaderSummaryId) {
-    console.log("orderView_onclick", "00000000", "ENTER!!!");
-    var url = "/Dashboard/OrderView";
+function orderEdit_onclick(orderHeaderSummaryId) {
+    console.log("orderEdit_onclick", "00000000", "ENTER!!!");
+    var url = "/Dashboard/OrderEdit";
     url += "?id=" + orderHeaderSummaryId;
     $.ajax({
         url: url,
@@ -243,11 +243,60 @@ function orderView_onclick(orderHeaderSummaryId) {
         //data: jsonPostDataString,
         success: function (responseData, textStatus, request) {
             $('#loadingModal').modal('hide');
-            console.log("00001000", "orderView_onclick success", responseData.processMessage);
+            console.log("00001000", "orderEdit_onclick success", responseData.processMessage);
             document.getElementById("divDashboard").innerHTML = responseData.htmlString;
         },
         error: function (xhr, exception) {
             $('#loadingModal').modal('hide');
+            console.log("orderEdit_onclick", "00099000", "ERROR???");
+            console.log(xhr, exception);
+        }
+    });
+}
+function orderEditSave_onclick(index) {
+    console.log("orderEditSave_onclick", "00000000", "ENTER!!!");
+    $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+    var url = "/Dashboard/OrderEdit";
+    var jsonPostData = new FormData(document.getElementById("formOrderEdit" + index));
+    $.ajax({
+        url: url,
+        type: "POST",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: jsonPostData,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "orderEditSave_onclick SUCCESS!!!");
+            alert("Order edited successfully!!!");
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            console.log("orderEditSave_onclick", "00099000", "ERROR???", exception, xhr);
+            alert("Error while updating order???");
+        }
+    });
+}
+function orderView_onclick(orderHeaderSummaryId, updateStatus) {
+    console.log("orderView_onclick", "00000000", "ENTER!!!");
+    var url = "/Dashboard/OrderView";
+    url += "?id=" + orderHeaderSummaryId + "&updateStatus=" + updateStatus;
+    $.ajax({
+        url: url,
+        type: "GET",
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        //data: jsonPostDataString,
+        success: function (responseData, textStatus, request) {
+            $('#loadingModal').modal('hide');
+            console.log("00001000", "orderView_onclick success", responseData.processMessage);
+            document.getElementById("divDashboard").innerHTML = responseData;
+        },
+        error: function (xhr, exception) {
+            $('#loadingModal').modal('hide');
+            alert("Error while loading order???");
             console.log("orderView_onclick", "00099000", "ERROR???");
             console.log(xhr, exception);
         }

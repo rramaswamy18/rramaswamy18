@@ -537,6 +537,104 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // GET: OrderEdit
+        [HttpGet]
+        public ActionResult OrderEdit(string id)
+        {
+            ViewData["ActionName"] = "OrderEdit";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            bool success;
+            string processMessage, htmlString;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                success = true;
+                processMessage = "SUCCESS!!!";
+                SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+                SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
+                OrderListModel orderListModel = null;// retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                htmlString = archLibBL.ViewToHtmlString(this, "_OrderEdit", orderListModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            catch (ApplicationException applicationException)
+            {
+                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+                ModelState.AddModelError("", "OrderList / GET");
+                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
+                success = false;
+                processMessage = "ERROR???";
+                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
+                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // POST: OrderEdit
+        [HttpPost]
+        public ActionResult OrderEdit(OrderEditModel orderEditModel)
+        {
+            ViewData["ActionName"] = "OrderEdit";
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            //ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
+            SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                retailSlnBL.OrderEdit(ref orderEditModel, sessionObjectModel, createForSessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                if (ModelState.IsValid)
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success!!!");
+                }
+                else
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error???");
+                    ModelState.AddModelError("", "Error while updating order edit");
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while updating order edit");
+            }
+            if (ModelState.IsValid)
+            {
+                //orderEditModel = retailSlnBL.OrderEditDetail(orderEditModel.OrderHeaderSummaryId, sessionObjectModel, createForSessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = null;//PartialView("_OrderEditDetail", orderEditModel);
+                Response.StatusCode = (int)HttpStatusCode.OK;
+            }
+            else
+            {
+                actionResult = null;
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            if (ModelState.IsValid)
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+            }
+            else
+            {
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
         // GET: OrderList
         [HttpGet]
         public ActionResult OrderList(string id, string rowCount)
@@ -576,7 +674,7 @@ namespace RetailSlnWeb.Controllers
 
         // GET: OrderView
         [HttpGet]
-        public ActionResult OrderView(string id)
+        public ActionResult OrderView(string id, string updateStatus)
         {
             ViewData["ActionName"] = "OrderView";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = GetLoggedInUserId();
@@ -585,33 +683,20 @@ namespace RetailSlnWeb.Controllers
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
             ActionResult actionResult;
-            bool success;
-            string processMessage, htmlString;
             try
             {
                 //int x = 1, y = 0, z = x / y;
-                success = true;
-                processMessage = "SUCCESS!!!";
                 SessionObjectModel sessionObjectModel = (SessionObjectModel)Session["SessionObject"];
                 SessionObjectModel createForSessionObjectModel = (SessionObjectModel)Session["CreateForSessionObject"];
-                OrderListModel orderListModel = null;// retailSlnBL.OrderList(id, rowCount, sessionObjectModel, createForSessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, "_OrderView", orderListModel);
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
-            }
-            catch (ApplicationException applicationException)
-            {
-                actionResult = Json(new { success = false, errorCode = "RELOAD_PAGE", message = applicationException.Message }, JsonRequestBehavior.AllowGet);
+                OrderHeaderSummary orderHeaderSummary = retailSlnBL.OrderView(long.Parse(id), updateStatus, sessionObjectModel, createForSessionObjectModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                actionResult = PartialView("_OrderView", orderHeaderSummary);
+                Response.StatusCode = (int)HttpStatusCode.OK;
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                ModelState.AddModelError("", "OrderList / GET");
-                archLibBL.CopyReponseObjectToModelErrors(ModelState, null, responseObjectModel.ResponseMessages);
-                success = false;
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "Error", responseObjectModel);
-                actionResult = Json(new { success, processMessage, htmlString }, JsonRequestBehavior.AllowGet);
+                actionResult = null;
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;

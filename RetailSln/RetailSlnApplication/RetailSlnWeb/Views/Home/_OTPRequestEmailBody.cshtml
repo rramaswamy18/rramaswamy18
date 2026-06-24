@@ -1,7 +1,3 @@
-﻿@using ArchitectureLibraryCacheData
-@using ArchitectureLibraryModels
+﻿@using ArchitectureLibraryModels
 @model OTPResponseModel
-@{
-    long clientId = ArchLibCache.ClientId;
-}
-@(ArchLibCache.GetApplicationDefault(clientId, "BusinessNameAbbrev", "") + " OTP " + Model.OTPCode + " expires in " + Model.OTPDuration + " minutes at " + Model.OTPExpiryDate + " " + Model.OTPExpiryTime)
+Your OTP code from @Model.BusinessName for @Model.OTPPurpose is @Model.OTPCode. OTP will expire in @Model.OTPDuration minutes at @(Model.OTPExpiryDate + " " + Model.OTPExpiryTime)

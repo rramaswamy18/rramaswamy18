@@ -163,7 +163,10 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    oTPResponseModel = archLibBL.CheckoutOTPRequest(ref oTPRequestModel, "CHECKOUT", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    oTPRequestModel.OTPPurpose = "Checkout";
+                    oTPRequestModel.OTPTypeNameDesc = "CHECKOUT";
+                    oTPRequestModel.RequestType = "Checkout";
+                    oTPResponseModel = archLibBL.CheckoutOTPRequest(ref oTPRequestModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }

@@ -1,4 +1,6 @@
-﻿@using RetailSlnCacheData
+﻿@using ArchitectureLibraryCacheData
+@using ArchitectureLibraryModels
+@using RetailSlnCacheData
 @using RetailSlnEnumerations
 @using RetailSlnModels
 @model OrderListModel
@@ -16,116 +18,100 @@
         text-decoration: underline;
     }
 </style>
-<table style="margin-left: auto; margin-right: auto; padding: 5px; table-layout: auto; width: auto;">
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; table-layout: auto; width: auto;">
     <tr>
-        <th class="text-center" colspan="9" style="color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Order(s) List</th>
+        <th class="text-center" colspan="18" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Order(s) List Not Viewed</th>
     </tr>
     <tr>
-        <th style="padding: 5px;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
             #
         </th>
-        <th style="padding: 5px;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
             Id
         </th>
-        <th style="padding: 5px;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
         </th>
-        <th style="padding: 5px;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
             Created For
         </th>
-        <th style="padding: 5px;">
-            Created Date Time
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Created Date Time<br />
+            Type<br />
+            Tracking
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Order Amt<br />
+            Addtl Chgs
         </th>
         <th style="padding: 5px;">
+            Tax Amt<br />
+            S&H
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Inv Amt<br />
+            Paid<br />
+            Balance
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Status
         </th>
     </tr>
     @{
-        int i = 0, index = 0;
-        OrderListDataModel orderListDataModel1;
-        while (i < Model.OrderListDataModels.Count)
+        int i;
+        for (i = 0; i < Model.OrderListDataModels.Count; i++)
         {
-            orderListDataModel1 = Model.OrderListDataModels[i];
-            <tr>
-                <td class="text-right" style="padding: 5px;">
-                    @(++index).
-                </td>
-                <td class="text-right" style="padding: 5px;">
-                    @orderListDataModel1.OrderHeaderId
-                </td>
-                <td style="padding: 5px;">
-                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderEdit_onclick(@orderListDataModel1.OrderHeaderId);">Edit</a>
-                </td>
-                <td class="text-left" style="padding: 5px;">
-                    @orderListDataModel1.CreatedForEmailAddress
-                    <br />
-                    @orderListDataModel1.CreatedForFirstName
-                    <br />
-                    @orderListDataModel1.CreatedForLastName
-                </td>
-                <td class="text-center" style="padding: 5px;">
-                    @orderListDataModel1.OrderDateTime
-                </td>
-                <td class="text-left" style="padding: 5px;">
-                    <table class="table table-responsive" style="margin-left: auto; margin-right: auto; width: 100%;">
-                        <tr>
-                            <th style="padding: 5px;">
-                                Type
-                            </th>
-                            <th style="padding: 5px;">
-                                Order Amt
-                            </th>
-                            <th style="padding: 5px;">
-                                Tax Amt
-                            </th>
-                            <th style="padding: 5px;">
-                                S&H
-                            </th>
-                            <th style="padding: 5px;">
-                                Inv Amt
-                            </th>
-                            <th style="padding: 5px;">
-                                Paid
-                            </th>
-                            <th style="padding: 5px;">
-                                Balance
-                            </th>
-                            <th style="padding: 5px;">
-                                Status
-                            </th>
-                        </tr>
-                        @while (i < Model.OrderListDataModels.Count && orderListDataModel1.OrderHeaderId == Model.OrderListDataModels[i].OrderHeaderId)
-                        {
-                            orderListDataModel1 = Model.OrderListDataModels[i];
-                            <tr>
-                                <td class="text-left" style="padding: 5px;">
-                                    <a class="hrefStyle" href="javascript: void(0);" onclick="javascript: return orderView_onclick(@orderListDataModel1.OrderHeaderId, '@Convert.ToInt64(orderListDataModel1.InvoiceTypeId)')">@orderListDataModel1.InvoiceTypeId</a>
-                                </td>
-                                <td class="text-right" style="padding: 5px;">
-                                    @orderListDataModel1.TotalOrderAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                </td>
-                                <td class="text-right" style="padding: 5px;">
-                                    @orderListDataModel1.TotalTaxAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                </td>
-                                <td class="text-right" style="padding: 5px;">
-                                    @orderListDataModel1.ShippingAndHandlingCharges.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                </td>
-                                <td class="text-right" style="padding: 5px;">
-                                    @orderListDataModel1.TotalInvoiceAmount.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                </td>
-                                <td class="text-right" style="padding: 5px;">
-                                    @orderListDataModel1.TotalAmountPaid.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                </td>
-                                <td class="text-right" style="padding: 5px;">
-                                    @orderListDataModel1.BalanceDue.ToString(RetailSlnCache.CurrencyDecimalPlaces, RetailSlnCache.CurrencyCultureInfo).Replace(" ", "")
-                                </td>
-                                <td class="text-left" style="padding: 5px;">
-                                    @orderListDataModel1.OrderStatusId
-                                </td>
-                            </tr>
-                            i++;
-                        }
-                    </table>
-                </td>
-            </tr>
+            if (Model.OrderListDataModels[i].OrderStatusId != OrderStatusEnum.OrderPlaced)
+            {
+                break;
+            }
+            Model.OrderListDataModels[i].Index = i + 1;
+            @Html.Partial("_OrderEditData", Model.OrderListDataModels[i])
+        }
+    }
+</table>
+<table style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; margin-left: auto; margin-right: auto; padding: 5px; table-layout: auto; width: auto;">
+    <tr>
+        <th class="text-center" colspan="18" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; color: #a54000; font-size: 18px; letter-spacing: 4px; text-transform: uppercase;">Order(s) List</th>
+    </tr>
+    <tr>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            #
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Id
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Created For
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Created Date Time<br />
+            Type<br />
+            Tracking
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Order Amt<br />
+            Addtl Chgs
+        </th>
+        <th style="padding: 5px;">
+            Tax Amt<br />
+            S&H
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Inv Amt<br />
+            Paid<br />
+            Balance
+        </th>
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; padding: 5px;">
+            Status
+        </th>
+    </tr>
+    @{
+        for (; i < Model.OrderListDataModels.Count; i++)
+        {
+            Model.OrderListDataModels[i].Index = i + 1;
+            @Html.Partial("_OrderEditData", Model.OrderListDataModels[i])
         }
     }
 </table>

@@ -1036,48 +1036,58 @@ namespace RetailSlnDataLayer
             {
                 #region
                 string sqlStmt = "";
-                sqlStmt += "        SELECT" + Environment.NewLine;
-                sqlStmt += "               OrderHeader.OrderHeaderId" + Environment.NewLine;
-                sqlStmt += "              ,CreatedForAspNetUser.Email AS CreatedForEmailAddress" + Environment.NewLine;
-                sqlStmt += "              ,CreatedForPerson.PersonId AS CreatedForPersonId" + Environment.NewLine;
-                sqlStmt += "              ,CreatedForPerson.FirstName AS CreatedForFirstName" + Environment.NewLine;
-                sqlStmt += "              ,CreatedForPerson.LastName AS CreatedForLastName" + Environment.NewLine;
-                sqlStmt += "              ,AspNetUser.Email AS EmailAddress" + Environment.NewLine;
-                sqlStmt += "              ,Person.PersonId" + Environment.NewLine;
-                sqlStmt += "              ,Person.FirstName" + Environment.NewLine;
-                //sqlStmt += "              ,OrderHeader.InvoiceTypeId" + Environment.NewLine;
-                sqlStmt += "              ,Person.LastName" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeader.OrderDateTime" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeader.OrderStatusId" + Environment.NewLine;
-                sqlStmt += "              ,Person.PersonId" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.BalanceDue" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.InvoiceTypeId" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.ShippingAndHandlingCharges" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.TotalAmountPaid" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.TotalDiscountAmount" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.TotalInvoiceAmount" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.TotalOrderAmount" + Environment.NewLine;
-                sqlStmt += "              ,OrderHeaderSummary.TotalTaxAmount" + Environment.NewLine;
-                //sqlStmt += "              ," + Environment.NewLine;
-                sqlStmt += "          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
-                sqlStmt += "            ON OrderHeader.OrderHeaderId = OrderHeaderSummary.OrderHeaderId" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN ArchLib.Person" + Environment.NewLine;
-                sqlStmt += "            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN ArchLib.AspNetUser" + Environment.NewLine;
-                sqlStmt += "            ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
-                sqlStmt += "            ON OrderHeader.CreatedForPersonId = CreatedForPerson.PersonId" + Environment.NewLine;
-                sqlStmt += "    INNER JOIN ArchLib.AspNetUser AS CreatedForAspNetUser" + Environment.NewLine;
-                sqlStmt += "            ON CreatedForPerson.AspNetUserId = CreatedForAspNetUser.AspNetUserId" + Environment.NewLine;
+                sqlStmt += $"        SELECT" + Environment.NewLine;
+                sqlStmt += $"               OrderHeader.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"              ,CreatedForAspNetUser.Email AS CreatedForEmailAddress" + Environment.NewLine;
+                sqlStmt += $"              ,CreatedForPerson.PersonId AS CreatedForPersonId" + Environment.NewLine;
+                sqlStmt += $"              ,CreatedForPerson.FirstName AS CreatedForFirstName" + Environment.NewLine;
+                sqlStmt += $"              ,CreatedForPerson.LastName AS CreatedForLastName" + Environment.NewLine;
+                sqlStmt += $"              ,AspNetUser.Email AS EmailAddress" + Environment.NewLine;
+                sqlStmt += $"              ,Person.PersonId" + Environment.NewLine;
+                sqlStmt += $"              ,Person.FirstName" + Environment.NewLine;
+                sqlStmt += $"              ,Person.LastName" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeader.OrderDateTime" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeader.OrderStatusId" + Environment.NewLine;
+                sqlStmt += $"              ,Person.PersonId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.OrderHeaderSummaryId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.AdditionalCharges" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.BalanceDue" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.InvoiceTypeId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.ShippingAndHandlingCharges" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.TotalAmountPaid" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.TotalDiscountAmount" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.TotalInvoiceAmount" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.TotalOrderAmount" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeaderSummary.TotalTaxAmount" + Environment.NewLine;
+                sqlStmt += $"              ,OrderDelivery.OrderDeliveryId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderDelivery.TrackingRefNumber" + Environment.NewLine;
+                sqlStmt += $"              ,OrderPayment.OrderPaymentId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderPayment.PaymentModeId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderPayment.PaymentStatusId" + Environment.NewLine;
+                sqlStmt += $"          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderHeaderSummary.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderDelivery" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderDelivery.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderPayment" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderPayment.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN ArchLib.Person" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN ArchLib.AspNetUser" + Environment.NewLine;
+                sqlStmt += $"            ON Person.AspNetUserId = AspNetUser.AspNetUserId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.CreatedForPersonId = CreatedForPerson.PersonId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN ArchLib.AspNetUser AS CreatedForAspNetUser" + Environment.NewLine;
+                sqlStmt += $"            ON CreatedForPerson.AspNetUserId = CreatedForAspNetUser.AspNetUserId" + Environment.NewLine;
                 if (corpAcctId != null && corpAcctId > 0)
                 {
-                    sqlStmt += "    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
-                    sqlStmt += "            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
+                    sqlStmt += $"    INNER JOIN RetailSlnSch.PersonExtn1" + Environment.NewLine;
+                    sqlStmt += $"            ON Person.PersonId = PersonExtn1.PersonId" + Environment.NewLine;
                     sqlStmt += $"           AND PersonExtn1.CorpAcctId = {corpAcctId}" + Environment.NewLine;
                 }
-                sqlStmt += "         WHERE OrderHeader.OrderHeaderId > 0" + Environment.NewLine;
-                sqlStmt += "      ORDER BY OrderHeader.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"         WHERE OrderHeader.OrderHeaderId > 0" + Environment.NewLine;
+                sqlStmt += $"      ORDER BY OrderHeader.OrderStatusId" + Environment.NewLine;
+                sqlStmt += $"              ,OrderHeader.OrderHeaderId" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 #endregion
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
@@ -1089,6 +1099,7 @@ namespace RetailSlnDataLayer
                         new OrderListDataModel
                         {
                             OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                            OrderHeaderSummaryId = long.Parse(sqlDataReader["OrderHeaderSummaryId"].ToString()),
                             CreatedForEmailAddress = sqlDataReader["CreatedForEmailAddress"].ToString(),
                             CreatedForFirstName = sqlDataReader["CreatedForFirstName"].ToString(),
                             CreatedForLastName = sqlDataReader["CreatedForLastName"].ToString(),
@@ -1096,10 +1107,16 @@ namespace RetailSlnDataLayer
                             EmailAddress = sqlDataReader["EmailAddress"].ToString(),
                             FirstName = sqlDataReader["FirstName"].ToString(),
                             LastName = sqlDataReader["LastName"].ToString(),
+                            OrderDeliveryId = long.Parse(sqlDataReader["OrderDeliveryId"].ToString()),
+                            OrderPaymentId = long.Parse(sqlDataReader["OrderPaymentId"].ToString()),
                             OrderDateTime = DateTime.Parse(sqlDataReader["OrderDateTime"].ToString()).ToString("MMM-dd-yyyy h:mm tt"),
                             OrderStatusId = (OrderStatusEnum)long.Parse(sqlDataReader["OrderStatusId"].ToString()),
+                            PaymentModeId = (PaymentModeEnum)long.Parse(sqlDataReader["PaymentModeId"].ToString()),
+                            PaymentStatusId = (PaymentStatusEnum)long.Parse(sqlDataReader["PaymentStatusId"].ToString()),
                             PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                            TrackingRefNumber = sqlDataReader["TrackingRefNumber"].ToString(),
 
+                            AdditionalCharges = float.Parse(sqlDataReader["AdditionalCharges"].ToString()),
                             BalanceDue = float.Parse(sqlDataReader["BalanceDue"].ToString()),
                             InvoiceTypeId = (InvoiceTypeEnum)long.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
                             ShippingAndHandlingCharges = float.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),

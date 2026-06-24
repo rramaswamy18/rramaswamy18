@@ -479,7 +479,7 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
                 sqlCommand.Parameters["@CreatedForPersonId"].Value = (int)orderHeader.CreatedForPersonId;
                 sqlCommand.Parameters["@OrderDateTime"].Value = orderHeader.OrderDateTime;
-                sqlCommand.Parameters["@OrderStatusId"].Value = orderHeader.OrderStatusId;
+                sqlCommand.Parameters["@OrderStatusId"].Value = (long)orderHeader.OrderStatusId;
                 sqlCommand.Parameters["@PersonId"].Value = orderHeader.PersonId;
                 sqlCommand.Parameters["@SaveThisAddress"].Value = orderHeader.SaveThisAddress ? 1 : 0;
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
@@ -507,6 +507,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        INSERT RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
                 sqlStmt += "              (" + Environment.NewLine;
                 sqlStmt += "               ClientId" + Environment.NewLine;
+                sqlStmt += "              ,AdditionalCharges" + Environment.NewLine;
                 sqlStmt += "              ,BalanceDue" + Environment.NewLine;
                 sqlStmt += "              ,InvoiceTypeId" + Environment.NewLine;
                 sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
@@ -522,6 +523,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "        OUTPUT INSERTED.OrderHeaderSummaryId" + Environment.NewLine;
                 sqlStmt += "        SELECT" + Environment.NewLine;
                 sqlStmt += "               @ClientId" + Environment.NewLine;
+                sqlStmt += "              ,@AdditionalCharges" + Environment.NewLine;
                 sqlStmt += "              ,@BalanceDue" + Environment.NewLine;
                 sqlStmt += "              ,@InvoiceTypeId" + Environment.NewLine;
                 sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
@@ -537,6 +539,7 @@ namespace RetailSlnDataLayer
                 #region
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 sqlCommand.Parameters.Add("@ClientId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@AdditionalCharges", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@BalanceDue", SqlDbType.Float);
                 sqlCommand.Parameters.Add("@InvoiceTypeId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
@@ -552,6 +555,7 @@ namespace RetailSlnDataLayer
                 #endregion
                 #region
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
+                sqlCommand.Parameters["@AdditionalCharges"].Value = orderHeaderSummary.AdditionalCharges;
                 sqlCommand.Parameters["@BalanceDue"].Value = orderHeaderSummary.BalanceDue;
                 sqlCommand.Parameters["@InvoiceTypeId"].Value = (int)orderHeaderSummary.InvoiceTypeId;
                 sqlCommand.Parameters["@OrderHeaderId"].Value = orderHeaderSummary.OrderHeaderId;
@@ -655,6 +659,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "              ,GiftCertId" + Environment.NewLine;
                 sqlStmt += "              ,OrderHeaderId" + Environment.NewLine;
                 sqlStmt += "              ,PaymentModeId" + Environment.NewLine;
+                sqlStmt += "              ,PaymentStatusId" + Environment.NewLine;
                 sqlStmt += "              ,AddUserId" + Environment.NewLine;
                 sqlStmt += "              ,UpdUserId" + Environment.NewLine;
                 sqlStmt += "              )" + Environment.NewLine;
@@ -666,6 +671,7 @@ namespace RetailSlnDataLayer
                 sqlStmt += "              ,@GiftCertId" + Environment.NewLine;
                 sqlStmt += "              ,@OrderHeaderId" + Environment.NewLine;
                 sqlStmt += "              ,@PaymentModeId" + Environment.NewLine;
+                sqlStmt += "              ,@PaymentStatusId" + Environment.NewLine;
                 sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
                 sqlStmt += "              ,@LoggedInUserId" + Environment.NewLine;
                 #endregion
@@ -678,6 +684,7 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters.Add("@GiftCertId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@OrderHeaderId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@PaymentModeId", SqlDbType.BigInt);
+                sqlCommand.Parameters.Add("@PaymentStatusId", SqlDbType.BigInt);
                 sqlCommand.Parameters.Add("@LoggedInUserId", SqlDbType.NVarChar, 256);
                 sqlCommand.Parameters.Add("@OrderPaymentId", SqlDbType.BigInt);
                 sqlCommand.Parameters["@OrderPaymentId"].Direction = ParameterDirection.ReturnValue;
@@ -690,6 +697,7 @@ namespace RetailSlnDataLayer
                 sqlCommand.Parameters["@GiftCertId"].Value = paymentDataModel.GiftCertId;
                 sqlCommand.Parameters["@OrderHeaderId"].Value = paymentDataModel.OrderHeaderId;
                 sqlCommand.Parameters["@PaymentModeId"].Value = paymentDataModel.PaymentModeId;
+                sqlCommand.Parameters["@PaymentStatusId"].Value = paymentDataModel.PaymentStatusId;
                 sqlCommand.Parameters["@LoggedInUserId"].Value = loggedInUserId;
                 #endregion
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 Before ExecuteScalar", "orderDetail.OrderHeaderId", paymentDataModel.OrderHeaderId.ToString(), "paymentData1Model.CreditCardDataId", paymentDataModel.CreditCardDataId.ToString());

@@ -365,6 +365,58 @@ namespace RetailSlnBusinessLayer
                 ApplicationDataContext.CloseSqlConnection();
             }
         }
+        // POST : OrderEdit
+        public void OrderEdit(ref OrderEditModel orderEditModel, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                //Update Delivery
+                if (orderEditModel.OrderDeliveryId > 0)
+                {
+                    OrderDelivery orderDelivery = new OrderDelivery
+                    {
+                        OrderDeliveryId = orderEditModel.OrderDeliveryId,
+                        TrackingRefNumber = orderEditModel.TrackingRefNumber,
+                    };
+                    ApplicationDataContext.OrderDeliveryUpd(orderDelivery, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                //Update Payment
+                if (orderEditModel.OrderPaymentId > 0)
+                {
+                    OrderPayment orderPayment = new OrderPayment
+                    {
+                        OrderPaymentId = orderEditModel.OrderPaymentId,
+                        PaymentModeId = orderEditModel.PaymentModeId,
+                        PaymentStatusId = orderEditModel.PaymentStatusId,
+                    };
+                    ApplicationDataContext.OrderPaymentUpd(orderPayment, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                //Update OrderHeader and / or OrderHeaderSummary
+                if (orderEditModel.OrderHeaderId > 0)
+                {
+                    OrderHeader orderHeader = new OrderHeader
+                    {
+                        OrderHeaderId = orderEditModel.OrderHeaderId,
+                        OrderStatusId = orderEditModel.OrderStatusId,
+                    };
+                    ApplicationDataContext.OrderHeaderUpd(orderHeader, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
         // GET : OrderList
         public OrderListModel OrderList(string pageNumParm, string pageSizeParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
         {
@@ -413,6 +465,66 @@ namespace RetailSlnBusinessLayer
                     },
                 };
                 return orderListModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : OrderView
+        public OrderHeaderSummary OrderView(long orderHeaderSummaryId, string updateStatusParm, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                bool updateStatus = bool.Parse(updateStatusParm);
+                ApplicationDataContext.OpenSqlConnection();
+                OrderHeaderSummary orderHeaderSummary = ApplicationDataContext.OrderView(orderHeaderSummaryId, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                OrderHeader orderHeader = new OrderHeader
+                {
+                    OrderHeaderId = orderHeaderSummary.OrderHeaderId,
+                    OrderStatusId = OrderStatusEnum.OrderViewed,
+                };
+                if (updateStatus)
+                {
+                    ApplicationDataContext.OrderHeaderUpd(orderHeader, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                }
+                orderHeaderSummary.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ResponseTypeId = ResponseTypeEnum.Success,
+                };
+                return orderHeaderSummary;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception Occurred", exception);
+                throw;
+            }
+            finally
+            {
+                ApplicationDataContext.CloseSqlConnection();
+            }
+        }
+        // GET : OrderListData
+        public OrderEditModel OrderEditDetail(long id, SessionObjectModel sessionObjectModel, SessionObjectModel createForessionObjectModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            try
+            {
+                ApplicationDataContext.OpenSqlConnection();
+                OrderEditModel orderEditModel = new OrderEditModel();
+                return orderEditModel;
             }
             catch (Exception exception)
             {

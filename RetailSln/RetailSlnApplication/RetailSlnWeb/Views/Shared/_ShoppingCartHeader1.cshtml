@@ -81,10 +81,10 @@
             <span style="color: #000000; font-size: 17px; font-weight: bold;">@((Model.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + Model.DeliveryInfoModel.OrderSummaryModel.LastName).Trim())</span>
             <br style="clear: both;" />
             @*if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryAddressModel.AddressName))
-            {
-                @Html.DisplayFor(m => m.DeliveryInfoModel.DeliveryAddressModel.AddressName)
-                <br />
-            }*@
+                {
+                    @Html.DisplayFor(m => m.DeliveryInfoModel.DeliveryAddressModel.AddressName)
+                    <br />
+                }*@
             @(Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.AddressLine1 + " " + (Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId == ArchitectureLibraryEnumerations.BuildingTypeEnum._ ? "" : Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.BuildingTypeId) + " " + Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.HouseNumber)
             @if (!string.IsNullOrWhiteSpace(Model.DeliveryInfoModel.DeliveryDataModel.DeliveryAddressModel.AddressLine2))
             {
@@ -100,6 +100,12 @@
                 <br style="clear: both;" />
                 @(ArchLibCache.GetApplicationDefault(ArchLibCache.ClientId, "Business", "TaxIdentCaption") + " " + Model.DeliveryInfoModel.OrderSummaryModel.CorpAcctModel.TaxIdentNum)
             }
+        </th>
+    </tr>
+    <tr style="background-color: #ffffff;">
+        <th style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px;"></th>
+        <th colspan="2" style="border-collapse: collapse; border-color: #000000; border-style: solid; border-width: 1px; text-align: left; vertical-align: top; ">
+            @Model.DeliveryInfoModel.DeliveryDataModel.DeliveryInstructions
         </th>
     </tr>
 </table>

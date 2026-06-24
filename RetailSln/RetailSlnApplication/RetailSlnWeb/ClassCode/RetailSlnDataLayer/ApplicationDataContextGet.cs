@@ -1,5 +1,7 @@
 ﻿using ArchitectureLibraryException;
+using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using RetailSlnEnumerations;
 using RetailSlnModels;
 using System;
 using System.Collections.Generic;
@@ -195,6 +197,125 @@ namespace RetailSlnDataLayer
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 throw;
+            }
+        }
+        public static OrderHeaderSummary OrderView(long orderHeaderSummaryId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name;
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            SqlDataReader sqlDataReader = null;
+            try
+            {
+                #region
+                string sqlStmt = "";
+                sqlStmt += $"        SELECT OrderHeader.*, OrderHeaderSummary.*, OrderDelivery.*, OrderPayment.*, OrderDetail.*" + Environment.NewLine;
+                sqlStmt += $"              ,CreatedForPerson.PersonId AS CreatedForPersonId, CreatedForPerson.FirstName AS CreatedForFirstName, CreatedForPerson.LastName AS CreatedForLastName" + Environment.NewLine;
+                sqlStmt += $"              ,Person.PersonId, Person.FirstName, Person.LastName" + Environment.NewLine;
+                sqlStmt += $"          FROM RetailSlnSch.OrderHeader" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderHeaderSummary" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderHeaderSummary.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderDelivery" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderDelivery.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderPayment" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.OrderHeaderId = OrderPayment.OrderHeaderId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN RetailSlnSch.OrderDetail" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeaderSummary.OrderHeaderSummaryId = OrderDetail.OrderHeaderSummaryId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN ArchLib.Person AS CreatedForPerson" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.PersonId = CreatedForPerson.PersonId" + Environment.NewLine;
+                sqlStmt += $"    INNER JOIN ArchLib.Person" + Environment.NewLine;
+                sqlStmt += $"            ON OrderHeader.PersonId = Person.PersonId" + Environment.NewLine;
+                sqlStmt += $"         WHERE OrderHeaderSummary.OrderHeaderSummaryId = {orderHeaderSummaryId}" + Environment.NewLine;
+                sqlStmt += $"      ORDER BY OrderDetail.SeqNum" + Environment.NewLine;
+                #endregion
+                #region
+                SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                bool sqlDataReaderRead = sqlDataReader.Read();
+                #endregion
+                #region
+                OrderHeaderSummary orderHeaderSummary = new OrderHeaderSummary
+                {
+                    OrderHeaderSummaryId = long.Parse(sqlDataReader["OrderHeaderSummaryId"].ToString()),
+                    AdditionalCharges = float.Parse(sqlDataReader["AdditionalCharges"].ToString()),
+                    BalanceDue = float.Parse(sqlDataReader["BalanceDue"].ToString()),
+                    InvoiceTypeId = (InvoiceTypeEnum)int.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+                    OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                    ShippingAndHandlingCharges = float.Parse(sqlDataReader["ShippingAndHandlingCharges"].ToString()),
+                    TotalAmountPaid = float.Parse(sqlDataReader["TotalAmountPaid"].ToString()),
+                    TotalDiscountAmount = float.Parse(sqlDataReader["TotalDiscountAmount"].ToString()),
+                    TotalInvoiceAmount = float.Parse(sqlDataReader["TotalInvoiceAmount"].ToString()),
+                    TotalOrderAmount = float.Parse(sqlDataReader["TotalOrderAmount"].ToString()),
+                    TotalTaxAmount = float.Parse(sqlDataReader["TotalTaxAmount"].ToString()),
+                    OrderDelivery = new OrderDelivery
+                    {
+                        OrderDeliveryId = long.Parse(sqlDataReader["OrderDeliveryId"].ToString()),
+                        TrackingRefNumber = sqlDataReader["TrackingRefNumber"].ToString(),
+                    },
+                    OrderHeader = new OrderHeader
+                    {
+                        OrderHeaderId = long.Parse(sqlDataReader["OrderHeaderId"].ToString()),
+                        CreatedForPersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                        InvoiceTypeId = (InvoiceTypeEnum)int.Parse(sqlDataReader["InvoiceTypeId"].ToString()),
+                        OrderDateTime = sqlDataReader["OrderDateTime"].ToString(),
+                        OrderStatusId = (OrderStatusEnum)int.Parse(sqlDataReader["OrderStatusId"].ToString()),
+                        PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                        CreatedForPersonModel = new PersonModel
+                        {
+                            PersonId = long.Parse(sqlDataReader["CreatedForPersonId"].ToString()),
+                            FirstName = sqlDataReader["CreatedForFirstName"].ToString(),
+                            LastName = sqlDataReader["CreatedForLastName"].ToString(),
+                        },
+                        PersonModel = new PersonModel
+                        {
+                            PersonId = long.Parse(sqlDataReader["PersonId"].ToString()),
+                            FirstName = sqlDataReader["FirstName"].ToString(),
+                            LastName = sqlDataReader["LastName"].ToString(),
+                        },
+                    },
+                    OrderPayment = new OrderPayment
+                    {
+                        OrderPaymentId = long.Parse(sqlDataReader["OrderPaymentId"].ToString()),
+                        PaymentModeId = (PaymentModeEnum)int.Parse(sqlDataReader["PaymentModeId"].ToString()),
+                        PaymentStatusId = (PaymentStatusEnum)int.Parse(sqlDataReader["PaymentStatusId"].ToString()),
+                    },
+                    OrderDetails = new List<OrderDetail>(),
+                };
+                while (sqlDataReaderRead)
+                {
+                    orderHeaderSummary.OrderDetails.Add
+                    (
+                        new OrderDetail
+                        {
+                            OrderDetailId = long.Parse(sqlDataReader["OrderDetailId"].ToString()),
+                            OrderDetailTypeId = (OrderDetailTypeEnum)long.Parse(sqlDataReader["OrderDetailTypeId"].ToString()),
+                            DiscountPercent = float.Parse(sqlDataReader["DiscountPercent"].ToString()),
+                            DiscountPercentOriginal = float.Parse(sqlDataReader["DiscountPercentOriginal"].ToString()),
+                            ItemItemSpecsForDisplay = sqlDataReader["ItemItemSpecsForDisplay"].ToString(),
+                            ItemMasterDesc0 = sqlDataReader["ItemMasterDesc0"].ToString(),
+                            ItemMasterDesc1 = sqlDataReader["ItemMasterDesc1"].ToString(),
+                            ItemMasterDesc2 = sqlDataReader["ItemMasterDesc2"].ToString(),
+                            ItemMasterDesc3 = sqlDataReader["ItemMasterDesc3"].ToString(),
+                            ItemRateBeforeDiscount = float.Parse(sqlDataReader["ItemRateBeforeDiscount"].ToString()),
+                            ItemRateOriginal = float.Parse(sqlDataReader["ItemRateOriginal"].ToString()),
+                            ItemRate = float.Parse(sqlDataReader["ItemRateOriginal"].ToString()),
+                            OrderAmount = float.Parse(sqlDataReader["OrderAmount"].ToString()),
+                            OrderQty = long.Parse(sqlDataReader["OrderQty"].ToString()),
+                        }
+                    );
+                    sqlDataReaderRead = sqlDataReader.Read();
+                }
+                #endregion
+                return orderHeaderSummary;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                throw;
+            }
+            finally
+            {
+                sqlDataReader.Close();
             }
         }
         public static ShoppingCartWIPHdrModel ShoppingCartWIPHdrGet(long personId, SqlConnection sqlConnection, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)

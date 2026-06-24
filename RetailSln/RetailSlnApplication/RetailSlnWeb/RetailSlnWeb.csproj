@@ -247,6 +247,7 @@
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderDetailTypeEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\OrderStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnEnumerations\PaymentModeEnum.cs" />
+    <Compile Include="ClassCode\RetailSlnEnumerations\PaymentStatusEnum.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ApplSessionObjectModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\AspNetRoleCategoryModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\CategoryCategoryHierModel.cs" />
@@ -279,6 +280,9 @@
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterItemSpecModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemMasterDataModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemItemSpecModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderDelivery.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderEditModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\OrderPayment.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchMetaDataListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ItemSpecMasterListModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\OrderInvoiceModel.cs" />
@@ -1546,8 +1550,6 @@
     <Content Include="Views\Home\_RegisterUserEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfEmailBody.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserSuccess.cshtml" />
     <Content Include="Views\Home\_ReturnPolicy.cshtml" />
     <Content Include="Views\Home\_SearchResult.cshtml" />
@@ -1652,12 +1654,16 @@
     <Content Include="Views\Home\_RegisterUserOTPRequestEmailBody.cshtml" />
     <Content Include="Views\Home\_RegisterUserOTPRequestEmailSubject.cshtml" />
     <Content Include="Views\Home\_RegisterUserResponseData.cshtml" />
-    <Content Include="Views\Shared\_Layout - Copy.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_HeaderResponsive.cshtml" />
     <Content Include="Views\Dashboard\_CRMListList.cshtml" />
     <Content Include="Views\Dashboard\_CRMListListData.cshtml" />
     <Content Include="Views\Dashboard\_OrderCreatedFor.cshtml" />
+    <Content Include="Views\Dashboard\_OrderEdit.cshtml" />
+    <Content Include="Views\Dashboard\_OrderView.cshtml" />
+    <Content Include="Views\Dashboard\_OrderEditData.cshtml" />
+    <Content Include="Views\Dashboard\_OrderEditDetail.cshtml" />
+    <Content Include="Views\Home\_RegisterUserProfSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
