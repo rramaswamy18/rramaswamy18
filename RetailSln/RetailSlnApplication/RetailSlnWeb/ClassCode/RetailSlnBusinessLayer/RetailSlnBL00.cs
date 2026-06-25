@@ -1437,17 +1437,11 @@ namespace RetailSlnBusinessLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                bool createItemCatalogFiles = bool.Parse(ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "CreateItemCatalogFiles"));
                 string itemCatalogFilesPath = Utilities.GetServerMapPath("~/Files/ItemCatalog/");
-                if (System.IO.File.Exists(itemCatalogFilesPath + @"\CreateItemCatalogFiles.txt"))
+                if (createItemCatalogFiles)
                 {
-                    DirectoryInfo directoryInfo = new DirectoryInfo(itemCatalogFilesPath);
-                    foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-                    {
-                        if (fileInfo.FullName.IndexOf("@Temp.txt") == -1)
-                        {
-                            fileInfo.Delete();
-                        }
-                    }
+                    // Do we need to update database and cache to FALSE???
                     // Create an instance of the controller
                     controller = new BaseController(); // Replace HomeController with your controller name
                                                        // Create a controller context (optional, but good practice for some scenarios)
@@ -3351,7 +3345,7 @@ namespace RetailSlnBusinessLayer
                 (
                     new JProperty("1", paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName), //Name
                     new JProperty("2", paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString()), //Order#
-                    new JProperty("3", "123.45"), //Order Amount
+                    new JProperty("3", paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted),//"123.45"), //Order Amount
                     new JProperty("4", DateTime.Parse(paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderDateTime).ToString("MMM-dd-yyyy")), //Order Date
                     new JProperty("5", invoicePdfUrl) //"https://www.princexml.com/samples/invoice-colorful/invoicesample.pdf") //Invoice Link
                 );

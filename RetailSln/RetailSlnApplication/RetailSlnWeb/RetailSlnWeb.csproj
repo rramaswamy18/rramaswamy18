@@ -1492,6 +1492,7 @@
     <Content Include="ClientSpecific\96_MathangiDivineMall\Web.config.Release.txt">
       <DependentUpon>Web.config.txt</DependentUpon>
     </Content>
+    <Content Include="Invoices\InvoiceSample.pdf" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
