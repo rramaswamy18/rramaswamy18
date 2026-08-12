@@ -5042,8 +5042,14 @@
             <summary>Copy a Glyph.</summary>
             <param name="glyph">Glyph to copy</param>
         </member>
+        <member name="M:iText.IO.Font.Otf.Glyph.#ctor(iText.IO.Font.Otf.Glyph,System.Int32,System.Int32)">
+            <summary>Copy a Glyph and assign new advance offsets.</summary>
+            <param name="glyph">Glyph to copy</param>
+            <param name="xAdvance">x - advance offset</param>
+            <param name="yAdvance">y - advance offset</param>
+        </member>
         <member name="M:iText.IO.Font.Otf.Glyph.#ctor(iText.IO.Font.Otf.Glyph,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>Copy a Glyph and assign new placement and advance offsets and a new index delta to base glyph</summary>
+            <summary>Copy a Glyph and assign new placement and advance offsets and a new index delta to base glyph.</summary>
             <param name="glyph">Glyph to copy</param>
             <param name="xPlacement">x - placement offset</param>
             <param name="yPlacement">y - placement offset</param>
@@ -5057,10 +5063,61 @@
             <param name="glyph">glyph to copy</param>
             <param name="unicode">new unicode point</param>
         </member>
+        <member name="M:iText.IO.Font.Otf.Glyph.GetAnchorDelta">
+            <summary>Gets the index delta to base glyph.</summary>
+            <returns>the index delta to base glyph</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.Glyph.SetAnchorDelta(System.Int16)">
+            <summary>Sets the index delta to base glyph.</summary>
+            <param name="anchorDelta">the index delta to base glyph to be set</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.Glyph.HasOffsets">
+            <summary>Checks whether the glyph has any offsets either own or advance or both at the same time.</summary>
+            <remarks>
+            Checks whether the glyph has any offsets either own or advance or both at the same time.
+            <para />
+            See
+            <see cref="M:iText.IO.Font.Otf.Glyph.HasPlacement"/>
+            and
+            <see cref="M:iText.IO.Font.Otf.Glyph.HasAdvance"/>.
+            </remarks>
+            <returns>
+            
+            <see langword="true"/>
+            if glyph has any offsets,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.Glyph.HasPlacement">
+            <summary>Checks whether the glyph has own offsets: either for X axis or Y axis or both at the same time.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if glyph has any own offsets,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.Glyph.HasAdvance">
+            <summary>Checks whether the glyph has advance offsets: either for X axis or Y axis or both at the same time.
+                </summary>
+            <returns>
+            
+            <see langword="true"/>
+            if glyph has any advance offsets,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
         <member name="M:iText.IO.Font.Otf.Glyph.Equals(System.Object)">
             <summary>Two Glyphs are equal if their unicode characters, code and normalized width are equal.</summary>
-            <param name="obj">The object</param>
-            <returns>True if this equals obj cast to Glyph, false otherwise.</returns>
+            <param name="obj">еhe object</param>
+            <returns>
+            
+            <see langword="true"/>
+            if this equals obj cast to Glyph, false otherwise
+            </returns>
         </member>
         <member name="M:iText.IO.Font.Otf.Glyph.GetUnicodeString">
             <summary>Gets a Unicode string corresponding to this glyph.</summary>
@@ -5224,6 +5281,25 @@
             This has been written according to the OPenTypeFont specifications. This may be found <a href="http://www.microsoft.com/typography/otspec/gsub.htm">here</a>.
             </remarks>
         </member>
+        <member name="M:iText.IO.Font.Otf.GlyphPositioningTableReader.#ctor(iText.IO.Source.RandomAccessFileOrArray,System.Int32,iText.IO.Font.Otf.OpenTypeGdefTableReader,System.Collections.Generic.IDictionary{System.Int32,iText.IO.Font.Otf.Glyph},System.Int32)">
+            <summary>
+            Instantiates a new instance of
+            <see cref="T:iText.IO.Font.Otf.GlyphPositioningTableReader"/>.
+            </summary>
+            <param name="rf">
+            the
+            <c>RandomAccessFileOrArray</c>
+            containing the OpenType font
+            </param>
+            <param name="gposTableLocation">the GPOS table location</param>
+            <param name="gdef">the GDEF table reader</param>
+            <param name="indexGlyphMap">the glyph index to glyph map</param>
+            <param name="unitsPerEm">
+            the
+            <c>head.unitsPerEm</c>
+            value from the OpenType font
+            </param>
+        </member>
         <member name="T:iText.IO.Font.Otf.GlyphSubstitutionTableReader">
             <summary>Parses an OpenTypeFont file and reads the Glyph Substitution Table.</summary>
             <remarks>
@@ -5232,6 +5308,40 @@
             <para />
             This has been written according to the OPenTypeFont specifications. This may be found <a href="http://www.microsoft.com/typography/otspec/gsub.htm">here</a>.
             </remarks>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GlyphSubstitutionTableReader.#ctor(iText.IO.Source.RandomAccessFileOrArray,System.Int32,iText.IO.Font.Otf.OpenTypeGdefTableReader,System.Collections.Generic.IDictionary{System.Int32,iText.IO.Font.Otf.Glyph},System.Int32)">
+            <summary>
+            Instantiates a new instance of
+            <see cref="T:iText.IO.Font.Otf.GlyphSubstitutionTableReader"/>.
+            </summary>
+            <param name="rf">
+            the
+            <c>RandomAccessFileOrArray</c>
+            containing the OpenType font
+            </param>
+            <param name="gsubTableLocation">the GSUB table location</param>
+            <param name="gdef">the GDEF table reader</param>
+            <param name="indexGlyphMap">the glyph index to glyph map</param>
+            <param name="unitsPerEm">
+            the
+            <c>head.unitsPerEm</c>
+            value from the OpenType font
+            </param>
+        </member>
+        <member name="T:iText.IO.Font.Otf.GposAnchor">
+            <summary>
+            A GPOS table uses anchor points to position one glyph with respect to another: two glyphs each define an anchor
+            point, and the text-processing client attaches the glyphs by aligning their corresponding anchor points.
+            </summary>
+            <remarks>
+            A GPOS table uses anchor points to position one glyph with respect to another: two glyphs each define an anchor
+            point, and the text-processing client attaches the glyphs by aligning their corresponding anchor points.
+            <para />
+            For more information see <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/gpos#anchor-table">Anchor table</a>
+            </remarks>
+        </member>
+        <member name="M:iText.IO.Font.Otf.GposAnchor.#ctor">
+            <summary>Creates a GPOS Anchor object with zero x and y coordinates.</summary>
         </member>
         <member name="M:iText.IO.Font.Otf.GposAnchor.#ctor(iText.IO.Font.Otf.GposAnchor)">
             <summary>Creates a Gpos Anchor object based on a given Gpos Anchor object.</summary>
@@ -5423,6 +5533,113 @@
         <member name="T:iText.IO.Font.Otf.Lookuptype8.PosTableLookup8Format3">
             <summary>Chained Contexts Positioning Format 3: Coverage-based Glyph Contexts</summary>
         </member>
+        <member name="T:iText.IO.Font.Otf.OpenTableLookup">
+            <summary>
+            A Lookup table defines the specific conditions, type, and results of
+            substitution or positioning actions that are used to implement a feature.
+            </summary>
+            <remarks>
+            A Lookup table defines the specific conditions, type, and results of
+            substitution or positioning actions that are used to implement a feature.
+            <para />
+            The data describing the actions of a lookup are contained in one or more lookup subtables.
+            Different lookup types support different types of operation; for example, positioning
+            adjustment on a single glyph versus positioning adjustments on pairs of glyphs.
+            <para />
+            For more information see <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+            </remarks>
+        </member>
+        <member name="F:iText.IO.Font.Otf.OpenTableLookup.lookupFlag">
+            <summary>Indicates to a text-processing client certain processing options to use when substituting or positioning glyphs.
+                </summary>
+        </member>
+        <member name="F:iText.IO.Font.Otf.OpenTableLookup.subTableLocations">
+            <summary>Subtables locations.</summary>
+        </member>
+        <member name="F:iText.IO.Font.Otf.OpenTableLookup.openReader">
+            <summary>OpenType font table reader.</summary>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.#ctor(iText.IO.Font.Otf.OpenTypeFontTableReader,System.Int32,System.Int32[])">
+            <summary>
+            Instantiates a new instance of
+            <see cref="T:iText.IO.Font.Otf.OpenTableLookup"/>.
+            </summary>
+            <param name="openReader">the OpenType font table reader</param>
+            <param name="lookupFlag">the lookup flag</param>
+            <param name="subTableLocations">the subtables locations</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GetLookupFlag">
+            <summary>Gets the lookup flag.</summary>
+            <remarks>
+            Gets the lookup flag.
+            <para />
+            The flag indicates to a text-processing client certain processing
+            options to use when substituting or positioning glyphs.
+            </remarks>
+            <returns>the lookup flag</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.TransformOne(iText.IO.Font.Otf.GlyphLine)">
+            <summary>Apply transformation to only one glyph from the glyph line.</summary>
+            <param name="line">the glyph line to transform</param>
+            <returns>
+            
+            <see langword="true"/>
+            if transformation was applied,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.TransformLine(iText.IO.Font.Otf.GlyphLine)">
+            <summary>Apply transformation to the glyph line.</summary>
+            <param name="line">the glyph line to transform</param>
+            <returns>
+            
+            <see langword="true"/>
+            if transformation was applied,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.HasSubstitution(System.Int32)">
+            <summary>
+            Checks whether there is a substitution (replacement) for the specified index in
+            <c>this</c>
+            lookup table.
+            </summary>
+            <param name="index">the index to check for a substitution</param>
+            <returns>
+            
+            <see langword="true"/>
+            if there is substitution,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.ReadSubTables">
+            <summary>Reads subtables.</summary>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.ReadSubTable(System.Int32)">
+            <summary>Reads subtable from the specified location.</summary>
+            <param name="subTableLocation">the subtable location</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GetIndexInLookupList">
+            <summary>
+            Gets
+            <c>this</c>
+            lookup table index in the LookupList.
+            </summary>
+            <returns>the table index in the LookupList</returns>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.SetIndexInLookupList(System.Int32)">
+            <summary>Sets lookup table index in the LookupList.</summary>
+            <param name="indexInLookupList">the table index in the LookupList</param>
+        </member>
+        <member name="T:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer">
+            <summary>
+            Utility class to iterate over
+            <see cref="T:iText.IO.Font.Otf.GlyphLine"/>.
+            </summary>
+        </member>
         <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.GetLine">
             <summary>Retrieves the glyph line of the object.</summary>
             <returns>glyph line</returns>
@@ -5446,6 +5663,16 @@
         <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.SetIdx(System.Int32)">
             <summary>Sets the idx of the glyph indexer.</summary>
             <param name="idx">idx</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.NextGlyph(iText.IO.Font.Otf.OpenTypeFontTableReader,System.Int32)">
+            <summary>Reads the next glyph taking into account glyph class and lookup flag.</summary>
+            <param name="openReader">the OpenType reader to check glyph class against lookup flag</param>
+            <param name="lookupFlag">the lookup flag</param>
+        </member>
+        <member name="M:iText.IO.Font.Otf.OpenTableLookup.GlyphIndexer.PreviousGlyph(iText.IO.Font.Otf.OpenTypeFontTableReader,System.Int32)">
+            <summary>Reads the previous glyph taking into account glyph class and lookup flag.</summary>
+            <param name="openReader">the OpenType reader to check glyph class against lookup flag</param>
+            <param name="lookupFlag">the lookup flag</param>
         </member>
         <member name="M:iText.IO.Font.Otf.OpenTypeFontTableReader.StartReadingTable">
             <summary>This is the starting point of the class.</summary>
@@ -5816,6 +6043,19 @@
             </summary>
             <returns>the number of the “cmap” subtables</returns>
         </member>
+        <member name="M:iText.IO.Font.TrueTypeFont.ExtractFeatures(System.Collections.Generic.ICollection{System.String},System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IList{iText.IO.Font.Otf.OpenTableLookup}})">
+            <summary>Extracts features from GSUB and GPOS tables based on the passed script tags.</summary>
+            <remarks>
+            Extracts features from GSUB and GPOS tables based on the passed script tags.
+            The features are put in the passed extractedFeatures map
+            </remarks>
+            <param name="otfScriptTags">the script tags to extract the features for</param>
+            <param name="extractedFeatures">the features will be added to this map</param>
+            <returns>
+            the script tag which was used to extract features.
+            It may be null if no features were extracted or default script tag was used.
+            </returns>
+        </member>
         <member name="M:iText.IO.Font.TrueTypeFont.GetCodePagesSupported">
             <summary>Gets the code pages supported by the font.</summary>
             <returns>the code pages supported by the font</returns>
@@ -5948,6 +6188,49 @@
             By default limits size to kDefaultMaxSize.
             </remarks>
         </member>
+        <member name="T:iText.IO.Image.AbstractWebPLoader">
+            <summary>An abstract class to control WebP image data handling.</summary>
+        </member>
+        <member name="M:iText.IO.Image.AbstractWebPLoader.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.IO.Image.AbstractWebPLoader"/>.
+            </summary>
+        </member>
+        <member name="M:iText.IO.Image.AbstractWebPLoader.GetImageData(System.Byte[])">
+            <summary>
+            Gets
+            <see cref="T:iText.IO.Image.ImageData"/>
+            from provided WebP raw image bytes.
+            </summary>
+            <param name="bytes">raw bytes to create WebP image data from</param>
+            <returns>
+            a new WebP
+            <see cref="T:iText.IO.Image.ImageData"/>
+            from raw bytes
+            </returns>
+        </member>
+        <member name="M:iText.IO.Image.AbstractWebPLoader.GetImageData(System.Uri)">
+            <summary>
+            Gets
+            <see cref="T:iText.IO.Image.ImageData"/>
+            from provided WebP URL.
+            </summary>
+            <param name="url">URL to create WebP image data from</param>
+            <returns>
+            a new WebP
+            <see cref="T:iText.IO.Image.ImageData"/>
+            from URL
+            </returns>
+        </member>
+        <member name="M:iText.IO.Image.AbstractWebPLoader.IsWebPSupported">
+            <summary>Checks if webp-image-support module is loaded.</summary>
+            <returns>
+            
+            <see langword="true"/>
+            if webp-image-support module is loaded
+            </returns>
+        </member>
         <member name="M:iText.IO.Image.BmpImageData.#ctor(System.Uri,System.Boolean)">
             <summary>
             Creates instance of
@@ -6072,6 +6355,14 @@
             <summary>Creates a new serial id.</summary>
             <returns>the new serialId</returns>
         </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.SetWebPLoaderInstance(iText.IO.Image.AbstractWebPLoader)">
+            <summary>
+            Sets
+            <see cref="T:iText.IO.Image.AbstractWebPLoader"/>
+            instance to use.
+            </summary>
+            <param name="newInstance">the instance to set</param>
+        </member>
         <member name="M:iText.IO.Image.ImageDataFactory.Create(System.Byte[],System.Boolean)">
             <summary>Create an ImageData instance representing the image from the image bytes.</summary>
             <param name="bytes">byte representation of the image.</param>
@@ -6127,7 +6418,7 @@
             <returns>created ImageData object.</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.Create(System.Drawing.Image,System.Nullable{System.Drawing.Color})">
-            <summary>Gets an instance of an Image from a java.awt.Image</summary>
+            <summary>Gets an instance of an Image from a java.awt.Image.</summary>
             <param name="image">the java.awt.Image to convert</param>
             <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
             <returns>RawImage</returns>
@@ -6140,13 +6431,13 @@
             <returns>RawImage</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateBmp(System.Uri,System.Boolean)">
-            <summary>Get a bitmap ImageData instance from the specified url.</summary>
-            <param name="url">location of the image.</param>
-            <param name="noHeader">Whether the image contains a header.</param>
+            <summary>Gets a bitmap ImageData instance from the specified URL.</summary>
+            <param name="url">location of the image</param>
+            <param name="noHeader">whether the image contains a header</param>
             <returns>created ImageData</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateBmp(System.Byte[],System.Boolean)">
-            <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
+            <summary>Gets a bitmap ImageData instance from the provided bytes.</summary>
             <param name="bytes">array containing the raw image data</param>
             <param name="noHeader">Whether the image contains a header.</param>
             <returns>created ImageData</returns>
@@ -6158,36 +6449,36 @@
             <returns>GifImageData instance.</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateGifFrame(System.Uri,System.Int32)">
-            <summary>Returns a specified frame of the gif image</summary>
+            <summary>Returns a specified frame of the gif image.</summary>
             <param name="url">url of gif image</param>
             <param name="frame">number of frame to be returned, 1-based</param>
             <returns>GifImageData instance.</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateGifFrame(System.Byte[],System.Int32)">
-            <summary>Returns a specified frame of the gif image</summary>
+            <summary>Returns a specified frame of the gif image.</summary>
             <param name="bytes">byte array of gif image</param>
             <param name="frame">number of frame to be returned, 1-based</param>
             <returns>GifImageData instance</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateGifFrames(System.Byte[],System.Int32[])">
-            <summary>Returns <c>List</c> of gif image frames</summary>
+            <summary>Returns <c>List</c> of gif image frames.</summary>
             <param name="bytes">byte array of gif image</param>
             <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
             <returns>all frames of gif image</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateGifFrames(System.Uri,System.Int32[])">
-            <summary>Returns <c>List</c> of gif image frames</summary>
+            <summary>Returns <c>List</c> of gif image frames.</summary>
             <param name="url">url of gif image</param>
             <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
             <returns>all frames of gif image</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateGifFrames(System.Byte[])">
-            <summary>Returns <c>List</c> of gif image frames</summary>
+            <summary>Returns <c>List</c> of gif image frames.</summary>
             <param name="bytes">byte array of gif image</param>
             <returns>all frames of gif image</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.CreateGifFrames(System.Uri)">
-            <summary>Returns <c>List</c> of gif image frames</summary>
+            <summary>Returns <c>List</c> of gif image frames.</summary>
             <param name="url">url of gif image</param>
             <returns>all frames of gif image</returns>
         </member>
@@ -6195,10 +6486,73 @@
             <summary>
             Create an
             <see cref="T:iText.IO.Image.ImageData"/>
-            instance from a Jpeg image url
+            instance from a JPEG image URL.
             </summary>
-            <param name="url">URL</param>
+            <param name="url">URL to create JPEG image data from</param>
             <returns>the created JPEG image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreateJpeg(System.Byte[])">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a JPEG image raw bytes.
+            </summary>
+            <param name="bytes">raw bytes to create JPEG image data from</param>
+            <returns>the created JPEG image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreateJpeg2000(System.Uri)">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a JPEG2000 image URL.
+            </summary>
+            <param name="url">URL to create JPEG2000 image data from</param>
+            <returns>the created JPEG2000 image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreateJpeg2000(System.Byte[])">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a JPEG2000 image raw bytes.
+            </summary>
+            <param name="bytes">raw bytes to create JPEG2000 image data from</param>
+            <returns>the created JPEG2000 image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreatePng(System.Uri)">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a PNG image URL.
+            </summary>
+            <param name="url">URL to create PNG image data from</param>
+            <returns>the created PNG image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreatePng(System.Byte[])">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a PNG image raw bytes.
+            </summary>
+            <param name="bytes">raw bytes to create PNG image data from</param>
+            <returns>the created PNG image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreateWebP(System.Uri)">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a WebP image URL.
+            </summary>
+            <param name="url">URL to create WebP image data from</param>
+            <returns>the created WebP image</returns>
+        </member>
+        <member name="M:iText.IO.Image.ImageDataFactory.CreateWebP(System.Byte[])">
+            <summary>
+            Creates an
+            <see cref="T:iText.IO.Image.ImageData"/>
+            instance from a WebP image raw bytes.
+            </summary>
+            <param name="bytes">raw bytes to create WebP image data from</param>
+            <returns>the created WebP image</returns>
         </member>
         <member name="M:iText.IO.Image.ImageDataFactory.IsSupportedType(System.Byte[])">
             <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.</summary>
@@ -6421,6 +6775,21 @@
             <param name="marker">an int</param>
             <returns>a type: <var>VALID_MARKER</var>, <var>UNSUPPORTED_MARKER</var> or <var>NOPARAM_MARKER</var></returns>
         </member>
+        <member name="T:iText.IO.Image.NoWebPLoader">
+            <summary>A no-op class for WebP image data handling.</summary>
+        </member>
+        <member name="M:iText.IO.Image.NoWebPLoader.#ctor">
+            <summary>Standard constructor.</summary>
+        </member>
+        <member name="M:iText.IO.Image.NoWebPLoader.GetImageData(System.Byte[])">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Image.NoWebPLoader.GetImageData(System.Uri)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.IO.Image.NoWebPLoader.IsWebPSupported">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="F:iText.IO.Image.PngImageHelper.PNGID">
             <summary>Some PNG specific values.</summary>
         </member>
@@ -6534,8 +6903,14 @@
             <summary>Processes the ImageData as a TIFF image.</summary>
             <param name="image">image to process.</param>
         </member>
+        <member name="T:iText.IO.Image.WebPLogMessageConstant">
+            <summary>Class containing constants to be used in logging related to WebP.</summary>
+        </member>
         <member name="T:iText.IO.Logs.IoLogMessageConstant">
             <summary>Class containing constants to be used in logging.</summary>
+        </member>
+        <member name="F:iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND">
+            <summary>Old log message when Typography module was not found</summary>
         </member>
         <member name="T:iText.IO.Resolver.Resource.DefaultResourceRetriever">
             <summary>

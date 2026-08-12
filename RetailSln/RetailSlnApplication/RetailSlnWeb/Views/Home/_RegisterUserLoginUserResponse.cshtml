@@ -1,0 +1,50 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserLoginUserResponseModel
+<div class="col-md-11" id="divRegisterUserLoginUser" style="padding-left: 0px;">
+    <h2 style="font-weight: bold;">
+        <span style="color: #0000ff; font-size: 21px;">Register / Sign In - Confirm OTP</span>
+    </h2>
+    <div class="col-md-6">
+        <form id="formRegisterUserLoginUserResponse">
+            @Html.Partial("_RegisterUserLoginUserResponseData", Model)
+        </form>
+        <div class="row">
+            <button class="loginRegisterbtn" id="btnRegisterUserLoginUserResponse" onclick="javascript: return registerUserLoginUserResponse_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 90%;" type="button">confirm&nbsp;&nbsp;otp</button>
+            <h4 style="color: #a54000; font-size: 16px; font-weight: bold;">Did not receive OTP or is it expired?....</h4>
+            <button class="btn btn-primary" id="oTPGetNew" onclick="javascript: return registerUserLoginUserGetNew_onclick();" style="font-weight: bold; letter-spacing: 5px; text-transform: uppercase; width: 54%;" type="button">get&nbsp;new&nbsp;otp</button>
+            <div>
+                <span style="color: #000000; font-weight: bold;">OTP expires in</span>
+                <span id="oTPExpires" style="color: #ff0000; font-weight: bold; padding-left: 9px;">@(Model.OTPResponseModel.OTPDuration * 60)</span>
+                <span style="color: #000000; font-weight: bold; padding-left: 9px;">seconds</span>
+                <br style="clear: both;" />
+                <span style="color: #0000ff; font-size: 12px; font-weight: bold;">@(Model.OTPResponseModel.OTPCreatedDate + " " + Model.OTPResponseModel.OTPCreatedTime)</span>
+                <span style="color: #000000; font-weight: bold; padding-left: 2px;">-</span>
+                <span style="color: #0000ff; font-size: 12px; font-weight: bold; padding-left: 9px;">@(Model.OTPResponseModel.OTPExpiryDate + " " + Model.OTPResponseModel.OTPExpiryTime)</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="row" style="text-align: left;">
+            <ul style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; padding-left: 18px;">
+                <li>
+                    Enter OTP code
+                </li>
+                <li>
+                    Click <span class="loginRegisterbtn" style="cursor: default; font-size: 12px; padding: 4px; letter-spacing: 3px; text-transform: uppercase;">confirm&nbsp;&nbsp;OTP</span> button
+                </li>
+                <li style="list-style: none;">
+                    <br />
+                </li>
+                <li>
+                    <span style="color: #000000;">First Time / New User?</span> - You will be registered & signed in
+                </li>
+                <li style="list-style: none;">
+                    <br />
+                </li>
+                <li>
+                    <span style="color: #000000;">Returning / Existing User?</span> - You will be signed in
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

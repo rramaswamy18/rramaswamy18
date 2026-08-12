@@ -7409,11 +7409,6 @@
             <typeparam name="T">the type of the result returned by the Callable actions</typeparam>
             <returns>a list of results from the executed actions</returns>
         </member>
-        <member name="T:iText.Commons.Utils.NoopAnnotation">
-            An annotation that does nothing. It is used as a transpilation workaround for Java annotations that are
-            unneeded in C#.
-            
-        </member>
         <member name="T:iText.Commons.Utils.Pair`2">
             <summary>Class which represents a pair of key and value.</summary>
             <typeparam name="K">key parameter type.</typeparam>

@@ -1,0 +1,3 @@
+﻿@using ArchitectureLibraryModels
+@model OTPResponseModel
+Your OTP code from @Model.BusinessName for @Model.OTPPurpose is @Model.OTPCode. OTP will expire in @Model.OTPDuration minutes at @(Model.OTPExpiryDate + " " + Model.OTPExpiryTime)

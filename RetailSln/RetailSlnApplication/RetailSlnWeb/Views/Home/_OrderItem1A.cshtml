@@ -15,27 +15,13 @@
     }
 </style>
 <!--Single, Regular-->
-<table @*class="table table-responsive"*@ style="border-style: none; border-width: 0px; margin-left: auto; margin-right: auto; padding: 5px; width: 99%;">
-    <colgroup>
-        <col />
-        <col />
-        <col style="width: 49%;" />
-        <col />
-        <col />
-        @*<col style="width: 27px;" />
-        <col style="width: 36px;" />
-        <col />
-        <col style="width: 54px;" />
-        <col style="width: 54px;" />
-        <col style="width: 153px;" />*@
-    </colgroup>
+<table style="border-style: none; border-width: 0px;">
     <tr style="background-color: #d0d0d0;">
-        <th style="padding: 5px; text-align: right;">#</th>
-        <th style="padding: 5px; text-align: center;">Id</th>
-        <th style="padding: 5px; text-align: left;">Desc</th>
-        <th style="padding: 5px; text-align: right;">Disc.<br />Price</th>
-        @*<th style="padding: 5px; text-align: right;">Price</th>*@
-        <th style="padding: 5px; text-align: left;">Qty</th>
+        <th style="font-size: 12px; padding: 5px; text-align: right;">#</th>
+        <th style="font-size: 12px; padding: 5px; text-align: center;">Id</th>
+        <th style="font-size: 12px; padding: 5px; text-align: left;">Desc</th>
+        <th style="font-size: 12px; padding: 5px; text-align: right;">Disc.<br />Price</th>
+        <th style="font-size: 12px; padding: 5px; text-align: left;">Qty</th>
     </tr>
     @foreach (var itemModel in Model.ItemMasterModel.ItemModels)
     {

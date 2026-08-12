@@ -949,11 +949,6 @@
         <member name="F:iText.Html2pdf.Attach.Impl.Layout.PageCountType.TOTAL_PAGE_COUNT">
             <summary>Type for the total page count.</summary>
         </member>
-        <member name="M:iText.Html2pdf.Attach.Impl.Layout.PageMarginBoxBuilder.RemoveAreaBreaks(iText.Layout.Renderer.IRenderer)">
-            <summary>Gets rid of all page breaks that might have occurred inside page margin boxes because of the running elements.
-                </summary>
-            <param name="renderer">root renderer of renderers subtree</param>
-        </member>
         <member name="M:iText.Html2pdf.Attach.Impl.Layout.PageMarginBoxBuilder.CalculatePageMarginBoxDimensions(iText.Html2pdf.Attach.Impl.Layout.DimensionContainer,iText.Html2pdf.Attach.Impl.Layout.DimensionContainer,iText.Html2pdf.Attach.Impl.Layout.DimensionContainer,System.Single)">
             <summary>
             See the algorithm detailed at https://www.w3.org/TR/css3-page/#margin-dimension

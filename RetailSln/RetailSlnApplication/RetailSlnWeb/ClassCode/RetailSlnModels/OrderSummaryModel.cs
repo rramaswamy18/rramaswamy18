@@ -35,11 +35,7 @@ namespace RetailSlnModels
         public float? AdditionalCharges { set; get; }
 
         [Display(Name = "Email Address")]
-        [EmailAddress(ErrorMessage = "Enter valid email address")]
-        [Required(ErrorMessage = "Enter email address")]
         public string EmailAddress { set; get; }
-
-        public bool EmailExists { set; get; }
 
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "First Name")]

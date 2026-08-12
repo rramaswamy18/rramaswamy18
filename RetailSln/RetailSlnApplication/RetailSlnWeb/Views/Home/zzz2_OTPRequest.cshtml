@@ -1,0 +1,43 @@
+﻿@using ArchitectureLibraryModels
+@model OTPRequestModel
+<div class="main">
+    <div class="container">
+        <div class="row" style="padding-left: 27px; text-align: left;">
+            <div class="col-md-10" id="divOTP" style="padding-left: 0px;">
+                <h2 style="font-weight: bold;">
+                    <span style="color: #0000ff; font-size: 21px;">Get OTP</span>
+                </h2>
+                <div class="col-md-5">
+                    <form id="formOTP">
+                        @Html.Partial("_OTPRequestData", Model, new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "" } })
+                    </form>
+                    <input id="registerUserLoginUserDataSave0" class="loginRegisterbtn" onclick="javascript: return enrollmentSave_onclick();" style="font-size: 18px; font-weight: bold;" type="button" value="G E T&nbsp;&nbsp;O T P" />
+                </div>
+                <div class="col-md-5">
+                    <div class="row" style="text-align: left;">
+                        <ul style="color: #0000ff; font-family: Arial; font-size: 14px; font-weight: bold; padding-left: 18px;">
+                            <li>
+                                Select the country of you telephone#
+                            </li>
+                            <li>
+                                Enter your telephone number
+                            </li>
+                            <li>
+                                Enter captcha answer
+                            </li>
+                            <li>
+                                Click <span class="loginRegisterbtn" style="font-size: 12px; padding: 4px;">G E T&nbsp;&nbsp;O T P</span> button
+                            </li>
+                            <li style="list-style: none;">
+                                <br />
+                            </li>
+                            <li style="color: #ff0000;">
+                                You will receive your OTP in your WhatsApp
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

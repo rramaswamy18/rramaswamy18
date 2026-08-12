@@ -77,6 +77,9 @@
             <summary>Returns maximum allowed bytes length of the string in a PDF document.</summary>
             <returns>maximum string length</returns>
         </member>
+        <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckFileSpecEmbeddedStream(iText.Kernel.Pdf.PdfStream)">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="M:iText.Pdfa.Checker.PdfA1Checker.CheckAnnotation(iText.Kernel.Pdf.PdfDictionary)">
             <summary><inheritDoc/></summary>
         </member>
@@ -164,6 +167,9 @@
         <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckCatalogAAConformance(iText.Kernel.Pdf.PdfDictionary)">
             <summary>Checks if the catalog is compliant with the PDF/A-2 standard.</summary>
             <param name="dict">the catalog dictionary</param>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckFileSpecEmbeddedStream(iText.Kernel.Pdf.PdfStream)">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfA2Checker.CheckPageAAConformance(iText.Kernel.Pdf.PdfDictionary)">
             <summary>Checks if the page is compliant with the PDF/A-2 standard.</summary>
@@ -255,6 +261,9 @@
             the required conformance, <c>a</c> or
             <c>u</c> or <c>b</c>
             </param>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfA3Checker.CheckFileSpecEmbeddedStream(iText.Kernel.Pdf.PdfStream)">
+            <summary><inheritDoc/></summary>
         </member>
         <member name="T:iText.Pdfa.Checker.PdfA4Checker">
             <summary>
@@ -786,6 +795,14 @@
             the
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             containing file specification to be checked
+            </param>
+        </member>
+        <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckFileSpecEmbeddedStream(iText.Kernel.Pdf.PdfStream)">
+            <summary>Verify the conformity of the file specification embedded file stream.</summary>
+            <param name="embeddedFile">
+            the
+            <see cref="T:iText.Kernel.Pdf.PdfStream"/>
+            containing file specification embedded stream to be checked
             </param>
         </member>
         <member name="M:iText.Pdfa.Checker.PdfAChecker.CheckForm(iText.Kernel.Pdf.PdfDictionary)">

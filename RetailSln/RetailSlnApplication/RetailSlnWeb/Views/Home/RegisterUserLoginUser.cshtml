@@ -1,0 +1,80 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserLoginUserRequestModel
+@{
+    ViewBag.Title = "RegisterUserLoginUser";
+}
+@Html.Partial("_RegisterUserLoginUser", Model)
+<script type="text/javascript">
+    function window_onload() {
+    }
+    function registerUserLoginUserRequest_onclick() {
+        console.log("00000000", "registerUserLoginUserRequest_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUserLoginUserRequest";
+        var postData = $("#formRegisterUserLoginUserRequest").serialize();
+        console.log(9, postData);
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "registerUserLoginUserRequest_onclick success");
+                document.getElementById("divRegisterUserLoginUser").innerHTML = responseData;
+                console.log("00090000", "registerUserLoginUserRequest_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "registerUserLoginUserRequest_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formRegisterUserLoginUserRequest").innerHTML = xhr.responseText;
+                console.log("00090100", "registerUserLoginUserRequest_onclick error", "Exit");
+            }
+        });
+    }
+    const timerInterval = setInterval(function () {
+        if (document.getElementById("oTPExpires") != null) {
+            var oTPTimeRemaining = document.getElementById("oTPExpires").innerHTML;
+            oTPTimeRemaining--;
+            if (oTPTimeRemaining <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById("oTPExpires").innerHTML = "EXPIRED";
+                return;
+            }
+            //Display the result
+            document.getElementById("oTPExpires").innerHTML = oTPTimeRemaining;
+        }
+    }, 1000);
+    function registerUserLoginUserResponse_onclick() {
+        console.log("00000000", "registerUserLoginUserResponse_onclick", "Enter");
+        $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
+        var url = "/Home/RegisterUserLoginUserResponse";
+        var postData = $("#formRegisterUserLoginUserResponse").serialize();
+        console.log(9, postData);
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
+            //dataType: "html",
+            data: postData,
+            //async: false,
+            success: function (responseData, textStatus, request) {
+                $("#loadingModal").modal('hide');
+                console.log("00001000", "registerUserLoginUserResponse_onclick success");
+                document.getElementById("divRegisterUserLoginUser").innerHTML = responseData;
+                console.log("00090000", "registerUserLoginUserResponse_onclick success", "Exit");
+            },
+            error: function (xhr, exception) {
+                $("#loadingModal").modal('hide');
+                console.log("00099000", "registerUserLoginUserResponse_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formRegisterUserLoginUserResponse").innerHTML = xhr.responseText;
+                console.log("00090100", "registerUserLoginUserResponse_onclick error", "Exit");
+            }
+        });
+    }
+    function registerUserLoginUserGetNew_onclick() {
+        window.location.reload();
+    }
+</script>

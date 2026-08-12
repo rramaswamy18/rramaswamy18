@@ -1,0 +1,31 @@
+﻿@using ArchitectureLibraryModels
+@using RetailSlnModels
+@{
+    SessionObjectModel sessionObject = (SessionObjectModel)Session["SessionObject"];
+    ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
+}
+<div class="row">
+    <h2 style="font-weight: bold; text-align: left;">
+        <span style="color: #a54000; font-size: 18px; font-weight: bold; letter-spacing: 0px; text-transform: none;">USER PROFILE<span style="color: #0000ff;">&nbsp;-&nbsp;Success</span></span>
+    </h2>
+</div>
+<br style="clear: both;" />
+<div class="row" style="text-align: left;">
+    <span style="color: #0000ff; font-size: 14px; font-weight: bold;">You have successfully updated your profile</span>
+    <br style="clear: both;" />
+    <br style="clear: both;" />
+    @if (shoppingCartModel == null || shoppingCartModel.ShoppingCartItemModels == null || shoppingCartModel.ShoppingCartItemModels.Count == 0)
+    {
+        <span style="color: #a54000; font-size: 14px; font-weight: bold;">Your shopping cart is empty</span>
+        <br style="clear: both;" />
+        <a href="@Url.Action("Index", "Home")" style="color: #0000ff; font-size: 15px; font-weight: bold; text-decoration: underline;">Click Here</a><span style="color: #a54000; font-size: 14px; font-weight: bold;">&nbsp;to start ordering</span>
+    }
+    else
+    {
+        <span style="color: #a54000; font-size: 14px; font-weight: bold;">Order amount is @shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted</span>
+        <br style="clear: both;" />
+        <a href="@Url.Action("Index", "Home")" style="color: #0000ff; font-size: 15px; font-weight: bold; text-decoration: underline;">Click Here</a><span style="color: #000000; font-size: 14px; font-weight: bold;">&nbsp;to continue ordering or</span>
+        <br style="clear: both;" />
+        <a href="@Url.Action("Checkout", "Home")" style="color: #0000ff; font-size: 15px; font-weight: bold; text-decoration: underline;">Click Here</a><span style="color: #000000; font-size: 14px; font-weight: bold;">&nbsp;to checkout</span>
+    }
+</div>

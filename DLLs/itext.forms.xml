@@ -3330,12 +3330,23 @@
             <para />
             Default value is
             <see langword="true"/>.
+            <para />
+            If you have rotated pages but want to ignore that rotation when adding a new field,
+            you need to disable this broken feature and negate page rotation by modifying form field rectangle
+            and field rotation properties using
+            <see cref="M:iText.Forms.Fields.PdfFormAnnotation.SetRotation(System.Int32)"/>.
+            An example code explaining how to do it can be found in SignatureAppearancePageRotationAgnosticExample sample in
+            <a href="https://github.com/itext/itext-publications-examples-java/blob/develop/src/main/java/com/itextpdf/samples/sandbox/signatures/appearance">
+            Java samples repository</a>
+            and
+            <a href="https://github.com/itext/itext-publications-samples-dotnet/blob/develop/itext/itext.samples/itext/samples/sandbox/signatures/appearance">
+            C# samples repository</a>.
             </remarks>
-            <param name="ignore">boolean value to set.</param>
+            <param name="ignore">boolean value to set</param>
             <returns>
             this same
             <see cref="T:iText.Forms.Fields.PdfSignatureFormField"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Forms.Fields.PdfSignatureFormField.GetBackgroundLayer">
@@ -6420,6 +6431,19 @@
             <summary>Put a key/value pair in the dictionary and overwrite previous value if it already exists.</summary>
             <param name="key">the key as pdf name</param>
             <param name="value">the value as pdf object</param>
+            <returns>
+            this
+            <see cref="T:iText.Forms.PdfAcroForm"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Forms.PdfAcroForm.Remove(iText.Kernel.Pdf.PdfName)">
+            <summary>
+            Removes the specified key from the
+            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
+            of the acroform.
+            </summary>
+            <param name="key">key to be removed</param>
             <returns>
             this
             <see cref="T:iText.Forms.PdfAcroForm"/>

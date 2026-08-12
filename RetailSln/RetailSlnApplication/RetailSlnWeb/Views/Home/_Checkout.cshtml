@@ -1,29 +1,59 @@
 ﻿@using RetailSlnModels
 @model CheckoutModel
-<div id="divOTP">
-    @Html.Partial("_OTPRequest", Model.OTPRequestModel)
+<div class="main">
+    <div class="container">
+        <div class="row" style="padding-left: 27px; text-align: left;">
+            <div class="col-md-10" id="divCheckout" style="padding-left: 0px;">
+                <h2 style="font-weight: bold;">
+                    <span style="color: #0000ff; font-size: 21px;">Checkout - Get OTP</span>
+                </h2>
+                <div class="col-md-5">
+                    <form id="formCheckoutRequest">
+                        @Html.Partial("_OTPRequest", Model.OTPRequestModel)
+                    </form>
+                    <input id="btnCheckoutRequest" class="loginRegisterbtn" onclick="javascript: return checkoutRequest_onclick();" style="font-size: 18px; font-weight: bold;" type="button" value="G E T&nbsp;&nbsp;O T P" />
+                </div>
+                <div class="col-md-5">
+                    <div class="row" style="text-align: left;">
+                        <ul style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold; padding-left: 18px;">
+                            <li>
+                                Select country of your telephone#
+                            </li>
+                            <li>
+                                Enter telephone number
+                            </li>
+                            <li>
+                                Enter captcha answer
+                            </li>
+                            <li style="list-style-type: none;">
+                                <br />
+                            </li>
+                            <li>
+                                Click <span class="loginRegisterbtn" style="cursor: default; font-size: 12px; padding: 4px;">G E T&nbsp;&nbsp;O T P</span> button
+                            </li>
+                            <li style="list-style: none;">
+                                <br />
+                            </li>
+                            <li style="color: #ff0000;">
+                                You will receive your OTP in your WhatsApp
+                            </li>
+                            <li style="list-style: none;">
+                                <br />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script type="text/javascript">
-    function OTPSendTypeIdClear_clear() {
-        var radio;
-        document.getElementById("OTPSendTypeIdClear").checked = false;
-        for (var i = 0; ; i++) {
-            radio = document.getElementById("OTPSendTypeId" + i);
-            if (radio == null) {
-                break;
-            }
-            else {
-                radio.checked = false;
-            }
-        }
-    }
-
-    function oTPRequestSave_onclick() {
-        console.log("00000000", "oTPRequestSave_onclick", "Enter");
+    function checkoutRequest_onclick() {
+        console.log("00000000", "checkoutRequest_onclick", "Enter");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         var url = "/Home/CheckoutOTPRequest";
-        var postData = $("#formOTPData").serialize();
+        var postData = $("#formCheckoutRequest").serialize();
         $.ajax({
             url: url,
             type: "POST",
@@ -33,29 +63,23 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                console.log("00001000", "oTPRequestSave_onclick success", responseData);
-                if (responseData.success) {
-                    document.getElementById("divOTP").innerHTML = responseData.htmlString;
-                }
-                else {
-                    document.getElementById("formOTPData").innerHTML = responseData.htmlString;
-                }
-                console.log("00090000", "oTPRequestSave_onclick success", "Exit");
+                console.log("00001000", "checkoutRequest_onclick success");
+                document.getElementById("divCheckout").innerHTML = responseData;
+                console.log("00090000", "checkoutRequest_onclick success", "Exit");
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
-                console.log("00099000", "oTPRequestSave_onclick error", "ERROR???", exception, xhr);
-                document.getElementById("formOTPData").innerHTML = xhr.responseText;
-                console.log("00090100", "oTPRequestSave_onclick error", "Exit");
+                console.log("00099000", "checkoutRequest_onclick error", "ERROR???", exception, xhr);
+                document.getElementById("formCheckoutRequest").innerHTML = xhr.responseText;
+                console.log("00090100", "checkoutRequest_onclick error", "Exit");
             }
         });
     }
-
-    function oTPResponseSave_onclick() {
-        console.log("00000000", "oTPResponseSave_onclick", "Enter");
+    function checkoutResponse_onclick() {
+        console.log("00000000", "checkoutResponse_onclick", "Enter");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
         var url = "/Home/CheckoutOTPResponse";
-        var postData = $("#formOTPData").serialize();
+        var postData = $("#formCheckoutResponse").serialize();
         $.ajax({
             url: url,
             type: "POST",
@@ -65,28 +89,23 @@
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                console.log("00001000", "oTPResponseSave_onclick success", responseData);
-                if (responseData.success) {
-                    document.getElementById("divOTP").innerHTML = responseData.htmlString;
-                }
-                else {
-                    document.getElementById("formOTPData").innerHTML = responseData.htmlString;
-                }
-                console.log("00090000", "oTPResponseSave_onclick success", "Exit");
+                console.log("00001000", "checkoutResponse_onclick success", responseData);
+                //alert("Success!!!");
+                window.location.href = responseData.htmlString;
+                console.log("00090000", "checkoutResponse_onclick success", "Exit");
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
-                console.log("00099000", "oTPResponseSave_onclick error", "ERROR???", exception, xhr);
-                document.getElementById("formOTPData").innerHTML = xhr.responseText;
+                console.log("00099000", "checkoutResponse_onclick error", "ERROR???", exception, xhr);
+                alert("Error while loading delivery info???");
+                document.getElementById("formCheckoutResponse").innerHTML = xhr.responseText;
                 console.log("00090100", "oTPResponseSave_onclick error", "Exit");
             }
         });
     }
-
     function oTPGetNew_onclick() {
         window.location.reload();
     }
-
     const timerInterval = setInterval(function () {
         if (document.getElementById("oTPExpires") != null) {
             var oTPTimeRemaining = document.getElementById("oTPExpires").innerHTML;

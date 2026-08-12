@@ -1307,6 +1307,23 @@
             </param>
             <returns>this element</returns>
         </member>
+        <member name="M:iText.Layout.Document.Add(iText.Layout.Element.SectionBreak)">
+            <summary>Terminates the current page if it's not the first one in the document.</summary>
+            <remarks>
+            Terminates the current page if it's not the first one in the document.
+            Sets the page size and/or page margins specified in the arguments for the next page.
+            </remarks>
+            <param name="sectionBreak">
+            
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            , optionally with a specified page size and/or page margins
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Document"/>
+            instance
+            </returns>
+        </member>
         <member name="M:iText.Layout.Document.GetPdfDocument">
             <summary>Gets PDF document.</summary>
             <returns>the in-memory representation of the PDF document</returns>
@@ -1386,6 +1403,121 @@
             <param name="rightMargin">the right margin</param>
             <param name="leftMargin">the left margin</param>
             <param name="bottomMargin">the lower margin</param>
+        </member>
+        <member name="M:iText.Layout.Document.GetPageMargins(System.Int32)">
+            <summary>Gets page margins by specified page number.</summary>
+            <param name="pageNumber">number of the page to get margins for</param>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            page margins
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Document.SetPageMargins(System.Int32,iText.Layout.Properties.Margins.PageMarginBoxes)">
+            <summary>Sets page margins for page with provided number.</summary>
+            <param name="pageNumber">number of the page to set margins for</param>
+            <param name="margins">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            page margins to set
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Document"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Document.SetPageMargins(System.Predicate{System.Int32},iText.Layout.Properties.Margins.PageMarginBoxes)">
+            <summary>Sets page margins for page based on provided condition for page number.</summary>
+            <param name="condition">matching rule with page number as argument</param>
+            <param name="margins">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            page margins to set
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Document"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Document.SetPageMargins(System.Func{System.Int32,iText.Layout.Properties.Margins.PageMarginBoxes})">
+            <summary>Sets page margins for page based on provided function for page number.</summary>
+            <param name="function">
+            function with page number as argument, return
+            <see langword="null"/>
+            in case result should be ignored
+            and
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            page margins return value
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Document"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Document.IsPageMarginsSpecified(System.Int32)">
+            <summary>Checks whether page margins have been specified for the given page number.</summary>
+            <remarks>
+            Checks whether page margins have been specified for the given page number.
+            <para />
+            This method returns
+            <see langword="true"/>
+            if the margins for the page are determined by
+            any of the following mechanisms (in order of precedence):
+            <list type="number">
+            <item><description>Explicitly set margins for page number via
+            <see cref="M:iText.Layout.Document.SetPageMargins(System.Int32,iText.Layout.Properties.Margins.PageMarginBoxes)"/>
+            </description></item>
+            <item><description>Matching rule set via
+            <see cref="!:SetPageMargins(System.Predicate&lt;T&gt;, iText.Layout.Properties.Margins.PageMarginBoxes)"/>
+            </description></item>
+            <item><description>Function set via
+            <see cref="!:SetPageMargins(System.Func&lt;T, R&gt;)"/>
+            </description></item>
+            </list>
+            <para />
+            NOTE: the method returns
+            <see langword="true"/>
+            even if the value produced by the mechanisms is
+            <see langword="null"/>.
+            Only when none of the above apply and the default static margins are used, this method returns
+            <see langword="false"/>.
+            </remarks>
+            <param name="pageNumber">the page number to check</param>
+            <returns>
+            
+            <see langword="true"/>
+            if margins for the page are defined explicitly by page number,
+            by matching rule or by function,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Document.GetFootnotesProperties">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            specified for the document to customize footnotes.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            specified for the document
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Document.SetFootnotesProperties(iText.Layout.Properties.Margins.FootnotesProperties)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            for the document.
+            </summary>
+            <param name="footnotesProperties">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            to customize footnotes
+            </param>
         </member>
         <member name="M:iText.Layout.Document.GetPageEffectiveArea(iText.Kernel.Geom.PageSize)">
             <summary>
@@ -2196,7 +2328,7 @@
             <returns>
             the
             <see cref="T:iText.Kernel.Geom.PageSize">page size</see>
-            of the next content area.
+            of the next content area
             </returns>
         </member>
         <member name="M:iText.Layout.Element.AreaBreak.SetPageSize(iText.Kernel.Geom.PageSize)">
@@ -2204,7 +2336,7 @@
             <param name="pageSize">
             the new
             <see cref="T:iText.Kernel.Geom.PageSize">page size</see>
-            of the next content area.
+            of the next content area
             </param>
         </member>
         <member name="M:iText.Layout.Element.AreaBreak.GetAreaType">
@@ -2732,6 +2864,20 @@
             </param>
             <returns>this Element</returns>
         </member>
+        <member name="M:iText.Layout.Element.Div.Add(iText.Layout.Element.SectionBreak)">
+            <summary>Adds the section break to the div contents.</summary>
+            <param name="sectionBreak">
+            
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            that terminates the current page content
+            and creates a new page, optionally with a specified page size and/or page margins
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Element.Div"/>
+            instance
+            </returns>
+        </member>
         <member name="M:iText.Layout.Element.Div.SetFillAvailableArea(System.Boolean)">
             <summary>
             Defines whether the
@@ -2790,7 +2936,7 @@
             <summary>The interface represents abstract layout element and provides an access to its children.</summary>
         </member>
         <member name="M:iText.Layout.Element.IAbstractElement.GetChildren">
-            <summary>Gets the child elements of this elements.</summary>
+            <summary>Gets the child elements of this element.</summary>
             <returns>a list of children</returns>
         </member>
         <member name="T:iText.Layout.Element.IBlockElement">
@@ -3037,6 +3183,18 @@
             <param name="left">a float value representing the horizontal offset of the lower left corner of the image</param>
             <param name="bottom">a float value representing the vertical offset of the lower left corner of the image</param>
             <param name="width">a float value</param>
+        </member>
+        <member name="M:iText.Layout.Element.Image.#ctor(iText.Layout.Element.Image)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Element.Image"/>
+            instance by copying an existing one.
+            </summary>
+            <param name="image">
+            
+            <see cref="T:iText.Layout.Element.Image"/>
+            instance to copy
+            </param>
         </member>
         <member name="M:iText.Layout.Element.Image.GetXObject">
             <summary>Gets the XObject contained in this image object</summary>
@@ -3787,6 +3945,20 @@
             <see cref="T:iText.Layout.Element.Paragraph"/>
             </returns>
         </member>
+        <member name="M:iText.Layout.Element.Paragraph.Add(iText.Layout.Properties.Margins.FootnoteAnchor)">
+            <summary>
+            Adds the
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            element to this
+            <see cref="T:iText.Layout.Element.Paragraph"/>.
+            </summary>
+            <param name="footnoteAnchor">the footnote anchor to be added</param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Element.Paragraph"/>
+            instance
+            </returns>
+        </member>
         <member name="M:iText.Layout.Element.Paragraph.AddAll``1(System.Collections.Generic.IList{``0})">
             <summary>
             Adds a
@@ -3870,12 +4042,12 @@
             </summary>
             <param name="orphansControl">
             an instance of
-            <see cref="T:iText.Layout.Properties.ParagraphOrphansControl"/>.
+            <see cref="T:iText.Layout.Properties.ParagraphOrphansControl"/>
             </param>
             <returns>
             this
             <see cref="T:iText.Layout.Element.Paragraph"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Layout.Element.Paragraph.SetWidowsControl(iText.Layout.Properties.ParagraphWidowsControl)">
@@ -3885,12 +4057,12 @@
             </summary>
             <param name="widowsControl">
             an instance of
-            <see cref="T:iText.Layout.Properties.ParagraphWidowsControl"/>.
+            <see cref="T:iText.Layout.Properties.ParagraphWidowsControl"/>
             </param>
             <returns>
             this
             <see cref="T:iText.Layout.Element.Paragraph"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Layout.Element.Paragraph.SetFixedLeading(System.Single)">
@@ -3944,6 +4116,302 @@
         </member>
         <member name="M:iText.Layout.Element.Paragraph.MakeNewRenderer">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Element.SectionBreak">
+            <summary>A layout object that terminates the current page content if any and starts the new page.</summary>
+            <remarks>
+            A layout object that terminates the current page content if any and starts the new page.
+            <para />
+            If no
+            <see cref="T:iText.Kernel.Geom.PageSize"/>
+            and
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            are given,
+            the new content section will have default page size and page margins.
+            <para />
+            Specified (or default if not specified)
+            <see cref="T:iText.Kernel.Geom.PageSize"/>
+            and
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            will be applied for all next pages until it'll be overridden by other
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            or
+            <see cref="T:iText.Layout.Element.AreaBreak"/>
+            elements.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            <para />
+            The new content section will have default page size and page margins.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.#ctor(iText.Kernel.Geom.PageSize)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            <para />
+            The new content section will have the specified page size and default page margins.
+            </remarks>
+            <param name="pageSize">
+            
+            <see cref="T:iText.Kernel.Geom.PageSize"/>
+            page size of the new content section
+            </param>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.#ctor(iText.Layout.Properties.Margins.PageMarginBoxes)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            <para />
+            The new content section will have the specified page margins and default page size.
+            </remarks>
+            <param name="pageMarginBoxes">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            page margins of the new content section
+            </param>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.#ctor(iText.Kernel.Geom.PageSize,iText.Layout.Properties.Margins.PageMarginBoxes)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates new
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance.
+            <para />
+            The new content section will have the specified page size and page margins.
+            </remarks>
+            <param name="pageSize">
+            
+            <see cref="T:iText.Kernel.Geom.PageSize"/>
+            page size of the new content section
+            </param>
+            <param name="pageMarginBoxes">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            page margins of the new content section
+            </param>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.GetPageSize">
+            <summary>Gets the page size.</summary>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Geom.PageSize">page size</see>
+            of the next content section
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.SetPageSize(iText.Kernel.Geom.PageSize)">
+            <summary>Sets the page size.</summary>
+            <param name="pageSize">
+            the new
+            <see cref="T:iText.Kernel.Geom.PageSize">page size</see>
+            of the next content section
+            </param>
+            <returns>this same instance</returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.GetPageMargins">
+            <summary>Gets the page margins.</summary>
+            <returns>
+            the
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes">page margins</see>
+            of the next content section
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.SetPageMargins(iText.Layout.Properties.Margins.PageMarginBoxes)">
+            <summary>Sets the page margins.</summary>
+            <param name="pageMarginBoxes">
+            the
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes">page margins</see>
+            of the next content section
+            </param>
+            <returns>this same instance</returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.GetFootnotesProperties">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            specified for the document via
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            to customize footnotes.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            specified for the document
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.SetFootnotesProperties(iText.Layout.Properties.Margins.FootnotesProperties)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            for the document.
+            </summary>
+            <param name="footnotesProperties">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            to customize footnotes
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.BreakPage">
+            <summary>
+            Checks whether this
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            </summary>
+            <remarks>
+            Checks whether this
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            <para />
+            Page won't break in case SectionBreak is added to the empty page with the same page size
+            or if page margins and page size were not changed. So
+            <c>breakPage</c>
+            field also checks
+            whether SectionBreak changes page margins or page size and is not the 1st element on the page.
+            </remarks>
+            <returns>
+            
+            <see langword="true"/>
+            if page break is expected,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreak.BreakPage(System.Boolean)">
+            <summary>
+            Defines whether this
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            </summary>
+            <remarks>
+            Defines whether this
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            Controlled by
+            <see cref="M:iText.Layout.Renderer.SectionBreakRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>.
+            <para />
+            Page shouldn't break in case SectionBreak is added to the empty page with the same page size
+            or if page margins and page size were not changed. So
+            <paramref name="breakPage"/>
+            field also checks
+            whether SectionBreak changes page margins or page size and is not the 1st element on the page.
+            </remarks>
+            <param name="breakPage">
+            
+            <see langword="true"/>
+            if page break is expected,
+            <see langword="false"/>
+            otherwise
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            instance
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Element.SectionBreakUtil">
+            <summary>
+            This file is a helper class for
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            for internal usage only.
+            </summary>
+            <remarks>
+            This file is a helper class for
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            for internal usage only.
+            Be aware that its API and functionality may be changed in the future.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreakUtil.BreakPage(iText.Layout.Element.SectionBreak)">
+            <summary>
+            Checks whether provided
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            </summary>
+            <remarks>
+            Checks whether provided
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            <para />
+            Page won't break in case SectionBreak is added to the empty page with the same page size
+            or if page margins and page size were not changed. So
+            <c>breakPage</c>
+            field also checks
+            whether SectionBreak changes page margins or page size and is not the 1st element on the page.
+            </remarks>
+            <param name="sectionBreak">
+            
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            to check
+            </param>
+            <returns>
+            
+            <see langword="true"/>
+            if page break is expected,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Element.SectionBreakUtil.BreakPage(iText.Layout.Element.SectionBreak,System.Boolean)">
+            <summary>
+            Defines whether provided
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            </summary>
+            <remarks>
+            Defines whether provided
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            should add page break.
+            Controlled by
+            <see cref="M:iText.Layout.Renderer.SectionBreakRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>.
+            <para />
+            Page shouldn't break in case SectionBreak is added to the empty page with the same page size
+            or if page margins and page size were not changed. So
+            <paramref name="breakPage"/>
+            field also checks
+            whether SectionBreak changes page margins or page size and is not the 1st element on the page.
+            </remarks>
+            <param name="sectionBreak">
+            
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            to check
+            </param>
+            <param name="breakPage">
+            
+            <see langword="true"/>
+            if page break is expected,
+            <see langword="false"/>
+            otherwise
+            </param>
         </member>
         <member name="T:iText.Layout.Element.Tab">
             <summary>
@@ -4804,6 +5272,18 @@
             <param name="text">
             the contents, as a
             <see cref="T:System.String"/>
+            </param>
+        </member>
+        <member name="M:iText.Layout.Element.Text.#ctor(iText.Layout.Element.Text)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Element.Text"/>
+            instance by copying an existing one.
+            </summary>
+            <param name="text">
+            
+            <see cref="T:iText.Layout.Element.Text"/>
+            instance to copy
             </param>
         </member>
         <member name="M:iText.Layout.Element.Text.GetText">
@@ -7444,6 +7924,14 @@
             <see cref="M:iText.Layout.Renderer.IRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>.
             </summary>
         </member>
+        <member name="F:iText.Layout.Layout.LayoutResult.sectionBreak">
+            <summary>
+            The
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            that that terminates the current page content
+            and creates a new page, optionally with a specified page size and/or page margins.
+            </summary>
+        </member>
         <member name="M:iText.Layout.Layout.LayoutResult.#ctor(System.Int32,iText.Layout.Layout.LayoutArea,iText.Layout.Renderer.IRenderer,iText.Layout.Renderer.IRenderer)">
             <summary>
             Creates the
@@ -7563,7 +8051,42 @@
         <member name="M:iText.Layout.Layout.LayoutResult.SetAreaBreak(iText.Layout.Element.AreaBreak)">
             <summary>Sets areaBreak value.</summary>
             <param name="areaBreak">the areaBreak value</param>
-            <returns>the areaBreak value</returns>
+            <returns>
+            current
+            <see cref="T:iText.Layout.Layout.LayoutResult"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Layout.LayoutResult.GetSectionBreak">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            value.
+            </summary>
+            <returns>
+            the
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            value that terminates the current page content
+            and creates a new page, optionally with a specified page size and/or page margins
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Layout.LayoutResult.SetSectionBreak(iText.Layout.Element.SectionBreak)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            value.
+            </summary>
+            <param name="sectionBreak">
+            the
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            value that terminates the current page content
+            and creates a new page, optionally with a specified page size and/or page margins
+            </param>
+            <returns>
+            current
+            <see cref="T:iText.Layout.Layout.LayoutResult"/>
+            instance
+            </returns>
         </member>
         <member name="M:iText.Layout.Layout.LayoutResult.GetCauseOfNothing">
             <summary>
@@ -7576,6 +8099,19 @@
             the
             <see cref="T:iText.Layout.Renderer.IRenderer">renderer</see>
             </returns>
+        </member>
+        <member name="M:iText.Layout.Layout.LayoutResult.SetCauseOfNothing(iText.Layout.Renderer.IRenderer)">
+            <summary>
+            Sets the first renderer to produce
+            <see cref="F:iText.Layout.Layout.LayoutResult.NOTHING"/>
+            during
+            <see cref="M:iText.Layout.Renderer.IRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>.
+            </summary>
+            <param name="causeOfNothing">
+            the first renderer to produce
+            <see cref="F:iText.Layout.Layout.LayoutResult.NOTHING"/>
+            layout result
+            </param>
         </member>
         <member name="M:iText.Layout.Layout.LayoutResult.ToString">
             <summary><inheritDoc/></summary>
@@ -9792,6 +10328,857 @@
         <member name="T:iText.Layout.Properties.ListSymbolPosition">
             <summary>A specialized enum containing position properties for list symbols.</summary>
         </member>
+        <member name="T:iText.Layout.Properties.Margins.AbstractPageContent">
+            <summary>Abstract class representing page content such as margins of footnotes.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.AbstractPageContent.#ctor(iText.Layout.Element.IElement)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.AbstractPageContent"/>
+            instance.
+            </summary>
+            <param name="content">
+            
+            <see cref="T:iText.Layout.Element.IElement"/>
+            layout element with page content
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.AbstractPageContent.#ctor(iText.Layout.Properties.Margins.AbstractPageContent)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.AbstractPageContent"/>
+            instance by copying existing one.
+            </summary>
+            <param name="other">
+            
+            <see cref="T:iText.Layout.Properties.Margins.AbstractPageContent"/>
+            instance to copy
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.AbstractPageContent.GetContent">
+            <summary>Returns layout element representing page content.</summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Element.IElement"/>
+            layout element for page margin content
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.AbstractPageContent.SetRectangle(iText.Kernel.Geom.Rectangle)">
+            <summary>Sets the rectangle in which page content is shown.</summary>
+            <param name="rectangle">
+            
+            <see cref="T:iText.Kernel.Geom.Rectangle"/>
+            defining position and dimensions of the content area
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.AbstractPageContent.GetRectangle">
+            <summary>Gets the rectangle in which page content should be shown.</summary>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Geom.Rectangle"/>
+            defining position and dimensions of the content area
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.Footnote">
+            <summary>
+            Class representing a single footnote which is a note placed at the bottom of the page
+            indicated in the text with superscript numbers (or letters or other symbols).
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.#ctor(System.String)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            instance with text.
+            </summary>
+            <param name="text">the textual contents of the footnote</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.#ctor(iText.Layout.Element.Paragraph)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            instance.
+            </summary>
+            <param name="paragraph">
+            
+            <see cref="T:iText.Layout.Element.Paragraph"/>
+            representing the contents of the footnote
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.ApplyFootnoteAnchor(System.Int32)">
+            <summary>Injects footnote anchor before placing this footnote on the specified page.</summary>
+            <param name="pageNum">number of the page where this footnote should be placed</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.ApplyFootnoteAnchor(iText.Layout.Properties.Margins.FootnoteAnchor)">
+            <summary>Injects footnote anchor into this footnote before layout.</summary>
+            <param name="footnoteAnchor">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            to link to this footnote
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.ResetFootnoteAnchor">
+            <summary>
+            Resets current
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            linked to this footnote.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.Footnote.MakeNewRenderer">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnoteAnchor">
+            <summary>Class representing an anchor for a footnote which is placed at the bottom of the page.</summary>
+            <remarks>
+            Class representing an anchor for a footnote which is placed at the bottom of the page.
+            Footnote anchor indicates footnote in the text with superscript numbers (or letters or other symbols).
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.#ctor(iText.Layout.Properties.Margins.Footnote)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance.
+            </summary>
+            <param name="footnote">
+            
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            linked to this anchor
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.#ctor(System.String,iText.Layout.Properties.Margins.Footnote)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance.
+            </summary>
+            <param name="text">superscript text for anchor to indicate a footnote</param>
+            <param name="footnote">
+            
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            linked to this anchor
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.#ctor(iText.Layout.Element.Text,iText.Layout.Properties.Margins.Footnote)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance.
+            </summary>
+            <param name="text">
+            
+            <see cref="T:iText.Layout.Element.Text"/>
+            for anchor to indicate a footnote
+            </param>
+            <param name="footnote">
+            
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            linked to this anchor
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.#ctor(iText.Layout.Element.Image,iText.Layout.Properties.Margins.Footnote)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance.
+            </summary>
+            <param name="image">
+            
+            <see cref="T:iText.Layout.Element.Image"/>
+            to use as footnote anchor
+            </param>
+            <param name="footnote">
+            
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            linked to this anchor
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.GetFootnoteAnchor">
+            <summary>
+            Gets layout element
+            <see cref="T:iText.Layout.Element.IElement"/>
+            representing footnote anchor.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Element.IElement"/>
+            representing footnote anchor (can be
+            <see cref="T:iText.Layout.Element.Text"/>
+            or
+            <see cref="T:iText.Layout.Element.Image"/>
+            )
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.SetFootnoteAnchor(iText.Layout.Element.Text)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Element.Text"/>
+            layout element representing footnote anchor.
+            </summary>
+            <param name="footnoteAnchor">
+            
+            <see cref="T:iText.Layout.Element.Text"/>
+            layout element representing footnote anchor
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.SetFootnoteAnchor(iText.Layout.Element.Image)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Element.Image"/>
+            layout element representing footnote anchor.
+            </summary>
+            <param name="footnoteAnchor">
+            
+            <see cref="T:iText.Layout.Element.Image"/>
+            layout element representing footnote anchor
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.GetFootnote">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            linked to this anchor.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            linked to this anchor
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.GetFootnoteAnchorLabelStyle">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnote anchor that is placed inside the footnote.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnote anchor that is inside the footnote
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.SetFootnoteAnchorLabelStyle(iText.Layout.Style)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnote anchor that is placed inside the footnote.
+            </summary>
+            <param name="footnoteAnchorLabelStyle">
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnote anchor inside the footnote
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnoteAnchor.MakeNewRenderer">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnoteNumberingConfig">
+            <summary>
+            Enum representing possible ways of footnotes numbering
+            specified via
+            <see cref="M:iText.Layout.Properties.Margins.FootnotesProperties.SetFootnoteNumberingConfig(iText.Layout.Properties.Margins.FootnoteNumberingConfig)"/>.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnoteNumberingType">
+            <summary>
+            Enum representing possible values for footnote anchors (and numbering)
+            specified via
+            <see cref="M:iText.Layout.Properties.Margins.FootnotesProperties.SetFootnoteNumberingType(System.Nullable{iText.Layout.Properties.Margins.FootnoteNumberingType})"/>.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnotesContainer">
+            <summary>
+            Class representing container to store
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            instances.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainer.#ctor(System.Int32)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainer"/>
+            instance.
+            </summary>
+            <param name="pageNum">number of the page to which this container will be added</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainer.Add(iText.Layout.Properties.Margins.Footnote,iText.Layout.Tagging.TaggingHintKey)">
+            <summary>
+            Adds
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            to this container.
+            </summary>
+            <param name="footnote">
+            
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            to add
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainer"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainer.AddFootnotesFromOtherContainer(iText.Layout.Properties.Margins.FootnotesContainer)">
+            <summary>Adds footnoted from another FootnotesContainer.</summary>
+            <param name="otherContainer">the other FootnotesContainer to add the footnotes from</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainer.CreateRendererSubTree">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainer.GetAccessibilityProperties">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainer.MakeNewRenderer">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnotesContainerRenderer">
+            <summary>
+            Represents a renderer for the
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainer"/>
+            layout element.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesContainerRenderer.#ctor(iText.Layout.Properties.Margins.FootnotesContainer)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainerRenderer"/>
+            from its corresponding layout object.
+            </summary>
+            <param name="modelElement">
+            the
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainer"/>
+            which this object should manage
+            </param>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnotesProperties">
+            <summary>Class representing properties to customize footnotes.</summary>
+            <remarks>
+            Class representing properties to customize footnotes.
+            <para />
+            Can be specified via
+            <see cref="M:iText.Layout.Document.SetFootnotesProperties(iText.Layout.Properties.Margins.FootnotesProperties)"/>
+            or
+            <see cref="M:iText.Layout.Element.SectionBreak.SetFootnotesProperties(iText.Layout.Properties.Margins.FootnotesProperties)"/>.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.GetFootnoteNumberingType">
+            <summary>
+            Gets
+            <see cref="!:FootnoteNumberingType?"/>
+            representing numbering type for footnote anchors.
+            </summary>
+            <returns>
+            
+            <see cref="!:FootnoteNumberingType?"/>
+            numbering type
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.SetFootnoteNumberingType(System.Nullable{iText.Layout.Properties.Margins.FootnoteNumberingType})">
+            <summary>
+            Sets
+            <see cref="!:FootnoteNumberingType?"/>
+            representing numbering type for footnote anchors.
+            </summary>
+            <param name="footnoteNumberingType">
+            
+            <see cref="!:FootnoteNumberingType?"/>
+            representing numbering type for footnote anchors
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.GetFootnoteNumberingConfig">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteNumberingConfig"/>
+            representing numbering configuration for footnotes.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteNumberingConfig"/>
+            representing footnotes numbering configuration
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.SetFootnoteNumberingConfig(iText.Layout.Properties.Margins.FootnoteNumberingConfig)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteNumberingConfig"/>
+            representing numbering configuration for footnotes.
+            </summary>
+            <param name="footnoteNumberingConfig">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteNumberingConfig"/>
+            representing footnotes numbering configuration
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.GetFootnotesContainerStyle">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnotes container.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnotes container
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.SetFootnotesContainerStyle(iText.Layout.Style)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnotes container.
+            </summary>
+            <param name="footnotesContainerStyle">
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnotes container
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.GetFootnoteAnchorLabelStyle">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnote anchors that are placed inside the footnotes container.
+            </summary>
+            <returns>
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnote anchors that are inside the footnotes
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesProperties.SetFootnoteAnchorLabelStyle(iText.Layout.Style)">
+            <summary>
+            Sets
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnote anchors that are placed inside the footnotes container.
+            </summary>
+            <param name="footnoteAnchorLabelStyle">
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnote anchors inside the footnotes
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            instance
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.FootnotesUtil">
+            <summary>Utility class to process footnotes for internal usage only.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesUtil.AddFootnotesToPage(System.Int32,System.Collections.Generic.IEnumerable{iText.Layout.Renderer.FootnoteRenderer},iText.Layout.Properties.Margins.PageMarginBoxes,iText.Layout.Properties.Margins.FootnotesProperties)">
+            <summary>
+            Adds provided footnotes to the specified page via
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>.
+            </summary>
+            <param name="pageNum">page number</param>
+            <param name="footnotesToAdd">
+            list of
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            instance to add
+            </param>
+            <param name="pageMarginBoxes">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            for the page
+            </param>
+            <param name="footnotesProperties">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            to apply for footnotes
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesUtil.SetParentForFootnoteRenderer(iText.Layout.Renderer.FootnoteRenderer,iText.Layout.Renderer.DocumentRenderer)">
+            <summary>Sets parent for footnote renderer in order for it to be layouted with correct properties and styles applied.
+                </summary>
+            <param name="footnoteRenderer">
+            
+            <see cref="T:iText.Layout.Renderer.FootnoteRenderer"/>
+            to set parent for
+            </param>
+            <param name="documentRenderer">
+            
+            <see cref="T:iText.Layout.Renderer.DocumentRenderer"/>
+            root renderer, the parent of footnotes container renderer
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.FootnotesUtil.ApplyFootnoteAnchorStyle(iText.Layout.Properties.Margins.FootnoteAnchor,iText.Layout.Style)">
+            <summary>
+            Applies
+            <see cref="T:iText.Layout.Style"/>
+            storing style properties for footnote anchor that is placed inside the footnote.
+            </summary>
+            <param name="anchor">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            to apply style for
+            </param>
+            <param name="footnoteAnchorLabelStyle">
+            
+            <see cref="T:iText.Layout.Style"/>
+            storing properties for footnote anchor inside the footnote
+            </param>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.MarginBoxName">
+            <summary>
+            A specialized enum containing values for page margin box names used in
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>.
+            </summary>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.PageFootnotesContent">
+            <summary>
+            Helper class to store information about footnotes content on the page represented by
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainer"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageFootnotesContent.#ctor(iText.Layout.Properties.Margins.FootnotesContainer)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            instance.
+            </summary>
+            <param name="footnotesContent">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesContainer"/>
+            container with all page footnotes
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageFootnotesContent.#ctor(iText.Layout.Properties.Margins.PageFootnotesContent)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            instance by copying existing one.
+            </summary>
+            <param name="other">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            instance to copy
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageFootnotesContent.SetPageNumber(System.Int32)">
+            <summary>
+            Sets page number for this
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>.
+            </summary>
+            <remarks>
+            Sets page number for this
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            . Treated automatically during layout.
+            </remarks>
+            <param name="pageNumber">page number to set</param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageFootnotesContent.GetPageNumber">
+            <summary>
+            Gets page number for this
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>.
+            </summary>
+            <returns>
+            page number for this
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            </returns>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.PageMarginBoxes">
+            <summary>Class to store information about all page margin boxes for a single page.</summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.#ctor(System.Collections.Generic.IList{iText.Layout.Properties.Margins.PageMarginContent})">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            instance.
+            </summary>
+            <param name="margins">
+            list of
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            instances representing page margin content
+            for corresponding margin box name
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>
+            (position on the page)
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.#ctor(iText.Layout.Properties.Margins.PageMarginBoxes)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            instance by copying existing one.
+            </summary>
+            <param name="other">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            to copy
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.Draw(iText.Layout.Renderer.IRenderer,iText.Kernel.Geom.Rectangle,iText.Layout.Renderer.DocumentRenderer,iText.Kernel.Pdf.PdfDocument,System.Int32,System.String)">
+            <summary>Draws all page margins for the page specified via page number.</summary>
+            <param name="marginRenderer">renderer for the margin content to draw</param>
+            <param name="marginRect">page margin box rectangle</param>
+            <param name="documentRenderer">document renderer to use as parent for margin renderer</param>
+            <param name="document">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            to which content is written
+            </param>
+            <param name="pageNumber">page number</param>
+            <param name="marginBoxName">string value representing margin box name (defining its position on the page)</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.CreateRendererFromElement(iText.Layout.Element.IElement,iText.Layout.Renderer.DocumentRenderer,iText.Kernel.Pdf.PdfDocument)">
+            <summary>Creates renderer from element excluding page breaks and adds tagging tree hints.</summary>
+            <param name="element">
+            
+            <see cref="T:iText.Layout.Element.IElement"/>
+            to create renderer for
+            </param>
+            <param name="documentRenderer">document renderer to use as parent for margin renderer</param>
+            <param name="pdfDocument">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            to which content is written
+            </param>
+            <returns>
+            created
+            <see cref="T:iText.Layout.Renderer.IRenderer"/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.AddFootnotes(iText.Layout.Properties.Margins.PageFootnotesContent)">
+            <summary>Adds footnotes for the page.</summary>
+            <param name="content">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageFootnotesContent"/>
+            representing footnotes
+            </param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.GetPageMarginContent(iText.Layout.Properties.Margins.MarginBoxName)">
+            <summary>
+            Gets page margin content
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            by margin box name.
+            </summary>
+            <param name="marginBoxName">
+            
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>
+            margin box name to get content for
+            </param>
+            <returns>
+            page margin content
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            by margin box name
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.GetMarginSizes">
+            <summary>Gets page margin sizes in top, right, bottom, left order.</summary>
+            <returns>array of float top, right, bottom, left margin sizes</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.SetMarginSizes(System.Single[])">
+            <summary>Sets page margin sizes in top, right, bottom, left order.</summary>
+            <param name="marginSizes">array of float top, right, bottom, left margin sizes</param>
+            <returns>
+            this same
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginBoxes"/>
+            instance
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.Layout(iText.Layout.Renderer.DocumentRenderer,System.Int32,iText.Kernel.Geom.Rectangle)">
+            <summary>Layouts all page margins to calculate their occupied area and page margin sizes.</summary>
+            <param name="documentRenderer">
+            
+            <see cref="T:iText.Layout.Renderer.DocumentRenderer"/>
+            renderer for the document to which content will be written
+            </param>
+            <param name="pageNumber">page number</param>
+            <param name="pageSize">page size</param>
+            <returns>float array of top, right, bottom, left margin sizes</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.Draw(iText.Layout.Renderer.DocumentRenderer,iText.Kernel.Pdf.PdfDocument,System.Int32)">
+            <summary>Draws all page margins for the page specified via page number.</summary>
+            <param name="documentRenderer">document renderer to use as parent for margin renderer</param>
+            <param name="document">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            to which content is written
+            </param>
+            <param name="pageNumber">page number</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.SetPageMarginTagRole(iText.Layout.Element.IElement)">
+            <summary>Sets the role of the page margin element to use in the document tag tree.</summary>
+            <param name="element">
+            
+            <see cref="T:iText.Layout.Element.IElement"/>
+            to set role for
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginBoxes.RemovePageBreaks(iText.Layout.Renderer.IRenderer)">
+            <summary>
+            Gets rid of all page breaks that might have occurred inside page margin boxes
+            because of the running/layout elements.
+            </summary>
+            <param name="renderer">the root renderer of the renderers subtree</param>
+        </member>
+        <member name="T:iText.Layout.Properties.Margins.PageMarginContent">
+            <summary>
+            Class to store information about page margin content represented by
+            <see cref="T:iText.Layout.Element.IElement"/>
+            linked to
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginContent.#ctor(iText.Layout.Properties.Margins.MarginBoxName,iText.Layout.Element.IElement)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            instance.
+            </summary>
+            <param name="marginBoxName">
+            
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>
+            specifying margin name based on its location on the page
+            </param>
+            <param name="marginContent">
+            
+            <see cref="T:iText.Layout.Element.IElement"/>
+            layout element with margin content
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginContent.#ctor(iText.Layout.Properties.Margins.MarginBoxName,System.Single)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            instance.
+            <para />
+            The margin will have the specified size in points.
+            </remarks>
+            <param name="marginBoxName">
+            
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>
+            specifying margin name based on its location on the page
+            </param>
+            <param name="marginInPoints"><c>float</c> specifying the margin in points</param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginContent.#ctor(iText.Layout.Properties.Margins.PageMarginContent)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            instance by copying existing one.
+            </summary>
+            <param name="other">
+            
+            <see cref="T:iText.Layout.Properties.Margins.PageMarginContent"/>
+            instance to copy
+            </param>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginContent.GetMarginBoxName">
+            <summary>
+            Gets the page margin box name
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>
+            which is based on its location on the page.
+            </summary>
+            <returns>the margin box name</returns>
+        </member>
+        <member name="M:iText.Layout.Properties.Margins.PageMarginContent.GetStaticMarginContent(iText.Layout.Properties.Margins.MarginBoxName,System.Single)">
+            <summary>
+            Creates
+            <see cref="T:iText.Layout.Element.Div"/>
+            layout element of the fixed size to represent a static margin.
+            </summary>
+            <param name="marginBoxName">
+            
+            <see cref="T:iText.Layout.Properties.Margins.MarginBoxName"/>
+            specifying margin name based on its location on the page
+            </param>
+            <param name="marginInPoints">
+            
+            <c>float</c>
+            specifying the margin in points
+            </param>
+            <returns>
+            
+            <see cref="T:iText.Layout.Element.Div"/>
+            layout element with static size
+            </returns>
+        </member>
         <member name="T:iText.Layout.Properties.ObjectFit">
             <summary>
             A specialized enum holding the possible values for an object-fit property
@@ -10101,7 +11488,7 @@
             <see cref="T:iText.Layout.IPropertyContainer"/>
             objects that
             are lower in the document's hierarchy. Most inherited properties are
-            related to textual operations. Indicates whether or not this type of property is inheritable.
+            related to textual operations. Indicates whether this type of property is inheritable.
             </remarks>
         </member>
         <member name="M:iText.Layout.Properties.Property.IsPropertyInherited(System.Int32)">
@@ -10607,6 +11994,47 @@
             <see cref="F:iText.Layout.Properties.Property.VERTICAL_ALIGNMENT"/>.
             </summary>
         </member>
+        <member name="T:iText.Layout.Renderer.AbsolutelyPositionedRenderer">
+            <summary>Wrapper for absolutely positioned elements which lack coordinates in a certain axis.</summary>
+            <remarks>
+            Wrapper for absolutely positioned elements which lack coordinates in a certain axis.
+            This wrapper performs fake static layout for such elements to determine it's coordinates.
+            </remarks>
+        </member>
+        <member name="T:iText.Layout.Renderer.AbstractBreakRenderer">
+            <summary>Class for storing logic shared by break renderers.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.#ctor">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Renderer.AbstractBreakRenderer"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.HasProperty(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.HasOwnProperty(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.GetProperty``1(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.GetProperty``1(System.Int32,``0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.GetOwnProperty``1(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.GetDefaultProperty``1(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.SetProperty(System.Int32,System.Object)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractBreakRenderer.DeleteOwnProperty(System.Int32)">
+            <summary><inheritDoc/></summary>
+        </member>
         <member name="T:iText.Layout.Renderer.AbstractRenderer">
             <summary>
             Defines the most common properties and behavior that are shared by most
@@ -10674,6 +12102,18 @@
         <member name="M:iText.Layout.Renderer.AbstractRenderer.GetChildRenderers">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.GetPositionenRenderers">
+            <summary>
+            Gets the fixed positioned child
+            <see cref="T:iText.Layout.Renderer.IRenderer"/>
+            s.
+            </summary>
+            <returns>
+            a list of direct fixed positioned child
+            <see cref="T:iText.Layout.Renderer.IRenderer">renderers</see>
+            of this instance
+            </returns>
+        </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.HasProperty(System.Int32)">
             <summary><inheritDoc/></summary>
         </member>
@@ -10704,13 +12144,13 @@
             </summary>
             <param name="property">the property key to be deleted</param>
         </member>
-        <member name="M:iText.Layout.Renderer.AbstractRenderer.GetProperty``1(System.Int32)">
-            <summary><inheritDoc/></summary>
-        </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.GetOwnProperty``1(System.Int32)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.GetProperty``1(System.Int32,``0)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.GetProperty``1(System.Int32)">
             <summary><inheritDoc/></summary>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.SetProperty(System.Int32,System.Object)">
@@ -10825,23 +12265,6 @@
         <member name="M:iText.Layout.Renderer.AbstractRenderer.Draw(iText.Layout.Renderer.DrawContext)">
             <summary><inheritDoc/></summary>
         </member>
-        <member name="M:iText.Layout.Renderer.AbstractRenderer.BeginElementOpacityApplying(iText.Layout.Renderer.DrawContext)">
-            <summary>
-            Apply
-            <c>Property.OPACITY</c>
-            property if specified by setting corresponding values in graphic state dictionary
-            opacity will be applied to all elements drawn after calling this method and before
-            calling
-            <see cref="M:iText.Layout.Renderer.AbstractRenderer.EndElementOpacityApplying(iText.Layout.Renderer.DrawContext)"/>.
-            </summary>
-            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
-        </member>
-        <member name="M:iText.Layout.Renderer.AbstractRenderer.EndElementOpacityApplying(iText.Layout.Renderer.DrawContext)">
-            <summary>
-            <see cref="M:iText.Layout.Renderer.AbstractRenderer.BeginElementOpacityApplying(iText.Layout.Renderer.DrawContext)"/>.
-            </summary>
-            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
-        </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.DrawBackground(iText.Layout.Renderer.DrawContext)">
             <summary>
             Draws a background layer if it is defined by a key
@@ -10862,6 +12285,23 @@
             <param name="xObjectArea">the result object area</param>
             <param name="document">the pdf document</param>
             <returns>the xObject with a specified area and a linear gradient</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.BeginElementOpacityApplying(iText.Layout.Renderer.DrawContext)">
+            <summary>
+            Apply
+            <c>Property.OPACITY</c>
+            property if specified by setting corresponding values in graphic state dictionary
+            opacity will be applied to all elements drawn after calling this method and before
+            calling
+            <see cref="M:iText.Layout.Renderer.AbstractRenderer.EndElementOpacityApplying(iText.Layout.Renderer.DrawContext)"/>.
+            </summary>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.AbstractRenderer.EndElementOpacityApplying(iText.Layout.Renderer.DrawContext)">
+            <summary>
+            <see cref="M:iText.Layout.Renderer.AbstractRenderer.BeginElementOpacityApplying(iText.Layout.Renderer.DrawContext)"/>.
+            </summary>
+            <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
         </member>
         <member name="M:iText.Layout.Renderer.AbstractRenderer.GetBackgroundArea(iText.Kernel.Geom.Rectangle)">
             <summary>Evaluate the actual background</summary>
@@ -11709,8 +13149,10 @@
         </member>
         <member name="M:iText.Layout.Renderer.AreaBreakRenderer.AddChild(iText.Layout.Renderer.IRenderer)">
             <summary>
-            Throws an UnsupportedOperationException because instances of this
-            class are only used for terminating the current content area.
+            Logs a warning about unexpected use of
+            <see cref="T:iText.Layout.Renderer.AreaBreakRenderer"/>
+            if not ignored,
+            because instances of this class are only used for terminating the current content area.
             </summary>
             <param name="renderer">
             
@@ -11719,8 +13161,10 @@
         </member>
         <member name="M:iText.Layout.Renderer.AreaBreakRenderer.Draw(iText.Layout.Renderer.DrawContext)">
             <summary>
-            Throws an UnsupportedOperationException because instances of this
-            class are only used for terminating the current content area.
+            Logs a warning about unexpected use of
+            <see cref="T:iText.Layout.Renderer.AreaBreakRenderer"/>
+            if not ignored,
+            because instances of this class are only used for terminating the current content area.
             </summary>
             <param name="drawContext">
             
@@ -11729,54 +13173,20 @@
         </member>
         <member name="M:iText.Layout.Renderer.AreaBreakRenderer.GetOccupiedArea">
             <summary>
-            Throws an UnsupportedOperationException because instances of this
+            Throws an UnsupportedOperationException if not ignored, because instances of this
             class are only used for terminating the current content area.
             </summary>
             <returns>
             
             <inheritDoc/>
             </returns>
-        </member>
-        <member name="M:iText.Layout.Renderer.AreaBreakRenderer.GetProperty``1(System.Int32,``0)">
-            <summary>
-            Throws an UnsupportedOperationException because instances of this
-            class are only used for terminating the current content area.
-            </summary>
-            <param name="property">
-            
-            <inheritDoc/>
-            </param>
-            <param name="defaultValue">
-            
-            <inheritDoc/>
-            </param>
-            <typeparam name="T1">
-            
-            <inheritDoc/>
-            </typeparam>
-            <returns>
-            
-            <inheritDoc/>
-            </returns>
-        </member>
-        <member name="M:iText.Layout.Renderer.AreaBreakRenderer.SetProperty(System.Int32,System.Object)">
-            <summary>
-            Throws an UnsupportedOperationException because instances of this
-            class are only used for terminating the current content area.
-            </summary>
-            <param name="property">
-            
-            <inheritDoc/>
-            </param>
-            <param name="value">
-            
-            <inheritDoc/>
-            </param>
         </member>
         <member name="M:iText.Layout.Renderer.AreaBreakRenderer.Move(System.Single,System.Single)">
             <summary>
-            Throws an UnsupportedOperationException because instances of this
-            class are only used for terminating the current content area.
+            Logs a warning about unexpected use of
+            <see cref="T:iText.Layout.Renderer.AreaBreakRenderer"/>
+            if not ignored,
+            because instances of this class are only used for terminating the current content area.
             </summary>
             <param name="dx">
             
@@ -12234,6 +13644,13 @@
             <param name="customPageSize">the size of created pages, can be null</param>
             <returns>the page size of the last created page, or null if no page was created</returns>
         </member>
+        <member name="T:iText.Layout.Renderer.DocumentRenderer.PageMarginBoxesDrawingHandler">
+            <summary>
+            Handler for drawing page margins on
+            <c>END_PAGE</c>
+            event.
+            </summary>
+        </member>
         <member name="T:iText.Layout.Renderer.DrawContext">
             <summary>This class holds instances which required for drawing on pdf document.</summary>
         </member>
@@ -12404,6 +13821,149 @@
             </summary>
             <param name="flexContainerMainSize">the width of the flex container</param>
             <returns>content size suggestion</returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.FootnoteAnchorRenderer">
+            <summary>
+            Renderer for
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            instance representing an anchor for a footnote.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.#ctor(iText.Layout.Properties.Margins.FootnoteAnchor)">
+            <summary>
+            Creates a
+            <see cref="T:iText.Layout.Renderer.FootnoteAnchorRenderer"/>
+            from its corresponding layout object.
+            </summary>
+            <param name="modelElement">
+            the
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            which this object should manage
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.Layout(iText.Layout.Layout.LayoutContext)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.Move(System.Single,System.Single)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.Draw(iText.Layout.Renderer.DrawContext)">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.GetMinMaxWidth">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.GetMinMaxWidth(System.Nullable{System.Single})">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.GetNextRenderer">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.GetFirstYLineRecursively">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteAnchorRenderer.GetLastYLineRecursively">
+            <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Renderer.FootnoteRenderer">
+            <summary>
+            Renderer for
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            representing a footnote placed at the bottom of the page.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnoteRenderer.#ctor(iText.Layout.Properties.Margins.Footnote)">
+            <summary>
+            Creates a
+            <see cref="T:iText.Layout.Renderer.FootnoteRenderer"/>
+            from its corresponding layout object.
+            </summary>
+            <param name="modelElement">
+            the
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            which this object should manage
+            </param>
+        </member>
+        <member name="T:iText.Layout.Renderer.FootnotesCounterHandler">
+            <summary>Helper handler class to collect and count footnotes placed on the page.</summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnotesCounterHandler.#ctor">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Layout.Renderer.FootnotesCounterHandler"/>
+            instance.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnotesCounterHandler.AddFootnoteAnchor(iText.Layout.Renderer.FootnoteAnchorRenderer)">
+            <summary>
+            Adds footnote anchor info after
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            layout.
+            </summary>
+            <param name="renderer">
+            renderer for
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteAnchor"/>
+            which stores layout information
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnotesCounterHandler.GetFootnotesCounterHandler(iText.Layout.Renderer.IRenderer)">
+            <summary>
+            Gets
+            <see cref="T:iText.Layout.Renderer.FootnotesCounterHandler"/>
+            used in root
+            <see cref="T:iText.Layout.Renderer.DocumentRenderer"/>.
+            </summary>
+            <param name="renderer">
+            
+            <see cref="T:iText.Layout.Renderer.IRenderer"/>
+            any renderer in the current tree
+            </param>
+            <returns>
+            
+            <see cref="T:iText.Layout.Renderer.FootnotesCounterHandler"/>
+            used in root
+            <see cref="T:iText.Layout.Renderer.DocumentRenderer"/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnotesCounterHandler.Reset">
+            <summary>
+            Resets current
+            <see cref="T:iText.Layout.Renderer.FootnotesCounterHandler"/>
+            before collecting placed footnotes.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnotesCounterHandler.CollectFootnotes(iText.Layout.Layout.LayoutArea)">
+            <summary>
+            Collects footnotes which anchors are placed in the current area
+            in order their anchors are placed on a page from top to bottom and left to right.
+            </summary>
+            <param name="currentArea">
+            
+            <see cref="T:iText.Layout.Layout.LayoutArea"/>
+            area to collect placed footnote anchors
+            </param>
+            <returns>
+            linked map of
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            and its height float value
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.FootnotesCounterHandler.UpdateFootnoteNumberingAndStyles(iText.Layout.Properties.Margins.FootnotesProperties,System.Int32)">
+            <summary>
+            Updates footnote anchors using automatic numbering and styles configured via
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>.
+            </summary>
+            <param name="footnotesProperties">
+            
+            <see cref="T:iText.Layout.Properties.Margins.FootnotesProperties"/>
+            with optional
+            <see cref="!:iText.Layout.Properties.Margins.FootnoteNumberingType?"/>
+            specifying type for numbering of the footnote anchors and optional styles for footnote anchors
+            </param>
+            <param name="latestFootnoteNum">
+            the number of the previous placed footnote based on
+            <see cref="T:iText.Layout.Properties.Margins.FootnoteNumberingConfig"/>
+            </param>
         </member>
         <member name="T:iText.Layout.Renderer.Grid">
             <summary>This class represents a grid of elements.</summary>
@@ -13760,6 +15320,10 @@
         <member name="M:iText.Layout.Renderer.RootRenderer.Layout(iText.Layout.Layout.LayoutContext)">
             <summary><inheritDoc/></summary>
         </member>
+        <member name="M:iText.Layout.Renderer.RootRenderer.FlushOnClose">
+            <summary>Draws (flushes) the content, of this element and all its children that were not yet processed.</summary>
+            <seealso cref="M:iText.Layout.Renderer.AbstractRenderer.Draw(iText.Layout.Renderer.DrawContext)"/>
+        </member>
         <member name="M:iText.Layout.Renderer.RotationUtils.CountRotationMinMaxWidth(iText.Layout.Minmaxwidth.MinMaxWidth,iText.Layout.Renderer.AbstractRenderer)">
             <summary>
             This method tries to calculate min-max-width of rotated element using heuristics
@@ -13809,6 +15373,81 @@
         </member>
         <member name="M:iText.Layout.Renderer.RtlFlexItemMainDirector.ApplyJustifyContent(System.Collections.Generic.IList{iText.Layout.Renderer.FlexUtil.FlexItemCalculationInfo},iText.Layout.Properties.JustifyContent,System.Single)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Renderer.SectionBreakRenderer">
+            <summary>
+            Renderer for the
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            layout element.
+            </summary>
+            <remarks>
+            Renderer for the
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            layout element.
+            Will terminate the current page content if any and start a new page.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.SectionBreakRenderer.#ctor(iText.Layout.Element.SectionBreak)">
+            <summary>
+            Creates new
+            <see cref="T:iText.Layout.Renderer.SectionBreakRenderer"/>
+            instance.
+            </summary>
+            <param name="sectionBreak">
+            the
+            <see cref="T:iText.Layout.Element.SectionBreak"/>
+            that will be rendered by this object
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.SectionBreakRenderer.AddChild(iText.Layout.Renderer.IRenderer)">
+            <summary>
+            Logs a warning about unexpected use of
+            <see cref="T:iText.Layout.Renderer.SectionBreakRenderer"/>
+            if not ignored,
+            because instances of this class are only used for terminating the current page content.
+            </summary>
+            <param name="renderer">
+            
+            <inheritDoc/>
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.SectionBreakRenderer.Draw(iText.Layout.Renderer.DrawContext)">
+            <summary>
+            Logs a warning about unexpected use of
+            <see cref="T:iText.Layout.Renderer.SectionBreakRenderer"/>
+            if not ignored,
+            because instances of this class are only used for terminating the current page content.
+            </summary>
+            <param name="drawContext">
+            
+            <inheritDoc/>
+            </param>
+        </member>
+        <member name="M:iText.Layout.Renderer.SectionBreakRenderer.GetOccupiedArea">
+            <summary>
+            Throws an UnsupportedOperationException if not ignored, because instances of this
+            class are only used for terminating the current page content.
+            </summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.SectionBreakRenderer.Move(System.Single,System.Single)">
+            <summary>
+            Logs a warning about unexpected use of
+            <see cref="T:iText.Layout.Renderer.SectionBreakRenderer"/>
+            if not ignored,
+            because instances of this class are only used for terminating the current page content.
+            </summary>
+            <param name="dx">
+            
+            <inheritDoc/>
+            </param>
+            <param name="dy">
+            
+            <inheritDoc/>
+            </param>
         </member>
         <member name="M:iText.Layout.Renderer.TableBorderDescriptor.#ctor(System.Int32,System.Single,System.Single,System.Single[])">
             <summary>Creates a table border descriptor which will be used while drawing the described border.</summary>
@@ -14580,6 +16219,123 @@
             <summary>Checks if layout module can access pdfCalligraph</summary>
             <returns><c>true</c> if layout can access pdfCalligraph and <c>false</c> otherwise</returns>
         </member>
+        <member name="T:iText.Layout.Renderer.Typography.ScriptInfo">
+            <summary>Class containing information about script support in pdfCalligraph.</summary>
+            <remarks>
+            Class containing information about script support in pdfCalligraph.
+            It contains information about supported scripts and their requirements.
+            <para />
+            This class is intended for internal usage.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptInfo.ScriptSupported(System.Nullable{iText.Commons.Utils.UnicodeScript})">
+            <summary>Checks if the script is supported by pdfCalligraph.</summary>
+            <remarks>
+            Checks if the script is supported by pdfCalligraph.
+            Supported script have requirements set in
+            <see cref="T:iText.Layout.Renderer.Typography.ScriptRequirements"/>.
+            </remarks>
+            <param name="script">the script to check</param>
+            <returns><c>true</c> if the script is supported by pdfCalligraph and <c>false</c> otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptInfo.GetRequirements(System.Nullable{iText.Commons.Utils.UnicodeScript})">
+            <summary>Returns requirements for the script.</summary>
+            <remarks>Returns requirements for the script. Only supported script have the requirements set.</remarks>
+            <param name="script">the script to get requirements for</param>
+            <returns>requirements for the script. Only supported script have the requirements set</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptInfo.GetSupportedScripts">
+            <summary>Returns a set if scripts supported by pdfCalligraph.</summary>
+            <returns>a set if scripts supported by pdfCalligraph</returns>
+        </member>
+        <member name="T:iText.Layout.Renderer.Typography.ScriptRequirements">
+            <summary>Class that contains requirements for correct shaping and layout of text for a script.</summary>
+            <remarks>
+            Class that contains requirements for correct shaping and layout of text for a script.
+            <para />
+            Intended for internal use
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.#ctor(System.Collections.Generic.ICollection{System.String},System.Collections.Generic.ICollection{System.String},System.Collections.Generic.ICollection{System.String},System.Boolean,System.Boolean)">
+            <summary>Creates an immutable set of requirements for rendering a script</summary>
+            <param name="otfScriptNames">names of OpenType scripts corresponding to the Utf script</param>
+            <param name="requiredFeatures">font features required for correct shaping and layout of text in the script
+                </param>
+            <param name="affectingFeatures">
+            font features that can affect shaping and layout of text
+            in the script but that are not required
+            </param>
+            <param name="hardCodedHandling">
+            flag indicating if the script requires hard coded handling for actions not supported
+            by OpenType features. For example custom line splitting.
+            </param>
+            <param name="supported">flag indicating if the script is supported by pdfCalligraphy.</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.#ctor(iText.Layout.Renderer.Typography.ScriptRequirements,System.Collections.Generic.ICollection{System.String})">
+            <summary>
+            Creates a new immutable set of requirements for rendering a script based on the existing one,
+            but with different OpenType script names.
+            </summary>
+            <param name="other">existing set of requirements for rendering a script</param>
+            <param name="otfScriptNames">names of OpenType scripts corresponding to the Utf script</param>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.CreateUnsupported(System.Collections.Generic.ICollection{System.String})">
+            <summary>Creates a set of requirements for an unsupported script.</summary>
+            <remarks>
+            Creates a set of requirements for an unsupported script.
+            The set contains only names of OpenType scripts corresponding to the Utf script,
+            and empty collections of required and affecting features.
+            </remarks>
+            <param name="otfScriptNames">names of OpenType scripts corresponding to the Utf script</param>
+            <returns>a new set of requirements for an unsupported script</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.GetRequiredFeatures">
+            <summary>Get features required for correct shaping and layout of text in the script.</summary>
+            <returns>collection of required features</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.GetAffectingFeatures">
+            <summary>Get features that affect shaping and layout of text in the script, but are not required.</summary>
+            <returns>collection of affecting features</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.GetOtfScriptNames">
+            <summary>Get names of OpenType scripts corresponding to the Utf script.</summary>
+            <returns>collection of OpenType script names</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.IsHardCodedHandling">
+            <summary>
+            Check if the script requires hard coded handling in layout for actions not supported
+            by OpenType features.
+            </summary>
+            <remarks>
+            Check if the script requires hard coded handling in layout for actions not supported
+            by OpenType features. For example custom line splitting.
+            </remarks>
+            <returns><c>true</c> if the script requires hard coded handling and <c>false</c> otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.IsSupported">
+            <summary>Check if the script is supported by pdfCalligraphy.</summary>
+            <returns><c>true</c> if the script is supported and <c>false</c> otherwise</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.WithOtfScriptNames(System.String[])">
+            <summary>
+            Creates a new set of requirements for rendering a script based on the existing one,
+            but with different OpenType script names.
+            </summary>
+            <param name="scriptNames">names of OpenType scripts corresponding to the Utf script</param>
+            <returns>a new set of requirements for rendering a script with the specified OpenType script names</returns>
+        </member>
+        <member name="M:iText.Layout.Renderer.Typography.ScriptRequirements.WithIsHardcoded(System.Boolean)">
+            <summary>
+            Creates a new set of requirements for rendering a script based on the existing one,
+            but with different value of the hard coded handling flag.
+            </summary>
+            <param name="isHardcoded">
+            flag indicating if the script requires hard coded handling for actions not supported
+            by OpenType features. For example custom line splitting.
+            </param>
+            <returns>a new set of requirements for rendering a script with the specified value of the hard coded handling flag
+                </returns>
+        </member>
         <member name="T:iText.Layout.RootElement`1">
             <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
             <typeparam name="T">this type</typeparam>
@@ -15070,6 +16826,51 @@
             <param name="minWidth">a floating point value for the new min-width</param>
             <returns>the block element itself</returns>
         </member>
+        <member name="T:iText.Layout.Tagging.FootnoteTaggingHelper">
+            <summary>
+            The class is a helper which is used to correctly create structure
+            tree for Footnote elements.
+            </summary>
+        </member>
+        <member name="M:iText.Layout.Tagging.FootnoteTaggingHelper.RepairFootnoteTagIfNeeded(iText.Layout.Renderer.FootnoteRenderer,iText.Layout.Tagging.LayoutTaggingHelper)">
+            <summary>
+            Adjusts the tag roles of the
+            <see cref="T:iText.Layout.Properties.Margins.Footnote"/>
+            element when required by the PdfVersion targeted.
+            </summary>
+            <param name="hintOwner">
+            the
+            <see cref="T:iText.Layout.Renderer.FootnoteRenderer"/>
+            to repair
+            </param>
+            <param name="taggingHelper">
+            the
+            <see cref="T:iText.Layout.Tagging.LayoutTaggingHelper"/>
+            instance to use
+            </param>
+        </member>
+        <member name="M:iText.Layout.Tagging.FootnoteTaggingHelper.WrapAnchorInsideFootnoteIntoLbl(iText.Layout.IPropertyContainer,iText.Layout.Tagging.LayoutTaggingHelper)">
+            <summary>Wraps the FootnoteAnchor content element with a dummy element.</summary>
+            <param name="footnoteAnchorContent">the FootnoteAnchor content element to wrap.</param>
+            <param name="taggingHelper">
+            the
+            <see cref="T:iText.Layout.Tagging.LayoutTaggingHelper"/>
+            instance to use
+            </param>
+        </member>
+        <member name="M:iText.Layout.Tagging.FootnoteTaggingHelper.RepairFootnoteAnchorTagIfNeeded(iText.Layout.Renderer.FootnoteAnchorRenderer,iText.Layout.Tagging.LayoutTaggingHelper)">
+            <summary>Adjusts the tag roles when required by the PdfVersion targeted.</summary>
+            <param name="hintOwner">
+            the
+            <see cref="T:iText.Layout.Renderer.FootnoteAnchorRenderer"/>
+            to repair
+            </param>
+            <param name="taggingHelper">
+            the
+            <see cref="T:iText.Layout.Tagging.LayoutTaggingHelper"/>
+            instance to use
+            </param>
+        </member>
         <member name="T:iText.Layout.Tagging.IAccessibleElement">
             <summary>
             A layout element which has
@@ -15125,6 +16926,661 @@
             The class is a helper which is used to correctly create structure
             tree for layout element (with keeping right order for tags).
             </summary>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.#ctor(iText.Kernel.Pdf.PdfDocument,System.Boolean)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Layout.Tagging.LayoutTaggingHelper"/>
+            instance for managing layout-level tagging.
+            </summary>
+            <remarks>
+            Instantiates a new
+            <see cref="T:iText.Layout.Tagging.LayoutTaggingHelper"/>
+            instance for managing layout-level tagging.
+            <para />This helper maintains a tree of tagging hints that represent the logical structure of a PDF document
+            and coordinates tag creation in the PDF structure tree. It automatically registers default tagging rules
+            for standard roles (e.g., TABLE, THEAD, TFOOT, TH) based on the PDF version.
+            </remarks>
+            <param name="document">the PDF document being created or modified</param>
+            <param name="immediateFlush">
+            if
+            <see langword="true"/>
+            , parent tags will be flushed as soon as all their children are flushed;
+            if
+            <see langword="false"/>
+            , tag flushing is deferred until explicitly requested
+            </param>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseFinishedHints"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseAllHints"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.AddTreeHints(iText.Layout.Tagging.LayoutTaggingHelper,iText.Layout.Renderer.IRenderer)">
+            <summary>Recursively registers tagging hints from a renderer tree, preserving the logical structure.</summary>
+            <remarks>
+            Recursively registers tagging hints from a renderer tree, preserving the logical structure.
+            <para />This utility method traverses the renderer hierarchy and calls
+            <see cref="!:AddKidsHint(iText.Layout.IPropertyContainer, System.Collections.Generic.IEnumerable&lt;T&gt;)"/>
+            for each renderer and its children, ensuring all parent-child relationships are captured in the tagging system.
+            </remarks>
+            <param name="taggingHelper">the helper instance managing tags</param>
+            <param name="rootRenderer">the root renderer of the tree to process recursively</param>
+            <seealso cref="!:AddKidsHint(iText.Layout.IPropertyContainer, System.Collections.Generic.IEnumerable&lt;T&gt;)"/>
+            <seealso cref="M:iText.Layout.Renderer.IRenderer.GetChildRenderers"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetHintKey(iText.Layout.IPropertyContainer)">
+            <summary>Retrieves an existing tagging hint key for the given container without creating one.</summary>
+            <remarks>
+            Retrieves an existing tagging hint key for the given container without creating one.
+            <para />If no hint key has been created for this container, returns
+            <see langword="null"/>.
+            Use
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetOrCreateHintKey(iText.Layout.IPropertyContainer)"/>
+            if you need to ensure a hint exists.
+            </remarks>
+            <param name="container">the element or renderer to retrieve the hint for</param>
+            <returns>
+            the
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            associated with the container, or
+            <see langword="null"/>
+            if not yet created
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetOrCreateHintKey(iText.Layout.IPropertyContainer)"/>
+            <seealso cref="F:iText.Layout.Properties.Property.TAGGING_HINT_KEY"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetOrCreateHintKey(iText.Layout.IPropertyContainer)">
+            <summary>Gets or creates a tagging hint key for the given container.</summary>
+            <remarks>
+            Gets or creates a tagging hint key for the given container.
+            <para />If a hint key already exists for this container, returns it. Otherwise, creates a new
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            , stores it in the container's properties, and returns it.
+            <para />For
+            <see cref="T:iText.Layout.Element.ILargeElement"/>
+            s that are not yet complete, the hint key is stored on the element itself
+            rather than on the renderer, to preserve the hint across renderer recreation.
+            <para />If the container's role is
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.ARTIFACT"/>
+            , the created hint is automatically
+            marked as artifact and finished.
+            </remarks>
+            <param name="container">the element or renderer to get or create a hint for</param>
+            <returns>
+            the existing or newly created
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetHintKey(iText.Layout.IPropertyContainer)"/>
+            <seealso cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            <seealso cref="F:iText.Layout.Properties.Property.TAGGING_HINT_KEY"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.AddKidsHint``1(iText.Kernel.Pdf.Tagutils.TagTreePointer,System.Collections.Generic.IEnumerable{``0})">
+            <summary>Registers child hints for a pre-existing PDF tag (mapped via TagTreePointer).</summary>
+            <remarks>
+            Registers child hints for a pre-existing PDF tag (mapped via TagTreePointer).
+            <para />This method is used when you have a pre-existing tag structure element (from a PDF that already
+            contains tags) and need to associate new children with it. The helper creates a
+            <see cref="T:iText.Layout.Tagging.TaggingDummyElement"/>
+            wrapper to manage the pre-existing tag and adds the new children under it.
+            <para />This is useful for merging external PDFs or handling documents that were partially tagged
+            before layout processing.
+            </remarks>
+            <param name="parentPointer">
+            the
+            <see cref="T:iText.Kernel.Pdf.Tagutils.TagTreePointer"/>
+            pointing to the pre-existing parent tag
+            </param>
+            <param name="newKids">the children to add under the parent tag</param>
+            <seealso cref="T:iText.Layout.Tagging.TaggingDummyElement"/>
+            <seealso cref="M:iText.Kernel.Pdf.Tagutils.WaitingTagsManager.AssignWaitingState(iText.Kernel.Pdf.Tagutils.TagTreePointer,System.Object)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.AddKidsHint``1(iText.Layout.IPropertyContainer,System.Collections.Generic.IEnumerable{``0})">
+            <summary>Registers children hints for a parent element or renderer (append mode).</summary>
+            <remarks>
+            Registers children hints for a parent element or renderer (append mode).
+            <para />This method declares that the given children should appear as kids of the parent in the PDF structure tree.
+            Children are appended to any existing children. This method creates
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            s for each child
+            if they don't already exist.
+            </remarks>
+            <param name="parent">the parent element or renderer</param>
+            <param name="newKids">the children to add under the parent (can be elements or renderers)</param>
+            <seealso cref="!:AddKidsHint(iText.Layout.IPropertyContainer, System.Collections.Generic.IEnumerable&lt;T&gt;, int)"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.AddKidsHint``1(iText.Layout.IPropertyContainer,System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>Registers children hints for a parent element or renderer (with insert position).</summary>
+            <remarks>
+            Registers children hints for a parent element or renderer (with insert position).
+            <para />This method declares that the given children should appear as kids of the parent in the PDF structure tree,
+            optionally at a specific position. If
+            <paramref name="insertIndex"/>
+            is negative, children are appended.
+            <para />If the parent tag has already been created in the PDF structure tree, this method will relocate
+            child tags into the parent.
+            </remarks>
+            <param name="parent">the parent element or renderer</param>
+            <param name="newKids">the children to add under the parent</param>
+            <param name="insertIndex">the position at which to insert the first child; negative means append at end</param>
+            <seealso cref="!:AddKidsHint(iText.Layout.IPropertyContainer, System.Collections.Generic.IEnumerable&lt;T&gt;)"/>
+            <seealso cref="!:AddKidsHint(TaggingHintKey, System.Collections.Generic.ICollection&lt;E&gt;, int)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.AddKidsHint(iText.Layout.Tagging.TaggingHintKey,System.Collections.Generic.ICollection{iText.Layout.Tagging.TaggingHintKey})">
+            <summary>
+            Registers children hints using
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            s directly (append mode).
+            </summary>
+            <remarks>
+            Registers children hints using
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            s directly (append mode).
+            <para />This variant works directly with
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            objects instead of containers,
+            useful when you already have the hint keys or when working with internal hint manipulation.
+            </remarks>
+            <param name="parentKey">the parent hint key</param>
+            <param name="newKidsKeys">the hint keys of children to add</param>
+            <seealso cref="!:AddKidsHint(TaggingHintKey, System.Collections.Generic.ICollection&lt;E&gt;, int)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.AddKidsHint(iText.Layout.Tagging.TaggingHintKey,System.Collections.Generic.ICollection{iText.Layout.Tagging.TaggingHintKey},System.Int32)">
+            <summary>
+            Registers children hints using
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            s directly (with insert position).
+            </summary>
+            <remarks>
+            Registers children hints using
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            s directly (with insert position).
+            <para />This variant works directly with
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            objects and supports specifying
+            an insertion position. This is the core method that other
+            <c>addKidsHint</c>
+            overloads delegate to.
+            </remarks>
+            <param name="parentKey">the parent hint key</param>
+            <param name="newKidsKeys">the hint keys of children to add</param>
+            <param name="insertIndex">the position at which to insert the first child; negative means append at end</param>
+            <seealso cref="!:AddKidsHint(TaggingHintKey, System.Collections.Generic.ICollection&lt;E&gt;)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.SetRoleHint(iText.Layout.IPropertyContainer,System.String)">
+            <summary>Overrides the PDF role for an element's tag in the structure tree.</summary>
+            <remarks>
+            Overrides the PDF role for an element's tag in the structure tree.
+            <para />By default, a tag's role is determined from the element's accessibility properties. This method
+            allows you to override that role at runtime. The override is applied when the tag is created.
+            <para /><strong>Important:</strong> Apply role overrides <em>before</em>
+            calling
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)"/>.
+            Once tagging rules have been applied during finishing, re-applying the same rules for a new role will not occur.
+            </remarks>
+            <param name="hintOwner">the element or renderer whose tag role should be overridden</param>
+            <param name="role">
+            the new PDF role (e.g.,
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.SPAN"/>
+            ,
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.STRONG"/>
+            )
+            </param>
+            <seealso cref="T:iText.Kernel.Pdf.Tagging.StandardRoles"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.IsArtifact(iText.Layout.IPropertyContainer)">
+            <summary>Checks whether the given container is marked as an artifact (non-accessible).</summary>
+            <remarks>
+            Checks whether the given container is marked as an artifact (non-accessible).
+            <para />An artifact is content that should not appear in the accessibility tree, such as decorative
+            elements. Artifacts are not included in the PDF structure tree.
+            <para />This method checks:
+            <list type="number">
+            <item><description>If a hint exists and is marked as artifact, returns
+            <see langword="true"/>
+            </description></item>
+            <item><description>If the container's accessibility role is
+            <see cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.ARTIFACT"/>
+            , returns
+            <see langword="true"/>
+            </description></item>
+            <item><description>Otherwise returns
+            <see langword="false"/>
+            </description></item>
+            </list>
+            </remarks>
+            <param name="hintOwner">the element or renderer to check</param>
+            <returns>
+            
+            <see langword="true"/>
+            if the container is an artifact,
+            <see langword="false"/>
+            otherwise
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MarkArtifactHint(iText.Layout.IPropertyContainer)"/>
+            <seealso cref="F:iText.Kernel.Pdf.Tagging.StandardRoles.ARTIFACT"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.MarkArtifactHint(iText.Layout.IPropertyContainer)">
+            <summary>Marks an element or renderer as an artifact (non-accessible content).</summary>
+            <remarks>
+            Marks an element or renderer as an artifact (non-accessible content).
+            <para />Artifacts are excluded from the PDF accessibility tree and are not exposed to assistive technologies.
+            Use this for decorative elements, borders, backgrounds, or other non-semantic content.
+            <para />This method:
+            <list type="bullet">
+            <item><description>Marks the hint as artifact and finished
+            </description></item>
+            <item><description>Recursively marks all children as artifacts
+            </description></item>
+            <item><description>Removes the hint from its parent (orphaning it)
+            </description></item>
+            <item><description>Logs an error if the artifact tag was already created in the PDF
+            </description></item>
+            </list>
+            </remarks>
+            <param name="hintOwner">the element or renderer to mark as artifact</param>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MarkArtifactHint(iText.Layout.Tagging.TaggingHintKey)"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.IsArtifact(iText.Layout.IPropertyContainer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.MarkArtifactHint(iText.Layout.Tagging.TaggingHintKey)">
+            <summary>Marks a hint key as an artifact (non-accessible content).</summary>
+            <remarks>
+            Marks a hint key as an artifact (non-accessible content).
+            <para />This is the core implementation of artifact marking. It:
+            <list type="bullet">
+            <item><description>Sets the artifact and finished flags on the hint
+            </description></item>
+            <item><description>Recursively marks all children as artifacts
+            </description></item>
+            <item><description>Removes the hint from its parent
+            </description></item>
+            <item><description>Flushes the artifact tag pointer if already created
+            </description></item>
+            </list>
+            </remarks>
+            <param name="hintKey">the hint key to mark as artifact</param>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MarkArtifactHint(iText.Layout.IPropertyContainer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.UseAutoTaggingPointerAndRememberItsPosition(iText.Layout.Renderer.IRenderer)">
+            <summary>Saves the current auto-tagging pointer position and returns it for temporary use.</summary>
+            <remarks>
+            Saves the current auto-tagging pointer position and returns it for temporary use.
+            <para />This method is useful when a renderer needs to temporarily modify the auto-tagging pointer
+            for custom tag creation or structure manipulation. The saved position can be restored later
+            using
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.RestoreAutoTaggingPointerPosition(iText.Layout.Renderer.IRenderer)"/>.
+            <para /><strong>Usage pattern (with try-finally):</strong>
+            <pre>
+            <c>
+            TagTreePointer ptr = helper.useAutoTaggingPointerAndRememberItsPosition(renderer);
+            try
+            ptr.addTag("CustomRole");
+            // ... custom operations ...
+            </c>
+            finally
+            helper.restoreAutoTaggingPointerPosition(renderer);
+            }
+            }</pre>
+            </remarks>
+            <param name="renderer">the renderer whose position should be saved (used as a key for restoration)</param>
+            <returns>the current auto-tagging pointer (position at the time of call)</returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.RestoreAutoTaggingPointerPosition(iText.Layout.Renderer.IRenderer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.RestoreAutoTaggingPointerPosition(iText.Layout.Renderer.IRenderer)">
+            <summary>Restores the auto-tagging pointer to a previously saved position.</summary>
+            <remarks>
+            Restores the auto-tagging pointer to a previously saved position.
+            <para />This method retrieves the pointer position saved by
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.UseAutoTaggingPointerAndRememberItsPosition(iText.Layout.Renderer.IRenderer)"/>
+            and moves the auto-tagging pointer back
+            to that location. If no saved position exists for the renderer, does nothing.
+            <para /><strong>Important:</strong> Always call this in a finally block or error handling path to ensure
+            the pointer is restored even if an exception occurs during custom tagging operations.
+            </remarks>
+            <param name="renderer">the renderer whose position should be restored</param>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.UseAutoTaggingPointerAndRememberItsPosition(iText.Layout.Renderer.IRenderer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetKidsHint(iText.Layout.Tagging.TaggingHintKey)">
+            <summary>Gets the unmodifiable list of direct children for a parent hint.</summary>
+            <remarks>
+            Gets the unmodifiable list of direct children for a parent hint.
+            <para />This method returns all direct children hints, including non-accessible intermediate nodes.
+            For accessible children only, use
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetAccessibleKidsHint(iText.Layout.Tagging.TaggingHintKey)"/>.
+            <para />Returns an empty list if the parent has no children.
+            </remarks>
+            <param name="parent">the parent hint key</param>
+            <returns>an unmodifiable list of direct child hint keys</returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetAccessibleKidsHint(iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetAccessibleKidsHint(iText.Layout.Tagging.TaggingHintKey)">
+            <summary>Gets the list of accessible children for a parent hint, flattening non-accessible intermediate nodes.
+                </summary>
+            <remarks>
+            Gets the list of accessible children for a parent hint, flattening non-accessible intermediate nodes.
+            <para />This method returns only accessible children (those with a non-null role). Non-accessible
+            intermediate nodes (grouping nodes) are recursively flattened, and their accessible descendants
+            are included in the returned list.
+            <para />For example, if a parent has a non-accessible child that contains two accessible children,
+            this method returns those two accessible children directly.
+            <para />Returns an empty list if the parent has no accessible children.
+            </remarks>
+            <param name="parent">the parent hint key</param>
+            <returns>an unmodifiable list of accessible child hint keys with non-accessible intermediates flattened</returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetKidsHint(iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetParentHint(iText.Layout.IPropertyContainer)">
+            <summary>Gets the parent hint of a given element or renderer.</summary>
+            <remarks>
+            Gets the parent hint of a given element or renderer.
+            <para />This method retrieves the direct parent hint for the given container by first obtaining
+            its hint key and then looking up the parent.
+            </remarks>
+            <param name="hintOwner">the element or renderer whose parent should be retrieved</param>
+            <returns>
+            the parent
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            , or
+            <see langword="null"/>
+            if this is a root or has no hint
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetParentHint(iText.Layout.Tagging.TaggingHintKey)"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetAccessibleParentHint(iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetParentHint(iText.Layout.Tagging.TaggingHintKey)">
+            <summary>Gets the direct parent hint of a hint key.</summary>
+            <param name="hintKey">the child hint key</param>
+            <returns>
+            the parent
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            , or
+            <see langword="null"/>
+            if this is a root
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetParentHint(iText.Layout.IPropertyContainer)"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetAccessibleParentHint(iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetAccessibleParentHint(iText.Layout.Tagging.TaggingHintKey)">
+            <summary>Gets the nearest accessible parent hint, skipping non-accessible intermediate nodes.</summary>
+            <remarks>
+            Gets the nearest accessible parent hint, skipping non-accessible intermediate nodes.
+            <para />This method traverses up the hint tree, skipping non-accessible hints (grouping nodes),
+            and returns the first accessible parent found. Useful when you need to know the logical
+            parent regardless of grouping structure.
+            </remarks>
+            <param name="hintKey">the child hint key</param>
+            <returns>
+            the nearest accessible parent
+            <see cref="T:iText.Layout.Tagging.TaggingHintKey"/>
+            , or
+            <see langword="null"/>
+            if no accessible parent exists
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.GetParentHint(iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseFinishedHints">
+            <summary>Incrementally finalizes and releases finished hints from the tagging structure.</summary>
+            <remarks>
+            Incrementally finalizes and releases finished hints from the tagging structure.
+            <para />This method scans all hints and releases those that:
+            <list type="bullet">
+            <item><description>Are marked as finished
+            </description></item>
+            <item><description>Are accessible (not non-accessible grouping nodes)
+            </description></item>
+            <item><description>Have no unfinished parents (up the hierarchy)
+            </description></item>
+            <item><description>Have no unfinished children
+            </description></item>
+            <item><description>Are not followed by unfinished siblings
+            </description></item>
+            </list>
+            <para />When a hint is released:
+            <list type="bullet">
+            <item><description>It is removed from the hint trees
+            </description></item>
+            <item><description>The associated PDF tag is finalized
+            </description></item>
+            <item><description>If
+            <c>immediateFlush</c>
+            is enabled, parent tags are flushed if all kids are flushed
+            </description></item>
+            </list>
+            <para />This is an incremental operation useful for memory management. Call this periodically
+            (e.g., at end of each page or logical boundary) to progressively finalize tags.
+            </remarks>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseAllHints"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseAllHints">
+            <summary>Forces finalization and release of all hints, clearing the entire tagging structure.</summary>
+            <remarks>
+            Forces finalization and release of all hints, clearing the entire tagging structure.
+            <para />This is a comprehensive cleanup operation that:
+            <list type="bullet">
+            <item><description>Finishes all dummy elements (pre-existing tags)
+            </description></item>
+            <item><description>Recursively finishes all dummy children
+            </description></item>
+            <item><description>Calls
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseFinishedHints"/>
+            to finalize any now-finished hints
+            </description></item>
+            <item><description>Releases all remaining unfinished hints (orphaned hints)
+            </description></item>
+            <item><description>Clears all internal maps
+            </description></item>
+            </list>
+            <para />Call this at the end of document layout or when discarding the layout state entirely.
+            This method should leave all internal structures empty after completion.
+            </remarks>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseFinishedHints"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.CreateTag(iText.Layout.Renderer.IRenderer,iText.Kernel.Pdf.Tagutils.TagTreePointer)">
+            <summary>Creates or retrieves a PDF tag for a renderer, ensuring it exists in the structure tree.</summary>
+            <remarks>
+            Creates or retrieves a PDF tag for a renderer, ensuring it exists in the structure tree.
+            <para />This method is typically called by a renderer before it writes marked content to ensure the tag
+            is positioned correctly in the PDF structure tree. If the tag already exists, it is not recreated.
+            <para />For artifacts, returns
+            <see langword="false"/>
+            without creating a tag. For non-accessible hints,
+            the pointer is positioned at the nearest accessible parent. For accessible hints, a tag is
+            created with the correct sibling index.
+            </remarks>
+            <param name="renderer">the renderer whose tag should be created</param>
+            <param name="tagPointer">the tag tree pointer to use for positioning; the pointer may be moved during tag creation
+                </param>
+            <returns>
+            
+            <see langword="true"/>
+            if a tag was created,
+            <see langword="false"/>
+            if one already existed or
+            hint is artifact/non-accessible
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.CreateTag(iText.Layout.Tagging.TaggingHintKey,iText.Kernel.Pdf.Tagutils.TagTreePointer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.CreateTag(iText.Layout.Tagging.TaggingHintKey,iText.Kernel.Pdf.Tagutils.TagTreePointer)">
+            <summary>Creates a PDF tag for a hint key, ensuring it exists in the structure tree.</summary>
+            <remarks>
+            Creates a PDF tag for a hint key, ensuring it exists in the structure tree.
+            <para />This is the core tag creation method. It:
+            <list type="bullet">
+            <item><description>Returns
+            <see langword="false"/>
+            if the hint is an artifact
+            </description></item>
+            <item><description>Determines the correct parent tag and sibling index
+            </description></item>
+            <item><description>Creates the tag via
+            <c>tagPointer.addTag(...)</c>
+            </description></item>
+            <item><description>Stores the pointer on the hint
+            </description></item>
+            <item><description>Assigns waiting state to the tag
+            </description></item>
+            <item><description>Recursively creates tags for dummy children
+            </description></item>
+            </list>
+            <para />The pointer may be modified during this method to position it at the correct parent and index.
+            That's why if auto-tagging pointer is to be used, make sure to rely on
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.UseAutoTaggingPointerAndRememberItsPosition(iText.Layout.Renderer.IRenderer)"/>
+            and
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.RestoreAutoTaggingPointerPosition(iText.Layout.Renderer.IRenderer)"/>
+            functionality.
+            </remarks>
+            <param name="hintKey">the hint key to create a tag for</param>
+            <param name="tagPointer">the tag tree pointer to use for positioning</param>
+            <returns>
+            
+            <see langword="true"/>
+            if a tag was created,
+            <see langword="false"/>
+            if artifact or already exists
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.CreateTag(iText.Layout.Renderer.IRenderer,iText.Kernel.Pdf.Tagutils.TagTreePointer)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)">
+            <summary>Marks an element or renderer as logically complete and applies tagging rules.</summary>
+            <remarks>
+            Marks an element or renderer as logically complete and applies tagging rules.
+            <para />Call this method when an element has finished its layout or rendering and will not
+            receive new children. This triggers:
+            <list type="bullet">
+            <item><description>Lookup of applicable
+            <see cref="T:iText.Layout.Tagging.ITaggingRule"/>
+            s for the element's role
+            </description></item>
+            <item><description>Invocation of each rule's
+            <see cref="M:iText.Layout.Tagging.ITaggingRule.OnTagFinish(iText.Layout.Tagging.LayoutTaggingHelper,iText.Layout.Tagging.TaggingHintKey)"/>
+            method
+            </description></item>
+            <item><description>If all rules return
+            <see langword="true"/>
+            , the hint is marked as finished
+            </description></item>
+            <item><description>If any rule returns
+            <see langword="false"/>
+            , the hint remains unfinished (rules can block finishing)
+            </description></item>
+            </list>
+            <para /><strong>Important:</strong> A hint cannot receive new children or be relocated after finishing.
+            Always try to finish hints in parent-to-child order (or at least ensure children are finished before parents)
+            if possible.
+            <para />For non-accessible hints, rules are bypassed and the hint is marked finished immediately.
+            For artifacts, this method has no effect.
+            </remarks>
+            <param name="hintOwner">the element or renderer to finish</param>
+            <seealso cref="T:iText.Layout.Tagging.ITaggingRule"/>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.ReleaseFinishedHints"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.ReplaceKidHint(iText.Layout.Tagging.TaggingHintKey,System.Collections.Generic.ICollection{iText.Layout.Tagging.TaggingHintKey})">
+            <summary>Replaces one child hint with multiple new child hints.</summary>
+            <remarks>
+            Replaces one child hint with multiple new child hints.
+            <para />This method is useful when a single renderer needs to expand into multiple child tags.
+            It removes the old child from its parent and inserts the new children at the same position.
+            <para />Errors are logged and the operation fails if:
+            <list type="bullet">
+            <item><description>The child hint is already finished
+            </description></item>
+            <item><description>Any new child is already finished and either has no parent or the parent is already finished too.
+            </description></item>
+            </list>
+            <para />The method returns the index where the replacement occurred, which can be used for
+            further hint tree manipulation if needed.
+            </remarks>
+            <param name="kidHintKey">the child hint to be replaced</param>
+            <param name="newKidsHintKeys">the new child hints to insert at the replacement position</param>
+            <returns>
+            the index where the old child was removed, or
+            <c>-1</c>
+            if replacement failed
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey)">
+            <summary>Moves a child hint from its current parent to a new parent (appended).</summary>
+            <remarks>
+            Moves a child hint from its current parent to a new parent (appended).
+            <para />This method removes a child from its current parent and re-parents it to the new parent,
+            appending it to the new parent's children list.
+            <para />For a specific insertion position in the new parent, use
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey,System.Int32)"/>.
+            </remarks>
+            <param name="hintKeyOfKidToMove">the child hint to move</param>
+            <param name="newParent">the new parent hint</param>
+            <returns>
+            the index where the child was removed from the old parent, or
+            <c>-1</c>
+            if move failed
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey,System.Int32)"/>
+            <seealso cref="!:ReplaceKidHint(TaggingHintKey, System.Collections.Generic.ICollection&lt;E&gt;)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey,System.Int32)">
+            <summary>Moves a child hint from its current parent to a new parent at a specific position.</summary>
+            <remarks>
+            Moves a child hint from its current parent to a new parent at a specific position.
+            <para />This method is similar to
+            <see cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey)"/>
+            but allows
+            specifying the insertion index in the new parent's children list. Negative index means append.
+            <para />Errors are logged if:
+            <list type="bullet">
+            <item><description>The new parent is already finished
+            </description></item>
+            <item><description>The child hint is already finished
+            </description></item>
+            </list>
+            </remarks>
+            <param name="hintKeyOfKidToMove">the child hint to move</param>
+            <param name="newParent">the new parent hint</param>
+            <param name="insertIndex">the position at which to insert the child; negative means append</param>
+            <returns>
+            the index where the child was removed from the old parent, or
+            <c>-1</c>
+            if move failed
+            </returns>
+            <seealso cref="M:iText.Layout.Tagging.LayoutTaggingHelper.MoveKidHint(iText.Layout.Tagging.TaggingHintKey,iText.Layout.Tagging.TaggingHintKey)"/>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.CreateStructureElementId(System.String)">
+            <summary>Created a unique id for a structureElement.</summary>
+            <param name="prefix">a prefix to prepend to the id</param>
+            <returns>a unique id</returns>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetPdfDocument">
+            <summary>Gets the PDF document associated with this helper.</summary>
+            <returns>
+            the
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            passed to the constructor
+            </returns>
+        </member>
+        <member name="M:iText.Layout.Tagging.LayoutTaggingHelper.GetOrCreateHintKey(iText.Layout.IPropertyContainer,System.Boolean)">
+            <summary>Internal implementation of hint key creation/retrieval.</summary>
+            <remarks>
+            Internal implementation of hint key creation/retrieval.
+            <para />This method implements the core logic for obtaining or creating hint keys:
+            <list type="bullet">
+            <item><description>Checks for existing hint on the container
+            </description></item>
+            <item><description>If not found, wraps the container's accessible element
+            </description></item>
+            <item><description>Automatically marks as artifact if role is ARTIFACT
+            </description></item>
+            <item><description>Optionally stores the hint on the container
+            </description></item>
+            </list>
+            </remarks>
+            <param name="hintOwner">the element or renderer</param>
+            <param name="setProperty">
+            if
+            <see langword="true"/>
+            , stores the hint in the container's properties
+            </param>
+            <returns>the existing or newly created hint key</returns>
         </member>
         <member name="T:iText.Layout.Tagging.ProhibitedTagRelationsResolver">
             <summary>This class is used to resolve prohibited relations between parent and child tags.</summary>
@@ -15320,6 +17776,60 @@
         </member>
         <member name="M:iText.Layout.Tagging.THTaggingRule.OnTagFinish(iText.Layout.Tagging.LayoutTaggingHelper,iText.Layout.Tagging.TaggingHintKey)">
             <summary><inheritDoc/></summary>
+        </member>
+        <member name="T:iText.Layout.Utils.LayoutInfiniteLoopResolver">
+            <summary>This resolver is used during the layout process to prevent infinite loops.</summary>
+        </member>
+        <member name="M:iText.Layout.Utils.LayoutInfiniteLoopResolver.#ctor">
+            <summary>
+            Creates default instance of
+            <see cref="T:iText.Layout.Utils.LayoutInfiniteLoopResolver"/>.
+            </summary>
+            <remarks>
+            Creates default instance of
+            <see cref="T:iText.Layout.Utils.LayoutInfiniteLoopResolver"/>
+            . Limit in this case is set to 333_333 pages.
+            </remarks>
+        </member>
+        <member name="M:iText.Layout.Utils.LayoutInfiniteLoopResolver.#ctor(System.Int32)">
+            <summary>
+            Creates
+            <see cref="T:iText.Layout.Utils.LayoutInfiniteLoopResolver"/>
+            instance.
+            </summary>
+            <remarks>
+            Creates
+            <see cref="T:iText.Layout.Utils.LayoutInfiniteLoopResolver"/>
+            instance.
+            <para />
+            This resolver is used during the layout process to prevent infinite loops. In particular,
+            it limits the amount of times same element will be split across multiple pages. If the limit is exceeded,
+            exception is thrown. It is guaranteed, that this limit will not be exceeded,
+            unless the document contains at least the same amount of pages, as specified in the limit.
+            </remarks>
+            <param name="maxPagesCountForSingleElement">
+            property which defines,
+            how many times single element can be split across multiple pages
+            </param>
+        </member>
+        <member name="M:iText.Layout.Utils.LayoutInfiniteLoopResolver.GetMaxPagesCountForSingleElement">
+            <summary>Gets maximum pages count per element.</summary>
+            <remarks>
+            Gets maximum pages count per element.
+            <para />
+            This property defines, how many times single element can be split across multiple pages.
+            It is used to detect potential infinite loops during the layout process.
+            </remarks>
+            <returns>maximum pages count per element</returns>
+        </member>
+        <member name="T:iText.Layout.Utils.RegisterDefaultDiContainer">
+            <summary>Registers a default instance for a dependency injection container for the layout module.</summary>
+        </member>
+        <member name="M:iText.Layout.Utils.RegisterDefaultDiContainer.#ctor">
+            <summary>
+            Creates an instance of
+            <see cref="T:iText.Kernel.Utils.RegisterDefaultDiContainer"/>.
+            </summary>
         </member>
         <member name="T:iText.Layout.Validation.Context.LayoutValidationContext">
             <summary>

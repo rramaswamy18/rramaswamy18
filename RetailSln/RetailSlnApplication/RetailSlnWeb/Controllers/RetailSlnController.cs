@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using Stripe;
 using System.Web.Security;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace RetailSlnWeb.Controllers
 {
@@ -152,8 +153,6 @@ namespace RetailSlnWeb.Controllers
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
-            bool success;
-            string processMessage, htmlString;
             OTPResponseModel oTPResponseModel = null;
             //int x = 1, y = 0, z = x / y;
             try
@@ -163,10 +162,20 @@ namespace RetailSlnWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    oTPRequestModel.OTPPurpose = "Checkout";
-                    oTPRequestModel.OTPTypeNameDesc = "CHECKOUT";
-                    oTPRequestModel.RequestType = "Checkout";
-                    oTPResponseModel = archLibBL.CheckoutOTPRequest(ref oTPRequestModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    oTPResponseModel = archLibBL.OTPRequest(ref oTPRequestModel, "CHECKOUT", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success!!!");
+                    }
+                    else
+                    {
+                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: BL Process Error???");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Model Error(s)");
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model State Errors");
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
@@ -174,27 +183,21 @@ namespace RetailSlnWeb.Controllers
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ModelState.AddModelError("", "Error during OTP setup");
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
             }
             if (ModelState.IsValid)
             {
-                success = true;
-                processMessage = "SUCCESS!!!";
-                oTPResponseModel.RequestType = "Checkout";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
+                actionResult = PartialView("_CheckoutResponse", oTPResponseModel);
+                Response.StatusCode = (int)HttpStatusCode.OK;
             }
             else
             {
-                success = false;
-                processMessage = "ERROR???";
                 archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
                 oTPRequestModel.CaptchaAnswer = null;
                 oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
                 oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
-                oTPRequestModel.RequestType = "Checkout";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+                actionResult = PartialView("_OTPRequest", oTPRequestModel);
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
-            actionResult = Json(new { success, processMessage, htmlString });
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
@@ -212,22 +215,15 @@ namespace RetailSlnWeb.Controllers
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString;
-            //DeliveryInfoModel deliveryInfoModel = null;
             try
             {
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
                 TryValidateModel(oTPResponseModel);
-                if (string.IsNullOrWhiteSpace(oTPResponseModel.EmailAddress))
-                {
-                    ModelState.Remove("EmailAddress");
-                }
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    SessionObjectModel sessionObjectModel = archLibBL.CheckoutOTPResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    SessionObjectModel sessionObjectModel = archLibBL.OTPResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
                         if (sessionObjectModel.NewUser && sessionObjectModel.AspNetRoleName != "GUESTROLE")
@@ -236,39 +232,35 @@ namespace RetailSlnWeb.Controllers
                         }
                         Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
                         sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                        string currentLoggedInUserId = loggedInUserId;
+                        string currentLoggedInUserId = sessionObjectModel.LoggedInUserId;
                         LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
                         SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                        success = true;
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                     }
                     else
                     {
-                        success = false;
+                        ModelState.AddModelError("", "BL Process Error");
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                     }
                 }
                 else
                 {
-                    success = false;
+                    ModelState.AddModelError("", "Model Error(s)");
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Model Error(s)");
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
                 archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
                 ModelState.AddModelError("", "Error during OTP setup");
             }
-            if (success)
+            if (ModelState.IsValid)
             {
-                processMessage = "SUCCESS!!!";
-                SessionObjectModel sessionObject = (SessionObjectModel)Session["SessionObject"];
-                SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
-                DeliveryInfoModel deliveryInfoModel = retailSlnBL.Checkout(sessionObject, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                htmlString = archLibBL.ViewToHtmlString(this, "_DeliveryInfo", deliveryInfoModel);
-                actionResult = Json(new { success, processMessage, htmlString });
+                string htmlString = Url.Action("DeliveryInfo", "Home");
+                actionResult = Json(new { htmlString }, JsonRequestBehavior.AllowGet);
+                Response.StatusCode = (int)HttpStatusCode.OK;
             }
             else
             {
@@ -276,11 +268,59 @@ namespace RetailSlnWeb.Controllers
                 {
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                 };
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
-                actionResult = Json(new { success, processMessage, htmlString });
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                actionResult = PartialView("_OTPResponse", oTPResponseModel);
             }
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+            return actionResult;
+        }
+
+        // GET: DeliveryInfo
+        [Authorize]
+        [AjaxAuthorize]
+        [HttpGet]
+        [Route("DeliveryInfo")]
+        public ActionResult DeliveryInfo()
+        {
+            //int x = 1, y = 0, z = x / y;
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = "";
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            DeliveryInfoModel deliveryInfoModel = null;
+            ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
+            if (shoppingCartModel == null)
+            {
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                SessionObjectModel sessionObject = (SessionObjectModel)Session["SessionObject"];
+                SessionObjectModel createForSessionObject = (SessionObjectModel)Session["CreateForSessionObject"];
+                //ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
+                deliveryInfoModel = retailSlnBL.Checkout(sessionObject, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                shoppingCartModel.Checkout = true;
+                Session["ShoppingCart"] = shoppingCartModel;
+                Session["DeliveryInfo"] = deliveryInfoModel;
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error loding delivery info");
+            }
+            if (ModelState.IsValid)
+            {
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                actionResult = View("DeliveryInfo", deliveryInfoModel);
+            }
+            else
+            {
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                actionResult = View("Error");
+            }
             return actionResult;
         }
 
@@ -332,6 +372,17 @@ namespace RetailSlnWeb.Controllers
                     TryValidateModel(deliveryInfoModel.GiftCertPaymentModel, "GiftCertPaymentModel");
                     TryValidateModel(deliveryInfoModel.OrderSummaryModel, "OrderSummaryModel");
                     TryValidateModel(deliveryInfoModel.PaymentModeModel, "PaymentModeModel");
+                    if (!string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.EmailAddress))
+                    {
+                        if (Utilities.IsValidEmail(deliveryInfoModel.OrderSummaryModel.EmailAddress))
+                        {
+
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("OrderSummaryModel.EmailAddress", "Invalid email address");
+                        }
+                    }
                     if (ModelState.IsValid)
                     {
                         ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];

@@ -102,7 +102,7 @@
         }
     }
     //Get Prior Addresses
-    #region
+    #region SqlStmt Region
     var createForPersonId = createForSessionObject == null ? -1 : createForSessionObject.PersonId;
     string sqlStmt = "";
     sqlStmt += $"        SELECT " + Environment.NewLine;
@@ -154,7 +154,6 @@
     sqlConnection.Close();
     #endregion
 }
-@Html.HiddenFor(m => m.OrderSummaryModel.EmailExists)
 @Html.HiddenFor(m => m.OrderSummaryModel.InvoiceTypeId)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId)
 @Html.HiddenFor(m => m.DeliveryDataModel.PrimaryTelephoneTelephoneCode)
@@ -189,42 +188,15 @@
 }
 <div class="container">
     <div class="column">
-        @if (Model.OrderSummaryModel.EmailExists)
-        {
-            <div class="row" style="padding-left: 9px; text-align: left;">
-                <table style="width: 100%;">
-                    <tr>
-                        <td style="text-align: left; vertical-align: top; width: 45%; word-break: break-all;">
-                            @Html.LabelFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted, new { @class = "col-form-label" })
-                            <br />
-                            <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@primaryTelephoneFormatted</span>
-                        </td>
-                        <td style="text-align: left; vertical-align: top; width: 50%; word-break: break-all;">
-                            @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })
-                            <br />
-                            <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@Model.OrderSummaryModel.EmailAddress</span>
-                            @Html.HiddenFor(m => m.OrderSummaryModel.EmailAddress)
-                        </td>
-                        <td style="text-align: left; width: 50%;">
-                            &nbsp;
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        }
-        else
-        {
-            <div class="row" style="padding-left: 9px; text-align: left;">
-                @Html.LabelFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted, new { @class = "col-form-label" })
-                <br />
-                <span style="color: #0000ff; font-size: 14px; font-weight: bold;">@primaryTelephoneFormatted</span>
-            </div>
-            <div class="row" style="padding-left: 9px; text-align: left;">
-                @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })<span style="color: #0000ff; font-weight: bold;">&nbsp;(Required)</span>
-                @Html.TextAreaFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "form-control", maxlength = "256", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.EmailAddress), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter email address" })
-                @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.EmailAddress, "", new { id = "OrderSummaryModel_EmailAddress-error" }).ToHtmlString()))
-            </div>
-        }
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryDataModel.PrimaryTelephoneFormatted, new { @class = "col-form-label" })
+            <span style="color: #0000ff; font-size: 14px; font-weight: bold; padding-left: 5px;">@primaryTelephoneFormatted</span>
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "col-form-label" })<span style="color: #ff0000; font-weight: bold;">&nbsp;(Optional)</span>
+            @Html.TextAreaFor(m => m.OrderSummaryModel.EmailAddress, new { @class = "form-control", maxlength = "256", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.EmailAddress), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter email address" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.EmailAddress, "", new { id = "OrderSummaryModel_EmailAddress-error" }).ToHtmlString()))
+        </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             <div style="display: table-cell; padding: 0px; width: 45%;">
                 @Html.LabelFor(m => m.OrderSummaryModel.AdditionalCharges, new { @class = "col-form-label" })
@@ -244,12 +216,12 @@
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.OrderSummaryModel.FirstName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            @Html.TextAreaFor(m => m.OrderSummaryModel.FirstName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", @*oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);",*@ placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.FirstName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter first name" })
+            @Html.TextAreaFor(m => m.OrderSummaryModel.FirstName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.FirstName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter first name"})
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.FirstName, "", new { id = "OrderSummaryModel_FirstName-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.OrderSummaryModel.LastName, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
-            @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", @*oninput = "javascript: OrderSummaryModel_FirstName_LastName_oninput('OrderSummaryModel_FirstName', 'OrderSummaryModel_LastName', 'CompleteOrderModel_ApproverSignatureTextValue', 'CompleteOrderModel_ApproverSignatureTextId', 'CompleteOrderModel_ApproverSignatureTextValue_Selected');", onkeydown = "javascript: return suppressEnterKeyDown(event);",*@ placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter last name" })
+            @Html.TextAreaFor(m => m.OrderSummaryModel.LastName, new { @class = "form-control", maxlength = "100", onfocus = "javascript: this.select();", placeholder = @Html.DisplayNameFor(m => m.OrderSummaryModel.LastName), style = "height: 32px; overflow: hidden; resize: none; width: 95%;", title = "Enter last name" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.OrderSummaryModel.LastName, "", new { id = "OrderSummaryModel_LastName-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
@@ -401,6 +373,22 @@
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.AlternateTelephoneNum, "", new { id = "DeliveryDataModel_AlternateTelephoneNum-error" }).ToHtmlString()))
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
+            @Html.LabelFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "col-form-label" })
+            @Html.TextAreaFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(m => m.DeliveryDataModel.DeliveryInstructions) + " (if any...)", rows = "5", style = "width: 95%;", title = "Enter instructions for delivery, if any" })
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.DeliveryInstructions, "", new { id = "DeliveryDataModel_DeliveryInstructions-error" }).ToHtmlString()))
+        </div>
+    </div>
+    <div class="column">
+        <div class="row" style="padding-left: 9px; text-align: left;">
+            <select class="form-control" style="width: 95%;">
+                <option value="">-- Previous Address(s) --</option>
+                @foreach (var demogInfoAddressModel1 in demogInfoAddressModels)
+                {
+                    <option value="@(demogInfoAddressModel1.DemogInfoAddressId + ";" + demogInfoAddressModel1.DemogInfoSubDivisionId)">@(demogInfoAddressModel1.AddressLine1 + ";" + demogInfoAddressModel1.AddressLine2 + ";" + demogInfoAddressModel1.CityName + ";" + demogInfoAddressModel1.StateAbbrev + ";" + demogInfoAddressModel1.ZipCode)</option>
+                }
+            </select>
+        </div>
+        <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.DeliveryAddressModel.DemogInfoCountryId, "Delivery " + Html.DisplayNameFor(m => m.DeliveryAddressModel.DemogInfoCountryId), new { @class = "col-form-label" })
             @if (Model.DeliveryAddressModel.DemogInfoCountrySelectListItems.Count > 1)
             {
@@ -414,7 +402,7 @@
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             <div style="float: left; padding: 0px; width: 50%;">
-                @Html.LabelFor(m => m.DeliveryAddressModel.BuildingTypeId, new { @class = "col-form-label" })
+                @Html.LabelFor(m => m.DeliveryAddressModel.BuildingTypeId, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-weight: bold;">(Required)</span>
                 @Html.DropDownListFor(m => m.DeliveryAddressModel.BuildingTypeId, new SelectList(Model.DeliveryAddressModel.BuildingTypeSelectListItems, "Value", "Text", Model.DeliveryAddressModel.BuildingTypeId), "---", new { @class = "form-control", style = "font-size: 13px; width: 85%;", title = "Select building type for delivery address" })
                 @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.BuildingTypeId, "", new { id = "DeliveryAddressModel_BuildingTypeId-error" }).ToHtmlString()))
             </div>
@@ -423,17 +411,6 @@
                 @Html.TextBoxFor(m => m.DeliveryAddressModel.HouseNumber, new { @class = "form-control validate", maxlength = "50", placeholder = @Html.DisplayNameFor(m => m.DeliveryAddressModel.HouseNumber), style = "width: 90%;", title = "Enter house# delivery address, if any" })
                 @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.HouseNumber, "", new { id = "DeliveryAddressModel_HouseNumber-error" }).ToHtmlString()))
             </div>
-        </div>
-    </div>
-    <div class="column">
-        <div class="row" style="padding-left: 9px; text-align: left;">
-            <select class="form-control" style="width: 95%;">
-                <option value="">-- Previous Address(s) --</option>
-                @foreach (var demogInfoAddressModel1 in demogInfoAddressModels)
-                {
-                    <option value="@(demogInfoAddressModel1.DemogInfoAddressId + ";" + demogInfoAddressModel1.DemogInfoSubDivisionId)">@(demogInfoAddressModel1.AddressLine1 + ";" + demogInfoAddressModel1.AddressLine2 + ";" + demogInfoAddressModel1.CityName + ";" + demogInfoAddressModel1.StateAbbrev + ";" + demogInfoAddressModel1.ZipCode)</option>
-                }
-            </select>
         </div>
         <div class="row" style="padding-left: 9px; text-align: left;">
             @Html.LabelFor(m => m.DeliveryAddressModel.AddressLine1, new { @class = "col-form-label" })&nbsp;<span style="color: #0000ff; font-size: 12px; font-weight: bold;">(Required)</span>
@@ -473,11 +450,6 @@
             @Html.LabelFor(m => m.DeliveryAddressModel.DemogInfoSubDivisionId, new { @class = "col-form-label", style = "font-size: 12px;" })<span style="color: #0000ff; font-size: 12px; font-weight: bold;">*</span>
             @Html.DropDownListFor(m => m.DeliveryAddressModel.DemogInfoSubDivisionId, new SelectList(Model.DeliveryAddressModel.DemogInfoSubDivisionSelectListItems, "Value", "Text", Model.DeliveryAddressModel.DemogInfoSubDivisionId), "---", new { @class = "form-control", style = "font-size: 13px; width: 95%;", title = "Select state for delivery address" })
             @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryAddressModel.DemogInfoSubDivisionId, "", new { id = "DeliveryAddressModel_DemogInfoSubDivisionId-error" }).ToHtmlString()))
-        </div>
-        <div class="row" style="padding-left: 9px; text-align: left;">
-            @Html.LabelFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "col-form-label" })
-            @Html.TextAreaFor(m => m.DeliveryDataModel.DeliveryInstructions, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(m => m.DeliveryDataModel.DeliveryInstructions) + " (if any...)", rows = "5", style = "width: 95%;", title = "Enter instructions for delivery, if any" })
-            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.DeliveryDataModel.DeliveryInstructions, "", new { id = "DeliveryDataModel_DeliveryInstructions-error" }).ToHtmlString()))
         </div>
     </div>
 </div>

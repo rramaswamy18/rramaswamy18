@@ -1084,6 +1084,12 @@
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.HAS">
             <summary>The Constant HAS.</summary>
         </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.IS">
+            <summary>The Constant IS.</summary>
+        </member>
+        <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.WHERE">
+            <summary>The Constant WHERE.</summary>
+        </member>
         <member name="F:iText.StyledXmlParser.Css.CommonCssConstants.DISABLED">
             <summary>The Constant DISABLED.</summary>
         </member>
@@ -4534,6 +4540,9 @@
             <param name="node">the child node</param>
             <returns>the sibling nodes with the type of a child node</returns>
         </member>
+        <member name="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassForgivingSelectorListSelectorItem">
+            <summary>Base class for pseudo-classes that accept a forgiving selector list (e.g. :is(), :where()).</summary>
+        </member>
         <member name="T:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassHasSelectorItem">
             <summary>A class representing a CSS pseudo-class selector item for the ":has()" CSS pseudo-class.</summary>
             <remarks>
@@ -4621,6 +4630,19 @@
             or
             <see langword="null"/>
             </returns>
+        </member>
+        <member name="M:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem.ParseSelectorListWithoutPseudoElements(System.String,System.Boolean)">
+            <summary>Parses a selector list.</summary>
+            <remarks>Parses a selector list. Whether parsing is supposed to be forgiving can be configured.</remarks>
+            <param name="arguments">selector list as written inside parentheses</param>
+            <param name="forgiving">
+            
+            <see langword="true"/>
+            if parsing is supposed to be forgiving,
+            <see langword="false"/>
+            otherwise
+            </param>
+            <returns>list of valid selectors (possibly empty), or null if arguments are syntactically incorrect</returns>
         </member>
         <member name="M:iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem.GetPseudoClass">
             <summary>Gets the selector pseudo class name.</summary>

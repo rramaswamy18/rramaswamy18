@@ -1,0 +1,47 @@
+﻿@using ArchitectureLibraryModels
+@using RetailSlnModels
+@model RegisterUserLoginUserResponseModel
+@{
+    SessionObjectModel sessionObject = (SessionObjectModel)Session["SessionObject"];
+    ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
+}
+<div class="row">
+    <h2 style="font-weight: bold; text-align: left;">
+        <span style="color: #0000ff; font-size: 21px; ">Register / Sign In - Success</span>
+    </h2>
+</div>
+<div class="row">
+    @if (sessionObject.NewUser)
+    {
+        <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.OTPResponseModel.TelephoneNumberFormatted</span><span style="color: #a54000; font-size: 16px; font-weight: bold;">&nbsp;- first time (New User...)</span>
+        <br style="clear: both;" />
+        <span style="color: #ff0000; font-size: 14px; font-weight: bold;">Successfully registered!!!</span>
+    }
+    else
+    {
+        <span style="color: #000000; font-size: 16px; font-weight: bold;">@Model.OTPResponseModel.TelephoneNumberFormatted</span><span style="color: #a54000; font-size: 16px; font-weight: bold;">&nbsp;- returning user...</span>
+        <br style="clear: both;" />
+        <span style="color: #ff0000; font-size: 14px; font-weight: bold;">Successfully logged in!!!</span>
+    }
+</div>
+<br style="clear: both;" />
+<div class="row">
+    @if (shoppingCartModel == null || shoppingCartModel.ShoppingCartItemModels == null || shoppingCartModel.ShoppingCartItemModels.Count == 0)
+    {
+        <span style="color: #a54000; font-size: 14px; font-weight: bold;">Your shopping cart is empty</span>
+        <br style="clear: both;" />
+        <a href="@Url.Action("Index", "Home")" style="color: #0000ff; font-size: 15px; font-weight: bold; text-decoration: underline;">Click Here</a><span style="color: #a54000; font-size: 14px; font-weight: bold;">&nbsp;to start ordering</span>
+    }
+    else
+    {
+        <span style="color: #a54000; font-size: 14px; font-weight: bold;">Order amount is @shoppingCartModel.ShoppingCartSummaryModel.TotalOrderAmountFormatted</span>
+        <br style="clear: both;" />
+        <a href="@Url.Action("Index", "Home")" style="color: #0000ff; font-size: 15px; font-weight: bold; text-decoration: underline;">Click Here</a><span style="color: #000000; font-size: 14px; font-weight: bold;">&nbsp;to continue ordering or</span>
+        <br style="clear: both;" />
+        <a href="@Url.Action("Checkout", "Home")" style="color: #0000ff; font-size: 15px; font-weight: bold; text-decoration: underline;">Click Here</a><span style="color: #000000; font-size: 14px; font-weight: bold;">&nbsp;to checkout</span>
+    }
+</div>
+<br style="clear: both;" />
+<div class="row">
+    <a href="@Url.Action("UserProfile", "Home")" style="color: #ff0000; font-size: 15px; font-weight: bold; text-decoration: underline;">Click here</a><span style="color: #000000; font-size: 14px; font-weight: bold;">&nbsp;to update your profile</span>
+</div>

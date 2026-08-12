@@ -1,10 +1,16 @@
-﻿@using RetailSlnCacheData
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnCacheData
 @using RetailSlnEnumerations
 @using RetailSlnModels
 @model ItemMasterAttributesModel
-<table @*class="table table-condensed table-responsive"*@ style="border-style: none; border-width: 0px; padding: 0px; width: 81%;">
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
+}
+<table style="border-style: none; border-width: 0px; padding: 0px;">
     <tr>
-        <th class="text-left" style="border-style: none; border-width: 0px; padding-left: 18px; width: 65%;">
+        <th style="border-style: none; border-width: 0px; padding-left: 18px; text-align: left;">
             <span style="color: #000000; font-size: 18px;">@(Model.OrderItem1Model.ItemMasterModel.ItemMasterId + ".")</span>
             <span style="color: #000000; font-size: 18px;">@Model.OrderItem1Model.ItemMasterModel.ItemMasterDesc</span>
             <span style="color: #a54000; font-size: 14px; padding-left: 5px;">@(Model.OrderItem1Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle ? "(Item Bundle)" :  "")</span>
@@ -15,40 +21,52 @@
             }
         </th>
     </tr>
+    <tr>
+        <td style="margin: 0px; padding-left: 18px;">
+            <div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
+                <a id="divTab0" href="javascript: void(0);" onclick="javascript: return divTab_onclick('0', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">1. Order</a>
+            </div>
+            <div style="float: left; width: 27px;">
+                &nbsp;
+            </div>
+            <div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
+                <a id="divTab1" href="javascript: void(0);" onclick="javascript: return divTab_onclick('1', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">2. Specifications</a>
+            </div>
+            <div style="float: left; width: 27px;">
+                &nbsp;
+            </div>
+            <div style="display: none; background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
+                <a id="divTab2" href="javascript: void(0);" onclick="javascript: return divTab_onclick('2', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">3. Prod Info</a>
+            </div>
+            <div style="float: left; width: 27px;">
+                &nbsp;
+            </div>
+            <div style="display: none; background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
+                <a id="divTab3" href="javascript: void(0);" onclick="javascript: return divTab_onclick('3', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">3. Image(s)</a>
+            </div>
+            <div id="divTabData0" style="display: none; text-align: left; width: 95%;">
+                <br style="clear: both;" />
+                @if (Model.OrderItem1Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+                {//Bundle
+                    @Html.Partial("_OrderItem1C", Model.OrderItem1Model)
+                }
+                else
+                {//Individual Item
+                    @Html.Partial("_OrderItem1A", Model.OrderItem1Model)
+                }
+                <br style="clear: both;" />
+                <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.OrderItem1Model.ItemMasterModel.ImageName@imageDateTime" />
+                <br style="clear: both;" />
+            </div>
+            <div id="divTabData1" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
+            </div>
+            <div id="divTabData2" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
+            </div>
+            <div id="divTabData3" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
+            </div>
+        </td>
+    </tr>
 </table>
-<div style="float: left; width: 9px;">
-    &nbsp;
-</div>
-<div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
-    <a id="divTab0" href="javascript: void(0);" onclick="javascript: return divTab_onclick('0', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">1. Order</a>
-</div>
-<div style="float: left; width: 27px;">
-    &nbsp;
-</div>
-<div style="background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
-    <a id="divTab1" href="javascript: void(0);" onclick="javascript: return divTab_onclick('1', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">2. Specifications</a>
-</div>
-<div style="float: left; width: 27px;">
-    &nbsp;
-</div>
-<div style="display: none; background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
-    <a id="divTab2" href="javascript: void(0);" onclick="javascript: return divTab_onclick('2', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">3. Prod Info</a>
-</div>
-<div style="float: left; width: 27px;">
-    &nbsp;
-</div>
-<div style="display: none; background: #e5e4e2; border-top-left-radius: 20px; border-top-right-radius: 20px; float: left; height: 45px; margin-bottom: 9px; margin-left: auto; margin-right: auto; padding: 18px; text-align: center; vertical-align: middle;">
-    <a id="divTab3" href="javascript: void(0);" onclick="javascript: return divTab_onclick('3', '4')" style="color: #0000ff; font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 15px; font-weight: bold; text-decoration: underline;">3. Image(s)</a>
-</div>
-<div id="divTabData0" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
-    @Html.Partial("_OrderItem1", Model.OrderItem1Model)
-</div>
-<div id="divTabData1" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
-</div>
-<div id="divTabData2" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
-</div>
-<div id="divTabData3" class="col-md-12" style="display: none; padding-left: 27px; text-align: left;">
-</div>
 <script type="text/javascript">
     divTab_onclick(@Model.TabId, 0);
     function divTab_onclick(index, count) {

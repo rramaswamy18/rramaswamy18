@@ -4,6 +4,7 @@
 @using RetailSlnCacheData
 @using RetailSlnModels
 @{
+    #region Backend code
     //DivineBija - 97, 98, 99
     var clientId = ArchLibCache.ClientId;
     var clientName = ArchLibCache.ClientName;
@@ -20,6 +21,7 @@
     }
     isLoggedIn = isLoggedIn && User.Identity.IsAuthenticated;
     //var categoryModels = RetailSlnCache.AspNetRoleParentCategoryCategoryModels[aspNetRoleName][0];
+    #endregion
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -142,12 +144,13 @@
                                 </a>
                             </div>
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a class="navbar-right-link" href="@Url.Action("RegisterUserProf", "Home")" title="Register - @imageTitle">
+                                <a class="navbar-right-link" href="@Url.Action("RegisterUserLoginUser", "Home")" alt="Register / Sign In - @imageTitle" title="Register / Sign In - @imageTitle">
                                     <i class="fas fa-user-plus"></i>
                                     <br style="clear: both;" />
-                                    Register
+                                    Register / Sign In
                                 </a>
                             </div>
+                            @*
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
                                 <a class="navbar-right-link @(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" title="Login / Sign In - @imageTitle">
                                     <i class="fas fa-user"></i>
@@ -155,8 +158,9 @@
                                     Sign In
                                 </a>
                             </div>
+                            *@
                             <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                <a class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" title="Logout - @imageTitle">
+                                <a class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" alt="Logout - @imageTitle" title="Logout - @imageTitle">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <br style="clear: both;" />
                                     Logout

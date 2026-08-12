@@ -15994,6 +15994,10 @@
             </summary>
             <returns>true if /ActualText value is used, false otherwise</returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy.SortTextChunks(System.Collections.Generic.IList{iText.Kernel.Pdf.Canvas.Parser.Listener.TextChunk})">
+            <summary>Sorts a list of text chunks according to their locations on a page.</summary>
+            <param name="textChunks">text chinks to sort</param>
+        </member>
         <member name="M:iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy.IsChunkAtWordBoundary(iText.Kernel.Pdf.Canvas.Parser.Listener.TextChunk,iText.Kernel.Pdf.Canvas.Parser.Listener.TextChunk)">
             <summary>Determines if a space character should be inserted between a previous chunk and the current chunk.
                 </summary>
@@ -17510,7 +17514,7 @@
             <summary>Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.</summary>
             <remarks>
             Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.
-            Glyphs with placement are ignored.
+            Glyphs with anchor delta are ignored.
             XAdvance is not taken into account neither before `from` nor after `to` glyphs.
             </remarks>
         </member>
@@ -23092,27 +23096,6 @@
             containing the file specification of the file
             </returns>
         </member>
-        <member name="M:iText.Kernel.Pdf.Filespec.PdfFileSpec.CreateEmbeddedFileSpec(iText.Kernel.Pdf.PdfDocument,iText.Kernel.Pdf.PdfStream,System.String,System.String,iText.Kernel.Pdf.PdfName)">
-            <summary>Create an embedded file specification.</summary>
-            <param name="doc">
-            
-            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
-            instance to make this file specification indirect
-            </param>
-            <param name="stream">an embedded file stream dictionary</param>
-            <param name="fileDisplay">actual file name stored in the pdf</param>
-            <param name="afRelationshipValue">
-            value that represents the relationship between the component of the passed PDF document that
-            refers to this file specification and the associated file. If <c>null</c>,
-            <see cref="F:iText.Kernel.Pdf.PdfName.Unspecified"/>
-            will be added.
-            </param>
-            <returns>
-            
-            <see cref="T:iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
-            containing the file specification of the file
-            </returns>
-        </member>
         <member name="M:iText.Kernel.Pdf.Filespec.PdfFileSpec.SetThumbnailImage(iText.Kernel.Pdf.Xobject.PdfImageXObject)">
             <summary>PDF 2.0.</summary>
             <remarks>PDF 2.0. Sets a stream object defining the thumbnail image for the file specification.</remarks>
@@ -24709,6 +24692,11 @@
             <see cref="T:iText.Kernel.Pdf.PdfReader"/>
             when opening
             a document.
+            <para />Note that
+            <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
+            must not be shared between different
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            instances.
             </remarks>
             <seealso cref="M:iText.Kernel.Pdf.ReaderProperties.SetMemoryLimitsAwareHandler(iText.Kernel.Pdf.MemoryLimitsAwareHandler)"/>
             <seealso cref="T:iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
@@ -24728,7 +24716,7 @@
             with calculated memory limits
             for decompression and xref structures based on the provided document size.
             </summary>
-            <param name="documentSize">the size of the document (in bytes).</param>
+            <param name="documentSize">the size of the document (in bytes)</param>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.CreateNewInstance">
             <summary>
@@ -24740,53 +24728,55 @@
             </summary>
             <returns>
             a new instance of
-            <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>.
+            <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.GetMaxSizeOfSingleDecompressedPdfStream">
             <summary>Returns the maximum allowed size (in bytes) of a single decompressed PDF stream.</summary>
-            <returns>maximum allowed size of a single decompressed stream in bytes.</returns>
+            <returns>maximum allowed size of a single decompressed stream in bytes</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.SetMaxSizeOfSingleDecompressedPdfStream(System.Int32)">
-            <summary>Sets the maximum allowed size which can be occupied by a single decompressed pdf stream.</summary>
+            <summary>Sets the maximum allowed size which can be occupied by a single decompressed PDF stream.</summary>
             <remarks>
-            Sets the maximum allowed size which can be occupied by a single decompressed pdf stream.
+            Sets the maximum allowed size which can be occupied by a single decompressed PDF stream.
             This value correlates with maximum heap size. This value should not exceed limit of the heap size.
-            <para />iText will throw an exception if during decompression a pdf stream which was identified as
+            <para />iText will throw an exception if during decompression a PDF stream which was identified as
             requiring memory limits awareness occupies more memory than allowed.
             </remarks>
             <param name="maxSizeOfSingleDecompressedPdfStream">
             the maximum allowed size which can be occupied by a single
-            decompressed pdf stream.
+            decompressed PDF stream
             </param>
             <returns>
             this
             <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
-            instance.
+            instance
             </returns>
             <seealso cref="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(iText.Kernel.Pdf.PdfArray)"/>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.GetMaxSizeOfDecompressedPdfStreamsSum">
-            <summary>Gets the maximum allowed size which can be occupied by all decompressed pdf streams.</summary>
+            <summary>Gets the maximum allowed size which can be occupied by all decompressed PDF streams.</summary>
             <returns>the maximum allowed size value which streams may occupy</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.SetMaxSizeOfDecompressedPdfStreamsSum(System.Int64)">
-            <summary>Sets the maximum allowed size which can be occupied by all decompressed pdf streams.</summary>
+            <summary>Sets the maximum allowed size which can be occupied by all decompressed PDF streams.</summary>
             <remarks>
-            Sets the maximum allowed size which can be occupied by all decompressed pdf streams.
+            Sets the maximum allowed size which can be occupied by all decompressed PDF streams.
             This value can be limited by the maximum expected PDF file size when it's completely decompressed.
             Setting this value correlates with the maximum processing time spent on document reading
-            <para />iText will throw an exception if during decompression pdf streams which were identified as
+            <para />iText will throw an exception if during decompression of PDF streams which were identified as
             requiring memory limits awareness occupy more memory than allowed.
+            <para />
+            Note that if a PDF stream is decompressed multiple times, it is counted multiple times for this limit.
             </remarks>
             <param name="maxSizeOfDecompressedPdfStreamsSum">
-            he maximum allowed size which can be occupied by all decompressed pdf
-            streams.
+            he maximum allowed size which can be occupied by all decompressed PDF
+            streams
             </param>
             <returns>
             this
             <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
-            instance.
+            instance
             </returns>
             <seealso cref="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(iText.Kernel.Pdf.PdfArray)"/>
         </member>
@@ -24802,41 +24792,51 @@
             <see cref="T:iText.Kernel.Pdf.PdfArray"/>
             of names of filters
             </param>
-            <returns>true if PDF stream is suspicious and false otherwise</returns>
+            <returns>
+            
+            <see langword="true"/>
+            if PDF stream is suspicious and
+            <see langword="false"/>
+            otherwise
+            </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.GetMaxNumberOfElementsInXrefStructure">
             <summary>Gets maximum number of elements in xref structure.</summary>
-            <returns>maximum number of elements in xref structure.</returns>
+            <returns>maximum number of elements in xref structure</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.GetMaxXObjectsSizePerPage">
             <summary>Gets maximum page size.</summary>
-            <returns>maximum page size.</returns>
+            <returns>maximum page size</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.SetMaxXObjectsSizePerPage(System.Int64)">
             <summary>Sets maximum page size.</summary>
-            <param name="maxPageSize">maximum page size.</param>
+            <param name="maxPageSize">maximum page size</param>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(System.Int32)">
             <summary>Sets maximum number of elements in xref structure.</summary>
-            <param name="maxNumberOfElementsInXrefStructure">maximum number of elements in xref structure.</param>
+            <param name="maxNumberOfElementsInXrefStructure">maximum number of elements in xref structure</param>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.CheckIfXrefStructureExceedsTheLimit(System.Int32)">
             <summary>Performs a check of possible extension of xref structure.</summary>
-            <param name="requestedCapacity">capacity to which we need to expand xref array.</param>
+            <param name="requestedCapacity">capacity to which we need to expand xref array</param>
+        </member>
+        <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.CheckIfPageSizeExceedsTheLimit(System.Int64)">
+            <summary>Checks if page size limit is exceeded.</summary>
+            <param name="totalPageSize">total size of the read page content</param>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.CalculateMaxElementsInXref(System.Int64)">
             <summary>Calculate max number of elements allowed in xref table based on the size of the document, achieving max limit at 100MB.
                 </summary>
-            <param name="documentSizeInBytes">document size in bytes.</param>
-            <returns>calculated limit.</returns>
+            <param name="documentSizeInBytes">document size in bytes</param>
+            <returns>calculated limit</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.ConsiderBytesOccupiedByDecompressedPdfStream(System.Int64)">
-            <summary>Considers the number of bytes which are occupied by the decompressed pdf stream.</summary>
+            <summary>Considers the number of bytes which are occupied by the decompressed PDF stream.</summary>
             <remarks>
-            Considers the number of bytes which are occupied by the decompressed pdf stream.
+            Considers the number of bytes which are occupied by the decompressed PDF stream.
             If memory limits have not been faced, throws an exception.
             </remarks>
-            <param name="numOfOccupiedBytes">the number of bytes which are occupied by the decompressed pdf stream.</param>
+            <param name="numOfOccupiedBytes">the number of bytes which are occupied by the decompressed PDF stream</param>
             <returns>
             this
             <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
@@ -24845,11 +24845,11 @@
             <seealso cref="T:iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.BeginDecompressedPdfStreamProcessing">
-            <summary>Begins handling of current pdf stream decompression.</summary>
+            <summary>Begins handling of current PDF stream decompression.</summary>
             <returns>
             this
             <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
-            instance.
+            instance
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.MemoryLimitsAwareHandler.EndDecompressedPdfStreamProcessing">
@@ -24861,7 +24861,7 @@
             <returns>
             this
             <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
-            instance.
+            instance
             </returns>
             <seealso cref="T:iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         </member>
@@ -26955,6 +26955,34 @@
             <see langword="false"/>
             </returns>
         </member>
+        <member name="M:iText.Kernel.Pdf.PdfConformance.Includes(iText.Kernel.Pdf.PdfConformance)">
+            <summary>
+            Checks if passed conformance is fully included into this
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
+            </summary>
+            <param name="conformance">the conformance to check</param>
+            <returns>
+            
+            <see langword="true"/>
+            if conformance is fully included into this conformance,
+            otherwise
+            <see langword="false"/>
+            </returns>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfConformance.IsWellTaggedConformanceIncluded(iText.Kernel.Pdf.PdfConformance)">
+            <summary>
+            Checks if well tagged conformance part of passed conformance is included into this
+            <see cref="T:iText.Kernel.Pdf.PdfConformance"/>
+            </summary>
+            <param name="conformance">the conformance to check</param>
+            <returns>
+            
+            <see langword="true"/>
+            if well tagged conformance of this conformance is included,
+            otherwise
+            <see langword="false"/>
+            </returns>
+        </member>
         <member name="M:iText.Kernel.Pdf.PdfConformance.IsPdfAOrUa">
             <summary>Checks if any PDF/A or PDF/UA conformance is specified.</summary>
             <returns>
@@ -27153,7 +27181,7 @@
             See also ISO-320001 7.9.4, "Dates".
             </summary>
             <seealso cref="T:iText.Kernel.Pdf.PdfString"/>
-            <seealso cref="!:Java.Util.GregorianCalendar"/>
+            <seealso cref="T:System.Globalization.GregorianCalendar"/>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDate.#ctor(System.DateTime)">
             <summary>
@@ -27643,7 +27671,7 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.#ctor(iText.Kernel.Pdf.PdfReader,iText.Kernel.Pdf.DocumentProperties)">
             <summary>Open PDF document in reading mode.</summary>
-            <param name="reader">PDF reader.</param>
+            <param name="reader">PDF reader</param>
             <param name="properties">document properties</param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.#ctor(iText.Kernel.Pdf.PdfWriter)">
@@ -27669,13 +27697,13 @@
             Opens PDF document in the stamping mode.
             <br />
             </remarks>
-            <param name="reader">PDF reader.</param>
-            <param name="writer">PDF writer.</param>
+            <param name="reader">PDF reader</param>
+            <param name="writer">PDF writer</param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.#ctor(iText.Kernel.Pdf.PdfReader,iText.Kernel.Pdf.PdfWriter,iText.Kernel.Pdf.StampingProperties)">
             <summary>Open PDF document in stamping mode.</summary>
-            <param name="reader">PDF reader.</param>
-            <param name="writer">PDF writer.</param>
+            <param name="reader">PDF reader</param>
+            <param name="writer">PDF writer</param>
             <param name="properties">properties of the stamping process</param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.IsClosing">
@@ -27817,7 +27845,7 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetLastPage">
             <summary>Gets the last page of the document.</summary>
-            <returns>last page.</returns>
+            <returns>last page</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetMemoryLimitsAwareHandler">
             <summary>Gets current memory limits handler</summary>
@@ -27868,8 +27896,8 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddPage(iText.Kernel.Pdf.PdfPage)">
             <summary>Adds page to the end of document.</summary>
-            <param name="page">page to add.</param>
-            <returns>added page.</returns>
+            <param name="page">page to add</param>
+            <returns>added page</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddPage(System.Int32,iText.Kernel.Pdf.PdfPage)">
             <summary>Inserts page to the document.</summary>
@@ -27879,12 +27907,12 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetNumberOfPages">
             <summary>Gets number of pages of the document.</summary>
-            <returns>number of pages.</returns>
+            <returns>number of pages</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetPageNumber(iText.Kernel.Pdf.PdfPage)">
             <summary>Gets page number by page.</summary>
-            <param name="page">the page.</param>
-            <returns>page number.</returns>
+            <param name="page">the page</param>
+            <returns>page number</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetPageNumber(iText.Kernel.Pdf.PdfDictionary)">
             <summary>
@@ -27894,11 +27922,11 @@
             <param name="pageDictionary">
             
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            that present page.
+            that present page
             </param>
             <returns>
             page number by
-            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.MovePage(iText.Kernel.Pdf.PdfPage,System.Int32)">
@@ -28072,11 +28100,11 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.IsClosed">
             <summary>Gets close status of the document.</summary>
-            <returns>true, if the document has already been closed, otherwise false.</returns>
+            <returns>true, if the document has already been closed, otherwise false</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.IsTagged">
             <summary>Gets tagged status of the document.</summary>
-            <returns>true, if the document has tag structure, otherwise false.</returns>
+            <returns>true, if the document has tag structure, otherwise false</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.SetTagged">
             <summary>Specifies that document shall contain tag structure.</summary>
@@ -28099,14 +28127,14 @@
             <returns>
             
             <see cref="T:iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
-            in case document is tagged, otherwise it returns null.
+            in case document is tagged, otherwise it returns null
             </returns>
             <seealso cref="M:iText.Kernel.Pdf.PdfDocument.IsTagged"/>
             <seealso cref="M:iText.Kernel.Pdf.PdfDocument.GetNextStructParentIndex"/>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetNextStructParentIndex">
             <summary>Gets next parent index of tagged document.</summary>
-            <returns>-1 if document is not tagged, or &gt;= 0 if tagged.</returns>
+            <returns>-1 if document is not tagged, or &gt;= 0 if tagged</returns>
             <seealso cref="M:iText.Kernel.Pdf.PdfDocument.IsTagged"/>
             <seealso cref="M:iText.Kernel.Pdf.PdfDocument.GetNextStructParentIndex"/>
         </member>
@@ -28122,7 +28150,7 @@
             </remarks>
             <returns>
             document
-            <c>TagStructureContext</c>.
+            <c>TagStructureContext</c>
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CopyPagesTo(System.Int32,System.Int32,iText.Kernel.Pdf.PdfDocument,System.Int32)">
@@ -28141,10 +28169,10 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pageFrom">start of the range of pages to be copied.</param>
-            <param name="pageTo">end of the range of pages to be copied.</param>
-            <param name="toDocument">a document to copy pages to.</param>
-            <param name="insertBeforePage">a position where to insert copied pages.</param>
+            <param name="pageFrom">start of the range of pages to be copied</param>
+            <param name="pageTo">end of the range of pages to be copied</param>
+            <param name="toDocument">a document to copy pages to</param>
+            <param name="insertBeforePage">a position where to insert copied pages</param>
             <returns>list of copied pages</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetConformance">
@@ -28175,18 +28203,18 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pageFrom">1-based start of the range of pages to be copied.</param>
+            <param name="pageFrom">1-based start of the range of pages to be copied</param>
             <param name="pageTo">
             1-based end (inclusive) of the range of pages to be copied. This page is included in list
-            of copied pages.
+            of copied pages
             </param>
-            <param name="toDocument">a document to copy pages to.</param>
-            <param name="insertBeforePage">a position where to insert copied pages.</param>
+            <param name="toDocument">a document to copy pages to</param>
+            <param name="insertBeforePage">a position where to insert copied pages</param>
             <param name="copier">
             a copier which bears a special copy logic. May be null.
             It is recommended to use the same instance of
             <see cref="T:iText.Kernel.Pdf.IPdfPageExtraCopier"/>
-            for the same output document.
+            for the same output document
             </param>
             <returns>list of new copied pages</returns>
         </member>
@@ -28213,12 +28241,12 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pageFrom">1-based start of the range of pages to be copied.</param>
+            <param name="pageFrom">1-based start of the range of pages to be copied</param>
             <param name="pageTo">
             1-based end (inclusive) of the range of pages to be copied. This page is included in list of
-            copied pages.
+            copied pages
             </param>
-            <param name="toDocument">a document to copy pages to.</param>
+            <param name="toDocument">a document to copy pages to</param>
             <returns>list of new copied pages</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CopyPagesTo(System.Int32,System.Int32,iText.Kernel.Pdf.PdfDocument,iText.Kernel.Pdf.IPdfPageExtraCopier)">
@@ -28244,19 +28272,19 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pageFrom">1-based start of the range of pages to be copied.</param>
+            <param name="pageFrom">1-based start of the range of pages to be copied</param>
             <param name="pageTo">
             1-based end (inclusive) of the range of pages to be copied. This page is included in list of
-            copied pages.
+            copied pages
             </param>
-            <param name="toDocument">a document to copy pages to.</param>
+            <param name="toDocument">a document to copy pages to</param>
             <param name="copier">
             a copier which bears a special copy logic. May be null.
             It is recommended to use the same instance of
             <see cref="T:iText.Kernel.Pdf.IPdfPageExtraCopier"/>
-            for the same output document.
+            for the same output document
             </param>
-            <returns>list of new copied pages.</returns>
+            <returns>list of new copied pages</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CopyPagesTo(System.Collections.Generic.IList{System.Int32},iText.Kernel.Pdf.PdfDocument,System.Int32)">
             <summary>
@@ -28274,9 +28302,9 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pagesToCopy">list of pages to be copied.</param>
-            <param name="toDocument">a document to copy pages to.</param>
-            <param name="insertBeforePage">a position where to insert copied pages.</param>
+            <param name="pagesToCopy">list of pages to be copied</param>
+            <param name="toDocument">a document to copy pages to</param>
+            <param name="insertBeforePage">a position where to insert copied pages</param>
             <returns>list of new copied pages</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CopyPagesTo(System.Collections.Generic.IList{System.Int32},iText.Kernel.Pdf.PdfDocument,System.Int32,iText.Kernel.Pdf.IPdfPageExtraCopier)">
@@ -28295,14 +28323,14 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pagesToCopy">list of pages to be copied.</param>
-            <param name="toDocument">a document to copy pages to.</param>
-            <param name="insertBeforePage">a position where to insert copied pages.</param>
+            <param name="pagesToCopy">list of pages to be copied</param>
+            <param name="toDocument">a document to copy pages to</param>
+            <param name="insertBeforePage">a position where to insert copied pages</param>
             <param name="copier">
             a copier which bears a special copy logic. May be null.
             It is recommended to use the same instance of
             <see cref="T:iText.Kernel.Pdf.IPdfPageExtraCopier"/>
-            for the same output document.
+            for the same output document
             </param>
             <returns>list of new copied pages</returns>
         </member>
@@ -28324,8 +28352,8 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pagesToCopy">list of pages to be copied.</param>
-            <param name="toDocument">a document to copy pages to.</param>
+            <param name="pagesToCopy">list of pages to be copied</param>
+            <param name="toDocument">a document to copy pages to</param>
             <returns>list of copied pages</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CopyPagesTo(System.Collections.Generic.IList{System.Int32},iText.Kernel.Pdf.PdfDocument,iText.Kernel.Pdf.IPdfPageExtraCopier)">
@@ -28346,13 +28374,13 @@
             In this case iText will log a warning. This can be avoided by renaming
             destinations names in the source document.
             </remarks>
-            <param name="pagesToCopy">list of pages to be copied.</param>
-            <param name="toDocument">a document to copy pages to.</param>
+            <param name="pagesToCopy">list of pages to be copied</param>
+            <param name="toDocument">a document to copy pages to</param>
             <param name="copier">
             a copier which bears a special copy logic. May be null.
             It is recommended to use the same instance of
             <see cref="T:iText.Kernel.Pdf.IPdfPageExtraCopier"/>
-            for the same output document.
+            for the same output document
             </param>
             <returns>list of copied pages</returns>
         </member>
@@ -28376,7 +28404,7 @@
             <returns>
             true,
             <see cref="M:iText.Kernel.Pdf.PdfDocument.Close"/>
-            method is going to close associated PdfReader, otherwise false.
+            method is going to close associated PdfReader, otherwise false
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.SetCloseReader(System.Boolean)">
@@ -28388,7 +28416,7 @@
             <param name="closeReader">
             true,
             <see cref="M:iText.Kernel.Pdf.PdfDocument.Close"/>
-            method shall close associated PdfReader, otherwise false.
+            method shall close associated PdfReader, otherwise false
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.IsCloseWriter">
@@ -28400,7 +28428,7 @@
             <returns>
             true,
             <see cref="M:iText.Kernel.Pdf.PdfDocument.Close"/>
-            method is going to close associated PdfWriter, otherwise false.
+            method is going to close associated PdfWriter, otherwise false
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.SetCloseWriter(System.Boolean)">
@@ -28412,7 +28440,7 @@
             <param name="closeWriter">
             true,
             <see cref="M:iText.Kernel.Pdf.PdfDocument.Close"/>
-            method shall close associated PdfWriter, otherwise false.
+            method shall close associated PdfWriter, otherwise false
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.IsFlushUnusedObjects">
@@ -28431,7 +28459,7 @@
             <returns>
             false, if
             <see cref="M:iText.Kernel.Pdf.PdfDocument.Close"/>
-            shall not flush unused objects, otherwise true.
+            shall not flush unused objects, otherwise true
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.SetFlushUnusedObjects(System.Boolean)">
@@ -28444,7 +28472,7 @@
             <param name="flushUnusedObjects">
             false, if
             <see cref="M:iText.Kernel.Pdf.PdfDocument.Close"/>
-            shall not flush unused objects, otherwise true.
+            shall not flush unused objects, otherwise true
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetOutlines(System.Boolean)">
@@ -28456,12 +28484,12 @@
             If the flag is
             <see langword="false"/>
             , the method gets cached outline tree
-            (if it was cached via calling getOutlines method before).
+            (if it was cached via calling getOutlines method before)
             </param>
             <returns>
             fully initialize
             <see cref="T:iText.Kernel.Pdf.PdfOutline"/>
-            object.
+            object
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.InitializeOutlines">
@@ -28471,20 +28499,20 @@
             <summary>The method adds new name in the Dests NameTree.</summary>
             <remarks>The method adds new name in the Dests NameTree. It throws an exception, if the name already exists.
                 </remarks>
-            <param name="key">Name of the destination.</param>
+            <param name="key">Name of the destination</param>
             <param name="value">
-            An object destination refers to. Must be an array or a dictionary with key /D and array.
-            See ISO 32000-1 12.3.2.3 for more info.
+            An object destination refers to. Must be an array or a dictionary with key /D and array
+            See ISO 32000-1 12.3.2.3 for more info
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddNamedDestination(iText.Kernel.Pdf.PdfString,iText.Kernel.Pdf.PdfObject)">
             <summary>The method adds new name in the Dests NameTree.</summary>
             <remarks>The method adds new name in the Dests NameTree. It throws an exception, if the name already exists.
                 </remarks>
-            <param name="key">Name of the destination.</param>
+            <param name="key">Name of the destination</param>
             <param name="value">
             An object destination refers to. Must be an array or a dictionary with key /D and array.
-            See ISO 32000-1 12.3.2.3 for more info.
+            See ISO 32000-1 12.3.2.3 for more info
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.ListIndirectReferences">
@@ -28493,7 +28521,7 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetTrailer">
             <summary>Gets document trailer.</summary>
-            <returns>document trailer.</returns>
+            <returns>document trailer</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddOutputIntent(iText.Kernel.Pdf.PdfOutputIntent)">
             <summary>
@@ -28505,7 +28533,7 @@
             <param name="outputIntent">
             
             <see cref="T:iText.Kernel.Pdf.PdfOutputIntent"/>
-            to add.
+            to add
             </param>
             <seealso cref="T:iText.Kernel.Pdf.PdfOutputIntent"/>
         </member>
@@ -28521,11 +28549,11 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddFileAttachment(System.String,iText.Kernel.Pdf.Filespec.PdfFileSpec)">
             <summary>Adds file attachment at document level.</summary>
-            <param name="key">name of the destination.</param>
+            <param name="key">name of the destination</param>
             <param name="fs">
             
             <see cref="T:iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
-            object.
+            object
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddAssociatedFile(System.String,iText.Kernel.Pdf.Filespec.PdfFileSpec)">
@@ -28547,7 +28575,7 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetAssociatedFiles">
             <summary>Returns files associated with PDF document.</summary>
-            <returns>associated files array.</returns>
+            <returns>associated files array</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetEncryptedPayloadDocument">
             <summary>
@@ -28556,7 +28584,7 @@
             <see langword="null"/>
             if this document isn't an unencrypted wrapper document.
             </summary>
-            <returns>encrypted payload of this document.</returns>
+            <returns>encrypted payload of this document</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.SetEncryptedPayload(iText.Kernel.Pdf.Filespec.PdfFileSpec)">
             <summary>Sets an encrypted payload, making this document an unencrypted wrapper document.</summary>
@@ -28568,7 +28596,7 @@
             <param name="fs">
             encrypted payload file spec.
             <see cref="T:iText.Kernel.Pdf.Filespec.PdfEncryptedPayloadFileSpecFactory"/>
-            can produce one.
+            can produce one
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetPageLabels">
@@ -28588,7 +28616,7 @@
             <see langword="true"/>
             , if there are outlines and
             <see langword="false"/>
-            otherwise.
+            otherwise
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.SetUserProperties(System.Boolean)">
@@ -28606,7 +28634,7 @@
             
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             that presents
-            <see cref="T:iText.Kernel.Font.PdfFont"/>.
+            <see cref="T:iText.Kernel.Font.PdfFont"/>
             </param>
             <returns>
             instance of
@@ -28618,7 +28646,7 @@
             until it will be added to
             <see cref="T:iText.Kernel.Pdf.Canvas.PdfCanvas"/>
             or
-            <see cref="T:iText.Kernel.Pdf.PdfResources"/>.
+            <see cref="T:iText.Kernel.Pdf.PdfResources"/>
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetDefaultFont">
@@ -28632,7 +28660,7 @@
             <see cref="T:iText.Kernel.Font.PdfFont"/>
             or
             <see langword="null"/>
-            on error.
+            on error
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.AddFont(iText.Kernel.Font.PdfFont)">
@@ -28653,12 +28681,12 @@
             <see cref="T:iText.Kernel.Font.PdfFont"/>
             instance to add
             </param>
-            <returns>the same PdfFont instance.</returns>
+            <returns>the same PdfFont instance</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.RegisterProduct(iText.Commons.Actions.Data.ProductData)">
             <summary>Registers a product for debugging purposes.</summary>
-            <param name="productData">product to be registered.</param>
-            <returns>true if the product hadn't been registered before.</returns>
+            <param name="productData">product to be registered</param>
+            <returns>true if the product hadn't been registered before</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetFingerPrint">
             <summary>Returns the object containing the registered products.</summary>
@@ -28718,15 +28746,14 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.FlushObject(iText.Kernel.Pdf.PdfObject,System.Boolean)">
             <summary>Flush an object.</summary>
-            <param name="pdfObject">object to flush.</param>
-            <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
+            <param name="pdfObject">object to flush</param>
+            <param name="canBeInObjStm">indicates whether object can be placed into object stream</param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.Open(iText.Kernel.Pdf.PdfVersion)">
             <summary>Initializes document.</summary>
             <param name="newPdfVersion">
             new pdf version of the resultant file if stamper is used and the version needs to be
-            changed,
-            or
+            changed, or
             <see langword="null"/>
             otherwise
             </param>
@@ -28749,7 +28776,7 @@
             <summary>List all newly added or loaded fonts.</summary>
             <returns>
             List of
-            <see cref="T:iText.Kernel.Font.PdfFont"/>.
+            <see cref="T:iText.Kernel.Font.PdfFont"/>
             </returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.FlushFonts">
@@ -28757,11 +28784,11 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CheckAndAddPage(System.Int32,iText.Kernel.Pdf.PdfPage)">
             <summary>Checks page before adding and add.</summary>
-            <param name="index">one-base index of the page.</param>
+            <param name="index">one-base index of the page</param>
             <param name="page">
             
             <see cref="T:iText.Kernel.Pdf.PdfPage"/>
-            to add.
+            to add
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CheckAndAddPage(iText.Kernel.Pdf.PdfPage)">
@@ -28769,11 +28796,11 @@
             <param name="page">
             
             <see cref="T:iText.Kernel.Pdf.PdfPage"/>
-            to add.
+            to add
             </param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CheckClosingStatus">
-            <summary>checks whether a method is invoked at the closed document</summary>
+            <summary>Checks whether a method is invoked at the closed document.</summary>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetPageFactory">
             <summary>Returns the factory for creating page instances.</summary>
@@ -28797,13 +28824,13 @@
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.GetXref">
             <summary>Gets list of indirect references.</summary>
-            <returns>list of indirect references.</returns>
+            <returns>list of indirect references</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.RemoveUnusedWidgetsFromFields(iText.Kernel.Pdf.PdfPage)">
             <summary>Removes all widgets associated with a given page from AcroForm structure.</summary>
             <remarks>Removes all widgets associated with a given page from AcroForm structure. Widgets can be either pure or merged.
                 </remarks>
-            <param name="page">to remove from.</param>
+            <param name="page">to remove from</param>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfDocument.CopyOutlines(System.Collections.Generic.ICollection{iText.Kernel.Pdf.PdfOutline},iText.Kernel.Pdf.PdfDocument,System.Collections.Generic.IDictionary{iText.Kernel.Pdf.PdfPage,iText.Kernel.Pdf.PdfPage})">
             <summary>This method copies all given outlines</summary>
@@ -29235,6 +29262,10 @@
             <see cref="!:iText.Kernel.Security.IExternalDecryptionProcess"/>
             the external decryption process to be used
             </param>
+        </member>
+        <member name="M:iText.Kernel.Pdf.PdfEncryption.GenerateNewDocumentId">
+            <summary>Generates random document ID.</summary>
+            <returns>document ID</returns>
         </member>
         <member name="M:iText.Kernel.Pdf.PdfEncryption.CreateInfoId(System.Byte[],System.Boolean)">
             <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
@@ -33907,7 +33938,7 @@
         <member name="M:iText.Kernel.Pdf.ReaderProperties.SetPublicKeySecurityParams(iText.Commons.Bouncycastle.Cert.IX509Certificate,iText.Commons.Bouncycastle.Crypto.IPrivateKey)">
             <summary>
             Defines the certificate which will be used if the document is encrypted with public key
-            encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers)
+            encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers).
             </summary>
             <param name="certificate">
             the recipient
@@ -33929,7 +33960,7 @@
         <member name="M:iText.Kernel.Pdf.ReaderProperties.SetPublicKeySecurityParams(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
             <summary>
             Defines the certificate which will be used if the document is encrypted with public key
-            encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers)
+            encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers).
             </summary>
             <param name="certificate">
             the recipient
@@ -33945,6 +33976,15 @@
         </member>
         <member name="M:iText.Kernel.Pdf.ReaderProperties.SetMemoryLimitsAwareHandler(iText.Kernel.Pdf.MemoryLimitsAwareHandler)">
             <summary>Sets the memory handler which will be used to handle decompressed PDF streams.</summary>
+            <remarks>
+            Sets the memory handler which will be used to handle decompressed PDF streams.
+            <para />
+            Note that
+            <see cref="T:iText.Kernel.Pdf.MemoryLimitsAwareHandler"/>
+            must not be shared between different
+            <see cref="T:iText.Kernel.Pdf.PdfDocument"/>
+            instances.
+            </remarks>
             <param name="memoryLimitsAwareHandler">the memory handler which will be used to handle decompressed PDF streams
                 </param>
             <returns>
@@ -35543,6 +35583,14 @@
             instance based on structure element role.
             </summary>
             <param name="role">the structure element role</param>
+        </member>
+        <member name="M:iText.Kernel.Pdf.Tagutils.DefaultAccessibilityProperties.#ctor(iText.Kernel.Pdf.Tagutils.AccessibilityProperties)">
+            <summary>
+            Instantiates a new
+            <see cref="T:iText.Kernel.Pdf.Tagutils.DefaultAccessibilityProperties"/>
+            instance as a copy of another instance.
+            </summary>
+            <param name="other">the instance to copy</param>
         </member>
         <member name="M:iText.Kernel.Pdf.Tagutils.DefaultAccessibilityProperties.GetStructureElementId">
             <summary><inheritDoc/></summary>
@@ -39071,17 +39119,17 @@
             not checked as objects, but rather simply checked that they have same page numbers in both documents.
             This behaviour is intended for the
             <see cref="M:iText.Kernel.Utils.CompareTool.CompareByContent(System.String,System.String,System.String)"/>
-            set of methods, because in them documents are compared in page by page basis. Thus, we don't need to check if pages
-            are of the same content when they are met in comparison process, we are sure that we will compare their content or
-            we have already compared them.
+            set of methods, because in them documents are compared in page by page basis.
+            Thus, we don't need to check if pages are of the same content when they are met in comparison process,
+            we are sure that we will compare their content or we have already compared them.
             <para />
             However, if you would use
             <see cref="M:iText.Kernel.Utils.CompareTool.CompareByCatalog(iText.Kernel.Pdf.PdfDocument,iText.Kernel.Pdf.PdfDocument)"/>
             with default behaviour
             of pages comparison, pages won't be checked at all, every time when reference to the page dictionary is met,
-            only page numbers will be compared for both documents. You can say that in this case, comparison will be performed
-            for all document's catalog entries except /Pages (However in fact, document's page tree structures will be compared,
-            but pages themselves - won't).
+            only page numbers will be compared for both documents. You can say that in this case,
+            comparison will be performed for all document's catalog entries except /Pages (However in fact,
+            document's page tree structures will be compared, but pages themselves - won't).
             </remarks>
             <returns>
             this
@@ -39385,7 +39433,8 @@
             corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
             of the two trees that represent pdf objects structure of the documents.
             <para />
-            When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+            When comparison by content is finished, if any differences were found, visual comparison is
+            automatically started.
             For this overload, differenceImagePrefix value is generated using diff_%outPdfFileName%_ format.
             <para />
             For more explanations about what outPdf and cmpPdf are see last paragraph of the
@@ -39412,7 +39461,8 @@
             corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
             of the two trees that represent pdf objects structure of the documents.
             <para />
-            When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+            When comparison by content is finished, if any differences were found,
+            visual comparison is automatically started.
             <para />
             For more explanations about what outPdf and cmpPdf are see last paragraph of the
             <see cref="T:iText.Kernel.Utils.CompareTool"/>
@@ -39420,8 +39470,10 @@
             </remarks>
             <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
             <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-            <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-                </param>
+            <param name="outPath">
+            the absolute path to the folder, which will be used to store image files for
+            visual comparison.
+            </param>
             <param name="differenceImagePrefix">
             file name prefix for image files with marked visual differences if there are any;
             if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -39442,7 +39494,8 @@
             corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
             of the two trees that represent pdf objects structure of the documents.
             <para />
-            When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+            When comparison by content is finished, if any differences were found,
+            visual comparison is automatically started.
             For more info see
             <see cref="M:iText.Kernel.Utils.CompareTool.CompareVisually(System.String,System.String,System.String,System.String)"/>.
             <para />
@@ -39452,8 +39505,10 @@
             </remarks>
             <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
             <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-            <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-                </param>
+            <param name="outPath">
+            the absolute path to the folder, which will be used to store image files
+            for visual comparison.
+            </param>
             <param name="differenceImagePrefix">
             file name prefix for image files with marked visual differences if there is any;
             if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -39476,7 +39531,8 @@
             corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
             of the two trees that represent pdf objects structure of the documents.
             <para />
-            When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+            When comparison by content is finished, if any differences were found,
+            visual comparison is automatically started.
             <para />
             For more explanations about what outPdf and cmpPdf are see last paragraph of the
             <see cref="T:iText.Kernel.Utils.CompareTool"/>
@@ -39484,8 +39540,10 @@
             </remarks>
             <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
             <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-            <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-                </param>
+            <param name="outPath">
+            the absolute path to the folder, which will be used to store image files
+            for visual comparison.
+            </param>
             <param name="differenceImagePrefix">
             file name prefix for image files with marked visual differences if there are any;
             if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -39508,7 +39566,8 @@
             corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
             of the two trees that represent pdf objects structure of the documents.
             <para />
-            When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+            When comparison by content is finished, if any differences were found,
+            visual comparison is automatically started.
             <para />
             For more explanations about what outPdf and cmpPdf are see last paragraph of the
             <see cref="T:iText.Kernel.Utils.CompareTool"/>
@@ -39516,8 +39575,10 @@
             </remarks>
             <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
             <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-            <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-                </param>
+            <param name="outPath">
+            the absolute path to the folder, which will be used to store image files
+            for visual comparison.
+            </param>
             <param name="differenceImagePrefix">
             file name prefix for image files with marked visual differences if there are any;
             if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -39553,8 +39614,9 @@
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             shall have indirect references.
             <para />
-            By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
-            simply comparing their page numbers. This behavior can be disabled by calling
+            By default page dictionaries are excluded from the comparison when met
+            and are instead compared in a special manner, simply comparing their page numbers.
+            This behavior can be disabled by calling
             <see cref="M:iText.Kernel.Utils.CompareTool.DisableCachedPagesComparison"/>.
             <para />
             For more explanations about what outPdf and cmpPdf are see last paragraph of the
@@ -39564,12 +39626,14 @@
             <param name="outDict">
             an indirect
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            from the output file, which is to be compared to cmp-file dictionary.
+            from the output file,
+            which is to be compared to cmp-file dictionary.
             </param>
             <param name="cmpDict">
             an indirect
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            from the cmp-file file, which is to be compared to output file dictionary.
+            from the cmp-file file,
+            which is to be compared to output file dictionary.
             </param>
             <returns>
             
@@ -39591,8 +39655,9 @@
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
             shall have indirect references.
             <para />
-            By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
-            simply comparing their page numbers. This behavior can be disabled by calling
+            By default page dictionaries are excluded from the comparison when met
+            and are instead compared in a special manner, simply comparing their page numbers.
+            This behavior can be disabled by calling
             <see cref="M:iText.Kernel.Utils.CompareTool.DisableCachedPagesComparison"/>.
             <para />
             For more explanations about what outPdf and cmpPdf are see last paragraph of the
@@ -39602,12 +39667,14 @@
             <param name="outDict">
             an indirect
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            from the output file, which is to be compared to cmp-file dictionary.
+            from the output file,
+            which is to be compared to cmp-file dictionary.
             </param>
             <param name="cmpDict">
             an indirect
             <see cref="T:iText.Kernel.Pdf.PdfDictionary"/>
-            from the cmp-file file, which is to be compared to output file dictionary.
+            from the cmp-file file,
+            which is to be compared to output file dictionary.
             </param>
             <param name="excludedKeys">
             a
@@ -39709,8 +39776,14 @@
         </member>
         <member name="M:iText.Kernel.Utils.CompareTool.CompareXmp(System.String,System.String,System.Boolean)">
             <summary>Compares xmp metadata of the two given PDF documents.</summary>
-            <param name="outPdf">the absolute path to the output file, which xmp is to be compared to cmp-file.</param>
-            <param name="cmpPdf">the absolute path to the cmp-file, which xmp is to be compared to output file.</param>
+            <param name="outPdf">
+            the absolute path to the output file,
+            which xmp is to be compared to cmp-file.
+            </param>
+            <param name="cmpPdf">
+            the absolute path to the cmp-file,
+            which xmp is to be compared to output file.
+            </param>
             <param name="ignoreDateAndProducerProperties">
             true, if to ignore differences in date or producer xmp metadata
             properties.
@@ -39762,13 +39835,28 @@
             <remarks>
             Compares tag structures of the two PDF documents.
             <para />
-            This method creates xml files in the same folder with outPdf file. These xml files contain documents tag structures
-            converted into the xml structure. These xml files are compared if they are equal.
+            This method creates xml files in the same folder with outPdf file.
+            These xml files contain documents tag structures converted into the xml structure.
+            These xml files are compared if they are equal.
             </remarks>
             <param name="outPdf">the absolute path to the output file, which tags are to be compared to cmp-file tags.
                 </param>
             <param name="cmpPdf">the absolute path to the cmp-file, which tags are to be compared to output file tags.
                 </param>
+            <returns>text report of the differences in documents tags.</returns>
+        </member>
+        <member name="M:iText.Kernel.Utils.CompareTool.CompareTagStructureAgainstXml(System.String,System.String)">
+            <summary>Compares tag structures of the a PDF document against an xml.</summary>
+            <remarks>
+            Compares tag structures of the a PDF document against an xml.
+            <para />
+            This method creates an xml file in the same folder with outPdf file.
+            This xml file contain documents tag structures converted into the xml structure.
+            This xml files is compared against the provided xml file if they are equal.
+            </remarks>
+            <param name="outPdf">the absolute path to the output file, which tags are to be compared to cmp-file tags.
+                </param>
+            <param name="cmpXml">the absolute path to the compare xml file.</param>
             <returns>text report of the differences in documents tags.</returns>
         </member>
         <member name="M:iText.Kernel.Utils.CompareTool.ConvertDocInfoToStrings(iText.Kernel.Pdf.PdfDocumentInfo)">
@@ -41117,6 +41205,10 @@
             <summary>Inspects attributes dictionary of the StructTreeRoot child.</summary>
             <param name="kid">the direct kid of the StructTreeRoot</param>
         </member>
+        <member name="M:iText.Kernel.Utils.TaggedPdfReaderTool.InspectId(iText.Kernel.Pdf.Tagging.PdfStructElem)">
+            <summary>Inspects Id property of the StructTreeRoot child.</summary>
+            <param name="kid">the direct kid of the StructTreeRoot</param>
+        </member>
         <member name="M:iText.Kernel.Utils.TaggedPdfReaderTool.ParseTag(iText.Kernel.Pdf.Tagging.PdfMcr)">
             <summary>Parses tag of the Marked Content Reference (MCR) kid of the StructTreeRoot.</summary>
             <param name="kid">
@@ -41182,6 +41274,74 @@
             </summary>
             <param name="textReader">the text reader from which to read the XML data.</param>
             <returns>an object that is used to read the XML data in the stream.</returns>
+        </member>
+        <member name="T:iText.Kernel.Utils.XmlUtils">
+            <summary>Utility methods for working with XML Documents in a safe way.</summary>
+        </member>
+        <member name="M:iText.Kernel.Utils.XmlUtils.#ctor">
+            <summary>Private constructor to prevent instantiation of this utility class.</summary>
+        </member>
+        <member name="M:iText.Kernel.Utils.XmlUtils.WriteXmlDocToStream(System.Xml.XmlDocument,System.IO.Stream)">
+            <summary>
+            Writes the provided DOM
+            <see cref="T:System.Xml.XmlDocument"/>
+            to the given
+            <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="xmlReport">
+            the DOM document to serialize; must not be
+            <see langword="null"/>
+            </param>
+            <param name="stream">
+            the output stream to write the XML to; the caller is
+            responsible for opening and closing the stream
+            </param>
+        </member>
+        <member name="M:iText.Kernel.Utils.XmlUtils.CompareXmls(System.IO.Stream,System.IO.Stream)">
+            <summary>Compares two XML documents provided as input streams for structural equality.</summary>
+            <remarks>
+            Compares two XML documents provided as input streams for structural equality.
+            <para />
+            The method parses both input streams using a secure
+            <see cref="!:Javax.Xml.Parsers.DocumentBuilder"/>
+            (created via
+            <see cref="!:XmlProcessorCreator.CreateSafeDocumentBuilder(bool, bool)"/>
+            ),
+            normalizes the documents and removes empty text nodes before
+            delegating to
+            <see cref="!:System.Xml.XmlNode.IsEqualNode(System.Xml.XmlNode)"/>
+            to perform
+            the equality check.
+            </remarks>
+            <param name="xml1">input stream of the first XML document; must be readable</param>
+            <param name="xml2">input stream of the second XML document; must be readable</param>
+            <returns>
+            
+            <see langword="true"/>
+            if the documents are structurally equal,
+            <see langword="false"/>
+            otherwise
+            </returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:iText.Kernel.Utils.XmlUtils.InitNewXmlDocument" -->
+        <member name="M:iText.Kernel.Utils.XmlUtils.InitXmlDocument(System.IO.Stream)">
+            <summary>
+            Parses an XML document from the provided input stream and returns the resulting DOM
+            <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+            <remarks>
+            Parses an XML document from the provided input stream and returns the resulting DOM
+            <see cref="T:System.Xml.XmlDocument"/>.
+            <para />
+            If parsing fails for any reason the method wraps the underlying
+            exception in a
+            <see cref="T:iText.Kernel.Exceptions.PdfException"/>.
+            </remarks>
+            <param name="inputStream">the input stream containing XML content; must be readable</param>
+            <returns>
+            the parsed
+            <see cref="T:System.Xml.XmlDocument"/>
+            </returns>
         </member>
         <member name="T:iText.Kernel.Validation.Context.AbstractColorValidationContext">
             <summary>Abstract class for color validation context.</summary>
@@ -41536,6 +41696,40 @@
         <member name="M:iText.Kernel.Validation.Context.PdfDocumentValidationContext.GetDocumentFonts">
             <summary>Gets the document fonts.</summary>
             <returns>the document fonts</returns>
+        </member>
+        <member name="T:iText.Kernel.Validation.Context.PdfFileSpecDataValidationContext">
+            <summary>
+            Class for
+            <see cref="T:iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+            stream validation context.
+            </summary>
+        </member>
+        <member name="M:iText.Kernel.Validation.Context.PdfFileSpecDataValidationContext.#ctor(iText.Kernel.Pdf.PdfStream)">
+            <summary>
+            Creates a new
+            <see cref="T:iText.Kernel.Validation.Context.PdfFileSpecDataValidationContext"/>
+            instance.
+            </summary>
+            <param name="fileSpecDataStream">
+            
+            <see cref="T:iText.Kernel.Pdf.PdfStream"/>
+            which represents data for validation
+            </param>
+        </member>
+        <member name="M:iText.Kernel.Validation.Context.PdfFileSpecDataValidationContext.GetFileSpecDataStream">
+            <summary>
+            Gets
+            <see cref="T:iText.Kernel.Pdf.PdfStream"/>
+            presentation of file spec data.
+            </summary>
+            <returns>file spec data stream object</returns>
+        </member>
+        <member name="M:iText.Kernel.Validation.Context.PdfFileSpecDataValidationContext.GetType">
+            <summary><inheritDoc/></summary>
+            <returns>
+            
+            <inheritDoc/>
+            </returns>
         </member>
         <member name="T:iText.Kernel.Validation.Context.PdfObjectValidationContext">
             <summary>

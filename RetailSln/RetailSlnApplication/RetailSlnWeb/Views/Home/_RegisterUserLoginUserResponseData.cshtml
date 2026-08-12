@@ -1,0 +1,25 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserLoginUserResponseModel
+@Html.HiddenFor(m => m.RegisterSource)
+@Html.HiddenFor(m => m.UserTypeId)
+@{
+    if (Model != null && Model.ResponseObjectModel != null && !string.IsNullOrWhiteSpace(Model.ResponseObjectModel.ValidationSummaryMessage))
+    {
+        <div class="row validationSummaryMessage" style="padding-left: 9px;">
+            @Model.ResponseObjectModel.ValidationSummaryMessage
+        </div>
+    }
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row" style="padding-left: 9px;">
+            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "validationSummaryErrors", style = "-webkit-column-count: 3; -moz-column-count: 3; column-count: 3;  font-size: 12px; text-align: left;" }).ToHtmlString()))
+        </div>
+    }
+    if (Model != null && Model.ResponseObjectModel != null)
+    {
+        <div class="row" style="padding-left: 9px;">
+            @Html.Partial("_ResponseObject", Model.ResponseObjectModel)
+        </div>
+    }
+}
+@Html.Partial("_OTPResponse", Model.OTPResponseModel, new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "OTPResponseModel" } })

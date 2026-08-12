@@ -9,6 +9,7 @@ using ArchitectureLibraryModels;
 using ArchitectureLibraryPDFLibrary;
 using ArchitectureLibraryShippingLibrary;
 using ArchitectureLibraryUtility;
+using Microsoft.Owin;
 using Newtonsoft.Json.Linq;
 using RetailSlnCacheData;
 using RetailSlnDataLayer;
@@ -25,6 +26,7 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -86,7 +88,7 @@ namespace RetailSlnBusinessLayer
                             CaptchaNumber0 = httpSessionStateBase["CaptchaNumber0"].ToString(),
                             CaptchaNumber1 = httpSessionStateBase["CaptchaNumber1"].ToString(),
                             DefaultDemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
-                            RequestType = "Checkout",
+                            //RequestType = "Checkout",
                             TelephoneCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
                         }
                     };
@@ -123,7 +125,6 @@ namespace RetailSlnBusinessLayer
                         },
                         DeliveryAddressModel = new DemogInfoAddressModel
                         {
-                            BuildingTypeId = BuildingTypeEnum._,
                             DemogInfoCountryId = RetailSlnCache.DefaultDeliveryDemogInfoCountryId,
                         },
                         DeliveryDataModel = new DeliveryDataModel
@@ -142,7 +143,7 @@ namespace RetailSlnBusinessLayer
                         OrderSummaryModel = new OrderSummaryModel
                         {
                             EmailAddress = createForSessionObject.EmailAddress,
-                            EmailExists = string.IsNullOrWhiteSpace(createForSessionObject.EmailAddress) ? false : true,
+                            //EmailExists = string.IsNullOrWhiteSpace(createForSessionObject.EmailAddress) ? false : true,
                             InvoiceTypeId = corpAcctModel.CorpAcctId > 0 ? InvoiceTypeEnum.Quotation : InvoiceTypeEnum.FinalInvoice,
                         },
                         PaymentModeModel = new PaymentModeModel
@@ -161,6 +162,14 @@ namespace RetailSlnBusinessLayer
                     if (string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.LastName))
                     {
                         deliveryInfoModel.OrderSummaryModel.LastName = createForSessionObject?.LastName;
+                    }
+                    if (deliveryInfoModel.DeliveryAddressModel.BuildingTypeId == null)
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.BuildingTypeId = createForSessionObject?.DemogInfoAddressModel?.BuildingTypeId;
+                    }
+                    if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.HouseNumber))
+                    {
+                        deliveryInfoModel.DeliveryAddressModel.HouseNumber = createForSessionObject?.DemogInfoAddressModel?.HouseNumber;
                     }
                     if (string.IsNullOrWhiteSpace(deliveryInfoModel.DeliveryAddressModel.AddressLine1))
                     {
@@ -200,14 +209,17 @@ namespace RetailSlnBusinessLayer
             try
             {
                 ApplicationDataContext.OpenSqlConnection();
-                if (!deliveryInfoModel.OrderSummaryModel.EmailExists)
-                {
-                    var aspNetuserModel = ArchLibDataContext.AspNetUserFromEmailGet(deliveryInfoModel.OrderSummaryModel.EmailAddress, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (aspNetuserModel != null)
-                    {
-                        modelStateDictionary.AddModelError("OrderSummaryModel.EmailAddress", "Invalid Phone, Email combination");
-                    }
-                }
+                //if (!string.IsNullOrWhiteSpace(deliveryInfoModel.OrderSummaryModel.EmailAddress))//(!deliveryInfoModel.OrderSummaryModel.EmailExists)
+                //{
+                //    var aspNetuserModel = ArchLibDataContext.AspNetUserFromEmailAddressGet(deliveryInfoModel.OrderSummaryModel.EmailAddress, deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId.Value, deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //    if (aspNetuserModel != null)
+                //    {
+                //        if (!(aspNetuserModel.TelephoneCountryId == deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId && aspNetuserModel.PhoneNumber == deliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum))
+                //        {
+                //            modelStateDictionary.AddModelError("OrderSummaryModel.EmailAddress", "Invalid Phone, Email combination");
+                //        }
+                //    }
+                //}
                 PaymentInfoModel paymentInfoModel;
                 if (modelStateDictionary.IsValid)
                 {
@@ -1090,8 +1102,8 @@ namespace RetailSlnBusinessLayer
             try
             {
                 string salesTaxCaption = ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "SalesTaxCaption");
-                bool totalSalesTaxAmountFlag = !string.IsNullOrWhiteSpace(salesTaxCaption);
-                float? orderAmout, salesTaxAmount, totalSalesTaxAmount = 0;
+                //bool totalSalesTaxAmountFlag = !string.IsNullOrWhiteSpace(salesTaxCaption);
+                float ? orderAmout, salesTaxAmount, totalSalesTaxAmount = 0;
                 CodeDataModel salesTaxCaptionId;
                 shoppingCartModel.ShoppingCartSummaryModel.TotalTaxAmount = 0;
                 foreach (var salesTaxListModel in salesTaxListModels)
@@ -1123,8 +1135,8 @@ namespace RetailSlnBusinessLayer
                             var itemSpecValue = RetailSlnCache.ItemModels.Find(x => x.ItemId == shoppingCartItemModel.ItemId).ItemItemSpecModels[salesTaxListModel.SalesTaxCaptionId.ToString()].ItemSpecValue;
                             salesTaxAmount = float.Parse(itemSpecValue) * shoppingCartItemModel.OrderAmount.Value / 100f;
                             totalSalesTaxAmount += salesTaxAmount;
-                            if (!totalSalesTaxAmountFlag)
-                            {
+                            //if (!totalSalesTaxAmountFlag)
+                            //{
                                 shoppingCartItemModel.ShoppingCartItemSummarys.Add
                                 (
                                     new ShoppingCartItemModel
@@ -1138,13 +1150,13 @@ namespace RetailSlnBusinessLayer
                                         OrderDetailTypeId = OrderDetailTypeEnum.DoNotShow,
                                     }
                                 );
-                            }
+                            //}
                         }
                         shoppingCartModel.ShoppingCartSummaryModel.TotalTaxAmount = totalSalesTaxAmount.Value;
                     }
                 }
-                if (totalSalesTaxAmountFlag)
-                {
+                //if (totalSalesTaxAmountFlag)
+                //{
                     shoppingCartModel.ShoppingCartItemModelsSummary.Add
                     (
                         new ShoppingCartItemModel
@@ -1158,7 +1170,7 @@ namespace RetailSlnBusinessLayer
                             OrderDetailTypeId = OrderDetailTypeEnum.SalesTaxAmount,
                         }
                     );
-                }
+                //}
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
                 return;
             }
@@ -3314,47 +3326,59 @@ namespace RetailSlnBusinessLayer
                 paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceType = codeDataModel.CodeDataDesc0;
                 orderFileName += "_" + (int)paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId;
                 //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceFileNamePdf = orderFileName + ".pdf";
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before Email");
                 string emailSubjectText = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceDataSubject", paymentInfoModel);
                 string emailBodyHtml = archLibBL.ViewToHtmlString(controller, "_OrderInvoiceData", paymentInfoModel);
                 string signatureHtml = archLibBL.ViewToHtmlString(controller, "_SignatureTemplateEmail", paymentInfoModel);
-                PDFUtility pDFUtility = new PDFUtility();
                 string invoiceDirectoryName = Utilities.GetServerMapPath("~/Invoices/");
                 StreamWriter streamWriter = new StreamWriter(invoiceDirectoryName + orderFileName + ".html");
                 streamWriter.Write(emailBodyHtml);
                 streamWriter.Write(Environment.NewLine);
                 streamWriter.Close();
-                string pDFFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
-                //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceFullFileNamePdf = pDFFullFileName;
-                pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pDFFullFileName);
+                string pdfFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
+                //PDFUtility pDFUtility = new PDFUtility();
+                //pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pdfFullFileName);
+                string webAPIRootUri = ArchLibCache.GetApplicationDefault(clientId, "Api", "ApiRootUriPdfApi");//"http://localhost:55495/";Utilities.GetApplicationValue("RestAPIRootUri");
+                string requestUri = ArchLibCache.GetApplicationDefault(clientId, "Api", "RequestUriPdfApi");//"api/PdfUtility/GeneratePdfFromHtml";//Utilities.GetApplicationValue("GetCodeTypesUri");
+                string queryString = "?directoryName=" + invoiceDirectoryName + "&htmlFileName=" + orderFileName +".html";
+                HttpResponseMessage httpResponseMessage = RestAPI.CallRESTServiceGet(webAPIRootUri, requestUri, queryString);
+                var responseData = httpResponseMessage.Content.ReadAsStringAsync().Result;
                 List<string> emailAttachmentFileNames = new List<string>
                 {
-                    pDFFullFileName,
+                    pdfFullFileName,
                 };
-                var toEmailAddresss = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress;// + ";" + ArchLibCache.GetApplicationDefault(clientId, "OrderProcess", "ToEmailAddress");
+                var toEmailAddresss = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress;
+                toEmailAddresss = string.IsNullOrWhiteSpace(toEmailAddresss) ? "" : toEmailAddresss;
                 if (createForSessionObject.EmailAddress.ToLower() != sessionObjectModel.EmailAddress.ToLower())
                 {
                     toEmailAddresss += ";" + sessionObjectModel.EmailAddress;
                 }
-                string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                string invoicePdfUrl = ArchLibCache.GetApplicationDefault(clientId, oTPServiceType, "LocalHostInvoicePdf");
-                if (invoicePdfUrl == "")
-                {
-                    invoicePdfUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "") + paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value + "_900.pdf";
-                }
-                JObject whatsAppMessageJson = new JObject
-                (
-                    new JProperty("1", paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName), //Name
-                    new JProperty("2", paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString()), //Order#
-                    new JProperty("3", paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted),//"123.45"), //Order Amount
-                    new JProperty("4", DateTime.Parse(paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderDateTime).ToString("MMM-dd-yyyy")), //Order Date
-                    new JProperty("5", invoicePdfUrl) //"https://www.princexml.com/samples/invoice-colorful/invoicesample.pdf") //Invoice Link
-                );
-                string whatsAppMessageJsonString = whatsAppMessageJson.ToString();
-                string toTelephoneNumber = paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode + paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum;
-                //archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
                 archLibBL.SendEmail(toEmailAddresss, emailSubjectText, emailBodyHtml, emailAttachmentFileNames, clientId, ipAddress, execUniqueId, loggedInUserId);
-                archLibBL.WhatsAppMessageSend(oTPServiceType, "Invoice", toTelephoneNumber, whatsAppMessageJsonString, clientId, ipAddress, execUniqueId, loggedInUserId);
-                //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceHtmlString = emailBodyHtml;
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: After Email");
+                if (ArchLibCache.GetApplicationDefault(clientId, "OTP", "NotificationSenderEmail") == "")
+                {
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: Before WhatsApp Invoice");
+                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+                    string invoicePdfUrl = ArchLibCache.GetApplicationDefault(clientId, oTPServiceType, "LocalHostInvoicePdf");
+                    if (invoicePdfUrl == "")
+                    {
+                        invoicePdfUrl = ArchLibCache.GetApplicationDefault(clientId, "BaseUrl", "") + "Invoices/" + paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value + "_900.pdf";
+                    }
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00004000 :: WhatsApp Invoice", "invoicePdfUrl", invoicePdfUrl);
+                    JObject whatsAppMessageJson = new JObject
+                    (
+                        new JProperty("1", paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName + " " + paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName), //Name
+                        new JProperty("2", paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value.ToString()), //Order#
+                        new JProperty("3", paymentInfoModel.ShoppingCartModel.ShoppingCartSummaryModel.BalanceDueFormatted),//"123.45"), //Order Amount
+                        new JProperty("4", DateTime.Parse(paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderDateTime).ToString("MMM-dd-yyyy")), //Order Date
+                        new JProperty("5", invoicePdfUrl) //"https://www.princexml.com/samples/invoice-colorful/invoicesample.pdf") //Invoice Link
+                    );
+                    string whatsAppMessageJsonString = whatsAppMessageJson.ToString();
+                    string toTelephoneNumber = paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneTelephoneCode + paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum;
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00005000 :: WhatsApp Invoice", "toTelephoneNumber", toTelephoneNumber, "whatsAppMessageJsonString", whatsAppMessageJsonString);
+                    var messageSid = archLibBL.WhatsAppMessageSend(oTPServiceType, "Invoice", toTelephoneNumber, whatsAppMessageJsonString, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00006000 :: WhatsApp Invoice", "messageSid", messageSid);
+                }
                 if (paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.InvoiceTypeId == InvoiceTypeEnum.FinalInvoice)
                 {
                 }
@@ -3368,13 +3392,18 @@ namespace RetailSlnBusinessLayer
                     streamWriter.Write(emailBodyHtml);
                     streamWriter.Write(Environment.NewLine);
                     streamWriter.Close();
-                    pDFFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
-                    pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pDFFullFileName);
+                    //pdfFullFileName = invoiceDirectoryName + orderFileName + ".pdf";
+                    //pDFUtility.GeneratePDFFromHtmlString(emailBodyHtml, pdfFullFileName);
+                    //string webAPIRootUri = "http://localhost:55495/";// Utilities.GetApplicationValue("RestAPIRootUri");
+                    //string requestUri = "api/PdfUtility/GeneratePdfFromHtml";//Utilities.GetApplicationValue("GetCodeTypesUri");
+                    queryString = "?directoryName=" + invoiceDirectoryName + "&htmlFileName=" + orderFileName + ".html";
+                    httpResponseMessage = RestAPI.CallRESTServiceGet(webAPIRootUri, requestUri, queryString);
+                    responseData = httpResponseMessage.Content.ReadAsStringAsync().Result;
                 }
                 OrderInvoiceModel orderInvoiceModel = new OrderInvoiceModel
                 {
                     InvoiceFileNamePdf = orderFileName + ".pdf",
-                    InvoiceFullFileNamePdf = pDFFullFileName,
+                    InvoiceFullFileNamePdf = pdfFullFileName,
                     InvoiceHtmlString = emailBodyHtml,
                     OrderHeaderId = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderHeaderId.Value,
                 };
@@ -3404,16 +3433,7 @@ namespace RetailSlnBusinessLayer
             {
                 //int x = 1, y = 0, z = x / y;
                 ArchLibDataContext.CreateDemogInfoAddress(paymentInfoModel.DeliveryInfoModel.DeliveryAddressModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                if (createForSessionObject.AspNetRoleName == "GUESTROLE")
-                {
-                    if (!paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailExists)
-                    {//Create new user
-                        AspNetUserModel aspNetUserModel = archLibBL.CreateNewUser(paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneDemogInfoCountryId.Value, paymentInfoModel.DeliveryInfoModel.DeliveryDataModel.PrimaryTelephoneNum, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.LastName, paymentInfoModel.DeliveryInfoModel.DeliveryAddressModel.DemogInfoAddressId, "GUESTROLE", UserStatusEnum.Active, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        RegisterUserProfPersonExtn1(aspNetUserModel.PersonModel.PersonId.Value, 0, sqlConnection, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    }
-                }
                 CorpAcctModel corpAcctModel = ((ApplSessionObjectModel)createForSessionObject.ApplSessionObjectModel).CorpAcctModel;
-                //paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderDateTime = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderDateTime ?? DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 OrderHeader orderHeader = CreateOrderHeader(paymentInfoModel, sessionObjectModel, createForSessionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
                 paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.OrderDateTime = orderHeader.OrderDateTime;
                 paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.CorpAcctModel = corpAcctModel;
@@ -3475,6 +3495,7 @@ namespace RetailSlnBusinessLayer
                     PaymentRefOptions = paymentRefOptions,
                 };
                 ApplicationDataContext.OrderPaymentAdd(paymentInfoModel.PaymentDataModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
+                //ArchLibDataContext.UpdAspNetUser4(createForSessionObject.AspNetUserId, paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.EmailAddress, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 PersonModel personModel = new PersonModel
                 {
                     FirstName = paymentInfoModel.DeliveryInfoModel.OrderSummaryModel.FirstName,
@@ -3483,10 +3504,7 @@ namespace RetailSlnBusinessLayer
                     PersonId = createForSessionObject.PersonId,
                     StatusId = GenericStatusEnum.Active,
                 };
-                if (createForSessionObject.AspNetRoleName != "GUESTROLE")
-                {
-                    ArchLibDataContext.UpdPerson(personModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
-                }
+                ArchLibDataContext.UpdPerson(personModel, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 CreateInvoice(paymentInfoModel, sessionObjectModel, createForSessionObject, controller, httpSessionStateBase, modelStateDictionary, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplicationDataContext.ShoppingCartWIPDelAll(paymentInfoModel.ShoppingCartModel.ShoppingCartWIPHdrModel.ShoppingCartWIPHdrId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);
                 ApplicationDataContext.ShoppingCartWIPHdrDel(paymentInfoModel.ShoppingCartModel.ShoppingCartWIPHdrModel.ShoppingCartWIPHdrId, sqlConnection, clientId, ipAddress, execUniqueId, loggedInUserId);

@@ -4,6 +4,7 @@ using ArchitectureLibraryEnumerations;
 using ArchitectureLibraryException;
 using ArchitectureLibraryModels;
 using ArchitectureLibraryUtility;
+using Microsoft.Ajax.Utilities;
 using Microsoft.Owin.BuilderProperties;
 using RetailSlnBusinessLayer;
 using RetailSlnCacheData;
@@ -21,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
@@ -40,14 +42,14 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult Index(string id)
         {
-            #region CodeGen Commented out
+            #region Commented out code - CodeGen execution
             //if (id == "CODEGEN01")
             //{
             //    CreateClassDefns();
             //}
             #endregion
             //int x = 1, y = 0, z = x / y;
-            Session.Timeout = 9;
+            Session.Timeout = int.Parse(ArchLibCache.GetApplicationDefault(clientId, "SessionTimeout", "Web"));
             ViewData["ActionName"] = "Index";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request, lastIpAddress, ArchLibCache.IpInfoClientAccessToken), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -128,7 +130,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        #region CodeGen Commented out
+        #region Commented out code - CodeGen implementation
         //private void CreateClassDefns()
         //{
         //    string directoryName = @"C:\Code\rramaswamy27\ArchLib\ArchLibSolution\ArchLib.Domain\";
@@ -823,184 +825,107 @@ namespace RetailSlnWeb.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: LoginUserProf
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("LoginUserProf")]
-        public ActionResult LoginUserProf()
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "LoginUserProf";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                loginUserProfModel.OTPRequestModel.RequestType = "Login";
-                actionResult = View("LoginUserProf", loginUserProfModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
-        // POST: LoginUserProfOTPRequest
-        [HttpPost]
-        public ActionResult LoginUserProfOTPRequest(OTPRequestModel oTPRequestModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "LoginUserProfOTPRequest";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            bool success;
-            string processMessage, htmlString;
-            OTPResponseModel oTPResponseModel = null;
-            //int x = 1, y = 0, z = x / y;
-            try
-            {
-                ModelState.Clear();
-                TryValidateModel(oTPRequestModel);
-                if (ModelState.IsValid)
-                {
-                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    oTPResponseModel = archLibBL.LoginUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (oTPResponseModel != null)
-                    {
-                        oTPResponseModel.RequestType = "Login";
-                    }
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ModelState.AddModelError("", "Error during OTP setup");
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
-            }
-            if (ModelState.IsValid)
-            {
-                success = true;
-                processMessage = "SUCCESS!!!";
-            }
-            else
-            {
-                success = false;
-                processMessage = "ERROR???";
-            }
-            if (success)
-            {
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
-            }
-            else
-            {
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
-                oTPRequestModel.CaptchaAnswer = null;
-                oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
-                oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
-            }
-            actionResult = Json(new { success, processMessage, htmlString });
-            return actionResult;
-        }
-
-        // POST: LoginUserProfOTPResponse
-        [HttpPost]
-        public ActionResult LoginUserProfOTPResponse(OTPResponseModel oTPResponseModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "LoginUserProfOTPResponse";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString = "";
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ModelState.Clear();
-                TryValidateModel(oTPResponseModel);
-                if (ModelState.IsValid)
-                {
-                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    //SessionObjectModel sessionObjectModel = archLibBL.LoginUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, oTPServiceType, "", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (ModelState.IsValid)
-                    {
-                        if (sessionObjectModel.NewUser)
-                        {
-                            retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        }
-                        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
-                        sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                        string currentLoggedInUserId = loggedInUserId;
-                        htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
-                        //Reset the last visited - User can be different
-                        Session["LastVisitedParentCategoryId"] = null;
-                        Session["LastVisitedPageNum"] = null;
-                        success = true;
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-                    }
-                    else
-                    {
-                        success = false;
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                    }
-                }
-                else
-                {
-                    success = false;
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
-                ModelState.AddModelError("", "Error during OTP setup");
-            }
-            if (success)
-            {
-                processMessage = "SUCCESS!!!";
-                actionResult = Json(new { success, processMessage, htmlString });
-            }
-            else
-            {
-                oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
-                actionResult = Json(new { success, processMessage, htmlString });
-            }
-            return actionResult;
-        }
-
-        #region Commented Code
-        //// POST: LoginUserProf
+        #region Commented out code - LoginUserProf
+        //// GET: LoginUserProf
         //[AllowAnonymous]
-        //[HttpPost]
-        //public ActionResult LoginUserProf(LoginUserProfModel loginUserProfModel)
+        //[HttpGet]
+        //[Route("LoginUserProf")]
+        //public ActionResult LoginUserProf()
         //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "LoginUserProf";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        LoginUserProfModel loginUserProfModel = archLibBL.LoginUserProf(RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        loginUserProfModel.OTPRequestModel.RequestType = "Login";
+        //        actionResult = View("LoginUserProf", loginUserProfModel);
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        actionResult = View("Error", responseObjectModel);
+        //    }
+        //    return actionResult;
+        //}
+
+        //// POST: LoginUserProfOTPRequest
+        //[HttpPost]
+        //public ActionResult LoginUserProfOTPRequest(OTPRequestModel oTPRequestModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "LoginUserProfOTPRequest";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    OTPResponseModel oTPResponseModel = null;
+        //    //int x = 1, y = 0, z = x / y;
+        //    try
+        //    {
+        //        ModelState.Clear();
+        //        TryValidateModel(oTPRequestModel);
+        //        if (ModelState.IsValid)
+        //        {
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            oTPResponseModel = archLibBL.LoginUserProfOTPRequest(ref oTPRequestModel, "LOGINUSERPROF", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (oTPResponseModel != null)
+        //            {
+        //                oTPResponseModel.RequestType = "Login";
+        //            }
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //    }
+        //    else
+        //    {
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //    }
+        //    if (success)
+        //    {
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
+        //    }
+        //    else
+        //    {
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        oTPRequestModel.CaptchaAnswer = null;
+        //        oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
+        //        oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString });
+        //    return actionResult;
+        //}
+
+        //// POST: LoginUserProfOTPResponse
+        //[HttpPost]
+        //public ActionResult LoginUserProfOTPResponse(OTPResponseModel oTPResponseModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "LoginUserProfOTPResponse";
         //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
         //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
         //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -1009,125 +934,68 @@ namespace RetailSlnWeb.Controllers
         //    ArchLibBL archLibBL = new ArchLibBL();
         //    RetailSlnBL retailSlnBL = new RetailSlnBL();
         //    bool success;
-        //    string processMessage, htmlString;
+        //    string processMessage, htmlString = "";
         //    try
         //    {
         //        //int x = 1, y = 0, z = x / y;
         //        ModelState.Clear();
-        //        TryValidateModel(loginUserProfModel);
-        //        string currentLoggedInUserId = loggedInUserId;
-        //        SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, true, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
-        //        sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //        TryValidateModel(oTPResponseModel);
         //        if (ModelState.IsValid)
         //        {
-        //            var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            actionResult = Json(new { success, processMessage, redirectUrl });
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-        //        }
-        //        else
-        //        {
-        //            loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            //SessionObjectModel sessionObjectModel = archLibBL.LoginUserProfOTPResponse(ref oTPResponseModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, oTPServiceType, "", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (ModelState.IsValid)
         //            {
-        //                ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //            };
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
-        //            actionResult = Json(new { success, processMessage, htmlString });
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberLogin0", "CaptchaNumberLogin1");
-        //        loginUserProfModel.CaptchaAnswerLogin = null;
-        //        loginUserProfModel.CaptchaNumberLogin0 = Session["CaptchaNumberLogin0"].ToString();
-        //        loginUserProfModel.CaptchaNumberLogin1 = Session["CaptchaNumberLogin1"].ToString();
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        loginUserProfModel.ResponseObjectModel = new ResponseObjectModel
-        //        {
-        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //        };
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_LoginUserProfData", loginUserProfModel);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        actionResult = Json(new { success, processMessage, htmlString });
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-        //    }
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-        //// GET: OTP
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public ActionResult OTP(string id, string emailAddress)
-        //{
-        //    ViewData["ActionName"] = "OTP";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    string oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration;
-        //    try
-        //    {
-        //        OTPSendTypeEnum oTPSendTypeId;
-        //        try
-        //        {
-        //            ModelState.Clear();
-        //            oTPSendTypeId = (OTPSendTypeEnum)long.Parse(id);
-        //            OTPModel oTPModel = archLibBL.OTP(id, emailAddress, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            success = ModelState.IsValid;
-        //            if (success)
-        //            {
-        //                processMessage = "SUCCESS!!!";
-        //                htmlString = "OTP generated successfully";
-        //                oTPExpiryDate = oTPModel.OTPExpiryDate;
-        //                oTPExpiryTime = oTPModel.OTPExpiryTime;
-        //                oTPExpiryDuration = oTPModel.OTPExpiryDuration.ToString();
+        //                if (sessionObjectModel.NewUser)
+        //                {
+        //                    retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                }
+        //                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //                string currentLoggedInUserId = loggedInUserId;
+        //                htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
+        //                //Reset the last visited - User can be different
+        //                Session["LastVisitedParentCategoryId"] = null;
+        //                Session["LastVisitedPageNum"] = null;
+        //                success = true;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
         //            }
         //            else
         //            {
-        //                processMessage = "ERROR???";
-        //                htmlString = "Error occurred while generating OTP";
-        //                oTPExpiryDate = "Error";
-        //                oTPExpiryTime = "Error";
-        //                oTPExpiryDuration = "Error";
+        //                success = false;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
         //            }
         //        }
-        //        catch (Exception exception)
+        //        else
         //        {
-        //            exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
         //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = "Error while generating OTP";
-        //            oTPExpiryDate = "Error";
-        //            oTPExpiryTime = "Error";
-        //            oTPExpiryDuration = "Error";
         //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    }
         //    catch (Exception exception)
         //    {
         //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
         //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = "Error while generating OTP";
-        //        oTPExpiryDate = "";
-        //        oTPExpiryTime = "";
-        //        oTPExpiryDuration = "";
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        ModelState.AddModelError("", "Error during OTP setup");
         //    }
-        //    actionResult = Json(new { success, processMessage, htmlString, oTPExpiryDate, oTPExpiryTime, oTPExpiryDuration }, JsonRequestBehavior.AllowGet);
-        //    //Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+        //    if (success)
+        //    {
+        //        processMessage = "SUCCESS!!!";
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
+        //    else
+        //    {
+        //        oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
         //    return actionResult;
-        //    //string url = "/Home/Forbidden";
-        //    //return JavaScript(string.Format("window.open('{0}', '_blank', 'left=100,top=100,width=500,height=500,toolbar=no,resizable=no,scrollable=yes');", url));
         //}
         #endregion
 
@@ -1217,213 +1085,14 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: RegisterUser
+        #region
+        // GET: RegisterUserLoginUser
         [HttpGet]
-        [Route("RegisterUser/{id?}")]
-        public ActionResult RegisterUser(string id)
+        [Route("RegisterUserLoginUser/{id?}")]
+        public ActionResult RegisterUserLoginUser(string id)
         {
             //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUser";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                string userTypeIdParm = "700";
-                RegisterUserRequestModel registerUserRequestModel = archLibBL.RegisterUser(id, userTypeIdParm, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerUserRequestModel.RequestType = "Register Referral";
-                actionResult = View("RegisterUser", registerUserRequestModel);
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-                actionResult = View("Error", responseObjectModel);
-            }
-            return actionResult;
-        }
-
-        // POST: RegisterUserOTPRequest
-        [HttpPost]
-        public ActionResult RegisterUserOTPRequest(RegisterUserRequestModel registerUserRequestModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserProfOTPRequest";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            bool success;
-            string processMessage, htmlString;
-            RegisterUserResponseModel registerUserResponseModel = null;
-            //int x = 1, y = 0, z = x / y;
-            try
-            {
-                ModelState.Clear();
-                TryValidateModel(registerUserRequestModel);
-                if (ModelState.IsValid)
-                {
-                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    registerUserResponseModel = archLibBL.RegisterUserOTPRequest(ref registerUserRequestModel, "Register", "REGISTERUSER", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    registerUserResponseModel.RequestType = "Register Referral";
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Data Validation Success");
-                }
-                else
-                {
-                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Errors");
-                    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserRequestData", registerUserRequestModel);
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                ModelState.AddModelError("", "Error during OTP setup");
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserRequestData", registerUserRequestModel);
-            }
-            if (ModelState.IsValid)
-            {
-                success = true;
-                processMessage = "SUCCESS!!!";
-            }
-            else
-            {
-                success = false;
-                processMessage = "ERROR???";
-            }
-            if (success)
-            {
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserResponse", registerUserResponseModel);
-            }
-            else
-            {
-                archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
-                registerUserRequestModel.RequestType = "Register Referral";
-                registerUserRequestModel.CaptchaAnswer = null;
-                registerUserRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
-                registerUserRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
-                registerUserRequestModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                ModelState.AddModelError("", "Error during OTP setup");
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserRequestData", registerUserRequestModel);
-            }
-            actionResult = Json(new { success, processMessage, htmlString });
-            return actionResult;
-        }
-
-        // POST: RegisterUserOTPResponse
-        [HttpPost]
-        public ActionResult RegisterUserOTPResponse(RegisterUserResponseModel registerUserResponseModel)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserOTPResponse";
-            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-            ActionResult actionResult;
-            ArchLibBL archLibBL = new ArchLibBL();
-            RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString = "";
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ModelState.Clear();
-                TryValidateModel(registerUserResponseModel);
-                if (ModelState.IsValid)
-                {
-                    string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserOTPResponse(ref registerUserResponseModel, oTPServiceType, "REFERRALROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    if (ModelState.IsValid)
-                    {
-                        if (sessionObjectModel.NewUser)
-                        {
-                            retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        }
-                        Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
-                        sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                        RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
-                        {
-                            RegisterUserResponseModel = registerUserResponseModel,
-                        };
-                        retailSlnBL.RegisterUserExtn1(registerUserEmailModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        var oTPType = ArchLibCache.GetApplicationDefault(clientId, "OTP", "Type");
-                        var notificationSenderEmail = ArchLibCache.GetApplicationDefault(clientId, "OTP", "NotificationSenderEmail");
-                        if (oTPType == "Telephone")
-                        {
-                            if (notificationSenderEmail != "")
-                            {//Send the message as email
-                                archLibBL.SendEmail(notificationSenderEmail, null, "_RegisterUserEmailSubject", registerUserEmailModel, "_RegisterUserEmailBody", registerUserEmailModel, "_SignatureTemplate", registerUserEmailModel, this, clientId, ipAddress, execUniqueId, loggedInUserId);
-                            }
-                            else
-                            {//Send message using Twillo
-                                string message = registerUserResponseModel.TelephoneNumberFormatted + " registered " + ArchLibCache.GetApplicationDefault(clientId, "BusinessNameAbbrev", "");
-                                //archLibBL.SendWhatsAppMessagePayLoad(oTPServiceType, "+" + registerUserResponseModel.TelephoneCode + registerUserResponseModel.TelephoneNumber, message, clientId);
-                            }
-                        }
-                        else
-                        {//Send the message as email
-                            archLibBL.SendEmail(notificationSenderEmail, null, "_RegisterUserEmailSubject", registerUserEmailModel, "_RegisterUserEmailBody", registerUserEmailModel, "_SignatureTemplate", registerUserEmailModel, this, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        }
-                        var currentLoggedInUserId = "";
-                        htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName01", "ControllerName01");
-                        success = true;
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-                    }
-                    else
-                    {
-                        success = false;
-                        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-                    }
-                }
-                else
-                {
-                    success = false;
-                }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
-            }
-            if (success)
-            {
-                processMessage = "SUCCESS!!!";
-                actionResult = Json(new { success, processMessage, htmlString });
-            }
-            else
-            {
-                registerUserResponseModel.ResponseObjectModel = new ResponseObjectModel
-                {
-                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-                };
-                ModelState.AddModelError("", "Error during OTP setup");
-                processMessage = "ERROR???";
-                registerUserResponseModel.RequestType = "Register Referral";
-                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserResponseData", registerUserResponseModel);
-                actionResult = Json(new { success, processMessage, htmlString });
-            }
-            return actionResult;
-        }
-
-        // GET: RegisterUserProf
-        [HttpGet]
-        [Route("RegisterUserProf/{id?}")]
-        public ActionResult RegisterUserProf(string id)
-        {
-            //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserProf";
+            ViewData["ActionName"] = "RegisterUserLoginUser";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -1434,9 +1103,9 @@ namespace RetailSlnWeb.Controllers
             {
                 //int x = 1, y = 0, z = x / y;
                 id = "100"; //This action will be used for regular register - There will be no source for now
-;               RegisterUserProfModel registerUserProfModel = archLibBL.RegisterUserProf("", id, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                registerUserProfModel.OTPRequestModel.RequestType = "Register";
-                actionResult = View("RegisterUserProf", registerUserProfModel);
+                RegisterUserLoginUserRequestModel registerUserLoginUserRequestModel = archLibBL.RegisterUserLoginUser("", id, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                registerUserLoginUserRequestModel.OTPRequestModel.RequestType = "Register";
+                actionResult = View("RegisterUserLoginUser", registerUserLoginUserRequestModel);
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
@@ -1447,74 +1116,66 @@ namespace RetailSlnWeb.Controllers
             }
             return actionResult;
         }
+        #endregion
 
-        // POST: RegisterUserProfOTPRequest
+        // POST: RegisterUserLoginUserRequest
         [HttpPost]
-        public ActionResult RegisterUserProfOTPRequest(OTPRequestModel oTPRequestModel)
+        public ActionResult RegisterUserLoginUserRequest(RegisterUserLoginUserRequestModel registerUserLoginUserRequestModel)
         {
             //int x = 1, y = 0, z = x / y;
-            ViewData["ActionName"] = "RegisterUserProfOTPRequest";
+            ViewData["ActionName"] = "RegisterUserLoginUser";
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
             ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
-            bool success;
-            string processMessage, htmlString;
-            OTPResponseModel oTPResponseModel = null;
-            //int x = 1, y = 0, z = x / y;
+            RegisterUserLoginUserResponseModel registerUserLoginUserResponseModel = null;
             try
             {
+                //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
-                TryValidateModel(oTPRequestModel);
+                TryValidateModel(registerUserLoginUserRequestModel);
+                TryValidateModel(registerUserLoginUserRequestModel.OTPRequestModel, "OTPRequestModel");
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    oTPRequestModel.OTPPurpose = "Register";
-                    oTPRequestModel.OTPTypeNameDesc = "REGISTERUSERPROF";
-                    oTPRequestModel.RequestType = "Register";
-                    oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                    oTPResponseModel.RequestType = "Register";
-                    //oTPResponseModel.RequestType = "Register";
+                    //int x = 1, y = 0, z = x / y;
+                    registerUserLoginUserResponseModel = archLibBL.RegisterUserLoginUserRequest(ref registerUserLoginUserRequestModel, "REGiSTERUSERLOGINUSER", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Success!!!");
                 }
-                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+                else
+                {
+                    ModelState.AddModelError("", "Error processing OTP???");
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00003000 :: BL Process Failure???");
+                }
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
                 ModelState.AddModelError("", "Error during OTP setup");
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
             }
             if (ModelState.IsValid)
             {
-                success = true;
-                processMessage = "SUCCESS!!!";
-            }
-            else
-            {
-                success = false;
-                processMessage = "ERROR???";
-            }
-            if (success)
-            {
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
+                actionResult = PartialView("_RegisterUserLoginUserResponse", registerUserLoginUserResponseModel);
+                Response.StatusCode = (int)HttpStatusCode.OK;
             }
             else
             {
                 archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
-                oTPRequestModel.CaptchaAnswer = null;
-                oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
-                oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+                registerUserLoginUserRequestModel.OTPRequestModel.CaptchaAnswer = null;
+                registerUserLoginUserRequestModel.OTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
+                registerUserLoginUserRequestModel.OTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
+                actionResult = PartialView("_RegisterUserLoginUserRequest", registerUserLoginUserRequestModel);
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
-            actionResult = Json(new { success, processMessage, htmlString });
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return actionResult;
         }
 
         // POST: RegisterUserProfOTPResponse
         [HttpPost]
-        public ActionResult RegisterUserProfOTPResponse(OTPResponseModel oTPResponseModel)
+        public ActionResult RegisterUserLoginUserResponse(RegisterUserLoginUserResponseModel registerUserLoginUserResponseModel)
         {
             //int x = 1, y = 0, z = x / y;
             ViewData["ActionName"] = "RegisterUserProfOTPResponse";
@@ -1525,17 +1186,16 @@ namespace RetailSlnWeb.Controllers
             ActionResult actionResult;
             ArchLibBL archLibBL = new ArchLibBL();
             RetailSlnBL retailSlnBL = new RetailSlnBL();
-            bool success;
-            string processMessage, htmlString = "";
             try
             {
                 //int x = 1, y = 0, z = x / y;
                 ModelState.Clear();
-                TryValidateModel(oTPResponseModel);
+                TryValidateModel(registerUserLoginUserResponseModel);
+                TryValidateModel(registerUserLoginUserResponseModel.OTPResponseModel, "OTPResponseModel");
                 if (ModelState.IsValid)
                 {
                     string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
-                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    SessionObjectModel sessionObjectModel = archLibBL.RegisterUserLoginUserResponse(ref registerUserLoginUserResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
                         if (sessionObjectModel.NewUser)
@@ -1544,52 +1204,199 @@ namespace RetailSlnWeb.Controllers
                         }
                         Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
                         sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-                        string currentLoggedInUserId = loggedInUserId;
-                        htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
-                        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfSuccess", oTPResponseModel);
-                        success = true;
+                        string currentLoggedInUserId = sessionObjectModel.LoggedInUserId;
+                        LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
                     }
                     else
                     {
-                        success = false;
+                        ModelState.AddModelError("", "Error while processing OTP");
                         exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                     }
                 }
                 else
                 {
-                    success = false;
+                    ModelState.AddModelError("", "Model Error(s)");
+                    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
                 }
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             }
             catch (Exception exception)
             {
                 exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                success = false;
                 archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
                 ModelState.AddModelError("", "Error during OTP setup");
             }
-            if (success)
+            if (ModelState.IsValid)
             {
-                processMessage = "SUCCESS!!!";
-                actionResult = Json(new { success, processMessage, htmlString });
+                actionResult = PartialView("_RegisterUserLoginUserSuccess", registerUserLoginUserResponseModel);
+                Response.StatusCode = (int)HttpStatusCode.OK;
             }
             else
             {
-                oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
+                registerUserLoginUserResponseModel.ResponseObjectModel = new ResponseObjectModel
                 {
                     ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
                 };
-                processMessage = "ERROR???";
-                htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
-                actionResult = Json(new { success, processMessage, htmlString });
+                actionResult = PartialView("_RegisterUserLoginUserResponseData", registerUserLoginUserResponseModel);
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
             return actionResult;
         }
 
-        #region Commented out temporarily
+        #region Commented out code - RegisterUserProfOTPResponse
+        //// POST: RegisterUserProfOTPResponseBackup
+        //[HttpPost]
+        //public ActionResult RegisterUserLoginUserResponseBackup(OTPResponseModel oTPResponseModel/*RegisterUserLoginUserResponseModel registerUserLoginUserResponseModel*/)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserProfOTPResponse";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    bool success;
+        //    string processMessage, htmlString = "";
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(oTPResponseModel);
+        //        if (ModelState.IsValid)
+        //        {
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            //SessionObjectModel sessionObjectModel = archLibBL.RegisterUserLoginUserProfResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            SessionObjectModel sessionObjectModel = null;
+        //            if (ModelState.IsValid)
+        //            {
+        //                if (sessionObjectModel.NewUser)
+        //                {
+        //                    retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                }
+        //                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //                string currentLoggedInUserId = loggedInUserId;
+        //                htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
+        //                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfSuccess", oTPResponseModel);
+        //                success = true;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //            }
+        //            else
+        //            {
+        //                success = false;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            success = false;
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        success = false;
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //    }
+        //    if (success)
+        //    {
+        //        processMessage = "SUCCESS!!!";
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
+        //    else
+        //    {
+        //        oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        processMessage = "ERROR???";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
+        //    return actionResult;
+        //}
+
+        //// POST: RegisterUserProfOTPResponse
+        //[HttpPost]
+        //public ActionResult RegisterUserLoginUserResponse(RegisterUserLoginUserResponseModel registerUserLoginUserResponseModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserProfOTPResponse";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
+        //    //bool success;
+        //    //string processMessage, htmlString = "";
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ModelState.Clear();
+        //        TryValidateModel(registerUserLoginUserResponseModel);
+        //        TryValidateModel(registerUserLoginUserResponseModel.OTPResponseModel, "OTPResponseModel");
+        //        if (ModelState.IsValid)
+        //        {
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            SessionObjectModel sessionObjectModel = archLibBL.RegisterUserLoginUserResponse(ref registerUserLoginUserResponseModel, oTPServiceType, "DEFAULTROLE", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (ModelState.IsValid)
+        //            {
+        //                if (sessionObjectModel.NewUser)
+        //                {
+        //                    retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                }
+        //                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //                string currentLoggedInUserId = sessionObjectModel.LoggedInUserId;
+        //                LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("", "Error while processing OTP");
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("", "Model Error(s)");
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        actionResult = PartialView("_RegisterUserLoginUserSuccess", registerUserLoginUserResponseModel);
+        //        Response.StatusCode = (int)HttpStatusCode.OK;
+        //    }
+        //    else
+        //    {
+        //        registerUserLoginUserResponseModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        actionResult = PartialView("_RegisterUserLoginUserResponseData", registerUserLoginUserResponseModel);
+        //        Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        //    }
+        //    return actionResult;
+        //}
+        #endregion
+
+        #region Commented out code - RegisterUser & RegisterUserProf
         //// GET: RegisterUser
-        //[AllowAnonymous]
         //[HttpGet]
         //[Route("RegisterUser/{id?}")]
         //public ActionResult RegisterUser(string id)
@@ -1605,10 +1412,10 @@ namespace RetailSlnWeb.Controllers
         //    try
         //    {
         //        //int x = 1, y = 0, z = x / y;
-        //        RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
-        //        Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
-        //        actionResult = View("RegisterUser", registerUserModel);
+        //        string userTypeIdParm = "700";
+        //        RegisterUserRequestModel registerUserRequestModel = archLibBL.RegisterUser(id, userTypeIdParm, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        registerUserRequestModel.RequestType = "Register Referral";
+        //        actionResult = View("RegisterUser", registerUserRequestModel);
         //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    }
         //    catch (Exception exception)
@@ -1619,13 +1426,85 @@ namespace RetailSlnWeb.Controllers
         //    }
         //    return actionResult;
         //}
-        #endregion
 
-        //// POST: RegisterUser
-        //[AllowAnonymous]
+        //// POST: RegisterUserOTPRequest
         //[HttpPost]
-        //public ActionResult RegisterUser(RegisterUserModel registerUserModel)
+        //public ActionResult RegisterUserOTPRequest(RegisterUserRequestModel registerUserRequestModel)
         //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserProfOTPRequest";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    RegisterUserResponseModel registerUserResponseModel = null;
+        //    //int x = 1, y = 0, z = x / y;
+        //    try
+        //    {
+        //        ModelState.Clear();
+        //        TryValidateModel(registerUserRequestModel);
+        //        if (ModelState.IsValid)
+        //        {
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            registerUserResponseModel = archLibBL.RegisterUserOTPRequest(ref registerUserRequestModel, "Register", "REGISTERUSER", oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            registerUserResponseModel.RequestType = "Register Referral";
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Data Validation Success");
+        //        }
+        //        else
+        //        {
+        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model Errors");
+        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserRequestData", registerUserRequestModel);
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserRequestData", registerUserRequestModel);
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //    }
+        //    else
+        //    {
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //    }
+        //    if (success)
+        //    {
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserResponse", registerUserResponseModel);
+        //    }
+        //    else
+        //    {
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        registerUserRequestModel.RequestType = "Register Referral";
+        //        registerUserRequestModel.CaptchaAnswer = null;
+        //        registerUserRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
+        //        registerUserRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
+        //        registerUserRequestModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserRequestData", registerUserRequestModel);
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString });
+        //    return actionResult;
+        //}
+
+        //// POST: RegisterUserOTPResponse
+        //[HttpPost]
+        //public ActionResult RegisterUserOTPResponse(RegisterUserResponseModel registerUserResponseModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserOTPResponse";
         //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
         //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
         //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -1634,173 +1513,90 @@ namespace RetailSlnWeb.Controllers
         //    ArchLibBL archLibBL = new ArchLibBL();
         //    RetailSlnBL retailSlnBL = new RetailSlnBL();
         //    bool success;
-        //    string processMessage, htmlString;
+        //    string processMessage, htmlString = "";
         //    try
         //    {
         //        //int x = 1, y = 0, z = x / y;
         //        ModelState.Clear();
-        //        TryValidateModel(registerUserModel);
-        //        TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
-        //        //archLibBL.RegisterUser(ref registerUserModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        TryValidateModel(registerUserResponseModel);
         //        if (ModelState.IsValid)
         //        {
-        //            if (!registerUserModel.RedirectToUpdatePassword)
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            SessionObjectModel sessionObjectModel = archLibBL.RegisterUserOTPResponse(ref registerUserResponseModel, oTPServiceType, "REFERRALROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (ModelState.IsValid)
         //            {
-        //                retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                if (sessionObjectModel.NewUser)
+        //                {
+        //                    retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                }
+        //                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //                RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
+        //                {
+        //                    RegisterUserResponseModel = registerUserResponseModel,
+        //                };
+        //                retailSlnBL.RegisterUserExtn1(registerUserEmailModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                var oTPType = ArchLibCache.GetApplicationDefault(clientId, "OTP", "Type");
+        //                var notificationSenderEmail = ArchLibCache.GetApplicationDefault(clientId, "OTP", "NotificationSenderEmail");
+        //                if (oTPType == "Telephone")
+        //                {
+        //                    if (notificationSenderEmail != "")
+        //                    {//Send the message as email
+        //                        archLibBL.SendEmail(notificationSenderEmail, null, "_RegisterUserEmailSubject", registerUserEmailModel, "_RegisterUserEmailBody", registerUserEmailModel, "_SignatureTemplate", registerUserEmailModel, this, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                    }
+        //                    else
+        //                    {//Send message using Twillo
+        //                        string message = registerUserResponseModel.TelephoneNumberFormatted + " registered " + ArchLibCache.GetApplicationDefault(clientId, "BusinessNameAbbrev", "");
+        //                        //archLibBL.SendWhatsAppMessagePayLoad(oTPServiceType, "+" + registerUserResponseModel.TelephoneCode + registerUserResponseModel.TelephoneNumber, message, clientId);
+        //                    }
+        //                }
+        //                else
+        //                {//Send the message as email
+        //                    archLibBL.SendEmail(notificationSenderEmail, null, "_RegisterUserEmailSubject", registerUserEmailModel, "_RegisterUserEmailBody", registerUserEmailModel, "_SignatureTemplate", registerUserEmailModel, this, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                }
+        //                var currentLoggedInUserId = "";
+        //                htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName01", "ControllerName01");
+        //                success = true;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
         //            }
-        //            RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
+        //            else
         //            {
-        //                RegisterUserModel = registerUserModel,
-        //            };
-        //            retailSlnBL.RegisterUserExtn1(registerUserEmailModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            string registerUserEmailBodyHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailBody", registerUserEmailModel);
-        //            string registerUserEmailSubjectHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailSubject", registerUserEmailModel);
-        //            string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
-        //            registerUserEmailBodyHtml += signatureHtml;
-        //            archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserSuccess", registerUserEmailModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
+        //                success = false;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
+        //            }
         //        }
         //        else
         //        {
         //            success = false;
-        //            processMessage = "ERROR???";
-        //            var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-        //            registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-        //            registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //            registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-        //            if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-        //            {
-        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-        //            }
-        //            else
-        //            {
-        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-        //            }
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
         //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
-        //        registerUserModel.CaptchaAnswerRegisterUser = null;
-        //        registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
-        //        registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-        //        registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-        //        registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //        registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-        //        if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-        //        {
-        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-        //        }
-        //        else
-        //        {
-        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-        //        }
-        //        registerUserModel.ResponseObjectModel = new ResponseObjectModel
-        //        {
-        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //        };
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-        //    }
-        //    actionResult = Json(new { success, processMessage, htmlString });
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-
-        #region Commented Out Code
-        //// GET: RegisterUserOTP
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("RegisterUserOTP/{id?}")]
-        //public ActionResult RegisterUserOTP(string id)
-        //{
-        //    //int x = 1, y = 0, z = x / y;
-        //    ViewData["ActionName"] = "RegisterUserOTP";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        RegisterUserOTPModel registerUserOTPModer = archLibBL.RegisterUserOTP(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("RegisterUserOTP", registerUserOTPModer);
         //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    }
         //    catch (Exception exception)
         //    {
         //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        actionResult = View("Error", responseObjectModel);
-        //    }
-        //    return actionResult;
-        //}
-
-        //// GET: RegisterUserOTP
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public ActionResult RegisterUserOTP(RegisterUserOTPModel registerUserOTPModel)
-        //{
-        //    //int x = 1, y = 0, z = x / y;
-        //    ViewData["ActionName"] = "RegisterUserOTP";
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        int x = 1, y = 0, z = x / y;
-        //        ModelState.Clear();
-        //        TryValidateModel(registerUserOTPModel);
-        //        TryValidateModel(registerUserOTPModel.OTPModel, "OTPModel");
-        //        if (ModelState.IsValid)
-        //        {
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Model State Success");
-        //            //RegisterUserOTPModel registerUserOTPModel = archLibBL.RegisterUserOTP(id, "700", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            registerUserOTPModel.OTPResponseModel = new OTPResponseModel();
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: Model State Errors");
-        //        }
-        //        //actionResult = View("RegisterUserOTP", registerUserOTPModel);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
         //        success = false;
-        //        processMessage = "ERROR???";
-        //        ResponseObjectModel responseObjectModel = archLibBL.CreateSystemError(clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        //actionResult = View("Error", responseObjectModel);
         //    }
-        //    htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserOTPData", registerUserOTPModel);
-        //    actionResult = Json(new { success, processMessage, htmlString });
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    if (success)
+        //    {
+        //        processMessage = "SUCCESS!!!";
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
+        //    else
+        //    {
+        //        registerUserResponseModel.ResponseObjectModel = new ResponseObjectModel
+        //        {
+        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+        //        };
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //        processMessage = "ERROR???";
+        //        registerUserResponseModel.RequestType = "Register Referral";
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserResponseData", registerUserResponseModel);
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
         //    return actionResult;
         //}
 
-        //// GET: RegisterUser
-        //[AllowAnonymous]
+        //// GET: RegisterUserProf
         //[HttpGet]
         //[Route("RegisterUserProf/{id?}")]
         //public ActionResult RegisterUserProf(string id)
@@ -1816,10 +1612,10 @@ namespace RetailSlnWeb.Controllers
         //    try
         //    {
         //        //int x = 1, y = 0, z = x / y;
-        //        RegisterUserModel registerUserModel = archLibBL.RegisterUser(id, "100", RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        Session["CaptchaNumberRegisterUser0"] = registerUserModel.CaptchaNumberRegisterUser0;
-        //        Session["CaptchaNumberRegisterUser1"] = registerUserModel.CaptchaNumberRegisterUser1;
-        //        actionResult = View("RegisterUserProf", registerUserModel);
+        //        id = "100"; //This action will be used for regular register - There will be no source for now
+        //        RegisterUserProfModel registerUserProfModel = archLibBL.RegisterUserProf("", id, RetailSlnCache.DefaultDeliveryDemogInfoCountryId, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        registerUserProfModel.OTPRequestModel.RequestType = "Register";
+        //        actionResult = View("RegisterUserProf", registerUserProfModel);
         //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    }
         //    catch (Exception exception)
@@ -1831,11 +1627,76 @@ namespace RetailSlnWeb.Controllers
         //    return actionResult;
         //}
 
-        //// POST: RegisterUser
-        //[AllowAnonymous]
+        //// POST: RegisterUserProfOTPRequest
         //[HttpPost]
-        //public ActionResult RegisterUserProf(RegisterUserModel registerUserModel)
+        //public ActionResult RegisterUserProfOTPRequest(OTPRequestModel oTPRequestModel)
         //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserProfOTPRequest";
+        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+        //    ActionResult actionResult;
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    bool success;
+        //    string processMessage, htmlString;
+        //    OTPResponseModel oTPResponseModel = null;
+        //    //int x = 1, y = 0, z = x / y;
+        //    try
+        //    {
+        //        ModelState.Clear();
+        //        TryValidateModel(oTPRequestModel);
+        //        if (ModelState.IsValid)
+        //        {
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            oTPRequestModel.OTPPurpose = "Register";
+        //            oTPRequestModel.OTPTypeNameDesc = "REGISTERUSERPROF";
+        //            oTPRequestModel.RequestType = "Register";
+        //            oTPResponseModel = archLibBL.RegisterUserProfOTPRequest(ref oTPRequestModel, oTPServiceType, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            oTPResponseModel.RequestType = "Register";
+        //            //oTPResponseModel.RequestType = "Register";
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        success = true;
+        //        processMessage = "SUCCESS!!!";
+        //    }
+        //    else
+        //    {
+        //        success = false;
+        //        processMessage = "ERROR???";
+        //    }
+        //    if (success)
+        //    {
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponse", oTPResponseModel);
+        //    }
+        //    else
+        //    {
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        oTPRequestModel.CaptchaAnswer = null;
+        //        oTPRequestModel.CaptchaNumber0 = Session["CaptchaNumber0"].ToString();
+        //        oTPRequestModel.CaptchaNumber1 = Session["CaptchaNumber1"].ToString();
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPRequestData", oTPRequestModel);
+        //    }
+        //    actionResult = Json(new { success, processMessage, htmlString });
+        //    return actionResult;
+        //}
+
+        //// POST: RegisterUserProfOTPResponse
+        //[HttpPost]
+        //public ActionResult RegisterUserProfOTPResponse(OTPResponseModel oTPResponseModel)
+        //{
+        //    //int x = 1, y = 0, z = x / y;
+        //    ViewData["ActionName"] = "RegisterUserProfOTPResponse";
         //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
         //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
         //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
@@ -1844,101 +1705,69 @@ namespace RetailSlnWeb.Controllers
         //    ArchLibBL archLibBL = new ArchLibBL();
         //    RetailSlnBL retailSlnBL = new RetailSlnBL();
         //    bool success;
-        //    string processMessage, htmlString, redirectUrl;
+        //    string processMessage, htmlString = "";
         //    try
         //    {
         //        //int x = 1, y = 0, z = x / y;
         //        ModelState.Clear();
-        //        TryValidateModel(registerUserModel);
-        //        TryValidateModel(registerUserModel.DemogInfoAddressModel, "DemogInfoAddressModel");
-        //        archLibBL.RegisterUser(ref registerUserModel, true, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        TryValidateModel(oTPResponseModel);
         //        if (ModelState.IsValid)
         //        {
-        //            if (!registerUserModel.RedirectToUpdatePassword)
+        //            string oTPServiceType = Utilities.GetApplicationValue("OTPServiceType");
+        //            SessionObjectModel sessionObjectModel = archLibBL.RegisterUserProfOTPResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //            if (ModelState.IsValid)
         //            {
-        //                retailSlnBL.RegisterUserProfPersonExtn1(registerUserModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            }
-        //            RegisterUserEmailModel registerUserEmailModel = new RegisterUserEmailModel
-        //            {
-        //                RegisterUserModel = registerUserModel,
-        //            };
-        //            string registerUserEmailBodyHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailBody", registerUserEmailModel);
-        //            string registerUserEmailSubjectHtml = archLibBL.ViewToHtmlString(this, "_RegisterUserEmailSubject", registerUserEmailModel);
-        //            string signatureHtml = archLibBL.ViewToHtmlString(this, "_SignatureTemplate", registerUserEmailModel);
-        //            registerUserEmailBodyHtml += signatureHtml;
-        //            archLibBL.SendEmail(registerUserModel.RegisterEmailAddress, registerUserEmailSubjectHtml, registerUserEmailBodyHtml, null, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            LoginUserProfModel loginUserProfModel = new LoginUserProfModel
-        //            {
-        //                LoginEmailAddress = registerUserModel.RegisterEmailAddress,
-        //                LoginPassword = registerUserModel.LoginPassword,
-        //            };
-        //            SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
-        //            sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
-        //            redirectUrl = LoginUserProfProcess(sessionObjectModel.AspNetUserId, sessionObjectModel);
-        //            success = true;
-        //            processMessage = "SUCCESS!!!";
-        //            htmlString = "";
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-        //        }
-        //        else
-        //        {
-        //            var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-        //            registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-        //            registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //            registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-        //            if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-        //            {
-        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
+        //                if (sessionObjectModel.NewUser)
+        //                {
+        //                    retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //                }
+        //                Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
+        //                sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
+        //                string currentLoggedInUserId = loggedInUserId;
+        //                htmlString = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel, "ActionName00", "ControllerName00");
+        //                htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfSuccess", oTPResponseModel);
+        //                success = true;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
         //            }
         //            else
         //            {
-        //                registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
+        //                success = false;
+        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
         //            }
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserProfData", registerUserModel);
-        //            redirectUrl = "";
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
         //        }
+        //        else
+        //        {
+        //            success = false;
+        //        }
+        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    }
         //    catch (Exception exception)
         //    {
         //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumberRegister0", "CaptchaNumberRegister1");
-        //        registerUserModel.CaptchaAnswerRegisterUser = null;
-        //        registerUserModel.CaptchaNumberRegisterUser0 = Session["CaptchaNumberRegisterUser0"].ToString();
-        //        registerUserModel.CaptchaNumberRegisterUser1 = Session["CaptchaNumberRegisterUser1"].ToString();
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        var aspNetRoleModels = ArchLibCache.AspNetRoleModels.FindAll(x => x.UserTypeId == registerUserModel.AspNetRoleUserTypeId);
-        //        registerUserModel.AspNetRoleModels = aspNetRoleModels.Count == 0 ? RetailSlnCache.AspNetRoleModelsReferral : aspNetRoleModels;
-        //        registerUserModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //        registerUserModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-        //        if (registerUserModel.DemogInfoAddressModel.DemogInfoCountryId == null || registerUserModel.DemogInfoAddressModel.DemogInfoCountryId < 1)
-        //        {
-        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[RetailSlnCache.DefaultDeliveryDemogInfoCountryId];
-        //        }
-        //        else
-        //        {
-        //            registerUserModel.DemogInfoAddressModel.DemogInfoSubDivisionSelectListItems = DemogInfoCache.DemogInfoSubDivisionSelectListItems[registerUserModel.DemogInfoAddressModel.DemogInfoCountryId.Value];
-        //        }
-        //        registerUserModel.ResponseObjectModel = new ResponseObjectModel
+        //        success = false;
+        //        archLibBL.GenerateCaptchaQuesion(Session, "CaptchaNumber0", "CaptchaNumber1");
+        //        ModelState.AddModelError("", "Error during OTP setup");
+        //    }
+        //    if (success)
+        //    {
+        //        processMessage = "SUCCESS!!!";
+        //        actionResult = Json(new { success, processMessage, htmlString });
+        //    }
+        //    else
+        //    {
+        //        oTPResponseModel.ResponseObjectModel = new ResponseObjectModel
         //        {
         //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
         //        };
-        //        success = false;
         //        processMessage = "ERROR???";
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_RegisterUserData", registerUserModel);
-        //        redirectUrl = "";
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
+        //        htmlString = archLibBL.ViewToHtmlString(this, "_OTPResponseData", oTPResponseModel);
+        //        actionResult = Json(new { success, processMessage, htmlString });
         //    }
-        //    actionResult = Json(new { success, processMessage, htmlString, redirectUrl });
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
         //    return actionResult;
         //}
         #endregion
 
-        // GET: ResetPasswordContactUs
+        // GET: ReturnPolicy
         [AllowAnonymous]
         [HttpGet]
         [Route("ReturnPolicy")]
@@ -1966,7 +1795,7 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
-        // GET: ResetPasswordContactUs
+        // GET: ShippingPolicy
         [AllowAnonymous]
         [HttpGet]
         [Route("ShippingPolicy")]
@@ -2065,101 +1894,8 @@ namespace RetailSlnWeb.Controllers
         [HttpGet]
         public ActionResult Unauthorized()
         {
-            return RedirectToAction("LoginUserProf");
+            return RedirectToAction("RegisterUserLoginUser");
         }
-
-        #region Commented Out Code
-        //// POST: UpdatePassword
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public ActionResult UpdatePassword(UpdatePasswordModel updatePasswordModel)
-        //{
-        //    string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
-        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
-        //    ActionResult actionResult;
-        //    ArchLibBL archLibBL = new ArchLibBL();
-        //    RetailSlnBL retailSlnBL = new RetailSlnBL();
-        //    bool success;
-        //    string processMessage, htmlString;
-        //    try
-        //    {
-        //        //int x = 1, y = 0, z = x / y;
-        //        ModelState.Clear();
-        //        TryValidateModel(updatePasswordModel);
-        //        TryValidateModel(updatePasswordModel.DemogInfoAddressModel, "DemogInfoAddressModel");
-        //        string currentLoggedInUserId = loggedInUserId;
-        //        archLibBL.UpdatePassword(ref updatePasswordModel, false, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        if (ModelState.IsValid)
-        //        {
-        //            LoginUserProfModel loginUserProfModel = new LoginUserProfModel
-        //            {
-        //                LoginEmailAddress = updatePasswordModel.EmailAddress,
-        //                LoginPassword = updatePasswordModel.LoginPassword,
-        //            };
-        //            SessionObjectModel sessionObjectModel = archLibBL.LoginUserProf(ref loginUserProfModel, false, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            if (ModelState.IsValid)
-        //            {
-        //                var redirectUrl = LoginUserProfProcess(currentLoggedInUserId, sessionObjectModel);
-        //                success = true;
-        //                processMessage = "SUCCESS!!!";
-        //                actionResult = Json(new { success, processMessage, redirectUrl });
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: BL Process Success");
-        //            }
-        //            else
-        //            {
-        //                success = false;
-        //                processMessage = "ERROR???";
-        //                var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
-        //                updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //                updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-        //                updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
-        //                archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //                htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //                actionResult = Json(new { success, processMessage, htmlString });
-        //                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            success = false;
-        //            processMessage = "ERROR???";
-        //            var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
-        //            updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //            updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = DemogInfoCache.DemogInfoCountrySelectListItems;
-        //            updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
-        //            archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //            htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //            actionResult = Json(new { success, processMessage, htmlString });
-        //            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00002000 :: BL Process Error");
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-        //        archLibBL.CreateSystemError(ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        archLibBL.UpdatePasswordPostData(ref updatePasswordModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-        //        var demogInfoCountryId = updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId == null ? RetailSlnCache.DefaultDeliveryDemogInfoCountryId : updatePasswordModel.DemogInfoAddressModel.DemogInfoCountryId.Value;
-        //        updatePasswordModel.DemogInfoAddressModel.BuildingTypeSelectListItems = LookupCache.CodeTypeSelectListItems["BuildingType"]["CodeDataNameId"];
-        //        updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySelectListItems = RetailSlnCache.DeliveryDemogInfoCountrySelectListItems;
-        //        updatePasswordModel.DemogInfoAddressModel.DemogInfoCountrySubDivisionModels = DemogInfoCache.DemogInfoSubDivisionModels.FindAll(x => x.DemogInfoCountryId == demogInfoCountryId);
-        //        updatePasswordModel.ResponseObjectModel = new ResponseObjectModel
-        //        {
-        //            ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
-        //        };
-        //        //actionResult = PartialView("_UpdatePasswordData", updatePasswordModel);
-        //        htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //        success = false;
-        //        processMessage = "ERROR???";
-        //        actionResult = Json(new { success, processMessage, htmlString });
-        //        exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00099100 :: Error Exit");
-        //    }
-        //    //htmlString = archLibBL.ViewToHtmlString(this, "_UpdatePasswordData", updatePasswordModel);
-        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
-        //    return actionResult;
-        //}
-        #endregion
 
         // GET: UserProfile
         [Authorize]
@@ -2195,6 +1931,169 @@ namespace RetailSlnWeb.Controllers
             return actionResult;
         }
 
+        // POST: UserProfile
+        [Authorize]
+        [AjaxAuthorize]
+        [HttpPost]
+        public ActionResult UserProfile(PersonModel personModel)
+        {
+            string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
+            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "01000Url", "Url", Request.Url.AbsoluteUri);
+            ArchLibBL archLibBL = new ArchLibBL();
+            RetailSlnBL retailSlnBL = new RetailSlnBL();
+            ActionResult actionResult;
+            try
+            {
+                //int x = 1, y = 0, z = x / y;
+                ModelState.Clear();
+                TryValidateModel(personModel);
+                TryValidateModel(personModel.HomeDemogInfoAddressModel, "HomeDemogInfoAddressModel");
+                TryValidateModel(personModel.AspNetUserModel, "AspNetUserModel");
+                #region
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Nickname").IsMapped)
+                {
+                    ModelState.Remove("NicknameFirst");
+                    ModelState.Remove("NicknameLast");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Name").IsMapped)
+                {
+                    ModelState.Remove("SalutationId");
+                    ModelState.Remove("FirstName");
+                    ModelState.Remove("MiddleName");
+                    ModelState.Remove("LastName");
+                    ModelState.Remove("SuffixId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "MaritalStatus").IsMapped)
+                {
+                    ModelState.Remove("MaritalStatusId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Citizenship").IsMapped)
+                {
+                    ModelState.Remove("CitizenshipId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "DateOfBirth").IsMapped)
+                {
+                    ModelState.Remove("DateOfBirth");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "ElectronicSignatureConsent").IsMapped)
+                {
+                    ModelState.Remove("ElectronicSignatureConsentAccepted");
+                    ModelState.Remove("ElectronicSignatureConsent");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "AlternateTelephone").IsMapped)
+                {
+                    ModelState.Remove("AspNetUserModel.AlternateTelephoneCountryId");
+                    ModelState.Remove("AspNetUserModel.AlternateTelephoneNumber");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "InitialsSignature").IsMapped)
+                {
+                    ModelState.Remove("InitialsTextValue");
+                    ModelState.Remove("InitialsTextId");
+                    ModelState.Remove("SignatureTextValue");
+                    ModelState.Remove("SignatureTextId");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Address").IsMapped)
+                {
+                    ModelState.Remove("HomeDemogInfoAddressModel.DemogInfoCountryId");
+                    ModelState.Remove("HomeDemogInfoAddressModel.BuildingTypeId");
+                    ModelState.Remove("HomeDemogInfoAddressModel.HouseNumber");
+                    ModelState.Remove("HomeDemogInfoAddressModel.AddressLine1");
+                    ModelState.Remove("HomeDemogInfoAddressModel.AddressLine2");
+                    ModelState.Remove("HomeDemogInfoAddressModel.DemogInfoSubDivisionId");
+                    ModelState.Remove("HomeDemogInfoAddressModel.ZipCode");
+                    ModelState.Remove("HomeDemogInfoAddressModel.CityName");
+                }
+                else
+                {
+                    if (
+                        personModel.HomeDemogInfoAddressModel.BuildingTypeId == null &&
+                        string.IsNullOrWhiteSpace(personModel.HomeDemogInfoAddressModel.HouseNumber) &&
+                        string.IsNullOrWhiteSpace(personModel.HomeDemogInfoAddressModel.AddressLine1) &&
+                        string.IsNullOrWhiteSpace(personModel.HomeDemogInfoAddressModel.AddressLine2) &&
+                        personModel.HomeDemogInfoAddressModel.DemogInfoSubDivisionId == null &&
+                        string.IsNullOrWhiteSpace(personModel.HomeDemogInfoAddressModel.ZipCode) &&
+                        string.IsNullOrWhiteSpace(personModel.HomeDemogInfoAddressModel.CityName)
+                       )
+                    {//If all are missing
+                        ModelState.Remove("HomeDemogInfoAddressModel.DemogInfoCountryId");
+                        ModelState.Remove("HomeDemogInfoAddressModel.BuildingTypeId");
+                        ModelState.Remove("HomeDemogInfoAddressModel.HouseNumber");
+                        ModelState.Remove("HomeDemogInfoAddressModel.AddressLine1");
+                        ModelState.Remove("HomeDemogInfoAddressModel.AddressLine2");
+                        ModelState.Remove("HomeDemogInfoAddressModel.DemogInfoSubDivisionId");
+                        ModelState.Remove("HomeDemogInfoAddressModel.ZipCode");
+                        ModelState.Remove("HomeDemogInfoAddressModel.CityName");
+                    }
+                }
+                if (ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "Email").IsMapped)
+                {
+                    if (string.IsNullOrWhiteSpace(personModel.AspNetUserModel.Email))
+                    {
+                        ModelState.Remove("AspNetUserModel.Email");
+                    }
+                    else
+                    {
+                        var validEmailAddress = Utilities.IsValidEmail(personModel.AspNetUserModel.Email);
+                        if (!validEmailAddress)
+                        {
+                            ModelState.Remove("AspNetUserModel.Email");
+                            ModelState.AddModelError("AspNetUserModel.Email", "Enter valid email address");
+                        }
+                    }
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "SSN").IsMapped)
+                {
+                    ModelState.Remove("SSN");
+                }
+                if (!ArchLibCache.UserProfileMetaDatas.First(x => x.MetaDataName == "DriverLicense").IsMapped)
+                {
+                    ModelState.Remove("DriverLicenseType");
+                    ModelState.Remove("DriverLicenseNumber");
+                    ModelState.Remove("DriverLicenseDemogInfoSubDivisionId");
+                    ModelState.Remove("DriverLicenseExpiryDate");
+                }
+                #endregion
+                if (ModelState.IsValid)
+                {
+                    archLibBL.UserProfile(ref personModel, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                    if (ModelState.IsValid)
+                    {
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Error while saving User Profile BL");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Fix data errors");
+                }
+                exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00001000 :: Before BL");
+            }
+            catch (Exception exception)
+            {
+                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+                ModelState.AddModelError("", "Error while saving User Profile");
+            }
+            if (ModelState.IsValid)
+            {
+                actionResult = PartialView("_UserProfileSuccess", personModel);
+                Response.StatusCode = (int)HttpStatusCode.OK;
+            }
+            else
+            {
+                personModel.ResponseObjectModel = new ResponseObjectModel
+                {
+                    ValidationSummaryMessage = ArchLibCache.ValidationSummaryMessageFixErrors,
+                };
+                actionResult = PartialView("_UserProfileData", personModel);
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            return actionResult;
+        }
+
         private string LoginUserProfProcess(string currentLoggedInUserId, SessionObjectModel sessionObjectModel, string actionNameValue, string controllerNameValue)
         {
             string methodName = MethodBase.GetCurrentMethod().Name, ipAddress = Utilities.GetIPAddress(Request), loggedInUserId = Utilities.GetLoggedInUserId(Session);
@@ -2216,7 +2115,7 @@ namespace RetailSlnWeb.Controllers
                 new[]
                 {
                     new Claim(ClaimTypes.Name, sessionObjectModel.FirstName + " " + sessionObjectModel.LastName),
-                    new Claim(ClaimTypes.Email, sessionObjectModel.EmailAddress),
+                    new Claim(ClaimTypes.MobilePhone, sessionObjectModel.TelephoneCountryId + "_" + sessionObjectModel.PhoneNumber),
                     new Claim(ClaimTypes.Role, sessionObjectModel.AspNetRoleName),
                     //new Claim(ClaimTypes.Country, "India"),
                 },
@@ -2230,10 +2129,26 @@ namespace RetailSlnWeb.Controllers
             redirectUrl = Url.Action(aspNetRoleKVPs[actionNameValue].KVPValueData, aspNetRoleKVPs[controllerNameValue].KVPValueData);
             ShoppingCartModel shoppingCartModel = (ShoppingCartModel)Session["ShoppingCart"];
             retailSlnBL.ShoppingCartWIPCreate(shoppingCartModel, sessionObjectModel, createForSessionObject, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-            //actionResult = Json(new { success, processMessage, redirectUrl });
-            //redirectUrl = Url.Action(actionName, controllerName);
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00090000 :: Exit");
             return redirectUrl;
         }
+
+        //public static class EmailValidator
+        //{
+        //    public static bool IsValidEmail(string emailAddress)
+        //    {
+        //        bool returnValue;
+        //        if (string.IsNullOrWhiteSpace(emailAddress))
+        //        {
+        //            returnValue = false;
+        //        }
+        //        else
+        //        {
+        //            returnValue = Regex.IsMatch(emailAddress, @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+        //            returnValue = Regex.IsMatch(emailAddress, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+        //        }
+        //        return returnValue;
+        //    }
+        //}
     }
 }

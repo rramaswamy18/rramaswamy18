@@ -49,36 +49,51 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\DLLs\ArchitectureLibraryDLL.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.7\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.10\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.Memory, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.Memory.10.0.7\lib\net462\Microsoft.Bcl.Memory.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.Cryptography, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Cryptography.10.0.10\lib\net462\Microsoft.Bcl.Cryptography.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.TimeProvider, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.TimeProvider.10.0.7\lib\net462\Microsoft.Bcl.TimeProvider.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.Memory, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Memory.10.0.10\lib\net462\Microsoft.Bcl.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.TimeProvider, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.TimeProvider.10.0.10\lib\net462\Microsoft.Bcl.TimeProvider.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=10.0.0.7, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.10.0.7\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=10.0.0.10, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.10.0.10\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=10.0.0.7, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.10.0.7\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=10.0.0.10, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.10.0.10\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=8.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.8.17.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging, Version=10.0.0.10, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.10.0.10\lib\net462\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=8.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.8.17.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=10.0.0.10, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.10.0.10\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging, Version=8.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Logging.8.17.0\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Options, Version=10.0.0.10, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.10.0.10\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens, Version=8.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.8.17.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=10.0.0.10, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.10.0.10\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=8.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.8.22.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=8.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.8.22.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=8.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.8.22.0\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=8.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.8.22.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.2.3\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -101,8 +116,8 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Stripe.net, Version=51.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stripe.net.51.1.0\lib\net462\Stripe.net.dll</HintPath>
+    <Reference Include="Stripe.net, Version=52.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stripe.net.52.2.0\lib\net462\Stripe.net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -114,15 +129,18 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.7\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.10\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=8.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.8.17.0\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    <Reference Include="System.Formats.Asn1, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Formats.Asn1.10.0.10\lib\net462\System.Formats.Asn1.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Pipelines, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Pipelines.10.0.7\lib\net462\System.IO.Pipelines.dll</HintPath>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=8.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.8.22.0\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Pipelines, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.10.0.10\lib\net462\System.IO.Pipelines.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
@@ -144,11 +162,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Text.Encodings.Web, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encodings.Web.10.0.7\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    <Reference Include="System.Text.Encodings.Web, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.10.0.10\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.10.0.7\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.10.0.10\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -204,8 +222,8 @@
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
-    <Reference Include="Twilio, Version=7.14.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Twilio.7.14.7\lib\net462\Twilio.dll</HintPath>
+    <Reference Include="Twilio, Version=7.14.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.7.14.9\lib\net462\Twilio.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -311,7 +329,7 @@
     <Compile Include="ClassCode\RetailSlnModels\PersonExtn1Model.cs" />
     <Compile Include="ClassCode\RetailSlnModels\PickupLocationModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\ReferralListModel.cs" />
-    <Compile Include="ClassCode\RetailSlnModels\RegisterUserEmailModel.cs" />
+    <Compile Include="ClassCode\RetailSlnModels\zzz_RegisterUserEmailModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RemoveFromCartModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\RetailSlnInitModel.cs" />
     <Compile Include="ClassCode\RetailSlnModels\SearchKeywordModel.cs" />
@@ -1528,8 +1546,8 @@
     <Content Include="Views\Home\_FAQs.cshtml" />
     <Content Include="Views\Home\_ItemBundleData.cshtml" />
     <Content Include="Views\Home\_ItemMasterAttributes.cshtml" />
-    <Content Include="Views\Home\_LoginUserProf.cshtml" />
-    <Content Include="Views\Home\_LoginUserProfData.cshtml" />
+    <Content Include="Views\Home\zzz__LoginUserProf.cshtml" />
+    <Content Include="Views\Home\zzz__LoginUserProfData.cshtml" />
     <Content Include="Views\Home\_OrderInvoice.cshtml" />
     <Content Include="Views\Home\_OrderInvoiceData.cshtml" />
     <Content Include="Views\Home\_OrderInvoiceDataSubject.cshtml" />
@@ -1537,8 +1555,8 @@
     <Content Include="Views\Home\_OrderItem1.cshtml" />
     <Content Include="Views\Home\_OrderItem1A.cshtml" />
     <Content Include="Views\Home\_OrderItem1C.cshtml" />
-    <Content Include="Views\Home\_OTPEmailBody.cshtml" />
-    <Content Include="Views\Home\_OTPEmailSubject.cshtml" />
+    <Content Include="Views\Home\zzz__OTPEmailBody.cshtml" />
+    <Content Include="Views\Home\zzz__OTPEmailSubject.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0.cshtml" />
     <Content Include="Views\Home\_PaymentInfo3.cshtml" />
     <Content Include="Views\Home\_PaymentInfo4.cshtml" />
@@ -1546,12 +1564,12 @@
     <Content Include="Views\Home\_PicGallery.cshtml" />
     <Content Include="Views\Home\_PrivacyPolicy.cshtml" />
     <Content Include="Views\Home\_RefundPolicy.cshtml" />
-    <Content Include="Views\Home\_RegisterUser.cshtml" />
-    <Content Include="Views\Home\_RegisterUserData.cshtml" />
-    <Content Include="Views\Home\_RegisterUserEmailBody.cshtml" />
-    <Content Include="Views\Home\_RegisterUserEmailSubject.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProf.cshtml" />
-    <Content Include="Views\Home\_RegisterUserSuccess.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUser.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserData.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserEmailBody.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserEmailSubject.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserProf.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserSuccess.cshtml" />
     <Content Include="Views\Home\_ReturnPolicy.cshtml" />
     <Content Include="Views\Home\_SearchResult.cshtml" />
     <Content Include="Views\Home\_SearchResultCategory.cshtml" />
@@ -1571,13 +1589,13 @@
     <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\ItemMasterAttributes.cshtml" />
-    <Content Include="Views\Home\LoginUserProf.cshtml" />
+    <Content Include="Views\Home\zzz_LoginUserProf.cshtml" />
     <Content Include="Views\Home\OrderInvoice.cshtml" />
     <Content Include="Views\Home\PicGallery.cshtml" />
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
     <Content Include="Views\Home\RefundPolicy.cshtml" />
-    <Content Include="Views\Home\RegisterUser.cshtml" />
-    <Content Include="Views\Home\RegisterUserProf.cshtml" />
+    <Content Include="Views\Home\zzz_RegisterUser.cshtml" />
+    <Content Include="Views\Home\zzz_RegisterUserProf.cshtml" />
     <Content Include="Views\Home\ReturnPolicy.cshtml" />
     <Content Include="Views\Home\SearchResult.cshtml" />
     <Content Include="Views\Home\ShippingPolicy.cshtml" />
@@ -1620,17 +1638,17 @@
     <Content Include="Views\Dashboard\_ItemSpecMasterList.cshtml" />
     <Content Include="Views\Dashboard\_ItemSpecMasterListData.cshtml" />
     <Content Include="Views\Shared\_ShoppingCartBundle2.cshtml" />
-    <Content Include="Views\Home\RegisterUserOTP.cshtml" />
-    <Content Include="Views\Home\_RegisterUserOTP.cshtml" />
-    <Content Include="Views\Home\_RegisterUserOTPData.cshtml" />
-    <Content Include="Views\Home\_OTPResponseData.cshtml" />
-    <Content Include="Views\Home\_OTPRequestData.cshtml" />
-    <Content Include="Views\Home\_OTPRequest.cshtml" />
-    <Content Include="Views\Home\_OTPResponse.cshtml" />
-    <Content Include="Views\Home\_OTPRequestEmailBody.cshtml" />
-    <Content Include="Views\Home\_OTPRequestEmailSubject.cshtml" />
-    <Content Include="Views\Home\_OTPResponseEmailSubject.cshtml" />
-    <Content Include="Views\Home\_OTPResponseEmailBody.cshtml" />
+    <Content Include="Views\Home\zzz_RegisterUserOTP.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserOTP.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserOTPData.cshtml" />
+    <Content Include="Views\Home\zzz__OTPResponseData.cshtml" />
+    <Content Include="Views\Home\zzz__OTPRequestData.cshtml" />
+    <Content Include="Views\Home\zzz__OTPRequest.cshtml" />
+    <Content Include="Views\Home\zzz__OTPResponse.cshtml" />
+    <Content Include="Views\Home\zzz__OTPRequestEmailBody.cshtml" />
+    <Content Include="Views\Home\zzz__OTPRequestEmailSubject.cshtml" />
+    <Content Include="Views\Home\zzz__OTPResponseEmailSubject.cshtml" />
+    <Content Include="Views\Home\zzz__OTPResponseEmailBody.cshtml" />
     <Content Include="Views\Home\_PaymentInfo0Data.cshtml" />
     <Content Include="Views\Home\_ContactUsInfo.cshtml" />
     <Content Include="Views\Home\DeliveryInfo.cshtml" />
@@ -1649,12 +1667,12 @@
     <Content Include="Views\Dashboard\_UserList.cshtml" />
     <Content Include="Views\Dashboard\_Item.cshtml" />
     <Content Include="Views\Dashboard\_ItemData.cshtml" />
-    <Content Include="Views\Home\_RegisterUserRequest.cshtml" />
-    <Content Include="Views\Home\_RegisterUserResponse.cshtml" />
-    <Content Include="Views\Home\_RegisterUserRequestData.cshtml" />
-    <Content Include="Views\Home\_RegisterUserOTPRequestEmailBody.cshtml" />
-    <Content Include="Views\Home\_RegisterUserOTPRequestEmailSubject.cshtml" />
-    <Content Include="Views\Home\_RegisterUserResponseData.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserRequest.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserResponse.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserRequestData.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserOTPRequestEmailBody.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserOTPRequestEmailSubject.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserResponseData.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_HeaderResponsive.cshtml" />
     <Content Include="Views\Dashboard\_CRMListList.cshtml" />
@@ -1664,7 +1682,29 @@
     <Content Include="Views\Dashboard\_OrderView.cshtml" />
     <Content Include="Views\Dashboard\_OrderEditData.cshtml" />
     <Content Include="Views\Dashboard\_OrderEditDetail.cshtml" />
-    <Content Include="Views\Home\_RegisterUserProfSuccess.cshtml" />
+    <Content Include="Views\Home\zzz__RegisterUserProfSuccess.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUser.cshtml" />
+    <Content Include="Views\Home\RegisterUserLoginUser.cshtml" />
+    <Content Include="Views\Home\_OTPRequest.cshtml" />
+    <Content Include="Views\Home\zzz2_OTPRequest.cshtml" />
+    <Content Include="Views\Home\OTPRequest.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUserRequestEmailSubject.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUserRequestEmailBody.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUserRequest.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUserResponse.cshtml" />
+    <Content Include="Views\Home\_OTPResponse.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUserSuccess.cshtml" />
+    <Content Include="Views\Home\_CheckoutResponse.cshtml" />
+    <Content Include="Views\Home\_OTPRequestEmailSubject.cshtml" />
+    <Content Include="Views\Home\_OTPRequestEmailBody.cshtml" />
+    <Content Include="Views\Home\_UserProfileData.cshtml" />
+    <Content Include="Views\Home\_UserProfileSuccess.cshtml" />
+    <Content Include="Views\Home\_RegisterUserLoginUserResponseData.cshtml" />
+    <Content Include="Views\Home\_ItemBundleData - Copy.cshtml" />
+    <Content Include="Views\Home\_ItemMasterAttributes - Copy.cshtml" />
+    <Content Include="Views\Home\_OrderItem1 - Copy.cshtml" />
+    <Content Include="Views\Home\_OrderItem1A - Copy.cshtml" />
+    <Content Include="Views\Home\_OrderItem1C - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

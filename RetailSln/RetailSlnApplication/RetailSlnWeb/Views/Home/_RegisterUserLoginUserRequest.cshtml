@@ -1,0 +1,5 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserLoginUserRequestModel
+@Html.HiddenFor(m => m.RegisterSource)
+@Html.HiddenFor(m => m.UserTypeId)
+@Html.Partial("_OTPRequest", Model.OTPRequestModel, new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "OTPRequestModel" } })

@@ -3838,6 +3838,17 @@
             <see cref="T:Org.BouncyCastle.Ocsp.RespID"/>
             </param>
         </member>
+        <member name="M:iText.Bouncycastle.Cert.Ocsp.RespIDBC.#ctor(Org.BouncyCastle.Asn1.Ocsp.ResponderID)">
+            <summary>
+            Creates new wrapper instance for
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
+            </summary>
+            <param name="responderId">
+            
+            <see cref="T:Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>
+            to be wrapped
+            </param>
+        </member>
         <member name="M:iText.Bouncycastle.Cert.Ocsp.RespIDBC.#ctor(iText.Commons.Bouncycastle.Cert.IX509Certificate)">
             <summary>
             Creates new wrapper instance for

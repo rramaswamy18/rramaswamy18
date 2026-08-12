@@ -40,11 +40,12 @@ namespace RetailSlnDataLayer
             exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
             try
             {
+                string doNotBreakBundleParm = doNotBreakBundle ? "1" : "0";
                 string sqlStmt = "";
                 sqlStmt += $"         DELETE RetailSlnSch.ShoppingCartWIP" + Environment.NewLine;
                 sqlStmt += $"          WHERE ShoppingCartWIPHdrId = {shoppingCartWIPHdrId}" + Environment.NewLine;
                 sqlStmt += $"            AND ParentItemId = {parentItemId}" + Environment.NewLine;
-                sqlStmt += $"            AND DoNotBreakBundle = {doNotBreakBundle}" + Environment.NewLine;
+                sqlStmt += $"            AND DoNotBreakBundle = {doNotBreakBundleParm}" + Environment.NewLine;
                 SqlCommand sqlCommand = new SqlCommand(sqlStmt, sqlConnection);
                 sqlCommand.ExecuteNonQuery();
                 exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00009000 :: Exit");

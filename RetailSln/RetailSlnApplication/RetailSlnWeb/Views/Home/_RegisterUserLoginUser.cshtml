@@ -1,0 +1,58 @@
+﻿@using ArchitectureLibraryModels
+@model RegisterUserLoginUserRequestModel
+<div class="main">
+    <div class="container">
+        <div class="row" style="padding-left: 27px; text-align: left;">
+            <div class="col-md-10" id="divRegisterUserLoginUser" style="padding-left: 0px;">
+                <h2 style="font-weight: bold;">
+                    <span style="color: #0000ff; font-size: 21px;">Register / Sign In - Get OTP</span>
+                </h2>
+                <div class="col-md-5">
+                    <form id="formRegisterUserLoginUserRequest">
+                        @Html.Partial("_RegisterUserLoginUserRequest", Model)
+                    </form>
+                    <input id="btnRegisterUserLoginUserRequest" class="loginRegisterbtn" onclick="javascript: return registerUserLoginUserRequest_onclick();" style="font-size: 18px; font-weight: bold;" type="button" value="G E T&nbsp;&nbsp;O T P" />
+                </div>
+                <div class="col-md-5">
+                    <div class="row" style="text-align: left;">
+                        <ul style="color: #000000; font-family: Arial; font-size: 14px; font-weight: bold; padding-left: 18px;">
+                            <li>
+                                Select country of your telephone#
+                            </li>
+                            <li>
+                                Enter telephone number
+                            </li>
+                            <li>
+                                Enter captcha answer
+                            </li>
+                            <li style="list-style-type: none;">
+                                <br />
+                            </li>
+                            <li>
+                                Click <span class="loginRegisterbtn" style="cursor: default; font-size: 12px; padding: 4px;">G E T&nbsp;&nbsp;O T P</span> button
+                            </li>
+                            <li style="list-style: none;">
+                                <br />
+                            </li>
+                            <li style="color: #ff0000;">
+                                You will receive your OTP in your WhatsApp
+                            </li>
+                            <li style="list-style: none;">
+                                <br />
+                            </li>
+                            @*<li>
+                                <span style="color: #000000;">First Time / New User?</span> - You will be registered & signed in after entering OTP
+                            </li>
+                            <li style="list-style: none;">
+                                <br />
+                            </li>
+                            <li>
+                                <span style="color: #ff0000;">Returning / Existing User?</span> - You will be signed in after entering OTP
+                            </li>*@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

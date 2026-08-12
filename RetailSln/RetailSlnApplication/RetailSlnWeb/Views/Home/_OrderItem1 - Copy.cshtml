@@ -1,0 +1,26 @@
+﻿@using ArchitectureLibraryCacheData
+@using RetailSlnEnumerations
+@using RetailSlnModels
+@model OrderItem1Model
+@{
+    var clientId = ArchLibCache.ClientId;
+    var clientName = ArchLibCache.ClientName;
+    string imageDateTime = "?id=" + DateTime.Now.ToString("yyyyMMddHHmmss");
+}
+<table @*class="table table-responsive"*@ style="border-style: none; border-width: 0px; padding: 5px; width: 99%;">
+    <tr>
+        <td>
+            @if (Model.ItemMasterModel.ItemTypeId == ItemTypeEnum.ItemBundle)
+            {//Bundle
+                @Html.Partial("_OrderItem1C", Model)
+            }
+            else
+            {//Individual Item
+                @Html.Partial("_OrderItem1A", Model)
+            }
+        </td>
+        <td style="vertical-align: top;">
+            <img class="img-responsive" src="~/ClientSpecific/@(clientId)_@(clientName)/Documents/Images/ItemMaster/@Model.ItemMasterModel.ImageName@imageDateTime" />
+        </td>
+    </tr>
+</table>

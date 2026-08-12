@@ -108,16 +108,18 @@
                     <br />
                     Checkout
                 </a>
-                <a class="navbar-right-link" href="@Url.Action("RegisterUserProf", "Home")" style="float: left; padding-right: 18px; text-align: center;" title="Register - @imageTitle">
+                <a class="navbar-right-link" href="@Url.Action("RegisterUserLoginUser", "Home")" style="float: left; padding-right: 18px; text-align: center;" title="Register / Sign In - @imageTitle">
                     <i class="fas fa-user-plus"></i>
                     <br />
-                    Register
+                    Register / Sign In
                 </a>
-                <a class="navbar-right-link @(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" style="float: left; padding-right: 18px; text-align: center;" title="Login / Sign In - @imageTitle">
+                @*
+                <a class="navbar-right-link @(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("RegisterUserLoginUser", "Home")" style="float: left; padding-right: 18px; text-align: center;" title="Login / Sign In - @imageTitle">
                     <i class="fas fa-user"></i>
                     <br />
                     Sign In
                 </a>
+                *@
                 <a class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" style="float: left; padding-right: 27px; text-align: center;" title="Logout - @imageTitle">
                     <i class="fas fa-sign-out-alt"></i>
                     <br />
@@ -158,15 +160,15 @@
                     </a>
                 </div>
                 <div style="float: left;">
-                    <a href="@Url.Action("RegisterUserProf", "Home")" style="color: #ffffff; float: left; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding-right: 9px; text-align: center;" title="Register - @imageTitle">
-                        Register
+                    <a href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #ffffff; float: left; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding-right: 9px; text-align: center;" title="Register / Sign In - @imageTitle">
+                        Register / Sign In
                     </a>
                 </div>
-                <div style="float: left;">
-                    <a class="@(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" style="color: #ffffff; float: left; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding-right: 9px; text-align: center;" title="Login / Sign In - @imageTitle">
+                @*<div style="float: left;">
+                    <a class="@(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("RegisterUserLoginUser", "Home")" style="color: #ffffff; float: left; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding-right: 9px; text-align: center;" title="Login / Sign In - @imageTitle">
                         Sign In
                     </a>
-                </div>
+                </div>*@
                 <div style="float: left;">
                     <a href="javascript: void(0);" style="cursor: default; padding: 13px 0px;">
                         <span id="categoryNameSelectedA" style="color: #61ce70; font-size: 12px; font-weight: bold;"></span>

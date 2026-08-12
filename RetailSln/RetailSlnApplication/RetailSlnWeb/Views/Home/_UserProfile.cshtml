@@ -1,25 +1,46 @@
-﻿@model ArchitectureLibraryModels.PersonModel
-<center>
-    <h3 style="color: #a54000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">USER&nbsp;&nbsp;PROFILE</h3>
-    <button class="loginRegisterbtn" id="userProfileSave" onclick="javascript: return userProfileSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 27%;" type="button">save</button>
-</center>
-<form id="formUserProfileData">
-    @{
-        bool mobileDevice = Request.Browser.IsMobileDevice;
-        //mobileDevice = true;
-        if (mobileDevice)
-        {
-            @Html.Partial("_UserProfileData1", Model)
+﻿@using ArchitectureLibraryModels
+@model PersonModel
+<div class="main">
+    <div class="container">
+        <div class="col-md-11" id="divUserProfile">
+            <h2 style="text-align: center; width: 81%;">
+                <span style="color: #a54000; font-size: 18px; font-weight: bold; letter-spacing: 9px; text-transform: uppercase;">USER PROFILE</span>
+                <br />
+                <input id="userProfileSave0" class="loginRegisterbtn" onclick="javascript: return userProfileSave_onclick();" style="font-size: 18px; font-weight: bold; letter-spacing: 9px; text-align: center; text-transform: uppercase; width: 45%;" type="button" value="save" />
+            </h2>
+            <form id="formUserProfileData">
+                @Html.Partial("_UserProfileData", Model)
+            </form>
+            <h2 style="text-align: center; width: 81%;">
+                <input id="userProfileSave1" class="loginRegisterbtn" onclick="javascript: return userProfileSave_onclick();" style="font-size: 18px; font-weight: bold; letter-spacing: 9px; text-align: center; text-transform: uppercase; width: 45%;" type="button" value="save" />
+            </h2>
+        </div>
+    </div>
+</div>
+<br style="clear: both;" />
+@*
+    <center>
+        <h3 style="color: #a54000; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">USER&nbsp;&nbsp;PROFILE</h3>
+        <button class="loginRegisterbtn" id="userProfileSave" onclick="javascript: return userProfileSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 27%;" type="button">save</button>
+    </center>
+    <form id="formUserProfileData1">
+        @{
+            bool mobileDevice = Request.Browser.IsMobileDevice;
+            //mobileDevice = true;
+            if (mobileDevice)
+            {
+                @Html.Partial("_UserProfileData1", Model)
+            }
+            else
+            {
+                @Html.Partial("_UserProfileData2", Model)
+            }
         }
-        else
-        {
-            @Html.Partial("_UserProfileData2", Model)
-        }
-    }
-</form>
-<center>
-    <button class="loginRegisterbtn" id="userProfileSave" onclick="javascript: return userProfileSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 27%;" type="button">save</button>
-</center>
+    </form>
+    <center>
+        <button class="loginRegisterbtn" id="userProfileSave" onclick="javascript: return userProfileSave_onclick();" style="letter-spacing: 5px; text-transform: uppercase; width: 27%;" type="button">save</button>
+    </center>
+*@
 <script type="text/javascript">
     $(".datepick").datepicker({
         changeMonth: true,
@@ -28,32 +49,36 @@
     function userProfileSave_onclick() {
         console.log("00000000", "userProfileSave_onclick", "ENTER!!!");
         $("#loadingModal").modal({ backdrop: 'static', keyboard: false });
-        //document.getElementById("divModalErrorMessage").innerHTML = "";
         var url = "/Home/UserProfile";
+        //var ajaxPostData = new FormData(document.getElementById("formUserProfileData"));
+        //console.log(9, ajaxPostData);
+        var ajaxPostData = $("#formUserProfileData").serialize();
+        //console.log(9.9, ajaxPostData);
         $.ajax({
             url: url,
             type: "POST",
             //contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
             //dataType: "html",
             cache: false,
-            contentType: false,
+            //contentType: false,
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//"application/x-www-form-urlencoded; charset=UTF-8",//"text/plain; charset=UTF-8", //false, //"application/json; charset=utf-8",
             processData: false,
-            data: new FormData(document.getElementById("formUserProfileData")),
+            data: ajaxPostData,
+            dataType: "html",
             //async: false,
             success: function (responseData, textStatus, request) {
                 $("#loadingModal").modal('hide');
-                console.log("00001000", "userProfileSave_onclick success", responseData.processMessage);
-                if (responseData.success) {
-                    window.location.href = responseData.htmlString;
-                }
-                else {
-                    document.getElementById("formUserProfileData").innerHTML = responseData.htmlString;
-                }
+                console.log("00001000", "userProfileSave_onclick success", responseData);
+                alert("User profile updated successfully!!!");
+                document.getElementById("divUserProfile").innerHTML = responseData;
+                document.getElementById("divUserProfile").scrollIntoView();
             },
             error: function (xhr, exception) {
                 $("#loadingModal").modal('hide');
                 document.getElementById("formUserProfileData").innerHTML = xhr.responseText;
                 console.log("00099000", "userProfileSave_onclick", "ERROR???", exception, xhr);
+                alert("Please fix errors to continue???");
+                document.getElementById("formUserProfileData").innerHTML = xhr.responseText;
                 //document.getElementById("divModalErrorMessage").innerHTML = JSON.parse(xhr.responseText).errorMessage;
                 //document.getElementById("divModalErrorMessage").style.color = "#ff0000";
             }

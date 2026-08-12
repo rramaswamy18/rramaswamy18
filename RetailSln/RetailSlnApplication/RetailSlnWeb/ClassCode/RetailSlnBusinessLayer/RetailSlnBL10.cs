@@ -127,45 +127,47 @@ namespace RetailSlnBusinessLayer
             }
         }
 
-        public void RegisterUserExtn1(RegisterUserEmailModel registerUserEmailModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
-        {
-            string methodName = MethodBase.GetCurrentMethod().Name;
-            ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
-            ArchLibBL archLibBL = new ArchLibBL();
-            try
-            {
-                //int x = 1, y = 0, z = x / y;
-                ApplicationDataContext.OpenSqlConnection();
-                CouponListModel couponListModel = new CouponListModel
-                {
-                    BegEffDate = "1900-01-01",
-                    CouponNum = archLibBL.GenerateRandomKey(int.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCouponLength")), lowerCaseFlag: false, specialCharFlag: false),
-                    DiscountPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralUserDiscount")),
-                    EndEffDate = "9999-12-31",
-                };
-                registerUserEmailModel.CouponListModel = couponListModel;
-                ApplicationDataContext.CouponListAdd(couponListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-                ReferralListModel referralListModel = new ReferralListModel
-                {
-                    CommissionPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCommission")),
-                    CouponListId = couponListModel.CouponListId.Value,
-                    DiscountPercent = couponListModel.DiscountPercent,
-                    PersonId = registerUserEmailModel.RegisterUserResponseModel.PersonId,
-                };
-                registerUserEmailModel.ReferralListModel = referralListModel;
-                ApplicationDataContext.ReferralListAdd(referralListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
-            }
-            catch (Exception exception)
-            {
-                exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
-                throw;
-            }
-            finally
-            {
-                ApplicationDataContext.CloseSqlConnection();
-            }
-        }
+        #region Commented out code - RegisterUserExtn1
+        //public void RegisterUserExtn1(RegisterUserEmailModel registerUserEmailModel, Controller controller, HttpSessionStateBase httpSessionStateBase, ModelStateDictionary modelStateDictionary, long clientId, string ipAddress, string execUniqueId, string loggedInUserId)
+        //{
+        //    string methodName = MethodBase.GetCurrentMethod().Name;
+        //    ExceptionLogger exceptionLogger = Utilities.CreateExceptionLogger(Utilities.GetApplicationValue("ApplicationName"), ipAddress, execUniqueId, loggedInUserId, Assembly.GetCallingAssembly().FullName, Assembly.GetExecutingAssembly().FullName, MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        //    exceptionLogger.LogInfo(methodName, Utilities.GetCallerLineNumber(), "00000000 :: Enter");
+        //    ArchLibBL archLibBL = new ArchLibBL();
+        //    try
+        //    {
+        //        //int x = 1, y = 0, z = x / y;
+        //        ApplicationDataContext.OpenSqlConnection();
+        //        CouponListModel couponListModel = new CouponListModel
+        //        {
+        //            BegEffDate = "1900-01-01",
+        //            CouponNum = archLibBL.GenerateRandomKey(int.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCouponLength")), lowerCaseFlag: false, specialCharFlag: false),
+        //            DiscountPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralUserDiscount")),
+        //            EndEffDate = "9999-12-31",
+        //        };
+        //        registerUserEmailModel.CouponListModel = couponListModel;
+        //        ApplicationDataContext.CouponListAdd(couponListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //        ReferralListModel referralListModel = new ReferralListModel
+        //        {
+        //            CommissionPercent = float.Parse(ArchLibCache.GetApplicationDefault(clientId, "Business", "ReferralCommission")),
+        //            CouponListId = couponListModel.CouponListId.Value,
+        //            DiscountPercent = couponListModel.DiscountPercent,
+        //            PersonId = registerUserEmailModel.RegisterUserResponseModel.PersonId,
+        //        };
+        //        registerUserEmailModel.ReferralListModel = referralListModel;
+        //        ApplicationDataContext.ReferralListAdd(referralListModel, ApplicationDataContext.SqlConnectionObject, clientId, ipAddress, execUniqueId, loggedInUserId);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        exceptionLogger.LogError(methodName, Utilities.GetCallerLineNumber(), "00099000 :: Exception", exception);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        ApplicationDataContext.CloseSqlConnection();
+        //    }
+        //}
+        #endregion
     }
 }
 //System.Web.Mvc.Html.PartialExtensions.Partial(html, "~/Views/Orders/OrdersPartialView.cshtml", orderModel).ToString();

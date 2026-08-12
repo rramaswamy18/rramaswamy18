@@ -98,7 +98,7 @@
                         setTimeout(checkLoggedInStatus, sessionTimeout);
                     } else {
                         console.log("End Session _Layout3", getCurrentDateTime());
-                        window.location = "@Url.Action("Index", "Home")";
+                        window.location = "@Url.Action("RegisterUserLoginUser", "Home")";
                     }
                 });
         }
@@ -161,12 +161,13 @@
                                     </a>
                                 </div>
                                 <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
-                                    <a class="navbar-right-link" href="@Url.Action("RegisterUserProf", "Home")" title="Register - @imageTitle">
+                                    <a class="navbar-right-link" href="@Url.Action("RegisterUserLoginUser", "Home")" title="Register / Sign In - @imageTitle">
                                         <i class="fas fa-user-plus"></i>
                                         <br style="clear: both;" />
-                                        Register
+                                        Register / Sign In
                                     </a>
                                 </div>
+                                @*
                                 <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
                                     <a class="navbar-right-link @(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")" title="Login / Sign In - @imageTitle">
                                         <i class="fas fa-user"></i>
@@ -174,6 +175,7 @@
                                         Sign In
                                     </a>
                                 </div>
+                                *@
                                 <div class="nav-right-feature" style="padding-right: 0px; text-align: center;">
                                     <a class="navbar-right-link @(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")" title="Logout - @imageTitle">
                                         <i class="fas fa-sign-out-alt"></i>
@@ -254,8 +256,8 @@
                                 Checkout
                             </a>
                         </li>
-                        <li><a href="@Url.Action("RegisterUserProf", "Home")">Register</a></li>
-                        <li><a class="@(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")">Sign In</a></li>
+                        <li><a href="@Url.Action("RegisterUserLoginUser", "Home")" alt="Register / Sign In @imageTitle" title="Register / Sign In @imageTitle">Register / Sign In</a></li>
+                        @*<li><a class="@(isLoggedIn ? "disabled-link" : "")" href="@Url.Action("LoginUserProf", "Home")">Sign In</a></li>*@
                         <li><a class="@(isLoggedIn ? "" : "disabled-link")" href="@Url.Action("Logout", "Home")">Logout</a></li>
                     </ul>
                 </div>
