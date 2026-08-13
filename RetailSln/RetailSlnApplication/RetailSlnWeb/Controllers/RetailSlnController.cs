@@ -226,10 +226,11 @@ namespace RetailSlnWeb.Controllers
                     SessionObjectModel sessionObjectModel = archLibBL.OTPResponse(ref oTPResponseModel, oTPServiceType, "DEFAULTROLE", this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
                     if (ModelState.IsValid)
                     {
-                        if (sessionObjectModel.NewUser && sessionObjectModel.AspNetRoleName != "GUESTROLE")
-                        {
-                            retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
-                        }
+                        retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //if (sessionObjectModel.NewUser && sessionObjectModel.AspNetRoleName != "GUESTROLE")
+                        //{
+                        //    retailSlnBL.RegisterUserProfPersonExtn1(sessionObjectModel.PersonId, 0, this, Session, ModelState, clientId, ipAddress, execUniqueId, loggedInUserId);
+                        //}
                         Dictionary<string, AspNetRoleKVPModel> aspNetRoleKVPs = ArchLibCache.AspNetRoleKVPs[sessionObjectModel.AspNetRoleName];
                         sessionObjectModel.AspNetRoleNameProxy = aspNetRoleKVPs["ProxyAspNetRoleName00"].KVPValueData;
                         string currentLoggedInUserId = sessionObjectModel.LoggedInUserId;
